@@ -22,11 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Data;
-using System.Xml;
 using System.Xml.XPath;
 using System.Collections;
 using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
@@ -35,98 +34,95 @@ using Origam.Service.Core;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowStateMachine.
-	/// </summary>
 	[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
     [HelpTopic("State+Workflows")]
     [DefaultProperty("Entity")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-    public class StateMachine : AbstractSchemaItem, ISchemaItemFactory
+    public class StateMachine : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkflowStateMachine";
 
-		public StateMachine() : base() {}
+		public StateMachine() {}
 
 		public StateMachine(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public StateMachine(Key primaryKey) : base(primaryKey)	{}
+		public StateMachine(Key primaryKey) : base(primaryKey) {}
 
 		#region Public Methods
 		public StateMachineState GetState(object value)
 		{
-			foreach(StateMachineState state in this.AllStates())
-			{
-				if(state.Type != StateMachineStateType.Group && state.Value.Equals(value))
-				{
-					return state;
-				}
-			}
-
-			return null;
+			return AllStates().Cast<StateMachineState>()
+				.FirstOrDefault(state => 
+					(state.Type != StateMachineStateType.Group) 
+					&& state.Value.Equals(value));
 		}
 
 		public ArrayList AllStates()
 		{
-			ArrayList result = new ArrayList();
-
-			foreach(ISchemaItem item in this.ChildItemsRecursive)
+			var result = new ArrayList();
+			foreach(ISchemaItem item in ChildItemsRecursive)
 			{
 				if(item is StateMachineState)
 				{
 					result.Add(item);
 				}
 			}
-
 			return result;
 		}
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			dependencies.Add(this.Entity);
-			if(this.Field != null)	dependencies.Add(this.Field);
-			if(this.DynamicOperationsLookup != null)	dependencies.Add(this.DynamicOperationsLookup);
-			if(this.DynamicStatesLookup != null)	dependencies.Add(this.DynamicStatesLookup);
-
+			dependencies.Add(Entity);
+			if(Field != null)
+			{
+				dependencies.Add(Field);
+			}
+			if(DynamicOperationsLookup != null)
+			{
+				dependencies.Add(DynamicOperationsLookup);
+			}
+			if(DynamicStatesLookup != null)
+			{
+				dependencies.Add(DynamicStatesLookup);
+			}
 			base.GetExtraDependencies (dependencies);
 		}
 		#endregion
 
 		#region Properties
 		[Browsable(false)]
-		public ArrayList Events => this.ChildItemsByType(StateMachineEvent.CategoryConst);
+		public ArrayList Events => ChildItemsByType(
+			StateMachineEvent.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineDynamicLookupParameterMapping.CategoryConst);
+		public ArrayList ParameterMappings => ChildItemsByType(
+			StateMachineDynamicLookupParameterMapping.CategoryConst);
 
 		public object[] DynamicOperations(IXmlContainer data)
 		{
-			DataView view = GetDynamicList(this.DynamicOperationsLookupId, data);
-
-			object[] result = new object[view.Count];
-			for(int i=0; i<view.Count; i++)
+			var dataView = GetDynamicList(DynamicOperationsLookupId, data);
+			var result = new object[dataView.Count];
+			for(var i=0; i < dataView.Count; i++)
 			{
-				result[i] = view[i][this.DynamicOperationsLookup.ListValueMember];
+				result[i] = dataView[i][DynamicOperationsLookup
+					.ListValueMember];
 			}
-
 			return result;
 		}
 
 		public object[] InitialStateValues(IXmlContainer data)
 		{
-			ArrayList list = new ArrayList();
-
-			if(this.DynamicStatesLookup == null)
+			var list = new ArrayList();
+			if(DynamicStatesLookup == null)
 			{
 				// states defined in the model
-				foreach(StateMachineState state in this.AllStates())
+				foreach(StateMachineState state in AllStates())
 				{
 					if(state.Type == StateMachineStateType.Initial)
 					{
@@ -136,29 +132,27 @@ namespace Origam.Schema.WorkflowModel
 			}
 			else
 			{
-				DataView view = GetDynamicList(this.DynamicStatesLookupId, data);
-
+				var dataView = GetDynamicList(DynamicStatesLookupId, data);
 				// dynamic state list from the data source
-				foreach(DataRowView rv in view)
+				foreach(DataRowView dataRowView in dataView)
 				{
-					if((bool)rv["IsInitial"])
+					if((bool)dataRowView["IsInitial"])
 					{
-						list.Add(rv["Id"]);
+						list.Add(dataRowView["Id"]);
 					}
 				}
 			}
-
-			return (object[])list.ToArray();
+			return list.ToArray();
 		}
 
 		private DataView GetDynamicList(Guid lookupId, IXmlContainer data)
 		{
 			DataView view;
-
-			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-			if(this.ParameterMappings.Count == 0)
+			var dataLookupService 
+				= ServiceManager.Services.GetService<IDataLookupService>();
+			if(ParameterMappings.Count == 0)
 			{
-				view = ls.GetList(lookupId, null);
+				view = dataLookupService.GetList(lookupId, null);
 			}
 			else
 			{
@@ -168,42 +162,41 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					Hashtable parameters = new Hashtable();
-					foreach(StateMachineDynamicLookupParameterMapping pm in this.ParameterMappings)
+					var parameters = new Hashtable();
+					foreach(StateMachineDynamicLookupParameterMapping 
+						        parameterMapping in ParameterMappings)
 					{
-						string xpath = "/row/" + (pm.Field.XmlMappingType == EntityColumnXmlMapping.Attribute ? "@" : "") + pm.Field.Name;
-						XPathNavigator nav = data.Xml.CreateNavigator();
-						object val = nav.Evaluate(xpath);
-						if(val is XPathNodeIterator)
+						var xpath 
+							= "/row/" + (parameterMapping .Field.XmlMappingType 
+							             == EntityColumnXmlMapping.Attribute 
+								? "@" : "") + parameterMapping.Field.Name;
+						var xPathNavigator = data.Xml.CreateNavigator();
+						var value = xPathNavigator.Evaluate(xpath);
+						if(value is XPathNodeIterator iterator)
 						{
-							XPathNodeIterator iterator = val as XPathNodeIterator;
-
 							if(iterator.Count == 0)
 							{
-								val = null;
+								value = null;
 							}
 							else
 							{
 								iterator.MoveNext();
-								val = iterator.Current.Value;
+								value = iterator.Current.Value;
 							}
 						}
 						else
 						{
-							val = null;
+							value = null;
 						}
-
-						parameters.Add(pm.Name, val);
+						parameters.Add(parameterMapping.Name, value);
 					}
-
-					view = ls.GetList(lookupId, parameters, null);
+					view = dataLookupService.GetList(
+						lookupId, parameters, null);
 				}
 			}
-
 			return view;
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid EntityId;
         [NotNullModelElementRule]
 		[TypeConverter(typeof(EntityConverter))]
@@ -211,15 +204,16 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("entity", "EntityId")]
 		public IDataEntity Entity
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityId));
+			get => (IDataEntity)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
 			set
 			{
-				this.EntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+				EntityId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				SetName();
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid FieldId;
 
 		[TypeConverter(typeof(StateMachineEntityFieldConverter))]
@@ -227,16 +221,16 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("field", "FieldId")]
 		public IDataEntityColumn Field
 		{
-			get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+			get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(FieldId));
 			set
 			{
-				this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-
+				FieldId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				SetName();
 			}
 		}
-
-		[EntityColumn("G03")]
+		
 		public Guid DynamicStatesLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -244,14 +238,13 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("dynamicStatesLookup", "DynamicStatesLookupId")]
 		public IDataLookup DynamicStatesLookup
 		{
-			get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DynamicStatesLookupId));
-			set
-			{
-				this.DynamicStatesLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(DynamicStatesLookupId));
+			set => DynamicStatesLookupId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G04")]
+		
 		public Guid DynamicOperationsLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -259,14 +252,13 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("dynamicOperationsLookup", "DynamicOperationsLookupId")]
 		public IDataLookup DynamicOperationsLookup
 		{
-			get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DynamicOperationsLookupId));
-			set
-			{
-				this.DynamicOperationsLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(DynamicOperationsLookupId));
+			set => DynamicOperationsLookupId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G05")]
+		
 		public Guid ReverseLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -274,69 +266,60 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("reverseLookup", "ReverseLookupId")]
 		public IDataLookup ReverseLookup
 		{
-			get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReverseLookupId));
-			set
-			{
-				this.ReverseLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(
+					ReverseLookupId));
+			set => ReverseLookupId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		#endregion
 
 		#region Private Methods
 		private void SetName()
 		{
-			if(this.Entity != null & this.Field != null)
+			if((Entity != null) && (Field != null))
 			{
-				this.Name = this.Entity.Name + "_" + this.Field.Name;
+				Name = Entity.Name + "_" + Field.Name;
 			}
-			else if(this.Entity != null)
+			else if(Entity != null)
 			{
-				this.Name = this.Entity.Name;
+				Name = Entity.Name;
 			}
 			else
 			{
-				this.Name = "";
+				Name = "";
 			}
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes =>
-			new Type[] {
-				typeof(StateMachineState),
-				typeof(StateMachineEvent),
-				typeof(StateMachineDynamicLookupParameterMapping)
-			};
+		public override Type[] NewItemTypes => new[] 
+		{ 
+			typeof(StateMachineState),
+			typeof(StateMachineEvent),
+			typeof(StateMachineDynamicLookupParameterMapping)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(StateMachineState))
+			string itemName = null;
+			if(typeof(T) == typeof(StateMachineState))
 			{
-				item = new StateMachineState(schemaExtensionId);
-				item.Name = "NewState";
+				itemName = "NewState";
 			}
-			else if(type == typeof(StateMachineEvent))
+			else if(typeof(T) == typeof(StateMachineEvent))
 			{
-				item = new StateMachineEvent(schemaExtensionId);
-				item.Name = "NewEvent";
+				itemName = "NewEvent";
 			}
-			else if(type == typeof(StateMachineDynamicLookupParameterMapping))
+			else if(typeof(T) 
+			== typeof(StateMachineDynamicLookupParameterMapping))
 			{
-				item = new StateMachineDynamicLookupParameterMapping(schemaExtensionId);
-				item.Name = "NewParameterMapping";
+				itemName = "NewParameterMapping";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorStateMachineStateUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
-
 		#endregion
 	}
 }

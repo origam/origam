@@ -36,6 +36,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Security.Principal;
+using Origam.Extensions;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine
 {
@@ -49,7 +51,7 @@ namespace Origam.OrigamEngine
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
         private static DateTime LastRestartRequestDate;
-        private static readonly IRuntimeServiceFactory standardServiceFactory = new RuntimeServiceFactory();
+        private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
         #endregion
 
         #region Constructors
@@ -102,13 +104,19 @@ namespace Origam.OrigamEngine
 
 		public static void InitializeRuntimeServices()
 		{
-			standardServiceFactory.InitializeServices();
+			serviceFactory.InitializeServices();
 		}
 
         public static void UnloadConnectedServices()
         {
-            standardServiceFactory.UnloadServices();
-            Workbench.Services.CoreServices.DataService.ClearDataService();
+            serviceFactory.UnloadServices();
+            DataServiceFactory.ClearDataService();
+        }
+        
+        public static void DisconnectRuntime()
+        {
+	        UnloadConnectedServices();
+	        RestartTimer?.Stop();
         }
 
 		public static void ConnectRuntime(
@@ -121,22 +129,14 @@ namespace Origam.OrigamEngine
                 PrincipalPolicy.NoPrincipal);
             SecurityManager.SetServerIdentity();
 			SetActiveConfiguration(configName);
-			OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() 
-                as OrigamSettings;
-			if (customServiceFactory == null)
+			var settings = ConfigurationManager.GetActiveConfiguration();
+			if (customServiceFactory != null)
 			{
-				standardServiceFactory.InitializeServices();
+				serviceFactory = customServiceFactory;
 			}
-			else
-			{
-				customServiceFactory.InitializeServices();
-			}
+			serviceFactory.InitializeServices();
 			SchemaService schema 
                 = ServiceManager.Services.GetService<SchemaService>();
-            IPersistenceService persistence 
-                = ServiceManager.Services.GetService<IPersistenceService>();
-			persistence.LoadSchemaList();
 			log.Info("Loading model " + settings.Name + ", Package ID: " + settings.DefaultSchemaExtensionId.ToString());
 			schema.LoadSchema(settings.DefaultSchemaExtensionId, 
                 settings.ExtraSchemaExtensionId, false, 
@@ -166,10 +166,8 @@ namespace Origam.OrigamEngine
 
 		private static void SetActiveConfiguration(string configName="")
 		{
-			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations();
-			
-			OrigamSettings origamSettings = GetSettings(configName, configurations);
+			var configurations = ConfigurationManager.GetAllConfigurations();
+			var origamSettings = GetSettings(configName, configurations);
 			ConfigurationManager.SetActiveConfiguration(origamSettings);
 		}
 
@@ -202,12 +200,12 @@ namespace Origam.OrigamEngine
 
         public static IPersistenceService CreatePersistenceService()
         {
-	        return standardServiceFactory.CreatePersistenceService();
+	        return serviceFactory.CreatePersistenceService();
         }
 
         public static IDocumentationService CreateDocumentationService()
         {
-	        return standardServiceFactory.CreateDocumentationService();
+	        return serviceFactory.CreateDocumentationService();
         }
 
 		private static DateTime GetLastRestartRequestDate()
@@ -250,7 +248,7 @@ namespace Origam.OrigamEngine
                 RestartTimer.Interval *= 10;
                 if(log.IsErrorEnabled)
                 {
-                    log.Error("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
+                    log.LogOrigamError("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
                 }
             }
 		}

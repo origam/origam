@@ -46,7 +46,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureSortSetItem(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -79,8 +78,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _fieldName;
-
-		[EntityColumn("SS01")]  
+		
 		[SortSetItemValidModelElementRuleAttribute()]
 		[TypeConverter(typeof(DataStructureColumnStringConverter))]
 		[Category("Sorting"), RefreshProperties(RefreshProperties.Repaint)]
@@ -100,8 +98,7 @@ namespace Origam.Schema.EntityModel
 
 		private int _sortOrder = 0;
 		[Category("Sorting"), DefaultValue(0), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]
-        [XmlAttribute("sortOrder")]
+		[XmlAttribute("sortOrder")]
 		public int SortOrder
 		{
 			get
@@ -116,8 +113,7 @@ namespace Origam.Schema.EntityModel
 
 		private DataStructureColumnSortDirection _sortDirection = DataStructureColumnSortDirection.Ascending;
 		[Category("Sorting"), DefaultValue(DataStructureColumnSortDirection.Ascending)]
-		[EntityColumn("I02")]
-        [XmlAttribute("sortDirection")]
+		[XmlAttribute("sortDirection")]
 		public DataStructureColumnSortDirection SortDirection
 		{
 			get
@@ -132,7 +128,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

@@ -36,22 +36,29 @@ import moment from "moment";
 import "moment/min/locales";
 import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ArrayPrototypes } from "@origam/utils"
 
-if (process.env.REACT_APP_SELENIUM_KICK) {
-  axios.post("http://127.0.0.1:3500/app-reload");
-}
-
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
-
-  //inspect({ iframe: false });
 }
 
-(window as any).ORIGAM_CLIENT_REVISION_HASH = process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
-(window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
+(window as any).ORIGAM_CUSTOM_CLIENT_BUILD = import.meta.env.VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
+(window as any).ORIGAM_UI_PLUGINS = import.meta.env.VITE_REACT_APP_ORIGAM_UI_PLUGINS;
+(window as any).ORIGAM_SERVER_PLUGINS = import.meta.env.VITE_REACT_APP_ORIGAM_SERVER_PLUGINS;
+
+function disableAutoZoomingOnIPhone(){
+  const safariDerivedBrowser = navigator.vendor && navigator.vendor.indexOf('Apple') > -1;
+  if(safariDerivedBrowser){
+    document
+      .querySelector('meta[name="viewport"]')
+      ?.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1");
+  }
+}
 
 async function main() {
+  disableAutoZoomingOnIPhone();
   preventDoubleclickSelect();
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
@@ -99,7 +106,7 @@ async function main() {
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
     sessionStorage.setItem("origamAuthToken", user.access_token);
-    userManager.events.addUserLoaded((user) => {
+    userManager.events.addUserLoaded((user: any) => {
       getApi(application).setAccessToken(user.access_token);
       sessionStorage.setItem("origamAuthToken", user.access_token);
     });

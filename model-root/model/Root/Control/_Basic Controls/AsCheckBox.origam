@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="48dc8d6a-21c1-4e12-96de-c3a5eb67434d"
@@ -12,9 +16,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="b424c509-cf88-4dfa-938d-2005d5adf5e3"
+      x:id="340d9566-e8ca-4eff-af06-80221a495f71"
       cpi:localizable="false"
-      asi:name="Left"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="3e03172f-fc92-4f7b-b09d-9f562c256040"
+      cpi:localizable="false"
+      asi:name="TabIndex"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -23,6 +34,20 @@
       cpi:localizable="false"
       asi:name="GridColumnWidth"
       cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="562004f3-48f7-460d-b8f6-e8c911235a36"
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="627a6911-cb5c-483c-bfdf-8d1d7a71f928"
+      cpi:localizable="false"
+      asi:name="ReadOnly"
+      cpi:propertyType="Boolean" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -40,31 +65,17 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="b424c509-cf88-4dfa-938d-2005d5adf5e3"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="c750fd0e-7553-4e96-9293-6e089f6ade74"
       cpi:localizable="false"
       asi:name="HideOnForm"
       cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="340d9566-e8ca-4eff-af06-80221a495f71"
-      cpi:localizable="false"
-      asi:name="Top"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="627a6911-cb5c-483c-bfdf-8d1d7a71f928"
-      cpi:localizable="false"
-      asi:name="ReadOnly"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="3e03172f-fc92-4f7b-b09d-9f562c256040"
-      cpi:localizable="false"
-      asi:name="TabIndex"
-      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -79,12 +90,5 @@
       cpi:localizable="false"
       asi:name="StyleId"
       cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="562004f3-48f7-460d-b8f6-e8c911235a36"
-      cpi:localizable="true"
-      asi:name="Text"
-      cpi:propertyType="String" />
   </ci:Control>
 </x:file>

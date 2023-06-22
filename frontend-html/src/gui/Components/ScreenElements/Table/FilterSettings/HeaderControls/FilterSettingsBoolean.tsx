@@ -26,6 +26,9 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsBoolean.module.scss";
 
 const OPERATORS: Operator[] = [Operator.equals];
 
@@ -33,6 +36,7 @@ const OPERATORS: Operator[] = [Operator.equals];
 export class FilterSettingsBoolean extends React.Component<{
   setting?: any;
   id: string;
+  ctx: any;
 }> {
 
   static get defaultSettings() {
@@ -57,17 +61,25 @@ export class FilterSettingsBoolean extends React.Component<{
     return (
       <>
         <FilterSettingsComboBox
-            id={"combo_"+this.props.id}
-            trigger={<>=</>}
+          id={"combo_" + this.props.id}
+          trigger={<>=</>}
         >
           <FilterSettingsComboBoxItem>=</FilterSettingsComboBoxItem>
         </FilterSettingsComboBox>
-        <Checkbox
-          id={"input_"+this.props.id}
-          indeterminate={this.props.setting.val1 === undefined}
-          checked={this.props.setting.val1}
-          onClick={this.handleValueClick}
-        />
+        {isMobileLayoutActive(this.props.ctx)
+          ? <div className={S.mobileInputContainer}>
+            <MobileBooleanInput
+              checked={this.props.setting.val1}
+              onChange={this.handleValueClick}
+            />
+          </div>
+          : <Checkbox
+            id={"input_" + this.props.id}
+            indeterminate={this.props.setting.val1 === undefined}
+            checked={this.props.setting.val1}
+            onClick={this.handleValueClick}
+          />
+        }
       </>
     );
   }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="f396fe80-fc5c-4be3-8f85-e85cc7df8d5a"
@@ -16,5 +16,30 @@
       asi:name="WidgetDropdownTest"
       dse:relationType="Normal"
       dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="faba1d48-0241-49c3-aaa7-bd9f08e346da"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WidgetDropdownTest.origam#WidgetDropdownTest/WidgetDropdownTest/5f3b265d-2db0-4137-94fb-43a98327033f"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="5cab4eca-8fdd-4b04-9560-266080e4be04"
+        asi:name="WidgetDropdownTest_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="c2311307-c47f-4e84-88fb-d7df9b5becf8"
+      asi:name="Default">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Widgets/DataStructure/Widgets/WidgetDropdownTest.origam#WidgetDropdownTest/WidgetDropdownTest/5f3b265d-2db0-4137-94fb-43a98327033f"
+        dsssi:fieldName="Id"
+        x:id="4849cebf-e780-4d43-bfc8-e8c321ba1761"
+        asi:name="WidgetDropdownTest_0_Id"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
   </ds:DataStructure>
 </x:file>

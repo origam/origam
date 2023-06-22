@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="c1881851-7e8f-49ab-b207-efc191a96f6b"
@@ -9,27 +13,6 @@
     ci:requestSaveAfterChangeAllowed="false"
     ci:toolboxVisibility="Nowhere"
     ci:typeName="Origam.Gui.Win.CollapsiblePanel">
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="8782a5ef-1427-44a3-aeb4-0c0eb364513d"
-      cpi:localizable="false"
-      asi:name="Height"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="c89dc98e-9d37-4420-b723-14ae01b291ba"
-      cpi:localizable="false"
-      asi:name="StyleId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="2339a615-7411-42b9-a5c7-2cebc1d65ec1"
-      cpi:localizable="false"
-      asi:name="Left"
-      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -47,10 +30,10 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="97cb2bd1-6b0b-41db-b278-918e64eae0ea"
+      x:id="2339a615-7411-42b9-a5c7-2cebc1d65ec1"
       cpi:localizable="false"
-      asi:name="IsOpen"
-      cpi:propertyType="Boolean" />
+      asi:name="Left"
+      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -58,6 +41,27 @@
       cpi:localizable="false"
       asi:name="IndentLevel"
       cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="8782a5ef-1427-44a3-aeb4-0c0eb364513d"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="97cb2bd1-6b0b-41db-b278-918e64eae0ea"
+      cpi:localizable="false"
+      asi:name="IsOpen"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="c89dc98e-9d37-4420-b723-14ae01b291ba"
+      cpi:localizable="false"
+      asi:name="StyleId"
+      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"

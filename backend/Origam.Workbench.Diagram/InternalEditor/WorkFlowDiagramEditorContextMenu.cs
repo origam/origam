@@ -68,7 +68,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuEdge_Add_Between);
 			addBetweenMenu.Image = ImageRes.icon_new;
 			var builder = new SchemaItemEditorsMenuBuilder(true);
-			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+			var dependency = (WorkflowTaskDependency)edge.Edge.UserData;
+			var targetStep = (IWorkflowStep)dependency.ParentItem;
+			var parentBlock = targetStep.ParentItem;
+			var submenuItems = builder.BuildSubmenu(parentBlock);
 			foreach (AsMenuCommand submenuItem in submenuItems)
             {
              	if (!(submenuItem.Command is AddNewSchemaItem addNewCommand))

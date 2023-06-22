@@ -33,7 +33,6 @@ import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 import { IDialogStack } from "model/entities/types/IDialogStack";
-import { ModalWindow } from "@origam/components";
 import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
@@ -45,6 +44,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @inject(({property}: { property: IProperty }, {value}) => {
   return {
@@ -81,9 +81,7 @@ export class BlobEditor extends React.Component<{
   SessionFormIdentifier?: string;
   parameters?: any;
   subscribeToFocusManager?: (obj: IFocusable) => void;
-  isInvalid: boolean;
   canUpload: boolean;
-  invalidMessage?: string;
   onKeyDown?(event: any): void;
   onChange?(event: any, value: string): void;
   onEditorBlur?(event: any): void;
@@ -186,7 +184,7 @@ export class BlobEditor extends React.Component<{
         action((resolve: (value: boolean) => void) => {
           const closeDialog = this.props.dialogStack!.pushDialog(
             "",
-            <ModalWindow
+            <ModalDialog
               title={T("Question", "question_title")}
               titleButtons={null}
               buttonsCenter={
@@ -218,7 +216,7 @@ export class BlobEditor extends React.Component<{
               <div className={S.dialogContent}>
                 {T("Do you wish to delete {0}?", "blob_delete_confirmation", this.props.value)}
               </div>
-            </ModalWindow>
+            </ModalDialog>
           );
         })
       )
@@ -265,11 +263,6 @@ export class BlobEditor extends React.Component<{
     return (
       <div className={S.editorContainer}>
         {this.renderInput()}
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

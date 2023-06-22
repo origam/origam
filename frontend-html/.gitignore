@@ -47,3 +47,5 @@ src/.ionide/symbolCache.db
 /tests_e2e/__image_snapshots__/
 /tests_e2e/instalMouseHelper_.js
 /tests_e2e/additionalConfig.js
+/dist/
+/public/supportedBrowserRegEx.js

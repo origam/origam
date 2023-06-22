@@ -55,7 +55,6 @@ namespace Origam.BI
             }
             var persistence = ServiceManager.Services
                 .GetService<IPersistenceService>();
-            var ruleEngine = new RuleEngine(null, null);
             var transformParams = new Hashtable();
             foreach(SchemaItemParameter parameter in report.Parameters)
             {
@@ -100,8 +99,8 @@ namespace Origam.BI
                     xsltParameter.transformationId,
                     Guid.Empty, 
                     transformParams, 
-                    null, 
-                    ruleEngine, 
+                    null,
+                    null,
                     null, 
                     false);
                 var resultNode = result.Xml.SelectSingleNode("/ROOT/value");
@@ -230,7 +229,7 @@ namespace Origam.BI
             {
                 return null;
             }
-			var ruleEngine = new RuleEngine(null, null);
+			var ruleEngine = RuleEngine.Create(null, null);
 			var cultureString = (string)ruleEngine.EvaluateContext(
                 reportElement.LocaleXPath, doc, OrigamDataType.String, null);
 			return cultureString;
@@ -258,7 +257,7 @@ namespace Origam.BI
                         }
                     }
                     return DataDocumentFactory.New(
-                        core.DataService.LoadData(
+                        core.DataService.Instance.LoadData(
                             report.DataStructureId,
                             report.DataStructureMethodId, 
                             Guid.Empty, 

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.1" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0">
   <frmi:MenuItem
     asi:abstract="false"
     frmi:autoSaveOnListRecordChange="false"
@@ -7,6 +11,7 @@
     x:id="29f3248b-cb50-497a-8d73-4ddc611c333a"
     asi:name="MapElement_EditMode"
     ami:openExclusively="false"
+    ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     frmi:readOnlyAccess="false"
     frmi:refreshAfterSaveType="RefreshChangedRecords"
@@ -23,6 +28,7 @@
     x:id="5469ac4d-0201-458c-bec9-654d02437e44"
     asi:name="MapElement_DisplayAll"
     ami:openExclusively="false"
+    ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     frmi:readOnlyAccess="false"
     frmi:refreshAfterSaveType="RefreshChangedRecords"

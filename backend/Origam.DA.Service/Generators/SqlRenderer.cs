@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Configuration;
+
 public abstract class SqlRenderer
 {
     public abstract string NameLeftBracket { get; }
@@ -50,4 +52,5 @@ public abstract class SqlRenderer
     internal abstract string CreateDataStructureHead();
     internal abstract string DeclareBegin();
     internal abstract string SetParameter(string name);
+    internal abstract string Char(int number);
 }

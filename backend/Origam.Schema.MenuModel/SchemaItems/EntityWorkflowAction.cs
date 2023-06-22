@@ -82,8 +82,7 @@ namespace Origam.Schema.MenuModel
 		private ServiceOutputMethod _mergeType = ServiceOutputMethod.AppendMergeExisting;
 
 		[DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
-		[EntityColumn("I08")]
-        [XmlAttribute("mergeType")]
+		[XmlAttribute("mergeType")]
 		public ServiceOutputMethod MergeType
 		{
 			get
@@ -99,8 +98,7 @@ namespace Origam.Schema.MenuModel
 		private bool _saveAfterWorkflow = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B03")]
-        [XmlAttribute("saveAfterWorkflow")]
+		[XmlAttribute("saveAfterWorkflow")]
 		public bool SaveAfterWorkflow
 		{
 			get
@@ -116,8 +114,7 @@ namespace Origam.Schema.MenuModel
 		private bool _requestSaveBeforeWorkflow = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B04")]
-        [XmlAttribute("requestSaveBeforeWorkflow")]
+		[XmlAttribute("requestSaveBeforeWorkflow")]
         public bool RequestSaveBeforeWorkflow
 		{
 			get
@@ -133,8 +130,7 @@ namespace Origam.Schema.MenuModel
 		private bool _commitChangesAfterMerge = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B05")]
-        [XmlAttribute("commitChangesAfterMerge")]
+		[XmlAttribute("commitChangesAfterMerge")]
         public bool CommitChangesAfterMerge
 		{
 			get
@@ -150,8 +146,7 @@ namespace Origam.Schema.MenuModel
 		private bool _cleanDataBeforeMerge = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B06")]
-        [XmlAttribute("cleanDataBeforeMerge")]
+		[XmlAttribute("cleanDataBeforeMerge")]
         public bool CleanDataBeforeMerge
 		{
 			get
@@ -166,7 +161,6 @@ namespace Origam.Schema.MenuModel
 
         private bool _refreshPortalAfterFinish = false;
         [DefaultValue(false)]
-        [EntityColumn("B07")]
         [Description("If true, the client will refresh its menu after finishing the action.")]
         [XmlAttribute("refreshPortalAfterFinish")]
         public bool RefreshPortalAfterFinish
@@ -184,8 +178,7 @@ namespace Origam.Schema.MenuModel
         private ModalDialogCloseType _closeType = ModalDialogCloseType.None;
 
 		[DefaultValue(ModalDialogCloseType.None)]
-		[EntityColumn("I09")]
-        [XmlAttribute("closeType")]
+		[XmlAttribute("closeType")]
         public ModalDialogCloseType CloseType
 		{
 			get
@@ -201,8 +194,7 @@ namespace Origam.Schema.MenuModel
 		private SaveRefreshType _refreshAfterWorkflow = SaveRefreshType.RefreshChangedRecords;
 
 		[DefaultValue(SaveRefreshType.RefreshChangedRecords)]
-		[EntityColumn("I07")]
-        [XmlAttribute("refreshAfterWorkflow")]
+		[XmlAttribute("refreshAfterWorkflow")]
         public SaveRefreshType RefreshAfterWorkflow
 		{
 			get
@@ -215,7 +207,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid WorkflowId;
 
 		[Category("References")]

@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
@@ -36,8 +36,7 @@ namespace Origam.Schema.GuiModel
     public class ScreenCondition: AbstractSchemaItem
     {
         public const string CategoryConst = "ScreenCondition";
-        
-        [EntityColumn("ItemType")]
+
         public override string ItemType => CategoryConst;
 
         public Guid ScreenId;
@@ -47,7 +46,16 @@ namespace Origam.Schema.GuiModel
         public FormControlSet Screen
         {
             get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
-            set => ScreenId = value?.Id ?? Guid.Empty;
+            set 
+            {
+                ScreenId = value?.Id ?? Guid.Empty;
+                if(ScreenId != null && ScreenId != Guid.Empty)
+                {
+                    var formControl = (FormControlSet)PersistenceProvider.
+                                      RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+                    Name = formControl.Name;
+                }
+            }
         }
         
         public ScreenCondition(Guid extensionId) : base(extensionId)
@@ -60,6 +68,11 @@ namespace Origam.Schema.GuiModel
 
         public ScreenCondition()
         {
+        }
+        
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
+            dependencies.Add(Screen);
         }
     }
 }

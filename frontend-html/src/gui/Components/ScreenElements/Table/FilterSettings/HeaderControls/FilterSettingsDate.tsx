@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
@@ -29,6 +29,12 @@ import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import { csToMomentFormat } from "@origam/utils";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { IProperty } from "model/entities/types/IProperty";
+import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
+import { IFilterSetting } from "model/entities/types/IFilterSetting";
+import { IEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
+import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsCommon.module.scss";
 
 const OPERATORS = [
   Operator.equals,
@@ -70,12 +76,13 @@ const OpCombo: React.FC<{
 });
 
 const OpEditors: React.FC<{
-  setting: any;
+  setting: IFilterSetting;
   onChange?: (newSetting: any) => void;
-  onBlur?: (event: any) => void;
+  onBlur?: (event: any) => Promise<void>;
   onKeyDown?: (event: any) => void;
   autoFocus: boolean;
   id: string;
+  property: IProperty;
 }> = observer((props) => {
   const {setting} = props;
   const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
@@ -87,60 +94,124 @@ const OpEditors: React.FC<{
     case "gt":
     case "lte":
     case "gte":
-      return (
-        <DateTimeEditor
-          id={props.id}
-          value={setting.val1 ?? ""}
-          outputFormat={dateFormatMoment}
-          outputFormatToShow={dateFormatCs}
-          onChange={(event, isoDay) => {
-            runInAction(() => {
-              setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-              props.onChange && props.onChange(setting)
-            })
-          }}
-          autoFocus={props.autoFocus}
-          onEditorBlur={props.onBlur}
-          onKeyDown={props.onKeyDown}
-        />
-      );
-
-    case "between":
-    case "nbetween":
-      return (
-        <>
-          <DateTimeEditor
-            id={"from_"+props.id}
-            value={setting.val1}
+      if (isMobileLayoutActive(props.property)) {
+        return (
+          <MobileDateTimeEditor
+            value={setting.val1 ?? ""}
+            property={props.property}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
-            onChange={(event, isoDay) => {
+            onChange={async (event, isoDay) => {
               runInAction(() => {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                props.onChange &&
-                props.onChange(setting)
+                props.onChange && props.onChange(setting)
               })
             }}
-            onEditorBlur={props.onBlur}
+            autoFocus={props.autoFocus}
             onKeyDown={props.onKeyDown}
-          />
+            editorState={new MobileFilterEditorStateVal1(setting)}
+            showClearButton={true}
+            inputClass={S.dateTimeInput}
+          />);
+      } else {
+        return (
           <DateTimeEditor
-            id={"to_"+props.id}
-            value={setting.val2}
+            id={props.id}
+            value={setting.val1 ?? ""}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
-            onChange={(event, isoDay) => {
+            onChange={async (event, isoDay) => {
               runInAction(() => {
-                setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                props.onChange &&
-                props.onChange(setting)
+                setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                props.onChange && props.onChange(setting)
               })
             }}
+            autoFocus={props.autoFocus}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
+            className={S.dateTimeInput}
           />
-        </>
-      );
+        );
+      }
+    case "between":
+    case "nbetween":
+      if (isMobileLayoutActive(props.property)) {
+        return (
+          <>
+            <MobileDateTimeEditor
+              value={setting.val1}
+              property={props.property}
+              outputFormat={dateFormatMoment}
+              outputFormatToShow={dateFormatCs}
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
+                  setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                  props.onChange && props.onChange(setting)
+                })
+              }}
+              autoFocus={props.autoFocus}
+              onKeyDown={props.onKeyDown}
+              editorState={new MobileFilterEditorStateVal1(setting)}
+              showClearButton={true}
+              inputClass={S.dateTimeInput}
+            />
+            <MobileDateTimeEditor
+              value={setting.val2}
+              property={props.property}
+              outputFormat={dateFormatMoment}
+              outputFormatToShow={dateFormatCs}
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
+                  setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                  props.onChange && props.onChange(setting)
+                })
+              }}
+              autoFocus={props.autoFocus}
+              onKeyDown={props.onKeyDown}
+              editorState={new MobileFilterEditorStateVal2(setting)}
+              showClearButton={true}
+              inputClass={S.dateTimeInput}
+            />
+          </>
+        );
+      } else {
+        return (
+          <>
+            <DateTimeEditor
+              id={"from_" + props.id}
+              value={setting.val1}
+              outputFormat={dateFormatMoment}
+              outputFormatToShow={dateFormatCs}
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
+                  setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                  props.onChange &&
+                  props.onChange(setting)
+                })
+              }}
+              onEditorBlur={props.onBlur}
+              onKeyDown={props.onKeyDown}
+              className={S.dateTimeInput}
+            />
+            <DateTimeEditor
+              id={"to_" + props.id}
+              value={setting.val2}
+              outputFormat={dateFormatMoment}
+              outputFormatToShow={dateFormatCs}
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
+                  setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                  props.onChange &&
+                  props.onChange(setting)
+                })
+              }}
+              onEditorBlur={props.onBlur}
+              onKeyDown={props.onKeyDown}
+              className={S.dateTimeInput}
+            />
+          </>
+        );
+      }
     case "null":
     case "nnull":
     default:
@@ -150,9 +221,10 @@ const OpEditors: React.FC<{
 
 @observer
 export class FilterSettingsDate extends React.Component<{
-  setting?: any;
+  setting: IFilterSetting;
   autoFocus: boolean
   id: string;
+  property: IProperty;
 }> {
 
   static get defaultSettings() {
@@ -162,6 +234,7 @@ export class FilterSettingsDate extends React.Component<{
   @action.bound
   handleChange(newSetting: any) {
     this.handleSettingChange();
+    return Promise.resolve();
   }
 
   handleSettingChange() {
@@ -200,6 +273,7 @@ export class FilterSettingsDate extends React.Component<{
           setting={this.props.setting}
           onChange={this.handleChange}
           autoFocus={this.props.autoFocus}
+          property={this.props.property}
         />
       </>
     );
@@ -210,3 +284,24 @@ function removeTimeZone(isoDateString: string | null | undefined) {
   if (!isoDateString) return isoDateString;
   return isoDateString.substring(0, 23);
 }
+
+class MobileFilterEditorStateVal1 implements IEditorState {
+
+  constructor(private setting: IFilterSetting) {
+  }
+
+  get value() {
+    return this.setting.val1;
+  }
+}
+
+class MobileFilterEditorStateVal2 implements IEditorState {
+
+  constructor(private setting: IFilterSetting) {
+  }
+
+  get value() {
+    return this.setting.val2;
+  }
+}
+

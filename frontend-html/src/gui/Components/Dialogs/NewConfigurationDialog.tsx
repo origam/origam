@@ -17,13 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ModalWindow } from "@origam/components";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { T } from "utils/translation";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class NewConfigurationDialog extends React.Component<{
@@ -44,7 +45,7 @@ export class NewConfigurationDialog extends React.Component<{
   }
 
   componentDidMount() {
-    this.refInput.current?.focus();
+    requestFocus(this.refInput.current);
   }
 
   onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -62,7 +63,7 @@ export class NewConfigurationDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("New Column Configuration", "column_config_new_config_name")}
         titleButtons={null}
         buttonsCenter={
@@ -102,7 +103,7 @@ export class NewConfigurationDialog extends React.Component<{
             </div>
           </div>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

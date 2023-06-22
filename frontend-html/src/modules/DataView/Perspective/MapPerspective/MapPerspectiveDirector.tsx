@@ -25,7 +25,7 @@ import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { getIdent, IIId } from "utils/common";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { IMapPerspective, MapPerspective } from "./MapPerspective";
 import { Observer } from "mobx-react";
 import { IPerspective } from "../Perspective";
@@ -44,11 +44,12 @@ export class MapPerspectiveDirector implements IIId {
     public mapPerspective = IMapPerspective(),
     public perspective = IPerspective()
   ) {
+    this.toolbarActionsExtension = new ToolbarActionsExtension(this.mapPerspective, () => this.rootStore);
   }
 
   rootStore: MapRootStore = null!;
 
-  toolbarActionsExtension = new ToolbarActionsExtension(this.mapPerspective, () => this.rootStore);
+  toolbarActionsExtension: ToolbarActionsExtension;
 
   @action.bound
   setup() {

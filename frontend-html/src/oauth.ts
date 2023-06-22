@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Oidc from "oidc-client";
+import { UserManager } from "oidc-client-ts";
 
 const [windowLocation] = window.location.href.split("#");
 
@@ -28,12 +28,11 @@ const config = {
   response_type: "code",
   scope: "openid IdentityServerApi offline_access",
   post_logout_redirect_uri: `${windowLocation}`,
-  response_mode: "query",
   automaticSilentRenew: true,
   silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`,
 };
 
-export const userManager = new Oidc.UserManager(config);
+export const userManager = new UserManager(config);
 
 export async function ensureLogin() {
   const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
@@ -47,10 +46,14 @@ export async function ensureLogin() {
     );
     const [urlpart] = window.location.href.split("#");
     window.history.replaceState(null, "", urlpart);
-    return user;
+    if(!user.access_token){
+      await userManager.signinRedirect();
+    }else{
+      return user;
+    }
   } else {
     const user = await userManager.getUser();
-    if (user) {
+    if (user && user.access_token) {
       return user;
     } else {
       await userManager.signinRedirect();

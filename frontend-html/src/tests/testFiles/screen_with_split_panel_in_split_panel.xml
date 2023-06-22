@@ -1,0 +1,68 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Title="Rückvergütung"
+        MenuId="a4e99784-8a28-4595-9b1e-8f3147fc5b9a" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true"
+        autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false" SuppressSave="true" UseSession="true">
+    <DataSources>
+    </DataSources>
+    <ComponentBindings>
+        <Binding ParentId="33c2cb07-17c9-43d2-ad88-de4a32fd2026" ParentProperty="Id" ParentEntity="Partner"
+                 ChildId="3f939cf2-6e8f-4f25-9036-2f39533831fb" ChildProperty="refPartnerId"
+                 ChildEntity="PartnerKickback" ChildPropertyType="Field"/>
+    </ComponentBindings>
+    <UIRoot Id="SplitPanel1_0" ModelInstanceId="4d9a2819-928a-4e74-8b38-30f556f3c9a2" xsi:type="UIElement" Type="HSplit"
+            IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration/>
+        <UIChildren>
+            <UIElement Id="AsPanel1_1" ModelInstanceId="33c2cb07-17c9-43d2-ad88-de4a32fd2026"
+                       Name="Detail1" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                       ModelId="b1a63992-a24c-4cf3-9ada-a2018f41d04e" DefaultPanelView="1" IsHeadless="false"
+                       DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                       ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                       SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Partner" DataMember="Partner"
+                       IsRootGrid="true" IsRootEntity="true" IsPreloaded="true" RequestDataAfterSelectionChange="true"
+                       ConfirmSelectionChange="true">
+                <Properties>
+                </Properties>
+                <Actions>
+                </Actions>
+                <FormRoot Type="Canvas">
+                    <PropertyNames>
+                    </PropertyNames>
+                </FormRoot>
+                <Configuration>
+                    <tableConfigurations>
+                        <TableConfiguration name="" fixedColumnCount="0" isActive="true" id="default">
+                            <ColumnConfiguration propertyId="NumberAndName" width="100" isVisible="true"/>
+                            <ColumnConfiguration propertyId="PartnerGetsRefunds" width="100" isVisible="true"/>
+                            <ColumnConfiguration propertyId="LastKickbackDate" width="100" isVisible="true"/>
+                            <ColumnConfiguration propertyId="LastKickbackAmount" width="100" isVisible="true"/>
+                        </TableConfiguration>
+                    </tableConfigurations>
+                    <customConfigurations/>
+                    <defaultView>
+                        <view id="1"/>
+                    </defaultView>
+                </Configuration>
+            </UIElement>
+            <UIElement Id="AsPanel2_2" ModelInstanceId="3f939cf2-6e8f-4f25-9036-2f39533831fb" Name="Detail2"
+                       xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                       ModelId="826a611a-f1da-45db-b0eb-87881c48b9b1" DefaultPanelView="1" IsHeadless="false"
+                       DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                       ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                       SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="PartnerKickback"
+                       DataMember="Partner.PartnerKickback" IsRootGrid="false" IsRootEntity="false" IsPreloaded="false"
+                       ParentId="33c2cb07-17c9-43d2-ad88-de4a32fd2026" ParentEntityName="Partner">
+                <Properties>
+                </Properties>
+                <Actions>
+                </Actions>
+                <FormRoot Type="Canvas">
+                    <PropertyNames>
+                    </PropertyNames>
+                </FormRoot>
+                <Configuration>
+                </Configuration>
+                <FilterExpressions/>
+            </UIElement>
+        </UIChildren>
+    </UIRoot>
+</Window>

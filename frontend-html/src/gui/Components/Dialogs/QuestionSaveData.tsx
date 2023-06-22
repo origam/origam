@@ -18,10 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import { observer } from "mobx-react";
 import CS from "./DialogsCommon.module.css";
 import { T } from "../../../utils/translation";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class QuestionSaveData extends React.Component<{
@@ -43,7 +43,7 @@ export class QuestionSaveData extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Question", "question_title")}
         titleButtons={null}
         buttonsCenter={
@@ -74,7 +74,7 @@ export class QuestionSaveData extends React.Component<{
         <div className={CS.dialogContent}>
           {T("Do you wish to save changes in {0}?", "do_you_wish_to_save", this.props.screenTitle)}
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

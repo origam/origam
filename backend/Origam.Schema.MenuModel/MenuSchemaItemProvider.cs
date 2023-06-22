@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 		}
 
 		/// <summary>
-		/// Returs the first child Menu, skipping all the ContextMenu types.
+		/// Returns the first child Menu, skipping all the ContextMenu types.
 		/// </summary>
 		public Menu MainMenu =>
 			ChildItemsByType(Menu.CategoryConst)

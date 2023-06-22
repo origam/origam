@@ -36,12 +36,12 @@ namespace Origam.Schema.EntityModel
         {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
             var iDataLookup = ((ILookupReference)instance).Lookup;
-            
-            if(iDataLookup.IsFilteredServerside)
+
+            if(iDataLookup == null || iDataLookup.IsFilteredServerside)
             {
                 return null;
             }
-            return new DataException("Lookup have to have property isFilteredServerSide on true."); ;
+            return new DataException("Lookup has to have property isFilteredServerSide on true.");
         }
     }
 }

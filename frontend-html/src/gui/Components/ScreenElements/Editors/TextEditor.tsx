@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
-import { observer } from "mobx-react";
+import { action, observable } from "mobx";
+import { Observer, observer } from "mobx-react";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import S from "./TextEditor.module.scss";
@@ -30,8 +30,9 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
-const autoUpdateUntervalMs = 60_000;
+import { IDockType } from "model/entities/types/IProperty";
+import { AutoSizer, List, MultiGrid } from "react-virtualized";
+import { bind } from "bind-decorator";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -40,8 +41,6 @@ export class TextEditor extends React.Component<{
   isMultiline?: boolean;
   isReadOnly: boolean;
   isPassword?: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   maxLength?: number;
@@ -54,41 +53,51 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  onAutoUpdate?(value: string): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  dock?: IDockType;
 }> {
   disposers: any[] = [];
   currentValue = this.props.value;
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;
+  refGrid = React.createRef<MultiGrid>();
+  @observable.ref
+  longTextRowList: string[] = [];
 
   componentDidMount() {
-    if (this.props.isMultiline) {
-      this.disposers.push(this.startAutoUpdate());
-    }
     this.updateTextOverflowState();
+    this.updateBigTextRowList();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: any) {
     this.updateTextOverflowState();
+    if (this.props.value !== prevProps.value) {
+      this.updateBigTextRowList();
+    }
+  }
+
+  private updateBigTextRowList() {
+    if (!this.props.isMultiline ||
+        !this.props.isReadOnly ||
+        !this.props.value ||
+        this.props.value.length < 5000
+    ) {
+      this.longTextRowList = [this.props.value ?? ""]
+      return;
+    }
+    if (this.props.value.includes("\\n")) {
+      this.longTextRowList = this.props.value.split("\\n");
+    } else {
+      this.longTextRowList = [this.props.value.substring(0, 5000) + "\n...(TRUNCATED)"]
+    }
   }
 
   private updateTextOverflowState() {
-    if (this.props.isMultiline) {
+    if (this.props.isMultiline || !this.elmInput) {
       return;
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
     this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
-  }
-
-  private startAutoUpdate() {
-    this.updateInterval = setInterval(() => {
-      if (this.lastAutoUpdatedValue !== this.currentValue) {
-        this.props.onAutoUpdate?.(this.currentValue ?? "");
-        this.lastAutoUpdatedValue = this.currentValue;
-      }
-    }, autoUpdateUntervalMs);
-    return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
   componentWillUnmount() {
@@ -125,24 +134,33 @@ export class TextEditor extends React.Component<{
     }
   }
 
+  @bind rowRenderer({
+     key,
+     index,
+     isScrolling,
+     isVisible,
+     style,
+   }: any) {
+    return (
+      <div key={key} style={style}>
+        {this.longTextRowList[index]}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className={S.editorContainer}>
         {this.renderValueTag()}
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }
 
   getMultilineDivClass() {
     if (this.props.wrapText) {
-      return S.input + " " + S.wrapText;
+      return S.readonlyDiv + " " + S.input + " " + S.wrapText;
     }
-    return S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
+    return S.readonlyDiv + " " + S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
   }
 
   private renderValueTag() {
@@ -166,16 +184,18 @@ export class TextEditor extends React.Component<{
         );
       } else {
         return (
-          <RichTextEditor
-            value={this.props.value ?? ""}
-            onChange={(newValue: any) => {
-              this.currentValue = newValue;
-              this.props.onChange?.(undefined, newValue);
-            }}
-            refInput={this.refInput}
-            onBlur={this.props.onEditorBlur}
-            onFocus={this.handleFocus}
-          />
+          <div className={S.richTextWrappContainer} >
+              <RichTextEditor 
+                value={this.props.value ?? ""}
+                onChange={(newValue: any) => {
+                  this.currentValue = newValue;
+                  this.props.onChange?.(undefined, newValue);
+                }}
+                refInput={this.refInput}
+                onBlur={this.props.onEditorBlur}
+                onFocus={this.handleFocus}
+              />
+          </div>
         );
       }
     }
@@ -205,20 +225,42 @@ export class TextEditor extends React.Component<{
       );
     }
     if (this.props.isReadOnly) {
-      return (
-        <div
-          id={this.props.id}
-          className={this.getMultilineDivClass()}
-          onClick={this.props.onClick}
-          onDoubleClick={this.props.onDoubleClick}
-          onBlur={this.props.onEditorBlur}
-          onFocus={this.handleFocus}
-        >
-          <span style={this.getStyle()} className={S.multiLine}>
-            {this.props.value || ""}
-          </span>
-        </div>
-      );
+      if(this.longTextRowList.length > 1){
+        return (
+          <AutoSizer>
+            {({width, height}) => (
+              <Observer>
+                {() => (
+                <List
+                  className={S.input}
+                  width={width}
+                  height={height}
+                  rowCount={this.longTextRowList.length}
+                  rowHeight={20}
+                  rowRenderer={this.rowRenderer}
+                />
+                )}
+              </Observer>
+            )}
+          </AutoSizer>
+        );
+      }
+      else{
+        return (
+          <div
+            id={this.props.id}
+            className={this.getMultilineDivClass()}
+            onClick={this.props.onClick}
+            onDoubleClick={this.props.onDoubleClick}
+            onBlur={this.props.onEditorBlur}
+            onFocus={this.handleFocus}
+          >
+            <span style={this.getStyle()} className={S.multiLine}>
+              {this.longTextRowList[0]}
+            </span>
+          </div>
+        );
+      }
     } else {
       return (
         <textarea
@@ -291,16 +333,12 @@ function RichTextEditor(props: {
   }, [props.value, internalEditorStateHtml]);
 
   return (
-    <div style={{overflow: "auto", width: "100%", height: "100%"}}>
-      <div style={{minWidth: 800, minHeight: 600}}>
         <Editor
           editorState={internalEditorState}
-          wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
+          wrapperClassName={S.richTextWrappStyle}
+          editorClassName={S.richTextEditorStyle}
           onEditorStateChange={onEditorStateChange}
           onBlur={props.onBlur}
         />
-      </div>
-    </div>
   );
 }

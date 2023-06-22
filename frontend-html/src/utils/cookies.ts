@@ -34,7 +34,7 @@ let _locale: any;
 
 export function getLocaleFromCookie(): string {
   if (!_locale) {
-    const cookieValue = unescape(getCookie("origamCurrentLocale"));
+    const cookieValue = decodeURIComponent(getCookie("origamCurrentLocale"));
     const pattern = /c=([a-zA-Z-]+)\|/i;
     const results = cookieValue.match(pattern);
     if (results) {
@@ -75,7 +75,7 @@ let _defaultDateFormats: IDefaultDateFormats | undefined;
 
 export function getDefaultCsDateFormatDataFromCookie(): IDefaultDateFormats {
   if (!_defaultDateFormats) {
-    const cookieValue = unescape(getCookie("origamCurrentLocale"));
+    const cookieValue = decodeURIComponent(getCookie("origamCurrentLocale"));
     try {
       const parameters = getCookieParameters(cookieValue);
 
@@ -127,15 +127,15 @@ function getParameter(name: string, parameters: { [key: string]: string }) {
 }
 
 export async function initLocaleCookie(ctx: any) {
-  const cookieValue = unescape(getCookie("origamCurrentLocale"));
+  const cookieValue = decodeURIComponent(getCookie("origamCurrentLocale"));
   if (isValidLocalizationCookie(cookieValue)) {
     return;
   }
   const api = getApi(ctx);
   document.cookie = "origamCurrentLocale=" + await api.defaultLocalizationCookie();
 
-  const newCookieValue = unescape(getCookie("origamCurrentLocale"));
+  const newCookieValue = decodeURIComponent(getCookie("origamCurrentLocale"));
   if (!isValidLocalizationCookie(newCookieValue)) {
-    throw new Error("Could not parse localization cookie: " + newCookieValue);
+    throw new Error("Could not parse localization cookie: \"" + newCookieValue + "\"");
   }
 }

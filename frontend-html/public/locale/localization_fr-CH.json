@@ -51,6 +51,10 @@
   "metric_middle_tool_tip": "Compact",
   "metric_small_tool_tip": "Extra Compact",
   "about_application": "sur",
+  "origam_image_version": "Version de Origam: {0}",
+  "custom_client_version": "Version de compilation de client personnalisée: {0}",
+  "used_origam_plugins": "Plugins Origam utilisés:",
+  "copyright_attributions": "Attribution des droits d'auteur",
   "flash_version": "Flash Version:",
   "build_number": "Build Number:",
   "report_tabs": "Report Tabs:",
@@ -394,5 +398,16 @@
   "my_profile": "My Profile",
   "action_error": "erreur",
   "there_has_been_a_problem": "There has been a problem:",
-  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again."
+  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again.",
+  "mobile_detail_navigation": "Détail",
+  "mobile_details_dropdown": "Détails",
+  "mobile_search_title": "rechercher",
+  "auto_complete_date": "autocomplete",
+  "preview": "aperçu",
+  "format": "format",
+  "row_count": "les lignes",
+  "row_not_found": "La ligne que vous avez demandée est introuvable sur le serveur. Veuillez actualiser les données.",
+  "column_width": "largeur",
+  "order_columns_button": "organiser",
+  "order_columns_title": "organiser les colonnes"
 }

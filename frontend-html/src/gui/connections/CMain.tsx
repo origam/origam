@@ -23,6 +23,7 @@ import React from "react";
 import { CWorkbenchPage } from "gui/connections/pages/CWorkbenchPage";
 import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
 import { IWorkbench } from "model/entities/types/IWorkbench";
+import { BreakpointProvider } from "react-socks";
 
 @observer
 export class CMain extends React.Component {
@@ -41,7 +42,9 @@ export class CMain extends React.Component {
       <div className={"toplevelContainer"}>
         <Provider workbench={this.workbench}>
           <ApplicationDialogStack/>
-          <CWorkbenchPage/>
+          <BreakpointProvider>
+            <CWorkbenchPage/>
+          </BreakpointProvider>
         </Provider>
       </div>
     );

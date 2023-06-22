@@ -28,11 +28,11 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import S from "gui/connections/CFavorites.module.scss";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { SidebarSection } from "gui/Components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
@@ -41,6 +41,7 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { PinButton } from "gui/connections/MenuComponents/PinButton";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CFavorites extends React.Component<{
@@ -62,12 +63,35 @@ export class CFavorites extends React.Component<{
     this.favorites = getFavorites(this.props.ctx);
   }
 
+  componentDidMount() {
+   this.removeOutdatedMenuItemIds();
+  }
+
+  removeOutdatedMenuItemIds(){
+    const mainMenu = getMainMenu(this.props.ctx);
+    if(!mainMenu){
+      return;
+    }
+    const allMenuNodes = getAllElements(mainMenu?.menuUI)
+
+    const missingIds = this.props.folder.itemIds
+      .filter(itemId => {
+        const menuItem = allMenuNodes.find((childNode: any) => childNode.attributes["id"] === itemId)
+        return !menuItem;
+      })
+
+    runInFlowWithHandler({
+      ctx: this.props.ctx,
+      action: () => this.favorites.removeList(missingIds),
+    });
+  }
+
   get canBeDeleted() {
     return this.props.folder.id !== this.favorites.defaultFavoritesFolderId;
   }
 
   onCreateNewFolderClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("New Favourites Folder", "new_group_title")}
@@ -84,7 +108,7 @@ export class CFavorites extends React.Component<{
   }
 
   onFolderPropertiesClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("Favourites Folder Properties", "group_properties_title")}
@@ -100,6 +124,13 @@ export class CFavorites extends React.Component<{
         onCancelClick={() => closeDialog()}
       />
     );
+  }
+
+  onMouseEnter() {
+    this.mouseInHeader = true;
+    if (isMobileLayoutActive(this.props.ctx)) {
+      this.props.onHeaderClick?.();
+    }
   }
 
   @action
@@ -133,6 +164,7 @@ export class CFavorites extends React.Component<{
                     <div  {...provided.droppableProps} ref={provided.innerRef}>
                       {this.props.folder.itemIds
                         .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
+                        .filter(node => node)
                         .map((node: any, index: number) =>
                           <Draggable
                             key={node.$iid}
@@ -192,7 +224,7 @@ export class CFavorites extends React.Component<{
                 className={S.favoritesFolderHeader}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                onMouseEnter={() => this.mouseInHeader = true}
+                onMouseEnter={() => this.onMouseEnter()}
                 onMouseLeave={() => this.mouseInHeader = false}
               >
                 <SidebarSectionHeader

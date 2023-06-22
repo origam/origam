@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CloseButton, ModalWindow } from "@origam/components";
+import { CloseButton } from "@origam/components";
 import { observer, Observer } from "mobx-react";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React, { useEffect } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
@@ -34,6 +34,8 @@ import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWo
 import { T } from "../../../utils/translation";
 import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
@@ -68,17 +70,12 @@ export const DialogScreen: React.FC<{
   }
 
   useEffect(() => {
-    getDialogStack(workbenchLifecycle).pushDialog(
+    const closeFunction = showDialog(workbenchLifecycle,
       key,
       <Observer>
         {() => (
-          <ModalWindow
-            title={
-              /*!props.openedScreen.content.isLoading
-                ? props.openedScreen.content.formScreen!.title
-                : */ props
-                .openedScreen.tabTitle
-            }
+          <ModalDialog
+            title={props.openedScreen.tabTitle}
             titleIsWorking={
               props.openedScreen.content.isLoading ||
               getIsScreenOrAnyDataViewWorking(props.openedScreen.content.formScreen!) ||
@@ -89,6 +86,7 @@ export const DialogScreen: React.FC<{
             }
             buttonsCenter={null}
             buttonsLeft={null}
+            onWindowMove={(top, left)=> props.openedScreen.onWindowMove(top, left)}
             buttonsRight={
               <Observer>
                 {() =>
@@ -125,8 +123,8 @@ export const DialogScreen: React.FC<{
               {() => (
                 <div
                   style={{
-                    width: props.openedScreen.dialogInfo!.width,
-                    height: props.openedScreen.dialogInfo!.height,
+                    width:  isMobileLayoutActive(props.openedScreen) ? "unset" : props.openedScreen.dialogInfo!.width,
+                    height: isMobileLayoutActive(props.openedScreen) ? "60vh" : props.openedScreen.dialogInfo!.height ,
                     display: "flex",
                     flexDirection: "column",
                   }}
@@ -142,11 +140,11 @@ export const DialogScreen: React.FC<{
                 </div>
               )}
             </Observer>
-          </ModalWindow>
+          </ModalDialog>
         )}
       </Observer>
     );
-    return () => getDialogStack(workbenchLifecycle).closeDialog(key);
+    return closeFunction;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 });

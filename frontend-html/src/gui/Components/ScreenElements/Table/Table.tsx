@@ -41,6 +41,8 @@ import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./T
 import { IGridDimensions, ITableProps } from "./types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { IFocusable } from "model/entities/FormFocusManager";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -386,9 +388,16 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     let destinationHeaderIndex = Math.floor(result.destination.index); // separators must also have indices (1.5, 2.5, 3.5...)
     onColumnOrderChangeFinished(
       this.context.tablePanelView,
-      this.context.tablePanelView.tablePropertyIds[result.source.index],
-      this.context.tablePanelView.tablePropertyIds[destinationHeaderIndex]
+      this.context.tablePanelView.tableProperties[result.source.index].id,
+      this.context.tablePanelView.tableProperties[destinationHeaderIndex].id
     );
+  }
+
+  onFocus(event: any){
+    if(event.target){
+      let dataView = getDataView(this.context.tablePanelView);
+      dataView.formFocusManager.setLastFocused(event.target! as IFocusable);
+    }
   }
 
   render() {
@@ -416,14 +425,16 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                 <>
                   {this.props.headerContainers &&
                   (contentRect.bounds!.width ? (
-                    <div className={S.headers}>
+                    <div
+                      onFocus={(event) => this.onFocus(event)}
+                      className={S.headers}>
                       {this.hasFixedColumns ? (
                         <Scrollee
                           scrollOffsetSource={this.props.scrollState}
                           fixedHoriz={true}
                           fixedVert={true}
                           width={this.fixedColumnsWidth}
-                          zIndex={100}
+                          zIndex={101}
                         >
                           <HeaderRow headerElements={this.fixedHeaders} zIndex={100}/>
                         </Scrollee>
@@ -431,17 +442,17 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                       <Scrollee
                         scrollOffsetSource={this.props.scrollState}
                         fixedVert={true}
-                        zIndex={101}
+                        zIndex={100}
                         width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
                       >
                         <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>
-                          <Droppable droppableId="headers" direction="horizontal">
+                          <Droppable droppableId="headers" direction="horizontal" >
                             {(provided) => (
                               // width:"10000%" - when the table was horizontally scrolled to the right the drag
                               // and drop did not work on the headers that were outside of the originally visible area.
                               // This div has to be at least as wide as ALL its children, not just the visible ones.
                               <div style={{width:"10000%"}}  {...provided.droppableProps} ref={provided.innerRef}>
-                                <HeaderRow headerElements={[...this.freeHeaders, provided.placeholder as any]}/>
+                                <HeaderRow headerElements={[...this.freeHeaders, <div key={"placeholder"}>{provided.placeholder}</div> as any]}/>
                               </div>
                             )}
                           </Droppable>

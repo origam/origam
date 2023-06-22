@@ -56,10 +56,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-style: italic;
   background-color:var(--background1);
   color: grey;
- white-space: nowrap;
+  white-space: nowrap;
   padding: 5px;
 }
 
 .tagInput{
   height: 23px;
+  background-color:var(--background1);
+}
+
+:global(.filterRow)  div:global(.tagInput){
+  background-color:var(--background1);
 }

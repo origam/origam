@@ -88,11 +88,11 @@ export class DateGroupData implements IGroupData {
         break;
       case GroupingUnit.Hour:
         value.set({'minute': 0, 'second': 0});
-        groupLabel = value.format("YYYY-MM-DD h:00");
+        groupLabel = value.format("YYYY-MM-DD HH:00");
         break;
       case GroupingUnit.Minute:
         value.set({'second': 0});
-        groupLabel = value.format("YYYY-MM-DD h:mm");
+        groupLabel = value.format("YYYY-MM-DD HH:mm");
         break;
     }
     return new DateGroupData(value, groupLabel);

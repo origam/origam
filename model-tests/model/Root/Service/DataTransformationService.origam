@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="600930a5-102b-43e8-8af1-677c6d7e79f3"
     asi:name="DataTransformationService">
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
-      asi:name="Transform"
-      sm:returnValueDataType="Xml">
+      x:id="0e860118-936a-4c5b-921e-2ab366e5c1f2"
+      asi:name="TransformData"
+      sm:returnValueDataType="Object">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -21,70 +27,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="67"
         sip:dataType="Array"
-        x:id="ce3ebb59-6528-4157-b51a-500f84a635f0"
-        asi:name="Parameters" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="false"
-        smp:callElements="8"
-        sip:dataType="UniqueIdentifier"
-        x:id="7eecc204-f38e-49fc-8875-fd6b4ba019fd"
-        asi:name="XslScript" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Xml"
-        x:id="3e94d691-e045-426a-bc79-febc3562fa15"
-        asi:name="Data" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="0e860118-936a-4c5b-921e-2ab366e5c1f2"
-      asi:name="TransformData"
-      sm:returnValueDataType="Object">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="false"
-        smp:callElements="8"
-        sip:dataType="UniqueIdentifier"
-        x:id="e7d24efa-e1a2-4bee-a161-16456e510098"
-        asi:name="XslScript" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="6296c19f-6287-44a0-a4d8-4676623597d2"
-        asi:name="EntityName" />
+        x:id="2100b5ad-7d29-4a38-962c-b36e92fb5eaf"
+        asi:name="XslParameters" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="false"
@@ -111,22 +55,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="String"
-        x:id="83eaaa4c-1cd0-4d1e-b0af-701048a5c38c"
-        asi:name="OutputFile" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="67"
-        sip:dataType="Array"
-        x:id="2100b5ad-7d29-4a38-962c-b36e92fb5eaf"
-        asi:name="XslParameters" />
+        x:id="6296c19f-6287-44a0-a4d8-4676623597d2"
+        asi:name="EntityName" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -141,11 +71,39 @@
         sip:dataType="Array"
         x:id="722e92bb-e0de-4d03-b270-deef49d51d1e"
         asi:name="DataParameters" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="83eaaa4c-1cd0-4d1e-b0af-701048a5c38c"
+        asi:name="OutputFile" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="false"
+        smp:callElements="8"
+        sip:dataType="UniqueIdentifier"
+        x:id="e7d24efa-e1a2-4bee-a161-16456e510098"
+        asi:name="XslScript" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="a4fee8a1-5deb-47b8-ad6e-e3f75c18a8e6"
-      asi:name="TransformText"
+      x:id="a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
+      asi:name="Transform"
       sm:returnValueDataType="Xml">
       <smp:Parameter
         asi:abstract="false"
@@ -158,9 +116,43 @@
         smp:allowTransformationReference="false"
         smp:allowWorkflowReference="false"
         smp:callElements="1"
-        sip:dataType="Memo"
-        x:id="cb9854b2-7907-46d8-81da-6820678b8655"
+        sip:dataType="Xml"
+        x:id="3e94d691-e045-426a-bc79-febc3562fa15"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="false"
+        smp:callElements="8"
+        sip:dataType="UniqueIdentifier"
+        x:id="7eecc204-f38e-49fc-8875-fd6b4ba019fd"
         asi:name="XslScript" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="67"
+        sip:dataType="Array"
+        x:id="ce3ebb59-6528-4157-b51a-500f84a635f0"
+        asi:name="Parameters" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="a4fee8a1-5deb-47b8-ad6e-e3f75c18a8e6"
+      asi:name="TransformText"
+      sm:returnValueDataType="Xml">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -203,6 +195,20 @@
         sip:dataType="Integer"
         x:id="bff5c387-6f6f-4c9b-bc80-f1e67864e441"
         asi:name="XsltEngineType" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Memo"
+        x:id="cb9854b2-7907-46d8-81da-6820678b8655"
+        asi:name="XslScript" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

@@ -44,7 +44,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureTemplate(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -83,7 +82,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

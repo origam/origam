@@ -483,7 +483,8 @@ namespace Origam.Gui.Designer
 
                 if (saveControl && IsPanel && _panelControlItemRef != null)
                 {
-                    ControlItem newControl = _controls.NewItem(typeof(ControlItem), _schema.ActiveSchemaExtensionId, null) as ControlItem;
+                    ControlItem newControl = _controls.NewItem<ControlItem>(
+	                    _schema.ActiveSchemaExtensionId, null);
                     newControl.Name = ControlSet.Name;
                     newControl.IsComplexType = true;
                     Type t = typeof(PanelControlSet);
@@ -549,7 +550,7 @@ namespace Origam.Gui.Designer
 				catch(Exception ex)
 				{
 					invalidControls.Add(childItem);
-					AsMessageBox.ShowError(this, "Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", "Form Generating Failed", ex);
+					throw new Exception("Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", ex);
 				}
 			}
 
@@ -818,22 +819,10 @@ namespace Origam.Gui.Designer
 		private AbstractPropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind, bool bind)
 		{
 			AbstractPropertyValueItem result=null;
-
-			string strType=null;  //name of property type (property value or bindinfo)
-			Type type=null;    // Type property value or binf info)
-
-			if(bind)
-			{
-				strType = PropertyBindingInfo.CategoryConst;
-				type= typeof(PropertyBindingInfo);
-
-			}
-			else
-			{
-				strType= PropertyValueItem.CategoryConst;
-				type= typeof(PropertyValueItem);
-				
-			}
+			var strType = //name of property type (property value or binding info)
+				bind 
+				? PropertyBindingInfo.CategoryConst 
+				: PropertyValueItem.CategoryConst;
 
 			foreach(AbstractPropertyValueItem item in controlSetItem.ChildItemsByType(strType))
 			{
@@ -844,10 +833,21 @@ namespace Origam.Gui.Designer
 				}
 			}
             
-			if (result==null)
+			if(result==null)
 			{
 				//no record found then we create a new one /proretyvalue or property binding
-				result=controlSetItem.NewItem(type, _schema.ActiveSchemaExtensionId, null) as AbstractPropertyValueItem;
+				if(bind)
+				{
+					result =
+						controlSetItem.NewItem<PropertyBindingInfo>(
+							_schema.ActiveSchemaExtensionId, null);
+				}
+				else
+				{
+					result =
+						controlSetItem.NewItem<PropertyValueItem>(
+							_schema.ActiveSchemaExtensionId, null);
+				}
 				result.ControlPropertyItem = propertyToFind;
 				result.Name = propertyToFind.Name;
 			}
@@ -1426,7 +1426,8 @@ namespace Origam.Gui.Designer
 				}
                 
 				ControlSetItem newItem;
-				newItem=creator.NewItem((typeof(ControlSetItem)), _schema.ActiveSchemaExtensionId, null) as ControlSetItem;
+				newItem = creator.NewItem<ControlSetItem>(
+					_schema.ActiveSchemaExtensionId, null);
 				newItem.ControlItem = refControl;
 				newItem.Name = name;
 				control.Name = name;
@@ -1687,7 +1688,8 @@ namespace Origam.Gui.Designer
                 if (controlSet.ChildItems.Count == 0)
                 {
                     // doesn't have any children so we create new panel
-                    _rootControl = controlSet.NewItem(typeof(ControlSetItem), _schema.ActiveSchemaExtensionId, null) as ControlSetItem;
+                    _rootControl = controlSet.NewItem<ControlSetItem>(
+	                    _schema.ActiveSchemaExtensionId, null);
                     type = ResolveType();
                     SetControlItemRef(type);
                     InitNewItemEditor();
@@ -1789,7 +1791,7 @@ namespace Origam.Gui.Designer
 			}
 			catch(Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}

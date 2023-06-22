@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using Origam;
 using Origam.Schema.MenuModel;
@@ -30,7 +31,7 @@ namespace Origam.Gui
     {
         ExecuteActionProcessData CreateExecuteActionProcessData(
             string sessionFormIdentifier, string requestingGrid,
-            string actionType, string entity, IList selectedItems,
+            string actionType, string entity, List<string> selectedIds,
             string actionId, Hashtable parameterMappings,
             Hashtable inputParameters);
         void CheckActionConditions(ExecuteActionProcessData processData);

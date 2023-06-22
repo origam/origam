@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="d7921e0c-b763-4d07-a019-7e948b4c49a6"
@@ -19,17 +19,6 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-        x:id="84849694-f325-4318-953b-c6bcafad8eae"
-        asi:name="Id"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
         x:id="048109d4-e8f3-490d-a9a6-1db32c19b033"
         asi:name="FirstName"
@@ -41,9 +30,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstNameAndName/744ce5c1-c2bf-47ec-a394-c2a901919e1a"
-        x:id="91ada3ed-0b7a-479e-9095-ff5797f36cbe"
-        asi:name="FirstNameAndName"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
+        x:id="2d3213d8-e0a5-4f55-9214-3d69e47024df"
+        asi:name="Name"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -52,9 +41,20 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
-        x:id="2d3213d8-e0a5-4f55-9214-3d69e47024df"
-        asi:name="Name"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="84849694-f325-4318-953b-c6bcafad8eae"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstNameAndName/744ce5c1-c2bf-47ec-a394-c2a901919e1a"
+        x:id="91ada3ed-0b7a-479e-9095-ff5797f36cbe"
+        asi:name="FirstNameAndName"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -86,26 +86,6 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="ab4eb78c-6dcf-46c7-a316-e856f835fbfa"
-      asi:name="GetInviteUserSearch">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Chat/DataStructure/Chat/BusinessPartner.origam#BusinessPartner/BusinessPartner/6c90230f-c17c-4150-944c-f2a393cb1e68"
-        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LikeLookupTextOrReferenceCode/f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
-        x:id="965ff756-f68f-4d36-ab8c-c85847f06661"
-        asi:name="BusinessPartner_LikeLookupTextOrReferenceCode"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Chat/DataStructure/Chat/BusinessPartner.origam#BusinessPartner/BusinessPartner/6c90230f-c17c-4150-944c-f2a393cb1e68"
-        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUsersWithoutME/2b30ff66-91ae-441c-97d1-533d3f5ac7b4"
-        x:id="53346e2a-9591-4742-b805-d50ab5c2a618"
-        asi:name="BusinessPartner_GetUsersWithoutME"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
       x:id="34dcbb06-b353-42ff-9f33-f03478eb7ece"
       asi:name="GetInviteUser">
       <dsfsf:DataStructureFilterSetFilter
@@ -127,6 +107,26 @@
         dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUsers/4244b1d3-aebd-463f-aeaf-66367c2deb87"
         x:id="947283fe-e743-44a0-8816-6a032d134700"
         asi:name="BusinessPartner_GetUsers"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="ab4eb78c-6dcf-46c7-a316-e856f835fbfa"
+      asi:name="GetInviteUserSearch">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/BusinessPartner.origam#BusinessPartner/BusinessPartner/6c90230f-c17c-4150-944c-f2a393cb1e68"
+        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUsersWithoutME/2b30ff66-91ae-441c-97d1-533d3f5ac7b4"
+        x:id="53346e2a-9591-4742-b805-d50ab5c2a618"
+        asi:name="BusinessPartner_GetUsersWithoutME"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/BusinessPartner.origam#BusinessPartner/BusinessPartner/6c90230f-c17c-4150-944c-f2a393cb1e68"
+        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LikeLookupTextOrReferenceCode/f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
+        x:id="965ff756-f68f-4d36-ab8c-c85847f06661"
+        asi:name="BusinessPartner_LikeLookupTextOrReferenceCode"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
   </ds:DataStructure>

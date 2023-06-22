@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder";
+import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/FormScreenBuilder";
 import { observer, Provider } from "mobx-react";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -30,6 +30,7 @@ import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundar
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { getApi } from "model/selectors/getApi";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const {openedScreen} = props;
@@ -51,6 +52,17 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     if (openedScreen.screenUrl) {
       setLoading(true);
     }
+    const frameWindow = refIFrame.current as HTMLIFrameElement;
+    const fetchData = async () => {
+      if(!props.openedScreen.screenUrl){
+        return;
+      }
+      const api = getApi(props.openedScreen);
+      const url = props.openedScreen.screenUrl.replace("internalApi/", "")
+      const content = await api.callUserApi(url);
+      frameWindow.src = URL.createObjectURL(content)
+    }
+    fetchData().catch(error => console.error(error));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handle = setInterval(() => {
@@ -59,8 +71,8 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     return () => clearTimeout(handle);
   }, [setTabTitleFromIFrame]);
 
-  useEffect(() => {
-    const frameWindow = refIFrame.current;
+  useEffect(()=> {
+    const frameWindow = refIFrame.current as HTMLIFrameElement;
     const contentDocument = frameWindow?.contentDocument;
     const headNode = contentDocument?.querySelector("head");
 
@@ -163,7 +175,10 @@ class CScreenInner extends React.Component<{
         <CtxPanelVisibility.Provider
           value={{isVisible: getIsTopmostNonDialogScreen(openedScreen)}}
         >
-          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI}/>
+          <FormScreenBuilder
+            title={formScreen.formScreen!.title}
+            xmlWindowObject={formScreen.formScreen!.screenUI}
+          />
         </CtxPanelVisibility.Provider>
       </Screen>
     );

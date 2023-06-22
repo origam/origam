@@ -18,14 +18,89 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import cx from "classnames";
 import S from "gui/Components/DataViewHeader/DataViewHeaderButtonGroup.module.scss";
+import { IAction, IActionType } from "model/entities/types/IAction";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { Observer } from "mobx-react";
+import { DataViewHeaderButton } from "gui/Components/DataViewHeader/DataViewHeaderButton";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import { Dropdown } from "gui/Components/Dropdown/Dropdown";
+import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
+import { DataViewHeaderDropDownItem } from "gui/Components/DataViewHeader/DataViewHeaderDropDownItem";
+import uiActions from "model/actions-ui-tree";
 
-export const DataViewHeaderButtonGroup: React.FC<{
-  isHidden?: boolean;
-  domRef?: any;
-}> = props => (
-  <div ref={props.domRef} className={cx(S.root, {isHidden: props.isHidden})}>
-    {props.children}
-  </div>
-);
+export class DataViewHeaderButtonGroup extends React.Component<{
+  actions: IAction[];
+}> {
+
+  renderActions() {
+    return this.props.actions.map((action, idx) =>
+      this.renderAction(action, this.props.actions)
+    );
+  }
+
+  renderAction(action: IAction, actionsToRender: IAction[]) {
+    if (action.type === IActionType.Dropdown) {
+      const childActions = actionsToRender.filter(
+        (otherAction) => otherAction.groupId === action.id
+      );
+      return (
+        <Dropdowner
+          style={{width: "auto"}}
+          trigger={({refTrigger, setDropped}) => (
+            <Observer key={action.id}>
+              {() => (
+                <DataViewHeaderButton
+                  title={action.caption}
+                  disabled={!getIsEnabledAction(action)}
+                  onClick={() => setDropped(true)}
+                  domRef={refTrigger}
+                >
+                  {action.caption}
+                </DataViewHeaderButton>
+              )}
+            </Observer>
+          )}
+          content={() => (
+            <Dropdown>
+              {childActions.map((action) => (
+                <Observer key={action.id}>
+                  {() => (
+                    <DropdownItem isDisabled={!getIsEnabledAction(action)}>
+                      <DataViewHeaderDropDownItem
+                        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                      >
+                        {action.caption}
+                      </DataViewHeaderDropDownItem>
+                    </DropdownItem>
+                  )}
+                </Observer>
+              ))}
+            </Dropdown>
+          )}
+        />
+      );
+    }
+    return (
+      <Observer key={action.id}>
+        {() => (
+          <DataViewHeaderButton
+            title={action.caption}
+            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            disabled={!getIsEnabledAction(action)}
+          >
+            {action.caption}
+          </DataViewHeaderButton>
+        )}
+      </Observer>
+    );
+  }
+
+  render(){
+    return (
+      <div className={S.root}>
+        {this.renderActions()}
+      </div>
+    );
+  }
+}

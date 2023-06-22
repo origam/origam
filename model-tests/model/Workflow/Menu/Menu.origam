@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.1" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
@@ -7,6 +11,7 @@
     x:id="e231e8c7-6a5f-4032-a2ac-4e4862aeeb28"
     asi:name="Test1"
     ami:openExclusively="false"
+    ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     ami:roles="Test1"
     wrmi:workflow="Workflow/Workflow/Workflow/Test1.origam#Test1/2501ab69-718c-460b-94a2-88af4146a370" />

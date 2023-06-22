@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
@@ -86,10 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit">
-      <Version>3.13.2</Version>
+      <Version>3.13.3</Version>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
-      <Version>4.2.0</Version>
+      <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

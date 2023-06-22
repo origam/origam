@@ -37,13 +37,13 @@ export class FormPerspective implements IIId, IPerspectiveContrib {
   @observable isActive = false;
 
   @bind
-  handleClick(args: { saveNewState: boolean }) {
+  handleClick(args?: { saveNewState: boolean }) {
     const self = this;
     return flow(function*() {
       if (self.isActive) return;
       yield*self.perspective.deactivate();
       self.isActive = true;
-      if (args.saveNewState) {
+      if (args?.saveNewState) {
         yield*self.viewConfiguration.anounceActivePerspective(IPanelViewType.Form);
       }
     })();

@@ -29,5 +29,10 @@ namespace Origam.DA.Service.Generators
         {
             return "LIKE";
         }
+
+        protected override string ColumnArray(string columnName, string operand, string[] rightValues)
+        {
+            return "\0" + columnName + " " + operand + " (" + string.Join(", ", rightValues) + ")\0";
+        }
     }
 }

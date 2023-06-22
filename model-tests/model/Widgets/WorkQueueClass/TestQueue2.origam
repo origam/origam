@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0"
+  xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0"
+  xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0"
+  xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0">
+  <wqc:WorkQueueClass
+    asi:abstract="false"
+    x:id="21e3ed42-513e-4881-8e76-efe42c79ad67"
+    asi:name="TestQueue2"
+    wqc:workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    wqc:workQueueStructure="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/7f1b1ced-453a-48e1-a21e-6fd27596df56"
+    wqc:workQueueStructureSortSet="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/Default/fe32e91b-25b0-4cda-9f82-ed41d995ee5d"
+    wqc:workQueueStructureUserListMethod="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/GetByQueueId/25d8bafb-2232-40a3-a33a-979ab34829dd">
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="1998cab3-3905-4734-abd9-1b405a09ce96"
+      asi:name="refId"
+      wqcem:xPath="/row/@Id" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="608133e5-dbe9-48b2-a8f7-a895bc0e18d5"
+      asi:name="TextNullableMemo"
+      wqcem:xPath="/row/@TextNullableMemo" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="772534d2-205e-4750-b76b-16f2246d8524"
+      asi:name="TextMandatoryLimited20"
+      wqcem:xPath="/row/@TextMandatoryLimited20" />
+    <wqwc:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      euia:default="false"
+      x:id="c879e244-7b5a-4312-9258-1dca84ec068b"
+      euia:label="Run Workflow"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="Execute_WorkQueueTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      euia:roles="*"
+      euia:valueType="SavedValue"
+      wqwc:workflow="Widgets/Workflow/Widgets/WorkQueueTest2.origam#WorkQueueTest2/ac11e5c0-b2e0-49cb-9a3d-980b6a31d2bb">
+      <wqwcpm:WorkQueueWorkflowCommandParameterMapping
+        asi:abstract="false"
+        x:id="471aa854-86c6-4035-b711-70134b9fdea6"
+        asi:name="WQ_TestQueue2"
+        wqwcpm:value="QueueEntries" />
+    </wqwc:EntityUIAction>
+  </wqc:WorkQueueClass>
+</x:file>

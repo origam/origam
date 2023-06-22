@@ -26,6 +26,7 @@ using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using Origam.Rule;
+using Origam.Rule.Xslt;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
@@ -81,8 +82,8 @@ namespace Origam.Workflow.Tasks
                     ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
             }
 			XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
-			OrigamXsltContext ctx =  new OrigamXsltContext(
-                new NameTable(), this.Engine.RuleEngine);
+			OrigamXsltContext ctx = OrigamXsltContext.Create(
+				new NameTable(), Engine.TransactionId);
 			XPathExpression expr = navigator.Compile(block.IteratorXPath);
 			expr.SetContext(ctx);
             // code might fail and this handler doesn't get cleared
@@ -107,7 +108,7 @@ namespace Origam.Workflow.Tasks
 
 				if(log.IsInfoEnabled)
 				{
-					log.Info("Starting iteration no. " + _iter.CurrentPosition.ToString());
+					log.Info("Starting iteration no. " + _iter.CurrentPosition);
 				}
 
 				// Set workflow
@@ -195,7 +196,7 @@ namespace Origam.Workflow.Tasks
 
 				if(log.IsInfoEnabled)
 				{
-					log.Info("Finishing iteration no. " + _iter.CurrentPosition.ToString());
+					log.Info("Finishing iteration no. " + _iter.CurrentPosition);
 				}
 			}
 		}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="fb218c12-1f0d-4004-be43-4c02466afa97"
+    ds1:localized="true"
+    asi:name="LookupWorkQueueRetryType">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/8e7e0ad5-169e-41af-879d-dfb963cf17b6"
+      x:id="24e26d47-8986-47cb-85bb-0256a3223363"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkQueueRetryType"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/Name/a8f771d8-fb04-44f7-88dc-bb445b07329f"
+        dsc:hideInOutput="false"
+        x:id="1e20f4a9-976a-4948-b120-b219e716a474"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="b050ef45-aca9-4f18-8286-13b1a1654fe2"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/WorkQueueRetryType_l10n/b9ef8d80-4ccb-48dc-bae2-177f40d5dcd7"
+        x:id="7016ca5f-0e78-4d93-b53c-68804c9d8265"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="WorkQueueRetryType_l10n"
+        dse:relationType="LeftJoin"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="3fc14865-4b53-4ac1-8b8c-ee28bb7fdcd7"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueRetryType.origam#LookupWorkQueueRetryType/WorkQueueRetryType/24e26d47-8986-47cb-85bb-0256a3223363"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="53288754-b8cd-44ab-91d6-3513ac4a67d3"
+        asi:name="WorkQueueRetryType_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

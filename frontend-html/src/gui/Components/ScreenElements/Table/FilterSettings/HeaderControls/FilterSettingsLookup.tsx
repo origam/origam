@@ -17,35 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {action, computed, observable, runInAction} from "mobx";
-import { MobXProviderContext, observer } from "mobx-react";
+import { action, observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import React, { useContext, useState } from "react";
+import React from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
-import S from "./FilterSettingsLookup.module.scss";
 import CS from "./FilterSettingsCommon.module.scss";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import {
-  CtxDropdownEditor,
-  DropdownEditor,
-  DropdownEditorSetup,
-  IDropdownEditorContext,
-} from "modules/Editors/DropdownEditor/DropdownEditor";
-import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
-import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
-import { DropdownColumnDrivers, DropdownDataTable, } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
-import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
-import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
-import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { ILookup } from "model/entities/types/ILookup";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
+import { MobileTagLookupFilterEditor } from "gui/connections/MobileComponents/Grid/MobileTagLookupFilterEditor";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import {
+  TagLookupFilterEditor
+} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
 
 const OPERATORS = [
   Operator.in,
@@ -137,17 +126,32 @@ class OpEditors extends React.Component<{
     switch (setting?.type) {
       case "in":
       case "nin":
-        return (
-          <FilterBuildDropdownEditor
-            id={this.props.id}
-            lookup={this.props.lookup}
-            property={this.props.property}
-            getOptions={this.props.getOptions}
-            onChange={this.handleSelectedItemsChange}
-            values={this.props.setting.val1 ?? []}
-            autoFocus={this.props.autoFocus}
-          />
-        );
+        if (isMobileLayoutActive(this.props.property)) {
+          return (
+            <MobileTagLookupFilterEditor
+              id={this.props.id}
+              lookup={this.props.lookup}
+              property={this.props.property}
+              getOptions={this.props.getOptions}
+              onChange={this.handleSelectedItemsChange}
+              values={this.props.setting.val1 ?? []}
+              autoFocus={this.props.autoFocus}
+              setting={this.props.setting}
+            />
+          );
+        } else {
+          return (
+            <TagLookupFilterEditor
+              id={this.props.id}
+              lookup={this.props.lookup}
+              property={this.props.property}
+              getOptions={this.props.getOptions}
+              onChange={this.handleSelectedItemsChange}
+              values={this.props.setting.val1 ?? []}
+              autoFocus={this.props.autoFocus}
+            />
+          );
+        }
       case "starts":
       case "nstarts":
       case "contains":
@@ -262,164 +266,4 @@ export class LookupFilterSetting implements IFilterSetting {
   }
 }
 
-export function FilterBuildDropdownEditor(props: {
-  lookup: ILookup;
-  property: IProperty;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
-  onChange(selectedItems: Array<any>): void;
-  values: Array<any>;
-  autoFocus: boolean;
-  id?: string;
-}) {
-  const mobxContext = useContext(MobXProviderContext);
 
-
-  const workbench = mobxContext.workbench;
-  const {lookupListCache} = workbench;
-
-  const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
-    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
-
-    const dropdownEditorDataTable = new DropdownDataTable(
-      () => dropdownEditorSetup,
-      dropdownEditorData
-    );
-    const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
-      () => dropdownEditorSetup,
-      lookupListCache
-    );
-    const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      false,
-    );
-
-
-    const drivers = new DropdownColumnDrivers();
-
-    let identifierIndex = 0;
-    const columnNameToIndex = new Map<string, number>([
-      [props.property.identifier!, identifierIndex],
-    ]);
-    const visibleColumnNames: string[] = [];
-
-    columnNameToIndex.set(props.property.name, 1);
-    visibleColumnNames.push(props.property.name);
-
-    drivers.allDrivers.push({
-      columnId: props.property.id,
-      headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
-      bodyCellDriver: new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior),
-    });
-
-    const showUniqueValues = true;
-
-    const cached = getGroupingConfiguration(props.property).isGrouping
-      ? false
-      : props.property.lookup?.cached!
-
-    const dropdownEditorSetup = new DropdownEditorSetup(
-      props.property.id,
-      props.lookup.lookupId,
-      [],
-      visibleColumnNames,
-      columnNameToIndex,
-      showUniqueValues,
-      props.property.identifier!,
-      identifierIndex,
-      props.property.parameters,
-      props.property.lookup?.dropDownType!,
-      cached,
-      !props.property.lookup?.searchByFirstColumnOnly
-    );
-
-    return {
-      behavior: dropdownEditorBehavior,
-      editorData: dropdownEditorData,
-      columnDrivers: drivers,
-      editorDataTable: dropdownEditorDataTable,
-      setup: dropdownEditorSetup
-    };
-  });
-
-  function onItemRemoved(event: any, value: string[]) {
-    props.onChange(value);
-  }
-
-  const value = props.values;
-  return (
-    <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor
-        editor={
-          <TagInputEditor
-            id={props.id}
-            customInputClass={S.tagInput}
-            value={value}
-            isReadOnly={false}
-            isInvalid={false}
-            onChange={onItemRemoved}
-            onClick={undefined}
-            autoFocus={props.autoFocus}
-          />
-        }
-      />
-    </CtxDropdownEditor.Provider>
-  );
-}
-
-export class FilterEditorData implements IDropdownEditorData {
-  constructor(private onChange: (selectedItems: Array<any>) => void) {
-  }
-
-  setValue(value: string | string[] | null) {
-    if (value) {
-      this._value = Array.isArray(value) ? value : [value];
-    }
-  }
-
-  @computed get value(): string | string[] | null {
-    return this._value;
-  }
-
-  @observable
-  _value: any[] = [];
-
-  @computed get text(): string {
-    return "";
-  }
-
-  get isResolving() {
-    return false;
-  }
-
-  @action.bound chooseNewValue(value: any) {
-    if (value !== null && !this._value.includes(value)) {
-      this._value = [...this._value, value];
-      this.onChange(this._value);
-    }
-  }
-
-  get idsInEditor() {
-    return this._value as string[];
-  }
-
-  remove(valueToRemove: any): void {
-    const index = this._value.indexOf(valueToRemove)
-    if (index > -1) {
-      this._value.splice(index, 1);
-    }
-  }
-}
-
-class DropDownApi implements IDropdownEditorApi {
-  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {
-  }
-
-  *getLookupList(searchTerm: string): Generator {
-    return yield this.getOptions(searchTerm);
-  }
-}

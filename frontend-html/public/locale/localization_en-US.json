@@ -51,6 +51,10 @@
   "metric_middle_tool_tip": "Compact",
   "metric_small_tool_tip": "Extra Compact",
   "about_application": "About",
+  "origam_image_version": "Origam version: {0}",
+  "custom_client_version": "Custom client build version: {0}",
+  "used_origam_plugins": "Used Origam plugins:",
+  "copyright_attributions": "Copyright attributions",
   "flash_version": "Flash Version:",
   "build_number": "Build Number:",
   "report_tabs": "Report Tabs:",
@@ -410,5 +414,16 @@
   "my_profile": "My Profile",
   "action_error": "Action Error",
   "there_has_been_a_problem": "There has been a problem:",
-  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again."
+  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again.",
+  "mobile_detail_navigation": "Detail",
+  "mobile_details_dropdown": "Details",
+  "mobile_search_title": "Search",
+  "auto_complete_date": "Auto Complete",
+  "preview": "Preview",
+  "format": "Format",
+  "row_count": "Rows",
+  "row_not_found": "The row you requested was not found on the server. Please refresh the data.",
+  "column_width": "Width",
+  "order_columns_button": "Order",
+  "order_columns_title": "Order Columns"
 }

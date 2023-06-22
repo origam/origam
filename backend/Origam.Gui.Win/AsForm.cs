@@ -191,7 +191,7 @@ namespace Origam.Gui.Win
 			get => toolStripContainer;
 			set
 			{
-				ToolStripsLoaded(null, EventArgs.Empty);
+				ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
 				toolStripContainer = value;
 			}
 		}
@@ -466,7 +466,7 @@ namespace Origam.Gui.Win
 			this.FormGenerator.AsyncListDataMember = listDataMember;
 
 			LoadFormAsync();
-			ToolStripsLoaded.Invoke(null, EventArgs.Empty);
+			ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
 		}
 		
 		private void LoadFormAsync()

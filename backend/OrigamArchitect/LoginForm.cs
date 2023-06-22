@@ -84,7 +84,7 @@ namespace OrigamArchitect
 
             try
             {
-				using (WebResponse webResponse = HttpTools.GetResponse(
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(
 					url: string.Format("{0}AjaxLogin", frmMain.ORIGAM_COM_API_BASEURL),
 					method: "POST",
 					content: jobj.ToString(),
@@ -98,7 +98,7 @@ namespace OrigamArchitect
 					ignoreHTTPSErrors: frmMain.IgnoreHTTPSErrors))
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-                    string output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+                    string output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 
                     JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK && (int)jResult["Status"] == 200)

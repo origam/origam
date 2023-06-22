@@ -44,7 +44,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
     const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
 
     return (
-      <TabbedViewHandleRow>
+      <TabbedViewHandleRow className={"noPrint"}>
         {openedScreenItems.map((item) => (
           <ErrorBoundaryEncapsulated ctx={item} key={`${item.menuItemId}@${item.order}`}>
             <CScreenTabbedViewHandle item={item}/>
@@ -57,15 +57,10 @@ export class CScreenTabbedViewHandleRow extends React.Component {
 
 @observer
 class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
-  getLabel(item: IOpenedScreen) {
-    const text = item.tabTitle;
-    const order = item.order > 0 && !item.hasDynamicTitle ? `[${item.order}]` : "";
-    return [text, order].join(" ");
-  }
 
   render() {
     const {item} = this.props;
-    const label = this.getLabel(item);
+    const label = getLabel(item);
     return (
       <TabbedViewHandle
         title={label}
@@ -81,4 +76,13 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
       </TabbedViewHandle>
     );
   }
+}
+
+export function getLabel(item: IOpenedScreen | undefined) {
+  if(!item){
+    return "";
+  }
+  const text = item.tabTitle;
+  const order = item.order > 0 && !item.hasDynamicTitle ? `[${item.order}]` : "";
+  return [text, order].join(" ");
 }

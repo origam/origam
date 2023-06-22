@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="c453e0eb-0525-4379-b725-46f7c7492105"
+    ci:isComplex="true"
+    asi:name="DropdownLookupField"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Widgets/PanelControlSet/Widgets/DropdownLookupField.origam#DropdownLookupField/fbe42df0-25b8-4992-8e07-8414930aff51"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="01ddcefc-4f27-4249-ba97-bddec93a8059" />
+  </ci:Control>
+</x:file>

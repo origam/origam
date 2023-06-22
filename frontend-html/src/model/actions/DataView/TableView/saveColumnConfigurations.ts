@@ -24,6 +24,7 @@ import { getActivePanelView } from "model/selectors/DataView/getActivePanelView"
 import { getSessionId } from "model/selectors/getSessionId";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function saveColumnConfigurations(ctx: any) {
   return function*saveColumnConfigurations() {
@@ -36,10 +37,10 @@ export function saveColumnConfigurations(ctx: any) {
     }
 
     const activeTableConfiguration = configurationManager.activeTableConfiguration;
-    for (const property of getProperties(ctx)) {
+    for (const property of getProperties(ctx).slice(1)) {
       activeTableConfiguration.updateColumnWidth(property.id, property.columnWidth);
     }
-    activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
+    activeTableConfiguration.sortColumnConfigurations(tablePanelView.tablePropertyIds);
 
     yield getApi(ctx).saveObjectConfiguration({
       sessionFormIdentifier: getSessionId(ctx),
@@ -48,4 +49,13 @@ export function saveColumnConfigurations(ctx: any) {
       defaultView: getActivePanelView(ctx),
     });
   };
+}
+
+export async function saveColumnConfigurationsAsync(ctx: any) {
+  await runGeneratorInFlowWithHandler({
+    ctx: ctx,
+    generator: function*() {
+      yield*saveColumnConfigurations(ctx)();
+    }()
+  });
 }

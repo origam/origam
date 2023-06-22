@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:uis="http://schemas.origam.com/Origam.Schema.GuiModel.UIStyle/6.0.0" xmlns:uisp="http://schemas.origam.com/Origam.Schema.GuiModel.UIStyleProperty/6.0.0">
+  <uis:Style
+    asi:abstract="false"
+    x:id="153dbc4f-b45a-41c3-914a-793a0db652cb"
+    asi:name="alignLeft"
+    uis:widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc">
+    <uisp:StyleProperty
+      asi:abstract="false"
+      x:id="4541b8ef-a54c-46c9-be17-d300c1bfae4c"
+      asi:name="textAlign: left"
+      uisp:property="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/textAlign/a3a78170-be3f-448e-a54a-08e209e4a562"
+      uisp:value="left" />
+  </uis:Style>
+</x:file>

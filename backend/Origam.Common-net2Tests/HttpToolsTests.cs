@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-﻿
+ 
 using System.Net;
 using System.Reflection;
 using NUnit.Framework;
@@ -35,12 +35,8 @@ namespace Origam.Common_net2Tests
         public void ShouldNotSplitASingleCookieWithAnExpiresAttribute(
             string setHeaderStr, int numOfCookiesInside)
         {
-            MethodInfo dynMethod = typeof(HttpTools).GetMethod(
-                "SplitCookiesHeaderToSingleCookies" , 
-                BindingFlags.Static | BindingFlags.NonPublic);
-            var cookies = (System.Collections.Generic.List<string>)dynMethod.Invoke(
-                this, new object[] { setHeaderStr });
-            
+            var sut = HttpTools.Instance;
+            var cookies = sut.SplitCookiesHeaderToSingleCookies(setHeaderStr);
             Assert.That(cookies.Count,Is.EqualTo(numOfCookiesInside));
         }
         
@@ -51,13 +47,8 @@ namespace Origam.Common_net2Tests
             {
                 "laravel_session=YmY3NDk3NTgwZmZhU5NDU5NjExZTQifQ%3D%3D; expires=Thu, 11-Jan-2018 17:50:21 GMT; Max-Age=7200; path=/; HttpOnly"
             };
-        
-            
-            MethodInfo dynMethod = typeof(HttpTools).GetMethod(
-                "CookiesFromStrings" , 
-                BindingFlags.Static | BindingFlags.NonPublic);
-            var cookies = (System.Collections.Generic.List<Cookie>)dynMethod.Invoke(
-                this, new object[] { "test", singleCookie,});
+            var sut = HttpTools.Instance;
+            var cookies = sut.CookiesFromStrings("test", singleCookie);
 
             var cookie = cookies[0];
             

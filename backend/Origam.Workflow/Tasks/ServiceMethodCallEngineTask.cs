@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
@@ -88,6 +88,10 @@ namespace Origam.Workflow.Tasks
 			{
 				OnFinished(new WorkflowEngineTaskEventArgs(exception));
 			}
+			if (ServiceAgent is IDisposable disposableServiceAgent)
+			{
+				disposableServiceAgent.Dispose();
+			}
 		}
 		private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
 		{
@@ -128,29 +132,32 @@ namespace Origam.Workflow.Tasks
 							paramList.Add(item.Name, this.Evaluate(item));
 						}
 
-						if(log.IsDebugEnabled)
+						if (log.IsDebugEnabled)
 						{
-							log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
-							foreach(DictionaryEntry entry in paramList)
+							log.RunHandled(() =>
 							{
-								object v = entry.Value;
-								if(v == null) v = "null";
-								if(v is ArrayList)
+								log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
+								foreach(DictionaryEntry entry in paramList)
 								{
-									v = "array: {";
-									for(int i = 0; i < (entry.Value as ArrayList).Count; i++)
+									object v = entry.Value;
+									if(v == null) v = "null";
+									if(v is ArrayList)
 									{
-										object av = (entry.Value as ArrayList)[i];
+										v = "array: {";
+										for(int i = 0; i < (entry.Value as ArrayList).Count; i++)
+										{
+											object av = (entry.Value as ArrayList)[i];
 
-										if(i != 0) v+= ", ";
-										if(av == null) av = "null";
-										v += av.ToString();
+											if(i != 0) v+= ", ";
+											if(av == null) av = "null";
+											v += av.ToString();
+										}
+										v += "}";
 									}
-									v += "}";
-								}
 
-								log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
-							}
+									log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
+								}
+							});
 						}
 
 						agent.Parameters.Add(parameter.ServiceMethodParameter.Name, paramList);
@@ -199,7 +206,7 @@ namespace Origam.Workflow.Tasks
 				{
 					if(log.IsDebugEnabled)
 					{
-						log.Debug("Parameter '" + parameter.Name + "' has no value set.");
+						log.Debug("Parameter '" + parameter?.Name + "' has no value set.");
 					}
 				}
 			}

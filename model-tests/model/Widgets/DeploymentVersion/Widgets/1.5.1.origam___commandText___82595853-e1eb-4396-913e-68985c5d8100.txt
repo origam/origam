@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [TagInputBinding] ADD CONSTRAINT [FK_TagInputBinding_refAllDataTypesId_AllDataTypes]
+	FOREIGN KEY (
+		[refAllDataTypesId]
+	)
+
+	REFERENCES [AllDataTypes] (
+		[Id]
+	);
+ALTER TABLE [TagInputBinding] ADD CONSTRAINT [FK_TagInputBinding_refTagInputSourceId_TagInputSource]
+	FOREIGN KEY (
+		[refTagInputSourceId]
+	)
+
+	REFERENCES [TagInputSource] (
+		[Id]
+	);

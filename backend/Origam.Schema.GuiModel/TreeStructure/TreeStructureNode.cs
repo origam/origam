@@ -51,7 +51,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -74,8 +73,7 @@ namespace Origam.Schema.GuiModel
 		private string _label;
 
 		[NotNullModelElementRule()]
-		[EntityColumn("SS01")]
-        [XmlAttribute("label")]
+		[XmlAttribute("label")]
         public string Label
 		{
 			get
@@ -88,7 +86,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid NodeIconId;
 
 		[Category("Menu Item")]
@@ -106,7 +103,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G02")]  
 		public Guid DataStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -126,7 +122,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid LoadByParentMethodId;
 
 		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -156,7 +151,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G04")]
 		[NotNullModelElementRule()]
 		public Guid LoadByPrimaryKeyMethodId;
 
@@ -174,7 +168,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid DataStructureSortSetId;
 
 		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]

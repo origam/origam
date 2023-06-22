@@ -19,10 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .tagInputContainer {
   display: flex;
+  flex: 1;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
   align-content: flex-start;
+  border-radius: 2px;
+  background:var(--background2);
 }
 
 .tagInputAdd {
@@ -37,19 +40,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .tagInputAdd:hover {
   cursor: pointer;
   font-weight: bold;
-  background-color: var(--foreground6);
-  color:var(--background1);
+  background-color: var(--foreground1);
+  color:var(--background2);
 }
 
 .tagInputItem {
-  background-color: var(--foreground6);
-  color:var(--background1);
-  display: inline-block;
-  padding: 3px;
+  background-color: var(--foreground1);
+  color:var(--background2);
   margin: 1px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  border-radius: 2px;
+  padding: 3px 5px 3px 3px;
 }
 
 .tagInputItemDelete {

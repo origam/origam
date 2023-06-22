@@ -17,9 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
-using System.Xml;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -30,8 +30,8 @@ using MailKit.Net.Imap;
 using Origam.Mail;
 using Origam.Workflow.WorkQueue;
 using Origam.Workbench.Services;
-using Microsoft.Win32;
 using MimeKit;
+using MimeTypes;
 
 namespace Origam.workflow.mail
 {
@@ -315,14 +315,8 @@ namespace Origam.workflow.mail
 
         private static string GetDefaultExtension(string mimeType)
         {
-            string result;
-            RegistryKey key;
-            object value;
-
-            key = Registry.ClassesRoot.OpenSubKey(@"MIME\Database\Content Type\" + mimeType, false);
-            value = key != null ? key.GetValue("Extension", null) : null;
-            result = value != null ? value.ToString() : string.Empty;
-
+            var value = MimeTypeMap.GetExtension(mimeType);
+            var result = value != null ? value.ToString() : string.Empty;
             return result;
         }
     }

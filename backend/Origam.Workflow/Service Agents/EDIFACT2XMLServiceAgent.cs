@@ -71,7 +71,7 @@ namespace Origam.Workflow
                 if(log.IsDebugEnabled)
                 {
                     log.DebugFormat(
-                        "Processing input file {0}...", Parameters["Filename"]);
+                        "Processing input file {0}...",Parameters.ContainsKey("Filename") ? Parameters["Filename"] : "");
                 }
                 GenerateXMLFiles(parser);
             }

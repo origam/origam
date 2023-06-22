@@ -56,6 +56,9 @@ import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/DataView";
 import S from "./TableView.module.scss";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import cx from "classnames";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -105,7 +108,12 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
   refTable = (elmTable: RawTable | null) => {
     this.elmTable = elmTable;
     if (elmTable) {
-      const d1 = this.props.tablePanelView!.subOnFocusTable(elmTable.focusTable);
+      const d1 = this.props.tablePanelView!.subOnFocusTable(() => {
+        const gridFocusManager = getGridFocusManager(this.props.dataView);
+        if(gridFocusManager.canFocusTable){
+          elmTable.focusTable();
+        }
+      });
       const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
         elmTable.scrollToCellShortest
       );
@@ -373,6 +381,7 @@ class HeaderRenderer implements IHeaderRendererData {
           onColumnWidthChange={this.onColumnWidthChange}
           onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
           onClick={onColumnHeaderClick(this.tablePanelView)}
+          isDragDisabled={isMobileLayoutActive(this.tablePanelView)}
           additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property, args.columnIndex === 0)}
         />
       </Provider>
@@ -387,7 +396,7 @@ class HeaderRenderer implements IHeaderRendererData {
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
-      headerContent.push(<div className={S.filterRow}><FilterSettings key={`filter-settings-${columnId}`}
+      headerContent.push(<div className={"filterRow"}><FilterSettings key={`filter-settings-${columnId}`}
                                                                       autoFocus={autoFocus} ctx={this.dataView}/>
       </div>);
     }
@@ -395,7 +404,7 @@ class HeaderRenderer implements IHeaderRendererData {
       const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);
       if (aggregation) {
         headerContent.push(
-          <div className={S.aggregationRow} key={`aggregation-field-${columnId}`}>
+          <div className={cx(S.aggregationRow, "headerClickable")} key={`aggregation-field-${columnId}`}>
             {aggregationToString(aggregation, property)}
           </div>
         );

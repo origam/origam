@@ -30,6 +30,13 @@ import { CriticalSection } from "utils/sync";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { ScreenPictureCache } from "./ScreenPictureCache";
 import { DataViewCache } from "./DataViewCache";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getApi } from "model/selectors/getApi";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 export class FormScreen implements IFormScreen {
 
@@ -41,7 +48,10 @@ export class FormScreen implements IFormScreen {
     this.dataViews.forEach((o) => (o.parent = this));
     this.dataSources.forEach((o) => (o.parent = this));
     this.componentBindings.forEach((o) => (o.parent = this));
+    this.focusManager.parent = this;
   }
+
+  focusManager: ScreenFocusManager = null as any;
 
   parent?: any;
 
@@ -50,6 +60,7 @@ export class FormScreen implements IFormScreen {
   dataViewCache = new DataViewCache(this);
 
   @observable isDirty: boolean = false;
+  uiRootType = "";
   dynamicTitleSource: string | undefined;
   sessionId: string = "";
   @observable title: string = "";
@@ -71,6 +82,7 @@ export class FormScreen implements IFormScreen {
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
   autoWorkflowNext: boolean = null as any;
+  workflowTaskId: string | null = null;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
@@ -259,11 +271,8 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
-    yield*this.formScreenLifecycle.start(initUIResult);
-    if (this.formScreen) {
-      this.formScreen.setDirty(!!preloadIsDirty);
-    }
+  *start(args: {initUIResult: any, preloadIsDirty?: boolean}): Generator {
+    yield*this.formScreenLifecycle.start(args.initUIResult, args.preloadIsDirty);
   }
 
   parent?: any;

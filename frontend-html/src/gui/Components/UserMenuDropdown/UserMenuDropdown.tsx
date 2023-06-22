@@ -25,30 +25,16 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import S from "gui/Components/UserMenuDropdown/UserMenuDropdown.module.scss";
 import cx from "classnames";
-import { getDialogStack } from "model/selectors/getDialogStack";
-import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
-import { IAboutInfo } from "model/entities/types/IAboutInfo";
 
 export const UserMenuDropdown: React.FC<{
   handleLogoutClick: (event: any) => void,
   avatarLink: string | undefined,
-  userName: string | undefined,
+  userName?: string,
+  hideLabel?: boolean,
   ctx: any,
-  aboutInfo: IAboutInfo,
+  onAboutClick: ()=> void;
   helpUrl: string | undefined
 }> = (props) => {
-
-  function onAboutClick() {
-    const closeDialog = getDialogStack(props.ctx).pushDialog(
-      "",
-      <AboutDialog
-        aboutInfo={props.aboutInfo}
-        onOkClick={() => {
-          closeDialog();
-        }}
-      />
-    );
-  }
 
   function onHelpClick() {
     window.open(props.helpUrl);
@@ -67,7 +53,7 @@ export const UserMenuDropdown: React.FC<{
                 <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink} alt=""/>
               </div>
             </div>
-            <div className={S.userNameLabel}>{props.userName}</div>
+            {!props.hideLabel && <div className={S.userNameLabel}>{props.userName}</div>}
           </div>
         </div>
       )}
@@ -78,9 +64,6 @@ export const UserMenuDropdown: React.FC<{
             avatarLink={props.avatarLink}
             actionItems={
               <>
-                {/* <DropdownItem isDisabled={true}>
-                  {T("My profile", "my_profile")}
-                </DropdownItem> */}
                 {props.helpUrl && props.helpUrl.trim() !== "" &&
                 <DropdownItem
                   onClick={() => {
@@ -92,7 +75,7 @@ export const UserMenuDropdown: React.FC<{
                 <DropdownItem
                   onClick={() => {
                     setDropped(false);
-                    onAboutClick();
+                    props.onAboutClick();
                   }}>
                   {T("About", "about_application")}
                 </DropdownItem>

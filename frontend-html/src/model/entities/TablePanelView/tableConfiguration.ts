@@ -23,6 +23,7 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
 import { observable } from "mobx";
+import { Layout, parseLayout } from "model/entities/TablePanelView/layout";
 
 export interface ICustomConfiguration{
   name: string;
@@ -35,10 +36,12 @@ export class TableConfiguration implements ITableConfiguration {
   public name: string | undefined;
   @observable
   public fixedColumnCount: number = 0;
+  @observable
   public columnConfigurations: IColumnConfiguration[] = [];
   @observable
   public isActive: boolean = false;
   id: string = "";
+  layout = Layout.Desktop;
 
   private constructor() {
   }
@@ -49,7 +52,8 @@ export class TableConfiguration implements ITableConfiguration {
       isActive: boolean,
       id: string,
       fixedColumnCount: number,
-      columnConfigurations: IColumnConfiguration[]
+      columnConfigurations: IColumnConfiguration[],
+      layout?: string
     }
   ) {
     const newInstance = new TableConfiguration();
@@ -58,15 +62,17 @@ export class TableConfiguration implements ITableConfiguration {
     newInstance.isActive = args.isActive;
     newInstance.fixedColumnCount = args.fixedColumnCount ?? 0;
     newInstance.columnConfigurations = args.columnConfigurations;
+    newInstance.layout = parseLayout(args.layout);
     return newInstance;
   }
 
 
-  static createDefault(properties: IProperty[]) {
+  static createDefault(properties: IProperty[], layout: Layout) {
     const newInstance = new TableConfiguration();
     newInstance.id = this.DefaultConfigId
     newInstance.columnConfigurations = properties
-      .map(property => new TableColumnConfiguration(property.id));
+      .map(property => new TableColumnConfiguration(property.id, property.columnWidth));
+    newInstance.layout = layout;
     return newInstance;
   }
 
@@ -75,13 +81,14 @@ export class TableConfiguration implements ITableConfiguration {
   }
 
   deepClone() {
-    const newinstance = new TableConfiguration();
-    newinstance.name = this.name;
-    newinstance.id = this.id;
-    newinstance.fixedColumnCount = this.fixedColumnCount;
-    newinstance.columnConfigurations = this.columnConfigurations
-      .map(columnConfifuration => columnConfifuration.deepClone());
-    return newinstance;
+    const newInstance = new TableConfiguration();
+    newInstance.name = this.name;
+    newInstance.id = this.id;
+    newInstance.fixedColumnCount = this.fixedColumnCount;
+    newInstance.columnConfigurations = this.columnConfigurations
+      .map(columnConfiguration => columnConfiguration.deepClone());
+    newInstance.layout = this.layout;
+    return newInstance;
   }
 
   apply(tablePanelView: ITablePanelView) {
@@ -122,10 +129,11 @@ export class TableConfiguration implements ITableConfiguration {
     }
   }
 
-  sortColumnConfiguartions(propertyIds: string[]) {
-    this.columnConfigurations
-      .sort((congigA, configB) => {
-        const columnIdxA = propertyIds.findIndex(id => id === congigA.propertyId);
+  sortColumnConfigurations(propertyIds: string[]) {
+    this.columnConfigurations = this.columnConfigurations
+      .slice()
+      .sort((configA, configB) => {
+        const columnIdxA = propertyIds.findIndex(id => id === configA.propertyId);
         if (columnIdxA === -1) return 0;
         const columnIdxB = propertyIds.findIndex(id => id === configB.propertyId);
         if (columnIdxB === -1) return 0;

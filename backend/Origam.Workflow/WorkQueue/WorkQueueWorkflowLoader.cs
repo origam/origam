@@ -24,7 +24,7 @@ using System.Collections;
 using System.Xml;
 using System.Xml.XPath;
 using System.Data;
-
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.WorkflowModel;
@@ -165,7 +165,7 @@ namespace Origam.Workflow.WorkQueue
 			{
 				if(log.IsErrorEnabled)
 				{
-					log.Error(workflowEngine.Exception.Message, workflowEngine.Exception);
+					log.LogOrigamError(workflowEngine.Exception.Message, workflowEngine.Exception);
 				}
 				throw workflowEngine.Exception;
 			}
@@ -175,7 +175,7 @@ namespace Origam.Workflow.WorkQueue
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Workflow loader result:");
-				log.Debug(resultData.Xml.OuterXml);
+				log.Debug(resultData?.Xml.OuterXml);
 			}
 			if(resultData == null)
 			{

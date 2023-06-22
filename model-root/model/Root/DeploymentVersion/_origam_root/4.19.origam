@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="4c6b1c4d-bd40-41a0-9a07-12a924d041ed"
@@ -11,6 +16,14 @@
       scusa:commandText="-***-ExternalFile:4.19.origam___commandText___421ba8ba-e023-4bd4-bbc6-16b5302c9a60.txt"
       x:id="421ba8ba-e023-4bd4-bbc6-16b5302c9a60"
       asi:name="00020_Database_Field_WorkQueueCommand.Roles"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:4.19.origam___commandText___6cbb1d70-0f2d-49d1-9e23-a392d4b62d08.txt"
+      x:id="6cbb1d70-0f2d-49d1-9e23-a392d4b62d08"
+      asi:name="00040_WorkQueue.Roles_SetDefault"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -27,14 +40,6 @@
       scusa:commandText="-***-ExternalFile:4.19.origam___commandText___fa411831-30ae-4a32-9ee5-8ce579705dea.txt"
       x:id="fa411831-30ae-4a32-9ee5-8ce579705dea"
       asi:name="00030_WorkQueueCommand.Roles_SetDefault"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:4.19.origam___commandText___6cbb1d70-0f2d-49d1-9e23-a392d4b62d08.txt"
-      x:id="6cbb1d70-0f2d-49d1-9e23-a392d4b62d08"
-      asi:name="00040_WorkQueue.Roles_SetDefault"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

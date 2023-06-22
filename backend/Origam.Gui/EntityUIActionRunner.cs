@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Xml;
 using Origam;
@@ -50,12 +51,12 @@ namespace Origam.Gui
         public IList ExecuteAction(
             string sessionFormIdentifier, string requestingGrid, string entity, 
             string actionType, string actionId, Hashtable parameterMappings, 
-            IList selectedItems, Hashtable inputParameters)
+            List<string> selectedIds, Hashtable inputParameters)
         {
             ExecuteActionProcessData processData 
                 = actionRunnerClient.CreateExecuteActionProcessData(
                 sessionFormIdentifier, requestingGrid, actionType, entity, 
-                selectedItems, actionId, parameterMappings, inputParameters);
+                selectedIds, actionId, parameterMappings, inputParameters);
             actionRunnerClient.CheckActionConditions(processData);
             PerformAppropriateAction(processData);
             actionRunnerClient.SetModalDialogSize(resultList,processData);
@@ -93,7 +94,7 @@ namespace Origam.Gui
             if((processData.Action == null)
             || (processData.Action.Mode != PanelActionMode.Always))
             {
-                CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
+                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
             }
             ActionResult result 
                 = MakeActionResult(ActionResultType.UpdateData);
@@ -256,9 +257,9 @@ namespace Origam.Gui
             if((scriptCall.Rule != null) 
             && (processData.Action.Mode != PanelActionMode.Always))
             {
-                RuleEngine ruleEngine = new RuleEngine(new Hashtable(), null);
+                RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
                 XmlContainer rowXml = DatasetTools.GetRowXml(
-                    processData.Rows[0], DataRowVersion.Current);
+                    processData.SelectedRows[0], DataRowVersion.Current);
                 object result = ruleEngine.EvaluateRule(
                     scriptCall.Rule, rowXml, null);
                 if(result is bool)

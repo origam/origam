@@ -36,6 +36,7 @@ import { Chatrooms } from "model/entities/Chatrooms";
 import { Notifications } from "model/entities/Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "model/entities/SidebarState";
+import { About } from "model/entities/AboutInfo";
 
 export function createWorkbench() {
   const clock = new Clock();
@@ -56,6 +57,7 @@ export function createWorkbench() {
     sidebarState: new SidebarState(),
     lookupListCache: workbenchLookupListCache,
     lookupMultiEngine,
+    about: new About()
   });
   workbenchLookupListCache.startup();
   lookupMultiEngine.startup();

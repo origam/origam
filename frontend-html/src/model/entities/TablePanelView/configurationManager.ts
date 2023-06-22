@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IConfigurationManager, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { ICustomConfiguration, TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
-import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { Layout } from "model/entities/TablePanelView/layout";
 
 export class ConfigurationManager implements IConfigurationManager {
   parent: any;
@@ -40,7 +39,8 @@ export class ConfigurationManager implements IConfigurationManager {
   constructor(
     customTableConfigurations: TableConfiguration[],
     defaultTableConfiguration: TableConfiguration,
-    customConfigurations: ICustomConfiguration[]
+    customConfigurations: ICustomConfiguration[],
+    private layout: Layout // for debugging
   ) {
     this.defaultTableConfiguration = defaultTableConfiguration;
     this.customTableConfigurations = customTableConfigurations;
@@ -64,7 +64,7 @@ export class ConfigurationManager implements IConfigurationManager {
   }
 
   set activeTableConfiguration(configToActivate: TableConfiguration) {
-    const groupingWasActine = this.activeTableConfiguration.isGrouping;
+    const groupingWasActive = this.activeTableConfiguration.isGrouping;
     this.replace(configToActivate);
 
     for (const tableConfiguration of this.allTableConfigurations) {
@@ -73,7 +73,7 @@ export class ConfigurationManager implements IConfigurationManager {
     configToActivate.isActive = true;
     const tablePanelView = getTablePanelView(this);
     configToActivate.apply(tablePanelView);
-    if (groupingWasActine !== configToActivate.isGrouping) {
+    if (groupingWasActive !== configToActivate.isGrouping) {
       getFormScreenLifecycle(this).loadInitialData();
     }
   }
@@ -114,17 +114,6 @@ export class ConfigurationManager implements IConfigurationManager {
     }
     this.customTableConfigurations.remove(this.activeTableConfiguration);
     this.activeTableConfiguration = this.defaultTableConfiguration;
-    await this.saveTableConfigurations();
-  }
-
-  async saveTableConfigurations(): Promise<any> {
-    const self = this;
-    await runGeneratorInFlowWithHandler({
-      ctx: this,
-      generator: function*() {
-        yield*saveColumnConfigurations(self)();
-      }()
-    })
   }
 
   *onColumnWidthChanged(propertyId: string, width: number): Generator {
@@ -132,7 +121,6 @@ export class ConfigurationManager implements IConfigurationManager {
       return;
     }
     this.activeTableConfiguration.updateColumnWidth(propertyId, width);
-    yield*saveColumnConfigurations(this)();
   }
 
   *onColumnOrderChanged(): Generator {
@@ -140,7 +128,7 @@ export class ConfigurationManager implements IConfigurationManager {
       return;
     }
     const tablePanelView = getTablePanelView(this);
-    this.activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
-    yield*saveColumnConfigurations(this)();
+    this.activeTableConfiguration.sortColumnConfigurations(tablePanelView.tablePropertyIds);
   }
 }
+

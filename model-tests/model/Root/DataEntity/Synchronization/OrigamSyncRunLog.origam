@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,135 +26,6 @@
     tmi:mappedObjectName="OrigamSyncRunLog"
     asi:name="OrigamSyncRunLog"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="1b14a524-b15d-4a3d-bda4-fb0b4dcc302b" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="e048ce9f-6640-4e7a-be35-4363eaa72c58"
-      adec:isPrimaryKey="false"
-      adec:label="Chybové hlášení"
-      fmi:mappedColumnName="ErrorText"
-      asi:name="ErrorText"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="4ce872b8-4c20-4351-a9fb-530126385947"
-      adec:isPrimaryKey="false"
-      adec:label="Cílové ID (guid)"
-      fmi:mappedColumnName="DestinationId_guid"
-      asi:name="DestinationId_guid"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="7a8c65eb-76a0-4d51-9e4d-5737596243e9"
-      adec:isPrimaryKey="false"
-      adec:label="Zdrojové ID (číslo)"
-      fmi:mappedColumnName="SourceId_int"
-      asi:name="SourceId_int"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="50"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="cbacddd8-9639-4017-8f86-985b661fffa9"
-      adec:isPrimaryKey="false"
-      adec:label="Reference"
-      fmi:mappedColumnName="ReferenceCode"
-      asi:name="ReferenceCode"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="9472a1ba-e91f-4bee-b284-a1ef85545925"
-      adec:isPrimaryKey="false"
-      adec:label="Cílové ID (číslo)"
-      fmi:mappedColumnName="DestinationId_int"
-      asi:name="DestinationId_int"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="6e354e73-1542-42c2-81a1-a2b291edcfbf"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="refOrigamSyncRunId"
-      asi:name="refOrigamSyncRunId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="aa5b13a3-926b-4582-a6fc-d2798bfb6724"
-      adec:isPrimaryKey="false"
-      adec:label="Úspěšné"
-      fmi:mappedColumnName="IsSuccess"
-      asi:name="IsSuccess"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="fd2febe5-5e15-4c06-980d-f66bd0840ad6"
-      adec:isPrimaryKey="false"
-      adec:label="Zdrojové ID (guid)"
-      fmi:mappedColumnName="SourceId_guid"
-      asi:name="SourceId_guid"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="ef2bbbb9-be11-4186-a6ec-7a5bc31f1e44"
-      asi:name="ix_OrigamSyncRun"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
-        x:id="ffc9f8ed-bd0b-4c4c-8cf6-eb826e180d6f"
-        asi:name="0_refOrigamSyncRunId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
     <dei:DataEntityIndex
       asi:abstract="false"
       dei:generateDeploymentScript="false"
@@ -150,6 +37,19 @@
         deif:field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/SourceId_guid/fd2febe5-5e15-4c06-980d-f66bd0840ad6"
         x:id="1acf807c-00b3-4598-b928-43b5788d0e0b"
         asi:name="0_SourceId_guid"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="ef2bbbb9-be11-4186-a6ec-7a5bc31f1e44"
+      asi:name="ix_OrigamSyncRun"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
+        x:id="ffc9f8ed-bd0b-4c4c-8cf6-eb826e180d6f"
+        asi:name="0_refOrigamSyncRunId"
         deif:sortOrder="Ascending" />
     </dei:DataEntityIndex>
     <ef:EntityFilter
@@ -171,17 +71,6 @@
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="false"
-          x:id="beb10fa5-ba03-4f8b-ad28-98ea717c1c42"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
-            x:id="a762b275-b047-40af-b514-23f3363a88e6"
-            asi:name="true" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
           x:id="2a4ede0e-3d91-4daa-8c9c-a22bf9d1afa9"
           asi:name="Left"
           fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
@@ -190,6 +79,17 @@
             ecr:field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/IsSuccess/aa5b13a3-926b-4582-a6fc-d2798bfb6724"
             x:id="ebf09297-4cdd-4230-b3a9-55e1a0413ab7"
             asi:name="IsSuccess" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="beb10fa5-ba03-4f8b-ad28-98ea717c1c42"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+            x:id="a762b275-b047-40af-b514-23f3363a88e6"
+            asi:name="true" />
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
@@ -249,5 +149,121 @@
         asi:name="OrigamSyncRunKey1"
         ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
     </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="4ce872b8-4c20-4351-a9fb-530126385947"
+      adec:isPrimaryKey="false"
+      adec:label="Cílové ID (guid)"
+      fmi:mappedColumnName="DestinationId_guid"
+      asi:name="DestinationId_guid"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="6e354e73-1542-42c2-81a1-a2b291edcfbf"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refOrigamSyncRunId"
+      asi:name="refOrigamSyncRunId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="7a8c65eb-76a0-4d51-9e4d-5737596243e9"
+      adec:isPrimaryKey="false"
+      adec:label="Zdrojové ID (číslo)"
+      fmi:mappedColumnName="SourceId_int"
+      asi:name="SourceId_int"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="9472a1ba-e91f-4bee-b284-a1ef85545925"
+      adec:isPrimaryKey="false"
+      adec:label="Cílové ID (číslo)"
+      fmi:mappedColumnName="DestinationId_int"
+      asi:name="DestinationId_int"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="aa5b13a3-926b-4582-a6fc-d2798bfb6724"
+      adec:isPrimaryKey="false"
+      adec:label="Úspěšné"
+      fmi:mappedColumnName="IsSuccess"
+      asi:name="IsSuccess"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="cbacddd8-9639-4017-8f86-985b661fffa9"
+      adec:isPrimaryKey="false"
+      adec:label="Reference"
+      fmi:mappedColumnName="ReferenceCode"
+      asi:name="ReferenceCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e048ce9f-6640-4e7a-be35-4363eaa72c58"
+      adec:isPrimaryKey="false"
+      adec:label="Chybové hlášení"
+      fmi:mappedColumnName="ErrorText"
+      asi:name="ErrorText"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="fd2febe5-5e15-4c06-980d-f66bd0840ad6"
+      adec:isPrimaryKey="false"
+      adec:label="Zdrojové ID (guid)"
+      fmi:mappedColumnName="SourceId_guid"
+      asi:name="SourceId_guid"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="1b14a524-b15d-4a3d-bda4-fb0b4dcc302b" />
   </tmi:DataEntity>
 </x:file>

@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [OrigamTraceRule] ADD CONSTRAINT [FK_OrigamTraceRule_refOrigamTraceWorkflowId_OrigamTraceWorkflow]
+	FOREIGN KEY (
+		[refOrigamTraceWorkflowId]
+	)
+
+	REFERENCES [OrigamTraceWorkflow] (
+		[Id]
+	);

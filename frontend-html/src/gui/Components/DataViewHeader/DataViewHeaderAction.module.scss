@@ -78,10 +78,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .isDisabled{
   svg {
+    fill: var(--background5) !important;
     stroke: var(--background5) !important;
     stroke-width: 1 !important;
     &:hover {
       stroke: var(--background5);
+      fill: var(--background5) !important;
     }
   }
 }

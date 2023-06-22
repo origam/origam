@@ -39,17 +39,20 @@ import { RowCursor } from "../../../modules/DataView/TableCursor";
 import { IInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IAggregation } from "./IAggregation";
 import { GridFocusManager } from "../GridFocusManager";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 export interface IDataViewData {
   id: string;
   modelInstanceId: string;
   name: string;
+  focusManager: ScreenFocusManager;
   modelId: string;
   defaultPanelView: IPanelViewType;
   isHeadless: boolean;
   isMapSupported: boolean;
   disableActionButtons: boolean;
   showAddButton: boolean;
+  hideCopyButton: boolean;
   showDeleteButton: boolean;
   showSelectionCheckboxesSetting: boolean;
   type: string;
@@ -187,7 +190,7 @@ export interface IDataView extends IDataViewData {
 
   isTableViewActive: () => boolean;
   isFormViewActive: () => boolean;
-  activateFormView: ((args: { saveNewState: boolean }) => Promise<any>) | undefined;
+  activateFormView: ((args?: { saveNewState: boolean }) => Promise<any>) | undefined;
   activateTableView: (() => Promise<any>) | undefined;
 
   initializeNewScrollLoader(): void;

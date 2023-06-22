@@ -87,13 +87,23 @@ namespace Origam.Workbench.Services
 
 		public void Deploy()
 		{
+			RunWithErrorHandling(Update);
+		}
+		
+		public void ForceDeployCurrentPackage()
+		{
+			RunWithErrorHandling(ForceUpdateCurrentPackageOnly);
+		}
+
+		private void RunWithErrorHandling(Action action)
+		{
 			if(_transactionId == null)
 			{
-                TryLoadVersions();
-                _transactionId = Guid.NewGuid().ToString();
+				TryLoadVersions();
+				_transactionId = Guid.NewGuid().ToString();
 				try
 				{
-					Update();
+					action();
 					ResourceMonitor.Commit(_transactionId);
 				}
 				catch(Exception ex)
@@ -104,9 +114,9 @@ namespace Origam.Workbench.Services
 				finally
 				{
 					_transactionId = null;
-                    ClearVersions();
+					ClearVersions();
 				}
-                SaveVersionAfterUpdate();
+				SaveVersionAfterUpdate();
 			}
 			else
 			{
@@ -114,7 +124,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-        private void SaveVersionAfterUpdate()
+		private void SaveVersionAfterUpdate()
         {
             IList <Package> packages = _schema.ActiveExtension.IncludedPackages;
             packages.Add(_schema.ActiveExtension);
@@ -134,6 +144,7 @@ namespace Origam.Workbench.Services
 
 		public PackageVersion CurrentDeployedVersion(Package extension)
 		{
+			TryLoadVersions();
 			foreach(OrigamModelVersionData.OrigamModelVersionRow versionRow in VersionData.OrigamModelVersion)
 			{
 				if(versionRow.refSchemaExtensionId == extension.Id)
@@ -197,7 +208,7 @@ namespace Origam.Workbench.Services
 		#region Private Methods
 		private void ExecuteActivity(AbstractUpdateScriptActivity activity)
 		{
-			Log(DateTime.Now + " Executing activity: " + activity.Name);
+			Log("Executing activity: " + activity.Name);
 
 			try
 			{
@@ -230,7 +241,7 @@ namespace Origam.Workbench.Services
 			IBusinessServicesService service = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
             IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
             string result = "";
-            if (activity.DatabaseType != ((AbstractSqlDataService)DataService.GetDataService()).PlatformName)
+            if (activity.DatabaseType != ((AbstractSqlDataService)DataServiceFactory.GetDataService()).PlatformName)
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 settings.DeployPlatforms?.ForEach(platform =>
@@ -239,7 +250,7 @@ namespace Origam.Workbench.Services
                         (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum(platform.DataService));
                     if (databaseType == activity.DatabaseType)
                     {
-                        agent.SetDataService(DataService.GetDataService(platform));
+                        agent.SetDataService(DataServiceFactory.GetDataService(platform));
                         result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
                     }
                 });
@@ -248,7 +259,7 @@ namespace Origam.Workbench.Services
             {
                 result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
             }
-			Log(DateTime.Now + " " + result);
+			Log(result);
 		}
 
 		private void ExecuteActivity(FileRestoreUpdateScriptActivity activity)
@@ -314,13 +325,45 @@ namespace Origam.Workbench.Services
 				.SelectMany(GetDeploymentVersions)
 				.ToList();
 
-			new DeploymentSorter()
+			var deploymentSorter = new DeploymentSorter();
+			deploymentSorter.SortingFailed += (sender, message) =>
+			{
+				Log(message);
+				throw new Exception(message);
+			};
+			deploymentSorter
 				.SortToRespectDependencies(unsortedDeployments)
 				.Cast<DeploymentVersion>()
 				.Where(WasNotRunAlready)
-				.SelectMany(deplVersion => deplVersion.UpdateScriptActivities)
-				.ForEach(ExecuteActivity);
+				.ForEach(deplVersion =>
+				{
+					Log($"{deplVersion.Package.Name}: {deplVersion.Version}");
+					foreach (var activity in deplVersion.UpdateScriptActivities)
+					{
+						ExecuteActivity(activity);
+					}
+				});
         }
+		
+		private void ForceUpdateCurrentPackageOnly()
+		{
+			Log("=======================================================================" + Environment.NewLine);
+			Log(DateTime.Now + " Starting update");
+
+			IEnumerable<DeploymentVersion> deployments =
+				GetDeploymentVersions(_schema.ActiveExtension);
+			
+			deployments
+				.Where(WasNotRunAlready)
+				.ForEach(deplVersion =>
+				{
+					Log($"{deplVersion.Package.Name}: {deplVersion.Version}");
+					foreach (var activity in deplVersion.UpdateScriptActivities)
+					{
+						ExecuteActivity(activity);
+					}
+				});
+		}
 
 		private bool WasNotRunAlready(DeploymentVersion deplversion)
 		{
@@ -419,7 +462,7 @@ namespace Origam.Workbench.Services
             VersionData.Clear();
 			_versionsLoaded = false;
 		}
-        private DataSet LoadversionDataFrom(Guid queryId, string tableName,string localTransaction)
+        private DataSet LoadVersionDataFrom(Guid queryId, string tableName,string localTransaction)
 		{
 			IServiceAgent dataServiceAgent = 
 				ServiceManager.Services.
@@ -460,12 +503,16 @@ namespace Origam.Workbench.Services
             DataSet data = null;
 
             DataSet versionDataFromOrigamModelVersion =
-                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
+                LoadVersionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
             if (versionDataFromOrigamModelVersion == null)
             {
                 DataSet versionDataFromAsapModelVersion =
-                    LoadversionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
-
+                    LoadVersionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
+                if (versionDataFromAsapModelVersion == null)
+                {
+	                _versionsLoaded = true;
+	                return;
+                }
                 if (versionDataFromAsapModelVersion != null &&
                     versionDataFromAsapModelVersion.Tables.Count != 0)
                 {

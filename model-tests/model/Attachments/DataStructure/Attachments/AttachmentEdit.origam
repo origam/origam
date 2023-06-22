@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="e536ac3c-8a50-4ccd-9b9f-0ef408f2fc2c"
@@ -30,20 +30,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/Note/6a148bad-09df-4266-b0aa-0ae2ff14441f"
-          x:id="8c01fc72-5dca-429f-912a-c6a67dadc124"
-          asi:name="Note"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/FileName/51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
-          x:id="5ed3554d-8406-4152-afe4-a6e10627e01b"
-          asi:name="FileName"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreatedServer/da9c4ff5-2e67-4744-935a-60a39b886828"
+          x:id="3202f804-0c76-4b63-ae9d-acb5f0381861"
+          asi:name="RecordCreatedServer"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -63,50 +52,6 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordEntityId/37560615-b9bc-4b55-8004-6cb68877ef70"
-          x:id="80b7532b-0165-48ff-a9ca-5cd8e4ff7e2a"
-          asi:name="refParentRecordEntityId"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
-          x:id="7ef59e1d-088e-4ab1-8b2b-12c2847400cd"
-          asi:name="refParentRecordId"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
-          x:id="cc054131-7399-4a8c-9c2d-2d0369e9218c"
-          asi:name="RecordUpdated"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreatedServer/da9c4ff5-2e67-4744-935a-60a39b886828"
-          x:id="3202f804-0c76-4b63-ae9d-acb5f0381861"
-          asi:name="RecordCreatedServer"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
           dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
           x:id="3891a613-ad0c-4405-8469-c4cc94a13ce6"
           asi:name="Id"
@@ -118,9 +63,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
-          x:id="81e79800-f0fa-4cd9-a06d-dbd4312ccc12"
-          asi:name="RecordUpdatedServer"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/FileName/51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
+          x:id="5ed3554d-8406-4152-afe4-a6e10627e01b"
+          asi:name="FileName"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -140,9 +85,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
-          x:id="dc7c6918-7c2d-4b8e-a246-ab304e102682"
-          asi:name="RecordCreated"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
+          x:id="7e163022-e17a-42d6-b85f-68eb931b4a75"
+          asi:name="RecordUpdatedBy"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -151,9 +96,64 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
-          x:id="7e163022-e17a-42d6-b85f-68eb931b4a75"
-          asi:name="RecordUpdatedBy"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+          x:id="7ef59e1d-088e-4ab1-8b2b-12c2847400cd"
+          asi:name="refParentRecordId"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordEntityId/37560615-b9bc-4b55-8004-6cb68877ef70"
+          x:id="80b7532b-0165-48ff-a9ca-5cd8e4ff7e2a"
+          asi:name="refParentRecordEntityId"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
+          x:id="81e79800-f0fa-4cd9-a06d-dbd4312ccc12"
+          asi:name="RecordUpdatedServer"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/Note/6a148bad-09df-4266-b0aa-0ae2ff14441f"
+          x:id="8c01fc72-5dca-429f-912a-c6a67dadc124"
+          asi:name="Note"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
+          x:id="cc054131-7399-4a8c-9c2d-2d0369e9218c"
+          asi:name="RecordUpdated"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+          x:id="dc7c6918-7c2d-4b8e-a246-ab304e102682"
+          asi:name="RecordCreated"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"

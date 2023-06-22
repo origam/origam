@@ -29,8 +29,8 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
-import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import cx from "classnames";
+import { requestFocus } from "utils/focus";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -46,9 +46,7 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
-  isInvalid: boolean;
   isReadonly?: boolean;
-  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
@@ -109,9 +107,7 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
-  isInvalid: boolean;
   isReadonly?: boolean;
-  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
   onClick: () => void;
@@ -133,9 +129,7 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
-      isInvalid={props.isInvalid}
       isReadonly={props.isReadonly}
-      invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
       onKeyDown={props.onKeyDown}
       onClick={props.onClick}
@@ -217,11 +211,6 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
           />
         ))}
       </div>
-      {props.isInvalid && (
-        <div className={CS.notification} title={props.invalidMessage}>
-          <i className="fas fa-exclamation-circle red"/>
-        </div>
-      )}
     </div>
   );
 });
@@ -283,14 +272,14 @@ export const CheckListItem: React.FC<{
     setIsFocused(false);
   }
 
-  function onClick(event: any) {
+  function onLabelClick(event: any) {
     props.onClick && props.onClick(event);
-    refInput?.current?.focus();
+    refInput.current?.click();
+    event.stopPropagation();
   }
 
-
   return (
-    <div className={S.item} onClick={onClick}>
+    <div className={S.item} >
       <input
         ref={refInput}
         type="checkbox"
@@ -300,8 +289,15 @@ export const CheckListItem: React.FC<{
         onKeyDown={onKeyDown}
         onFocus={onInputFocus}
         onBlur={onInputBlur}
+        readOnly={true}
+        onMouseDown={(event)=> props.onClick && props.onClick(event)}
       />
-      <div className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
+      <div
+        onClick={onLabelClick}
+        onMouseUp={()=> {
+          requestFocus(refInput?.current);
+        }}
+        className={cx("content", S.label, (isFocused ? S.focusedLabel : S.unFocusedLabel))}>
         {props.label}
       </div>
     </div>
@@ -345,6 +341,6 @@ class InputReference {
   }
 
   focus() {
-    this.inputRef.current?.focus();
+    requestFocus(this.inputRef.current);
   }
 }

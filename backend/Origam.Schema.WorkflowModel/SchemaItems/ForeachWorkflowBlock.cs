@@ -72,7 +72,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G07")]  
 		public Guid ContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -101,7 +100,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		string _xpath;
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule]
         [XmlAttribute("iteratorXPath")]
 		public string IteratorXPath
@@ -117,8 +115,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		bool _ignoreSourceContextChanges = false;
-
-		[EntityColumn("B05")] 
+		
 		[DefaultValue(false)]
         [XmlAttribute("ignoreSourceContextChanges")]
 		public bool IgnoreSourceContextChanges

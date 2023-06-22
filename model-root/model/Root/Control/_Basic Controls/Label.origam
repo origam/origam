@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="9aed7683-d366-405a-ab93-041bb3275dbd"
@@ -12,16 +16,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="8765f6f7-6456-4785-8f3f-0017f339b9ba"
+      x:id="2b52432e-0538-401a-a588-f6104de9eae8"
       cpi:localizable="false"
-      asi:name="Top"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="5cc29d23-955d-476d-b974-8b5e2bd5e79b"
-      cpi:localizable="false"
-      asi:name="Height"
+      asi:name="Left"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -33,16 +30,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="cd98b347-1225-4211-b577-e2ab19222e8f"
-      cpi:localizable="true"
-      asi:name="Text"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="2b52432e-0538-401a-a588-f6104de9eae8"
+      x:id="5cc29d23-955d-476d-b974-8b5e2bd5e79b"
       cpi:localizable="false"
-      asi:name="Left"
+      asi:name="Height"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -51,5 +41,19 @@
       cpi:localizable="false"
       asi:name="TabIndex"
       cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="8765f6f7-6456-4785-8f3f-0017f339b9ba"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="cd98b347-1225-4211-b577-e2ab19222e8f"
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
   </ci:Control>
 </x:file>

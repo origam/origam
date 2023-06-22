@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.1" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0" xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
+  xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0">
+  <rrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="Web Report"
+    rrmi:exportFormatType="PDF"
+    x:id="29486ab1-76f7-4d5b-9861-54aad358ac34"
+    asi:name="WebReport"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    rrmi:report="Reports/Report/WebReport.origam#WebReport/ea61f39c-a1a9-406b-8c86-d33af8db89dd"
+    ami:roles="*" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
@@ -8,6 +25,7 @@
     x:id="6e480a11-ecb1-476d-a455-ef53bc834c64"
     asi:name="WebReport_SD"
     ami:openExclusively="false"
+    ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     rrmi:report="Reports/Report/WebReport.origam#WebReport/fe175d0d-49b8-4f7a-8e0b-b50c843f78cd"
     ami:roles="*"
@@ -19,15 +37,4 @@
       asi:name="pageName"
       sdpm:selectionDialogField="Root/DataEntity/__system/SD.origam#SD/s1/fbe2be67-9456-4f8f-bb86-32569b113886" />
   </rrmi:MenuItem>
-  <rrmi:MenuItem
-    asi:abstract="false"
-    ami:alwaysOpenNew="false"
-    ami:displayName="Web Report"
-    rrmi:exportFormatType="PDF"
-    x:id="29486ab1-76f7-4d5b-9861-54aad358ac34"
-    asi:name="WebReport"
-    ami:openExclusively="false"
-    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    rrmi:report="Reports/Report/WebReport.origam#WebReport/ea61f39c-a1a9-406b-8c86-d33af8db89dd"
-    ami:roles="*" />
 </x:file>

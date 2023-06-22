@@ -43,18 +43,17 @@ namespace Origam.DA.Service
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private static readonly IDetachedFieldPacker detachedFieldPacker = new DetachedFieldPackerMs();
+        
         
         #region Constructors
-		public MsSqlDataService() : base(detachedFieldPacker)
-		{
+		public MsSqlDataService()
+        {
 			Init();
 		}
 
 		public MsSqlDataService(string connection, int bulkInsertThreshold,
             int updateBatchSize) : base(connection, bulkInsertThreshold,
-            updateBatchSize, detachedFieldPacker)
+            updateBatchSize)
 		{
 			Init();
 		}
@@ -62,7 +61,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
-			this.DbDataAdapterFactory = new MsSqlCommandGenerator(detachedFieldPacker);
+			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
 		}
 
         public override DatabaseType PlatformName
@@ -284,7 +283,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
         }
@@ -381,8 +380,8 @@ namespace Origam.DA.Service
 @"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
 VALUES ('{0}', '{1}', '', 1, getdate())
 -- add to the built-in SuperUser role
-INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (newid(), '{2}', '{0}', getdate(), 0)",
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly, IsInitialScreen)
+VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
@@ -566,10 +565,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
             return string.Format("INSERT INTO [dbo].[OrigamUser] " +
-                "([UserName],[IsLockedOut],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
-                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')", 
+                "([UserName],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
+                "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')", 
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
-                1,1,
+                1,
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
                Guid.NewGuid().ToString(),0,0);

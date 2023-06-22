@@ -7,7 +7,7 @@
 -->
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="C2952F44-ED44-4935-B703-16E8438E71C7">
+  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="e2a56de0-26fa-47f2-b349-d6eebe636cba">
     <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine">
     </Package>
     <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high">
@@ -31,7 +31,7 @@
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="origam" Name="ORIGAM">
           <Directory Id="INSTALLDIR" Name="$(var.OrigamProductName) ">
-            <Component Id="ConfigFile" Guid="">
+            <Component Id="ConfigFile" Guid="" NeverOverwrite="yes">
               <File Id="OrigamSettings" Name="OrigamSettings.config" DiskId="1" Source="config/OrigamSettings.architect.config" KeyPath="yes">
               </File>
             </Component>
@@ -47,6 +47,38 @@
             </Component>
             <Component Id="ExeConfig" Guid="">
               <File Id="ORIGAMARCHITECT.EXE.CONFIG" Name="OrigamArchitect.exe.config" Source="config\OrigamArchitect.exe.config">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.NUMERICS.VECTORS.DLL" DiskId="1" Guid="EB813AD1-20C7-4F31-99B1-1D330FF9EC40">
+              <File Id="SYSTEM.NUMERICS.VECTORS.DLL" Name="System.Numerics.Vectors.dll" Source="source\System.Numerics.Vectors.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.THREADING.CHANNELS.DLL" DiskId="1" Guid="A0EB56E0-0EA3-43E6-B2C6-BC846DB50526">
+              <File Id="SYSTEM.THREADING.CHANNELS.DLL" Name="System.Threading.Channels.dll" Source="source\System.Threading.Channels.dll">
+              </File>
+            </Component>
+            <Component Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL" DiskId="1" Guid="DB51BAB9-8AE7-4B69-9F51-FEC7AE1363C5">
+              <File Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="source\Microsoft.Bcl.AsyncInterfaces.dll">
+              </File>
+            </Component>
+            <Component Id="MICROSOFT.BCL.HASHCODE.DLL" DiskId="1" Guid="10A69F47-6A2F-4840-AC5E-DB24F734834F">
+              <File Id="MICROSOFT.BCL.HASHCODE.DLL" Name="Microsoft.Bcl.HashCode.dll" Source="source\Microsoft.Bcl.HashCode.dll">
+              </File>
+            </Component>
+			 <Component Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" DiskId="1" Guid="03EFFB26-4461-4384-91AD-A73532D68233">
+              <File Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="source\Microsoft.Extensions.Logging.Abstractions.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.TEXT.JSON.DLL" DiskId="1" Guid="E3F2FBF8-8D0A-4FEB-9FC3-76707B86AB4E">
+              <File Id="SYSTEM.TEXT.JSON.DLL" Name="System.Text.Json.dll" Source="source\System.Text.Json.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL" DiskId="1" Guid="8315A8AE-BA6B-4D8E-B02B-79B5B477A315">
+              <File Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL" Name="System.Diagnostics.DiagnosticSource.dll" Source="source\System.Diagnostics.DiagnosticSource.dll">
+              </File>
+            </Component>
+            <Component Id="ORIGAM.EXCEL.DLL" DiskId="1" Guid="32F0928A-4B26-4A4B-AB80-3564E8AF13A8">
+              <File Id="ORIGAM.EXCEL.DLL" Name="Origam.Excel.dll" Source="source\Origam.Excel.dll">
               </File>
             </Component>
             <Component Id="AEROWIZARD.DLL" DiskId="1" Guid="401981CE-043E-4428-A8C4-6C10FBCA893F">
@@ -399,14 +431,14 @@
             <Directory Id="lib" Name="lib">
               <Directory Id="win32" Name="win32">
                 <Directory Id="dir_x64" Name="x64">
-                  <Component Id="GIT2_106A5F2.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
-                    <File Id="GIT2_106A5F2.DLL_X64" Name="git2-106a5f2.dll" Source="source\lib\win32\x64\git2-106a5f2.dll">
+                  <Component Id="GIT2_E632535.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
+                    <File Id="GIT2_E632535.DLL_X64" Name="git2-e632535.dll" Source="source\lib\win32\x64\git2-e632535.dll">
                     </File>
                   </Component>
                 </Directory>
                 <Directory Id="dir_x86" Name="x86">
-                  <Component Id="GIT2_106A5F2.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
-                    <File Id="GIT2_106A5F2.DLL_X86" Name="git2-106a5f2.dll" Source="source\lib\win32\x86\git2-106a5f2.dll">
+                  <Component Id="GIT2_E632535.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
+                    <File Id="GIT2_E632535.DLL_X86" Name="git2-e632535.dll" Source="source\lib\win32\x86\git2-e632535.dll">
                     </File>
                   </Component>
                 </Directory>
@@ -605,14 +637,10 @@
               </Component>
             </Directory>
             <Directory Id="ProjectTemplates" Name="Project Templates">
-              <Directory Id="DefaultTemplate" Name="Default">
-                <Directory Id="MODEL_ROOT_SOURCE" Name="Model">
-                  <Component Id="DEFAULTMODEL.ZIP" DiskId="1" Guid="2267E558-BAE7-456E-869B-B27313A916D0">
-                    <File Id="DEFAULTMODEL.ZIP" Name="DefaultModel.zip" Source="model_root_source\DefaultModel.zip">
-                    </File>
-                  </Component>
-                </Directory>
-              </Directory>
+             <Component Id="DEFAULTMODEL.ZIP" DiskId="1" Guid="2267E558-BAE7-456E-869B-B27313A916D0">
+				<File Id="DEFAULTMODEL.ZIP" Name="DefaultModel.zip" Source="model_root_source\DefaultModel.zip">
+				</File>
+			  </Component>
             </Directory>
           </Directory>
         </Directory>
@@ -639,6 +667,14 @@
       </ComponentRef>
       <ComponentRef Id="StartMenuShortcuts">
       </ComponentRef>
+      <ComponentRef Id="SYSTEM.NUMERICS.VECTORS.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.THREADING.CHANNELS.DLL"></ComponentRef>
+      <ComponentRef Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL"></ComponentRef>
+      <ComponentRef Id="MICROSOFT.BCL.HASHCODE.DLL"></ComponentRef>
+	  <ComponentRef Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
+      <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
       <ComponentRef Id="AEROWIZARD.DLL">
       </ComponentRef>
       <ComponentRef Id="ANTLR3.RUNTIME.DLL">
@@ -663,9 +699,9 @@
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GIT.DLL">
       </ComponentRef>
-      <ComponentRef Id="GIT2_106A5F2.DLL_X86">
+      <ComponentRef Id="GIT2_E632535.DLL_X86">
       </ComponentRef>
-      <ComponentRef Id="GIT2_106A5F2.DLL_X64">
+      <ComponentRef Id="GIT2_E632535.DLL_X64">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL">
       </ComponentRef>

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0" xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0"
+  xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0"
+  xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0"
+  xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0">
   <wqc:WorkQueueClass
     asi:abstract="false"
     wqc:entity="Root/DataEntity/__system/Mail.origam#Mail/af59fd91-736c-462c-9039-daece8811668"
@@ -11,6 +18,51 @@
     wqc:workQueueStructure="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/a919bc9e-69b5-4d8b-ae56-dca81195239b"
     wqc:workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/Sort/b79d29c4-0d97-45d1-8c3f-a13c04e1e789"
     wqc:workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/GetByQueueId/26b49b77-9977-4787-91b5-001a64d260e1">
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="4d072d00-7ef4-431d-9bec-ffe92c2c6eef"
+      asi:name="refId"
+      wqcem:xPath="/ROOT/Mail/@Id" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="57b41a67-29f3-4449-8af4-838320a6a29e"
+      asi:name="DateReceived"
+      wqcem:xPath="/ROOT/Mail/@DateReceived" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="5dd6e80f-4361-4326-8c61-9b7f40fbd3e6"
+      asi:name="Subject"
+      wqcem:xPath="/ROOT/Mail/@Subject" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="5eb83d54-e49d-4d70-863d-c8f6460477bc"
+      asi:name="Sender"
+      wqcem:xPath="/ROOT/Mail/Sender" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="7dd3e373-518d-4bfc-a7e8-53a6e0915de2"
+      asi:name="CC"
+      wqcem:xPath="/ROOT/Mail/@CC" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="aba7e1fb-7d6e-461a-9220-d57351701e47"
+      asi:name="BCC"
+      wqcem:xPath="/ROOT/Mail/@BCC" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="c7742a16-b983-48d5-8f98-c88b2ea7c0b5"
+      asi:name="MessageBody"
+      wqcem:xPath="/ROOT/Mail/MessageBody" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="d047906d-7ea8-4b33-a40d-67b23f13cb89"
+      asi:name="Recipient"
+      wqcem:xPath="/ROOT/Mail/Recipient" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="df2ad81c-ecc7-46ee-b04b-21f903e4a802"
+      asi:name="DateSent"
+      wqcem:xPath="/ROOT/Mail/@DateSent" />
     <wqwc:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"
@@ -32,40 +84,5 @@
         asi:name="WQ_Mail"
         wqwcpm:value="QueueEntries" />
     </wqwc:EntityUIAction>
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="df2ad81c-ecc7-46ee-b04b-21f903e4a802"
-      asi:name="DateSent"
-      wqcem:xPath="/ROOT/Mail/@DateSent" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="d047906d-7ea8-4b33-a40d-67b23f13cb89"
-      asi:name="Recipient"
-      wqcem:xPath="/ROOT/Mail/Recipient" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="57b41a67-29f3-4449-8af4-838320a6a29e"
-      asi:name="DateReceived"
-      wqcem:xPath="/ROOT/Mail/@DateReceived" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="5dd6e80f-4361-4326-8c61-9b7f40fbd3e6"
-      asi:name="Subject"
-      wqcem:xPath="/ROOT/Mail/@Subject" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="c7742a16-b983-48d5-8f98-c88b2ea7c0b5"
-      asi:name="MessageBody"
-      wqcem:xPath="/ROOT/Mail/MessageBody" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="5eb83d54-e49d-4d70-863d-c8f6460477bc"
-      asi:name="Sender"
-      wqcem:xPath="/ROOT/Mail/Sender" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="4d072d00-7ef4-431d-9bec-ffe92c2c6eef"
-      asi:name="refId"
-      wqcem:xPath="/ROOT/Mail/@Id" />
   </wqc:WorkQueueClass>
 </x:file>

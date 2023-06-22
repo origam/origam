@@ -24,10 +24,14 @@ import { getEntity } from "../../selectors/DataView/getEntity";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { getFocusManager } from "model/selectors/getFocusManager";
 
-export function onCopyRowClick(ctx: any) {
+export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCopyRowClick(event: any) {
     try {
+      const focusManager = getFocusManager(ctx);
+      yield focusManager.activeEditorCloses();
       const selectedRowId = getDataView(ctx).selectedRowId;
       if (!selectedRowId) {
         return;
@@ -38,6 +42,9 @@ export function onCopyRowClick(ctx: any) {
       const dataView = getDataView(ctx);
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
+      }
+      if(switchToFormPerspective){
+        dataView.activateFormView?.({saveNewState: false});
       }
       yield*formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
     } catch (e) {

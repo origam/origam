@@ -69,8 +69,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region IWorkflowTask Members
-
-		[EntityColumn("G07")]  
+		
 		public Guid OutputContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -98,7 +97,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("I05")]  
 		[DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
 		[XmlAttribute ("outputMethod")]
 		public virtual ServiceOutputMethod OutputMethod { get; set; } = ServiceOutputMethod.AppendMergeExisting;

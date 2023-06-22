@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0">
   <de:DataEntity
     asi:abstract="true"
     ade:audit="None"
     x:id="bd39f6af-1ad1-488b-a16c-6fe919972260"
     asi:name="IOrigamAttachmentFields"
     ade:readOnly="false">
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="3900"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
+      adec:isPrimaryKey="false"
+      adec:label="File Name"
+      fmi:mappedColumnName="FileName"
+      asi:name="FileName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
       adec:allowNulls="true"
@@ -23,22 +44,7 @@
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="3900"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
-      adec:isPrimaryKey="false"
-      adec:label="File Name"
-      fmi:mappedColumnName="FileName"
-      asi:name="FileName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Blob"
       adec:excludeFromAllFields="false"

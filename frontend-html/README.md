@@ -39,3 +39,27 @@ for your setup, create a file `.env.development.local` and add this line to it:
 ```
 WDS_PROXY_TARGET=your-protocol://your-backend-proxy-target
 ```
+### Notes
+If you are on linux and `yarn start` fails with:
+```
+Error: spawn chrome ENOENT
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:269:19)
+    at onErrorNT (internal/child_process.js:467:16)
+    at processTicksAndRejections (internal/process/task_queues.js:82:21)
+Emitted 'error' event on ChildProcess instance at:
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:275:12)
+    at onErrorNT (internal/child_process.js:467:16)
+    at processTicksAndRejections (internal/process/task_queues.js:82:21) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'spawn chrome',
+  path: 'chrome',
+  spawnargs: [ 'https://localhost:3000' ]
+}
+
+```
+Try running it with the browser path specified:
+
+```BROWSER=/usr/bin/firefox yarn start```
+
+

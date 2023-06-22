@@ -26,9 +26,13 @@ function idGetter(row: any[]) {
 function getTestValue(row: any[]) {
   return row[1];
 }
+const mockDataView = {
+  $type_IDataView: 1,
+  dataTable: {identifierDataIndex: 0}
+} as any;
 
 test('Should append 6 rows', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -41,7 +45,7 @@ test('Should append 6 rows', () => {
 });
 
 test('Should replace duplicate rows', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -68,7 +72,7 @@ test('Should replace duplicate rows', () => {
 });
 
 test('Should delete a row', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -91,7 +95,7 @@ test('Should delete a row', () => {
 });
 
 test('Should delete last row', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -114,7 +118,7 @@ test('Should delete last row', () => {
 });
 
 test('Should delete first row', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -137,7 +141,7 @@ test('Should delete first row', () => {
 });
 
 test('Should insert a row', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -161,7 +165,7 @@ test('Should insert a row', () => {
 });
 
 test('Should insert two rows', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],
@@ -187,7 +191,8 @@ test('Should insert two rows', () => {
 });
 
 test('Should insert row at the end', () => {
-  const scrollContainer = new ScrollRowContainer(idGetter);
+
+  const scrollContainer = new ScrollRowContainer(idGetter, mockDataView);
   scrollContainer.appendRecords([
     ["1", "original"],
     ["2", "original"],

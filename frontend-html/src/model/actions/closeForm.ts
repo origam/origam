@@ -26,11 +26,13 @@ import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { getDataViewLifecycle } from "model/selectors/DataView/getDataViewLifecycle";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
+import { getMobileState } from "model/selectors/getMobileState";
 
 export function closeForm(ctx: any) {
   return function*closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
+    getMobileState(ctx).onFormClose(openedScreen?.content?.formScreen);
     yield*lifecycle.closeForm(openedScreen);
     if (openedScreen.content?.refreshOnReturnType) {
       const refreshOnReturnType = openedScreen.content.refreshOnReturnType;

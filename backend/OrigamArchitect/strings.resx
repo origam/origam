@@ -345,8 +345,8 @@
   <data name="WebAppFolderNotExists_Message" xml:space="preserve">
     <value>Web application folder does not exist.</value>
   </data>
-  <data name="TemplateFolderNotExists_Message" xml:space="preserve">
-    <value>Template folder does not exist.</value>
+  <data name="DefaultModelFileNotExists_Message" xml:space="preserve">
+    <value>Default model file does not exist.</value>
   </data>
   <data name="EnterSourceFolder_Message" xml:space="preserve">
     <value>Please enter the sources folder.</value>
@@ -739,6 +739,9 @@
     <value>Passwords are not equal!</value>
   </data>
   <data name="RuleTrace_MenuItem" xml:space="preserve">
-    <value>RuleTrace</value>
+    <value>Rule Trace</value>
+  </data>
+  <data name="DeploySinglePackageQuestion" xml:space="preserve">
+    <value>It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are any deployment conflicts with the other packages.</value>
   </data>
 </root>

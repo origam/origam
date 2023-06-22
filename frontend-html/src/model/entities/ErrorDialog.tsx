@@ -18,17 +18,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import bind from "bind-decorator";
-import { ModalWindow } from "@origam/components";
 import _ from "lodash";
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -116,16 +117,28 @@ export class ErrorDialogController implements IErrorDialogController {
   *pushError(error: any) {
     const myId = this.idGen++;
     const promise = NewExternalPromise();
-    this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+
+    if (!this.theSameErrorAlreadyDisplayed(error)) {
+      this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+    }
     this.displayDialog();
     yield promise;
+  }
+
+  theSameErrorAlreadyDisplayed(error: any){
+    if(this.errorStack.length == 0){
+      return false;
+    }
+
+    const lastError = this.errorStack[this.errorStack.length - 1];
+    return lastError.error?.name === error.name && lastError.error?.message === error.message;
   }
 
   @action.bound displayDialog() {
     if (!this.isDialogDisplayed) {
       this.isDialogDisplayed = true;
       const previouslyFocusedElement = document.activeElement as HTMLElement;
-      const closeDialog = getDialogStack(this).pushDialog(
+      const closeDialog = showDialog(this,
         "",
         <Observer>
           {() => (
@@ -135,7 +148,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
-                setTimeout(() => previouslyFocusedElement?.focus(), 100);
+                setTimeout(() => requestFocus(previouslyFocusedElement), 100);
               })}
             />
           )}
@@ -168,7 +181,7 @@ export class ErrorDialogComponent extends React.Component<{
 }> {
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Error", "error_window_title")}
         titleButtons={null}
         buttonsCenter={
@@ -204,7 +217,7 @@ export class ErrorDialogComponent extends React.Component<{
             )}
           </div>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

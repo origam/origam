@@ -19,8 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 
-import CS from "./CommonStyle.module.css";
-import S from "./TagInputEditor.module.css";
+import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
+import S from "gui/Components/ScreenElements/Editors/TagInputEditor.module.css";
 
 import { TagInput, TagInputAdd, TagInputItem, TagInputItemDelete, } from "gui/Components/TagInput/TagInput";
 import { inject, observer } from "mobx-react";
@@ -28,6 +28,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "@origam/components";
+import { requestFocus } from "utils/focus";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
@@ -40,8 +41,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       value: string[];
       textualValues?: string[];
       isReadOnly: boolean;
-      isInvalid: boolean;
-      invalidMessage?: string;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
@@ -127,11 +126,12 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
           removeItem(event, value[value.length - 1]);
         }
         beh.handleInputKeyDown(event);
+        props.onKeyDown?.(event);
       }
 
       return (
         <div className={CS.editorContainer} ref={ref}>
-          <TagInput className={S.tagInput}>
+          <TagInput className={"tagInput"}>
             {value
               ? value.map((valueItem, idx) => (
                 <TagInputItem key={valueItem}>
@@ -145,7 +145,10 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               ))
               : null}
             {props.isReadOnly ? null : (
-              <TagInputAdd onClick={(event) => beh.elmInputElement.focus()}/>
+              <TagInputAdd onClick={(event) => {
+                beh.handleInputBtnClick(event);
+                requestFocus(beh.elmInputElement);
+              }}/>
             )}
             <input
               id={props.id}
@@ -163,11 +166,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               size={1}
             />
           </TagInput>
-          {props.isInvalid && (
-            <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red"/>
-            </div>
-          )}
         </div>
       );
     }

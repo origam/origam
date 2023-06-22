@@ -21,12 +21,14 @@ import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCu
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { crs_fieldBlur_ActionClick } from "model/actions/actionSync";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function onFieldBlur(ctx: any) {
-  return flow(function*onFieldBlur(event: any) {
+  return flow(function*onFieldBlur() {
     try {
       yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
         yield*flushCurrentRowData(ctx)();
+        getGridFocusManager(ctx).focusEditor();
       });
     } catch (e) {
       yield*handleError(ctx)(e);

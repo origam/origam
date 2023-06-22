@@ -23,6 +23,16 @@ namespace Origam.Extensions
                 throw new ArgumentException($"String array in section \"{section}\" was not found in configuration or was empty. Check your appsettings.json");
             }
             return stringArray;
+        }        
+        
+        public static string[] GetStringArrayOrEmpty(this IConfiguration section)
+        {
+            string[] stringArray = section.Get<string[]>();
+            if (stringArray == null || stringArray.Length == 0)
+            {
+                return Array.Empty<string>();
+            }
+            return stringArray;
         }
     }
 }

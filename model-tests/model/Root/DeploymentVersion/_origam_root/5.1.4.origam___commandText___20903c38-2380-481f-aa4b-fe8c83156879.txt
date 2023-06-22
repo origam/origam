@@ -1,0 +1,4 @@
+﻿ALTER TABLE "OrigamTraceRule"
+RENAME COLUMN "DataIn" TO "Input";
+ALTER TABLE "OrigamTraceRule"
+ALTER COLUMN "Input" SET DATA TYPE VARCHAR;

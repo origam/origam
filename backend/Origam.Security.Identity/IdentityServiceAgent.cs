@@ -31,11 +31,13 @@ using Origam.Service.Core;
 
 namespace Origam.Security.Identity
 {
-    public class IdentityServiceAgent : AbstractServiceAgent
+    // class is sealed because of a simplified IDisposable pattern implementation
+    public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
     {
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
         private IManager userManager;
+        private IServiceScope serviceScope;
 
         public IdentityServiceAgent()
         {
@@ -45,6 +47,11 @@ namespace Origam.Security.Identity
             userManager = SecurityManager.DIServiceProvider
                 .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
                 .HttpContext?.RequestServices?.GetService<IManager>();
+            if (userManager == null)
+            {
+                serviceScope = SecurityManager.DIServiceProvider.CreateScope();
+                userManager = serviceScope.ServiceProvider.GetService<IManager>();
+            }
         }
 
         private object result;
@@ -485,6 +492,7 @@ namespace Origam.Security.Identity
             else
             {
                 result = task.Result.Succeeded;
+                OrigamUserContext.Reset(user.UserName);
             }
         }
 
@@ -632,7 +640,8 @@ namespace Origam.Security.Identity
 			else if (!task.Result.Succeeded)
 			{
 				throw new Exception(string.Join(" ", task.Result.Errors));
-			}            
+			} 
+            OrigamUserContext.Reset(Parameters["Username"].ToString());
 			result = user.UserName;            
         }
 
@@ -707,7 +716,7 @@ namespace Origam.Security.Identity
                     Resources.ErrorUserIdNotGuid);
             }
             Task<string> task = userManager
-                .GeneratePasswordResetTokenAsync1(
+                .GeneratePasswordResetTokenAsync(
                 Parameters["UserId"].ToString());
             if (task.IsFaulted)
             {
@@ -746,9 +755,6 @@ namespace Origam.Security.Identity
             XmlAttribute isApproved = xmlDoc.CreateAttribute("IsApproved");
             isApproved.Value = user.IsApproved.ToString();
             userData.Attributes.Append(isApproved);
-            XmlAttribute isLockedOut = xmlDoc.CreateAttribute("IsLockedOut");
-            isLockedOut.Value = user.IsLockedOut.ToString();
-            userData.Attributes.Append(isLockedOut);
             XmlAttribute isOnline = xmlDoc.CreateAttribute("IsOnline");
             userData.Attributes.Append(isOnline);
             isOnline.Value = user.IsOnline.ToString();
@@ -776,6 +782,8 @@ namespace Origam.Security.Identity
             xmlDoc.AppendChild(root);
             return xmlDoc;
         }
+
+        public void Dispose() => serviceScope?.Dispose();        
     }
 
 }

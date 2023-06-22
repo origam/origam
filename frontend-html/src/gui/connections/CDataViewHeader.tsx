@@ -22,13 +22,11 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { CtxDataViewHeaderExtension, DataViewHeaderExtension, } from "gui/Components/ScreenElements/DataView";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { DataViewHeaderButton } from "gui/Components/DataViewHeader/DataViewHeaderButton";
 import { DataViewHeaderButtonGroup } from "gui/Components/DataViewHeader/DataViewHeaderButtonGroup";
-import { DataViewHeaderDropDownItem } from "gui/Components/DataViewHeader/DataViewHeaderDropDownItem";
 import { DataViewHeaderGroup } from "gui/Components/DataViewHeader/DataViewHeaderGroup";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { FilterDropDown } from "gui/connections/FilterDropDown";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import uiActions from "model/actions-ui-tree";
@@ -44,7 +42,7 @@ import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { IAction, IActionMode, IActionPlacement, IActionType } from "model/entities/types/IAction";
+import { IAction, IActionMode, IActionPlacement } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -69,29 +67,10 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
-import { getTrueSelectedRowIndex } from "../../model/selectors/DataView/getTrueSelectedRowIndex";
-import { getAreCrudButtonsEnabled } from "../../model/selectors/DataView/getAreCrudButtonsEnabled";
-
-function isAddRecordShortcut(event: any) {
-  return (
-    ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
-    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j")
-  );
-}
-
-function isDeleteRecordShortcut(event: any) {
-  return (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "Delete";
-}
-
-function isDuplicateRecordShortcut(event: any) {
-  return (
-    (event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "d" || event.key === "k")
-  );
-}
-
-function isFilterRecordShortcut(event: any) {
-  return (event.ctrlKey || event.metaKey) && event.key === "f";
-}
+import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
+import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
+import { IDataView } from "model/entities/types/IDataView";
+import { saveColumnConfigurationsAsync } from "model/actions/DataView/TableView/saveColumnConfigurations";
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -142,93 +121,6 @@ export class CDataViewHeaderInner extends React.Component<{
     });
   }
 
-  renderActions() {
-    return this.relevantActions.map((action, idx) =>
-      this.renderAction(action, this.relevantActions)
-    );
-  }
-
-  renderAction(action: IAction, actionsToRender: IAction[]) {
-    if (action.type === IActionType.Dropdown) {
-      const childActions = actionsToRender.filter(
-        (otherAction) => otherAction.groupId === action.id
-      );
-      return (
-        <Dropdowner
-          style={{width: "auto"}}
-          trigger={({refTrigger, setDropped}) => (
-            <Observer key={action.id}>
-              {() => (
-                <DataViewHeaderButton
-                  title={action.caption}
-                  disabled={!getIsEnabledAction(action)}
-                  onClick={() => setDropped(true)}
-                  domRef={refTrigger}
-                >
-                  {action.caption}
-                </DataViewHeaderButton>
-              )}
-            </Observer>
-          )}
-          content={() => (
-            <Dropdown>
-              {childActions.map((action) => (
-                <Observer key={action.id}>
-                  {() => (
-                    <DropdownItem isDisabled={!getIsEnabledAction(action)}>
-                      <DataViewHeaderDropDownItem
-                        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-                      >
-                        {action.caption}
-                      </DataViewHeaderDropDownItem>
-                    </DropdownItem>
-                  )}
-                </Observer>
-              ))}
-            </Dropdown>
-          )}
-        />
-      );
-    }
-    return (
-      <Observer key={action.id}>
-        {() => (
-          <DataViewHeaderButton
-            title={action.caption}
-            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-            disabled={!getIsEnabledAction(action)}
-          >
-            {action.caption}
-          </DataViewHeaderButton>
-        )}
-      </Observer>
-    );
-  }
-
-  renderRowCount() {
-    const selectedRowIndex = getTrueSelectedRowIndex(this.dataView);
-    const totalRowCount = getTotalRowCount(this.dataView);
-    const groupRowCount = getExpandedGroupRowCount(this.dataView);
-    if (groupRowCount) {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {groupRowCount}
-          {totalRowCount ? " (" + totalRowCount + ")" : ""}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {totalRowCount}
-        </>
-      );
-    }
-  }
-
   @computed
   get isBarVisible() {
     return this.props.isVisible || this.hasSomeRelevantActions;
@@ -276,15 +168,16 @@ export class CDataViewHeaderInner extends React.Component<{
     const onLastRowClickEvt = onLastRowClick(dataView);
 
     const isMoveRowMenuVisible = getIsMoveRowMenuVisible(dataView);
+    const selectedRow = getSelectedRow(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+    const showCrudButtons =  isAddButton || (isDelButton && !!selectedRow) || (isCopyButton && !!selectedRow)
     const crudButtonsEnabled = getAreCrudButtonsEnabled(dataView);
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
-    const selectedRow = getSelectedRow(dataView);
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     const goToFirstRowDisabled =
@@ -307,9 +200,7 @@ export class CDataViewHeaderInner extends React.Component<{
                   (this.isActionsOnly ? (
                     <DataViewHeaderGroup grovable={true} noDivider={true}>
                       {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup>
-                        {this.renderActions()}
-                      </DataViewHeaderButtonGroup>
+                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
                     </DataViewHeaderGroup>
                   ) : (
                     <>
@@ -338,17 +229,17 @@ export class CDataViewHeaderInner extends React.Component<{
                             </DataViewHeaderAction>
                           </DataViewHeaderGroup>
                         ) : null}
-
+                        {showCrudButtons &&
                           <DataViewHeaderGroup noShrink={true}>
                             {isAddButton && (
                               <DataViewHeaderAction
-                                className={"addRow "+(crudButtonsEnabled ? "isGreenHover" : "")}
+                                className={"addRow " + (crudButtonsEnabled ? "isGreenHover" : "")}
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
                                 isDisabled={!crudButtonsEnabled}
                                 shortcutPredicate={isAddRecordShortcut}
                               >
-                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
+                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")}/>
                               </DataViewHeaderAction>
                             )}
 
@@ -380,18 +271,18 @@ export class CDataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                             )}
                           </DataViewHeaderGroup>
+                        }
 
                         <DataViewHeaderGroup grovable={true}>
                           {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup>
-                            {this.renderActions()}
-                          </DataViewHeaderButtonGroup>
+                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
                         </DataViewHeaderGroup>
 
                         {!isBreak640 && (
                           <>
                             <DataViewHeaderGroup noShrink={true}>
                               <DataViewHeaderAction
+                                className={"firstRowButton"}
                                 onMouseDown={onFirstRowClickEvt}
                                 isDisabled={goToFirstRowDisabled}
                               >
@@ -400,19 +291,20 @@ export class CDataViewHeaderInner extends React.Component<{
                                   tooltip={T("First", "move_first_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
+                              <DataViewHeaderAction className={"previousRowButton"} onMouseDown={onPrevRowClickEvt}>
                                 <Icon
                                   src="./icons/list-arrow-previous.svg"
                                   tooltip={T("Previous", "move_prev_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
+                              <DataViewHeaderAction className={"nextRowButton"} onMouseDown={onNextRowClickEvt}>
                                 <Icon
                                   src="./icons/list-arrow-next.svg"
                                   tooltip={T("Next", "move_next_tool_tip")}
                                 />
                               </DataViewHeaderAction>
                               <DataViewHeaderAction
+                                className={"lastRowButton"}
                                 onMouseDown={onLastRowClickEvt}
                                 isDisabled={goToLastRowDisabled}
                               >
@@ -424,7 +316,7 @@ export class CDataViewHeaderInner extends React.Component<{
                             </DataViewHeaderGroup>
 
                               <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                                {this.renderRowCount()}
+                                {renderRowCount(this.dataView)}
                               </DataViewHeaderGroup>
                             </>
                           )}
@@ -505,7 +397,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                       setDropped(false);
                                       configurationManager.activeTableConfiguration =
                                         configurationManager.defaultTableConfiguration;
-                                      await configurationManager.saveTableConfigurations();
+                                      await saveColumnConfigurationsAsync(configurationManager);
                                     }}
                                   >
                                     {T("Default View", "default_grid_view_view")}
@@ -513,12 +405,13 @@ export class CDataViewHeaderInner extends React.Component<{
                                   ...configurationManager.customTableConfigurations.map(
                                     (tableConfig) => (
                                       <DropdownItem
+                                        key={tableConfig.id}
                                         isDisabled={false}
                                         isSelected={tableConfig.isActive}
                                         onClick={async (event: any) => {
                                           setDropped(false);
                                           configurationManager.activeTableConfiguration = tableConfig;
-                                          await configurationManager.saveTableConfigurations();
+                                          await saveColumnConfigurationsAsync(configurationManager);
                                         }}
                                       >
                                         {tableConfig.name}
@@ -529,7 +422,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                     isDisabled={false}
                                     onClick={async (event: any) => {
                                       setDropped(false);
-                                      await configurationManager.saveTableConfigurations();
+                                      await saveColumnConfigurationsAsync(configurationManager);
                                     }}
                                   >
                                     {T("Save View", "save_current_column_config")}
@@ -564,7 +457,52 @@ export class CDataViewHeaderInner extends React.Component<{
   }
 }
 
+export function renderRowCount(dataView: IDataView) {
+  const selectedRowIndex = getTrueSelectedRowIndex(dataView);
+  const totalRowCount = getTotalRowCount(dataView);
+  const groupRowCount = getExpandedGroupRowCount(dataView);
+  if (groupRowCount) {
+    return (
+      <>
+        {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+        &nbsp;/&nbsp;
+        {groupRowCount}
+        {totalRowCount ? " (" + totalRowCount + ")" : ""}
+      </>
+    );
+  } else {
+    return (
+      <>
+        {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+        &nbsp;/&nbsp;
+        {totalRowCount}
+      </>
+    );
+  }
+}
+
 export function CDataViewHeader(props: { isVisible: boolean }) {
   const extension = useContext(CtxDataViewHeaderExtension);
   return <CDataViewHeaderInner isVisible={props.isVisible} extension={extension}/>;
+}
+
+export function isAddRecordShortcut(event: any) {
+  return (
+    ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
+    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j")
+  );
+}
+
+export function isDeleteRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "Delete";
+}
+
+export function isDuplicateRecordShortcut(event: any) {
+  return (
+    (event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "d" || event.key === "k")
+  );
+}
+
+export function isFilterRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && event.key === "f";
 }

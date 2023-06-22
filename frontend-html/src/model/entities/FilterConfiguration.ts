@@ -90,6 +90,11 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   filteringFunction(ignorePropertyId?: string): (row: any[]) => boolean {
     return (row: any[]) => {
+      const dataTable = getDataTable(this);
+      const dirtyValues = dataTable.getDirtyValues(row);
+      if (dirtyValues.size > 0){
+        return true;
+      }
       if (!this.isPresentInDetail(row)) {
         return false;
       }
@@ -348,6 +353,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         }
         break;
       }
+      case "Checklist":
       case "TagInput": {
         const cellValues = prepareAnyForFilter(this, dataTable.getOriginalCellValue(row, prop));
         const filterValues1 = prepareAnyForFilter(this, term.setting.val1);

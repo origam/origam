@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Attachment] ALTER COLUMN [Data] varbinary(max) NOT NULL

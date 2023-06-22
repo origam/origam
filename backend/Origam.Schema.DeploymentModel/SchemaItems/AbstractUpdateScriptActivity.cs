@@ -46,7 +46,6 @@ namespace Origam.Schema.DeploymentModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -70,8 +69,7 @@ namespace Origam.Schema.DeploymentModel
 		#region Properties
 		private int _activityOrder;
 		[Category("Update Script Activity")]
-		[EntityColumn("I01")]
-        [XmlAttribute("activityOrder")]
+		[XmlAttribute("activityOrder")]
 		public int ActivityOrder
 		{
 			get

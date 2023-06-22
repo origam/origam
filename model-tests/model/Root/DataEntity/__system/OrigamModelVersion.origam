@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -12,6 +18,19 @@
     ade:readOnly="false">
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="24173e18-37a9-4133-9006-5095b57b13d4"
+      adec:isPrimaryKey="true"
+      fmi:mappedColumnName="refSchemaExtensionId"
+      asi:name="refSchemaExtensionId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataLength="20"
@@ -22,19 +41,6 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="Version"
       asi:name="Version"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="24173e18-37a9-4133-9006-5095b57b13d4"
-      adec:isPrimaryKey="true"
-      fmi:mappedColumnName="refSchemaExtensionId"
-      asi:name="refSchemaExtensionId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn

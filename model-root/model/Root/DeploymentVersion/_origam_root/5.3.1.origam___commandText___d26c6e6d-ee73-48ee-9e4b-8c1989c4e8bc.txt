@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueueEntry" ADD "AttemptCount" Integer NOT NULL CONSTRAINT "DF_WorkQueueEntry_AttemptCount" DEFAULT 0;
+ALTER TABLE "WorkQueueEntry" ALTER COLUMN "AttemptCount" DROP DEFAULT;

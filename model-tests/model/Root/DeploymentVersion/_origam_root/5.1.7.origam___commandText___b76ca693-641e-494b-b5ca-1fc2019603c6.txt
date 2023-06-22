@@ -1,0 +1,1 @@
+﻿ALTER TABLE [Attachment] ALTER COLUMN [FileName] NVarChar(3900) NOT NULL

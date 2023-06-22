@@ -19,10 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getLocaleFromCookie } from "utils/cookies";
 import MessageFormat from '@messageformat/core';
-import {
-  ILocalization,
-  ILocalizer,
-} from "@origam/plugin-interfaces";
+import { DataType, ILocalization, ILocalizer, } from "@origam/plugins";
+import { formatNumber } from "model/entities/NumberFormating";
 
 export class Localizer implements ILocalizer {
 
@@ -32,15 +30,16 @@ export class Localizer implements ILocalizer {
   private _defaultLocalization: ILocalization | undefined;
   public locale;
 
-  get defaultLocalization(){
-    if(!this._defaultLocalization){
-     this._defaultLocalization = this.getLocalization(this.defaultLocale);
+  get defaultLocalization() {
+    if (!this._defaultLocalization) {
+      this._defaultLocalization = this.getLocalization(this.defaultLocale);
     }
     return this._defaultLocalization;
   }
-  get activeLocalization(){
-    if(!this._activeLocalization){
-     this._activeLocalization = this.getLocalization(this.locale);
+
+  get activeLocalization() {
+    if (!this._activeLocalization) {
+      this._activeLocalization = this.getLocalization(this.locale);
     }
     return this._activeLocalization;
   }
@@ -51,6 +50,20 @@ export class Localizer implements ILocalizer {
     this.defaultMessageFormat = this.locale === defaultLocale
       ? this.messageFormat
       : new MessageFormat(this.locale);
+  }
+
+  formatNumber(value: number, dataType: DataType, customNumericFormat?: string): string {
+    let dataTypeStr;
+    if(dataType === DataType.Currency){
+      dataTypeStr = "Currency"
+    }
+    else if(dataType === DataType.Float){
+      dataTypeStr = "Float";
+    }
+    else{
+      throw new Error("Data type not implemented: " + dataType)
+    }
+    return formatNumber(customNumericFormat, dataTypeStr, value);
   }
 
   private getLocalization(locale: string) {

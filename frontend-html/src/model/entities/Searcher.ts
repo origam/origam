@@ -351,6 +351,7 @@ export class Searcher implements ISearcher {
     this.workQueueResultGroup = undefined;
     this.chatResultGroup = undefined;
     this.searchTerm = "";
+    this.selectedResult = undefined;
   }
 }
 

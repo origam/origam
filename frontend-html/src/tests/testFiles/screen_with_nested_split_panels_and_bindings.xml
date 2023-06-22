@@ -1,0 +1,111 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Title="Pacient"
+        MenuId="d266cd5c-47bc-4fed-8921-376b827b5c91" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true"
+        RefreshOnFocus="true" autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false"
+        DynamicFormLabelSource="Patient.Identifier" SuppressSave="true">
+    <DataSources>
+    </DataSources>
+    <ComponentBindings>
+        <Binding ParentId="0727d774-51d3-4952-bdfe-ee1b54b33b8e" ParentProperty="Id" ParentEntity="Patient"
+                 ChildId="43e06031-36c8-4615-ba07-e62c557fa4f0" ChildProperty="refPatientId" ChildEntity="Measurement"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="43e06031-36c8-4615-ba07-e62c557fa4f0" ParentProperty="Id" ParentEntity="Measurement"
+                 ChildId="548587eb-0968-456c-a32d-b8e0a64b280e" ChildProperty="refMeasurementId"
+                 ChildEntity="MeasurementMoleculeUnit" ChildPropertyType="Field"/>
+        <Binding ParentId="0727d774-51d3-4952-bdfe-ee1b54b33b8e" ParentProperty="Id" ParentEntity="Patient"
+                 ChildId="6ff5d167-dd3b-40cb-bf19-0e10589683d3" ChildProperty="refPatientId" ChildEntity="Measurement"
+                 ChildPropertyType="Field"/>
+    </ComponentBindings>
+    <UIRoot Id="SplitPanel1_0" ModelInstanceId="2a71aa3d-07f7-42ff-bdfd-610e43d76004" xsi:type="UIElement" Type="VBox"
+            IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration/>
+        <UIChildren>
+            <UIElement Id="AsPanel1_1" ModelInstanceId="0727d774-51d3-4952-bdfe-ee1b54b33b8e" Height="64"
+                       Name="Pacienti" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                       ModelId="a1331f4c-7ff4-4fd5-9187-81b1f709361b" DefaultPanelView="0" IsHeadless="true"
+                       DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                       ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                       SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Patient" DataMember="Patient"
+                       IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+                <Properties>
+                </Properties>
+                <Actions>
+                </Actions>
+                <FormRoot Type="Canvas">
+                    <PropertyNames>
+                    </PropertyNames>
+                </FormRoot>
+                <Configuration>
+                </Configuration>
+            </UIElement>
+            <UIElement Id="SplitPanel2_2" ModelInstanceId="2ce63e9f-bdad-444a-a71d-1a515e828929" xsi:type="UIElement"
+                       Type="VSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel2_3" ModelInstanceId="43e06031-36c8-4615-ba07-e62c557fa4f0" Name="Měření"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="c576a3cd-145c-421f-a4ef-8773ec167c53" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="Selected" OrderMember="" IsDraggingEnabled="false" Entity="Measurement"
+                               DataMember="Patient.Measurement" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="0727d774-51d3-4952-bdfe-ee1b54b33b8e"
+                               ParentEntityName="Patient">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                    <UIElement Id="SplitPanel3_4" ModelInstanceId="412ab840-0af0-4004-9f6a-28dd82615ab9"
+                               xsi:type="UIElement" Type="HSplit" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="AsPanel3_5" ModelInstanceId="548587eb-0968-456c-a32d-b8e0a64b280e"
+                                       Name="Nastavená léčba" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                       ModelId="9d98381c-a2aa-4e7e-8981-92cc6e4701c3" DefaultPanelView="1"
+                                       IsHeadless="false" DisableActionButtons="false" ShowAddButton="false"
+                                       HideCopyButton="false" ShowDeleteButton="false" ShowSelectionCheckboxes="false"
+                                       IsGridHeightDynamic="false" SelectionMember="" OrderMember=""
+                                       IsDraggingEnabled="false" Entity="MeasurementMoleculeUnit"
+                                       DataMember="Patient.Measurement.MeasurementMoleculeUnit" IsRootGrid="false"
+                                       IsRootEntity="false" IsPreloaded="true"
+                                       ParentId="43e06031-36c8-4615-ba07-e62c557fa4f0" ParentEntityName="Measurement">
+                                <Properties>
+                                </Properties>
+                                <Actions/>
+                                <FormRoot Type="Canvas">
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormRoot>
+                                <Configuration/>
+                                <FilterExpressions/>
+                            </UIElement>
+                            <UIElement Id="RadarChartPlugin_6" ModelInstanceId="6ff5d167-dd3b-40cb-bf19-0e10589683d3"
+                                       xsi:type="UIElement" Type="SectionLevelPlugin" Name="RadarChartPlugin"
+                                       HasPanelConfiguration="true" Entity="Measurement"
+                                       ModelId="6ff5d167-dd3b-40cb-bf19-0e10589683d3" DataMember="Patient.Measurement"
+                                       AxisMax="8" AxisMin="0" FilterField="Selected"
+                                       NoDataMessage="Prosím zaškrtněte měření, která chcete zobrazit v grafu"
+                                       SeriesLabelField="RecordCreated"
+                                       SeriesValueFields="Result1;Result2;Result3;Result4;Result5" StepSize="1"
+                                       IsRootGrid="false" IsRootEntity="false" IsPreloaded="true"
+                                       ParentId="0727d774-51d3-4952-bdfe-ee1b54b33b8e" ParentEntityName="Patient">
+                                <Properties>
+                                </Properties>
+                                <Configuration/>
+                                <FilterExpressions/>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+        </UIChildren>
+    </UIRoot>
+</Window>

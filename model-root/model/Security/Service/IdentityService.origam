@@ -1,133 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     s:classPath="Origam.Security.Identity.IdentityServiceAgent,Origam.Security.Identity"
     x:id="888933c6-e4b4-40c0-ae6b-462721fe8a60"
     asi:name="IdentityService">
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="b1419e44-22ed-4804-b43a-0211939cb94b"
-      asi:name="ChangePassword"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="4750f2cf-3342-4e89-ac08-11a04001b751"
-        asi:name="Username" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="cd37c415-ba08-4984-89b1-6f4f6b238f33"
-        asi:name="OldPassword" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="b8a2709b-ea54-48f1-8417-93a0d8333f22"
-        asi:name="NewPassword" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="b310b252-e6bf-4dad-8193-1c4b66842578"
-      asi:name="ResetPassword"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="559cb09f-c23a-41d1-8168-2dc811657886"
-        asi:name="NewPassword" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="1024"
-        sip:dataType="String"
-        x:id="16d1b16a-1844-4c50-a79b-61ee94d11ac8"
-        asi:name="Token" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="1316d75a-5d2f-4cb6-a75b-74b33388ce28"
-        asi:name="UserName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="58b4c9ff-c280-43ce-ba33-25210260be36"
-      asi:name="UnlockUser"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="3fe0ba4d-e79e-41c6-8e63-a356ef94fa96"
-        asi:name="Username" />
-    </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
       x:id="01bc48a1-11be-4b5e-ac2c-3036f0b867d1"
@@ -146,8 +29,8 @@
         smp:callElements="127"
         sip:dataLength="255"
         sip:dataType="String"
-        x:id="32bc1782-d9ee-48af-a7b3-01603cdb509d"
-        asi:name="Username" />
+        x:id="06076360-22cf-46a8-b859-36c32b26afb9"
+        asi:name="Password" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -161,8 +44,8 @@
         smp:callElements="127"
         sip:dataLength="255"
         sip:dataType="String"
-        x:id="06076360-22cf-46a8-b859-36c32b26afb9"
-        asi:name="Password" />
+        x:id="32bc1782-d9ee-48af-a7b3-01603cdb509d"
+        asi:name="Username" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -196,49 +79,24 @@
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="3aa050c9-be67-4a4c-aff6-333176846a95"
-      asi:name="IsEmailConfirmed"
+      x:id="1c7a14b9-e49b-422c-9e66-86fd5db29c6d"
+      asi:name="UpdateUser"
       sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
         smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="a089fa51-634a-4b24-a833-7fd0629326ad"
-        asi:name="UserId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="eafdc1fd-a7d2-4c43-a172-33727d718223"
-      asi:name="ForceConfirmEmail"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="1500dcac-9d37-4b2d-8434-8bd017611b7d"
-        asi:name="UserId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="f2ceef10-2a93-433f-a048-3a00e4bee318"
-      asi:name="GetUserData"
-      sm:returnValueDataType="Xml">
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="039877df-d323-44eb-9dbf-5e7fd5324b1e"
+        asi:name="Email" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -252,8 +110,22 @@
         smp:callElements="127"
         sip:dataLength="255"
         sip:dataType="String"
-        x:id="abcf038e-a21a-4725-829d-ae0bf9f77cc1"
+        x:id="2ba3b7a1-8b2c-4707-8200-4df5b8ae06af"
         asi:name="Username" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataType="Boolean"
+        x:id="da302b15-eff5-4e04-b042-86c26f505650"
+        asi:name="IsApproved" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
@@ -288,232 +160,6 @@
         smp:callElements="3"
         sip:dataType="UniqueIdentifier"
         x:id="eefe44f5-6ca6-4ccf-8b92-d1989d3ecc39"
-        asi:name="UserId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="4885f8c5-afe5-4d20-9536-7f39481f6118"
-      asi:name="GetPasswordResetTokenFromEmail"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="7d274a44-5f92-46a8-9c82-f9d314f1be1e"
-        asi:name="Email" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="97844460-32c9-4be0-932d-83a976639d9d"
-      asi:name="Is2FAEnforced"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="c21131b6-bb04-45b8-8b1d-b6e40217edb8"
-        asi:name="UserId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="1c7a14b9-e49b-422c-9e66-86fd5db29c6d"
-      asi:name="UpdateUser"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="2ba3b7a1-8b2c-4707-8200-4df5b8ae06af"
-        asi:name="Username" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="039877df-d323-44eb-9dbf-5e7fd5324b1e"
-        asi:name="Email" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataType="Boolean"
-        x:id="da302b15-eff5-4e04-b042-86c26f505650"
-        asi:name="IsApproved" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="3721b774-d828-49e2-b80d-93dc7d189a75"
-      asi:name="CreateUser"
-      sm:returnValueDataType="String">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataType="Boolean"
-        x:id="984b2b27-634d-4aa7-b3c2-0541376774da"
-        asi:name="EmailConfirmed" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="f5f8da01-a93f-468a-a7df-1a6bb44c2a37"
-        asi:name="PasswordAnswer" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="71afe313-2206-49a4-b0dc-42d0720567ad"
-        asi:name="Email" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="4f3f8c55-209d-43b9-bb3e-67f166c421e5"
-        asi:name="PasswordQuestion" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="3b97d106-dd77-47f4-861b-a0e6ed248e97"
-        asi:name="Password" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="5ec01d8a-c34a-4d2a-84e6-a30f85856ca1"
-        asi:name="Username" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataLength="1024"
-        sip:dataType="UniqueIdentifier"
-        x:id="dd68f8c9-172d-4423-931a-d3fcda304c87"
-        asi:name="ProviderUserKey" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="3611d21a-277c-43fe-a1da-987881db44de"
-      asi:name="GetPasswordAttributes"
-      sm:returnValueDataType="Xml" />
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="c3c96224-7b37-40d1-bdba-ad1a5e6fe6de"
-      asi:name="GetPasswordResetToken"
-      sm:returnValueDataType="String">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="fb2eb339-b211-495e-9a8e-a0ba3baa1467"
         asi:name="UserId" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
@@ -558,8 +204,164 @@
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="8ed745aa-f0bc-4ebf-aaa1-c4b1c7199ea4"
-      asi:name="DeleteUser"
+      x:id="3611d21a-277c-43fe-a1da-987881db44de"
+      asi:name="GetPasswordAttributes"
+      sm:returnValueDataType="Xml" />
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="3721b774-d828-49e2-b80d-93dc7d189a75"
+      asi:name="CreateUser"
+      sm:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="3b97d106-dd77-47f4-861b-a0e6ed248e97"
+        asi:name="Password" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="4f3f8c55-209d-43b9-bb3e-67f166c421e5"
+        asi:name="PasswordQuestion" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="5ec01d8a-c34a-4d2a-84e6-a30f85856ca1"
+        asi:name="Username" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="71afe313-2206-49a4-b0dc-42d0720567ad"
+        asi:name="Email" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataType="Boolean"
+        x:id="984b2b27-634d-4aa7-b3c2-0541376774da"
+        asi:name="EmailConfirmed" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="1024"
+        sip:dataType="UniqueIdentifier"
+        x:id="dd68f8c9-172d-4423-931a-d3fcda304c87"
+        asi:name="ProviderUserKey" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="f5f8da01-a93f-468a-a7df-1a6bb44c2a37"
+        asi:name="PasswordAnswer" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="3aa050c9-be67-4a4c-aff6-333176846a95"
+      asi:name="IsEmailConfirmed"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="a089fa51-634a-4b24-a833-7fd0629326ad"
+        asi:name="UserId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="4885f8c5-afe5-4d20-9536-7f39481f6118"
+      asi:name="GetPasswordResetTokenFromEmail"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="7d274a44-5f92-46a8-9c82-f9d314f1be1e"
+        asi:name="Email" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="58b4c9ff-c280-43ce-ba33-25210260be36"
+      asi:name="UnlockUser"
       sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
@@ -574,8 +376,42 @@
         smp:callElements="127"
         sip:dataLength="255"
         sip:dataType="String"
-        x:id="7f4b2c5a-d323-4757-b5d6-b7fc8841a5a6"
+        x:id="3fe0ba4d-e79e-41c6-8e63-a356ef94fa96"
         asi:name="Username" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="5d99129c-2be0-48b3-aafd-da1b133c3538"
+      asi:name="Set2FAEnforcement"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Boolean"
+        x:id="0a074518-634f-4593-a685-75921eaf4b8d"
+        asi:name="Enforce" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="c47c12d5-f3e8-43f5-8819-31b9d5afeb01"
+        asi:name="UserId" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
@@ -600,8 +436,29 @@
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="5d99129c-2be0-48b3-aafd-da1b133c3538"
-      asi:name="Set2FAEnforcement"
+      x:id="8ed745aa-f0bc-4ebf-aaa1-c4b1c7199ea4"
+      asi:name="DeleteUser"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="7f4b2c5a-d323-4757-b5d6-b7fc8841a5a6"
+        asi:name="Username" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="97844460-32c9-4be0-932d-83a976639d9d"
+      asi:name="Is2FAEnforced"
       sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
@@ -615,8 +472,65 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="UniqueIdentifier"
-        x:id="c47c12d5-f3e8-43f5-8819-31b9d5afeb01"
+        x:id="c21131b6-bb04-45b8-8b1d-b6e40217edb8"
         asi:name="UserId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="b1419e44-22ed-4804-b43a-0211939cb94b"
+      asi:name="ChangePassword"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="4750f2cf-3342-4e89-ac08-11a04001b751"
+        asi:name="Username" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="b8a2709b-ea54-48f1-8417-93a0d8333f22"
+        asi:name="NewPassword" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="cd37c415-ba08-4984-89b1-6f4f6b238f33"
+        asi:name="OldPassword" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="b310b252-e6bf-4dad-8193-1c4b66842578"
+      asi:name="ResetPassword"
+      sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -628,9 +542,101 @@
         smp:allowTransformationReference="false"
         smp:allowWorkflowReference="false"
         smp:callElements="3"
-        sip:dataType="Boolean"
-        x:id="0a074518-634f-4593-a685-75921eaf4b8d"
-        asi:name="Enforce" />
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="1316d75a-5d2f-4cb6-a75b-74b33388ce28"
+        asi:name="UserName" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="1024"
+        sip:dataType="String"
+        x:id="16d1b16a-1844-4c50-a79b-61ee94d11ac8"
+        asi:name="Token" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="559cb09f-c23a-41d1-8168-2dc811657886"
+        asi:name="NewPassword" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="c3c96224-7b37-40d1-bdba-ad1a5e6fe6de"
+      asi:name="GetPasswordResetToken"
+      sm:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="fb2eb339-b211-495e-9a8e-a0ba3baa1467"
+        asi:name="UserId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="eafdc1fd-a7d2-4c43-a172-33727d718223"
+      asi:name="ForceConfirmEmail"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="1500dcac-9d37-4b2d-8434-8bd017611b7d"
+        asi:name="UserId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="f2ceef10-2a93-433f-a048-3a00e4bee318"
+      asi:name="GetUserData"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="abcf038e-a21a-4725-829d-ae0bf9f77cc1"
+        asi:name="Username" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

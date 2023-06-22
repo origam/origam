@@ -25,7 +25,7 @@ export class ScreenHeader extends React.Component<{
 }> {
   render() {
     return (
-      <div className={S.root}>
+      <div className={S.root + " noPrint"}>
         {this.props.children}
         {(this.props.isLoading || window.localStorage.getItem("debugKeepProgressIndicatorsOn")) && (
           <div className={S.progressIndicator}>

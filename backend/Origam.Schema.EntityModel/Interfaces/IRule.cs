@@ -26,10 +26,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for IRule.
 	/// </summary>
-	public interface IRule : ISchemaItem
+	public interface IRule : ISchemaItem, ITraceable
 	{
 		bool IsPathRelative{get;set;}
-		Trace TraceLevel { get; set; }
-		Trace Trace { get; }
 	}
 }

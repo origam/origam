@@ -27,6 +27,7 @@ import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 import { ScreenPictureCache } from "../ScreenPictureCache";
 import { DataViewCache } from "../DataViewCache";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 /*
 export interface ILoadedFormScreenData {
@@ -105,7 +106,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
 
   setFormScreen(formScreen?: IFormScreen): void;
 
-  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
+  start(args: {initUIResult: any, preloadIsDirty?: boolean, isWorkQueueScreen?: boolean}): Generator;
 
   parent?: any;
 }
@@ -133,6 +134,9 @@ export interface IFormScreenData {
   panelConfigurations: Map<string, IPanelConfiguration>;
   formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
+  workflowTaskId: string | null;
+  uiRootType: string;
+  focusManager: ScreenFocusManager;
 }
 
 export interface IFormScreen extends IFormScreenData {

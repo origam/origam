@@ -48,7 +48,6 @@ namespace Origam.Schema.EntityModel
 
         #region Properties
 
-        [EntityColumn("Name")]
         [Category("(Schema Item)")]
         [RefreshProperties(RefreshProperties.Repaint)]
         [StringNotEmptyModelElementRule]
@@ -62,8 +61,7 @@ namespace Origam.Schema.EntityModel
         }
 
         OrigamDataType _dataType = OrigamDataType.String;
-		[EntityColumn("I02")] 
-		[RefreshProperties(RefreshProperties.Repaint)]
+        [RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
 		[Category("Data Constant")]
         [XmlAttribute("dataType")]
@@ -80,8 +78,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		Guid _guidValue = Guid.Empty;
-		[EntityColumn("G01")]
-        //		[RefreshProperties(RefreshProperties.Repaint)]
+		//		[RefreshProperties(RefreshProperties.Repaint)]
         [Browsable(false)]
 		public Guid GuidValue
 		{
@@ -96,7 +93,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		string _stringValue = "";
-		[EntityColumn("LS01")] 
 		[Browsable(false)]
         public string StringValue
 		{
@@ -111,7 +107,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		bool _booleanValue = false;
-		[EntityColumn("B01")] 
 		[Browsable(false)]
         public bool BooleanValue
 		{
@@ -126,7 +121,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		int _intValue = 0;
-		[EntityColumn("I01")] 
 		[Browsable(false)]
         public int IntValue
 		{
@@ -141,7 +135,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		decimal _currencyValue = 0;
-		[EntityColumn("C01")] 
 		[Browsable(false)]
         public decimal CurrencyValue
 		{
@@ -156,7 +149,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		decimal _floatValue = 0;
-		[EntityColumn("F01")] 
 		[Browsable(false)]
         public decimal FloatValue
 		{
@@ -171,7 +163,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		object _dateValue = null;
-		[EntityColumn("D01")] 
 		[Browsable(false)]
         public object DateValue
 		{
@@ -192,7 +183,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G02")]
         public Guid DataLookupId;
 
 		[Category("Data Constant")]
@@ -389,7 +379,6 @@ namespace Origam.Schema.EntityModel
 		}
 
         bool _isUserDefinable = false;
-        [EntityColumn("B02")]
         [Category("User Definition")]
         [Description("When True and when the constant is included as a menu item a different value will be stored for each user.")]
         [DefaultValue(false)]
@@ -405,8 +394,7 @@ namespace Origam.Schema.EntityModel
                 _isUserDefinable = value;
             }
         }
-
-        [EntityColumn("G03")]
+        
         public Guid UserDefinableDefaultConstantId;
 
         [TypeConverter(typeof(DataConstantConverter))]
@@ -428,7 +416,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

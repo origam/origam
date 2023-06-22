@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @import "~@origam/styles/dist/styles/definitions";
 
 .root {
-  min-height: 0px;
-  max-height: 0px;
+  min-height: 0;
+  max-height: 0;
   flex-shrink: 0;
   background: var(--background1);
   padding: 0 1em 0 2em;
@@ -33,9 +33,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-wrap: nowrap;
   position: relative;
   width: 100%;
-  border-top: 1px solid var(--background4);
-
-  border-style: solid;
   border-color: var(--background3) !important;
   border-width: 0 0 1px 0;
   
@@ -60,8 +57,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     min-width: 0;
   }
 
@@ -71,10 +67,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     font-weight: 700;
     margin: 0 1.5em 0 0;
     padding: 0;
-    //max-width: 50%;
     text-overflow: ellipsis;
     overflow: hidden;
-    text-overflow: ellipsis;
     word-wrap: normal;
     white-space: nowrap;
   }

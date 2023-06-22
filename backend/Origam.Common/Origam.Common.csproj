@@ -3,6 +3,7 @@
 
  <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyName>Origam</AssemblyName>
@@ -60,12 +61,12 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-    <PackageReference Include="log4net" Version="2.0.14" />
+    <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Origam.Service.Core" Version="1.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Origam.Service.Core" Version="2.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
     <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
@@ -82,6 +83,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Remove="Interfaces\IApplicationRole.cs" />
   </ItemGroup>
 
   <ItemGroup>

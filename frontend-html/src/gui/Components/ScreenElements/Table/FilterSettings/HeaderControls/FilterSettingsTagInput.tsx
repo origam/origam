@@ -17,34 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable, runInAction } from "mobx";
-import { MobXProviderContext, observer } from "mobx-react";
+import { observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import React, { useContext, useState } from "react";
+import React from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
-import S from "./FilterSettingsLookup.module.scss";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import {
-  CtxDropdownEditor,
-  DropdownEditor,
-  DropdownEditorSetup,
-  IDropdownEditorContext,
-} from "modules/Editors/DropdownEditor/DropdownEditor";
-import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
-import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
-import { DropdownColumnDrivers, DropdownDataTable, } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
-import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
-import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
-import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import { prepareForFilter } from "../../../../../../model/selectors/PortalSettings/getStringFilterConfig";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { TagFilterEditor } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagFilterEditor";
+import { MobileTagFilterEditor } from "gui/connections/MobileComponents/Grid/MobileTagFilterEditor";
 
 const OPERATORS = [
   Operator.in,
@@ -103,17 +90,28 @@ class OpEditors extends React.Component<{
     switch (setting?.type) {
       case "in":
       case "nin":
-        return (
-          <FilterBuildDropdownEditor
+        if (isMobileLayoutActive(this.props.property)) {
+          return <MobileTagFilterEditor
             id={this.props.id}
             lookup={this.props.lookup}
             property={this.props.property}
             getOptions={this.props.getOptions}
-            values={setting.val1 ?? []}
             setting={setting}
             autoFocus={this.props.autoFocus}
           />
-        );
+        } else {
+          return (
+            <TagFilterEditor
+              id={this.props.id}
+              lookup={this.props.lookup}
+              property={this.props.property}
+              getOptions={this.props.getOptions}
+              values={setting.val1 ?? []}
+              setting={setting}
+              autoFocus={this.props.autoFocus}
+            />
+          );
+        }
       case "null":
       case "nnull":
       default:
@@ -198,167 +196,5 @@ export class TagInputFilterSetting implements IFilterSetting {
       this.val1 = [...new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;
-  }
-}
-
-export function FilterBuildDropdownEditor(props: {
-  lookup: ILookup;
-  property: IProperty;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
-  values: Array<any>;
-  setting: IFilterSetting;
-  autoFocus: boolean;
-  id: string;
-}) {
-  const mobxContext = useContext(MobXProviderContext);
-  const workbench = mobxContext.workbench;
-  const {lookupListCache} = workbench;
-
-  const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
-    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting);
-
-    const dropdownEditorDataTable = new DropdownDataTable(
-      () => dropdownEditorSetup,
-      dropdownEditorData
-    );
-    const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
-      () => dropdownEditorSetup,
-      lookupListCache
-    );
-    const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      false,
-      text => prepareForFilter(props.property, text)!
-    );
-
-    const drivers = new DropdownColumnDrivers();
-
-    let identifierIndex = 0;
-    const columnNameToIndex = new Map<string, number>([
-      [props.property.identifier!, identifierIndex],
-    ]);
-    const visibleColumnNames: string[] = [];
-
-    columnNameToIndex.set(props.property.name, 1);
-    visibleColumnNames.push(props.property.name);
-
-    drivers.allDrivers.push({
-      columnId: props.property.id,
-      headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
-      bodyCellDriver: new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior),
-    });
-
-    const showUniqueValues = true;
-
-    const dropdownEditorSetup = new DropdownEditorSetup(
-      props.property.id,
-      props.lookup.lookupId,
-      [],
-      visibleColumnNames,
-      columnNameToIndex,
-      showUniqueValues,
-      props.property.identifier!,
-      identifierIndex,
-      props.property.parameters,
-      props.property.lookup?.dropDownType!,
-      props.property.lookup?.cached!,
-      !props.property.lookup?.searchByFirstColumnOnly
-    );
-
-    return {
-      behavior: dropdownEditorBehavior,
-      editorData: dropdownEditorData,
-      columnDrivers: drivers,
-      editorDataTable: dropdownEditorDataTable,
-      setup: dropdownEditorSetup
-    };
-  });
-
-  (dropdownEditorInfrastructure.editorData as FilterEditorData).setting = props.setting;
-
-  const value = props.values;
-  return (
-    <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor
-        editor={
-          <TagInputEditor
-            id={props.id}
-            customInputClass={S.tagInput}
-            value={value}
-            isReadOnly={false}
-            isInvalid={false}
-            autoFocus={props.autoFocus}
-            onClick={undefined}
-          />
-        }
-      />
-    </CtxDropdownEditor.Provider>
-  );
-}
-
-export class FilterEditorData implements IDropdownEditorData {
-  constructor(public setting: IFilterSetting) {
-  }
-
-  setValue(value: string[]) {
-  }
-
-  @computed get value(): string | string[] | null {
-    return this.setting.val1;
-  }
-
-  @computed get text(): string {
-    return "";
-  }
-
-  get isResolving() {
-    return false;
-  }
-
-  onChange() {
-    this.setting.val2 = undefined;
-    this.setting.isComplete = this.setting.val1 !== undefined && this.setting.val1.length > 0;
-  }
-
-  @action.bound chooseNewValue(value: any) {
-    if (value !== null && !this.setting.val1?.includes(value)) {
-      if (this.setting.val1 === undefined) {
-        this.setting.val1 = [value];
-      } else {
-        this.setting.val1 = [...this.setting.val1, value];
-      }
-      this.onChange();
-    }
-  }
-
-  get idsInEditor() {
-    return this.setting.val1 ?? [] as string[];
-  }
-
-  remove(valueToRemove: any): void {
-    const index = this.setting.val1.indexOf(valueToRemove)
-    if (index > -1) {
-      this.setting.val1.splice(index, 1);
-    }
-    if (this.setting.val1?.length === 0) {
-      this.setting.val1 = undefined;
-    } else {
-      this.setting.val1 = [...this.setting.val1];
-    }
-    this.onChange();
-  }
-}
-
-class DropDownApi implements IDropdownEditorApi {
-  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {
-  }
-
-  *getLookupList(searchTerm: string): Generator {
-    return yield this.getOptions("");
   }
 }

@@ -77,12 +77,13 @@ namespace Origam.DA.Service
                     QueueOperation(Operation.clear, null);
                     filePersistenceIndex.PersistActualIndex(this);
                 }
-                else
+                for (int i = 0; i < 10; i++)
                 {
-                    if (!cancellationToken.IsCancellationRequested)
+                    if (cancellationToken.IsCancellationRequested)
                     {
-                        Thread.Sleep(2000);
+                        return;
                     }
+                    Thread.Sleep(200);
                 }
             }
         }
@@ -109,7 +110,13 @@ namespace Origam.DA.Service
         }
         public void Persist(ItemTracker itemTracker)
         {
+#if DEBUG
+            // The CheckDataConsistency method was originally a debugging tool.
+            // Running this method on a medium size project takes about 300 ms
+            // which seemed like a lot for something that is not necessary anymore.
+            // That is why was this call removed from the production builds. 
             CheckDataConsistency(itemTracker);
+#endif
             itemTracker.CleanUp();
             var serializationData = new TrackerSerializationData(
                 itemTracker.AllFiles, itemTracker.GetStats());
@@ -147,7 +154,7 @@ namespace Origam.DA.Service
                     }
                     catch (IOException ex)
                     {
-                        log.Error($"Could not remove {indexFile}", ex);
+                        log.LogOrigamError($"Could not remove {indexFile}", ex);
                     }
                 }
             }
@@ -175,14 +182,17 @@ namespace Origam.DA.Service
                     itemTracker.AddOrReplace(x);
                     itemTracker.AddOrReplaceHash(x);
                 });
-            
             if (log.IsDebugEnabled)
             {
-                log.Debug(
-                    $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
-                    "tracker stats:\n" +
-                    itemTracker.GetStats());
+                log.RunHandled(() =>
+                {
+                    log.Debug(
+                        $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
+                        "tracker stats:\n" +
+                        itemTracker.GetStats());
+                });
             }
+
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             if (settings.CheckFileHashesAfterModelLoad && !itemTracker.IsEmpty)
             {
@@ -287,10 +297,7 @@ namespace Origam.DA.Service
         public void StopTask()
         {
             IndexTaskCancellationTokenSource.Cancel();
-            while(task.Status==TaskStatus.Running)
-            {
-                Thread.Sleep(200);
-            }
+            task.Wait();
         }
     }
 

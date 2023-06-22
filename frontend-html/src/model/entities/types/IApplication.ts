@@ -22,6 +22,7 @@ import { IApplicationLifecycle } from "./IApplicationLifecycle";
 import { IDialogStack } from "./IDialogStack";
 import { IWorkbench } from "./IWorkbench";
 import { IErrorDialogController } from "./IErrorDialog";
+import { MobileState } from "model/entities/MobileState/MobileState";
 
 export interface IApplicationData {
   api: IApi;
@@ -35,7 +36,11 @@ export interface IApplication extends IApplicationData {
 
   workbench?: IWorkbench;
 
+  mobileState: MobileState;
+
   parent?: any;
+
+  breakpoint: string;
 
   resetWorkbench(): void;
 
@@ -46,3 +51,4 @@ export interface IApplication extends IApplicationData {
 
 export const isIApplication = (o: any): o is IApplication =>
   o.$type_IApplication;
+

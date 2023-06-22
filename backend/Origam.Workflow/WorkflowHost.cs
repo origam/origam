@@ -27,6 +27,8 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using System.Globalization;
+using Origam.Extensions;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -106,10 +108,14 @@ namespace Origam.Workflow
 				// fire event
 				if(WorkflowFinished != null)
 				{
-					this.WorkflowFinished(this, new WorkflowHostEventArgs(engine, exception));
+					Exception exceptionToPassOn =
+						PassExceptionOn(engine, exception)
+							? exception
+							: null;
+					WorkflowFinished(this, new WorkflowHostEventArgs(engine, exceptionToPassOn));
                     if(exception != null)
                     {
-                        log.Error(exception);
+	                    log.LogOrigamError(exception);
                     }
 				}
 			}
@@ -121,6 +127,18 @@ namespace Origam.Workflow
                 }
 				engine.Host = null;
 			}
+		}
+
+		private bool PassExceptionOn(WorkflowEngine engine, Exception exception)
+		{
+			if (engine.WorkflowBlock is not Schema.WorkflowModel.Workflow)
+			{
+				return true;
+			}
+
+			return
+				exception != null &&
+				exception.Data["onFailure"] is not StepFailureMode.Suppress;
 		}
 
 		internal void OnWorkflowUserMessage(WorkflowEngine engine, string message, Exception exception, bool popup)

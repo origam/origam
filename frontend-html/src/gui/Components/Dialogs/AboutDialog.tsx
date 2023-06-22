@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/AboutDialog.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { AboutView } from "gui/Components/Dialogs/AboutView";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class AboutDialog extends React.Component<{
@@ -31,10 +32,8 @@ export class AboutDialog extends React.Component<{
   onOkClick: () => void;
 }> {
   render() {
-    const commitId = (window as any).ORIGAM_CLIENT_REVISION_HASH;
-    const commitDate = (window as any).ORIGAM_CLIENT_REVISION_DATE;
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("About", "about_application")}
         titleButtons={null}
         buttonsCenter={
@@ -48,25 +47,9 @@ export class AboutDialog extends React.Component<{
         buttonsRight={null}
       >
         <div className={CS.dialogContent + " " + S.contentArea}>
-          <div>Server version:</div>
-          <div className={S.version}>{this.props.aboutInfo.serverVersion}</div>
-          <br/>
-          <div>Client version:</div>
-          <div className={S.version}>
-            <div>{"Commit ID: "}
-              <a href={"https://github.com/origam/origam-html/commit/" + commitId}>{commitId}</a>
-            </div>
-            <div>Commit Date: {commitDate}</div>
-          </div>
-          <br/>
-          <div>
-            <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
-          </div>
-          <br/>
-          <div>Copyright 2020 Advantage Solutions, s. r. o.</div>
-          <br/>
+         <AboutView aboutInfo={this.props.aboutInfo}/>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

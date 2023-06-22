@@ -35,11 +35,10 @@ namespace Origam.DA.Service
     public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
 
-		public PgSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) 
+		public PgSqlCommandGenerator() 
 			: base(
 				trueValue: "true",
 				falseValue: "false",
-				detachedFieldPacker: detachedFieldPacker, 
 				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
                 filterRenderer: new PgSqlFilterRenderer(),
 				new PgSqlRenderer())
@@ -231,7 +230,7 @@ namespace Origam.DA.Service
         {
             StringBuilder sqlExpression = new StringBuilder();
             return sqlExpression.AppendFormat(
-                "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT {3} DO UPDATE SET {4};",
+                "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT ({3}) DO UPDATE SET {4};",
                 tableName,
                 insertColumnsBuilder,
                 insertValuesBuilder,
@@ -242,7 +241,7 @@ namespace Origam.DA.Service
         
         public override object Clone()
         {
-            PgSqlCommandGenerator gen = new PgSqlCommandGenerator(new DetachedFieldPackerPostgre());
+            PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
             return gen;
         }
 
@@ -416,5 +415,9 @@ namespace Origam.DA.Service
 			return " PRIMARY KEY";
 
 		}
+        protected override string RenderUpsertKey(string paramName, string fieldName)
+        {
+			return fieldName;
+        }
     }
 }

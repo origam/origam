@@ -22,8 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
-using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 namespace Origam.DA.Service

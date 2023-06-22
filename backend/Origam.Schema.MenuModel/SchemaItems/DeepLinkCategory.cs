@@ -73,7 +73,8 @@ namespace Origam.Schema.MenuModel
 
         [Category("Reference")]
         [TypeConverter(typeof(DataLookupConverter))]
-        [LookupServerSideElementRule()]
+        [LookupServerSideElementRule]
+        [NotNullModelElementRule]
         [Description("A lookup which will resolve the list of available values for the link. The lookup must be server-side filtered and must be connected to a menu item so the user can open the link.")]
         [XmlReference("lookup", "LookupId")]
         public IDataLookup Lookup
@@ -114,7 +115,6 @@ namespace Origam.Schema.MenuModel
                 return false;
             }
         }
-        [EntityColumn("ItemType")]
         public override string ItemType
         {
             get

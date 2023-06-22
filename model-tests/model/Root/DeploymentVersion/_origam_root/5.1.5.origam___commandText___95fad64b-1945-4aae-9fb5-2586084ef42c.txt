@@ -1,0 +1,41 @@
+﻿SET NOCOUNT ON 
+
+DECLARE @nonclusteredname nvarchar(max),
+		@dropIndex nvarchar(max),
+    @position INT,  
+    @Index_Name VARCHAR(50),  
+    @Index_Table VARCHAR(50),  
+    @Column_Name VARCHAR(50),
+	@Obj_id INT
+ 
+DECLARE load_cursor CURSOR FOR 
+    
+SELECT
+ a.name AS Index_Name,
+ OBJECT_NAME(a.object_id) Index_Table,
+ COL_NAME(b.object_id,b.column_id) AS Column_Name,
+ a.object_id AS Obj_id
+FROM
+ sys.indexes AS a INNER JOIN sys.index_columns AS b
+       ON a.object_id = b.object_id AND a.index_id = b.index_id
+INNER JOIN sys.objects as c ON a.object_id = c.object_id 
+WHERE a.is_hypothetical = 0  and 
+(a.object_id = OBJECT_ID('OrigamTraceRule') )
+ and a.type_desc = 'CLUSTERED' and COL_NAME(b.object_id,b.column_id) = 'Id';
+
+ OPEN load_cursor 
+FETCH NEXT FROM load_cursor INTO @Index_Name, @Index_Table, @Column_Name,@Obj_id
+
+ WHILE @@FETCH_STATUS = 0 
+BEGIN 
+	print 'Working on ' + @Index_Table +' '+ @Index_Name +' '+ CONVERT(varchar(255),@Obj_id);
+	SET @dropIndex = 'ALTER TABLE [dbo].['+@Index_Table+'] DROP CONSTRAINT ['+@Index_Name+'] WITH ( ONLINE = OFF );'
+	EXECUTE sp_executesql @dropIndex;
+	SET @nonclusteredname = 'ALTER TABLE '+@Index_Table+' ADD CONSTRAINT ['+@Index_Table + '_NonClusteredIndex_'  +  CONVERT(varchar(255),NEWID())+'] PRIMARY KEY NONCLUSTERED (Id);'
+	EXECUTE sp_executesql @nonclusteredname;
+
+	FETCH NEXT FROM load_cursor INTO  @Index_Name, @Index_Table, @Column_Name,@Obj_id
+END 
+ 
+CLOSE load_cursor ;
+DEALLOCATE load_cursor;

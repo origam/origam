@@ -218,11 +218,14 @@ namespace Origam.DA.Service
 		private Hashtable GetCache()
 		{
 			Hashtable context = OrigamUserContext.Context;
-			if(! context.Contains("DataAdapterCache"))
+			lock (context)
 			{
-				context.Add("DataAdapterCache", new Hashtable());
+				if(! context.Contains("DataAdapterCache"))
+				{
+					context.Add("DataAdapterCache", new Hashtable());
+				}
 			}
-            return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
+			return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
 		}
 		
 		private DbDataAdapter GetAdapterCached(SelectParameters adParameters, string identityId)
@@ -516,8 +519,35 @@ namespace Origam.DA.Service
 											}
 										}
 										break;
-
-									case DbType.Decimal:
+                                    case DbType.Int32:
+                                        if (param.Value == DBNull.Value)
+                                        {
+                                            value = DBNull.Value;
+                                        }
+                                        else if (param.Value is string)
+                                        {
+                                            value = System.Xml.XmlConvert.ToInt32(param.Value as string);
+                                        }
+                                        else
+                                        {
+                                            value = param.Value;
+                                        }
+                                        break;
+                                    case DbType.Int64:
+                                        if (param.Value == DBNull.Value)
+                                        {
+                                            value = DBNull.Value;
+                                        }
+                                        else if (param.Value is string)
+                                        {
+                                            value = System.Xml.XmlConvert.ToInt64(param.Value as string);
+                                        }
+                                        else
+                                        {
+                                            value = param.Value;
+                                        }
+                                        break;
+                                    case DbType.Decimal:
 									case DbType.Currency:
 										if(param.Value == DBNull.Value)
 										{

@@ -24,7 +24,7 @@ import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { getIdent, IIId } from "utils/common";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { Observer } from "mobx-react";
 import { ITablePerspective } from "./TablePerspective";
 import { IPerspective } from "../Perspective";
@@ -51,7 +51,7 @@ export class TablePerspectiveDirector implements IIId {
       render: () => (
         <Observer key={this.$iid}>
           {() => (
-            <div className={cx(S.root, {isActive: this.tablePerspective.isActive})}>
+            <div className={cx(S.root, "tablePerspectiveDirector", {isActive: this.tablePerspective.isActive})}>
               <TableView/>
             </div>
           )}

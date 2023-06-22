@@ -37,6 +37,7 @@ using DataService
     = Origam.Workbench.Services.CoreServices.DataService;
 using Origam.Schema.WorkflowModel.WorkQueue;
 using System.Linq;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -928,7 +929,7 @@ namespace Origam.Workflow
             // check business rule
             if (operation.Rule != null)
             {
-                RuleEngine ruleEngine = new RuleEngine(new Hashtable(), transactionId);
+                RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
                 //				ruleEngine.TransactionId = transactionId;
 
                 object result = ruleEngine.EvaluateRule(operation.Rule, data, null);
@@ -1153,17 +1154,20 @@ namespace Origam.Workflow
                                 // evaluate the condition filter
                                 if (log.IsDebugEnabled)
                                 {
-                                    XmlContainer datarow;
-                                    if (row.RowState != DataRowState.Deleted)
+                                    log.RunHandled(() =>
                                     {
-                                        datarow = DatasetTools.GetRowXml(row, DataRowVersion.Default);
-                                    }
-                                    else
-                                    {
-                                        datarow = DatasetTools.GetRowXml(row, DataRowVersion.Original);
-                                    }
-                                    log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
-                                        wqc.ConditionFilter, wqc.Path, datarow.Xml.OuterXml);
+                                        XmlContainer datarow;
+                                        if (row.RowState != DataRowState.Deleted)
+                                        {
+                                            datarow = DatasetTools.GetRowXml(row, DataRowVersion.Default);
+                                        }
+                                        else
+                                        {
+                                            datarow = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+                                        }
+                                        log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
+                                            wqc.ConditionFilter, wqc.Path, datarow.Xml.OuterXml);
+                                    });
                                 }
                                 StringBuilder filterBuilder = new StringBuilder();
                                 string filter;

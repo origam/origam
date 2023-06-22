@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -40,7 +39,6 @@ using Newtonsoft.Json.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using Origam;
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -679,8 +677,7 @@ namespace OrigamArchitect
 			ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
-
-			toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
+            toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
         }
 		private void CreateHelpMenu()
@@ -1246,7 +1243,7 @@ namespace OrigamArchitect
                 {
                     this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
                 }
-                this.RunWithInvoke(DoModelChecksAsync); 
+                this.RunWithInvoke(RunBackgroundInitializationTasks); 
             }
 		}
 
@@ -1457,36 +1454,18 @@ namespace OrigamArchitect
 			try
 			{
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
-
-				// Login to the repository
-				try
-				{
-					if(! LoadSchemaList())
-					{
-						return;
-					}
-				}
-				catch(Exception ex)
-				{
-					AsMessageBox.ShowError(
-                        this,
-                        string.Format(strings.RepositoryLoginFailedMessage, Environment.NewLine + ex.Message),
-                        strings.RepositoryLoginFailedTitle,
-                        ex);
-
-					return;
-				}
+				InitPersistenceService();
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
 				InitializeConnectedServices();
 
-				// Initialize model-connected user interface
-				InitializeConnectedPads();
+                // Initialize model-connected user interface
+                InitializeConnectedPads();
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-				DoModelChecksAsync();
+				RunBackgroundInitializationTasks();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1522,7 +1501,7 @@ namespace OrigamArchitect
 #endif
 			this.LoadWorkspace();
 			cmd.Run();
-		}
+        }
 
 		private void SubscribeToUpgradeServiceEvents()
 		{
@@ -1541,23 +1520,59 @@ namespace OrigamArchitect
 			};
 		}
 
-		public void DoModelChecksAsync()
+		public void RunBackgroundInitializationTasks()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
 
-	       var cancellationToken = modelCheckCancellationTokenSource.Token;
-	        Task.Factory.StartNew(
-	            () => DoModelChecks(cancellationToken),
-	            cancellationToken 
-            ).ContinueWith(
-	            TaskErrorHandler,
-	            TaskScheduler.FromCurrentSynchronizationContext()
-            );
+           var cancellationToken =
+	           modelCheckCancellationTokenSource.Token;
+           Task.Factory.StartNew(() =>
+           {
+	           using (FilePersistenceService independentPersistenceService =
+	                  new FilePersistenceBuilder()
+		                  .CreateNoBinFilePersistenceService())
+	           {
+		           IndexReferences(
+			           independentPersistenceService, 
+			           cancellationToken);
+		           DoModelChecks(
+			           independentPersistenceService,
+			           cancellationToken);
+	           }
+           }, cancellationToken).ContinueWith(
+	           TaskErrorHandler,
+	           TaskScheduler.FromCurrentSynchronizationContext()
+           );
 	    }
 
-	    private void TaskErrorHandler(Task previousTask)
+		private void IndexReferences(FilePersistenceService independentPersistenceService,
+			CancellationToken cancellationToken)
+		{
+			try
+			{
+				_statusBarService.SetStatusText("Indexing references...");
+				ReferenceIndexManager.Clear(false);				
+				independentPersistenceService
+					.SchemaProvider
+					.RetrieveList<IFilePersistent>()
+					.OfType<AbstractSchemaItem>()
+					.AsParallel()
+					.ForEach(item =>
+					{
+						cancellationToken.ThrowIfCancellationRequested();
+						ReferenceIndexManager.Add(item);
+					});				
+				ReferenceIndexManager.Initialize();
+			}
+			finally
+			{
+				_statusBarService.SetStatusText("");
+			}
+		}
+
+		private void TaskErrorHandler(Task previousTask)
 	    {
 	        try
 	        {
@@ -1570,56 +1585,52 @@ namespace OrigamArchitect
 			        .Any(x => !(x is OperationCanceledException));
 		        if (actualExceptionsExist)
 	            {
-	                log.Error(ae);
+	                log.LogOrigamError(ae);
 	                this.RunWithInvoke(() => AsMessageBox.ShowError(
 		                this, ae.Message, strings.GenericError_Title, ae));
 	            }
 	        }
 	    }
 
-	    private void DoModelChecks(CancellationToken cancellationToken)
+	    private void DoModelChecks(
+		    FilePersistenceService independentPersistenceService,
+		    CancellationToken cancellationToken)
 	    {
-            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
-	            .CreateNoBinFilePersistenceService())
+		    List<Dictionary<IFilePersistent, string>> errorFragments =
+                ModelRules.GetErrors(
+                    schemaProviders: new OrigamProviderBuilder()
+                        .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                        .GetAll(), 
+                    independentPersistenceService: independentPersistenceService, 
+                    cancellationToken: cancellationToken); 
+            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
+            var errorSections = persistenceProvider.GetFileErrors(
+                ignoreDirectoryNames: new []{ ".git","l10n"},
+                cancellationToken: cancellationToken);
+            if (errorFragments.Count != 0)
             {
-                List<Dictionary<IFilePersistent, string>> errorFragments =
-                    ModelRules.GetErrors(
-                        schemaProviders: new OrigamProviderBuilder()
-                            .SetSchemaProvider(independentPersistenceService.SchemaProvider)
-                            .GetAll(), 
-                        independentPersistenceService: independentPersistenceService, 
-                        cancellationToken: cancellationToken); 
-
-	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
-	            var errorSections = persistenceProvider.GetFileErrors(
-	                ignoreDirectoryNames: new []{ ".git","l10n"},
-	                cancellationToken: cancellationToken);
-
-	            if (errorFragments.Count != 0)
-	            {
-                    FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
-                    this.RunWithInvoke(() =>
+                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+                this.RunWithInvoke(() =>
+                   {
+                       DialogResult dialogResult = MessageBox.Show(
+                           "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
+                           "Model Errors",
+                           MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                       if (dialogResult == DialogResult.Yes)
                        {
-                           DialogResult dialogResult = MessageBox.Show(
-                               "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
-                               "Model Errors",
-                               MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                           if (dialogResult == DialogResult.Yes)
-                           {
-                               resultsPad.DisplayResults(errorFragments);
-                           }
+                           resultsPad.DisplayResults(errorFragments);
                        }
-                    );
-                }
-	            if (errorSections.Count != 0)
+                   }
+                );
+            }
+            if (errorSections.Count != 0)
+            {
+	            this.RunWithInvoke(() =>
 	            {
-		            this.RunWithInvoke(() =>
-		            {
-			            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
-			            modelCheckResultWindow.Show(this);
-			          });
-	            }
-	        }
+		            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
+		            modelCheckResultWindow.Show(this);
+		          });
+            }
 	    }
 	    
 	    protected override void WndProc(ref Message m)
@@ -1666,21 +1677,7 @@ namespace OrigamArchitect
 				// could not close all the documents
 				return false;
 			}
-
-			if(_schema.IsSchemaChanged && _schema.SupportsSave)
-			{
-				DialogResult result = MessageBox.Show(this, strings.ModelChangedSaveToRepQuestion, strings.ModelChanged_Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-				switch(result)
-				{
-					case DialogResult.Yes:
-						_schema.SaveSchema();
-						break;
-					case DialogResult.Cancel:
-						return false;
-				}
-			}
-			_workflowPad.OrigamMenu = null;
+            _workflowPad.OrigamMenu = null;
 			
 #if ! ORIGAM_CLIENT
 			_findSchemaItemResultsPad?.ResetResults();
@@ -1710,14 +1707,14 @@ namespace OrigamArchitect
 
 				UpdateTitle();
 
-				modelCheckCancellationTokenSource.Cancel();
+                modelCheckCancellationTokenSource.Cancel();
 				modelCheckCancellationTokenSource =
 					new CancellationTokenSource();
 				return true;
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
@@ -1731,7 +1728,7 @@ namespace OrigamArchitect
                  ServiceManager.Services.GetService<IPersistenceService>();
             if (persistenceService != null)
             {
-                ReferenceIndexManager.ClearReferenceIndex(true);
+                ReferenceIndexManager.Clear(true);
             }
         }
 
@@ -1757,7 +1754,7 @@ namespace OrigamArchitect
 		private bool LoadConfiguration(string configurationName)
 		{
 			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations();
+				ConfigurationManager.GetAllUserHomeConfigurations();
 
             if (configurationName != null)
             {
@@ -1826,117 +1823,56 @@ namespace OrigamArchitect
 		/// <summary>
 		/// After configuration is selected, connect to the repository and load the model list from the repository.
 		/// </summary>
-		private bool LoadSchemaList()
+		private void InitPersistenceService()
 		{
 			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
 			ServiceManager.Services.AddService(persistence);
-
-			try
-			{
-				bool isRepositoryVersionCompatible = false;
-				bool isRepositoryEmpty = false;
-				try
-				{
-					isRepositoryVersionCompatible 
-						= persistence.IsRepositoryVersionCompatible();
-				}
-                catch (DatabaseProcedureNotFoundException ex)
-				{
-					if(ex.ProcedureName == "OrigamDatabaseSchemaVersion")
-					{
-						// let's assume repository is empty
-						isRepositoryEmpty = true;
-					}
-					else
-					{
-						throw;
-					}
-				}
-				if(! isRepositoryVersionCompatible && ! isRepositoryEmpty)
-				{
-					bool shouldUpdate = false;
-
-#if ORIGAM_CLIENT
-				shouldUpdate = AdministratorMode;
-#else
-					shouldUpdate = true;
-#endif
-
-					if(shouldUpdate & persistence.CanUpdateRepository())
-					{
-						if(MessageBox.Show(this, strings.UpgradeModelQuestion, strings.UpgradeModelTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-						{
-							persistence.UpdateRepository();
-						}
-						else
-						{
-							MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-							ServiceManager.Services.UnloadService(persistence);
-							return false;
-						}
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message2, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				else if(isRepositoryEmpty)
-				{
-					if(MessageBox.Show(this, strings.RepositoryInitializeQuestion, strings.Initialize_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-					{
-                        persistence.InitializeRepository();
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				persistence.LoadSchemaList();
-				return true;
-			}
-			catch
-			{
-				ServiceManager.Services.UnloadService(persistence);
-				throw;
-			}
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
-			AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security.Principal.PrincipalPolicy.WindowsPrincipal);
-			AsMessageBox.DebugInfoProvider = new Origam.Workflow.DebugInfo();
-			SplashScreen splash = new SplashScreen();
-			splash.Show();
-			Application.DoEvents();
-			InitializeDefaultServices();
-			SubscribeToUpgradeServiceEvents();
-			InitializeDefaultPads();
+			try
+			{
+				AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security
+					.Principal.PrincipalPolicy.WindowsPrincipal);
+				AsMessageBox.DebugInfoProvider =
+					new Origam.Workflow.DebugInfo();
+				SplashScreen splash = new SplashScreen();
+				splash.Show();
+				Application.DoEvents();
+				InitializeDefaultServices();
+				SubscribeToUpgradeServiceEvents();
+				InitializeDefaultPads();
 
-			//this.LoadWorkspace();
-			
-			// Menu and toolbars
-			PrepareMenuBars();
-			CreateMainMenu();
-			FinishMenuBars();
-	
-			this.dockPanel.ActiveDocumentChanged += dockPanel_ActiveDocumentChanged;
-            this.dockPanel.ContentRemoved += dockPanel_ContentRemoved;
-			this.dockPanel.ActiveContentChanged += dockPanel_ActiveContentChanged;
+				//this.LoadWorkspace();
+
+				// Menu and toolbars
+				PrepareMenuBars();
+				CreateMainMenu();
+				FinishMenuBars();
+
+				this.dockPanel.ActiveDocumentChanged +=
+					dockPanel_ActiveDocumentChanged;
+				this.dockPanel.ContentRemoved += dockPanel_ContentRemoved;
+				this.dockPanel.ActiveContentChanged +=
+					dockPanel_ActiveContentChanged;
 
 
 
 #if !ORIGAM_CLIENT
-			// auto-update within release-branch
-			AutoUpdateBackgroudFinder.RunWorkerAsync();
-			// search Origam.com for whether there is a newer architect version within the same release branch
-			// as the current branch
+				// auto-update within release-branch
+				AutoUpdateBackgroudFinder.RunWorkerAsync();
+				// search Origam.com for whether there is a newer architect version within the same release branch
+				// as the current branch
 #endif
-			Connect();
-			splash.Dispose();
+				Connect();
+				splash.Dispose();
+			}
+			catch(Exception ex)
+			{
+				this.RunWithInvoke(() => AsMessageBox.ShowError(
+					this, ex.Message, strings.GenericError_Title, ex));
+			}
 		}
 
 
@@ -2027,7 +1963,7 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             if (_schema.ActiveSchemaItem != null)
 			{
@@ -2140,11 +2076,13 @@ namespace OrigamArchitect
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-		private void _schema_SchemaLoaded(object sender, EventArgs e)
+        private void _schema_SchemaLoaded(object sender, EventArgs e)
 		{
-			OrigamEngine.InitializeSchemaItemProviders(_schema);
+            OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
+			IParameterService parameterService 
+				= ServiceManager.Services.GetService<IParameterService>();
 
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
@@ -2175,11 +2113,12 @@ namespace OrigamArchitect
 				}
 			}
 #else
-            ApplicationDataDisconnectedMode 
-                = !TestConnectionToApplicationDataDatabase();
+			ApplicationDataDisconnectedMode
+				= !TestConnectionToApplicationDataDatabase();
             if (ApplicationDataDisconnectedMode)
             {
-                UpdateTitle();
+				parameterService.PrepareParameters();
+				UpdateTitle();
                 return;
             }
             bool isEmpty = deployment.IsEmptyDatabase();
@@ -2198,23 +2137,10 @@ namespace OrigamArchitect
                     deployment.Deploy();
                 }
             }
-			Origam.Workbench.Commands.DeployVersion deployCommand = 
-                new Origam.Workbench.Commands.DeployVersion();
-	        if(deployCommand.IsEnabled)
-            {
-                if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
-                    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                {
-                    deployment.Deploy();
-	                GetPad<ExtensionPad>()?.LoadPackages();
-                }
-            }
+
+            RunDeploymentScripts(deployment);
 
 #endif
-			IParameterService parameterService = 
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
 			try
 			{
 				parameterService.RefreshParameters();
@@ -2251,7 +2177,42 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-        private void UpdateTitle()
+		private void RunDeploymentScripts(IDeploymentService deployment)
+		{
+			DeployVersion deployCommand = new DeployVersion();
+			if (!deployCommand.IsEnabled)
+			{
+				return;
+			}
+			if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
+				    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo,
+				    MessageBoxIcon.Question,
+				    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+			{
+				PackageVersion deployedPackageVersion =
+					deployment.CurrentDeployedVersion(_schema.ActiveExtension);
+				if (deployedPackageVersion == PackageVersion.Zero)
+				{
+					if (MessageBox.Show(
+						    strings.DeploySinglePackageQuestion,
+						    strings.DeploymentSctiptsPending_Title,
+						    MessageBoxButtons.YesNo,
+						    MessageBoxIcon.Question,
+						    MessageBoxDefaultButton.Button1) ==
+					    DialogResult.Yes)
+					{
+						deployment.ForceDeployCurrentPackage();
+						GetPad<ExtensionPad>()?.LoadPackages();
+						return;
+					}
+				}
+
+				deployment.Deploy();
+				GetPad<ExtensionPad>()?.LoadPackages();
+			}
+		}
+
+		public void UpdateTitle()
         {
 #if ORIGAM_CLIENT
 			Title = "";
@@ -2292,7 +2253,7 @@ namespace OrigamArchitect
 			try
 			{
 				_attachmentPad?.GetAttachments(mainEntityId, mainRecordId, childReferences);
-				}
+			}
 			catch
 			{
 			}
@@ -2343,7 +2304,7 @@ namespace OrigamArchitect
 		private void _schema_SchemaUnloading(object sender, CancelEventArgs e)
 		{
 			e.Cancel = ! UnloadSchema();
-		}
+        }
 
 		private void CheckModelRootPackageVersion()
 		{
@@ -2484,7 +2445,7 @@ namespace OrigamArchitect
 
                 using(Stream s = sfd.OpenFile())
                 {
-                    workbook.Write(s);
+                    workbook.Write(s, false);
                 }
 
                 System.Diagnostics.Process.Start(sfd.FileName);
@@ -2545,7 +2506,7 @@ namespace OrigamArchitect
 
 			try
 			{
-				using (WebResponse webResponse = HttpTools.GetResponse(url,
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(url,
 					"GET", null, null,
 					new Hashtable()
 					{ { "Accept-Encoding", "gzip,deflate"} }
@@ -2553,7 +2514,7 @@ namespace OrigamArchitect
 				{
 					string output;
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 
 					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]
@@ -2612,7 +2573,7 @@ namespace OrigamArchitect
 
         private static bool TestConnectionToApplicationDataDatabase()
         {
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             try
             {
                 abstractSqlDataService.ExecuteUpdate("SELECT 1",null);

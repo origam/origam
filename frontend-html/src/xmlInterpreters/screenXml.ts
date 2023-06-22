@@ -34,12 +34,12 @@ import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
 import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
 import { Property } from "model/entities/Property";
-import { ColumnConfigurationDialog } from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
 import { IComponentBinding } from "model/entities/types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { findStopping } from "./xmlUtils";
+import { findActions, findFormPropertyIds, findFormRoot, findParameters, findStopping, findUIRoot } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
 import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
@@ -93,33 +93,9 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
 import { getMomentFormat, replaceDefaultDateFormats } from "./getMomentFormat";
 import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePanelView";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
-export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
-
-export const findUIChildren = (node: any) =>
-  findStopping(node, (n) => n.parent.name === "UIChildren");
-
-export const findBoxes = (node: any) =>
-  findStopping(node, (n) => n.attributes && n.attributes.Type === "Box");
-
-export const findChildren = (node: any) => findStopping(node, (n) => n.name === "Children")[0];
-
-export const findActions = (node: any) =>
-  findStopping(node, (n) => n.parent.name === "Actions" && n.name === "Action");
-
-export const findParameters = (node: any) => findStopping(node, (n) => n.name === "Parameter");
-
-export const findStrings = (node: any) =>
-  findStopping(node, (n) => n.name === "string").map(
-    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
-  );
-
-export const findFormPropertyIds = (node: any) =>
-  findStopping(node, (n) => n.name === "string" && n.parent.name === "PropertyNames").map(
-    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
-  );
-
-export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
 function getPropertyParameters(node: any) {
   const parameters = findParameters(node);
@@ -141,56 +117,57 @@ export function fixColumnWidth(width: number) {
   }
 }
 
-function parseProperty(property: any, idx: number): IProperty {
+function parseProperty(node: any, idx: number): IProperty {
   const propertyObject = new Property({
-    xmlNode: property,
-    id: property.attributes.Id,
-    tabIndex: property.attributes.TabIndex,
-    controlPropertyId: property.attributes.ControlPropertyId,
-    controlPropertyValue: property.attributes.ControlPropertyValue,
-    modelInstanceId: property.attributes.ModelInstanceId || "",
-    name: property.attributes.Name,
-    readOnly: property.attributes.ReadOnly === "true",
-    x: parseInt(property.attributes.X, 10),
-    y: parseInt(property.attributes.Y, 10),
-    width: parseInt(property.attributes.Width, 10),
-    height: parseInt(property.attributes.Height, 10),
-    captionLength: parseInt(property.attributes.CaptionLength, 10),
-    captionPosition: property.attributes.CaptionPosition,
-    entity: property.attributes.Entity,
-    column: property.attributes.Column,
-    parameters: getPropertyParameters(property),
-    dock: property.attributes.Dock,
-    multiline: property.attributes.Multiline === "true",
-    isPassword: property.attributes.IsPassword === "true",
-    isRichText: property.attributes.IsRichText === "true",
-    autoSort: property.attributes.AutoSort === "true",
-    maxLength: parseInt(property.attributes.MaxLength, 10),
-    modelFormatterPattern: replaceDefaultDateFormats(property.attributes.FormatterPattern),
-    formatterPattern: property.attributes.FormatterPattern
-      ? getMomentFormat(property)
+    xmlNode: node,
+    id: node.attributes.Id,
+    tabIndex: node.attributes.TabIndex,
+    controlPropertyId: node.attributes.ControlPropertyId,
+    controlPropertyValue: node.attributes.ControlPropertyValue,
+    modelInstanceId: node.attributes.ModelInstanceId || "",
+    name: node.attributes.Name,
+    readOnly: node.attributes.ReadOnly === "true",
+    x: parseInt(node.attributes.X, 10),
+    y: parseInt(node.attributes.Y, 10),
+    width: parseInt(node.attributes.Width, 10),
+    height: parseInt(node.attributes.Height, 10),
+    captionLength: parseInt(node.attributes.CaptionLength, 10),
+    captionPosition: node.attributes.CaptionPosition,
+    entity: node.attributes.Entity,
+    column: node.attributes.Column,
+    alwaysHidden: node.attributes.AlwaysHidden === "true",
+    parameters: getPropertyParameters(node),
+    dock: node.attributes.Dock,
+    multiline: node.attributes.Multiline === "true",
+    isPassword: node.attributes.IsPassword === "true",
+    isRichText: node.attributes.IsRichText === "true",
+    autoSort: node.attributes.AutoSort === "true",
+    maxLength: parseInt(node.attributes.MaxLength, 10),
+    modelFormatterPattern: replaceDefaultDateFormats(node.attributes.FormatterPattern),
+    formatterPattern: node.attributes.FormatterPattern
+      ? getMomentFormat(node)
       : "",
-    customNumericFormat: property.attributes.CustomNumericFormat,
-    identifier: property.attributes.Identifier,
-    gridColumnWidth: property.attributes.GridColumnWidth
-      ? parseInt(property.attributes.GridColumnWidth)
+    customNumericFormat: node.attributes.CustomNumericFormat,
+    identifier: node.attributes.Identifier,
+    gridColumnWidth: node.attributes.GridColumnWidth
+      ? parseInt(node.attributes.GridColumnWidth)
       : 100,
     columnWidth: fixColumnWidth(
-      property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100
+      node.attributes.GridColumnWidth ? parseInt(node.attributes.GridColumnWidth) : 100
     ),
-    suppressEmptyColumns: property.attributes.SuppressEmptyColumns === "true",
-    lookupId: property.attributes.LookupId,
-    lookup: !property.attributes.LookupId
+    suppressEmptyColumns: node.attributes.SuppressEmptyColumns === "true",
+    lookupId: node.attributes.LookupId,
+    lookup: !node.attributes.LookupId
       ? undefined
       : new Lookup({
-        dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
-        lookupId: property.attributes.LookupId,
-        identifier: property.attributes.Identifier,
-        identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-        dropDownType: property.attributes.DropDownType,
-        cached: property.attributes.Cached === "true",
-        searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
-        dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+        dropDownShowUniqueValues: node.attributes.DropDownShowUniqueValues === "true",
+        lookupId: node.attributes.LookupId,
+        identifier: node.attributes.Identifier,
+        identifierIndex: parseInt(node.attributes.IdentifierIndex, 10),
+        dropDownType: node.attributes.DropDownType,
+        cached: node.attributes.Cached === "true",
+        searchByFirstColumnOnly: node.attributes.SearchByFirstColumnOnly === "true",
+        dropDownColumns: findStopping(node, (n) => n.name === "Property").map(
           (ddProperty) => {
             return new DropDownColumn({
               id: ddProperty.attributes.Id,
@@ -202,7 +179,7 @@ function parseProperty(property: any, idx: number): IProperty {
           }
         ),
         dropDownParameters: findStopping(
-          property,
+          node,
           (n) => n.name === "ComboBoxParameterMapping"
         ).map((ddParam) => {
           return {
@@ -212,17 +189,17 @@ function parseProperty(property: any, idx: number): IProperty {
         }),
       }),
 
-    allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-    isTree: property.attributes.IsTree === "true",
-    isAggregatedColumn: property.attributes.Aggregated || false,
-    isLookupColumn: property.attributes.IsLookupColumn || false,
-    style: cssString2Object(property.attributes.Style),
-    toolTip: property.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
-    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true",
-    fieldType: property.attributes.FieldType
+    allowReturnToForm: node.attributes.AllowReturnToForm === "true",
+    isTree: node.attributes.IsTree === "true",
+    isAggregatedColumn: node.attributes.Aggregated || false,
+    isLookupColumn: node.attributes.IsLookupColumn || false,
+    style: cssString2Object(node.attributes.Style),
+    toolTip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
+    supportsServerSideSorting: node.attributes.SupportsServerSideSorting === "true",
+    fieldType: node.attributes.FieldType
   });
-  if (property.elements && property.elements.length > 0) {
-    property.elements
+  if (node.elements && node.elements.length > 0) {
+    node.elements
       .filter((element: any) => element.name === "Property")
       .map((childProperty: any, idx: number) => parseProperty(childProperty, idx))
       .forEach((childProperty: IProperty) => {
@@ -241,6 +218,7 @@ export function*interpretScreenXml(
   panelConfigurationsRaw: any,
   lookupMenuMappings: any,
   sessionId: string,
+  workflowTaskId: string | null,
   isLazyLoading: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
@@ -265,7 +243,8 @@ export function*interpretScreenXml(
       (n.name === "UIElement" || n.name === "UIRoot") &&
       (n.attributes.Type === "Grid" ||
         n.attributes.Type === "TreePanel" ||
-        n.attributes.Type === "SectionLevelPlugin")
+        n.attributes.Type === "SectionLevelPlugin" ||
+        n.attributes.Type === "ScreenLevelPluginData")
   );
 
   checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
@@ -322,9 +301,13 @@ export function*interpretScreenXml(
   }
 
   const foundLookupIds = new Set<string>();
+  const uiRoot = findUIRoot(windowXml);
 
+  const focusManager = new ScreenFocusManager();
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
+    focusManager: focusManager,
+    uiRootType: uiRoot.attributes.Type,
     menuId: windowXml.attributes.MenuId,
     dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
     sessionId,
@@ -341,6 +324,7 @@ export function*interpretScreenXml(
     autoSaveOnListRecordChange: windowXml.attributes.AutoSaveOnListRecordChange === "true",
     requestSaveAfterUpdate: windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
+    workflowTaskId: workflowTaskId,
     panelConfigurations,
     formScreenLifecycle,
     // isSessioned: windowXml.attributes.UseSession,
@@ -413,6 +397,7 @@ export function*interpretScreenXml(
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
+        focusManager: focusManager,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -425,6 +410,7 @@ export function*interpretScreenXml(
         isHeadless: dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
+        hideCopyButton: dataView.attributes.HideCopyButton === "true",
         showDeleteButton: dataView.attributes.ShowDeleteButton === "true",
         showSelectionCheckboxesSetting: dataView.attributes.ShowSelectionCheckboxes === "true",
         isGridHeightDynamic: dataView.attributes.IsGridHeightDynamic === "true",
@@ -455,8 +441,10 @@ export function*interpretScreenXml(
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
-          tablePropertyIds: properties.slice(1).map((prop) => prop.id),
-          columnConfigurationDialog: new ColumnConfigurationDialog(),
+          tablePropertyIds: properties
+            .filter(x => !x.alwaysHidden)
+            .map((prop) => prop.id),
+          columnConfigurationModel: new ColumnConfigurationModel(),
           filterConfiguration: filterConfiguration,
           filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,
@@ -503,7 +491,6 @@ export function*interpretScreenXml(
         dataViewInstance.tablePanelView.tableProperties,
         isLazyLoading
       );
-      configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties
@@ -587,7 +574,9 @@ export function*interpretScreenXml(
           new ViewConfiguration(
             function*(perspectiveTag) {
               dataView.activePanelView = perspectiveTag as any;
-              yield*saveColumnConfigurations(dataView)();
+              if(!isMobileLayoutActive(dataView)){
+                yield*saveColumnConfigurations(dataView)();
+              }
             },
             () => {
               if (

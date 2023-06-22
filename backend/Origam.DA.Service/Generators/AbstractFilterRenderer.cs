@@ -75,16 +75,16 @@ namespace Origam.DA.Service
                 case "In":
                     if (isColumnArray)
                     {
-                        return "\0" + columnName + " IN (" + string.Join(", ", rightValues) + ")\0";                
+                        return ColumnArray(columnName, "IN", rightValues);     
                     }
                     else
                     {
                         return leftValue + " IN (" + string.Join(", ", rightValues) + ")";                
                     }
                 case "NotIn":
-                    if(isColumnArray)
+                    if (isColumnArray)
                     {
-                        return "\0" + columnName + " NOT IN (" + string.Join(", ", rightValues) + ")\0";
+                        return ColumnArray(columnName, "NOT IN", rightValues);
                     }
                     else
                     {
@@ -98,7 +98,9 @@ namespace Origam.DA.Service
                     throw new ArgumentException($"Cannot process operator {operatorName} with {rightValues.Length} arguments");
             }
         }
-        
+
+        protected abstract string ColumnArray(string columnName, string operand, string[] rightValues);
+
         public string BinaryOperator(string leftValue,
             string rightValue, string operatorName)
         {

@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AllDataTypes] ADD [refTagInputSourceId] UniqueIdentifier NULL

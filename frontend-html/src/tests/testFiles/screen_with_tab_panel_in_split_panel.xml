@@ -1,0 +1,624 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Title="Transactions"
+        MenuId="be8ee67e-3073-488d-bd2f-0238f18a1013" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true"
+        autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false" UseSession="true">
+    <DataSources>
+    </DataSources>
+    <ComponentBindings>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="78739e7e-b6b7-46fb-85db-dbc1a3be32f9" ChildProperty="Id" ChildEntity="RentalTransaction"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="828dae2a-c348-409b-a522-f4153ecb9823" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionOffer" ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="4deb90e9-6ea9-4d4e-8265-3b78176d7440" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionPayment" ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="31c1d716-854f-4a2f-a162-0945183f7e92" ChildProperty="Id" ChildEntity="RentalTransaction"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="21ceb047-ad1d-47c6-88b1-d2a2d38eefb7" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionConsumable" ChildPropertyType="Field"/>
+        <Binding ParentId="21ceb047-ad1d-47c6-88b1-d2a2d38eefb7" ParentProperty="Id"
+                 ParentEntity="RentalTransactionConsumable" ChildId="6888d8f0-963c-4f59-9f43-5c4f5a854ed0"
+                 ChildProperty="refRentalTransactionConsumableId" ChildEntity="RentalTransactionConsumableQuantityPrice"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="5f26605a-e661-45f1-8ef6-3b2ad750294c" ChildProperty="Id" ChildEntity="RentalTransaction"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="6ff0413f-4df1-4a5d-b7f8-c5491e7a99b5" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionAccessory" ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="37b094f9-73f0-4488-b7be-d0fedaa3105d" ChildProperty="Id" ChildEntity="RentalTransaction"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="5c5bdcef-faf4-4e94-9d2b-54b5d336b98b" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionService" ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="df035838-4be1-48bc-82d2-99ed65997839" ChildProperty="Id" ChildEntity="RentalTransaction"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="e50fe68b-fa0c-45c7-8f4b-761a50ee90b3" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionAdHoc" ChildPropertyType="Field"/>
+        <Binding ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" ParentProperty="Id" ParentEntity="RentalTransaction"
+                 ChildId="88b6b7ac-f94f-4873-b80a-b799f42a4bec" ChildProperty="refRentalTransactionId"
+                 ChildEntity="RentalTransactionNote" ChildPropertyType="Field"/>
+    </ComponentBindings>
+    <UIRoot Id="SplitPanel1_0" ModelInstanceId="d7c134cb-027d-4233-9186-0ca596d2369c" xsi:type="UIElement" Type="VSplit"
+            IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration/>
+        <UIChildren>
+            <UIElement Id="AsPanel1_1" ModelInstanceId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba" Name="Transaction"
+                       xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                       ModelId="10c93cf5-ea79-4d6e-8926-4cabb2eff27a" DefaultPanelView="1" IsHeadless="false"
+                       DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                       ShowDeleteButton="false" ShowSelectionCheckboxes="true" IsGridHeightDynamic="false"
+                       SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="RentalTransaction"
+                       DataMember="RentalTransaction" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true"
+                       RequestDataAfterSelectionChange="true" ConfirmSelectionChange="true">
+                <FormRoot Type="Canvas">
+                    <Children>
+                        <FormElement Type="FormSection" Title="Transaction Identification" TabIndex="0.0" X="12" Y="17"
+                                     Width="364" Height="221">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Status" TabIndex="0.1" X="397" Y="17" Width="346"
+                                     Height="221">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Rental Object" TabIndex="0.2" X="14" Y="244" Width="731"
+                                     Height="148">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Pickup &amp; Drop-off" TabIndex="0.3" X="14" Y="398"
+                                     Width="731" Height="114">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Total Order Price" TabIndex="0.4" X="751" Y="17"
+                                     Width="307" Height="190">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Downpayment" TabIndex="0.5" X="751" Y="220" Width="307"
+                                     Height="103">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Balance" TabIndex="0.6" X="751" Y="330" Width="307"
+                                     Height="209">
+                            <Children>
+                                <FormElement Type="Label" Title="-" X="146" Y="90" Width="10" Height="18"/>
+                            </Children>
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Reservation" TabIndex="0.7" X="1064" Y="17" Width="290"
+                                     Height="91">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Cancellation" TabIndex="0.8" X="1064" Y="126" Width="290"
+                                     Height="123">
+                            <Children>
+                                <FormElement Type="Label" Title="-" X="131" Y="61" Width="10" Height="18"/>
+                            </Children>
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Other Information" TabIndex="0.9" X="1064" Y="268"
+                                     Width="290" Height="153">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Deposit" TabIndex="0.10" X="1360" Y="17" Width="200"
+                                     Height="91">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Customer Note" TabIndex="0.11" X="1360" Y="126"
+                                     Width="200" Height="123">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                        <FormElement Type="FormSection" Title="Customer Note 2" TabIndex="0.12" X="1360" Y="264"
+                                     Width="200" Height="153">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormElement>
+                    </Children>
+                    <PropertyNames>
+                    </PropertyNames>
+                </FormRoot>
+                <Configuration>
+                </Configuration>
+            </UIElement>
+            <UIElement Id="AsTabControl1_2" ModelInstanceId="5a726824-4b65-4d83-b87c-f48662f94893" xsi:type="UIElement"
+                       Type="Tab" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="TabPage1_3" ModelInstanceId="7548dfcd-fa1c-475c-8a34-4158b79ade2a"
+                               xsi:type="UIElement" Type="Box" Name="Accepted Offers" IsRootGrid="false"
+                               IsRootEntity="true" IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="SplitPanel6_4" ModelInstanceId="6f460c32-cdaa-4cc0-85d4-336800009128"
+                                       xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true"
+                                       IsPreloaded="true">
+                                <Configuration/>
+                                <UIChildren>
+                                    <UIElement Id="AsPanel15_5" ModelInstanceId="78739e7e-b6b7-46fb-85db-dbc1a3be32f9"
+                                               Height="54" Name="" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="ac3b412d-77a2-41b8-8570-8df23bc8a48a" DefaultPanelView="0"
+                                               IsHeadless="true" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransaction" DataMember="RentalTransaction"
+                                               IsRootGrid="false" IsRootEntity="true" IsPreloaded="true"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <Children>
+                                                <FormElement Type="Label" Title="Total Price" X="130" Y="9" Width="100"
+                                                             Height="24"/>
+                                            </Children>
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration>
+                                        </Configuration>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                    <UIElement Id="AsPanel3_6" ModelInstanceId="828dae2a-c348-409b-a522-f4153ecb9823"
+                                               Name="" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                               ModelId="6504e174-5c43-4ee0-bec0-56bbc4c70f0e" DefaultPanelView="1"
+                                               IsHeadless="false" DisableActionButtons="false" ShowAddButton="true"
+                                               HideCopyButton="false" ShowDeleteButton="true"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransactionOffer"
+                                               DataMember="RentalTransaction.RentalTransactionOffer" IsRootGrid="false"
+                                               IsRootEntity="false" IsPreloaded="false"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <Children>
+                                                <FormElement Type="FormSection" Title="Main Data" TabIndex="0.0" X="12"
+                                                             Y="21" Width="716" Height="129">
+                                                    <PropertyNames>
+                                                    </PropertyNames>
+                                                </FormElement>
+                                                <FormElement Type="FormSection" Title="Price calculation" TabIndex="0.1"
+                                                             X="12" Y="169" Width="717" Height="222">
+                                                    <Children>
+                                                        <FormElement Type="Label"
+                                                                     Title="______________________________________________________"
+                                                                     X="366" Y="125" Width="350" Height="19"/>
+                                                        <FormElement Type="Label" Title="Qty" X="160" Y="35" Width="37"
+                                                                     Height="19"/>
+                                                        <FormElement Type="Label" Title="Offer" X="21" Y="57"
+                                                                     Width="100" Height="19"/>
+                                                        <FormElement Type="Label" Title="Name" X="203" Y="35"
+                                                                     Width="103" Height="19"/>
+                                                        <FormElement Type="Label" Title="Unit Price" X="368" Y="35"
+                                                                     Width="122" Height="19"/>
+                                                        <FormElement Type="Label" Title="Total" X="524" Y="35"
+                                                                     Width="100" Height="19"/>
+                                                        <FormElement Type="Label" Title="Prolongation" X="21" Y="100"
+                                                                     Width="100" Height="19"/>
+                                                    </Children>
+                                                    <PropertyNames>
+                                                    </PropertyNames>
+                                                </FormElement>
+                                            </Children>
+                                        </FormRoot>
+                                        <Configuration>
+                                        </Configuration>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                </UIChildren>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage2_7" ModelInstanceId="ecfba0ed-f227-4307-ba4f-769334e8f636"
+                               xsi:type="UIElement" Type="Box" Name="Payments" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="AsPanel8_8" ModelInstanceId="4deb90e9-6ea9-4d4e-8265-3b78176d7440"
+                                       Name="Payments" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                       ModelId="3c49629d-b7ab-4ed6-8ac4-309475d7a0c5" DefaultPanelView="1"
+                                       IsHeadless="false" DisableActionButtons="false" ShowAddButton="false"
+                                       HideCopyButton="false" ShowDeleteButton="true" ShowSelectionCheckboxes="false"
+                                       IsGridHeightDynamic="false" SelectionMember="" OrderMember=""
+                                       IsDraggingEnabled="false" Entity="RentalTransactionPayment"
+                                       DataMember="RentalTransaction.RentalTransactionPayment" IsRootGrid="false"
+                                       IsRootEntity="false" IsPreloaded="false"
+                                       ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                       ParentEntityName="RentalTransaction">
+                                <Properties>
+                                </Properties>
+                                <Actions>
+                                </Actions>
+                                <FormRoot Type="Canvas">
+                                    <Children>
+                                        <FormElement Type="FormSection" Title="DataTrans Payment Details" TabIndex="0.5"
+                                                     X="16" Y="173" Width="457" Height="152">
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormElement>
+                                    </Children>
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormRoot>
+                                <Configuration>
+                                </Configuration>
+                                <FilterExpressions/>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage3_9" ModelInstanceId="0f750372-89f4-4bb2-ae3c-54339cc49631"
+                               xsi:type="UIElement" Type="Box" Name="Consumables" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="SplitPanel4_10" ModelInstanceId="6120e64a-58c1-40da-b157-95d1bf5809a1"
+                                       xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true"
+                                       IsPreloaded="true">
+                                <Configuration/>
+                                <UIChildren>
+                                    <UIElement Id="AsPanel13_11" ModelInstanceId="31c1d716-854f-4a2f-a162-0945183f7e92"
+                                               Height="58" Name="" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="35221699-a0c8-40f7-9475-2a53ab4ef930" DefaultPanelView="0"
+                                               IsHeadless="true" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransaction" DataMember="RentalTransaction"
+                                               IsRootGrid="false" IsRootEntity="true" IsPreloaded="true"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration/>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                    <UIElement Id="SplitPanel7_12"
+                                               ModelInstanceId="1ff0b8d0-dce5-4731-92b0-a222bd544f58"
+                                               xsi:type="UIElement" Type="HSplit" IsRootGrid="false" IsRootEntity="true"
+                                               IsPreloaded="true">
+                                        <Configuration/>
+                                        <UIChildren>
+                                            <UIElement Id="AsPanel6_13"
+                                                       ModelInstanceId="21ceb047-ad1d-47c6-88b1-d2a2d38eefb7"
+                                                       Name="Consumables" xsi:type="Grid" Type="Grid"
+                                                       HasPanelConfiguration="true"
+                                                       ModelId="e3643c06-def4-4f01-8434-f698b9b445be"
+                                                       DefaultPanelView="1" IsHeadless="false"
+                                                       DisableActionButtons="false" ShowAddButton="true"
+                                                       HideCopyButton="false" ShowDeleteButton="true"
+                                                       ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                                       SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                                       Entity="RentalTransactionConsumable"
+                                                       DataMember="RentalTransaction.RentalTransactionConsumable"
+                                                       IsRootGrid="false" IsRootEntity="false" IsPreloaded="false"
+                                                       ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                                       ParentEntityName="RentalTransaction">
+                                                <Properties>
+                                                </Properties>
+                                                <Actions>
+                                                </Actions>
+                                                <FormRoot Type="Canvas">
+                                                    <PropertyNames>
+                                                    </PropertyNames>
+                                                </FormRoot>
+                                                <Configuration>
+                                                </Configuration>
+                                                <FilterExpressions/>
+                                            </UIElement>
+                                            <UIElement Id="AsPanel14_14"
+                                                       ModelInstanceId="6888d8f0-963c-4f59-9f43-5c4f5a854ed0"
+                                                       Name="Consumable Quantity Price" xsi:type="Grid" Type="Grid"
+                                                       HasPanelConfiguration="true"
+                                                       ModelId="bababc3e-85d4-4213-9d65-0d17a6fed16f"
+                                                       DefaultPanelView="1" IsHeadless="false"
+                                                       DisableActionButtons="false" ShowAddButton="false"
+                                                       HideCopyButton="false" ShowDeleteButton="false"
+                                                       ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                                       SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                                       Entity="RentalTransactionConsumableQuantityPrice"
+                                                       DataMember="RentalTransaction.RentalTransactionConsumable.RentalTransactionConsumableQuantityPrice"
+                                                       IsRootGrid="false" IsRootEntity="false" IsPreloaded="false"
+                                                       ParentId="21ceb047-ad1d-47c6-88b1-d2a2d38eefb7"
+                                                       ParentEntityName="RentalTransactionConsumable">
+                                                <Properties>
+                                                </Properties>
+                                                <Actions>
+                                                </Actions>
+                                                <FormRoot Type="Canvas">
+                                                    <PropertyNames>
+                                                    </PropertyNames>
+                                                </FormRoot>
+                                                <Configuration/>
+                                                <FilterExpressions/>
+                                            </UIElement>
+                                        </UIChildren>
+                                    </UIElement>
+                                </UIChildren>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage4_15" ModelInstanceId="9c3bff85-a0b5-456f-9d08-fd7a2f9398f5"
+                               xsi:type="UIElement" Type="Box" Name="Accessories" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="SplitPanel7_16" ModelInstanceId="773c14eb-d36c-4218-b3d3-4de5b35cbeed"
+                                       xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true"
+                                       IsPreloaded="true">
+                                <Configuration/>
+                                <UIChildren>
+                                    <UIElement Id="AsPanel15_17" ModelInstanceId="5f26605a-e661-45f1-8ef6-3b2ad750294c"
+                                               Height="57" Name="" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="9898231d-e78f-4f3c-a75b-b1ebfe0c8062" DefaultPanelView="0"
+                                               IsHeadless="true" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransaction" DataMember="RentalTransaction"
+                                               IsRootGrid="false" IsRootEntity="true" IsPreloaded="true"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <Children>
+                                                <FormElement Type="Label" Title="Total Price" X="129" Y="9" Width="100"
+                                                             Height="26"/>
+                                            </Children>
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration/>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                    <UIElement Id="AsPanel2_18" ModelInstanceId="6ff0413f-4df1-4a5d-b7f8-c5491e7a99b5"
+                                               Name="Accessories" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="51b3aa74-b72f-4510-8688-ddedbda1a6e9" DefaultPanelView="1"
+                                               IsHeadless="false" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransactionAccessory"
+                                               DataMember="RentalTransaction.RentalTransactionAccessory"
+                                               IsRootGrid="false" IsRootEntity="false" IsPreloaded="false"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration/>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                </UIChildren>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage5_19" ModelInstanceId="c1d68f45-d8a1-4bba-a5d2-daf777e49046"
+                               xsi:type="UIElement" Type="Box" Name="Services" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="SplitPanel5_20" ModelInstanceId="05e69590-01b4-43f3-9b54-a72760570337"
+                                       xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true"
+                                       IsPreloaded="true">
+                                <Configuration/>
+                                <UIChildren>
+                                    <UIElement Id="AsPanel14_21" ModelInstanceId="37b094f9-73f0-4488-b7be-d0fedaa3105d"
+                                               Height="84" Name="" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="9a5d68cf-8ab4-4d15-b075-08ac3b118145" DefaultPanelView="0"
+                                               IsHeadless="true" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransaction" DataMember="RentalTransaction"
+                                               IsRootGrid="false" IsRootEntity="true" IsPreloaded="true"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <Children>
+                                                <FormElement Type="Label" Title="TotalPrice" X="150" Y="10" Width="99"
+                                                             Height="15"/>
+                                            </Children>
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration>
+                                        </Configuration>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                    <UIElement Id="AsPanel3_22" ModelInstanceId="5c5bdcef-faf4-4e94-9d2b-54b5d336b98b"
+                                               Name="Services" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                               ModelId="e80d21f4-b76e-4551-a150-f0a2e4d7e3f8" DefaultPanelView="1"
+                                               IsHeadless="false" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="true"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransactionService"
+                                               DataMember="RentalTransaction.RentalTransactionService"
+                                               IsRootGrid="false" IsRootEntity="false" IsPreloaded="false"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <Children>
+                                                <FormElement Type="Label" Title="Time-based Price" X="18" Y="118"
+                                                             Width="124" Height="15"/>
+                                                <FormElement Type="Label" Title="x" X="189" Y="118" Width="10"
+                                                             Height="18"/>
+                                                <FormElement Type="Label" Title="à" X="285" Y="117" Width="21"
+                                                             Height="18"/>
+                                                <FormElement Type="Label"
+                                                             Title="_________________________________________________________________________________________"
+                                                             X="18" Y="136" Width="619" Height="20"/>
+                                                <FormElement Type="Label" Title="x" X="372" Y="116" Width="14"
+                                                             Height="18"/>
+                                                <FormElement Type="Label" Title="x Rental Object Quantity" X="333"
+                                                             Y="162" Width="136" Height="15"/>
+                                                <FormElement Type="Label" Title="%" X="362" Y="68" Width="25"
+                                                             Height="18"/>
+                                            </Children>
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration>
+                                        </Configuration>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                </UIChildren>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage6_23" ModelInstanceId="a853ca02-f451-4cef-a885-a29354eb6365"
+                               xsi:type="UIElement" Type="Box" Name="Extras" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="SplitPanel6_24" ModelInstanceId="beeffccf-83df-4a39-9ddf-978ba831ae23"
+                                       xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true"
+                                       IsPreloaded="true">
+                                <Configuration/>
+                                <UIChildren>
+                                    <UIElement Id="AsPanel14_25" ModelInstanceId="df035838-4be1-48bc-82d2-99ed65997839"
+                                               Height="56" Name="" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="53473a35-b117-4f36-9cdf-e5d3d83692ea" DefaultPanelView="0"
+                                               IsHeadless="true" DisableActionButtons="false" ShowAddButton="false"
+                                               HideCopyButton="false" ShowDeleteButton="false"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransaction" DataMember="RentalTransaction"
+                                               IsRootGrid="false" IsRootEntity="true" IsPreloaded="true"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <PropertyNames>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration/>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                    <UIElement Id="AsPanel15_26" ModelInstanceId="e50fe68b-fa0c-45c7-8f4b-761a50ee90b3"
+                                               Name="Extra Order Items" xsi:type="Grid" Type="Grid"
+                                               HasPanelConfiguration="true"
+                                               ModelId="4f6cb879-8f71-4149-b4e2-f90256efc325" DefaultPanelView="1"
+                                               IsHeadless="false" DisableActionButtons="false" ShowAddButton="true"
+                                               HideCopyButton="false" ShowDeleteButton="true"
+                                               ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                                               Entity="RentalTransactionAdHoc"
+                                               DataMember="RentalTransaction.RentalTransactionAdHoc" IsRootGrid="false"
+                                               IsRootEntity="false" IsPreloaded="false"
+                                               ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                               ParentEntityName="RentalTransaction">
+                                        <Properties>
+                                        </Properties>
+                                        <Actions>
+                                        </Actions>
+                                        <FormRoot Type="Canvas">
+                                            <PropertyNames>
+                                                <string>DescriptionNote</string>
+                                                <string>Amount</string>
+                                                <string>Date</string>
+                                            </PropertyNames>
+                                        </FormRoot>
+                                        <Configuration>
+                                        </Configuration>
+                                        <FilterExpressions/>
+                                    </UIElement>
+                                </UIChildren>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                    <UIElement Id="TabPage8_27" ModelInstanceId="180b0d42-80dd-4670-a643-55dd38a1fd65"
+                               xsi:type="UIElement" Type="Box" Name="Lessor Notes" IsRootGrid="false"
+                               IsRootEntity="true" IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="AsPanel6_28" ModelInstanceId="88b6b7ac-f94f-4873-b80a-b799f42a4bec" Name=""
+                                       xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                       ModelId="a906beeb-ab61-4a79-a8f1-8ce3c49859d6" DefaultPanelView="1"
+                                       IsHeadless="false" DisableActionButtons="false" ShowAddButton="false"
+                                       HideCopyButton="false" ShowDeleteButton="true" ShowSelectionCheckboxes="false"
+                                       IsGridHeightDynamic="false" SelectionMember="" OrderMember=""
+                                       IsDraggingEnabled="false" Entity="RentalTransactionNote"
+                                       DataMember="RentalTransaction.RentalTransactionNote" IsRootGrid="false"
+                                       IsRootEntity="false" IsPreloaded="false"
+                                       ParentId="e15bf75f-5f5e-4dcb-ab90-17bc4461ebba"
+                                       ParentEntityName="RentalTransaction">
+                                <Properties>
+                                </Properties>
+                                <Actions>
+                                </Actions>
+                                <FormRoot Type="Canvas">
+                                    <PropertyNames>
+                                        <string>RecordCreated</string>
+                                        <string>refRentalTransactionNoteTypeId</string>
+                                        <string>refOrganizationBusinessPartnerId</string>
+                                        <string>Note</string>
+                                        <string>Attachment</string>
+                                    </PropertyNames>
+                                </FormRoot>
+                                <Configuration>
+                                </Configuration>
+                                <FilterExpressions/>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+        </UIChildren>
+    </UIRoot>
+</Window>

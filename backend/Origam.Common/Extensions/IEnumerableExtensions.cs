@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,5 +43,24 @@ namespace Origam.Extensions
             
         public static T[] ToArray<T>(this IEnumerable iEnum) => 
             iEnum.Cast<T>().ToArray();
+        
+        public static IEnumerable<T> Peek<T>(this IEnumerable<T> source,
+            Action<T>
+                action)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            return Iterator();
+
+            IEnumerable<T> Iterator() 
+            {
+                foreach (var item in source)
+                {
+                    action(item);
+                    yield return item;
+                }
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ import { observer, Observer } from "mobx-react";
 import Measure, { ContentRect } from "react-measure";
 import _ from "lodash";
 import cx from "classnames";
+import { IPanelData } from "gui/Components/Splitter/IPanelData";
 
 @observer
 class SplitterPanel extends React.Component<{
@@ -105,8 +106,9 @@ class SplitterDivider extends React.Component<{
 export class Splitter extends React.Component<{
   type: "isHoriz" | "isVert";
   sizeOverrideFirstPanel?: number;
+  dontPrintLeftPane?: boolean;
   id?: string;
-  panels: Array<[any, number, React.ReactNode]>;
+  panels: Array<IPanelData>;
   onSizeChangeFinished?(
     panelId1: any,
     panelId2: any,
@@ -130,9 +132,9 @@ export class Splitter extends React.Component<{
     runInAction(() => {
       for (let i = 0; i < this.props.panels.length; i++) {
         const panel = this.props.panels[i];
-        this.sizeMap.set(panel[0], panel[1]);
+        this.sizeMap.set(panel.id, panel.positionRatio);
         if (i < this.props.panels.length - 1) {
-          this.dividerSizeMap.set(panel[0], 0);
+          this.dividerSizeMap.set(panel.id, 0);
         }
       }
     });
@@ -189,14 +191,14 @@ export class Splitter extends React.Component<{
       const sizeToDivide = containerSize - dividerSizeSum - firstPanelSize;
       const initSizeSum = this.props.panels
         .slice(1)
-        .reduce((acc, panel) => acc + (this.sizeMap.get(panel[0]) || 0), 0);
+        .reduce((acc, panel) => acc + (this.sizeMap.get(panel.id) || 0), 0);
       const sizeRatio = sizeToDivide / initSizeSum;
 
       for (let [key, value] of this.sizeMap.entries()) {
-        if (key === this.props.panels[0][0]) continue;
+        if (key === this.props.panels[0].id) continue;
         this.sizeMap.set(key, value * sizeRatio);
       }
-      this.sizeMap.set(this.props.panels[0][0], firstPanelSize);
+      this.sizeMap.set(this.props.panels[0].id, firstPanelSize);
     }
   }
 
@@ -227,9 +229,9 @@ export class Splitter extends React.Component<{
     const id1 = this.draggingDividerId;
     const id2 = this.props.panels[
     this.props.panels.findIndex(
-      panel => panel[0] === this.draggingDividerId
+      panel => panel.id === this.draggingDividerId
     )! + 1
-      ][0];
+      ].id;
     return [id1, id2];
   }
 
@@ -281,12 +283,12 @@ export class Splitter extends React.Component<{
       const panel = this.props.panels[i];
       content.push(
         <SplitterPanel
-          className={(this.props.STYLE || S).panel}
+          className={(this.props.STYLE || S).panel + (i === 0 && this.props.dontPrintLeftPane ? " noPrint" : "")}
           type={this.props.type}
-          size={this.sizeMap.get(panel[0])!}
-          key={`S${panel[0]}`}
+          size={this.sizeMap.get(panel.id)!}
+          key={`S${panel.id}`}
         >
-          {panel[2]}
+          {panel.element}
         </SplitterPanel>
       );
       if (i < this.props.panels.length - 1) {
@@ -295,7 +297,7 @@ export class Splitter extends React.Component<{
             key={i} // Assuming panel structure will not change.
             bounds={true}
             onResize={contentRect =>
-              this.handleDividerResize(contentRect, panel[0])
+              this.handleDividerResize(contentRect, panel.id)
             }
           >
             {({measureRef}) => (
@@ -304,14 +306,14 @@ export class Splitter extends React.Component<{
                   <SplitterDivider
                     className={(this.props.STYLE || S).divider}
                     domRef={measureRef}
-                    key={`D${panel[0]}`}
+                    key={`D${panel.id}`}
                     isDragging={
-                      this.isResizing && this.draggingDividerId === panel[0]
+                      this.isResizing && this.draggingDividerId === panel.id
                     }
                     relativeLoc={this.dividerRelativeLoc}
                     type={this.props.type}
                     onMouseDown={event =>
-                      this.handleDividerMouseDown(event, panel[0])
+                      this.handleDividerMouseDown(event, panel.id)
                     }
                   />
                 )}

@@ -23,7 +23,7 @@ import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearch
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
-import { Icon } from "../Icon/Icon";
+import { Icon } from "@origam/components";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
 import { T } from "../../../utils/translation";
@@ -69,7 +69,7 @@ export class ResultGroup extends React.Component<{
 
   render() {
     return (
-      <div>
+      <>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
           {this.isExpanded ? (
             <i className={"fas fa-angle-up " + S.arrow}/>
@@ -80,7 +80,7 @@ export class ResultGroup extends React.Component<{
             {this.props.name}
           </div>
         </div>
-        <div>
+        <div className={S.dropDownParent}>
           {this.isExpanded && this.props.results.map(result =>
             <Dropdowner
               trigger={({refTrigger, setDropped}) => (
@@ -112,7 +112,7 @@ export class ResultGroup extends React.Component<{
             />
           )}
         </div>
-      </div>
+      </>
     );
   }
 }

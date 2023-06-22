@@ -340,6 +340,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default model file does not exist..
+        /// </summary>
+        internal static string DefaultModelFileNotExists_Message {
+            get {
+                return ResourceManager.GetString("DefaultModelFileNotExists_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Delete.
         /// </summary>
         internal static string Delete_MenuItem {
@@ -390,6 +399,15 @@ namespace OrigamArchitect {
         internal static string DeploymentSctiptsPending_Title {
             get {
                 return ResourceManager.GetString("DeploymentSctiptsPending_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are any deployment conflicts with the other packages..
+        /// </summary>
+        internal static string DeploySinglePackageQuestion {
+            get {
+                return ResourceManager.GetString("DeploySinglePackageQuestion", resourceCulture);
             }
         }
         
@@ -1510,7 +1528,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to RuleTrace.
+        ///   Looks up a localized string similar to Rule Trace.
         /// </summary>
         internal static string RuleTrace_MenuItem {
             get {
@@ -1740,15 +1758,6 @@ namespace OrigamArchitect {
         internal static string SqlConsole_MenuItem {
             get {
                 return ResourceManager.GetString("SqlConsole_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Template folder does not exist..
-        /// </summary>
-        internal static string TemplateFolderNotExists_Message {
-            get {
-                return ResourceManager.GetString("TemplateFolderNotExists_Message", resourceCulture);
             }
         }
         

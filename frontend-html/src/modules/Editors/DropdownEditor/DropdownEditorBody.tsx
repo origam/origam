@@ -29,7 +29,7 @@ import cx from "classnames";
 import { getCanvasFontSize, getTextWidth } from "utils/textMeasurement";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { BoundingRect } from "react-measure";
-import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { observable } from "mobx";
 
 export function DropdownEditorBody() {
@@ -49,7 +49,7 @@ export function DropdownEditorBody() {
     return () => window.removeEventListener("mousedown", beh.handleWindowMouseDown);
   }, [beh]);
 
-  const drivers = useContext(CtxDropdownEditor).columnDrivers;
+  const drivers = useContext(CtxDropdownEditor).setup.columnDrivers;
   const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   const rectCtrl = useContext(CtxDropdownCtrlRect);
 
@@ -61,7 +61,9 @@ export function DropdownEditorBody() {
             drivers={drivers}
             dataTable={dataTable}
             rectCtrl={rectCtrl}
-            beh={beh}/>
+            beh={beh}
+            rowHeight={rowHeight}
+          />
         </div>
       )}
     </Observer>
@@ -73,7 +75,9 @@ export class DropdownEditorTable extends  React.Component<{
   drivers: DropdownColumnDrivers,
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
-  beh: DropdownEditorBehavior
+  beh: IDropdownEditorBehavior,
+  rowHeight: number,
+  height?: number
 }> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
@@ -89,9 +93,12 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   get height(){
+    if(this.props.height){
+      return this.props.height;
+    }
     let height = 0;
     for (let i = 0; i < this.rowCount; i++) {
-      height = height + rowHeight;
+      height = height + this.props.rowHeight;
     }
     return Math.min(height, this.maxHeight) + this.scrollbarSize.horiz;
   }
@@ -199,7 +206,7 @@ export class DropdownEditorTable extends  React.Component<{
         columnCount={this.columnCount}
         rowCount={this.rowCount}
         columnWidth={({ index }) => widths[index]}
-        rowHeight={rowHeight}
+        rowHeight={this.props.rowHeight}
         fixedRowCount={this.hasHeader ? 1 : 0}
         height={this.height}
         width={width}

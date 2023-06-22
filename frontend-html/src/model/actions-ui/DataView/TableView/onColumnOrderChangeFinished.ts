@@ -21,12 +21,12 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
-export function onColumnOrderChangeFinished(ctx: any, id1: string, id2: string) {
+export function onColumnOrderChangeFinished(ctx: any, columnIdToMove: string, columnIdToMoveBehind: string) {
   runGeneratorInFlowWithHandler({
     ctx: ctx,
     generator: function*() {
       const tablePanelView = getTablePanelView(ctx);
-      tablePanelView?.swapColumns(id1, id2);
+      tablePanelView?.moveColumn(columnIdToMove, columnIdToMoveBehind);
       yield*getConfigurationManager(ctx).onColumnOrderChanged();
     }()
   })

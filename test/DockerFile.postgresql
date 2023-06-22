@@ -1,0 +1,3 @@
+from postgres:13 as base
+WORKDIR /docker-entrypoint-initdb.d
+COPY 01-pgscript.sh /docker-entrypoint-initdb.d/

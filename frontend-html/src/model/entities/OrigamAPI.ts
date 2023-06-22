@@ -36,6 +36,7 @@ import { T } from "utils/translation";
 import fileDownload from "js-file-download";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { PubSub } from "utils/events";
+import { layoutToString } from "model/entities/TablePanelView/layout";
 
 
 export enum IAuditLogColumnIndices {
@@ -160,7 +161,7 @@ export class OrigamAPI implements IApi {
   }
 
   async destroyUI(data: { FormSessionId: string }) {
-    return (await this.axiosInstance.get(`/UIService/DestroyUI/${data.FormSessionId}`)).data;
+    return (await this.axiosInstance.post(`/UIService/DestroyUI`, data)).data;
   }
 
   async getEntities(query: {
@@ -434,7 +435,7 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any> {
     return (await this.axiosInstance.post("/UIService/ExecuteActionQuery", data)).data;
@@ -446,11 +447,17 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
+  }
+
+  async getReportInfo(data: {
+    ReportId: string
+  }): Promise<any> {
+    return (await this.axiosInstance.get(`/Report/GetReportInfo?reportRequestId=` + data.ReportId)).data;
   }
 
   async getFilterListValues(data: {
@@ -513,6 +520,14 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;
   }
 
+  async getRow(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any> {
+    return (await this.axiosInstance.post(`/UIService/GetRow`, data)).data;
+  }
+
   async getData(data: {
     SessionFormIdentifier: string;
     ChildEntity: string;
@@ -567,7 +582,7 @@ export class OrigamAPI implements IApi {
       const customConfigurations = Object.entries(data.customConfigurations)
         .filter(entry => entry[0] && entry[1])
         .map(entry => {
-          const encodedConfig = window.btoa(unescape(encodeURIComponent(entry[1])))
+          const encodedConfig = window.btoa(decodeURIComponent(encodeURIComponent(entry[1])))
           return `<${entry[0]}Configuration>\n${encodedConfig}\n</${entry[0]}Configuration>`
         });
       if(customConfigurations.length > 0) {
@@ -581,6 +596,7 @@ export class OrigamAPI implements IApi {
         ` fixedColumnCount="${tableConfig.fixedColumnCount}"` +
         ` isActive="${tableConfig.isActive}"` +
         ` id="${tableConfig.id}"` +
+        ` layout="${layoutToString(tableConfig.layout)}"` +
         ">" +
         tableConfig.columnConfigurations
           .map(columnConfig =>
@@ -853,6 +869,13 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     }
 
     fileDownload(response.data, fileName);
+  }
+
+  async callUserApi(screenUrl: string): Promise<Blob>{
+    return (await this.axiosInstance.get(
+      screenUrl,
+      { responseType: 'blob'}))
+      .data;
   }
 
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {

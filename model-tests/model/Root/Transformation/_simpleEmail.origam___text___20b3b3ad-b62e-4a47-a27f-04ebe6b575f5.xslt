@@ -11,6 +11,8 @@
 	<xsl:param name="senderEmail" />
 	<xsl:param name="senderName" />
 	<xsl:param name="recipientEmail"/>
+	<xsl:param name="recipientCCEmail"/>
+	<xsl:param name="recipientBCCEmail"/>
 
 	<xsl:template match="ROOT">
 		<xsl:variable name="sender">
@@ -33,6 +35,8 @@
 				Id="{AS:GenerateId()}"
 				Subject="{$subject}"
 				DateSent="{date:date-time()}"
+				CC="{$recipientCCEmail}"
+				BCC="{$recipientBCCEmail}"
 				>
 				
 				<Sender><xsl:value-of select="$sender"/></Sender>

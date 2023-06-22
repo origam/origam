@@ -1,0 +1,78 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  width: 35px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.slot {
+  height: 12px;
+  width: 100%;
+  border-radius: 6px;
+  background: var(--background4);
+  margin-left: 3px;
+  margin-right: 3px;
+
+  &.readOnly {
+    background: var(--background3);
+
+    &.off div.nob{
+      background: var(--background3);
+    }
+    &.on div.nob{
+        background: var(--background6);
+    }
+  }
+
+  &.off div{
+    left: -2px;
+  }
+
+  &.on{
+    div{
+      left: 10px;
+      background: var(--foreground1);
+    }
+  }
+
+  &.undefined{
+    div{
+      left: 4.5px;
+      background: var(--background1);
+      border: var(--background8)
+    }
+  }
+
+}
+
+.nob {
+  height: 20px;
+  width: 20px;
+  border-radius: 10px;
+  background: var(--background3);
+  position: relative;
+  top: -4px;
+  box-shadow: 0 2px 5px var(--background5);
+  transition: left 0.5s, background-color 0.5s, transform 0.5s;
+}
+
+

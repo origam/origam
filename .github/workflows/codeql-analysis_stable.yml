@@ -1,4 +1,4 @@
-name: "CodeQL Backend 2021.1"
+name: "Build Backend 2021.1"
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: windows-latest
+    runs-on: windows-2019
     permissions:
       actions: read
       contents: read
@@ -29,7 +29,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
 
@@ -48,4 +48,4 @@ jobs:
        msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2

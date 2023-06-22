@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { LookupListCacheMulti } from "modules/Lookup/LookupListCacheMulti";
-import { DropdownEditorSetup } from "./DropdownEditor";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export class DropdownEditorLookupListCache {
   constructor(private setup: () => DropdownEditorSetup, private cache: LookupListCacheMulti) {

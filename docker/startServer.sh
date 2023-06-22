@@ -6,47 +6,50 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   gitcredentials=""
 	   gitcloneBranch="-b master"
 	   fullgiturl=""
-
-	if [[ -n ${gitUrl} ]]; then
 	   if [[ -n ${gitBranch} ]]; then
 	    gitcloneBranch="-b $gitBranch"
 	   fi
-	   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
-			gitcredentials="${gitUsername}:${gitPassword}@"
-	   fi
-	   if [[ ${gitUrl} == https:* ]]; then
-			fullgiturl="https://$gitcredentials${gitUrl//https:\/\//}"
-	   fi
-	   if [[ ${gitUrl} == http:* ]]; then
-		fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
-	   fi
-	fi
-	if [[ -n ${gitSshUrl} && -n ${gitSshKey} && -n ${gitSshDomain} ]]; then
-		#Prepare ssh keys
-		mkdir -p /home/origam/.ssh
-		echo ${gitSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
-		chmod 600 /home/origam/.ssh/id_rsa
-		ssh-keyscan ${gitSshDomain} >> /home/origam/.ssh/known_hosts
-		fullgiturl=${gitSshUrl}
-	fi
-	   rm -rf $DIR
-	   mkdir $DIR
-	   cd $DIR
-	   git clone $gitcloneBranch --single-branch $fullgiturl
-	   ln -s `pwd`/`ls` `pwd`/origam
-	   #test custom scripts
-	   cd origam
-	   if [ -f custom.js ]; then
-			cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
-	   fi
-	   if [ -f reverse-proxy.conf ]; then
-			sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
-			sudo /etc/init.d/nginx restart
-	   fi
-	   if [ -f "/home/origam/.ssh/id_rsa" ]; then
-		#Remove key
-		rm /home/origam/.ssh/id_rsa
-	   fi
+
+		if [[ -n ${gitUrl} ]]; then
+		   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
+				gitcredentials="${gitUsername}:${gitPassword}@"
+		   fi
+		   if [[ ${gitUrl} == https:* ]]; then
+				fullgiturl="https://$gitcredentials${gitUrl//https:\/\//}"
+		   fi
+		   if [[ ${gitUrl} == http:* ]]; then
+			fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
+		   fi
+		fi
+		if [[ -n ${gitSshUrl} && -n ${gitSshKey} && -n ${gitSshDomain} ]]; then
+			#Prepare ssh keys
+			mkdir -p /home/origam/.ssh
+			echo ${gitSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
+			chmod 600 /home/origam/.ssh/id_rsa
+			ssh-keyscan ${gitSshDomain} >> /home/origam/.ssh/known_hosts
+			fullgiturl=${gitSshUrl}
+		fi
+		   rm -rf $DIR
+		   mkdir $DIR
+		   cd $DIR
+		   git clone $gitcloneBranch --single-branch $fullgiturl
+
+		   if [  "$(ls -A `pwd`)" ]; then
+			   ln -s `pwd`/`ls` `pwd`/origam
+			   #test custom scripts	
+			   cd origam
+			   if [ -f custom.js ]; then
+					cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+			   fi
+			   if [ -f reverse-proxy.conf ]; then
+					sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+					sudo /etc/init.d/nginx restart
+			   fi
+		   fi
+		   if [ -f "/home/origam/.ssh/id_rsa" ]; then
+				#Remove key
+				rm /home/origam/.ssh/id_rsa
+		   fi
 fi
 cd /home/origam/HTML5
 
@@ -56,64 +59,69 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   gitconfcredentials=""
 	   gitconfcloneBranch="-b master"
 	   fullconfgiturl=""
-	   
-	if [[ -n ${gitConfUrl} ]]; then
 	   if [[ -n ${gitConfBranch} ]]; then
-	    gitconfcloneBranch="-b $gitConfBranch"
+			gitconfcloneBranch="-b $gitConfBranch"
 	   fi
-	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
-			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
-	   fi
-	   if [[ ${gitConfUrl} == https:* ]]; then
-			fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
-	   fi
-	   if [[ ${gitConfUrl} == http:* ]]; then
-		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
-	   fi
-	 fi
-	 if [[ -n ${gitConfSshUrl} && -n ${gitConfSshKey} && -n ${gitConfSshDomain} ]]; then
-		#Prepare ssh keys
-		mkdir -p /home/origam/.ssh
-		echo ${gitConfSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
-		chmod 600 /home/origam/.ssh/id_rsa
-		ssh-keyscan ${gitConfSshDomain} >> /home/origam/.ssh/known_hosts
-		fullconfgiturl=${gitConfSshUrl}
-	fi
+	   
+		if [[ -n ${gitConfUrl} ]]; then
+		   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
+				gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
+		   fi
+		   if [[ ${gitConfUrl} == https:* ]]; then
+				fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
+		   fi
+		   if [[ ${gitConfUrl} == http:* ]]; then
+			fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
+		   fi
+		 fi
+		 if [[ -n ${gitConfSshUrl} && -n ${gitConfSshKey} && -n ${gitConfSshDomain} ]]; then
+			#Prepare ssh keys
+			mkdir -p /home/origam/.ssh
+			echo ${gitConfSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
+			chmod 600 /home/origam/.ssh/id_rsa
+			ssh-keyscan ${gitConfSshDomain} >> /home/origam/.ssh/known_hosts
+			fullconfgiturl=${gitConfSshUrl}
+		fi
 	   rm -rf $DIRCONFIG
 	   mkdir $DIRCONFIG
 	   cd $DIRCONFIG
 	   git clone $gitconfcloneBranch --single-branch $fullconfgiturl
-	   ln -s `pwd`/`ls` `pwd`/origam
-	   #need to move to gitRootDirectory everytime
-	   cd origam
-	   if [ -f _OrigamSettings.mssql.template ]; then
-		cp _OrigamSettings.mssql.template ../../
-	   fi
-	   if [ -f _OrigamSettings.postgres.template ]; then
-		cp _OrigamSettings.postgres.template ../../
-	   fi
-	   if [ -f _appsettings.template ]; then
-		cp _appsettings.template ../../
-	   fi
-	   if [ -f log4net.config ]; then
-		cp log4net.config ../../
-	   fi
-	   if [ -f custom.js ]; then
-		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
-	   fi
-	   if [ -f reverse-proxy.conf ]; then
-			sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
-			sudo /etc/init.d/nginx restart
+
+       if [  "$(ls -A `pwd`)" ]; then
+
+		   ln -s `pwd`/`ls` `pwd`/origam
+		   #need to move to gitRootDirectory everytime
+		   cd origam
+		   if [ -f _OrigamSettings.mssql.template ]; then
+			cp _OrigamSettings.mssql.template ../../
+		   fi
+		   if [ -f _OrigamSettings.postgres.template ]; then
+			cp _OrigamSettings.postgres.template ../../
+		   fi
+		   if [ -f _appsettings.template ]; then
+			cp _appsettings.template ../../
+		   fi
+		   if [ -f log4net.config ]; then
+			cp log4net.config ../../
+		   fi
+		   if [ -f custom.js ]; then
+			cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+		   fi
+		   if [ -f reverse-proxy.conf ]; then
+				sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+				sudo /etc/init.d/nginx restart
+		   fi
 	   fi
 	   if [ -f "/home/origam/.ssh/id_rsa" ]; then
 		#Remove key
 		rm /home/origam/.ssh/id_rsa
 	   fi
 fi
+
 cd /home/origam/HTML5
 
 if [ ! -d "$DIR/origam" ]; then 
-	echo “Server has no model!!!! Please set up with GIT.”;
+	echo “Server has no model!!! Review the instance setup.”;
 	echo "Mandatory: gitPullOnStart(true)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
@@ -199,5 +207,5 @@ export OrigamSettings_DbPassword
 ./updateEnvironment.sh
 sudo ./updateEnvironmentRoot.sh
 export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.ServerCore.dll
+dotnet Origam.Server.dll
 

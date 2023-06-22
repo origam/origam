@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  height: 1px;
-  background-color: var(--background4);
+  border-bottom: solid;
+  border-bottom-color: var(--background4);
+  border-width: 1.5px;
 }

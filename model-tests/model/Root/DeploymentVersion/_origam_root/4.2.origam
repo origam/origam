@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="2f0141f2-4c96-4c65-a90e-120d26de6b5f"
@@ -15,18 +20,18 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:4.2.origam___commandText___cb0dacca-26a8-4fd9-9f0b-b288c9392080.txt"
-      x:id="cb0dacca-26a8-4fd9-9f0b-b288c9392080"
-      asi:name="00020_Database_Column_Mapping_WorkQueue.IsMessageCountDisplayed"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:4.2.origam___commandText___692b95f2-21d7-4a5a-8dae-b9bd8f54bd13.txt"
       x:id="692b95f2-21d7-4a5a-8dae-b9bd8f54bd13"
       asi:name="00010_Database_Column_Mapping_WorkQueueCommand.IsDefault"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.2.origam___commandText___cb0dacca-26a8-4fd9-9f0b-b288c9392080.txt"
+      x:id="cb0dacca-26a8-4fd9-9f0b-b288c9392080"
+      asi:name="00020_Database_Column_Mapping_WorkQueue.IsMessageCountDisplayed"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

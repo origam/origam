@@ -23,6 +23,6 @@ import S from 'gui/Components/ScreenToolbar/ScreenToolbar.module.scss';
 
 export class ScreenToolbar extends React.Component {
   render() {
-    return <div className={S.root}>{this.props.children}</div>;
+    return <div className={S.root + " noPrint"}>{this.props.children}</div>;
   }
 }

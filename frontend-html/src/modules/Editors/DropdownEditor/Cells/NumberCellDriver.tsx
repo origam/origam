@@ -22,14 +22,14 @@ import { bodyCellClass } from "./CellsCommon";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import cx from "classnames";
 import S from "./NumberCell.module.scss";
-import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
+import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 
 export class NumberCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior
+    private driverState: IDriverState
   ) {
   }
 
@@ -47,12 +47,12 @@ export class NumberCellDriver implements IBodyCellDriver {
         className={cx(
           bodyCellClass(
             rowIndex,
-            this.behavior.chosenRowId === rowId,
-            this.behavior.cursorRowId === rowId
+            this.driverState.chosenRowId === rowId,
+            this.driverState.cursorRowId === rowId
           ),
           S.cell
         )}
-        onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}
+        onClick={(e) => this.driverState.handleTableCellClicked(e, rowIndex)}
       >
         {this.formattedText(rowIndex)}
       </div>

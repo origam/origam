@@ -31,6 +31,7 @@ import { Chatrooms } from "./Chatrooms";
 import { Notifications } from "./Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "./SidebarState";
+import { About } from "model/entities/AboutInfo";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -47,6 +48,7 @@ export class Workbench implements IWorkbench {
     this.recordInfo.parent = this;
     this.favorites.parent = this;
     this.sidebarState.parent = this;
+    this.about.parent = this;
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
@@ -62,6 +64,7 @@ export class Workbench implements IWorkbench {
   lookupMultiEngine: IMultiLookupEngine = null as any;
   favorites: Favorites = null as any;
   sidebarState: SidebarState = null as any;
+  about: About = null as any;
 
   @observable isFullScreen: boolean = false;
 

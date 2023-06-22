@@ -30,6 +30,10 @@ namespace Origam.Workbench.Editors
 {
     class UiActionEditor: PropertyGridEditor
     {
+        public UiActionEditor(bool closeOnLinkClick) : base(closeOnLinkClick)
+        {
+        }
+
         public override List<ToolStrip> GetToolStrips(int maxWidth = -1)
         {
             if (!showMenusInAppToolStrip) return new List<ToolStrip>();

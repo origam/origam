@@ -25,76 +25,50 @@ using Schedule;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for ScheduleGroup.
-	/// </summary>
 	[SchemaItemDescription("Schedule Group", "schedule-group.png")]
     [ClassMetaVersion("6.0.0")]
 	public class ScheduleGroup : AbstractScheduleTime
 	{
-		public ScheduleGroup() : base() {}
+		public ScheduleGroup() {}
 
 		public ScheduleGroup(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public ScheduleGroup(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden Members
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		public override IScheduledItem GetScheduledTime()
 		{
-			EventQueue q = new EventQueue();
-			
-			foreach(AbstractScheduleTime sch in this.ChildItems)
+			var eventQueue = new EventQueue();
+			foreach(AbstractScheduleTime abstractScheduleTime in ChildItems)
 			{
-				q.Add(sch.GetScheduledTime());
+				eventQueue.Add(abstractScheduleTime.GetScheduledTime());
 			}
-
-			return q;
+			return eventQueue;
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(SimpleScheduleTime),
-									  typeof(ScheduleGroup)
-								  };
-			}
-		}
+			typeof(SimpleScheduleTime),
+			typeof(ScheduleGroup)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(SimpleScheduleTime))
+			string itemName = null;
+			if(typeof(T) == typeof(SimpleScheduleTime))
 			{
-				item = new SimpleScheduleTime(schemaExtensionId);
-				item.Name = "NewSimpleScheduleTime";
+				itemName = "NewSimpleScheduleTime";
 			}
-			else if(type == typeof(ScheduleGroup))
+			else if(typeof(T) == typeof(ScheduleGroup))
 			{
-				item = new ScheduleGroup(schemaExtensionId);
-				item.Name = "NewScheduleGroup";
+				itemName = "NewScheduleGroup";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowSchedulerModelUnknownType"));
-
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.Group = group;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

@@ -1,0 +1,84 @@
+name: "Architect NUnit Tests"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, 20* ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-2022
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+           
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Build Architect
+      run: |
+       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
+
+    - name: Upload testing artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-dlls
+        path: "backend/**Tests/bin/Release" 
+     
+  tests:
+    needs: analyze
+    name: Compose
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      checks: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['csharp']
+
+    steps:
+    - name: Download testing artefact
+      uses: actions/download-artifact@v2
+      with:
+        name: test-dlls
+        path: backend
+
+    - name: Run NUnit Tests
+      run:  |
+       echo Linux platform is case sensitive filenames. For this reason it has to be renamed mvp.xml.dll to Mvp.Xml.dll.
+       find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
+       find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
+       dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+      
+    - name: Produce NUnit Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: NUnit Results
+        path: TestResults/test-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'
+    
+    # delete-artifact
+    - name: Delete artifact
+      uses: geekyeggo/delete-artifact@v2
+      with:
+          name: test-dlls

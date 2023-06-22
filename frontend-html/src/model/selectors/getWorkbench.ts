@@ -23,7 +23,13 @@ import { getApplication } from "./getApplication";
 export function getWorkbench(ctx: any): IWorkbench {
   const workbench = getApplication(ctx).workbench;
   if (!workbench) {
-    throw new Error("No workbench in Application.");
+    throw new Error("No workbench in Application." + "\n" + getStackTrace());
   }
   return workbench;
+}
+
+function getStackTrace() {
+  let obj = {} as any;
+  Error.captureStackTrace(obj, getStackTrace);
+  return obj.stack;
 }

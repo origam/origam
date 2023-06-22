@@ -1,0 +1,63 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.resultIemRow {
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+.resultIemRowHovered {
+  cursor: pointer;
+  background-color: var(--foreground4);
+  color:var(--background8) !important;
+}
+
+.resultIemRowSelected{
+  background-color: var(--foreground1);
+  color:var(--background1) !important;
+}
+.resultIemRowSelected div svg{
+  stroke:var(--background1);
+  stroke-width: 1.5;
+}
+
+.itemIcon{
+  min-width: 20px;
+  max-width: 20px;
+  height: 20px;
+}
+
+.itemContents{
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin-right: 10px;
+}
+
+.itemTitle {
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.itemTextSeparator{
+  white-space: pre-wrap;
+}

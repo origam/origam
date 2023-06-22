@@ -1,35 +1,95 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using MoreLinq.Extensions;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+using Origam.Schema;
 
 namespace Origam.DA.Service.NamespaceMapping
 {
-    class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
+    public class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
     {
         private readonly List<PropertyMapping> propertyMappings;
         private readonly string typeFullName;
-        private static readonly ConcurrentDictionary<Type, PropertyToNamespaceMapping> instances
-            = new ConcurrentDictionary<Type, PropertyToNamespaceMapping>();
+        private static readonly Dictionary<Type, PropertyToNamespaceMapping> instances
+            = new Dictionary<Type, PropertyToNamespaceMapping>();
 
         public string NodeNamespaceName { get; }
         public XNamespace NodeNamespace { get; }
         
-        public static PropertyToNamespaceMapping CreateOrGet(Type instanceType)
+        public static void Init()
         {
-            return instances.GetOrAdd(instanceType, type =>
+            if (instances.Count > 0)
             {
-                var typeFullName = instanceType.FullName;
-                var propertyMappings =
-                    GetPropertyMappings(instanceType,  XmlNamespaceTools.GetXmlNameSpace);
-                return new PropertyToNamespaceMapping(propertyMappings, typeFullName);
-            });
+                return;
+            }
+            var allTypes = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(x=>x.GetReferencedAssemblies())
+                .Where(x=>x.Name.Contains("Origam.Schema"))
+                .DistinctBy(x=>x.FullName)
+                .Select(Assembly.Load)
+                .SelectMany(GetTypes);
+
+            AddMapping(typeof(Package));
+            
+            allTypes
+                .Where(type => 
+                    typeof(IFilePersistent).IsAssignableFrom(type) && 
+                    type != typeof(IFilePersistent))
+                .ForEach(AddMapping);
+        }
+
+        private static IEnumerable<Type> GetTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (Exception exSub in ex.LoaderExceptions)
+                {
+                    stringBuilder.AppendLine(exSub.Message);
+                    if (exSub is FileNotFoundException exFileNotFound)
+                    {
+                        if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                        {
+                            stringBuilder.AppendLine("Fusion Log:");
+                            stringBuilder.AppendLine(exFileNotFound.FusionLog);
+                        }
+                    }
+                    stringBuilder.AppendLine();
+                }
+                string errorMessage = stringBuilder.ToString();
+                throw new Exception(errorMessage, ex);
+            }
+        }
+
+        public static void AddMapping(Type type)
+        {
+            if (instances.ContainsKey(type))
+            {
+                return;
+            }
+            var typeFullName = type.FullName;
+            var propertyMappings =
+                GetPropertyMappings(type, XmlNamespaceTools.GetXmlNameSpace);
+            instances[type] =
+                new PropertyToNamespaceMapping(propertyMappings, typeFullName);
+        }
+
+        public static PropertyToNamespaceMapping Get(Type instanceType)
+        {
+            return instances[instanceType];
         }
 
         private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, OrigamNameSpace> xmlNamespaceGetter)

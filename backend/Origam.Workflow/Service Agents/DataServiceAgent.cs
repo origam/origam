@@ -27,6 +27,7 @@ using System.IO;
 using System.Security.Principal;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -49,7 +50,7 @@ namespace Origam.Workflow
 
 		public DataServiceAgent()
 		{
-            _dataService = core.DataService.GetDataService();
+            _dataService = core.DataServiceFactory.GetDataService();
 		}
 
 		public IDataService DataService
@@ -324,14 +325,14 @@ namespace Origam.Workflow
 									{
 										if(this.Trace || log.IsInfoEnabled)
 										{
-											string logText = this.DataService.GetType().ToString() + " updated " + records.ToString() + " references on " + table.MappedObjectName + "." + (column as FieldMappingItem).MappedColumnName;
+											string logText = this.DataService.GetType().ToString() + " updated " + records + " references on " + table.MappedObjectName + "." + (column as FieldMappingItem).MappedColumnName;
 											if(log.IsInfoEnabled)
 											{
 												log.Info(logText);
 											}
 											if(this.Trace)
 											{
-												trace.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Deduplication", "Progress", originalEntity.MappedObjectName, "Audit: " + table.AuditingType.ToString(), "", logText);
+												trace?.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Deduplication", "Progress", originalEntity.MappedObjectName, "Audit: " + table.AuditingType, "", logText);
 											}
 										}
 									}
@@ -345,7 +346,7 @@ namespace Origam.Workflow
 			{
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Updating references failed.", ex);
+	                log.LogOrigamError("Updating references failed.", ex);
                 }
 				if(this.TransactionId == null)
 				{

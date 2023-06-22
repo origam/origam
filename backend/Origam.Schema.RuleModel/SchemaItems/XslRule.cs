@@ -76,8 +76,7 @@ namespace Origam.Schema.RuleModel
 
 		#region Properties
 		internal PropertyContainer<string> xsl;
-
-		[EntityColumn("M01")]
+		
         [XmlExternalFileReference(containerName: nameof(xsl),
             extension: ExternalFileExtension.Xslt)]
         public string Xsl
@@ -86,7 +85,7 @@ namespace Origam.Schema.RuleModel
             set => xsl.Set(value);
         }
 
-        [EntityColumn("B01"), Browsable(false)] 
+        [Browsable(false)] 
 		public override bool IsPathRelative
 		{
 			get

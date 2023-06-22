@@ -94,7 +94,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
         {
             fk = EntityHelper.CreateForeignKey(
                     keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
-                    keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, false);
+                    keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, true);
             GeneratedModelElements.Add(fk);
         }
 
@@ -121,7 +121,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             richTextBoxSummary.AppendText(keyForm.ForeignKeyName);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Lookup: \t\t");
-            richTextBoxSummary.AppendText(keyForm.Lookup.Name);
+            richTextBoxSummary.AppendText(keyForm.Lookup == null? "": keyForm.Lookup.Name);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Caption : \t");
             richTextBoxSummary.AppendText(keyForm.Caption);

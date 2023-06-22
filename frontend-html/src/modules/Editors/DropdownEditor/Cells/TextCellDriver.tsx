@@ -20,14 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import { bodyCellClass } from "./CellsCommon";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
-import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
+import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 
 export class TextCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior
+    private driverState: IDriverState
   ) {
   }
 
@@ -44,11 +44,11 @@ export class TextCellDriver implements IBodyCellDriver {
       <div
         className={bodyCellClass(
           rowIndex,
-          this.behavior.chosenRowId === rowId,
-          this.behavior.cursorRowId === rowId
+          this.driverState.chosenRowId === rowId,
+          this.driverState.cursorRowId === rowId
         )}
         onClick={(e) => {
-          this.behavior.handleTableCellClicked(e, rowIndex)
+          this.driverState.handleTableCellClicked(e, rowIndex)
         }
         }
       >

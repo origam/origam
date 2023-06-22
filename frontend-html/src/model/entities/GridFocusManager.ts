@@ -1,26 +1,48 @@
 import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IFocusable } from "./FormFocusManager";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { requestFocus } from "utils/focus";
 
 export class GridFocusManager {
+  private _activeEditor: IFocusable | undefined;
+  public focusTableOnReload: boolean = true;
+  get canFocusTable(){
+    return !this._activeEditor;
+  }
 
   constructor(public parent: any) {
   }
 
-  public focusTableOnReload: boolean = true;
-
   focusTableIfNeeded() {
-    if (this.focusTableOnReload) {
+    const filtersVisible = getFilterConfiguration(this.parent).isFilterControlsDisplayed;
+    const filterInputHasFocus = filtersVisible && document.activeElement?.tagName === 'INPUT';
+    if (this.focusTableOnReload && !filterInputHasFocus) {
       getTablePanelView(this)?.triggerOnFocusTable();
     } else {
       this.focusTableOnReload = true;
     }
   }
 
-  activeEditor: IFocusable | undefined;
+  get activeEditor(): IFocusable | undefined {
+    return this._activeEditor;
+  }
 
+  set activeEditor(value: IFocusable | undefined) {
+    this._activeEditor = value;
+    this.focusEditor();
+  }
+
+  editorBlur?: () => Promise<void>
+
+  async activeEditorCloses(){
+    if(this.editorBlur){
+      await this.editorBlur();
+      this.editorBlur = undefined;
+    }
+  }
   focusEditor() {
-    this.activeEditor?.focus();
+    requestFocus(this._activeEditor as any);
   }
 }
 

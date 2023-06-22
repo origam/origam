@@ -55,15 +55,11 @@ namespace Origam.ProjectAutomation
             _setting.Name = project.Name;
             _setting.TitleText = project.Name;
             _setting.DataConnectionString = project.BuilderDataConnectionString;
-            _setting.SchemaConnectionString = project.BuilderModelConnectionString;
             _setting.ModelSourceControlLocation = GetModelSourceLocation(project);
-            _setting.ServerUrl = project.FullUrl;
+            _setting.ServerUrl = project.BaseUrl;
             _setting.DataDataService = project.GetDataDataService;
             _setting.SchemaDataService = project.GetDataDataService;
-            if (project.Deployment == DeploymentType.Local)
-            {
-                _setting.ServerLocalPath = project.BinFolder;
-            }
+            _setting.ModelSourceControlLocation = project.ModelSourceFolder;
             _settingsIndex = _settings.Add(_setting);
             project.ActiveConfigurationIndex = _settingsIndex;
             ConfigurationManager.SetActiveConfiguration(_setting);
@@ -101,7 +97,7 @@ namespace Origam.ProjectAutomation
         }
 
         public static OrigamSettingsCollection GetSettings() => 
-            ConfigurationManager.GetAllConfigurations();
+            ConfigurationManager.GetAllUserHomeConfigurations();
 
         public static void SaveSettings(OrigamSettingsCollection settings)
         {

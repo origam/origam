@@ -1,9 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="3240b59e-08ec-4dc2-bbf5-a2c6cb1bfd7c"
     asi:name="MailService">
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="b5b0f1e1-3a75-4815-b65a-aef501604df7"
+      asi:name="SendMail"
+      sm:returnValueDataType="Integer">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Integer"
+        x:id="28d6024b-a275-4564-9630-e0d4af062834"
+        asi:name="Port" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
+        x:id="8111a1a9-22c7-4f11-8044-72b3784f65d9"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="e0677965-ba0f-4e84-80d5-ce0ce20e40bd"
+        asi:name="Server" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="bb17f67e-e0ad-485f-b402-d76406a02476"
+      asi:name="RetrieveMails"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="0af62524-b130-4156-a597-80e8cd95ba69"
+        asi:name="Server" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="2fb182e2-fde6-4fcc-9a9d-46ad0e114fc8"
+        asi:name="Password" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Integer"
+        x:id="62d9cff5-479f-47eb-8e2b-90e90ea02e34"
+        asi:name="Port" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="a1eea278-c27a-45d1-9fc7-139ae582a0de"
+        asi:name="UserName" />
+    </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
       x:id="fe9365d7-b60f-4c9b-9433-4f439d964828"
@@ -37,116 +153,6 @@
         sip:dataType="String"
         x:id="4205b302-b50d-46ef-b5c3-4b229b8d89d3"
         asi:name="QueueName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="b5b0f1e1-3a75-4815-b65a-aef501604df7"
-      asi:name="SendMail"
-      sm:returnValueDataType="Integer">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Xml"
-        x:id="8111a1a9-22c7-4f11-8044-72b3784f65d9"
-        asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="e0677965-ba0f-4e84-80d5-ce0ce20e40bd"
-        asi:name="Server" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Integer"
-        x:id="28d6024b-a275-4564-9630-e0d4af062834"
-        asi:name="Port" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="bb17f67e-e0ad-485f-b402-d76406a02476"
-      asi:name="RetrieveMails"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="a1eea278-c27a-45d1-9fc7-139ae582a0de"
-        asi:name="UserName" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="2fb182e2-fde6-4fcc-9a9d-46ad0e114fc8"
-        asi:name="Password" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="0af62524-b130-4156-a597-80e8cd95ba69"
-        asi:name="Server" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Integer"
-        x:id="62d9cff5-479f-47eb-8e2b-90e90ea02e34"
-        asi:name="Port" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

@@ -22,6 +22,7 @@ import { IOpenedScreen } from "./types/IOpenedScreen";
 import { action, observable } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
+import { EventHandler } from "@origam/utils";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
@@ -34,7 +35,8 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     title: string,
     public screenUrl: string,
     public menuItemId: string,
-    public order: number
+    public order: number,
+    public canRefresh: boolean
   ) {
     this.tabTitle = title;
     this.formTitle = title;
@@ -51,6 +53,9 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   @action.bound
   setActive(state: boolean): void {
     this.isActive = state;
+    if(this.isActive){
+      this.activationHandler.call();
+    }
   }
 
   setContent(screen: IFormScreenEnvelope): void {
@@ -78,4 +83,13 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   parameters: { [key: string]: any } = {};
   hasDynamicTitle: boolean = false;
   parentContext: IOpenedScreen | undefined;
+
+  activationHandler = new EventHandler();
+
+  onWindowMove(top: number, left: number): void {
+  }
+
+  get positionOffset(): { [p: string]: number } {
+    return {topOffset: 0, leftOffset: 0};
+  }
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0"
+  xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0">
   <f:Function
     asi:abstract="false"
     f:dataType="String"
@@ -8,16 +12,16 @@
     f:type="Standard">
     <fp:FunctionParameter
       asi:abstract="false"
-      x:id="a36d5eb3-8630-40df-9ce3-0ec1dce160b5"
-      asi:name="Right"
-      fp:ordinalPosition="1" />
-    <fp:FunctionParameter
-      asi:abstract="false"
       x:id="612b5010-8c8b-4603-9167-3175f1322e37"
       asi:name="Left" />
     <fp:FunctionParameter
       asi:abstract="false"
       x:id="85faf781-9658-4f9c-9995-d071ca6f82cc"
       asi:name="Expression" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="a36d5eb3-8630-40df-9ce3-0ec1dce160b5"
+      asi:name="Right"
+      fp:ordinalPosition="1" />
   </f:Function>
 </x:file>

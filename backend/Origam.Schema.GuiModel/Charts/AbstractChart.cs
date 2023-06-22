@@ -46,7 +46,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _caption = "";
 		[Category("User Interface")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
 		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption
@@ -61,7 +61,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-        [EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

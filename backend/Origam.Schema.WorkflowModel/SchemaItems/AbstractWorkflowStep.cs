@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA;
@@ -35,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
     /// Summary description for AbstractWorkflowStep.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.1")]
+    [ClassMetaVersion("6.0.2")]
     public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{															
 		public const string CategoryConst = "WorkflowTask";
@@ -52,7 +53,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -62,19 +62,18 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		[Browsable(false)] 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 destinationNode)
 		{
-			// can move inside the same workflow and we can move it under any block
-			if(this.RootItem == (newNode as ISchemaItem).RootItem && 
-				newNode is IWorkflowBlock)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+            if (!(destinationNode is ISchemaItem destinationSchemaItem) ||
+                destinationSchemaItem.RootItem == null ||
+                this.RootItem != destinationSchemaItem.RootItem ||
+                !(destinationNode is IWorkflowBlock) ||
+                destinationNode is AbstractWorkflowBlock && Dependencies.Count > 0)
+            {
+                return false;
+            }
+            return true;
+        }
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -117,10 +116,13 @@ namespace Origam.Schema.WorkflowModel
 				return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
 			}
 		}
+		[Category("Error Handling")]
+		[XmlAttribute("onFailure")]
+		[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]
+		public StepFailureMode OnFailure { set; get; }
 
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]  
 		[RuntimeConfigurable("traceLevel")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
@@ -144,9 +146,7 @@ namespace Origam.Schema.WorkflowModel
 	        } 
 	        return Trace.InheritFromParent;
         }
-
-
-        [EntityColumn("G02")]  
+        
 		public Guid StartRuleId;
 
 		[Category("Rules")]
@@ -174,8 +174,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid StartRuleContextStoreId;
 
 		[Category("Rules")]
@@ -203,8 +202,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G04")]  
+		
 		public Guid ValidationRuleId;
 
 		[Category("Rules")]
@@ -232,8 +230,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid ValidationRuleContextStoreId;
 
 		[Category("Rules")]
@@ -261,13 +258,11 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("SS02")]
+        
 		[Category("Rules")]
 		[XmlAttribute ("roles")]
 		public string Roles { get; set; } = "*";
 
-		[EntityColumn("SS01")]
 		[Category("Rules")]
 		[XmlAttribute ("features")]
 		public string Features { get; set; }

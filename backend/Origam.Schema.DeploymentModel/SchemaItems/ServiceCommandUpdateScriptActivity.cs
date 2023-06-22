@@ -73,7 +73,6 @@ namespace Origam.Schema.DeploymentModel
         [XmlAttribute("platform")]
         public DatabaseType DatabaseType { get; set; } 
 
-        [EntityColumn("G05")]  
 		public Guid ServiceId;
 
 		[Category("Service Command Information")]
@@ -104,8 +103,7 @@ namespace Origam.Schema.DeploymentModel
         private PropertyContainer<string> commandText;
 
 		[Category("Service Command Information")]
-        [EntityColumn("M01")]
-        [XmlExternalFileReference(containerName: nameof(commandText),
+		[XmlExternalFileReference(containerName: nameof(commandText),
             extension: ExternalFileExtension.Txt)]
         public string CommandText
         {

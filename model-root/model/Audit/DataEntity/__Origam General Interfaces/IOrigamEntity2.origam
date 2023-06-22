@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0" xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0">
   <ema:EntityUIAction
     asi:abstract="true"
     euia:actionType="OpenForm"

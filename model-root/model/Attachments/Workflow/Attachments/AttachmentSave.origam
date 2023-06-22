@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="25c09180-0a59-4d00-bd96-d2211456b03b"
     asi:name="AttachmentSave"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
+    <crs:WorkflowTask
+      asi:abstract="false"
+      x:id="692c68ea-b021-44b3-8583-812581c9d731"
+      asi:name="CheckFileName"
+      aws:onFailure="WorkflowFails"
+      aws:roles="*"
+      aws:validationRule="Attachments/Rule/Attachments/ValidateFileName.origam#ValidateFileName/d592c674-81b7-4094-a093-18e4222f8b72"
+      aws:validationRuleContextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -17,6 +38,7 @@
       asi:abstract="false"
       x:id="0b7a8085-145b-413b-8ba3-4426962ddd5f"
       asi:name="StoreData_AttachmentEdit"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0"
       wt:outputMethod="Ignore"
       aws:roles="*"
@@ -58,12 +80,5 @@
         wtd:startEvent="Success"
         wtd:task="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/CheckFileName/692c68ea-b021-44b3-8583-812581c9d731" />
     </smct:WorkflowTask>
-    <crs:WorkflowTask
-      asi:abstract="false"
-      x:id="692c68ea-b021-44b3-8583-812581c9d731"
-      asi:name="CheckFileName"
-      aws:roles="*"
-      aws:validationRule="Attachments/Rule/Attachments/ValidateFileName.origam#ValidateFileName/d592c674-81b7-4094-a093-18e4222f8b72"
-      aws:validationRuleContextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0" />
   </w:Workflow>
 </x:file>

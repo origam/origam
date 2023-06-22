@@ -24,7 +24,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -33,54 +32,37 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for ServiceMethodCallParameter.
-	/// </summary>
 	[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
     [HelpTopic("Service+Method+Call+Parameter")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class ServiceMethodCallParameter : AbstractSchemaItem, ISchemaItemFactory
+	public class ServiceMethodCallParameter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ServiceMethodCallParameter";
 
-		public ServiceMethodCallParameter() : base() {}
+		public ServiceMethodCallParameter() {}
 
-		public ServiceMethodCallParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public ServiceMethodCallParameter(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
-		public ServiceMethodCallParameter(Key primaryKey) : base(primaryKey)	{}
+		public ServiceMethodCallParameter(Key primaryKey) : base(primaryKey) {}
 
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
 		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			dependencies.Add(this.ServiceMethodParameter);
-
-			base.GetExtraDependencies (dependencies);
+			dependencies.Add(ServiceMethodParameter);
+			base.GetExtraDependencies(dependencies);
 		}
 
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid ServiceMethodParameterId;
 
 		[XmlReference("serviceMethodParameter", "ServiceMethodParameterId")]
@@ -89,15 +71,14 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ServiceMethodParameterId;
-
-				return (ServiceMethodParameter)this.PersistenceProvider.RetrieveInstance(typeof(ServiceMethodParameter), key);
+				var key = new ModelElementKey
+				{
+					Id = ServiceMethodParameterId
+				};
+				return (ServiceMethodParameter)PersistenceProvider
+					.RetrieveInstance(typeof(ServiceMethodParameter), key);
 			}
-			set
-			{
-				this.ServiceMethodParameterId = (Guid)value.PrimaryKey["Id"];
-			}
+			set => ServiceMethodParameterId = (Guid)value.PrimaryKey["Id"];
 		}
 		#endregion
 
@@ -108,86 +89,72 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ArrayList result = new ArrayList();
-				if(this.ServiceMethodParameter.AllowContextReference)
+				var result = new ArrayList();
+				if(ServiceMethodParameter.AllowContextReference)
 				{
 					result.Add(typeof(ContextReference));
 				}
-				if(this.ServiceMethodParameter.AllowDataConstantReference)
+				if(ServiceMethodParameter.AllowDataConstantReference)
 				{
 					result.Add(typeof(DataConstantReference));
 				}
-				if(this.ServiceMethodParameter.AllowSystemFunctionCall)
+				if(ServiceMethodParameter.AllowSystemFunctionCall)
 				{
 					result.Add(typeof(SystemFunctionCall));
 				}
-				if(this.ServiceMethodParameter.AllowDataStructureReference)
+				if(ServiceMethodParameter.AllowDataStructureReference)
 				{
 					result.Add(typeof(DataStructureReference));
 				}
-				if(this.ServiceMethodParameter.AllowTransformationReference)
+				if(ServiceMethodParameter.AllowTransformationReference)
 				{
 					result.Add(typeof(TransformationReference));
 				}
-				if(this.ServiceMethodParameter.AllowReportReference)
+				if(ServiceMethodParameter.AllowReportReference)
 				{
 					result.Add(typeof(ReportReference));
 				}
-				if(this.ServiceMethodParameter.AllowWorkflowReference)
+				if(ServiceMethodParameter.AllowWorkflowReference)
 				{
 					result.Add(typeof(WorkflowReference));
 				}
-
-				return (Type[]) result.ToArray(typeof(Type));
+				return (Type[])result.ToArray(typeof(Type));
 			}
 		}
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(ContextReference))
+			string itemName = null;
+			if(typeof(T) == typeof(ContextReference))
 			{
-				item = new ContextReference(schemaExtensionId);
-				item.Name = "NewContextReference";
+				itemName = "NewContextReference";
 			}
-			else if(type == typeof(DataConstantReference))
+			else if(typeof(T) == typeof(DataConstantReference))
 			{
-				item = new DataConstantReference(schemaExtensionId);
-				item.Name = "NewDataConstantReference";
+				itemName = "NewDataConstantReference";
 			}
-			else if(type == typeof(DataStructureReference))
+			else if(typeof(T) == typeof(DataStructureReference))
 			{
-				item = new DataStructureReference(schemaExtensionId);
-				item.Name = "NewDataStructureReference";
+				itemName = "NewDataStructureReference";
 			}
-			else if(type == typeof(TransformationReference))
+			else if(typeof(T) == typeof(TransformationReference))
 			{
-				item = new TransformationReference(schemaExtensionId);
-				item.Name = "NewTransformationReference";
+				itemName = "NewTransformationReference";
 			}
-			else if(type == typeof(ReportReference))
+			else if(typeof(T) == typeof(ReportReference))
 			{
-				item = new ReportReference(schemaExtensionId);
-				item.Name = "NewReportReference";
+				itemName = "NewReportReference";
 			}
-			else if(type == typeof(WorkflowReference))
+			else if(typeof(T) == typeof(WorkflowReference))
 			{
-				item = new WorkflowReference(schemaExtensionId);
-				item.Name = "NewWorkflowReference";
+				itemName = "NewWorkflowReference";
 			}
-			else if(type == typeof(SystemFunctionCall))
+			else if(typeof(T) == typeof(SystemFunctionCall))
 			{
-				item = new SystemFunctionCall(schemaExtensionId);
-				item.Name = "NewSystemFunctionCall";
+				itemName = "NewSystemFunctionCall";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		public override IList<string> NewTypeNames
@@ -196,10 +163,15 @@ namespace Origam.Schema.WorkflowModel
 			{
 				try
 				{
-					ServiceMethodCallTask call = this.ParentItem as ServiceMethodCallTask;
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent(call.Service.Name, null, null);
-					return agent.ExpectedParameterNames(call, call.ServiceMethod.Name, ServiceMethodParameter.Name);
+					var serviceMethodCallTask = ParentItem as ServiceMethodCallTask;
+					var businessServicesService = ServiceManager.Services
+						.GetService<IBusinessServicesService>();
+					var serviceAgent = businessServicesService.GetAgent(
+						serviceMethodCallTask.Service.Name, null, null);
+					return serviceAgent.ExpectedParameterNames(
+						serviceMethodCallTask, 
+						serviceMethodCallTask.ServiceMethod.Name, 
+						ServiceMethodParameter.Name);
 				}
 				catch
 				{
@@ -207,8 +179,6 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
 		#endregion
-
 	}
 }

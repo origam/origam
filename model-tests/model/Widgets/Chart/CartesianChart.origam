@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:acs="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractCartesianSeries/6.0.0" xmlns:ac="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractChart/6.0.0" xmlns:as="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractSeries/6.0.0" xmlns:cc="http://schemas.origam.com/Origam.Schema.GuiModel.CartesianChart/6.0.0" xmlns:cfm="http://schemas.origam.com/Origam.Schema.GuiModel.ChartFormMapping/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.GuiModel.ColumnSeries/6.0.0">
+  <cc:Chart
+    asi:abstract="false"
+    x:id="5018450a-a248-4396-bda4-19cb94643026"
+    ac:label="Cartesian Chart"
+    asi:name="CartesianChart">
+    <cfm:ChartFormMapping
+      asi:abstract="false"
+      cfm:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+      x:id="3bd209e2-225f-4054-ac12-09240cc84416"
+      asi:name="AllDataTypes"
+      cfm:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <cs:ChartSeries
+      asi:abstract="false"
+      as:aggregation="Sum"
+      as:field="Currency1"
+      x:id="ba0e5d7c-1ef0-4fa3-bd57-81a85c38a843"
+      as:label="Currency"
+      asi:name="Currency1"
+      cs:type="Clustered" />
+  </cc:Chart>
+</x:file>

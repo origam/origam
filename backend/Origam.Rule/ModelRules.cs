@@ -36,11 +36,7 @@ namespace Origam.Rule
             FilePersistenceService independentPersistenceService,
             CancellationToken cancellationToken)
         {
-            IStatusBarService statusBar =
-            ServiceManager.Services.GetService<IStatusBarService>();
-            statusBar.SetStatusText("Indexing references...");
-            ReferenceIndexManager.ClearReferenceIndex(false);
-           List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
+            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
                     .OfType<AbstractSchemaItem>()
@@ -48,7 +44,6 @@ namespace Origam.Rule
                     .Select(retrievedObj => {
                         retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
                         cancellationToken.ThrowIfCancellationRequested();
-                        ReferenceIndexManager.AddToBuildIndex(retrievedObj);
                         return retrievedObj;
                     })
                     .AsParallel()
@@ -67,18 +62,16 @@ namespace Origam.Rule
                     })
                     .Where(x => x != null)
                     .ToList();
-            ReferenceIndexManager.ActivateReferenceIndex();
-            statusBar.SetStatusText("");
             return errorFragments;
         }
 
-        private static bool BelongsToProvider(ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
+        private static bool BelongsToProvider(
+            ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
         {
-            if(String.Compare(retrievedObj.ItemType, ((AbstractSchemaItemProvider)provider).RootItemType,true)==0)
-            {
-                return true;
-            }
-            return false;
+            return String.Compare(
+                retrievedObj.ItemType, 
+                ((AbstractSchemaItemProvider)provider).RootItemType,
+                true) == 0;
         }
     }
 }

@@ -19,13 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Form/FormField.module.scss";
 import { inject, observer } from "mobx-react";
-import { IDockType } from "model/entities/types/IProperty";
+import { IDockType, IProperty } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
 import { observable } from "mobx";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -34,25 +37,12 @@ export enum ICaptionPosition {
   None = "None",
 }
 
-@inject(({property}, {caption}) => {
-  const rowId = getSelectedRowId(property);
-
-  const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
-
-  return {
-    caption: !!ovrCaption ? ovrCaption : caption,
-  };
-})
-@observer
-export class FormField extends React.Component<{
+export interface IFormFieldProps {
   caption: React.ReactNode;
   captionPosition?: ICaptionPosition;
   captionLength: number;
   dock?: IDockType;
-  left: number;
-  top: number;
-  width: number;
-  height: number;
+  fieldDimensions: FieldDimensions;
   isCheckbox?: boolean;
   isHidden?: boolean;
   hideCaption?: boolean;
@@ -63,88 +53,46 @@ export class FormField extends React.Component<{
   textualValue?: any;
   isRichText: boolean;
   backgroundColor?: string;
-}> {
+  property?: IProperty;
+}
+
+@inject(({property}, {caption}) => {
+  const rowId = getSelectedRowId(property);
+
+  const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
+
+  return {
+    caption: !!ovrCaption ? ovrCaption : caption,
+    property: property
+  };
+})
+@observer
+export class FormField extends React.Component<IFormFieldProps> {
 
   @observable
   toolTip: string | undefined | null;
 
-  get captionStyle() {
-    if (this.props.isHidden) {
-      return {
-        display: "none",
-      };
-    }
-    switch (this.props.captionPosition) {
-      default:
-      case ICaptionPosition.Left:
-        return {
-          top: this.props.top,
-          left: this.props.left - this.props.captionLength,
-          color: this.props.captionColor,
-        };
-      case ICaptionPosition.Right:
-        // 20 is expected checkbox width, might be needed to be set dynamically
-        // if there is some difference in chekbox sizes between various platforms.
-        return {
-          top: this.props.top,
-          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width + 4,
-          color: this.props.captionColor,
-        };
-      case ICaptionPosition.Top:
-        return {
-          top: this.props.top - 20, // TODO: Move this constant somewhere else...
-          left: this.props.left,
-          color: this.props.captionColor,
-        };
-    }
-  }
-
-  get formFieldStyle() {
-    if (this.props.isHidden) {
-      return {
-        display: "none",
-      };
-    }
-    if (this.props.dock === IDockType.Fill) {
-      return {
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      };
-    }
-    return {
-      left: this.props.left,
-      top: this.props.top,
-      width: this.props.width,
-      height: this.props.height,
-    };
-  }
-
-  getToolTip() {
-    let finalToolTip = this.props.toolTip ?? "";
-    if (this.toolTip) {
-      finalToolTip = this.toolTip + "\n\n" + finalToolTip;
-    }
-    return formatTooltipPlaintext(finalToolTip);
-  }
-
   render() {
+    const row = getSelectedRow(this.props.property);
+    const invalidMessage = row
+      ? getFieldErrorMessage(this.props.property!)(row, this.props.property!)
+      : undefined;
+
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption &&
+        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption && this.props.dock !== IDockType.Fill &&
         <label
           className={S.caption}
-          style={this.captionStyle}
-          title={this.getToolTip()}
+          style={getCaptionStyle(this.props)}
+          title={getToolTip(this.props, this.toolTip)}
         >
           {this.props.caption}
         </label>
         }
         <div
           className={S.editor}
-          style={this.formFieldStyle}
-          title={this.getToolTip()}
+          style={getFormFieldStyle(this.props)}
+          title={getToolTip(this.props, this.toolTip)}
         >
           <FormViewEditor
             value={this.props.value}
@@ -153,9 +101,83 @@ export class FormField extends React.Component<{
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
             onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            dock={this.props.dock}
           />
+          {invalidMessage && (
+            <div className={S.notification} title={invalidMessage}>
+              <i className="fas fa-exclamation-circle red"/>
+            </div>
+          )}
         </div>
       </>
     );
   }
 }
+
+export function getCaptionStyle(props: IFormFieldProps) {
+  const dimensions = props.fieldDimensions;
+  const style = {...(props.property?.style ?? {})};
+  if(dimensions.isUnset){
+    return {...dimensions.asStyle(), ...style};
+  }
+  if (props.isHidden) {
+    style["display"] = "none";
+    return style;
+  }
+  switch (props.captionPosition) {
+    default:
+    case ICaptionPosition.Left:
+      style["top"] = dimensions.top;
+      style["left"] = dimensions.left! - props.captionLength;
+      style["color"] = props.captionColor;
+      return style;
+    case ICaptionPosition.Right:
+      // 20 is expected checkbox width, might be needed to be set dynamically
+      // if there is some difference in chekbox sizes between various platforms.
+      style["top"] = dimensions.top;
+      style["left"] = props.isCheckbox ? dimensions.left! + 20 : dimensions.left! + dimensions.width! + 4;
+      style["color"] = props.captionColor;
+      return style;
+    case ICaptionPosition.Top:
+      style["top"] = dimensions.top! - 20; // TODO: Move this constant somewhere else...
+      style["left"] = dimensions.left;
+      style["color"] = props.captionColor
+      return style;
+  }
+}
+
+export function getFormFieldStyle(props: IFormFieldProps) {
+  const dimensions = props.fieldDimensions;
+  if(dimensions.isUnset){
+    return dimensions.asStyle();
+  }
+  if (props.isHidden) {
+    return {
+      display: "none",
+    };
+  }
+  if (props.dock === IDockType.Fill) {
+    return {
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+    };
+  }
+  return {
+    left: dimensions.left,
+    top: dimensions.top,
+    width: dimensions.width,
+    height: dimensions.height,
+  };
+}
+
+export function getToolTip(props: IFormFieldProps, toolTip: string | undefined | null){
+  let finalToolTip = props.toolTip ?? "";
+  if (toolTip) {
+    finalToolTip = toolTip + "\n\n" + finalToolTip;
+  }
+  return formatTooltipPlaintext(finalToolTip);
+}
+
+

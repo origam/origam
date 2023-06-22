@@ -50,7 +50,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Properties
-		[EntityColumn("G11")]  
 		public Guid WaitTimeDataConstantId;
 
 		[Category("Reference")]

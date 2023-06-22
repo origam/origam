@@ -24,11 +24,10 @@ import { TabbedViewHandleRow } from "gui/Components/TabbedView/TabbedViewHandleR
 import { TabbedViewHandle } from "gui/Components/TabbedView/TabbedViewHandle";
 import { action, observable } from "mobx";
 import { TabbedView } from "gui/Components/TabbedView/TabbedView";
-import { findUIChildren } from "xmlInterpreters/screenXml";
 import { TabbedViewPanelsContainer } from "gui/Components/TabbedView/TabbedViewPanelsContainer";
 import { IDataView } from "model/entities/types/IDataView";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { findStopping } from "xmlInterpreters/xmlUtils";
+import { findStopping, findUIChildren } from "xmlInterpreters/xmlUtils";
 
 @observer
 export class CScreenSectionTabbedView extends React.Component<{

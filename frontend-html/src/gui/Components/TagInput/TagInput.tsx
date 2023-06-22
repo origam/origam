@@ -17,9 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext } from "react";
+import React from "react";
 import S from "./TagInput.module.css";
-import { CtxDropdownEditor } from "../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 export const TagInput: React.FC<{ className?: string }> = (props) => {
   return (
@@ -35,17 +34,11 @@ export const TagInputAdd: React.FC<{
   onClick: (event: any) => void;
   onMouseDown?: (event: any) => void;
 }> = (props) => {
-  const beh = useContext(CtxDropdownEditor).behavior;
-
-  function onClick(event: any) {
-    beh.handleInputBtnClick(event);
-    props.onClick(event);
-  }
 
   return (
     <div
       className={S.tagInputAdd + (props.className ? ` ${props.className}` : "")}
-      onClick={(event) => onClick(event)}
+      onClick={(event) => props.onClick(event)}
       onMouseDown={props.onMouseDown}
       ref={props.domRef}
     >

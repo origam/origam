@@ -47,12 +47,10 @@ namespace Origam.Schema.GuiModel
 
 		#region Properties
 		[Category("Mapping")]
-		[EntityColumn("SS01")]
 		[Description("Name of url query string parameter, e.g. in case http://my-api/my-page?searchstring=value the mapped parametr should be 'searchstring'")]
 		[XmlAttribute ("mappedParameter")]
 		public string MappedParameter { get; set; } = "";
-
-		[EntityColumn("G01")]  
+ 
 		public Guid DataConstantId;
 
 		[Category("Mapping")]
@@ -69,11 +67,10 @@ namespace Origam.Schema.GuiModel
 		}
 
 		[Category("Lists")]
-		[EntityColumn("B01"), DefaultValue(false)]
+		[DefaultValue(false)]
 		[XmlAttribute ("isList")]
 		public bool IsList { get; set; } = false;
-
-		[EntityColumn("G02")]  
+ 
 		public Guid SeparatorDataConstantId;
 
 		[Category("Lists")]
@@ -89,7 +86,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 		#endregion			
 	}

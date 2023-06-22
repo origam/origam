@@ -37,12 +37,11 @@ import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { IDataView } from "../types/IDataView";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getDataStructureEntityId } from "../../selectors/DataView/getDataStructureEntityId";
-import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { SCROLL_ROW_CHUNK } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getColumnNamesToLoad } from "../../selectors/DataView/getColumnNamesToLoad";
 import { joinWithAND, toFilterItem } from "../OrigamApiHelpers";
-import { FlowBusyMonitor } from "../../../utils/flow";
+import { FlowBusyMonitor } from "utils/flow";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
@@ -64,13 +63,13 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   onSelectedRowIdChangeImm = flow(
     function*(this: DataViewLifecycle) {
-      const dataView = getDataView(this);
+      if(!isLazyLoading(this)){
+        return;
+      }
       try {
         this.monitor.inFlow++;
         if (getIsBindingRoot(this)) {
-          if (!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)) {
-            yield*this.changeMasterRow();
-          }
+          yield*this.changeMasterRow();
           yield*this.navigateChildren();
         } else if (getIsBindingParent(this)) {
           yield*this.navigateChildren();
@@ -113,6 +112,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     } finally {
       if (wasRunning) {
         await this.startSelectedRowReaction(true);
+      } else {
+        await this.onSelectedRowIdChangeImm();
       }
     }
   }
@@ -158,8 +159,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       if (Axios.isCancel(error)) {
         return;
       }
-      /*console.error(error);
-      yield errDialogPromise(this)(error);*/
       throw error;
     } finally {
       this.monitor.inFlow--;

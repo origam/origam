@@ -1,0 +1,53 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.openRoot {
+  height: 100%;
+}
+
+.navigationButtonContainer > div.navigationButton:first-child {
+  border-width: 1px 0 1px 0;
+}
+
+.navigationButtonContainer{
+  margin-left: var(--viewSideMargin);
+  margin-right: var(--viewSideMargin);
+}
+
+.navigationButton {
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+
+  border-style: solid;
+  border-color: var(--background3) !important;
+  border-width: 0 0 1px 0;
+  background-color: var(--background1);
+}
+
+svg.navigationIcon {
+  width: 35px;
+  height: 35px;
+}
+
+.label {
+  font-size: 15px;
+}

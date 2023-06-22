@@ -23,8 +23,6 @@ import { IDataView } from "model/entities/types/IDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { findStrings } from "xmlInterpreters/screenXml";
-
 import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -42,6 +40,8 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
+import { findStrings } from "xmlInterpreters/xmlUtils";
 
 
 @inject(({dataView}) => {
@@ -105,10 +105,7 @@ export class FormBuilder extends React.Component<{
         return (
           <FormSection
             key={xfo.$iid}
-            width={parseInt(xfo.attributes.Width, 10)}
-            height={parseInt(xfo.attributes.Height, 10)}
-            left={parseInt(xfo.attributes.X, 10)}
-            top={parseInt(xfo.attributes.Y, 10)}
+            dimensions={dimensionsFromXmlNode(xfo)}
             title={xfo.attributes.Title}
             backgroundColor={backgroundColor}
             foreGroundColor={foreGroundColor}
@@ -121,10 +118,7 @@ export class FormBuilder extends React.Component<{
           <FormLabel
             key={xfo.$iid}
             title={xfo.attributes.Title}
-            left={+xfo.attributes.X}
-            top={+xfo.attributes.Y}
-            width={+xfo.attributes.Width}
-            height={+xfo.attributes.Height}
+            fieldDimensions={dimensionsFromXmlNode(xfo)}
             foregroundColor={foreGroundColor}
           />
         );
@@ -139,10 +133,7 @@ export class FormBuilder extends React.Component<{
           <RadioButton
             key={xfo.$iid}
             caption={xfo.attributes.Name}
-            left={+xfo.attributes.X}
-            top={+xfo.attributes.Y}
-            width={+xfo.attributes.Width}
-            height={+xfo.attributes.Height}
+            fieldDimensions={dimensionsFromXmlNode(xfo)}
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
@@ -191,51 +182,49 @@ export class FormBuilder extends React.Component<{
                   (!getRowStateAllowRead(property, rowId || "", property.id) ||
                     getRowStateMayCauseFlicker(property)) && !!row;
 
-                if (property.column === "CheckBox") {
+                  if (property.column === "CheckBox") {
+                    return (
+                      <Provider property={property}>
+                        <CheckBox
+                          fieldDimensions={dimensionsFromProperty(property)}
+                          isHidden={isHidden}
+                          checked={value}
+                          readOnly={!row || isReadOnly(property, rowId)}
+                          onKeyDown={(event) => self.onKeyDown(event)}
+                          subscribeToFocusManager={(radioInput) =>
+                            focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
+                          }
+                          onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+                          labelColor={foreGroundColor}
+                        />
+                      </Provider>
+                    );
+                  }
+
                   return (
-                    <Provider property={property}>
-                      <CheckBox
+                    <Provider property={property} key={property.id}>
+                      <FormField
                         isHidden={isHidden}
-                        checked={value}
-                        readOnly={!row || isReadOnly(property, rowId)}
-                        onKeyDown={(event) => self.onKeyDown(event)}
-                        subscribeToFocusManager={(radioInput) =>
-                          focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
-                        }
-                        onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
-                        labelColor={foreGroundColor}
+                        caption={property.name}
+                        hideCaption={property.column === "Image"}
+                        captionLength={property.captionLength}
+                        captionPosition={property.captionPosition}
+                        captionColor={foreGroundColor}
+                        dock={property.dock}
+                        fieldDimensions={dimensionsFromProperty(property)}
+                        toolTip={property.toolTip}
+                        value={value}
+                        isRichText={property.isRichText}
+                        textualValue={textualValue}
+                        xmlNode={property.xmlNode}
+                        backgroundColor={backgroundColor}
                       />
                     </Provider>
                   );
-                }
-
-                return (
-                  <Provider property={property} key={property.id}>
-                    <FormField
-                      isHidden={isHidden}
-                      caption={property.name}
-                      hideCaption={property.column === "Image"}
-                      captionLength={property.captionLength}
-                      captionPosition={property.captionPosition}
-                      captionColor={foreGroundColor}
-                      dock={property.dock}
-                      height={property.height}
-                      width={property.width}
-                      left={property.x}
-                      top={property.y}
-                      toolTip={property.toolTip}
-                      value={value}
-                      isRichText={property.isRichText}
-                      textualValue={textualValue}
-                      xmlNode={property.xmlNode}
-                      backgroundColor={backgroundColor}
-                    />
-                  </Provider>
-                );
-              }}
-            </Observer>
-          );
-        });
+                }}
+              </Observer>
+            );
+          });
       } else {
         return xfo.elements.map((child: any) => recursive(child));
       }

@@ -30,8 +30,8 @@ namespace Origam.Workbench.Services
 	public interface IDeploymentService : IWorkbenchService
 	{
 		void Deploy();
+		void ForceDeployCurrentPackage();
 		void ExecuteActivity(Key key);
-		//bool CanUpdate(string oldVersion, string newVersion);
 		bool CanUpdate(Package extension);
         bool IsEmptyDatabase();
 		PackageVersion CurrentDeployedVersion(Package extension);

@@ -1,0 +1,7 @@
+﻿CREATE TABLE [TagInputSource] (
+	[Label] NVarChar(100) NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

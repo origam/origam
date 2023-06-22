@@ -80,7 +80,7 @@ import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrderin
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 
 import selectors from "model/selectors-tree";
-import produce from "immer";
+import { produce } from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
@@ -88,6 +88,7 @@ import { runInFlowWithHandler, } from "utils/runInFlowWithHandler";
 import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {
@@ -113,6 +114,8 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
+    this.focusManager.registerGridFocusManager(this.gridFocusManager);
+    this.focusManager.registerFormFocusManager(this.formFocusManager);
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
@@ -170,7 +173,7 @@ export class DataView implements IDataView {
 
   orderProperty: IProperty;
   activateFormView:
-    | ((args: { saveNewState: boolean }) => Promise<any>)
+    | ((args?: { saveNewState: boolean }) => Promise<any>)
     | undefined;
   activateTableView: (() => Promise<any>) | undefined;
 
@@ -185,6 +188,7 @@ export class DataView implements IDataView {
   isMapSupported = false;
   disableActionButtons = false;
   showAddButton = false;
+  hideCopyButton = false;
   showDeleteButton = false;
   showSelectionCheckboxesSetting = false;
   isGridHeightDynamic = false;
@@ -203,7 +207,7 @@ export class DataView implements IDataView {
   actions: IAction[] = [];
   defaultActions: IAction[] = [];
   type: string = "";
-
+  focusManager: ScreenFocusManager = null as any;
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;
   formViewUI: any;
@@ -315,10 +319,6 @@ export class DataView implements IDataView {
 
   @action.bound
   substituteRecord(row: any[]) {
-    if(!getSelectionMember(this)){
-      const rowId = this.dataTable.getRowId(row);
-      this.removeSelectedRowId(rowId);
-    }
     this.dataTable.substituteRecord(row);
     if (getGroupingConfiguration(this).isGrouping) {
       getGrouper(this).substituteRecord(row);

@@ -19,25 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Form/FormLabel.module.scss";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
 export const FormLabel: React.FC<{
   title: string;
-  top: number;
-  left: number;
-  width: number;
-  height: number;
+  fieldDimensions: FieldDimensions
   foregroundColor: string | undefined;
-}> = props => (
-  <div
+}> = props => {
+
+  function getStyle() {
+    const style = props.fieldDimensions.asStyle();
+    style["color"] = props.foregroundColor;
+    return style;
+  }
+
+  return <div
     className={S.root}
-    style={{
-      top: props.top,
-      left: props.left,
-      width: props.width,
-      height: props.height,
-      color: props.foregroundColor
-    }}
+    style={getStyle()}
   >
     {props.title}
   </div>
-);
+};

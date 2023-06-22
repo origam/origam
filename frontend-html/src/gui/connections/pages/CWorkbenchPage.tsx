@@ -20,10 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { MainBar } from "gui/Components/MainBar/MainBar";
 import { ScreenTabsArea } from "gui/Components/ScreenTabsArea/ScreenTabsArea";
 import { WorkbenchPage } from "gui/Components/WorkbenchPage/WorkbenchPage";
-import { MobXProviderContext, observer, Provider } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import React from "react";
+import React, { useContext } from "react";
 import { CScreenTabbedViewHandleRow } from "gui/connections/CScreenTabbedViewHandleRow";
 import { CScreenToolbar } from "gui/connections/CScreenToolbar";
 import { CSidebar } from "gui/connections/CSidebar";
@@ -34,6 +34,9 @@ import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentSc
 import { Fullscreen } from "gui/Components/Fullscreen/Fullscreen";
 import { onRootElementClick } from "model/actions/Global/onRootElementClick";
 import { action } from "mobx";
+import { Breakpoint, useCurrentBreakpointName } from "react-socks";
+import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
+import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
 
 @observer
 export class CWorkbenchPage extends React.Component {
@@ -59,35 +62,42 @@ export class CWorkbenchPage extends React.Component {
   render() {
     const isFullscreen = getIsCurrentScreenFull(this.workbench);
     return (
-      <Provider workbench={this.workbench}>
-        <WorkbenchPage
-          sidebar={<CSidebar/>}
-          mainbar={
-            <MainBar>
-              <CScreenToolbar/>
-              <ScreenTabsArea>
-                <CScreenTabbedViewHandleRow/>
-                <Fullscreen isFullscreen={isFullscreen}>
-                  <CScreenHeader/>
-                  <CScreenContent/>
-                </Fullscreen>
-                <CDialogContent/>
-                {/*<ScreenTabbedViewHandleRow>
-                <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
-                  Cubehór
-                </ScreenTabbedViewHandle>
-                <ScreenTabbedViewHandle isActive={true} hasCloseBtn={true}>
-                  Mýtobjekte
-                </ScreenTabbedViewHandle>
-                <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
-                  Mýtobjektgrúpn
-                </ScreenTabbedViewHandle>
-              </ScreenTabbedViewHandleRow>*/}
-              </ScreenTabsArea>
-            </MainBar>
-          }
-        />
-      </Provider>
+        <>
+          <Breakpoint small down className={S.mobileContainer}>
+            <MobileMain/>
+          </Breakpoint>
+          <Breakpoint medium up className={S.root}>
+            <WorkbenchPage
+              sidebar={<CSidebar/>}
+              mainbar={
+                <MainBar>
+                  <CScreenToolbar/>
+                  <ScreenTabsArea>
+                    <CScreenTabbedViewHandleRow/>
+                    <Fullscreen isFullscreen={isFullscreen}>
+                      <CScreenHeader/>
+                      <CScreenContent/>
+                    </Fullscreen>
+                    <CDialogContent/>
+                  </ScreenTabsArea>
+                </MainBar>
+              }
+            />
+          </Breakpoint>
+          <BreakpointProvider/>
+        </>
     );
   }
 }
+
+const BreakpointProvider: React.FC<{}> = (props) => {
+  const breakpoint = useCurrentBreakpointName();
+  const application = useContext(MobXProviderContext).application
+  application.breakpoint = breakpoint;
+
+  return (
+    <>
+    </>
+  );
+}
+

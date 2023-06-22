@@ -443,7 +443,9 @@ namespace Origam.BI.CrystalReports
 
 				if(this._origamMetadata.GetChildByName(parameterName) == null)
 				{
-					ColumnParameterMapping mapping=this._origamMetadata.NewItem(typeof(ColumnParameterMapping), this._origamMetadata.SchemaExtensionId, null) as ColumnParameterMapping;
+					ColumnParameterMapping mapping = _origamMetadata
+						.NewItem<ColumnParameterMapping>(
+							_origamMetadata.SchemaExtensionId, null);
 					mapping.Name = parameterName;
 				}
 			}
@@ -453,7 +455,9 @@ namespace Origam.BI.CrystalReports
 			{
 				if(this._origamMetadata.GetChildByName(param.Name) == null)
 				{
-					ColumnParameterMapping mapping = this._origamMetadata.NewItem(typeof(ColumnParameterMapping), this._origamMetadata.SchemaExtensionId, null) as ColumnParameterMapping;
+					ColumnParameterMapping mapping = _origamMetadata
+						.NewItem<ColumnParameterMapping>(
+							_origamMetadata.SchemaExtensionId, null);
 					mapping.Name = param.Name;
 				}
 			}

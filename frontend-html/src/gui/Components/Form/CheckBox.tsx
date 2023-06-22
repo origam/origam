@@ -26,6 +26,7 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { IFocusable } from "model/entities/FormFocusManager";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -37,11 +38,12 @@ export const CheckBox: React.FC<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onClick: () => void;
   labelColor?: string;
+  fieldDimensions: FieldDimensions;
 }> = inject(({property, formPanelView}) => {
   const row = getSelectedRow(formPanelView)!;
   return {
     property,
-    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
+    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(),
     onChange: (event: any, value: any) => onFieldChange(formPanelView)({
       event: event,
       row: row,
@@ -53,10 +55,8 @@ export const CheckBox: React.FC<{
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const label = props.property!.name;
-  const height = props.property!.height;
-  const width = props.property!.width;
-  const left = props.property!.x;
-  const top = props.property!.y;
+  const left = props.fieldDimensions?.left;
+  const top = props.fieldDimensions?.top;
 
   function captionStyle() {
     if (props.isHidden) {
@@ -64,11 +64,16 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
+    if(props.fieldDimensions.isUnset){
+      const style = props.fieldDimensions.asStyle();
+      style["color"] = props.labelColor;
+      return style;
+    }
     // 20 is expected checkbox width, might be needed to be set dynamically
     // if there is some difference in chekbox sizes between various platforms.
     return {
       top: top,
-      left: left + 20,
+      left: left! + 20,
       color: props.labelColor
     };
   }
@@ -79,12 +84,7 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    return {
-      left: left,
-      top: top,
-      width: width,
-      height: height,
-    };
+    return props.fieldDimensions.asStyle();
   }
 
   function onChange(event: any, state: boolean) {
@@ -105,7 +105,6 @@ export const CheckBox: React.FC<{
         <BoolEditor
           id={props.property!.modelInstanceId}
           value={props.checked}
-          isInvalid={false}
           isReadOnly={props.readOnly}
           onBlur={onInputBlur}
           onFocus={onInputFocus}

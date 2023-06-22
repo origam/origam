@@ -23,80 +23,42 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityFilter.
-	/// </summary>
 	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
     [HelpTopic("Filters")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class EntityFilter : AbstractSchemaItem, ISchemaItemFactory
+	public class EntityFilter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityFilter";
 
-		public EntityFilter() : base() {}
+		public EntityFilter() {}
 
 		public EntityFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public EntityFilter(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
 			return newNode is IDataEntity;
 		}
 
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(FunctionCall)};
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(type == typeof(FunctionCall))
-			{
-				FunctionCall item = new FunctionCall(schemaExtensionId);
-				item.PersistenceProvider = this.PersistenceProvider;
-
-				item.Group = group;
-				item.IsAbstract = this.IsAbstract;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorEntityFilterUnknownType"));
-		}
-
+			typeof(FunctionCall)
+		};
 		#endregion
 
 	}

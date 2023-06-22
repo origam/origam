@@ -1,0 +1,11 @@
+﻿CREATE TABLE [OrigamTraceRule] (
+	[RuleName] NVarChar(100) NULL,
+	[RuleId] UniqueIdentifier NULL,
+	[DataIn] NVarChar(500) NULL,
+	[DataOut] NVarChar(500) NULL,
+	[refOrigamTraceWorkflowId] UniqueIdentifier NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

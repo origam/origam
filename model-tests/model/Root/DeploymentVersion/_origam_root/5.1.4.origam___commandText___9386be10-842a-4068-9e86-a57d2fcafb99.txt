@@ -1,0 +1,6 @@
+﻿EXEC sp_rename
+	@objname = [OrigamTraceRule.DataIn],
+    @newname = [Input],
+    @objtype = 'COLUMN'
+ALTER TABLE [OrigamTraceRule]
+ALTER COLUMN [Input] nvarchar(max) NULL

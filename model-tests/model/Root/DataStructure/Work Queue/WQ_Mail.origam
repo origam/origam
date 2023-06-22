@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="a919bc9e-69b5-4d8b-ae56-dca81195239b"
@@ -19,9 +28,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/IsLocked/c019bbfc-551e-4dee-abe6-f777a13b77a9"
-        x:id="bd3aed0f-e58a-4555-be99-097864670539"
-        asi:name="IsLocked"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/ErrorText/4bfd4aa8-2d12-4293-9360-542e23e904ce"
+        x:id="117aad8f-ceed-4fd0-a43d-9f139e9b60b6"
+        asi:name="ErrorText"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -30,10 +39,11 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m1/bd384927-d6ca-43b6-bbab-cda60627cb88"
-        x:id="b803c9ab-6aba-41f9-80f4-0b68a9121046"
-        dsc:label="Message Body"
-        asi:name="MessageBody"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m3/be60bbf8-8aad-4afa-b75f-6ba9a10cfd74"
+        dsc:hideInOutput="false"
+        x:id="13bc42f1-be13-4357-8cfb-c04fbd40ee28"
+        dsc:label="CC"
+        asi:name="CC"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -42,33 +52,10 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordUpdatedBy/ad2d2efe-9cb0-4141-ac28-25b8ed68580b"
-        x:id="eabc869a-ff21-448b-b765-4e32b5b2bb1c"
-        asi:name="RecordUpdatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d1/3fd57777-7700-4943-a19f-3437f9df299a"
-        x:id="654ab7a5-1d99-4bec-99ce-4f6e77cfb4a8"
-        dsc:label="Date Sent"
-        asi:name="DateSent"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s2/abbc4d5e-aa24-4633-923b-5ff5075d9e7d"
-        x:id="bf7e853b-6993-482a-932a-5f9acd2b99b4"
-        dsc:label="Sender"
-        asi:name="Sender"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/AttemptCount/8515c4dc-c84a-4680-80a1-432f46a617fe"
+        dsc:hideInOutput="false"
+        x:id="2068bd4a-531c-4a8e-9ad1-d9bd7972b8f7"
+        asi:name="AttemptCount"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -88,44 +75,10 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d2/2aa64133-36c8-4d90-a696-1aa729d9fb78"
-        x:id="b379806c-6d43-4fcf-b1b2-7a7255220e97"
-        dsc:label="Date Received"
-        asi:name="DateReceived"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s1/a115749e-6c25-4395-967d-ba92da75171c"
-        x:id="c44c078b-f42b-4ebb-9dad-8f83eb12ad5b"
-        dsc:label="Subject"
-        asi:name="Subject"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refId/127907f1-e422-46bb-85d1-898b232d027d"
-        x:id="fa9b99fc-f0ea-446f-b5e6-9e8aff550bf3"
-        asi:name="refId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/ErrorText/4bfd4aa8-2d12-4293-9360-542e23e904ce"
-        x:id="117aad8f-ceed-4fd0-a43d-9f139e9b60b6"
-        asi:name="ErrorText"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/LastAttemptTime/b6ffd643-fe5a-4397-b195-89cce5879eff"
+        dsc:hideInOutput="false"
+        x:id="3e99b7ce-80bd-4881-9627-f89eba599df7"
+        asi:name="LastAttemptTime"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -146,31 +99,46 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="e8c258a9-65ef-429c-9013-addbd792caac"
-        asi:name="Id"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreatedBy/cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
-        x:id="f7eb1b9a-4fca-4617-90ea-cdfa270bbd15"
-        asi:name="RecordCreatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refLockedByBusinessPartnerId/1883087e-d17b-43e0-81ae-4019a9ce3021"
         x:id="5fa875ce-c081-4a79-8381-d136587b57a5"
         asi:name="refLockedByBusinessPartnerId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d1/3fd57777-7700-4943-a19f-3437f9df299a"
+        x:id="654ab7a5-1d99-4bec-99ce-4f6e77cfb4a8"
+        dsc:label="Date Sent"
+        asi:name="DateSent"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/NextAttemptTime/e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+        dsc:hideInOutput="false"
+        x:id="6f663333-3685-455e-adf9-f49590ecd12a"
+        asi:name="NextAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m4/1153d64f-b1a9-41eb-845a-5b5727b42112"
+        dsc:hideInOutput="false"
+        x:id="788910e9-5d27-4d6d-aad1-a46cc551f952"
+        dsc:label="BCC"
+        asi:name="BCC"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -198,113 +166,110 @@
         dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d2/2aa64133-36c8-4d90-a696-1aa729d9fb78"
+        x:id="b379806c-6d43-4fcf-b1b2-7a7255220e97"
+        dsc:label="Date Received"
+        asi:name="DateReceived"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m1/bd384927-d6ca-43b6-bbab-cda60627cb88"
+        x:id="b803c9ab-6aba-41f9-80f4-0b68a9121046"
+        dsc:label="Message Body"
+        asi:name="MessageBody"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/IsLocked/c019bbfc-551e-4dee-abe6-f777a13b77a9"
+        x:id="bd3aed0f-e58a-4555-be99-097864670539"
+        asi:name="IsLocked"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s2/abbc4d5e-aa24-4633-923b-5ff5075d9e7d"
+        x:id="bf7e853b-6993-482a-932a-5f9acd2b99b4"
+        dsc:label="Sender"
+        asi:name="Sender"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s1/a115749e-6c25-4395-967d-ba92da75171c"
+        x:id="c44c078b-f42b-4ebb-9dad-8f83eb12ad5b"
+        dsc:label="Subject"
+        asi:name="Subject"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="e8c258a9-65ef-429c-9013-addbd792caac"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordUpdatedBy/ad2d2efe-9cb0-4141-ac28-25b8ed68580b"
+        x:id="eabc869a-ff21-448b-b765-4e32b5b2bb1c"
+        asi:name="RecordUpdatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreatedBy/cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
+        x:id="f7eb1b9a-4fca-4617-90ea-cdfa270bbd15"
+        asi:name="RecordCreatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refId/127907f1-e422-46bb-85d1-898b232d027d"
+        x:id="fa9b99fc-f0ea-446f-b5e6-9e8aff550bf3"
+        asi:name="refId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
     </dse:DataStructureEntity>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="26b49b77-9977-4787-91b5-001a64d260e1"
-      asi:name="GetByQueueId">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="440414fc-3331-4782-a227-db6141352dd0"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="1aa398ee-4b07-4dbd-bbe8-06072dae4943"
-      asi:name="GetByRel3">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="b0547eef-30fc-4f53-aafb-180573f19879"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel3Id/51bd863a-1a1d-435e-b70a-afdf937b0358"
-        x:id="38d49f5b-f46c-4d18-9e7b-b167205a3a99"
-        asi:name="WorkQueueEntry_GetByrefRel3Id"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="49b62aaa-1f11-4afa-a790-352b68cd96b0"
-      asi:name="GetByRel2">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel2Id/90f68b03-0bf9-49fa-82d4-8884a97c59cd"
-        x:id="89b7dfd9-95ea-4301-b4e4-22f4338cfcd6"
-        asi:name="WorkQueueEntry_GetByrefRel2Id"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="7a2aa420-977d-47ab-9df2-991a0d1e6fe5"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="52792d5e-88ab-4595-a2f8-62117cdfc907"
-      asi:name="GetById">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
-        x:id="370109f7-797c-4858-80b0-1d597e2eab20"
-        asi:name="WorkQueueEntry_GetId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="7e9d8bc5-a73c-4750-b22a-6232ad624535"
-      asi:name="GetByRel4">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="04be926e-84c3-42a3-8ee5-030e45847739"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel4Id/a5dd5456-9af9-47ae-bf01-f95e89d0f8f8"
-        x:id="db478dd7-e552-4ac8-b5f5-e9a83c8c5e08"
-        asi:name="WorkQueueEntry_GetByrefRel4Id"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="711229bc-f3b0-4c4d-b52f-64e77d04b3a6"
-      asi:name="GetByRel6">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="239fc685-5dde-4571-8557-9c62bab14ba3"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel6Id/09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
-        x:id="98cdc6db-4ae6-4e4d-bdfb-bfe5938f8d8d"
-        asi:name="WorkQueueEntry_GetByrefRel6Id"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -313,16 +278,16 @@
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel5Id/8754075e-5086-4806-bf6e-b5591f50f9b5"
-        x:id="6ad8d5e9-9d81-4fc1-8c58-3a097f6fcfa3"
-        asi:name="WorkQueueEntry_GetByrefRel5Id"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="6ad3d70e-8c65-47d5-a4ec-fe440677e8a3"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="6ad3d70e-8c65-47d5-a4ec-fe440677e8a3"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel5Id/8754075e-5086-4806-bf6e-b5591f50f9b5"
+        x:id="6ad8d5e9-9d81-4fc1-8c58-3a097f6fcfa3"
+        asi:name="WorkQueueEntry_GetByrefRel5Id"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
@@ -333,15 +298,35 @@
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="53c58289-56f4-44cb-ac04-d93b11726436"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByMasterd/74f64f7c-d692-4712-ab8e-b0cbcd1d7541"
         x:id="5dac3a5e-4395-40fb-b6b7-ad752c06f302"
         asi:name="WorkQueueEntry_GetByMasterd"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="1aa398ee-4b07-4dbd-bbe8-06072dae4943"
+      asi:name="GetByRel3">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel3Id/51bd863a-1a1d-435e-b70a-afdf937b0358"
+        x:id="38d49f5b-f46c-4d18-9e7b-b167205a3a99"
+        asi:name="WorkQueueEntry_GetByrefRel3Id"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="53c58289-56f4-44cb-ac04-d93b11726436"
+        x:id="b0547eef-30fc-4f53-aafb-180573f19879"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
@@ -368,8 +353,28 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
+      x:id="26b49b77-9977-4787-91b5-001a64d260e1"
+      asi:name="GetByQueueId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="440414fc-3331-4782-a227-db6141352dd0"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
       x:id="34468819-3e3a-43c5-8113-d79ddff8c606"
       asi:name="GetByRel7">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel7Id/c6a2495b-48a0-4b34-b89e-ef40ab5f1bcf"
+        x:id="069062bd-4f65-448e-839b-4c31951792ee"
+        asi:name="WorkQueueEntry_GetByrefRel7Id"
+        dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
@@ -377,12 +382,78 @@
         x:id="b11a90cc-34ef-41d9-80b3-2268b5c0db5e"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="49b62aaa-1f11-4afa-a790-352b68cd96b0"
+      asi:name="GetByRel2">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel7Id/c6a2495b-48a0-4b34-b89e-ef40ab5f1bcf"
-        x:id="069062bd-4f65-448e-839b-4c31951792ee"
-        asi:name="WorkQueueEntry_GetByrefRel7Id"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="7a2aa420-977d-47ab-9df2-991a0d1e6fe5"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel2Id/90f68b03-0bf9-49fa-82d4-8884a97c59cd"
+        x:id="89b7dfd9-95ea-4301-b4e4-22f4338cfcd6"
+        asi:name="WorkQueueEntry_GetByrefRel2Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="52792d5e-88ab-4595-a2f8-62117cdfc907"
+      asi:name="GetById">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="370109f7-797c-4858-80b0-1d597e2eab20"
+        asi:name="WorkQueueEntry_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="711229bc-f3b0-4c4d-b52f-64e77d04b3a6"
+      asi:name="GetByRel6">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="239fc685-5dde-4571-8557-9c62bab14ba3"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel6Id/09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
+        x:id="98cdc6db-4ae6-4e4d-bdfb-bfe5938f8d8d"
+        asi:name="WorkQueueEntry_GetByrefRel6Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="7e9d8bc5-a73c-4750-b22a-6232ad624535"
+      asi:name="GetByRel4">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="04be926e-84c3-42a3-8ee5-030e45847739"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/WorkQueueEntry/edf36d46-ea77-49ee-a500-90cbd66d9e32"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel4Id/a5dd5456-9af9-47ae-bf01-f95e89d0f8f8"
+        x:id="db478dd7-e552-4ac8-b5f5-e9a83c8c5e08"
+        asi:name="WorkQueueEntry_GetByrefRel4Id"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsss:DataStructureSortSet

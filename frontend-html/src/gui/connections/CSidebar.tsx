@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { LogoSection } from "gui/Components/Sidebar/LogoSection";
 import { Sidebar } from "gui/Components/Sidebar/Sidebar";
@@ -48,6 +48,7 @@ import { SearchResults } from "gui/Components/Search/SearchResults";
 import { CFavorites } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { DragDropContext } from 'react-beautiful-dnd';
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CSidebar extends React.Component {
@@ -198,7 +199,12 @@ export class CSidebar extends React.Component {
           {favorites.favoriteFolders
             .filter((folder) => folder.isPinned)
             .map((folder) => (
-              <CFavorites ctx={this.workbench} folder={folder} isActive={true} forceOpen={true}/>
+              <CFavorites
+                key={folder.id}
+                ctx={this.workbench}
+                folder={folder}
+                isActive={true}
+                forceOpen={true}/>
             ))}
 
           {showWorkQues ? this.renderWorkQuesSection() : null}
@@ -224,36 +230,40 @@ export class CSidebar extends React.Component {
               />
             </Provider>
           </SidebarSection>
-          <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
-            <SidebarSectionDivider/>
-            <SidebarSectionHeader
-              isActive={this.sidebarState.activeSection === "Info"}
-              icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
-              label={T("Info", "infopanel_title")}
-              onClick={() => (this.sidebarState.activeSection = "Info")}
-            />
-            <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
-              <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
-            </SidebarSectionBody>
-          </SidebarSection>
-          <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
-            <SidebarSectionDivider/>
-            <SidebarSectionHeader
-              isActive={this.sidebarState.activeSection === "Search"}
-              icon={
-                <Icon
-                  src="./icons/search.svg"
-                  tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
+          {!isMobileLayoutActive(this.workbench) &&
+            <>
+              <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
+                <SidebarSectionDivider/>
+                <SidebarSectionHeader
+                  isActive={this.sidebarState.activeSection === "Info"}
+                  icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
+                  label={T("Info", "infopanel_title")}
+                  onClick={() => (this.sidebarState.activeSection = "Info")}
                 />
-              }
-              label={T("Search", "search_result", this.sidebarState.resultCount)}
-              onClick={() => (this.sidebarState.activeSection = "Search")}
-            />
-            <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
-              <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
-            </SidebarSectionBody>
-            <SidebarSectionDivider/>
-          </SidebarSection>
+                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
+                  <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
+                </SidebarSectionBody>
+              </SidebarSection>
+              <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
+                <SidebarSectionDivider/>
+                <SidebarSectionHeader
+                  isActive={this.sidebarState.activeSection === "Search"}
+                  icon={
+                    <Icon
+                      src="./icons/search.svg"
+                      tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
+                    />
+                  }
+                  label={T("Search", "search_result", this.sidebarState.resultCount)}
+                  onClick={() => (this.sidebarState.activeSection = "Search")}
+                />
+                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
+                  <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
+                </SidebarSectionBody>
+                <SidebarSectionDivider/>
+              </SidebarSection>
+            </>
+          }
         </DragDropContext>
       </Sidebar>
     );

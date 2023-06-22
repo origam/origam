@@ -61,11 +61,14 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
       return <FilterSettingsBoolean
         id={property.modelInstanceId}
         setting={getSettings(FilterSettingsBoolean.defaultSettings)}
+        ctx={property}
       />;
     case "Date":
       return <FilterSettingsDate
         id={property.modelInstanceId}
-        setting={getSettings(FilterSettingsDate.defaultSettings)} autoFocus={props.autoFocus}
+        setting={getSettings(FilterSettingsDate.defaultSettings)}
+        autoFocus={props.autoFocus}
+        property={property}
       />;
     case "Number":
       return <FilterSettingsNumber
@@ -95,10 +98,12 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
                 (array) =>
                   array[1] &&
                   array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
-              );
+              )
+              .sort((x, y) => x[1] > y[1] ? 1 : -1);
           })}
         />
       );
+    case "Checklist":
     case "TagInput":
       return (
         <FilterSettingsTagInput

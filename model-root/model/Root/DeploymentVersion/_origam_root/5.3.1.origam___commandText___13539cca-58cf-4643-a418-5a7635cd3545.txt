@@ -1,0 +1,9 @@
+﻿CREATE TABLE "WorkQueueState" (
+	"refWorkQueueId" Uuid NOT NULL,
+	"ThrottlingIntervalStart" Timestamp(3) NOT NULL,
+	"ThrottlingItemsProcessed" Integer NOT NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdated" Timestamp(3) NULL);

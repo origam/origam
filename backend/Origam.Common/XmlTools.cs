@@ -25,6 +25,7 @@ using System.Xml.XPath;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Origam
 {
@@ -179,6 +180,60 @@ namespace Origam
                 .Cast<XmlElement>()
                 .ToList();
         }
+        
+        public static string FormatXmlString(object value)
+        {
+	        if(value is DateTime)
+	        {
+		        return FormatXmlDateTime((DateTime)value);
+	        }
+	        else if(value is decimal)
+	        {
+		        return XmlConvert.ToString((decimal)value);
+	        }
+	        else if(value is float)
+	        {
+		        return XmlConvert.ToString((float)value);
+	        }
+	        else if(value is double)
+	        {
+		        return XmlConvert.ToString((double)value);
+	        }
+	        else if(value is bool)
+	        {
+		        return XmlConvert.ToString((bool)value);
+	        }
+	        else if(value == null || value == DBNull.Value)
+	        {
+		        return String.Empty;
+	        }
+	        else
+	        {
+		        return value.ToString();
+	        }
+        }
+        
+        public static string FormatXmlDateTime(DateTime date)
+        {
+	        if(date.Hour == 0 & date.Minute == 0 & date.Second == 0 & date.Millisecond == 0)
+	        {
+		        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(date);
+		        int daylight = TimeZone.CurrentTimeZone.GetDaylightChanges(date.Year).Delta.Hours;
+		        int hours = offset.Duration().Hours;
+		        int finalHours = hours; // + daylight;
+
+		        string sign = finalHours >= 0 ? "+" : "-";
+
+		        string result = date.ToString("yyyy-MM-dd") + "T00:00:00.0000000" + sign + finalHours.ToString("00") + ":" + offset.Minutes.ToString("00");
+
+		        return result;
+	        }
+	        else
+	        {
+		        return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
+	        }
+        }
+
 
     }
 }

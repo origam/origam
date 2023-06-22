@@ -35,20 +35,10 @@ namespace Origam.Workbench.Services
     {
 		IPersistenceProvider SchemaProvider{get;}
 		IPersistenceProvider SchemaListProvider{get;}
-
-		void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, 
-			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtension, bool loadDocumentation, 
 			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
 			bool loadDocumentation, bool loadDeploymentScripts, string transactionId);
-		void LoadSchemaList();
-		void UpdateRepository();
-		bool IsRepositoryVersionCompatible();
-		bool CanUpdateRepository();
-		void ExportPackage (Guid extensionId, string fileName);
-		void MergePackage (Guid extensionId, DataSet data, string transcationId);
-        void MergeSchema(DataSet schema, Key activePackage);
-        void InitializeRepository();
+		void InitializeRepository();
 	}
 }

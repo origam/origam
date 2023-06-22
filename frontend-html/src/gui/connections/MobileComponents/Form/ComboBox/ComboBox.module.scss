@@ -1,0 +1,58 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  display: flex;
+}
+
+div.mobileInput > .input:read-only {
+  background: var(--background2);
+  border: 1px solid var(--background5);
+}
+
+.input {
+  min-height: 23px;
+}
+
+div.mobileInput div.link {
+  color: var(--foreground1);
+
+  &:read-only {
+    color: var(--foreground1);
+  }
+}
+
+.readOnly{
+  div.input:read-only {
+    background: var(--background3);
+    border: 1px solid var(--background3);
+  }
+  div:global(.inputBtn):global(.lastOne){
+    background: var(--background3);
+    border: 1px solid var(--background3);
+    color: var(--background5);
+  }
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  min-width: 45px;
+}

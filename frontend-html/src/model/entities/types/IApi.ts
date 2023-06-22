@@ -228,7 +228,7 @@ export interface IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any>;
 
@@ -238,10 +238,14 @@ export interface IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any>;
+
+  getReportInfo(data: {
+    ReportId: string
+  }): Promise<any>
 
   getRows(data: {
     MenuId: string;
@@ -256,6 +260,12 @@ export interface IApi {
     MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any>;
+
+  getRow(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any>
 
   getFilterListValues(data: {
     MenuId: string;
@@ -430,6 +440,8 @@ export interface IApi {
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
+
+  callUserApi(screenUrl: string): Promise<Blob>;
 }
 
 export interface ILazyLoadedEntityInput {

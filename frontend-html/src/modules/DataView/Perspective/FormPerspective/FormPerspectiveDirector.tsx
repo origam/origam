@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React, { useContext } from "react";
 import { action } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { getIdent, IIId } from "utils/common";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 
-import { Observer } from "mobx-react";
+import { MobXProviderContext, observer, Observer } from "mobx-react";
 import { IFormPerspective } from "./FormPerspective";
 import { IPerspective } from "../Perspective";
 import { FormView } from "gui/Workbench/ScreenArea/FormView/FormView";
@@ -34,6 +34,9 @@ import { FormBuilder } from "gui/Workbench/ScreenArea/FormView/FormBuilder";
 import { T } from "../../../../utils/translation";
 import S from "./FormPerspectiveDirector.module.scss";
 import cx from "classnames";
+import { MobileFormBuilder } from "gui/connections/MobileComponents/Form/MobileFormBuilder";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { IApplication } from "model/entities/types/IApplication";
 
 export class FormPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -51,19 +54,10 @@ export class FormPerspectiveDirector implements IIId {
     this.dataViewBodyUI.contrib.put({
       $iid: this.$iid,
       render: () => (
-        <Observer key={this.$iid}>
-          {() =>
-            !this.formPerspective.isActive ? (
-              <></>
-            ) : (
-              <div className={cx(S.root, {isActive: this.formPerspective.isActive})}>
-                <FormView>
-                  <FormBuilder/>
-                </FormView>
-              </div>
-            )
-          }
-        </Observer>
+        <FormPerspectiveDirectorComponent
+          key={this.$iid}
+          formPerspectiveActive={this.formPerspective.isActive}
+        />
       ),
     });
 
@@ -99,6 +93,28 @@ export class FormPerspectiveDirector implements IIId {
     this.teardown();
   }
 }
+
+const FormPerspectiveDirectorComponent: React.FC<{
+  formPerspectiveActive: boolean;
+}> = observer((props) => {
+  const application = useContext(MobXProviderContext).application as IApplication
+
+  return (
+    !props.formPerspectiveActive ? (
+      <></>
+    ) : (
+      <div className={cx(S.root, {isActive: props.formPerspectiveActive})}>
+        <FormView>
+          {isMobileLayoutActive(application)
+            ? <MobileFormBuilder mobileState={application.mobileState}/>
+            : <FormBuilder/>
+          }
+        </FormView>
+      </div>
+    )
+  );
+});
+
 
 export const IFormPerspectiveDirector = TypeSymbol<FormPerspectiveDirector>(
   "IFormPerspectiveDirector"

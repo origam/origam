@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { observable } from "mobx";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class SaveFilterDialog extends React.Component<{
@@ -47,7 +48,7 @@ export class SaveFilterDialog extends React.Component<{
   }
 
   componentDidMount() {
-    this.refInput.current?.focus();
+    requestFocus(this.refInput.current);
   }
 
   onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -58,7 +59,7 @@ export class SaveFilterDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("New Filter", "new_filter_title")}
         titleButtons={null}
         buttonsCenter={
@@ -101,7 +102,7 @@ export class SaveFilterDialog extends React.Component<{
             </div>
           </div>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

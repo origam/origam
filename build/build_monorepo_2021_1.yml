@@ -320,9 +320,9 @@ jobs:
      - checkout: origam-html-chat
        fetchDepth: 1
      - task: NodeTool@0
-       displayName: 'Use Node 11.x'
+       displayName: 'Use Node 12.x'
        inputs:
-         versionSpec: 11.x
+         versionSpec: 12.x
      - task: geeklearningio.gl-vsts-tasks-yarn.yarn-installer-task.YarnInstaller@3
        displayName: 'Use Yarn 1.x'
      - task: Cache@2
@@ -362,8 +362,8 @@ jobs:
   - job: build_release
     displayName: Build release
     dependsOn: 
-    - build_source
     - build_html
+    - build_source
     pool:
       vmImage: windows-2019
     steps:

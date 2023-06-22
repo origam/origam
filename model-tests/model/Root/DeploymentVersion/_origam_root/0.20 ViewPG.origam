@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="734bce0c-c3ce-4a50-8a4c-91a625333773"
     asi:name="0.20 ViewPG"
     dv:version="0.20">
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="30"
-      scusa:commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e00a0985-9436-4dd2-8c57-165cb6ee4029.txt"
-      x:id="e00a0985-9436-4dd2-8c57-165cb6ee4029"
-      asi:name="00030_Recreate_View_BusinessPartnerLookup"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="1230"
-      scusa:commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e6bed12d-5ade-4237-8337-4214f32e8274.txt"
-      x:id="e6bed12d-5ade-4237-8337-4214f32e8274"
-      asi:name="01230_VIEW_ResourceAccessList"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="1220"
@@ -35,6 +24,22 @@
       scusa:commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___a6e78837-a208-43a0-8490-e7ff57bd52ed.txt"
       x:id="a6e78837-a208-43a0-8490-e7ff57bd52ed"
       asi:name="01210_View_OrganizationMappingList"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e00a0985-9436-4dd2-8c57-165cb6ee4029.txt"
+      x:id="e00a0985-9436-4dd2-8c57-165cb6ee4029"
+      asi:name="00030_Recreate_View_BusinessPartnerLookup"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="1230"
+      scusa:commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e6bed12d-5ade-4237-8337-4214f32e8274.txt"
+      x:id="e6bed12d-5ade-4237-8337-4214f32e8274"
+      asi:name="01230_VIEW_ResourceAccessList"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

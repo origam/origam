@@ -50,7 +50,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .pictureSection {
   flex-shrink: 0;
-  margin: 0 1em 0 0;
   width: 3em;
 }
 
@@ -63,7 +62,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-size: $h2-fontsize;
   line-height: $h2-lineheight;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 0 1em;
 }
 
 .userNameLabel {
@@ -74,28 +73,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   white-space: nowrap;
   color: var(--background6);
   cursor: pointer;
+  margin: 0 0 0 1em;
   @include hoverItemAnimation;
 }
 
 .userNameLabel:hover  {
   color: var(--background8);
-}
-
-actionSection {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--background3);
-  margin: 0;
-  padding: 0;
-
-}
-
-menuItemDivider {
-  height:1px;
-  border-top: 1px solid var(--background4);
-  margin-top: 5px;
-  margin-bottom: 5px;
-  display: none;
 }
 
 .root {

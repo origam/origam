@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 import { IProperty } from "../../types/IProperty";
-import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
 import { AggregationContainer } from "../TablePanelView";
@@ -27,10 +26,11 @@ import { ICellRectangle } from "./ICellRectangle";
 
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
-  columnConfigurationDialog: IColumnConfigurationDialog;
+  columnConfigurationModel: ColumnConfigurationModel;
   filterConfiguration: IFilterConfiguration;
   filterGroupManager: FilterGroupManager;
   orderingConfiguration: IOrderingConfiguration;
@@ -90,7 +90,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setSelectedColumnId(id: string | undefined): void;
 
-  swapColumns(id1: string, id2: string): void;
+  moveColumn(idToMove: string, idToMoveBehind: string): void;
 
   columnOrderChangingTargetId: string | undefined;
   columnOrderChangingSourceId: string | undefined;
@@ -111,7 +111,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setPropertyHidden(propertyId: string, state: boolean): void;
 
-  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle;
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle | undefined;
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
 

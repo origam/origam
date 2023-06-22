@@ -45,7 +45,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _namefield = "";
 		[Category("Series")]
-		[EntityColumn("SS03"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("nameField")]
 		public string NameField
 		{

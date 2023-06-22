@@ -17,6 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+:root {
+  --inputHeight: 25px;
+}
+
 html,
 body {
   margin: 0;
@@ -31,6 +35,10 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+input {
+  margin: 0;
 }
 
 input,
@@ -99,10 +107,31 @@ body,
 }
 
 .tippy-tooltip.tippy-tooltip--regular, .tippy-popper.tippy-tooltip.light-theme[data-animatefill] {
-  background-color:var(--background1) !important;
+  background-color: var(--background1) !important;
 }
 
 .leaflet-control-container,
 .leaflet-draw-actions a {
-  color:var(--background8) !important;
+  color: var(--background8) !important;
+}
+
+@media print {
+  .noPrint {
+    display: none;
+  }
+
+  h1.printOnly {
+    display: block;
+  }
+  html > body {
+    overflow: visible;
+
+    #root div {
+      overflow: visible;
+    }
+  }
+}
+
+.printOnly {
+  display: none;
 }

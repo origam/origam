@@ -31,7 +31,6 @@ import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPro
 import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import { IColumnConfigurationDialog } from "model/entities/TablePanelView/types/IColumnConfigurationDialog";
 import {
   ITableCanvas,
   ITablePanelView,
@@ -50,20 +49,23 @@ import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSav
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
-    this.columnConfigurationDialog.parent = this;
+    this.columnConfigurationModel.parent = this;
     this.filterConfiguration.parent = this;
     this.filterGroupManager.parent = this;
     this.orderingConfiguration.parent = this;
     this.groupingConfiguration.parent = this;
   }
 
-  columnConfigurationDialog: IColumnConfigurationDialog = null as any;
+  columnConfigurationModel: ColumnConfigurationModel = null as any;
   configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;
@@ -177,29 +179,19 @@ export class TablePanelView implements ITablePanelView {
         return;
       }
     }
-    yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+    if(isMobileLayoutActive(dataView)){
+      yield*this.onCellClickInternalMobile(event, row, columnId, isControlInteraction);
+      yield dataView.activateFormView!({saveNewState: false});
+    }else{
+      yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+    }
   }
 
-  *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
+  *onCellClickInternalMobile(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
-        yield*getDataView(this).navigateLookupLink(property, row);
-      } else {
-        if (this.dataTable.getRowId(row) === this.selectedRowId) {
-          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-          this.setEditing(true);
-        } else {
-          const {isEditing} = this;
-          if (isEditing) {
-            this.setEditing(false);
-          }
-          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-          if (isEditing) {
-            this.setEditing(true);
-          }
-        }
-      }
+      this.setEditing(false);
+      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
     } else {
       const rowId = this.dataTable.getRowId(row);
       yield*this.selectCellAsync(columnId, rowId);
@@ -218,7 +210,45 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  private*selectCellAsync(columnId: string, rowId: string) {
+  *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
+    const property = this.propertyMap.get(columnId)!;
+    if (property.column !== "CheckBox" || !isControlInteraction) {
+      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
+        yield*getDataView(this).navigateLookupLink(property, row);
+      } else {
+        if (this.dataTable.getRowId(row) === this.selectedRowId) {
+          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+          this.setEditing(true);
+        } else {
+          const {isEditing} = this;
+          if (isEditing) {
+            this.setEditing(false);
+          }
+          yield*this.selectCellAsync(this.dataTable.getRowId(row) as string, property.id);
+          if (isEditing) {
+            this.setEditing(true);
+          }
+        }
+      }
+    } else {
+      const rowId = this.dataTable.getRowId(row);
+      yield*this.selectCellAsync(rowId, columnId);
+
+      if (!isReadOnly(property!, rowId)) {
+        yield*onFieldChangeG(this)({
+          event: undefined,
+          row: row,
+          property: property,
+          value: !getCellValue(this, row, property),
+        });
+      }
+    }
+    if (!getGroupingConfiguration(this).isGrouping) {
+      this.scrollToCurrentCell();
+    }
+  }
+
+  private*selectCellAsync(rowId: string, columnId: string,) {
     this.selectedColumnId = columnId;
     const dataView = getDataView(this);
     if (dataView.selectedRowId === rowId) {
@@ -246,7 +276,6 @@ export class TablePanelView implements ITablePanelView {
     const _this = this;
     flow(function*() {
       if (_this.isEditing) {
-        _this.setEditing(false);
         yield*flushCurrentRowData(_this)();
       }
     })();
@@ -349,12 +378,11 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  swapColumns(id1: string, id2: string): void {
-    const idx1 = this.tablePropertyIds.findIndex((id) => id === id1);
-    const idx2 = this.tablePropertyIds.findIndex((id) => id === id2);
-    const tmp = this.tablePropertyIds[idx1];
-    this.tablePropertyIds[idx1] = this.tablePropertyIds[idx2];
-    this.tablePropertyIds[idx2] = tmp;
+  moveColumn(idToMove: string, idToMoveBehind: string): void {
+    const idx1 = this.tablePropertyIds.findIndex((id) => id === idToMove);
+    const idx2 = this.tablePropertyIds.findIndex((id) => id === idToMoveBehind);
+    this.tablePropertyIds.splice(idx1,1);
+    this.tablePropertyIds.splice(idx2,0, idToMove);
   }
 
   @action.bound
@@ -417,7 +445,7 @@ export class TablePanelView implements ITablePanelView {
     return getDataTable(this);
   }
 
-  getCellRectangle(rowIndex: number, columnIndex: number) {
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle | undefined {
     const groupingConfig = getGroupingConfiguration(this);
     let cellOffset = {row: 0, column: 0};
     if (groupingConfig.isGrouping) {
@@ -432,7 +460,18 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0,
       };
     }
-    return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    const rectangle = this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    if (!rectangle) {
+      return undefined;
+    }
+    const openedScreen = getOpenedScreen(this);
+
+    return {
+      columnLeft: rectangle.columnLeft + openedScreen.positionOffset.leftOffset,
+      columnWidth: rectangle.columnWidth,
+      rowTop: rectangle.rowTop + openedScreen.positionOffset.topOffset,
+      rowHeight: rectangle.rowHeight
+    };
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

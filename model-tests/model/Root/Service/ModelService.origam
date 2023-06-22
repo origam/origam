@@ -1,29 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm1="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     s:classPath="Origam.Workflow.ModelServiceAgent,Origam.Workflow"
     x:id="92d3277e-dabc-4093-bd25-bc010078b925"
     asi:name="ModelService">
-    <sm:ServiceMethod
+    <sm1:ServiceMethod
       asi:abstract="false"
-      x:id="6ed7e428-32bc-45d9-89b9-9424a5f2cf74"
-      asi:name="ElementAttribute"
-      sm:returnValueDataType="String">
+      x:id="07fc9c79-a98b-49af-aed3-9ba2b722d0fc"
+      asi:name="GetTrace"
+      sm1:returnValueDataType="Boolean" />
+    <sm1:ServiceMethod
+      asi:abstract="false"
+      x:id="2822882e-3e43-4f3d-a51a-cedb52c72740"
+      asi:name="TraceObject"
+      sm1:returnValueDataType="Object">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
         smp:allowDataConstantReference="true"
         smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
+        sip:allowNulls="true"
         smp:allowReportReference="false"
         smp:allowSystemFunctionCall="false"
         smp:allowTransformationReference="false"
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="UniqueIdentifier"
-        x:id="747b3b35-a813-4349-9506-d0e778f92dff"
-        asi:name="Id" />
+        x:id="3bddc0d0-7ae0-414f-9591-0d54ebc08725"
+        asi:name="ObjectId" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="917baa49-36c1-465f-8f35-8ef81714b31e"
+        asi:name="TraceType" />
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
+      asi:abstract="false"
+      x:id="6ed7e428-32bc-45d9-89b9-9424a5f2cf74"
+      asi:name="ElementAttribute"
+      sm1:returnValueDataType="String">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -38,12 +69,26 @@
         sip:dataType="String"
         x:id="17448517-ab08-4135-9a7a-854d5361480d"
         asi:name="AttributeName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="747b3b35-a813-4349-9506-d0e778f92dff"
+        asi:name="Id" />
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="a8f75de6-ede4-45f4-bce4-a04673d14d2b"
       asi:name="ElementListByParent"
-      sm:returnValueDataType="Xml">
+      sm1:returnValueDataType="Xml">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -72,6 +117,26 @@
         sip:dataType="String"
         x:id="5315fb7c-cb0e-41db-af1b-dfe5778c6674"
         asi:name="ItemType" />
-    </sm:ServiceMethod>
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
+      asi:abstract="false"
+      x:id="ce43a847-7147-4a0f-bd3e-3d531a2416aa"
+      asi:name="SetTrace"
+      sm1:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Boolean"
+        x:id="2b0fefc8-cf58-45f1-a9f6-e4cacec6af82"
+        asi:name="Enabled" />
+    </sm1:ServiceMethod>
   </s:Service>
 </x:file>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="97786083-64da-4990-9a28-abcb8818beb9"
+    ade:label="WorkQueueRetryType Localization"
+    tmi:mappedObjectName="WorkQueueRetryType_l10n"
+    asi:name="WorkQueueRetryType_l10n"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="756ab673-a84b-4b78-a384-287577bfc1ab"
+      asi:name="ix_unq_WorkQueueRetryType"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Work Queue/WorkQueueRetryType_l10n.origam#WorkQueueRetryType_l10n/refWorkQueueRetryTypeId/8c157f54-2827-4d17-b9b0-82fae86b4658"
+        x:id="18d6fecb-4d29-4cec-99e9-a8869d42e3d0"
+        asi:name="0_refWorkQueueRetryTypeId"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
+        x:id="6a7c5483-9386-4bc4-ac54-c7246e8226a0"
+        asi:name="1_refLanguageId"
+        deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="20a400fa-7da7-4030-bc41-4fbdbd10ca5d"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/8e7e0ad5-169e-41af-879d-dfb963cf17b6"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="8c157f54-2827-4d17-b9b0-82fae86b4658"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refWorkQueueRetryTypeId"
+      asi:name="refWorkQueueRetryTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="4261f761-f658-4202-abd6-3a638e2b183f" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
+      x:id="f79f400f-e7e7-4bda-b777-a7cde9603e82" />
+  </tmi:DataEntity>
+</x:file>

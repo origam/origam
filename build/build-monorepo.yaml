@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2021.2.0.$(Build.BuildId)
+  value: 2023.1.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 21.2.0.$(Build.BuildId)
+  value: 22.3.1.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2021.2-beta.2
+  value: 2023.1-alpha.1
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2021.2-beta.1
+  value: 2022.4.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2021.2
+  value: 2023.1
 
 
 resources:
@@ -40,8 +40,8 @@ resources:
 
 
 jobs:
-  - job: build_source
-    displayName: Build source
+  - job: build_desktop_applications
+    displayName: Build Desktop Applications
     pool:
       vmImage: windows-2022
     steps:
@@ -64,6 +64,11 @@ jobs:
          restoreSolution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
          feedsToUse: 'select'
      - powershell: |
+         $commitId = (git -C $(Agent.BuildDirectory)\s rev-parse HEAD)
+         Write-Host $commitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
+       displayName: Store origam-origam commit id
+     - powershell: |
         $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs -Recurse
         $filename | %{
          (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
@@ -72,7 +77,10 @@ jobs:
         $filename | %{
          (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
-        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
        displayName: 'Build Number'
      - task: VSBuild@1
        displayName: 'Build architect'
@@ -86,10 +94,11 @@ jobs:
        inputs:
          testSelector: 'testAssemblies'
          testAssemblyVer2: |
-           **\*test*.dll
+           **\*Tests.dll
            !**\*TestAdapter.dll
            !**\obj\**
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
+         runInParallel: false
      - task: CopyFiles@2
        displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:
@@ -153,6 +162,10 @@ jobs:
            **\*.exe.config
          TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
        condition: succeededOrFailed()
+     - powershell: |
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
+       displayName: 'Rename Config files'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-client'
        inputs:
@@ -205,15 +218,57 @@ jobs:
            server_source\**\*.*
          RemoveSourceFolder: true
        displayName: 'origam-setup clean up'
+  - job: build_server
+    displayName: Build Server
+    pool:
+      vmImage: windows-2022
+    steps:
+     - checkout: origam
+       fetchDepth: 1
+     - task: NuGetToolInstaller@0
+       displayName: 'Use NuGet 5.8'
+       inputs:
+         versionSpec: 5.8
+     - task: Cache@2
+       displayName: 'NuGet Cache'
+       inputs:
+         key: 'nuget-2021-04-11-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
+         path: '$(NUGET_PACKAGES)'
+         restoreKeys: 'nuget-2021-04-11-01 | "$(Agent.OS)"'
+     - task: NuGetCommand@2
+       displayName: 'NuGet restore'
+       inputs:
+         command: 'restore'
+         restoreSolution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         feedsToUse: 'select'
+     - powershell: |
+         $commitId = (git -C $(Agent.BuildDirectory)\s rev-parse HEAD)
+         Write-Host $commitId
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
+       displayName: Store origam-origam commit id
+     - powershell: |
+        $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs -Recurse
+        $filename | %{
+         (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
+        }
+        $fileName = Get-ChildItem "*" -Include *.csproj -Recurse
+        $filename | %{
+         (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
+        }
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
+       displayName: 'Build Number'
      - script: |
         set MsBuildEmitSolution=1
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        displayName: 'Build HTML Server'
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\bin\Release\net6.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net6.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -226,7 +281,7 @@ jobs:
          ArtifactName: origam-html-server
        condition: succeededOrFailed()
   - job: build_html
-    displayName: Build html
+    displayName: Build HTML Frontend
     pool:
       vmImage: windows-2022
     steps:
@@ -247,7 +302,7 @@ jobs:
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: |
-        yarn
+        yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn'
      - script: |
@@ -257,11 +312,11 @@ jobs:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-client'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\dist'
          ArtifactName: origam-html-client
        condition: succeededOrFailed()
      - script: |
-        yarn
+        yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
        displayName: 'origam-html-chat yarn'
      - script: |
@@ -271,14 +326,15 @@ jobs:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-chat'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
          ArtifactName: origam-html-chat
        condition: succeededOrFailed()
   - job: build_release
-    displayName: Build release
+    displayName: Create Github Release
     dependsOn: 
-    - build_source
     - build_html
+    - build_desktop_applications
+    - build_server
     pool:
       vmImage: windows-2022
     steps:

@@ -32,6 +32,7 @@ namespace Origam
 	{
 		public const string ROLE_SUFFIX_DIVIDER = "|";
 		public const string READ_ONLY_ROLE_SUFFIX = "isReadOnly()";
+		public const string INITIAL_SCREEN_ROLE_SUFFIX = "isInitialScreen()";
         public const string BUILTIN_SUPER_USER_ROLE = "e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2";
 
 		private static IOrigamProfileProvider _profileProvider = null;
@@ -86,19 +87,29 @@ namespace Origam
 
 		public static string GetReadOnlyRoles(string roles)
 		{
+			return AddRoleSuffix(roles, READ_ONLY_ROLE_SUFFIX);
+		}
+		
+		public static string GetInitialScreenRoles(string roles)
+		{
+			return AddRoleSuffix(roles, INITIAL_SCREEN_ROLE_SUFFIX);
+		}
+
+		private static string AddRoleSuffix(string roles, string suffix)
+		{
 			string authContext = "";
 			if(roles != null)
 			{
 				string[] roleList = roles.Split(";".ToCharArray());
 				foreach(string role in roleList)
 				{
-					authContext += role + ROLE_SUFFIX_DIVIDER + READ_ONLY_ROLE_SUFFIX + ";";
+					authContext += role + ROLE_SUFFIX_DIVIDER + suffix + ";";
 				}
 			}
 			return authContext;
 		}
 
-        public static void SetServerIdentity()
+		public static void SetServerIdentity()
         {
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
         }

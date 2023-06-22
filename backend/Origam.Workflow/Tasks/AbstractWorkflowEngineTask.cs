@@ -45,12 +45,17 @@ namespace Origam.Workflow.Tasks
 		public event WorkflowEngineTaskFinished Finished;
 		protected virtual void OnFinished(WorkflowEngineTaskEventArgs e)
 		{
-			if (this.Step == null)
+			if (Step == null)
             {
                 throw e.Exception;
             }
 			if (this.Finished != null)
 			{
+				if (e.Exception != null &&
+				    Step.OnFailure == StepFailureMode.Suppress)
+				{
+					e.Exception.Data["onFailure"] = Step.OnFailure;
+				}
 				this.Finished(this, e);
 			}
 		}

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="05650374-c8b4-48fa-a0e9-f3902b252fe6"
@@ -9,6 +15,34 @@
       x:id="196614b9-ae57-48e3-b14f-34257c285416"
       asi:name="ReadTextFile"
       sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="38a8c283-54b9-4ce7-b54f-6c2546cba237"
+        asi:name="FileName" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="623aa066-3025-41b9-b048-cb92dfc4347c"
+        asi:name="Encoding" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -35,36 +69,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="String"
-        x:id="38a8c283-54b9-4ce7-b54f-6c2546cba237"
-        asi:name="FileName" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
         x:id="a8fe1ade-8e06-49b3-b2a4-bb9bb3c25696"
         asi:name="Entity" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="623aa066-3025-41b9-b048-cb92dfc4347c"
-        asi:name="Encoding" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"

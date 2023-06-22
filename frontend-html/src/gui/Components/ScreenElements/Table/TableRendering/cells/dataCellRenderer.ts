@@ -45,9 +45,9 @@ import {
   rowHeight,
   rowIndex,
 } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { setTableDebugValue } from "gui/Components/ScreenElements/Table/TableRendering/DebugTableMonitor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { flashColor2htmlColor } from "@origam/utils";
 
 interface IDataCellRenderer {
   drawCellText(): void;
@@ -222,7 +222,7 @@ class ImageCellRenderer implements IDataCellRenderer {
     const property = currentProperty();
     const iw = img.width;
     const ih = img.height;
-    const cw = property.width;
+    const cw = property.columnWidth;
     const ch = property.height;
     const WR = cw / iw;
     const HR = ch / ih;

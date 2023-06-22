@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:si1="http://schemas.origam.com/Origam.Schema.StringItem/6.0.0">
+  <si1:String
+    asi:abstract="false"
+    x:id="5cb939d9-987a-4d6c-b06e-6173db7a5435"
+    asi:name="TestError"
+    si1:string="Intentional test error" />
+</x:file>

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     s:classPath="Origam.Workflow.WorkQueueServiceAgent,Origam.Workflow"
@@ -7,9 +13,97 @@
     asi:name="WorkQueueService">
     <sm:ServiceMethod
       asi:abstract="false"
+      x:id="621f826d-3ba4-4695-95d4-8f1c157aa883"
+      asi:name="GetNextItem"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="543ba4df-4720-4d1e-a954-ffedd15368ff"
+        asi:name="QueueName" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="65f98231-0d41-4050-bc5b-984c5077f23e"
+      asi:name="Get"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="10e2776c-5115-41a3-b927-e96479bad683"
+        asi:name="MessageId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="66199b69-ed9d-4bb1-acc3-934e693dea7b"
+      asi:name="Remove"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Object"
+        x:id="2918c28f-b1b3-4aa3-a3b4-d3144ae924e3"
+        asi:name="MessageId" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="6888eed0-67ef-4f10-8d8e-1f175d372f73"
+        asi:name="QueueId" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="bd66bee0-7a1c-4b48-a53a-04fcef288f4c"
       asi:name="GenerateNotificationMessage"
       sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
+        x:id="19a4b465-adbd-4710-a8b3-e74e8d3e239d"
+        asi:name="RecipientData" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -38,26 +132,12 @@
         sip:dataType="UniqueIdentifier"
         x:id="ad4705d3-0068-4ff5-9b0c-cf283ed65efb"
         asi:name="NotificationTemplateId" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Xml"
-        x:id="19a4b465-adbd-4710-a8b3-e74e8d3e239d"
-        asi:name="RecipientData" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
-      x:id="621f826d-3ba4-4695-95d4-8f1c157aa883"
-      asi:name="GetNextItem"
-      sm:returnValueDataType="Xml">
+      x:id="f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02"
+      asi:name="Add"
+      sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -70,68 +150,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="String"
-        x:id="543ba4df-4720-4d1e-a954-ffedd15368ff"
+        x:id="45e20038-d448-485b-a199-9197682a0a61"
         asi:name="QueueName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="66199b69-ed9d-4bb1-acc3-934e693dea7b"
-      asi:name="Remove"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="6888eed0-67ef-4f10-8d8e-1f175d372f73"
-        asi:name="QueueId" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Object"
-        x:id="2918c28f-b1b3-4aa3-a3b4-d3144ae924e3"
-        asi:name="MessageId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="65f98231-0d41-4050-bc5b-984c5077f23e"
-      asi:name="Get"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="UniqueIdentifier"
-        x:id="10e2776c-5115-41a3-b927-e96479bad683"
-        asi:name="MessageId" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02"
-      asi:name="Add"
-      sm:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -160,20 +180,6 @@
         sip:dataType="Xml"
         x:id="d79d854d-bd0d-4fc5-adc1-8f66e24b8513"
         asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="45e20038-d448-485b-a199-9197682a0a61"
-        asi:name="QueueName" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

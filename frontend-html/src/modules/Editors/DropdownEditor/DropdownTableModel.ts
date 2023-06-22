@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { action, computed, observable } from "mobx";
-import { DropdownEditorSetup } from "./DropdownEditor";
 import { EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export class DropdownDataTable {
   constructor(

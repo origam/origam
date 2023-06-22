@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Origam.Extensions;
 
 namespace Origam
 {
@@ -196,6 +197,11 @@ namespace Origam
 
             // new way - a)
             Type classType = ResolveTypeFromAssembly(classname, assembly);
+            if (classType == null)
+            {
+	            throw new Exception($"Class {classname} from assembly {assembly} was not found.");
+            }
+
             return Activator.CreateInstance(classType);
 
             // new way - b)
@@ -215,7 +221,7 @@ namespace Origam
             //			return result;
         }
 
-        private static Type ResolveTypeFromAssembly(
+        public static Type ResolveTypeFromAssembly(
             string classname, string assemblyName)
         {
             var classType = Type.GetType(classname + "," + assemblyName);
@@ -230,9 +236,12 @@ namespace Origam
                 classType = assembly.GetType(classname);
                 if (log.IsDebugEnabled && classType == null)
                 {
-                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
-                        classname + "," + assemblyName,
-                        ComposeAssemblyPath(assemblyName));
+	                log.RunHandled(() =>
+	                {
+	                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
+	                        classname + "," + assemblyName,
+	                        ComposeAssemblyPath(assemblyName));
+	                });
                 }
             }
 #endif

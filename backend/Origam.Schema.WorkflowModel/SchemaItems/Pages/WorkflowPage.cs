@@ -76,7 +76,6 @@ namespace Origam.Schema.WorkflowModel
 
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid WorkflowId;
 
 		[Category("Workflow")]
@@ -93,7 +92,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		[Category("InputValidation")]
-		[EntityColumn("B05")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
 

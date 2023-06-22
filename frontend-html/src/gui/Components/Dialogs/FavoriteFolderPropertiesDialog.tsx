@@ -20,10 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
-import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class FavoriteFolderPropertiesDialog extends React.Component<{
@@ -54,7 +55,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
   }
 
   componentDidMount() {
-    this.refInput.current?.focus();
+    requestFocus(this.refInput.current);
   }
 
   onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -72,7 +73,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={this.props.title}
         titleButtons={null}
         buttonsCenter={
@@ -121,7 +122,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
             </div>
           </div>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

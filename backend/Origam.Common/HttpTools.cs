@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Web;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
@@ -36,9 +35,15 @@ using Origam.Service.Core;
 
 namespace Origam
 {
-	public static class HttpTools
+	public class HttpTools : IHttpTools
 	{
-		private static void FixCookies(HttpWebRequest request,
+		public static HttpTools Instance { get; set; } = new();
+
+		private HttpTools()
+		{
+		}
+
+		private void FixCookies(HttpWebRequest request,
 			HttpWebResponse response)
 		{			
 			for (int i = 0; i < response.Headers.Count; i++)
@@ -60,7 +65,7 @@ namespace Origam
 			}
 		}
 
-		private static List<Cookie> CookiesFromStrings(string host,
+		public List<Cookie> CookiesFromStrings(string host,
 			List<string> singleCookies)
 		{
 			List<Cookie> cookies = new List<Cookie>();
@@ -80,7 +85,7 @@ namespace Origam
 			return cookies;
 		}
 
-		private static List<string> SplitCookiesHeaderToSingleCookies(
+		public List<string> SplitCookiesHeaderToSingleCookies(
 			string setCookieHeader)
 		{
 			string[] cookieSegments = setCookieHeader.Split(',');
@@ -127,7 +132,7 @@ namespace Origam
 //			return disposition;
 //		}
 
-		public static string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped)
+		public string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped)
 		{
 			Hashtable urlParameters = new Hashtable();
 
@@ -211,12 +216,12 @@ namespace Origam
 			return result;
 		}
 
-		public static object SendRequest(string url, string method)
+		public object SendRequest(string url, string method)
 		{
 			return SendRequest(url, method, null, null, null, null);
 		}
 
-		public static object SendRequest(string url, string method, string content,
+		public object SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, int? timeout)
 		{
 			Uri myUrl = new Uri(url);
@@ -237,93 +242,100 @@ namespace Origam
 			return SendRequest(url, method, content, contentType,
 				headers, null, null, null, false, timeout);
 		}
-		public static object SendRequest(string url, string method, string content,
+		public object SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, bool returnAsStream,
             int? timeout)
 		{
 			try
 			{
-				using (WebResponse response = GetResponse(url, method, content, contentType,
-					headers, authenticationType, userName, password, timeout, null, false))
+				using WebResponse response = GetResponse(url, method, content, 
+					contentType, headers, authenticationType, userName, 
+					password, timeout, null, false);
+				if (response is not HttpWebResponse httpResponse)
 				{
-					HttpWebResponse httpResponse = response as HttpWebResponse;
-					string encodingString = string.IsNullOrEmpty(httpResponse.ContentEncoding)?"":httpResponse.ContentEncoding.ToLower();
-					using (Stream responseStream =
-						encodingString.Contains("gzip") ?
-							new GZipStream(response.GetResponseStream(), CompressionMode.Decompress)
-							: encodingString.Contains("deflate") ?
-								new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress)
-								: response.GetResponseStream()
-
-					)
+					throw new Exception(
+						"WebResponse is not of HttpResponse type.");
+				}
+				using Stream responseStream = StreamFromResponse(httpResponse);
+				if (returnAsStream)
+				{
+					return responseStream;
+				}
+				if (response.ContentType.Equals("text/xml")
+				    || response.ContentType.Equals("application/xml")
+				    || response.ContentType.EndsWith("+xml"))
+				{
+					// for xml we will ignore encoding set in the HTTP header 
+					// because sometimes it is not present
+					// but we have the encoding in the XML header, so we take
+					// it from there
+					IXmlContainer container = new XmlContainer();
+					if (response.ContentLength != 0)
 					{
-						if (returnAsStream)
-						{
-							return responseStream;
-						}
-						if (response.ContentType.Equals("text/xml")
-                        || response.ContentType.Equals("application/xml"))
-						{
-							// for xml we will ignore encoding set in the HTTP header 
-							// because sometimes it is not present
-							// but we have the encoding in the XML header, so we take
-							// it from there
-							IXmlContainer container = new XmlContainer();
-							if (response.ContentLength != 0)
-							{
-								container.Xml.Load(responseStream);
-							}
-							return container;
-						}
-						else if (httpResponse != null && response.ContentType.StartsWith("text/"))
-						{
-							// result is text
-							return ReadResponseText(httpResponse, responseStream);
-						}
-						else if (httpResponse != null && response.ContentType.StartsWith("application/json"))
-						{
-							JsonSerializer js = new JsonSerializer();
-							string body = ReadResponseText(httpResponse, responseStream);
-							// DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
-							XmlDocument xd = new XmlDocument();
-							// deserialize from JSON to XML
-							try
-							{
-								xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
-							}
-							catch (Newtonsoft.Json.JsonSerializationException)
-							{
-								xd = JsonConvert.DeserializeXmlNode("{\"ARRAY\":" + body + "}", "ROOT");
-							}
-
-                            // remove any empty elements because empty guids and dates would
-                            // result in errors and empty strings should always be converted
-                            // to nulls anyway
-                            //RemoveEmptyNodes(ref xd);
-                            return new XmlContainer(xd);
-						}
-						else
-						{
-							// result is binary
-							return StreamTools.ReadToEnd(responseStream);
-						}
+						container.Xml.Load(responseStream);
 					}
+					return container;
 				}
-			}
-			catch (WebException wex)
-			{
-				string info = "";
-				HttpWebResponse httpResponse = wex.Response as HttpWebResponse;
-				if (httpResponse != null)
+				if (response.ContentType.StartsWith("text/"))
 				{
-					info = ReadResponseTextRespectionContentEncoding(httpResponse);
+					// result is text
+					return ReadResponseText(httpResponse, responseStream);
 				}
-				throw new Exception(wex.Message + Environment.NewLine + info, wex);
+				if (response.ContentType.StartsWith("application/json")
+				    || response.ContentType.EndsWith("+json"))
+				{
+					string body = ReadResponseText(
+						httpResponse, responseStream);
+					XmlDocument xmlDocument;
+					// deserialize from JSON to XML
+					try
+					{
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+							body, "ROOT");
+					}
+					catch (JsonSerializationException)
+					{
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+							"{\"ARRAY\":" + body + "}", "ROOT");
+					}
+					return new XmlContainer(xmlDocument);
+				}
+				// result is binary
+				return StreamTools.ReadToEnd(responseStream);
+			}
+			catch (WebException webException)
+			{
+				var info = "";
+				if (webException.Response is HttpWebResponse httpResponse)
+				{
+					info = ReadResponseTextRespectionContentEncoding(
+						httpResponse);
+				}
+				throw new Exception(
+					webException.Message + Environment.NewLine + info, 
+					webException);
 			}
 		}
 
-		public static WebResponse GetResponse(string url, string method, string content,
+		private static Stream StreamFromResponse(HttpWebResponse response)
+		{
+			var encodingString = string.IsNullOrEmpty(response.ContentEncoding)
+					? "" : response.ContentEncoding.ToLower();
+			if (encodingString.Contains("gzip"))
+			{
+				return new GZipStream(response.GetResponseStream(),
+					CompressionMode.Decompress);
+			}
+			if (encodingString.Contains("deflate"))
+			{
+				return new DeflateStream(response.GetResponseStream(),
+					CompressionMode.Decompress);
+			}
+			return response.GetResponseStream();
+		}
+
+		public WebResponse GetResponse(string url, string method, string content,
 			string contentType, Hashtable headers)
 		{
 			return GetResponse(url, method, content, contentType, headers,
@@ -331,7 +343,7 @@ namespace Origam
 		}
 
 
-		public static WebResponse GetResponse(string url, string method, string content,
+		public WebResponse GetResponse(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
@@ -411,7 +423,7 @@ namespace Origam
 		}
 
 
-		public static string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream)
+		public string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream)
 		{
 			using (StreamReader sr = new StreamReader(responseStream, EncodingFromResponse(httpResponse)))
 			{
@@ -419,7 +431,7 @@ namespace Origam
 			}
 		}
 
-		public static string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
+		public string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
 			//HttpWebResponse httpResponse = response as HttpWebResponse;
 			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
@@ -438,7 +450,7 @@ namespace Origam
 			}
 		}
 
-		public static Encoding EncodingFromResponse(HttpWebResponse response)
+		public Encoding EncodingFromResponse(HttpWebResponse response)
 		{
 			/*
 			if(response.ContentEncoding != String.Empty)
@@ -491,14 +503,14 @@ namespace Origam
 //			response.OutputStream.Write(file, 0, file.Length);
 //		}
 
-		public static string GetMimeType(string fileName)
+		public string GetMimeType(string fileName)
 		{
 			new FileExtensionContentTypeProvider()
 				.TryGetContentType(fileName, out string contentType);
 			return contentType ?? "application/unknown";
 		}
 
-		public static string GetDefaultExtension(string mimeType)
+		public string GetDefaultExtension(string mimeType)
 		{
 			var extensionMimeTypePair = new FileExtensionContentTypeProvider()
 				                            .Mappings
@@ -512,7 +524,7 @@ namespace Origam
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public static string EscapeDataStringLong(string value)
+		public string EscapeDataStringLong(string value)
 		{
 			int limit = 2000;
 

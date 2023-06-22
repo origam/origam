@@ -8,8 +8,14 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
+#INSTALL YARN & NODEJS 14
 RUN apt-get update \
-&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh \
+&& apt-get -y install curl gnupg \
+&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+&& curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
+&& apt-get update \
+&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh yarn nodejs \
 && git clone https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
 && cd libgdiplus \
 && ./autogen.sh --with-pango --prefix=/usr \
@@ -36,7 +42,8 @@ RUN mv reverse-proxy.conf /etc/nginx/sites-available \
 USER origam
 
 WORKDIR /home/origam
-RUN mkdir HTML5
+RUN mkdir HTML5 HTML5-SOURCE
+COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \

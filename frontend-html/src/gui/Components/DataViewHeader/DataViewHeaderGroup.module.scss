@@ -52,7 +52,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     &:not(:global(.noDivider)) {
       border-left: 1px solid var(--background3);
     }
-    border-right: none;
+    border-left: none;
   }
 
   &:last-of-type {

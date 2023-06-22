@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 (1.15em/2);
+  padding: 0 calc(1.15em/2);
   min-width: 0;
 
   &:global(.isHidden) {

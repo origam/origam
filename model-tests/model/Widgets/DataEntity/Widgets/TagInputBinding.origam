@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="933d7409-8df9-455a-bb2a-bd2411e6e025"
+    tmi:mappedObjectName="TagInputBinding"
+    asi:name="TagInputBinding"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="0b88b8a7-20a2-4d4e-856c-ddc937009d4b" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/c28f9bbe-76a1-4149-8141-680e7653086f"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="7ce7edc1-f490-4a3f-bf8c-f4430dae2af8"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refTagInputSourceId"
+      asi:name="refTagInputSourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="cbe68de1-d044-439b-8c29-790bbca44937"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refAllDataTypesId"
+      asi:name="refAllDataTypesId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+  </tmi:DataEntity>
+</x:file>

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="43b7bdd6-9f59-42d9-9a3b-0188dd9b1917"
@@ -18,6 +27,17 @@
       dse:useUpsert="false">
       <dse:DataStructureEntity
         asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/OrigamTraceRule/c4ff1a26-0577-4c66-8b0e-e4459553d43f"
+        x:id="2d088790-8656-4ab7-9169-1ade690ab640"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamTraceRule"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
         dse:allFields="false"
         dse:concurrencyHandling="Standard"
         dse:entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/OrigamDebugWorkflowStep/affcb263-3154-4d98-86ea-83f37a97c8aa"
@@ -30,64 +50,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data2/cfc492f4-d538-480f-acc1-c4508356e184"
-          x:id="2ece1c69-f8ef-4075-b515-0a077e1741e7"
-          asi:name="Data2"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
-          x:id="5a7e1399-856a-44fe-bbee-1d3030dade09"
-          asi:name="RecordUpdated"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Subcategory/d5237654-5350-454c-87df-18d7c2b7a9e1"
-          x:id="843e7f9a-e209-4720-a379-1e723b95665f"
-          asi:name="Subcategory"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Remark/4a5d2800-6faf-492b-ab47-1a84263116af"
-          x:id="dabf9a58-9f83-40c2-a2a5-2038cf2919ec"
-          asi:name="Remark"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepPath/58d86c9b-19d4-471a-8250-48c6ebe9337a"
-          x:id="8a551c5a-e63d-4fa3-a657-3af4bc431150"
-          asi:name="WorkflowStepPath"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
-          x:id="7f1ea591-783c-4037-8413-405aa4025be4"
-          asi:name="RecordCreated"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Message/9993d341-b247-4a93-8e30-f5e4d61ea08b"
+          x:id="1f3e643a-05fa-46db-aeb0-72023f6b58cc"
+          asi:name="Message"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -107,9 +72,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data1/f34e3d08-9394-46d9-9cef-bad0ec898430"
-          x:id="e05aadc6-c2e8-4ab7-bd0e-652137b99334"
-          asi:name="Data1"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data2/cfc492f4-d538-480f-acc1-c4508356e184"
+          x:id="2ece1c69-f8ef-4075-b515-0a077e1741e7"
+          asi:name="Data2"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -118,9 +83,64 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Message/9993d341-b247-4a93-8e30-f5e4d61ea08b"
-          x:id="1f3e643a-05fa-46db-aeb0-72023f6b58cc"
-          asi:name="Message"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepId/82bf411d-c14d-466b-970c-2178b2484234"
+          x:id="4e8c06bb-b2b2-4707-8e5f-986891c384af"
+          asi:name="WorkflowStepId"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
+          x:id="5a7e1399-856a-44fe-bbee-1d3030dade09"
+          asi:name="RecordUpdated"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+          x:id="7f1ea591-783c-4037-8413-405aa4025be4"
+          asi:name="RecordCreated"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Subcategory/d5237654-5350-454c-87df-18d7c2b7a9e1"
+          x:id="843e7f9a-e209-4720-a379-1e723b95665f"
+          asi:name="Subcategory"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepPath/58d86c9b-19d4-471a-8250-48c6ebe9337a"
+          x:id="8a551c5a-e63d-4fa3-a657-3af4bc431150"
+          asi:name="WorkflowStepPath"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
+          x:id="a1ccd801-8db9-41a0-9457-a63674fc15e5"
+          asi:name="RecordUpdatedBy"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -151,9 +171,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
-          x:id="ed335344-19ae-45cf-b616-963708813613"
-          asi:name="RecordUpdatedServer"
+          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+          x:id="d7478788-301b-4da1-b4a0-fd92e82bde8b"
+          asi:name="Id"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -162,20 +182,9 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepId/82bf411d-c14d-466b-970c-2178b2484234"
-          x:id="4e8c06bb-b2b2-4707-8e5f-986891c384af"
-          asi:name="WorkflowStepId"
-          dsc:upsertType="Replace"
-          dsc:useCopiedValue="false"
-          dsc:useLookupValue="false"
-          dsc:writeOnly="false"
-          dsc:xmlMappingType="Default" />
-        <dsc:DataStructureColumn
-          asi:abstract="false"
-          dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
-          x:id="a1ccd801-8db9-41a0-9457-a63674fc15e5"
-          asi:name="RecordUpdatedBy"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Remark/4a5d2800-6faf-492b-ab47-1a84263116af"
+          x:id="dabf9a58-9f83-40c2-a2a5-2038cf2919ec"
+          asi:name="Remark"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -195,9 +204,20 @@
         <dsc:DataStructureColumn
           asi:abstract="false"
           dsc:aggregation="None"
-          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-          x:id="d7478788-301b-4da1-b4a0-fd92e82bde8b"
-          asi:name="Id"
+          dsc:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data1/f34e3d08-9394-46d9-9cef-bad0ec898430"
+          x:id="e05aadc6-c2e8-4ab7-bd0e-652137b99334"
+          asi:name="Data1"
+          dsc:upsertType="Replace"
+          dsc:useCopiedValue="false"
+          dsc:useLookupValue="false"
+          dsc:writeOnly="false"
+          dsc:xmlMappingType="Default" />
+        <dsc:DataStructureColumn
+          asi:abstract="false"
+          dsc:aggregation="None"
+          dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
+          x:id="ed335344-19ae-45cf-b616-963708813613"
+          asi:name="RecordUpdatedServer"
           dsc:upsertType="Replace"
           dsc:useCopiedValue="false"
           dsc:useLookupValue="false"
@@ -224,18 +244,25 @@
       asi:name="Default">
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
-        dsssi:entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/9f131c55-9424-44a9-bc8a-f63968692ac5"
-        dsssi:fieldName="RecordCreated"
-        x:id="a1641518-c8b8-4b88-9188-01b2abe7be94"
-        asi:name="OrigamTraceWorkflow_0_RecordCreated"
-        dsssi:sortDirection="Descending" />
-      <dsssi:DataStructureSortSetItem
-        asi:abstract="false"
         dsssi:entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/OrigamTraceWorkflowStep/8a6b75d9-7603-4d67-9817-4cbd27025787"
         dsssi:fieldName="RecordCreated"
         x:id="3561b43a-c007-4f4c-b7c2-3d8572861912"
         asi:name="OrigamTraceWorkflowStep_RecordCreated"
         dsssi:sortDirection="Ascending" />
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/OrigamTraceRule/2d088790-8656-4ab7-9169-1ade690ab640"
+        dsssi:fieldName="RecordCreated"
+        x:id="563aa13c-4eeb-4c1d-a009-b13a4978187c"
+        asi:name="OrigamTraceRule_0_RecordCreated"
+        dsssi:sortDirection="Ascending" />
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/9f131c55-9424-44a9-bc8a-f63968692ac5"
+        dsssi:fieldName="RecordCreated"
+        x:id="a1641518-c8b8-4b88-9188-01b2abe7be94"
+        asi:name="OrigamTraceWorkflow_0_RecordCreated"
+        dsssi:sortDirection="Descending" />
     </dsss:DataStructureSortSet>
   </ds:DataStructure>
 </x:file>

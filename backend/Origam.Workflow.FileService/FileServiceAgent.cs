@@ -30,6 +30,7 @@ using System.Data;
 using log4net;
 using System.Text;
 using Extender;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow.FileService
@@ -154,7 +155,7 @@ namespace Origam.Workflow.FileService
 
             if (log.IsInfoEnabled)
             {
-                log.InfoFormat("Read {0} records from a file.", newDt.Rows.Count);
+                log.InfoFormat("Read {0} records from a file.", newDt?.Rows.Count);
             }
 
             dt.TableNewRow += new DataTableNewRowEventHandler(dt_TableNewRow);
@@ -235,27 +236,30 @@ namespace Origam.Workflow.FileService
         {
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Executing {0}", this.MethodName);
-
-                foreach (DictionaryEntry item in Parameters)
+                log.RunHandled(() =>
                 {
-                    string value;
+                    log.DebugFormat("Executing {0}", this.MethodName);
 
-                    if (item.Value == null)
+                    foreach (DictionaryEntry item in Parameters)
                     {
-                        value = null;
+                        string value;
+
+                        if (item.Value == null)
+                        {
+                            value = null;
+                        }
+                        else if (item.Value is XmlDocument)
+                        {
+                            value = (item.Value as XmlDocument).OuterXml;
+                        }
+                        else
+                        {
+                            value = item.Value.ToString();
+                        }
+                        
+                        log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
                     }
-                    else if (item.Value is XmlDocument)
-                    {
-                        value = (item.Value as XmlDocument).OuterXml;
-                    }
-                    else
-                    {
-                        value = item.Value.ToString();
-                    }
-                    
-                    log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
-                }
+                });
             }
 
             switch (this.MethodName)

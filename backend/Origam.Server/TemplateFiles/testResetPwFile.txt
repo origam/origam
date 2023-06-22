@@ -1,0 +1,11 @@
+Token: <%Token%>
+TokenValidityHours: <%TokenValidityHours%>
+UserName: <%UserName%>
+EscapedUserName:  <%EscapedUserName%>
+Name: <%Name%>
+EscapedName: <%EscapedName%>
+UserEmail: <%UserEmail%>
+EscapedUserEmail: <%EscapedUserEmail%>
+PortalBaseUrl: <%PortalBaseUrl%>
+
+link: <%PortalBaseUrl%>/Account/ResetPassword?code=<%Token%>&mail=<%EscapedUserEmail%>

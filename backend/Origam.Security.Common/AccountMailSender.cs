@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net.Mail;
 using log4net;
 using Origam.DA;
+using Origam.Extensions;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -129,7 +130,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Failed to send new user registration mail", ex);
+                    log.LogOrigamError("Failed to send new user registration mail", ex);
                 }
 
                 throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
@@ -141,7 +142,7 @@ namespace Origam.Security.Common
         }
 
         public bool SendUserUnlockingNotification(string username, string email,
-            string languageId, string firstNameAndName, string userMail)
+            string languageId, string firstNameAndName)
         {
             string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
             // build template replacements
@@ -152,12 +153,6 @@ namespace Origam.Security.Common
                     new KeyValuePair<string, string>("<%FirstNameAndName%>",
                         firstNameAndName)
                 };
-            // resolve recipient email
-            string resultEmail = email;
-            if (resultEmail == null)
-            {
-                resultEmail = userMail;
-            }
 
             MailMessage userUnlockNotificationMail;
             using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
@@ -165,7 +160,7 @@ namespace Origam.Security.Common
             {
                 try
                 {
-                    userUnlockNotificationMail = GenerateMail(resultEmail,
+                    userUnlockNotificationMail = GenerateMail(email,
                         fromAddress, userUnlockNotificationBodyFilename,
                         Resources.UserUnlockNotificationTemplate,
                         userUnlockNotificationSubject, userLangIETF, replacements);
@@ -176,7 +171,7 @@ namespace Origam.Security.Common
                     {
                         log.ErrorFormat("Unlocking user: Failed to generate a mail"
                                         + " for a user `{0}' to `{1}': {2}"
-                            , username, resultEmail, ex);
+                            , username, email, ex);
                     }
 
                     throw ex;
@@ -193,7 +188,7 @@ namespace Origam.Security.Common
                 {
                     log.ErrorFormat("Unlocking user: Failed to send a mail"
                                     + " for a user `{0}' to `{1}': {2}"
-                        , username, resultEmail, ex);
+                        , username, email, ex);
                 }
 
                 throw new Exception(
@@ -208,7 +203,7 @@ namespace Origam.Security.Common
             {
                 log.DebugFormat("User `{0}' has been unlocked and the"
                                 + " notification mail has been sent to `{1}'.",
-                    username, resultEmail);
+                    username, email);
             }
 
             return true;
@@ -270,7 +265,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Failed to send multi factor authentication mail", ex);
+                    log.LogOrigamError("Failed to send multi factor authentication mail", ex);
                 }
 
                 throw new Exception(Resources.FailedToSendMultiFactorAuthCode);
@@ -379,7 +374,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error(string.Format("Failed to send password reset "
+                    log.LogOrigamError(string.Format("Failed to send password reset "
                                             + "mail for username `{0}', email `{1}'",
                         username, email), ex);
                 }

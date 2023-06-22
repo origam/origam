@@ -20,53 +20,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { findStopping } from "xmlInterpreters/xmlUtils";
-import { BooleanCellDriver } from "./Cells/BooleanCellDriver";
-import { DefaultHeaderCellDriver } from "./Cells/HeaderCell";
-import { NumberCellDriver } from "./Cells/NumberCellDriver";
-import { TextCellDriver } from "./Cells/TextCellDriver";
 import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
-import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { DropdownEditorBehavior} from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
-import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
-import { DateCellDriver } from "./Cells/DateCellDriver";
-import { getMomentFormat } from "../../../xmlInterpreters/getMomentFormat";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
-  columnDrivers: DropdownColumnDrivers;
+  columnDrivers: DropdownColumnDrivers | undefined;
   setup: DropdownEditorSetup;
 }
 
 export const CtxDropdownEditor = createContext<IDropdownEditorContext>(null as any);
-
-export class DropdownEditorSetup {
-  constructor(
-    public propertyId: string,
-    public lookupId: string,
-    public columnNames: string[],
-    public visibleColumnNames: string[],
-    public columnNameToIndex: Map<string, number>,
-    public showUniqueValues: boolean,
-    public identifier: string,
-    public identifierIndex: number,
-    public parameters: { [key: string]: any },
-    public dropdownType: string,
-    public cached: boolean,
-    public searchByFirstColumnOnly: boolean,
-    public isLink?: boolean
-  ) {
-  }
-}
 
 export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
@@ -74,13 +50,12 @@ export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
 
 export function DropdownEditor(props: {
   editor?: JSX.Element;
-  isInvalid?: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
+  const workbench = useContext(MobXProviderContext).workbench as IWorkbench;
   return (
     <Observer>
       {() => (
@@ -92,15 +67,18 @@ export function DropdownEditor(props: {
               props.editor
             ) : (
               <DropdownEditorControl
-                isInvalid={props.isInvalid}
-                invalidMessage={props.invalidMessage}
                 backgroundColor={props.backgroundColor}
                 foregroundColor={props.foregroundColor}
                 customStyle={props.customStyle}
               />
             )
           }
-          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody/>} minSideMargin={50}/>}
+          renderDropdown={() =>
+            <DropdownLayoutBody
+              render={() => <DropdownEditorBody/>}
+              minSideMargin={isMobileLayoutActive(workbench) ? 20 : 50}
+            />
+          }
         />
       )}
     </Observer>
@@ -110,8 +88,6 @@ export function DropdownEditor(props: {
 export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   isReadOnly: boolean;
-  isInvalid?: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
@@ -125,8 +101,7 @@ export function XmlBuildDropdownEditor(props: {
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView as IDataView;
-  const {dataViewRowCursor, dataViewApi, dataViewData} = dataView;
+  const {dataViewRowCursor, dataViewApi, dataViewData} = mobxContext.dataView;
   const workbench = mobxContext.workbench;
   const {lookupListCache} = workbench;
 
@@ -149,123 +124,29 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       lookupListCache
     );
-    const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      props.isReadOnly,
-      props.onDoubleClick,
-      props.onClick,
-      props.subscribeToFocusManager,
-      props.onKeyDown,
-      props.autoSort,
-      props.onTextOverflowChanged
-    );
 
-    const rat = props.xmlNode.attributes;
-    const lookupId = rat.LookupId;
-    const propertyId = rat.Id;
-    const showUniqueValues = rat.DropDownShowUniqueValues === "true";
-    const identifier = rat.Identifier;
-    let identifierIndex = 0;
-    const dropdownType = rat.DropDownType;
-    const cached = rat.Cached === "true";
-    const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
+    const dropdownEditorBehavior = new DropdownEditorBehavior({
+      api: dropdownEditorApi,
+      data: dropdownEditorData,
+      dataTable: dropdownEditorDataTable,
+      setup: () => dropdownEditorSetup,
+      cache: dropdownEditorLookupListCache,
+      isReadOnly: props.isReadOnly,
+      onDoubleClick: props.onDoubleClick,
+      onClick: props.onClick,
+      subscribeToFocusManager: props.subscribeToFocusManager,
+      onKeyDown: props.onKeyDown,
+      autoSort: props.autoSort,
+      onTextOverflowChanged: props.onTextOverflowChanged,
+    });
 
-    const columnNames: string[] = [identifier];
-    const visibleColumnNames: string[] = [];
-    const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
-    let index = 0;
-    const drivers = new DropdownColumnDrivers();
-    if (rat.SuppressEmptyColumns === "true") {
-      drivers.driversFilter = (driver) => {
-        return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
-      };
-    }
-    for (let propertyXml of findStopping(props.xmlNode, (n) => n.name === "Property")) {
-      index++;
-      const attributes = propertyXml.attributes;
-      const id = attributes.Id;
-      columnNames.push(id);
-      columnNameToIndex.set(id, index);
-
-      const formatterPattern = attributes.FormatterPattern
-        ? getMomentFormat(propertyXml)
-        : "";
-      visibleColumnNames.push(id);
-      const name = attributes.Name;
-      const column = attributes.Column;
-
-      let bodyCellDriver;
-      switch (column) {
-        case "Text":
-          bodyCellDriver = new TextCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "Number":
-          bodyCellDriver = new NumberCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "CheckBox":
-          bodyCellDriver = new BooleanCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "Date":
-          bodyCellDriver = new DateCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior,
-            formatterPattern
-          );
-          break;
-        default:
-          throw new Error("Unknown column type " + column);
-      }
-
-      drivers.allDrivers.push({
-        columnId: id,
-        headerCellDriver: new DefaultHeaderCellDriver(name),
-        bodyCellDriver,
-      });
-    }
-
-    const parameters: { [k: string]: any } = {};
-
-    for (let ddp of findStopping(props.xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
-      const pat = ddp.attributes;
-      parameters[pat.ParameterName] = pat.FieldName;
-    }
-
-    const dropdownEditorSetup = new DropdownEditorSetup(
-      propertyId,
-      lookupId,
-      columnNames,
-      visibleColumnNames,
-      columnNameToIndex,
-      showUniqueValues,
-      identifier,
-      identifierIndex,
-      parameters,
-      dropdownType,
-      cached,
-      searchByFirstColumnOnly
-    );
+    const dropdownEditorSetup = DropdownEditorSetupFromXml(
+      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,
       editorData: dropdownEditorData,
-      columnDrivers: drivers,
+      columnDrivers: dropdownEditorSetup.columnDrivers,
       editorDataTable: dropdownEditorDataTable,
       setup: dropdownEditorSetup,
     };
@@ -281,14 +162,11 @@ export function XmlBuildDropdownEditor(props: {
 
   dropdownEditorInfrastructure.behavior.onClick = props.onClick;
   dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;
-  dropdownEditorInfrastructure.setup.isLink = props.isLink;
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
         editor={props.tagEditor}
-        isInvalid={props.isInvalid}
-        invalidMessage={props.invalidMessage}
         backgroundColor={props.backgroundColor}
         foregroundColor={props.foregroundColor}
         customStyle={props.customStyle}

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { ScreenHeader } from "gui/Components/ScreenHeader/ScreenHeader";
 import { ScreenHeaderAction } from "gui/Components/ScreenHeader/ScreenHeaderAction";
 import { ScreenHeaderPusher } from "gui/Components/ScreenHeader/ScreenHeaderPusher";
@@ -25,10 +25,8 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { onFullscreenClick } from "model/actions-ui/ScreenHeader/onFullscreenClick";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
 import React from "react";
-import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 import { ScreenheaderDivider } from "gui/Components/ScreenHeader/ScreenHeaderDivider";
 import { onWorkflowAbortClick } from "model/actions-ui/ScreenHeader/onWorkflowAbortClick";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
@@ -37,6 +35,7 @@ import S from "gui/Components/ScreenHeader/ScreenHeader.module.scss";
 import { T } from "utils/translation";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -47,8 +46,7 @@ export class CScreenHeader extends React.Component {
   }
 
   render() {
-    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
-    const activeScreen = openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
+    const activeScreen = getActiveScreen(this.workbench);
     if (!activeScreen) {
       return null;
     }
@@ -70,35 +68,38 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
     const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
     const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
     return (
-      <ScreenHeader
-        isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
-      >
-        <h1>{activeScreen.formTitle}</h1>
-        {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
-        {isCancelButton && (
-          <button
-            className={S.workflowActionBtn}
-            onClick={onWorkflowAbortClick(content.formScreen!)}
-          >
-            {T("Cancel", "button_cancel")}
-          </button>
-        )}
-        {isNextButton && (
-          <button
-            className={S.workflowActionBtn}
-            onClick={onWorkflowNextClick(content.formScreen!)}
-          >
-            {T("Next", "button_next")}
-          </button>
-        )}
-        <ScreenHeaderPusher/>
-        <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
-          <Icon
-            src="./icons/fullscreen.svg"
-            tooltip={T("Fullscreen", "fullscreen_button_tool_tip")}
-          />
-        </ScreenHeaderAction>
-      </ScreenHeader>
+      <>
+        <h1 className={"printOnly"}>{activeScreen.formTitle}</h1>
+        <ScreenHeader
+          isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
+        >
+          <h1>{activeScreen.formTitle}</h1>
+          {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
+          {isCancelButton && (
+            <button
+              className={S.workflowActionBtn}
+              onClick={onWorkflowAbortClick(content.formScreen!)}
+            >
+              {T("Cancel", "button_cancel")}
+            </button>
+          )}
+          {isNextButton && (
+            <button
+              className={S.workflowActionBtn}
+              onClick={onWorkflowNextClick(content.formScreen!)}
+            >
+              {T("Next", "button_next")}
+            </button>
+          )}
+          <ScreenHeaderPusher/>
+          <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
+            <Icon
+              src="./icons/fullscreen.svg"
+              tooltip={T("Fullscreen", "fullscreen_button_tool_tip")}
+            />
+          </ScreenHeaderAction>
+        </ScreenHeader>
+      </>
     );
   }
 }

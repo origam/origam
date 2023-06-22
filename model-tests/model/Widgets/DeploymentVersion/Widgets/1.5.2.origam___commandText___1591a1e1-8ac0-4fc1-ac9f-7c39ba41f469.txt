@@ -1,0 +1,8 @@
+﻿ALTER TABLE [AllDataTypes] ADD CONSTRAINT [FK_AllDataTypes_refTagInputSourceId_TagInputSource]
+	FOREIGN KEY (
+		[refTagInputSourceId]
+	)
+
+	REFERENCES [TagInputSource] (
+		[Id]
+	);

@@ -49,7 +49,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		[Category("Transaction"), DefaultValue(TransactionTypes.None)]
-		[EntityColumn("I05")] 
 		[XmlAttribute ("transactionType")]
 		public TransactionTypes TransactionType { get; set; } 
 			= TransactionTypes.None;

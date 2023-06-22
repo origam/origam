@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
 import { AggregationType } from "model/entities/types/AggregationType";
 import { GroupingUnit } from "model/entities/types/GroupingUnit";
+import { Layout } from "model/entities/TablePanelView/layout";
 
 export interface IConfigurationManager {
   onColumnOrderChanged(): Generator;
@@ -28,8 +29,6 @@ export interface IConfigurationManager {
 
   deleteActiveTableConfiguration(): Promise<any>;
 
-  saveTableConfigurations(): Promise<any>;
-
   cloneAndActivate(configuration: ITableConfiguration, newName: string): void;
 
   getCustomConfiguration(configName: string): string | undefined;
@@ -37,9 +36,9 @@ export interface IConfigurationManager {
   setCustomConfiguration(configName: string, configuration: string): void;
 
   activeTableConfiguration: ITableConfiguration;
-  customTableConfigurations: ITableConfiguration[],
-  defaultTableConfiguration: ITableConfiguration,
-  allTableConfigurations: ITableConfiguration[]
+  customTableConfigurations: ITableConfiguration[];
+  defaultTableConfiguration: ITableConfiguration;
+  allTableConfigurations: ITableConfiguration[];
   parent: any;
 }
 
@@ -50,8 +49,9 @@ export interface ITableConfiguration {
   fixedColumnCount: number;
   columnConfigurations: IColumnConfiguration[];
   isActive: boolean;
+  layout: Layout;
 
-  sortColumnConfiguartions(propertyIds: string[]): void;
+  sortColumnConfigurations(propertyIds: string[]): void;
 
   updateColumnWidth(propertyId: string, width: number): void;
 

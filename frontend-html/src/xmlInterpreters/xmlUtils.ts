@@ -62,3 +62,30 @@ export function assignIIds(xmlTree: any) {
 
   recursive(xmlTree);
 }
+
+export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
+
+export const findUIChildren = (node: any) =>
+  findStopping(node, (n) => n.parent.name === "UIChildren");
+
+export const findBoxes = (node: any) =>
+  findStopping(node, (n) => n.attributes && n.attributes.Type === "Box");
+
+export const findChildren = (node: any) => findStopping(node, (n) => n.name === "Children")[0];
+
+export const findActions = (node: any) =>
+  findStopping(node, (n) => n.parent.name === "Actions" && n.name === "Action");
+
+export const findParameters = (node: any) => findStopping(node, (n) => n.name === "Parameter");
+
+export const findStrings = (node: any) =>
+  findStopping(node, (n) => n.name === "string").map(
+    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
+  );
+
+export const findFormPropertyIds = (node: any) =>
+  findStopping(node, (n) => n.name === "string" && n.parent.name === "PropertyNames").map(
+    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
+  );
+
+export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];

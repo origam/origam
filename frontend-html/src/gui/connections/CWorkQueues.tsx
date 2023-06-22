@@ -23,7 +23,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
 import { computed } from "mobx";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 
@@ -49,6 +49,7 @@ export class CWorkQueues extends React.Component {
           const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
           return (
             <WorkQueuesItem
+              key={item.id}
               isEmphasized={item.countTotal > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}

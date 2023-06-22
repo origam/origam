@@ -29,14 +29,9 @@ using System.Collections.Generic;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Abstract implementation of ISchemaItemProvider
-	/// </summary>
-	public abstract class AbstractSchemaItemProvider : ISchemaItemProvider, ISchemaItemFactory, IComparable
+	public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	{
-		public AbstractSchemaItemProvider()
-		{
-		}
+		public AbstractSchemaItemProvider() {}
 
 		// String for root item type
 		public abstract string RootItemType{get;}
@@ -185,7 +180,11 @@ namespace Origam.Schema
                 }
                 else
                 {
-                    foreach (ISchemaItem item in this.ChildItems)
+	                if (!_childItemsPopulated)
+	                {
+		                return;
+	                }
+	                foreach (ISchemaItem item in this.ChildItems)
                     {
                         if (item.PrimaryKey.Equals(persistedItem.PrimaryKey))
                         {
@@ -402,23 +401,37 @@ namespace Origam.Schema
 
 		#region ISchemaItemFactory Members
 
-		public virtual AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
 		{
-			AbstractSchemaItem item;
+			return NewItem<T>(schemaExtensionId, group, null);
+		}
 
-			if(_childItemTypes.Contains(type))
+		protected T NewItem<T>
+			(Guid schemaExtensionId, SchemaItemGroup group, string itemName)
+			where T : AbstractSchemaItem
+		{
+			T item;
+			if(((IList)NewItemTypes).Contains(typeof(T)))
 			{
-				item = (AbstractSchemaItem)type.GetConstructor(new Type[] {typeof(Guid)}).Invoke(new object[] {schemaExtensionId});;
-				
-				//item.Name = "new" + type.Name;
+				item = (T)typeof(T).GetConstructor(new Type[] {typeof(Guid)})
+					.Invoke(new object[] {schemaExtensionId});
 			}
 			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTypeNotSupported", this.GetType().Name));
-
+			{
+				throw new ArgumentOutOfRangeException("type", typeof(T), 
+					ResourceUtils.GetString(
+						"ErrorTypeNotSupported", this.GetType().Name));
+			}
 			item.Group = group;
 			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
+			item.PersistenceProvider = PersistenceProvider;
+			if(!string.IsNullOrEmpty(itemName))
+			{
+				item.Name = itemName;
+			}
+			ChildItems.Add(item);
 			ItemCreated?.Invoke(item);
 			return item;
 		}

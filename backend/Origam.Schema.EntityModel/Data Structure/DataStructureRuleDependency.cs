@@ -47,7 +47,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureRuleDependency(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -65,8 +64,7 @@ namespace Origam.Schema.EntityModel
 				this.Field = null;
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid FieldId;
 
 		[TypeConverter(typeof(DataStructureEntityFieldConverter))]
@@ -88,7 +86,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { ScreenToolbar } from "gui/Components/ScreenToolbar/ScreenToolbar";
 import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
 import { ScreenToolbarPusher } from "gui/Components/ScreenToolbar/ScreenToolbarPusher";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { openSearchWindow } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { ScreenToolbarActionGroup } from "gui/Components/ScreenToolbar/ScreenToolbarActionGroup";
@@ -33,7 +33,6 @@ import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSession
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-
 import uiActions from "model/actions-ui-tree";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
@@ -41,19 +40,18 @@ import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { onReloadWebScreenClick } from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
 import { isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { isIWebScreen } from "model/entities/types/IWebScreen";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { IAction, IActionType } from "model/entities/types/IAction";
-
 import { T } from "utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getApi } from "model/selectors/getApi";
-import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
+import { getAbout } from "model/selectors/getAbout";
+import { About } from "model/entities/AboutInfo";
+import { showDialog } from "model/selectors/getDialogStack";
+import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 
 function isSaveShortcut(event: any) {
   return event.key === "s" && (event.ctrlKey || event.metaKey);
@@ -75,19 +73,24 @@ export class CScreenToolbar extends React.Component<{}> {
     return this.context.application;
   }
 
-  @observable
-  aboutInfo: IAboutInfo = {
-    serverVersion: "",
-  };
+  get about(): About {
+    return getAbout(this.application);
+  }
 
   componentDidMount() {
-    runInFlowWithHandler({
-      ctx: this.application,
-      action: async () => {
-        const api = getApi(this.application);
-        this.aboutInfo = await api.getAboutInfo();
-      },
-    });
+    this.about.update();
+  }
+
+  onAboutClick() {
+    const closeDialog = showDialog(this.application,
+      "",
+      <AboutDialog
+        aboutInfo={this.about.info}
+        onOkClick={() => {
+          closeDialog();
+        }}
+      />
+    );
   }
 
   @action.bound
@@ -100,7 +103,8 @@ export class CScreenToolbar extends React.Component<{}> {
       section: string;
       actions: IAction[];
     }>,
-    actionFilter: ((action: IAction) => boolean) | undefined
+    actionFilter: ((action: IAction) => boolean) | undefined,
+    setDropped: (state: boolean) => void
   ) {
     const customAssetsRoute = getCustomAssetsRoute(this.application);
 
@@ -129,7 +133,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   icon={getIcon(action)}
                   label={action.caption}
-                  onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                  onClick={(event) =>
+                  {
+                    uiActions.actions.onActionClick(action)(event, action);
+                    setDropped(false)
+                  }
+                }
                 />
               </DropdownItem>
             ))}
@@ -170,11 +179,12 @@ export class CScreenToolbar extends React.Component<{}> {
               )}
             </Observer>
           )}
-          content={() => (
+          content={args => (
             <Dropdown>
               {this.getOverfullActionsDropdownContent(
                 [{section: "", actions: childActions}],
-                undefined
+                undefined,
+                args.setDropped
               )}
             </Dropdown>
           )}
@@ -189,7 +199,10 @@ export class CScreenToolbar extends React.Component<{}> {
               action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/> : undefined
             }
             label={action.caption}
-            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            onClick={(event) => {
+              uiActions.actions.onActionClick(action)(event, action);
+            }
+          }
           />
         )}
       </Observer>
@@ -197,44 +210,47 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   renderForFormScreen() {
-    const activeScreen = getActiveScreen(this.application);
-    if (activeScreen && !activeScreen.content) return null;
-    const formScreen =
-      activeScreen && !activeScreen.content.isLoading ? activeScreen.content.formScreen : undefined;
-    const isDirty = formScreen && formScreen.isDirty;
+    const actionButtonsState = geScreenActionButtonsState(this.application);
+    if(!actionButtonsState){
+      return null;
+    }
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
     const avatarLink = getUserAvatarLink(this.application);
     return (
       <ScreenToolbar>
-        {formScreen ? (
+        {actionButtonsState.actionButtonsVisible ? (
           <>
             <ScreenToolbarActionGroup>
-              {!getIsSuppressSave(formScreen) && (
+              {actionButtonsState.isSaveButtonVisible && (
                 <ScreenToolbarAction
-                  className={isDirty ? "isRed isHoverGreen" : ""}
-                  onClick={onSaveSessionClick(formScreen)}
-                  onShortcut={onSaveSessionClick(formScreen)}
+                  className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
+                  onClick={onSaveSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={onSaveSessionClick(actionButtonsState.formScreen)}
                   id={"saveButton"}
                   shortcutPredicate={isSaveShortcut}
                   icon={
                     <Icon
                       src="./icons/save.svg"
-                      className={isDirty ? "isRed isHoverGreen" : ""}
+                      className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
                       tooltip={T("Save", "save_tool_tip")}
                     />
                   }
                   label={T("Save", "save_tool_tip")}
                 />
               )}
-              {!getIsSuppressRefresh(formScreen) && (
+              {actionButtonsState.isRefreshButtonVisible && (
                 <ScreenToolbarAction
-                  onClick={onRefreshSessionClick(formScreen)}
-                  onShortcut={onRefreshSessionClick(formScreen)}
+                  onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
                   id={"refreshButton"}
+                  className={"isHoverBlue"}
                   shortcutPredicate={isRefreshShortcut}
                   icon={
-                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>
+                    <Icon
+                      src="./icons/refresh.svg"
+                      className={"isHoverBlue"}
+                      tooltip={T("Refresh", "refresh_tool_tip")}/>
                   }
                   label={T("Refresh", "refresh_tool_tip")}
                 />
@@ -265,10 +281,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
               />
             )}
-            content={() => (
+            content={(args) => (
               <Dropdown>
-                {this.getOverfullActionsDropdownContent(toolbarActions, (action) =>
-                  this.state.hiddenActionIds.has(action.id)
+                {this.getOverfullActionsDropdownContent(
+                  toolbarActions,
+                  action => this.state.hiddenActionIds.has(action.id),
+                  args.setDropped
                 )}
               </Dropdown>
             )}
@@ -283,7 +301,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -298,11 +316,11 @@ export class CScreenToolbar extends React.Component<{}> {
       <ScreenToolbar>
         <>
           <ScreenToolbarActionGroup>
-            <ScreenToolbarAction
+            {activeScreen?.canRefresh && <ScreenToolbarAction
               onMouseDown={onReloadWebScreenClick(activeScreen)}
               icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>}
               label={T("Refresh", "refresh_tool_tip")}
-            />
+            />}
           </ScreenToolbarActionGroup>
         </>
         <ScreenToolbarPusher/>
@@ -315,7 +333,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -341,7 +359,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>

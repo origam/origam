@@ -23,9 +23,6 @@ using System;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Summary description for ISchemaItemConvertible.
-	/// </summary>
 	public interface ISchemaItemConvertible
 	{
 		ISchemaItem ConvertTo(Type type);

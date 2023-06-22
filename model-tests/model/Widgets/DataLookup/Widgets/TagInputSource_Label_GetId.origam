@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="991a8bec-5169-4506-9457-7f91c27bb5fd"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupTagInputSource_Label_GetId.origam#LookupTagInputSource_Label_GetId/bfff4e9b-2d75-4b2e-8f78-80ce9ff1d4e3"
+    adl:listDisplayMember="Number;Label"
+    adl:listValueMember="Id"
+    asi:name="TagInputSource_Label_GetId"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupTagInputSource_Label_GetId.origam#LookupTagInputSource_Label_GetId/bfff4e9b-2d75-4b2e-8f78-80ce9ff1d4e3"
+    adl:valueDisplayMember="Label"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupTagInputSource_Label_GetId.origam#LookupTagInputSource_Label_GetId/GetId/b21a1c22-3e17-492b-ad87-0fd028d1fa0d"
+    adl:valueValueMember="Id" />
+</x:file>

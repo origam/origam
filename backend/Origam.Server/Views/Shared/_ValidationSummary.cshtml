@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.Server
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+
+@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="alert alert-danger">
+        <strong>@SharedLocalizer["Error"]</strong>
+        <div asp-validation-summary="All" class="danger"></div>
+    </div>
+}

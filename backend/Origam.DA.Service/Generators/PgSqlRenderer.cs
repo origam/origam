@@ -28,7 +28,7 @@ class PgSqlRenderer : SqlRenderer
 
     public override string NameRightBracket => "\"";
 
-    public override string ParameterDeclarationChar => "";
+    public override string ParameterDeclarationChar => ":";
 
     internal override string DeclareAsSql()
     {
@@ -236,5 +236,10 @@ class PgSqlRenderer : SqlRenderer
     internal override string CountAggregate()
     {
         return "COUNT";
+    }
+
+    internal override string Char(int number)
+    {
+        return "CHR(" + number + ")";
     }
 }

@@ -40,7 +40,6 @@ namespace Origam.DA.Service
     public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisposable
     {
         protected readonly SQLValueFormatter sqlValueFormatter;
-        private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
         internal readonly AbstractFilterRenderer filterRenderer;
@@ -50,14 +49,13 @@ namespace Origam.DA.Service
         protected readonly SqlRenderer sqlRenderer;
 
         public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
-            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter,
-            AbstractFilterRenderer filterRenderer, SqlRenderer sqlRenderer)
+            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer filterRenderer,
+            SqlRenderer sqlRenderer)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
             True = trueValue;
             False = falseValue;
-            this.detachedFieldPacker = detachedFieldPacker;
             this.sqlValueFormatter = sqlValueFormatter;
             this.filterRenderer = filterRenderer;
             this.sqlRenderer = sqlRenderer;
@@ -1006,15 +1004,6 @@ namespace Origam.DA.Service
                 .OfType<LookupField>()
                 .Any(field =>
                     selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
-            bool wrapInGroupingSelect = hasLookupField &&
-                                        customGrouping != null;
-            if (wrapInGroupingSelect)
-            {
-                ColumnData groupColumn = selectParameters.ColumnsInfo.Columns
-                    .FirstOrDefault(column => column.Name == ColumnData.GroupByCountColumn.Name);
-                selectParameters.ColumnsInfo.Columns.Remove(groupColumn);
-                selectParameters.CustomGrouping = null;
-            }
 
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1074,7 +1063,7 @@ namespace Origam.DA.Service
             }
 
             // From
-            RenderSelectFromClause(sqlExpression, entity, entity, filter, replaceParameterTexts);
+            RenderSelectFromClause(sqlExpression, entity);
 
             bool whereExists = false;
 
@@ -1201,11 +1190,12 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-                sqlExpression.Append(
-                    PostProcessCustomCommandParserWhereClause(
-                        filterCommandParser.Sql, entity,
-                        replaceParameterTexts, dynamicParameters, 
-                        selectParameterReferences));
+                PostProcessCustomCommandParserWhereClause(
+                    replaceParameterTexts, 
+                    selectParameterReferences, 
+                    filterCommandParser, 
+                    sqlExpression, entity, 
+                    dynamicParameters);
             }
 
             // GROUP BY
@@ -1264,20 +1254,50 @@ namespace Origam.DA.Service
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
             }
 
-            if (wrapInGroupingSelect)
+            if (hasLookupField && customGrouping != null)
             {
-                string columnNames = string.Join(", ", 
-                    selectParameters.ColumnsInfo.ColumnNames.Select(
+                var columnNames = selectParameters.ColumnsInfo.ColumnNames;
+                if (selectParameters.AggregatedColumns.Count > 0)
+                {
+                    columnNames.AddRange(
+                        selectParameters.AggregatedColumns.Select(x => x.SqlQueryColumnName));
+                }
+                string sqlColumnNames = string.Join(", ", 
+                    columnNames.Select(
                         col => sqlRenderer.NameLeftBracket + col + sqlRenderer.NameRightBracket));
-                finalString = $"SELECT {columnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
+                finalString = $"SELECT {sqlColumnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
                               finalString + "\n" +
                               ") as Query\n"+
-                              $"GROUP BY {columnNames}";
+                              $"GROUP BY {sqlColumnNames}";
             }
 
             return finalString;
         }
 
+        private void PostProcessCustomCommandParserWhereClause(
+            Hashtable replaceParameterTexts,
+            Hashtable selectParameterReferences,
+            FilterCommandParser filterCommandParser, StringBuilder sqlExpression,
+            DataStructureEntity entity, Hashtable dynamicParameters)
+        {
+            if (filterCommandParser.Sql == null)
+            {
+                return;
+            }
+            string[] sqlParts = filterCommandParser.Sql.Split("AND");
+            for (int i = 0; i < sqlParts.Length; i++)
+            {
+                sqlExpression.Append(
+                    PostProcessCustomCommandParserWhereClauseSegment(
+                        sqlParts[i], entity,
+                        replaceParameterTexts, dynamicParameters,
+                        selectParameterReferences));
+                if (i < sqlParts.Length - 1)
+                {
+                    sqlExpression.Append(" AND ");
+                }
+            }
+        }
 
         internal bool IgnoreEntityWhenNoFilters(DataStructureEntity relation, DataStructureFilterSet filter, Hashtable dynamicParameters)
         {
@@ -1389,9 +1409,9 @@ namespace Origam.DA.Service
                                 keysBuilder.Append(", ");
                                 searchPredicatesBuilder.Append(" AND ");
                             }
-                            keysBuilder.AppendFormat("{0} as {1}",
+                            keysBuilder.AppendFormat(RenderUpsertKey(
                                 paramName,
-                                fieldName);
+                                fieldName));
                             searchPredicatesBuilder.AppendFormat("{0}.{1} = src.{1}",
                                 tableName, fieldName);
                             keys++;
@@ -1425,12 +1445,11 @@ namespace Origam.DA.Service
                insertValuesBuilder));
             return sqlExpression.ToString();
         }
-
         internal abstract string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder);
 
         public string InsertSql(DataStructure ds, DataStructureEntity entity)
         {
-            if (entity.UseUPSERT)
+            if (entity.UseUpsert)
             {
                 return UpsertSql(ds, entity);
             }
@@ -1492,20 +1511,35 @@ namespace Origam.DA.Service
             StringBuilder sqlExpression = new StringBuilder();
 
             ArrayList primaryKeys = new ArrayList();
+            StringBuilder primaryDetachKeys = new StringBuilder();
             sqlExpression.Append("SELECT ");
 
             RenderSelectColumns(entity.RootItem as DataStructure, sqlExpression, new StringBuilder(),
                 new StringBuilder(), entity, columnsInfo, new Hashtable(), new Hashtable(), null,
                 selectParameterReferences, forceDatabaseCalculation);
 
-            int i = 0;
             foreach (DataStructureColumn column in entity.Columns)
             {
                 if (column.Field is FieldMappingItem && column.UseLookupValue == false && column.UseCopiedValue == false)
                 {
                     if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
-                    i++;
                 }
+                if (column.Field is DetachedField && column.UseLookupValue == false && column.UseCopiedValue == false)
+                {
+                    if (column.Field.IsPrimaryKey) primaryDetachKeys.Append(column.Name).Append(";");
+                }
+            }
+            if (primaryKeys.Count == 0)
+            {
+                string errorMessage = "The primary key of entity "  + entity.Name +  " must be in the database.";
+                if(!string.IsNullOrEmpty(primaryDetachKeys.ToString()))
+                {
+                    errorMessage += "Primary key items " + 
+                        primaryDetachKeys.ToString().Substring(0, primaryDetachKeys.ToString().Length - 1) + 
+                        " are virtual!"; ;
+                }
+                
+                throw new Exception(errorMessage);
             }
             PrettyLine(sqlExpression);
             sqlExpression.AppendFormat("FROM {0} AS {1} ",
@@ -1523,7 +1557,7 @@ namespace Origam.DA.Service
             }
             PrettyLine(sqlExpression);
             sqlExpression.Append("WHERE (");
-            i = 0;
+            int i = 0;
             foreach (DataStructureColumn column in primaryKeys)
             {
                 if (i > 0) sqlExpression.Append(" AND ");
@@ -2531,7 +2565,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts)
+        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity)
         {
             PrettyLine(sqlExpression);
             sqlExpression.Append("FROM");
@@ -3084,7 +3118,7 @@ namespace Origam.DA.Service
             else if (item is DetachedField detachedField)
             {
                 return renderSqlForDetachedFields 
-                    ? detachedFieldPacker.RenderSqlExpression(entity, detachedField) 
+                    ? RenderSqlExpression(entity, detachedField) 
                     : "";
             }
             else if (item is AggregatedColumn)
@@ -3093,6 +3127,35 @@ namespace Origam.DA.Service
                 throw new NotImplementedException(ResourceUtils.GetString("TypeNotSupported", item.GetType().ToString()));
         }
 
+        public string RenderSqlExpression(DataStructureEntity entity,
+            DetachedField detachedField)
+        {
+            if (detachedField.ArrayRelation == null)
+            {
+                return "";
+            }
+
+            DataStructureEntity relation = entity.ChildItems.ToGeneric()
+                .OfType<DataStructureEntity>()
+                .FirstOrDefault(child =>
+                    child.Entity.PrimaryKey.Equals(detachedField.ArrayRelation.PrimaryKey));
+         
+            var columnRenderItem = new ColumnRenderItem
+            {
+                SchemaItem = detachedField.ArrayValueField,
+                Entity = relation,
+                RenderSqlForDetachedFields = false
+            };
+            string columnToAggregate = RenderExpression(columnRenderItem, null, null, null);
+            var sqlExpression = new StringBuilder(
+                $"(SELECT STRING_AGG({sqlRenderer.Text(RenderExpression(columnRenderItem, null, null, null))} ," +
+                sqlRenderer.Char(1) + " ) ");
+            RenderSelectFromClause(sqlExpression, relation);
+            RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, null);
+            sqlExpression.Append(")");
+            return sqlExpression.ToString();
+        }
+        
         internal string AggregationHelper(AggregatedColumn topLevelItem, DataStructureEntity topLevelEntity, AggregatedColumn item, Hashtable replaceParameterTexts, int level, StringBuilder joins, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             AggregatedColumn agg2 = item.Field as AggregatedColumn;
@@ -3896,7 +3959,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal string PostProcessCustomCommandParserWhereClause(
+        internal string PostProcessCustomCommandParserWhereClauseSegment(
             string input, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
             Hashtable parameterReferences)
@@ -3979,6 +4042,7 @@ namespace Origam.DA.Service
             }
             return output;
         }
+        protected abstract string RenderUpsertKey(string paramName, string fieldName);
         #endregion
 
         #region Operators

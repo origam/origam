@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="ac11e5c0-b2e0-49cb-9a3d-980b6a31d2bb"
+    asi:name="WorkQueueTest2"
+    w:onFailure="WorkflowFails"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="1994984e-1036-4f07-b4bc-da442c0aed0f"
+      cs:isReturnValue="false"
+      asi:name="WQ_TestQueue2"
+      cs:structure="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/7f1b1ced-453a-48e1-a21e-6fd27596df56" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="bfaf1d56-a2a2-4928-8d37-49d45a4d3fca"
+      asi:name="0100_LoadData_WQ_TestQueue"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/WorkQueueTest2.origam#WorkQueueTest2/WQ_TestQueue1/1994984e-1036-4f07-b4bc-da442c0aed0f"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="06095486-48ea-45a0-b63a-70ad3c45e548"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/7f1b1ced-453a-48e1-a21e-6fd27596df56"
+          x:id="4b03a376-7eab-4ce3-984f-31fc2b9a86d5"
+          dsr:method="Widgets/DataStructure/Widgets/WQ_TestQueue2.origam#WQ_TestQueue2/GetById/ff1a2432-87ef-4510-ab53-2979dc6066a6"
+          asi:name="WQ_TestQueue2" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="fef09922-af4f-49d3-88b8-6ee5d92c490f"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/WorkQueueTest2.origam#WorkQueueTest2/WQ_TestQueue1/1994984e-1036-4f07-b4bc-da442c0aed0f"
+          x:id="66fdc5d5-1149-4ada-8ccb-7ddb7456f6b2"
+          asi:name="WorkQueueEntry_parId"
+          cr:xPath="/ROOT/WorkQueueEntry/@Id" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

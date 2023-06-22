@@ -1,0 +1,4 @@
+﻿ALTER TABLE "OrigamTraceRule"
+RENAME COLUMN "DataOut" TO "Output";
+ALTER TABLE "OrigamTraceRule"
+ALTER COLUMN "Output" SET DATA TYPE VARCHAR;

@@ -1,0 +1,91 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.root {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  overflow-y: auto;
+}
+
+.filterRow {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  display: flex;
+
+  > div {
+    width: 50%;
+  }
+
+  * {
+    &:last-of-type {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+  }
+}
+
+.rowCount {
+  justify-content: center;
+  display: flex;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.rowContainer {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.label{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: var(--inputHeight);
+  display: flex;
+  align-items: center;
+}
+
+.filterSettingContainer {
+  > *:nth-child(1) {
+    margin-bottom: 5px;
+  }
+
+  > *:nth-child(2) {
+    width: 200%;
+    margin-left: -100%;
+    min-height: var(--inputHeight);
+    > div{
+      width: 100%
+    }
+  }
+
+  > *:nth-child(3) {
+    width: 200%;
+    margin-left: -100%;
+    min-height: var(--inputHeight);
+    margin-top: 5px;
+  }
+
+  > div:global(.tagEditorContainer){
+    height: 60px
+  }
+}
