@@ -51,5 +51,13 @@
       asi:name="00030_clearScreenConfiguration"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___f14ea973-9080-4728-8fd5-8ae2704ace35.txt"
+      x:id="f14ea973-9080-4728-8fd5-8ae2704ace35"
+      asi:name="00060_InsertTestWorkQueues"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
