@@ -42,6 +42,10 @@ namespace Origam.Workbench.Services
 
 		#region IWorkbenchService Members
 
+		public void StopTasks()
+		{
+		}
+
 		public void UnloadService()
 		{
 		}

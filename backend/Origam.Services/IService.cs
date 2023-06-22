@@ -30,6 +30,11 @@ namespace Origam.Workbench.Services
 		/// This method is called after the services are loaded.
 		/// </summary>
 		void InitializeService();
+
+		// Should stop timers and other running tasks. This is useful when
+		// unloading all services because they depend on each other. Not
+		// stopping all tasks before calling UnloadService would result in exceptions. 
+		void StopTasks();
 		
 		/// <summary>
 		/// This method is called before the service is unloaded.

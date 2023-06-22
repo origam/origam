@@ -33,6 +33,10 @@ namespace Origam.Workbench.Services
         {
         }
 
+        public void StopTasks()
+        {
+        }
+
         public void UnloadService()
         {
         }

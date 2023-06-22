@@ -34,6 +34,10 @@ namespace Origam.Rule
 		}
 		#region IWorkbenchService Members
 
+		public void StopTasks()
+		{
+		}
+
 		public void UnloadService()
 		{
 		}

@@ -182,6 +182,10 @@ namespace Origam.Workbench.Services
         {
         }
 
+        public override void StopTasks()
+        {
+        }
+
         public override void UnloadService()
         {
         }

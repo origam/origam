@@ -23,14 +23,17 @@ using System;
 
 namespace Origam.Workbench.Services
 {
-	public class AbstractService : IWorkbenchService
+	public abstract class AbstractService : IWorkbenchService
 	{
 		public virtual void InitializeService()
 		{
 			OnInitialize(EventArgs.Empty);
 		}
-		
-		
+
+		public virtual void StopTasks()
+		{
+		}
+
 		public virtual void UnloadService()
 		{
 			OnUnload(EventArgs.Empty);

@@ -114,10 +114,10 @@ namespace Origam.Workflow.WorkQueue
             schemaService.SchemaLoaded -= schemaService_SchemaLoaded;
             schemaService.SchemaUnloaded -= schemaService_SchemaUnloaded;
             schemaService.SchemaUnloading -= schemaService_SchemaUnloading;
-            StopTimers();
+            StopTasks();
         }
 
-        private void StopTimers()
+        public void StopTasks()
         {
             if(log.IsDebugEnabled)
             {
@@ -1825,7 +1825,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("schemaService_SchemaUnloading");
             }
-            StopTimers();
+            StopTasks();
         }
 
         void schemaService_SchemaUnloaded(object sender, EventArgs e)
