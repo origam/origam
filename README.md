@@ -13,190 +13,256 @@ See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how t
 ## License
 Origam is licensed under a [GPL-3.0 license](LICENSE).
 
+# Setting up Development Environment for Origam
+The following is a guide to help you set up Origam development environment. You will need it if you wish to contribute to Origam backend or frontend. It will be quite helpful if you are going to develop your own plugin for Origam too.
 
-# **Creating development environment for Origam.**
+Origam can be developed on Windows only because the Architect application is written using Windows Forms. 
+If you wish to run the server and front end only you can probably do that on Linux and Mac too.
 
-## :rotating_light: Step 1. Download software.
-- Visual Studio       [Download Page](https://visualstudio.microsoft.com/downloads/).
-- Visual Studio Code  [Download Page](https://code.visualstudio.com/).
-- JetBrains Rider     [Download Page](https://www.jetbrains.com/rider/). [Paid with 30days trial]
-- Node.js             [Download Page](https://nodejs.org/en/).
+## Download Software
+Here is what you have to install first. Make sure you have at least 50 GB of free 
+space on you hard drive before you install all the software. That way you should still have enough space to build origam 
+and some space left after you finish installing.
 
-- MsSQL (For Local Database)[Download Page](https://go.microsoft.com/fwlink/?linkid=866662).
-- SQL Server Management Studio (To work with databases) [Download Page](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15).
+#### SQL Database
+Install [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)  and [SQL Server Management Studio ](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) to work with the database.
 
-## :rotating_light: Step 2. Clone and download source files from GitHub: 
+#### C# IDE
+Install [Visual Studio](https://visualstudio.microsoft.com/downloads/). 
+Select **ASP.NET and web development** and **.NET desktop development** during the installation process.
+
+#### Node.js
+Make sure you download at least version 14 of [Node.js](https://nodejs.org/en/). The latest version is fine.
+
+#### Javascript IDE
+Either [Visual Studio Code](https://code.visualstudio.com/), [JetBrains Webstorm](https://www.jetbrains.com/webstorm/) or something else.
+
+#### git
+You probably have a [git](https://git-scm.com/) client in your IDE. Just make sure that git is working you will need it do clone Origam repository.
+
+## Clone Origam github Repository 
+Get the Origam source by cloning the Origam repository.
 ```
-Origam-origam => Clone and Open as Solution.
-```
-                 
-## :rotating_light: Step 3. Clone Origam-origam git using IDEs tools.
-
->Rider
-- Open Rider > Get from VCS > Paste URL of git to URL field (Choose Directory of local Repository)
-
->Visual Studio
-- Open VS and use Clone from Repository
-
->Visual Studio Code
-- On get Started > Clone Git Repository...
-
-## :rotating_light: Step 4. SDKs and Packages/Tools
-
-We can easily use Visual Studio Installer for that.
-When installing Visual Studio, it will show us which developer packages we want to install.
-Find and choose these two.
-
-- .NET 5
-- ASP.NET
-
-## :rotating_light: Step 5. Install MsSQL Server and SQL Server Management Studio
-```
-Use Origam.Utils: with these parameters create-demo -n 'name' -p 'password'.
+git clone https://github.com/origam/origam.git
 ```
 
-## :rotating_light: Step 6. Modify OrigamiSettings.config
+## Running the demo project
+If you wish to contribute to Origam you will need some project to test your 
+modifications/fixes on. If have you own project you can use it if not you can 
+run the origam demo project which comes with the source code. 
 
-Folder is in: 
+The demo project is used for automatic testing so there are a lot of features you can use for inspiration when working 
+on your own project or for testing and bug fixes when contributing to Origam itself.
+
+First we have to create an empty database. Open **SQL Server Management Studio** Right click on `Databases`
+choose `New Database...` name it `origam-demo` and click Ok.
+
+Then open the C# solution in Visual Studio. The solution file is at:
 ```
-YourRepositoryFolder\origam-origam\Origam.ServerCore\bin\Debug\net5.0
+backend\Origam.sln"
 ```
+### Open the Project in Architect
+Set the startup project to  **OrigamArchitect** switch the solution configuration to **Debug Architect** and run the project.
 
-<details><summary>Show Settings</summary>
-<p>
-
+New project wizard will pop up. Click Cancel to close it. Next to go `File` &rarr; 
+`Connection Configuration...`. There are no configurations as you can see. The status 
+bar at the bottom of the application shows path of the loaded settings file.
 ```
-Line DataConnectionString
-
-<DataConnectionString>Data Source=.;Initial Catalog=bes;Integrated Security=True;User ID=;Password=;Pooling=True</DataConnectionString>
-
-Line DefaultSchemaExtensionId
-
-<DefaultSchemaExtensionId>f17329d6-3143-420a-a2e6-30e431eea51d</DefaultSchemaExtensionId>
+C:\Users\<userName>\AppData\Roaming\ORIGAM\0.0\OrigamSettings.config
 ```
-
-</p>
-</details>
-
-<details><summary>Show Settings</summary>
-<p>
-
-```
+Open the file in a text editor and replace its contents with this
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <OrigamSettings>
   <xmlSerializerSection type="Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
     <ArrayOfOrigamSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <OrigamSettings>
-        <BaseFolder>C:\Users\jindr\Documents\Source\Repos\Origam2\origam-source\Origam.ServerCore\bin\Debug\netcoreapp2.1\</BaseFolder>
-        <SchemaConnectionString />
-        <ModelSourceControlLocation>C:\Users\Sapphire\Desktop\origam-demo-master\model</ModelSourceControlLocation>
-		<DataConnectionString>Data Source=.;Initial Catalog=origam-demo;Integrated Security=True;User ID=;Password=;Pooling=True</DataConnectionString>        
+        <ModelSourceControlLocation>C:\Repos\origam\model-tests\model</ModelSourceControlLocation>
+        <DataConnectionString>Data Source=.;Initial Catalog=origam-demo;Integrated Security=True;User ID=;Password=;Pooling=True</DataConnectionString>
         <SchemaDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</SchemaDataService>
         <DataDataService>Origam.DA.Service.MsSqlDataService, Origam.DA.Service</DataDataService>
-        <SecurityDomain />
-        <ReportConnectionString />
-        <PrintItServiceUrl />
-        <SQLReportServiceUrl />
-        <SQLReportServiceAccount />
-        <SQLReportServicePassword />
         <SQLReportServiceTimeout>60000</SQLReportServiceTimeout>
         <GUIExcelExportFormat>XLS</GUIExcelExportFormat>
         <DefaultSchemaExtensionId>f17329d6-3143-420a-a2e6-30e431eea51d</DefaultSchemaExtensionId>
         <ExtraSchemaExtensionId>00000000-0000-0000-0000-000000000000</ExtraSchemaExtensionId>
-        <TitleText>origam-demo</TitleText>
-        <Slogan />
-        <Name>origam-demo</Name>
-        <LocalizationFolder />
-        <TranslationBuilderLanguages />
-        <HelpUrl>https://www.merriam-webster.com/dictionary/help</HelpUrl>
+        <TitleText>Demo</TitleText>
+        <Name>Demo</Name>
         <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
         <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
         <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
-        <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
+        <LoadExternalWorkQueues>false</LoadExternalWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
+        <TraceEnabled>true</TraceEnabled>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
       </OrigamSettings>
     </ArrayOfOrigamSettings>
   </xmlSerializerSection>
 </OrigamSettings>
 ```
+Make sure you set the correct **ModelSourceControlLocation** in the file. Open the 
+Architect again. You should see the demo projects' packages. Double click the **Widgets**
+package and a **Deployment Scripts Pending** pop up should show up. Click Yes. The database 
+should now contain the generated tables and data.
 
-</p>
-</details>
+Now we add a test user into the database. Open **SQL Server Management Studio** go to
+the database **origam-demo** and run the following script
+```tsql
+DECLARE @userName NVARCHAR(max)
+DECLARE @passwordHash NVARCHAR(max)
 
-## :rotating_light: Step 7. Modify appsettings.json (secrets.json)
+SET @userName = 'testUser'
+SET @passwordHash = 'FA000.AGJMo11O/0jTchE97kPtXfSzDM7qOaBltse7bOAINgMYNdyf7iv4P0DINxkdTdxRhA==' -- hash of: 9ECZJ83w4UNQPjrR
 
-U will find this thanks to Visual Studio Manage User Secrets.
+INSERT INTO [dbo].[BusinessPartner] (
+	UserName
+	,Name
+	,Id
+	)
+VALUES (
+	@userName
+	,@userName
+	,'69aacf26-300e-477b-b9a6-408324ca1cad'
+	);
 
-<details><summary>Show example picture.</summary>
-<p>
+INSERT INTO [dbo].[OrigamUser] (
+	UserName
+	,EmailConfirmed
+	,refBusinessPartnerId
+	,Password
+	,Id
+	,FailedPasswordAttemptCount
+	,Is2FAEnforced
+	)
+VALUES (
+	@userName
+	,1
+	,'69aacf26-300e-477b-b9a6-408324ca1cad'
+	, @passwordHash
+	,'f0154207-4f49-476d-b955-6f587dd61708'
+	,0
+	,0
+	);
 
-![This is an image](https://fv2-2.failiem.lv/thumb_show.php?i=tzjuskzs3&view)
+INSERT INTO [dbo].[BusinessPartnerOrigamRole] (
+	Id
+	,refBusinessPartnerId
+	,refOrigamRoleId
+	)
+VALUES (
+	'd8130a52-a52c-49bb-b80d-565fa5b9eb21'
+	,'69aacf26-300e-477b-b9a6-408324ca1cad'
+	,'E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2'
+	);
 
-</p>
-</details>
-
-### Paste this settings:
-
-<details><summary>Show Settings</summary>
-<p>
+UPDATE  [dbo].[OrigamParameters]
+SET [BooleanValue] = 1
+WHERE Id = 'e42f864f-5018-4967-abdc-5910439adc9a'
 
 ```
+
+### Run the Server
+To run the demo project in Origam server you first have to build the client application.
+To do that open the folder `frontend-html` in your javascript IDE or CMD.exe and run the following.
+```
+npm install --global yarn
+```
+```
+yarn 
+```
+```
+yarn build
+```
+now you should have a production build of the front end application in 
+```
+frontend-html\dist
+```
+
+Next we have to create **OrigamSettings.config** for the server application.
+Go to Visual Studio set the startup project to **Origam.Server** and switch the solution configuration to **Debug Server**.
+Build the project. The debug folder should be created now and you can copy the OrigamSettings.config from the Architect there.
+
+Copy
+```
+C:\Users\<userName>\AppData\Roaming\ORIGAM\0.0\OrigamSettings.config
+```
+to
+```
+backend\Origam.Server\bin\Debug\net6.0
+```
+Then we have to configure logging by adding the **log4net.config** to the same folder
+```
+backend\Origam.Server\bin\Debug\net6.0\log4net.config
+```
+You can customize the file however you want. Here is a basic logging setup
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<log4net>
+  <appender name="FileAppender" type="log4net.Appender.FileAppender">
+    <file value="./logs/OrigamServer.log" />
+    <appendToFile value="false" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %level %logger - %message%newline" />
+    </layout>
+  </appender>
+  <root>
+    <level value="ERROR"/>
+    <appender-ref ref="FileAppender" />
+  </root>
+</log4net>
+```
+Next run these commands to create a *.pfx certificate file for JWT tokens. 
+```
+"C:\Program Files\Git\usr\bin\openssl.exe" req -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 365 -out serverCore.cer
+```
+```
+"C:\Program Files\Git\usr\bin\openssl.exe"   pkcs12 -export -in serverCore.cer -inkey serverCore.key -out serverCore.pfx
+```
+Then put the generated `serverCore.pfx` file to
+```
+backend\Origam.Server
+```
+The server needs some additional settings that we can pass in ***appsettings.json*** located 
+here 
+```
+backend\Origam.Server\appsettings.json
+```
+Create the file and put this in it
+```json
 {
-  "PathToClientApp": "C:\\Repos\\origamclient\\origam-html\\build",
-  "ChatConfig": {
-    "PathToChatApp": "",
-    "ChatRefreshInterval": 1000
-  },
-  "ReloadModelWhenFilesChangesDetected": "false",
-  "UserConfig": {
-    "FromAddress": "admin@localhost",
-    "NewUserRoleId": "",
-    "UserUnlockNotificationSubject": "",
-    "UserUnlockNotificationBodyFileName": "",
-    "UserRegistrationMailSubject": "Register",
-    "UserRegistrationMailBodyFileName": "testNewUserFile.txt",
-    "MultiFactorMailSubject": "Register",
-    "MultiFactorMailBodyFileName": "testMultiFactorFile.txt",
-    "MailQueueName": "",
-    "UserRegistrationAllowed": "true"
-  },
+  "ReloadModelWhenFilesChangesDetected": "true",
+  "PathToClientApp": "<AbsolutePathToTheDistFolder>",
   "IdentityGuiConfig": {
-    "AllowPasswordReset": "false"
+    "AllowPasswordReset": "true"
   },
   "CustomAssetsConfig": {
-    //"PathToCustomAssetsFolder": "C:\\someDirectory",
+    "PathToCustomAssetsFolder": "<AbsolutePathToFolderWhereYouHaveTheImages>",
     "RouteToCustomAssetsFolder": "/customAssets",
-    "IdentityGuiLogoUrl": "/customAssets/someFile1.png",
-    "Html5ClientLogoUrl": "/customAssets/someFile2.png"
+    "IdentityGuiLogoUrl": "/customAssets/avatarTest.png",
+    "Html5ClientLogoUrl": "/customAssets/avatarTest.png",
+    "FaviconLogoUrl": "/customAssets/faviconTest.png"
   },
   "IdentityServerConfig": {
+    "CookieSlidingExpiration": true,
     "PathToJwtCertificate": "serverCore.pfx",
-    "PasswordForJwtCertificate": "bla",
-    "UseGoogleLogin": "false",
-    "GoogleClientId": "",
-    "GoogleClientSecret": "",
+    "PasswordForJwtCertificate": "<PasswordYouEnteredWhenCreatingTheCertificate>",
     "WebClient": {
       "RedirectUris": [
-        "https://localhost:3000/#origamClientCallback/",
-        "https://localhost:44356/#origamClientCallback/",
-        "http://localhost:3000/#origamClientCallback/",
-        "https://localhost:3000/#origamClientCallbackRenew/"
+        "https://localhost:44357/#origamClientCallback/",
+        "https://localhost:44357/#origamClientCallbackRenew/",
+        "https://localhost:5173/#origamClientCallback/",
+        "https://localhost:5173/#origamClientCallbackRenew/"
       ],
-      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
-    },
-    "MobileClient": {
-      "RedirectUris": [ "http://localhost/xamarincallback" ],
-      "ClientSecret": "mobileSecret",
-      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
+      "PostLogoutRedirectUris": [
+        "https://localhost:44357",
+        "https://localhost:5173"
+      ]
     },
     "ServerClient": {
       "ClientSecret": "serverSecret"
     }
   },
   "UserLockoutConfig": {
-    "LockoutTimeMinutes": 5,
-    "MaxFailedAccessAttempts": 5
+    "MaxFailedAccessAttempts": 3
   },
   "PasswordConfig": {
     "RequireDigit": "false",
@@ -206,31 +272,22 @@ U will find this thanks to Visual Studio Manage User Secrets.
     "RequireLowercase": "true"
   },
   "MailConfig": {
-    "UserName": "",
-    "Password": "",
-    "Server": "",
     "Port": 587,
     "UseSsl": "true",
-    "PickupDirectoryLocation": "C:\\directoryToSaveTheEmailsTo"
+    "PickupDirectoryLocation": "<AbsolutePathToFolderWhereTheEmailsWillBeStored>"
   },
-  "urls": "https://localhost:44356;http://localhost:5000",
   "UserApiOptions": {
     "RestrictedRoutes": [
       "/api/private"
     ],
     "PublicRoutes": [
-      "/api/attachment"
+      "/api/attachment",
+      "/api/public"
     ]
   },
-  "SoapAPI": {
-    "Enabled": "false",
-    "RequiresAuthentication": "true",
-    "ExpectAndReturnOldDotNetAssemblyReferences": "true"
-  },
-  "BehindProxy": "false",
   "ClientFilteringConfig": {
     "CaseSensitive": "false",
-    "AccentSensitive": "true"
+    "AccentSensitive": "false"
   },
   "LanguageConfig": {
     "Default": "en-US",
@@ -239,140 +296,54 @@ U will find this thanks to Visual Studio Manage User Secrets.
         "Culture": "en-US",
         "Caption": "English",
         "ResetPasswordMailSubject": "Reset Password",
-        "ResetPasswordMailBodyFileName": "testResetPwFile.txt",
-        "DateCompleterConfig": {
-          "DateSeparator": ".",
-          "TimeSeparator": ":",
-          "DateTimeSeparator": " ",
-          "DateSequence": "MonthDayYear"
-        },
-        "DefaultDateFormats": {
-          "Short": "MM/dd/yyyy",
-          "Long": "MM/dd/yyyy HH:mm:ss",
-          "Time": "HH:mm:ss"
-        }
-      },
-      {
-        "Culture": "cs-CZ",
-        "Caption": "Česky",
-        "ResetPasswordMailSubject": "Obnova Hesla",
-        "ResetPasswordMailBodyFileName": "testResetPwFile.txt"
-      },
-      {
-        "Culture": "de-DE",
-        "Caption": "Deutsch",
-        "ResetPasswordMailSubject": "Passwort Zurücksetzen",
         "ResetPasswordMailBodyFileName": "testResetPwFile.txt"
       }
     ]
-  },
-  "HtmlClientConfig": {
-    "ShowToolTipsForMemoFieldsOnly": "false"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Warning",
-      "Microsoft.*": "Warning"
-    }
   }
 }
 ```
-</p>
-</details>
+Make sure you set 
+- **PathToClientApp** to the absolute path to the
+`frontend-html\dist` folder where we built the frontend application before.
+- **PathToCustomAssetsFolder** to absolute path to a folder where you keep the application images. The images don't have to be there for development.
+- **PickupDirectoryLocation** to absolute path to a folder where the emails will be saved instead 
+of sending them to the actual email addresses. This is quite useful for development.
+- **PasswordForJwtCertificate** password you entered when creating the `serverCore.pfx` 
+file
 
-Is important to set up path to hmtlclient, first line :
+All back slashes in the paths should be escaped i.e. \\ instead of \.
+
+When you opened the solution Visual Studio created the file 
 ```
-"PathToClientApp": "C:\\Repos\\origamclient\\origam-html\\build",
-
-Modify path to your path of hmtl client build.
+backend\Origam.Server\Properties\launchSettings.json
 ```
+Open the file and set the **https** port to **44357**. You can ignore the http port number.
 
 
-## :rotating_light: Step 8. Create and modify log4net.config.
+
+Now go to Visual Studio and run the Origam.Server project. Everything should work and 
+your default browser should open with the login screen. Enter the following:
+
+**Username: testUser**
+
+**Password: 9ECZJ83w4UNQPjrR**
+
+The production build of the client application located at `frontend-html\dist` will run after you login.
+
+### Run the Javascript Development Server
+Next we will run the front end javascript application in a development server so that
+we can debug it. 
+Just open CMD.exe in the `frontend-html` folder and run
 ```
-yourRepositoryFolder\\origam-source\Origam.ServerCore\bin\Debug\net5.0\
+yarn dev
 ```
-<details><summary>Show Settings</summary>
-<p>
+The development server will start and show you the port number where you can reach it.
 
-</p>
-</details>
+### Conclusion 
+We have configured the Origam development environment. Now you can debug all parts of Origam.
 
-## :rotating_light: Step 9. Download  ServerCore.pfx Certificate from Origam Core Team
+To debug the Architect in Visual Studio set the startup project to **OrigamArchitect** and switch the solution configuration to **Debug Architect**. Then run the project.
 
-Paste it into your repository folder, so should look like this: 
-```
-yourRepositoryFolder\origam-source\Origam.ServerCore
-```
-## :rotating_light: Step 10. Running the Client.
+If you wan to debug the server set the startup project to **Origam.Server** switch the solution configuration to **Debug Server** and run the project.
 
-Compile the html client application. First clone repository GitHub - origam/origam-html: ORIGAM HTML Client application. somewhere on your machine and install latest version of Node.js.
-
-Then open the command line in the repo’s root directory and run:
-```
-npm install -g yarn
-```
-this will install the yarn package manager. Next run
-```
-yarn install
-```
-This will download and install all dependencies.
-
-We will run the client application on a nodejs development server to make debugging simple. Before we do that we will also need an origam server to connect to and get the data from. You can use any running origam server you have access to installed in IIS or in docker, local or remote. Just note the address and port the server is running on and write it to an environment variable WDS_PROXY_TARGET.
-
-Now you can run the project with this command
-```
-yarn start
-```
-a development server should be started at https://localhost:3000/ when you go to that address you should see the client application.
-
-
-## :rotating_light: Step 11. Running Debugging.
-Make sure of these tasks complete.
-- [x] Running DB server (After MsSQL installation it runs in backround)
-- [x] Restored test database to demo-database 
-
-<details><summary>Show Example Image</summary>
-<p>
-	
-![image](https://user-images.githubusercontent.com/32484607/138682182-280f7245-61dd-4c52-a81c-5a82936f4183.png)
-</p>
-	
-</details>
-
-
-
-
-- [x] Start a debug of Server.Core in Visual Studio or Rider 
-
-<details><summary>Show Example Image</summary>
-<p>
-	
-
-![image](https://user-images.githubusercontent.com/32484607/138683171-ecb46caa-eda9-46e9-8419-bd8b38d84206.png)
-	
-</p>
-	
-</details>
-
-
-
-- [x] It should look like this after starting server.core.
-
-<details><summary>Show Example Image</summary>
-<p>
-	
-![image](https://user-images.githubusercontent.com/32484607/138681887-264b622c-ca1d-4cf2-ab4a-ea6caccfd48d.png)
-	
-</p>
-	
-</details>
-
-
-
-# :stop_sign: Common Problems.
-System.Exception: Could not find instance with id: f17329d6-3143-420a-a2e6-30e431eea51d
-This is caused by the wrong path to a demo-model.
-
-
-              
+If you need to debug the front end application in browser run the Origam server (previous paragraph) and start the node development server with `yarn dev`. 
