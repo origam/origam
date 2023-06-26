@@ -71,7 +71,7 @@ export class RowState implements IRowState {
           try {
             const containers =  Array.from(this.containers.values()).slice(-maxRowStatesInOneCall);
             for (let container of containers) {
-              if(container.rowId && !container.isValid && !container.processingSate){
+              if (container.rowId && !container.isValid && !container.processingSate) {
                 containersToLoad.set(container.rowId, container);
               }
             }
