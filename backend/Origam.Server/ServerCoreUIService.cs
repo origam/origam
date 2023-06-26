@@ -466,17 +466,18 @@ namespace Origam.Server
                 }
             }
 
-            if(action?.ConfirmationRule == null)
-            {
-                return new RuleExceptionDataCollection();
-            }
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
             if (sessionStore.IsDelayedLoading && 
-                action is EntityWorkflowAction workflowAction && 
+                action.Mode == PanelActionMode.MultipleCheckboxes && 
+                action is EntityWorkflowAction workflowAction &&
                 workflowAction.MergeType != ServiceOutputMethod.Ignore)
             {
                 throw new Exception("Only actions with merge type Ignore can be invoked in lazily loaded screens.");
+            }
+            if(action?.ConfirmationRule == null)
+            {
+                return new RuleExceptionDataCollection();
             }
             List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedIds);
             IXmlContainer xml 
