@@ -489,7 +489,8 @@ export function CDataViewHeader(props: { isVisible: boolean }) {
 export function isAddRecordShortcut(event: any) {
   return (
     ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
-    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j")
+    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j") ||
+      event.key === "Insert"
   );
 }
 

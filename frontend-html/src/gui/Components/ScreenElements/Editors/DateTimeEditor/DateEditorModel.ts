@@ -107,7 +107,19 @@ export class DateEditorModel {
         this.onChange?.(event, toOrigamServerString(this.momentValue));
       }
       this.dirtyTextualValue = undefined;
-    } else if (event.key === "Escape") {
+    }
+    else if (event.key === " " && !this.dirtyTextualValue) {
+      const timeNow = moment();
+      const dayFormatOnly =
+        !this.outputFormat.includes("H") &&
+        !this.outputFormat.includes("m") &&
+        !this.outputFormat.includes("s");
+      if(dayFormatOnly){
+        timeNow.set({hour:0, minute:0, second:0, millisecond:0})
+      }
+      this.onChange?.(event, toOrigamServerString(timeNow));
+    }
+    else if (event.key === "Escape") {
     }
     this.onKeyDown?.(event);
   }
