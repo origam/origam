@@ -192,10 +192,6 @@ namespace Origam.Workbench.Services
 
 		#region IService Members
 
-		public void StopTasks()
-		{
-		}
-
 		public void UnloadService()
 		{
 			_schema = null;

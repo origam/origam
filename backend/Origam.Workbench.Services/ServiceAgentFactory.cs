@@ -161,11 +161,7 @@ namespace Origam.Workbench.Services
         #endregion
 
         #region IService Members
-
-        public void StopTasks()
-        {
-        }
-
+        
         public void UnloadService()
         {
             _persistence = null;

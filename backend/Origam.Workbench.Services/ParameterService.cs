@@ -37,10 +37,6 @@ namespace Origam.Workbench.Services
 		{
 		}
 
-		public void StopTasks()
-		{
-		}
-
 		public void UnloadService()
 		{
 		}
@@ -542,11 +538,7 @@ namespace Origam.Workbench.Services
 		#endregion
 		
 		#region IWorkbenchService Members
-
-		public void StopTasks()
-		{
-		}
-
+		
 		public void UnloadService()
 		{
             if (_schemaService != null)

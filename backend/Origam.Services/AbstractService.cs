@@ -30,10 +30,6 @@ namespace Origam.Workbench.Services
 			OnInitialize(EventArgs.Empty);
 		}
 
-		public virtual void StopTasks()
-		{
-		}
-
 		public virtual void UnloadService()
 		{
 			OnUnload(EventArgs.Empty);

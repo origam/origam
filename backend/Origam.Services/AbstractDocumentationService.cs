@@ -86,7 +86,6 @@ namespace Origam.Workbench.Services
 		#region IWorkbenchService Members
 
 		public abstract void InitializeService();
-		public abstract void StopTasks();
 		public abstract void UnloadService();
 
 		public abstract event System.EventHandler Initialize;

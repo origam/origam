@@ -51,7 +51,7 @@ namespace Origam.Workflow.WorkQueue
     /// <summary>
     /// Summary description for WorkQueueService.
     /// </summary>
-    public class WorkQueueService : IWorkQueueService
+    public class WorkQueueService : IWorkQueueService, IBackGroundService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";

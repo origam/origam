@@ -55,10 +55,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
         }
 
-        public void StopTasks()
-        {
-        }
-
         public void UnloadService()
         {
         }
@@ -121,10 +117,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
 
         public void InitializeService()
-        {
-        }
-
-        public void StopTasks()
         {
         }
 

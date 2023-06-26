@@ -38,10 +38,6 @@ namespace Origam.Workbench.Services
 		public event System.EventHandler Unload;
 		public event System.EventHandler Initialize;
 
-		public void StopTasks()
-		{
-		}
-
 		public void UnloadService()
 		{
 			OnUnload(EventArgs.Empty);
