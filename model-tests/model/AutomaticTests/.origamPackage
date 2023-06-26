@@ -4,7 +4,7 @@
     x:id="c130ecd2-3b61-48fe-bac0-b721f86b0a0f"
     x:isFolder="true"
     p:name="AutomaticTests"
-    p:version="1.0.0">
+    p:version="1.0.1">
     <pr:packageReference
       x:id="db733777-7509-40bd-a910-a2cfc2219857"
       pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
