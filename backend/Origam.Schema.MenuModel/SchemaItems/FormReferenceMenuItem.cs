@@ -543,15 +543,13 @@ namespace Origam.Schema.MenuModel
 		
 		private string GetErrorOrNull(EntityWorkflowAction action, FormReferenceMenuItem menuItem)
 		{
-			if (action.MergeType == ServiceOutputMethod.Ignore)
+			if (menuItem.Screen == null ||
+			    action.MergeType == ServiceOutputMethod.Ignore || 
+			    action.Mode != PanelActionMode.MultipleCheckboxes)
 			{
 				return null;
 			}
-			if (menuItem.Screen == null)
-			{
-				return null;
-			}
-
+			
 			var screenConditions = action.ChildItems
 				.ToGeneric()
 				.OfType<ScreenCondition>()
@@ -559,11 +557,9 @@ namespace Origam.Schema.MenuModel
 			bool shouldShowOnScreen = screenConditions.Any(
 				screenCondition =>
 					screenCondition.ScreenId == menuItem.ScreenId);
-			if (screenConditions.Count > 0 && shouldShowOnScreen ||
-			    screenConditions.Count == 0)
+			if (screenConditions.Count > 0 && !shouldShowOnScreen)
 			{
-				return
-					$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
+				return null;
 			}
 
 			var screenSectionIds = menuItem.Screen.ChildItems
@@ -580,13 +576,12 @@ namespace Origam.Schema.MenuModel
 				.Any(screenCondition =>
 					screenSectionIds.Contains(screenCondition
 						.ScreenSectionId));
-			if (screenSectionConditions.Count > 0 && shouldShowOnScreenSection ||
-			    screenSectionConditions.Count == 0)
+			if (screenSectionConditions.Count > 0 && !shouldShowOnScreenSection)
 			{
-				return
-					$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
+				return null;
 			}
-			return null;
+			return
+				$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
 		}
 	}
 }
