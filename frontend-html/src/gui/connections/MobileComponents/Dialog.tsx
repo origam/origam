@@ -26,23 +26,12 @@ import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/Botto
 export const Dialog: React.FC<{
   heading: string
 }> = (props) => {
-
-  const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
-
   return (
     <div className={S.root}>
       <div className={S.topBar}>
         {props.heading}
       </div>
-      {/*{mobileState.dialogComponent}*/}
       {props.children}
-      <div className={S.bottomBar}>
-        <BottomIcon
-          key={"close"}
-          iconPath={"./icons/noun-close-25798.svg"}
-          onClick={() => mobileState.dialogComponent = null}
-        />
-      </div>
     </div>
   );
 }
