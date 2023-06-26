@@ -43,6 +43,11 @@ namespace Origam.Server.Configuration
             
             string defaultCulture = languageSection
                 .GetStringOrThrow("Default");
+            if (string.IsNullOrWhiteSpace(defaultCulture))
+            {
+                throw new Exception("Default culture in \"LanguageConfig\" cannot be empty");
+            }
+
             DefaultCulture = new RequestCulture(defaultCulture);
             
             CultureItems = languageSection
@@ -50,6 +55,12 @@ namespace Origam.Server.Configuration
                 .GetChildren()
                 .Select(CultureItem.Create)
                 .ToArray();
+
+            var defaultCultureExists = CultureItems.Any(item => item.CultureName == defaultCulture);
+            if (!defaultCultureExists)
+            {
+                throw new Exception($"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section.");
+            }
 
             AllowedCultures = CultureItems
                 .Select(item => new CultureInfo(item.CultureName))
