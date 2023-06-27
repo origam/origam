@@ -1041,8 +1041,7 @@ namespace Origam.Server.Controller
                     ?.ArrayRelation != null);
                 entity = entityData.Entity.Name;
             }
-            var columns = new List<ColumnData>
-                {columnData, ColumnData.GroupByCountColumn};
+            var columns = new List<ColumnData> {columnData};
             var query = new DataStructureQuery
             {
                 Entity = entity,
@@ -1052,13 +1051,11 @@ namespace Origam.Server.Controller
                     FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
                 },
                 CustomOrderings = new CustomOrderings(new List<Ordering>()),
-                RowLimit = 999999,
                 ColumnsInfo = new ColumnsInfo(
                     columns: columns, 
                     renderSqlForDetachedFields: true),
+                Distinct = true,
                 ForceDatabaseCalculation = true,
-                CustomGrouping = new Grouping(
-                    columnData.Name, Guid.Empty, null),
                 AggregatedColumns = new List<Aggregation>()
             };
 

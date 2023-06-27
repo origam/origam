@@ -49,5 +49,6 @@ namespace Origam.DA.Service
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
         public Grouping CustomGrouping { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
+        public bool Distinct { get; set; }
     }
 }
