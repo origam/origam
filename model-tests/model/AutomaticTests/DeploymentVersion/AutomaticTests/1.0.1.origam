@@ -19,5 +19,13 @@
       asi:name="00060_Create_SP_replicateWideDropdownHorizontalScrollError"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.0.1.origam___commandText___785f017c-e4a4-4a00-bf9d-c37cd842f382.txt"
+      x:id="785f017c-e4a4-4a00-bf9d-c37cd842f382"
+      asi:name="00070_InsertWorkqueuesAndCommandsForTests"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
