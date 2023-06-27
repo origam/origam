@@ -1717,6 +1717,7 @@ namespace Origam.DA.Service
                 CustomFilters = query.CustomFilters,
                 CustomOrderings = query.CustomOrderings,
                 CustomGrouping = query.CustomGrouping,
+                Distinct = query.Distinct,
                 RowLimit = query.RowLimit,
                 RowOffset = query.RowOffset,
                 ForceDatabaseCalculation = query.ForceDatabaseCalculation,

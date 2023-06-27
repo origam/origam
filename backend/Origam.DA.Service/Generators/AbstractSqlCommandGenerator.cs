@@ -987,6 +987,7 @@ namespace Origam.DA.Service
             OrderByCommandParser orderByCommandParser = null)
         {
             var entity = selectParameters.Entity;
+            var distinct = selectParameters.Distinct;
             var paging = selectParameters.Paging;
             var ds = selectParameters.DataStructure;
             var sortSet = selectParameters.SortSet;
@@ -1230,6 +1231,10 @@ namespace Origam.DA.Service
             else if (rowLimit.HasValue && (!rowOffset.HasValue || rowOffset == 0))
             {
                 finalString = sqlRenderer.SelectClause(finalString, rowLimit.Value);
+            }
+            else if (distinct)
+            {
+                finalString = sqlRenderer.SelectClauseWithDistinct(finalString);
             }
             else
             {
