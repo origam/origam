@@ -17,7 +17,7 @@ variables:
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2022.4.0
+  value: 2023.1-alpha.1
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
