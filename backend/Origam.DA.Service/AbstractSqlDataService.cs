@@ -651,14 +651,15 @@ namespace Origam.DA.Service
                         query.SortSetId,
                         query.DefaultSetId);
                 }
-                if(newTransaction)
-                {
+                var errorString = ComposeConcurrencyErrorMessage(userProfile,
+                    dataset, transactionId, currentEntityName, lastTableName,
+                    ex);
+                if (newTransaction)
+                {                    
                     ResourceMonitor.Rollback(transactionId);
                     transactionId = null;
                 }
-                var errorString = ComposeConcurrencyErrorMessage(userProfile, 
-	                dataset, transactionId, currentEntityName, lastTableName, 
-	                ex);
+                
                 // log before throw (because there are some place(s)
                 // where the exception isn't caught
                 if(concurrencyLog.IsDebugEnabled)
@@ -799,8 +800,8 @@ namespace Origam.DA.Service
                         {
 	                        continue;
                         }
-                        var storedValue = "";
-                        var myValue = "";
+                        string storedValue = null;
+                        string myValue = null;
                         if(!storedRow.IsNull(column.ColumnName))
                         {
 	                        storedValue = storedRow[column.ColumnName]
@@ -811,7 +812,8 @@ namespace Origam.DA.Service
 	                        myValue = row[column, DataRowVersion.Original]
 		                        .ToString();
                         }
-                        if(storedValue.Equals(myValue))
+                        if(storedValue != null && storedValue.Equals(myValue)
+                            || (storedValue == null && myValue == null))
                         {
 	                        continue;
                         }
@@ -843,9 +845,9 @@ namespace Origam.DA.Service
                                        + "- "
                                        + column.Caption
                                        + ": "
-                                       + myValue
+                                       + (myValue ?? "null")
                                        + " > "
-                                       + storedValue;
+                                       + (storedValue ?? "null");
                     }
                 }
                 while(row.Table.ParentRelations.Count > 0)
