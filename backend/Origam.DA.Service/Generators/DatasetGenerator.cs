@@ -372,10 +372,14 @@ namespace Origam.DA.Service
 						tableColumn.ExtendedProperties.Add(Const.OrigamDataType, finalDataType);
 						tableColumn.ExtendedProperties.Add(Const.FieldId, finalColumn.Id);
 						switch(column.Field)
-						{
+						{							
+							// mark column as a database field if the entity column
+							// is of type FieldMappingItem and the datastructure column
+							// doesn't have 'UseLookupValue' set (read-only datastructure lookups
+							// aren't saveable so they aren't actually database fields)
 							case FieldMappingItem _:
 								tableColumn.ExtendedProperties.Add(
-									Const.IsDatabaseField, true);
+									Const.IsDatabaseField, !column.UseLookupValue);
 								break;
 							case DetachedField detachedField 
 								when detachedField.DataType == OrigamDataType.Array:
