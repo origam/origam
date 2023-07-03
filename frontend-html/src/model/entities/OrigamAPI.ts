@@ -734,13 +734,12 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  getBlobUrl(data: { downloadToken: string }) {
+    return `${this.urlPrefix}/Blob/${data.downloadToken}`;
+  }
+
   async getBlob(data: { downloadToken: string }) {
-    window.open(`${this.urlPrefix}/Blob/${data.downloadToken}`);
-    /*return (
-await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
- headers: this.httpAuthHeader,
-})
-).data;*/
+    window.open(this.getBlobUrl(data));
   }
 
   async getUploadToken(data: {
