@@ -1735,10 +1735,10 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-1.0.3.tgz#28ed0c1c1f79b8d3635b34fbcfdba6653dce23ed"
   integrity sha512-+0Z9+Gd2Ec8UXWaIMN4oy2wJwqWIK9xJRGU5RMsrwdF7SdDjy56FmheW1C8PfIcVpzOHoKlmVZZxcVkOGzUP6g==
 
-"@origam/styles@^2.0.0", "@origam/styles@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
-  integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
+"@origam/styles@^2.0.0", "@origam/styles@^2.0.2", "@origam/styles@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.3.tgz#5ef69abaf654086d7d32ddb8db4e1b0e391fc82d"
+  integrity sha512-/ZNNEe8pSLKIFk/cvs57vdhDwLPUJeC9dgk01N1tZ8M5xAIcGqqplkvDWiDz2ytvez6mS1JnNvhUQXBp/A0chA==
 
 "@origam/utils@^1.0.0", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0":
   version "1.3.2"
