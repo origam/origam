@@ -80,6 +80,27 @@
       frmi:requestSaveAfterUpdate="false"
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Lazy Loaded - multiple checkboxes test"
+      x:id="55b596de-bda4-4efa-b2ef-b0ac90261adf"
+      frmi:listDataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+      frmi:listEntity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+      frmi:listSortSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      asi:name="AllDataTypesLazyLoaded_MultipleCheckboxesTest"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes_MultipleCheckboxesActionTest.origam#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348"
+      frmi:sortSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"

@@ -9,17 +9,17 @@ variables:
 - name: BRANCH # branch to be used
   value: 2022.4
 - name: VERSION_NUMBER # version number of the build
-  value: 2022.4.0.$(Build.BuildId)
+  value: 2022.4.1.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 22.4.0.$(Build.BuildId)
+  value: 22.4.1.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.4.0
+  value: 2022.4.1
 - name: TAG_LATEST # tag to be used
-  value: 2022.4.0
+  value: 2022.4.1
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2022.3.0
+  value: 2022.4.0
 - name: IS_PRERELASE
-  value: false
+  value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
   value: 2022.4
 
@@ -486,6 +486,7 @@ jobs:
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId)
            ```
+           Release notes: [Release notes 2022.4](https://community.origam.com/t/release-notes-2022-4/2688)
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-client.zip

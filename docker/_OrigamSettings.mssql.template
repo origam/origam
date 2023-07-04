@@ -30,6 +30,8 @@
         <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
         <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
         <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
+		<WorkQueueProcessingMode>Linear</WorkQueueProcessingMode>
+		<AutoProcessWorkQueues>true</AutoProcessWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
         <ReportDefinitionsPath>OrigamSettings_ReportDefinitionsPath</ReportDefinitionsPath>
