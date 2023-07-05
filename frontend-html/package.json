@@ -53,7 +53,7 @@
     "immer": "^10.0.2",
     "immutable": "^4.3.0",
     "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
+    "jest-environment-jsdom": "^29.6.0",
     "js-cookie": "^3.0.5",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.8.0",
