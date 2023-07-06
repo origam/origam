@@ -5,6 +5,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
+import proxy from "vite-plugin-http2-proxy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,7 +25,55 @@ export default defineConfig({
 			},
 		}),
 		tsconfigPaths(),
-		basicSsl()
+		basicSsl(),
+		proxy(
+			{
+				'/internalApi':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/customAssets':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/chatrooms':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/api':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/connect$':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/assets':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/Account':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/account':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/.well-known':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/home':{
+					target: "https://localhost:44357",
+					secure: false
+				},
+				'/locale':{
+					target: "https://localhost:44357",
+					secure: false
+				}
+			}
+		)
 	],
 	resolve: {
 		alias: [
@@ -81,53 +130,7 @@ export default defineConfig({
 		},
 	},
 	server: {
-		https: true,
-		proxy: {
-			'/internalApi':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/customAssets':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/chatrooms':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/api':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/connect':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/assets':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/Account':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/account':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/.well-known':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/home':{
-				target: "https://localhost:44357",
-				secure: false
-			},
-			'/locale':{
-				target: "https://localhost:44357",
-				secure: false
-			}
-		}
+		https: true
 	},
 	define: {
 		global: 'window',

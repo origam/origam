@@ -3851,6 +3851,11 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+http2-proxy@^5.0.53:
+  version "5.0.53"
+  resolved "https://registry.yarnpkg.com/http2-proxy/-/http2-proxy-5.0.53.tgz#fc6cb07d2bb977a388ebeec4449557f2011e5a1f"
+  integrity sha512-k9OUKrPWau/YeViJGv5peEFgSGPE2n8CDyk/G3f+JfaaJzbFMPAK5PJTd99QYSUvgUwVBGNbZJCY/BEb+kUZNQ==
+
 https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
@@ -7165,6 +7170,13 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+vite-plugin-http2-proxy@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-http2-proxy/-/vite-plugin-http2-proxy-0.4.1.tgz#af3f7c7570c439721ac455270521a7c31c334ea8"
+  integrity sha512-pllBOuVVsVnCqtQYA15qxe33TR7QU1OoGondTTx397UkRIY6Rp1F1wWSATXKEG1JpkVniuf3+iNmoeHB7dkrPw==
+  dependencies:
+    http2-proxy "^5.0.53"
 
 vite-tsconfig-paths@^4.2.0:
   version "4.2.0"

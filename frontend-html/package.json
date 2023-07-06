@@ -97,7 +97,8 @@
     "@vitejs/plugin-react": "^4.0.1",
     "browserslist-useragent-regexp": "^3.0.2",
     "identity-obj-proxy": "^3.0.0",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "vite-plugin-http2-proxy": "^0.4.1"
   },
   "resolutions": {
     "@types/react": "17.0.2",
