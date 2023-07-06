@@ -111,7 +111,7 @@ export class MapObjectsStore {
       let selectedRow = getSelectedRow(this.dataView);
       if (selectedRow) {
         const row = selectedRow;
-        if (_.isArray(row) && this.fldLocationIndex && row[this.fldLocationIndex]) {
+        if (_.isArray(row) && this.fldLocationIndex !== undefined && row[this.fldLocationIndex]) {
           let objectGeoJson: any;
           try {
             objectGeoJson = wktParse(row[this.fldLocationIndex]);
