@@ -1,7 +1,7 @@
 # Origam
 This repository contains main code for [Origam](https://www.origam.com).
 ## Contributing
-See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how to get involved with [Origam](https://www.origam.com).
+See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how to get involved with [Origam](https://www.origam.com). And [How to start](HOWTOSTART.md) to find out how to set up your development environment.
 ## Repository Structure
 * `backend` - C# code for backend part of the Origam stack (`Architect`, `Client`, `server`, `origam-utils`, `scheduler`)
 * `build` - build scripts for CI/CD
