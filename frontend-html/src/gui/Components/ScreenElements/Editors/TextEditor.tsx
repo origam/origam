@@ -115,6 +115,22 @@ export class TextEditor extends React.Component<{
     }
   }
 
+  @action.bound
+  handleKeyDown(event: any) {
+    if(event.key === ' ' && event.ctrlKey) {
+      const {selectionStart, selectionEnd} = this.elmInput;
+      const value = this.props.value || '';
+      const newValue = value.substring(0, selectionStart) + '\t' + value.substring(selectionEnd);
+      this.elmInput.value = newValue;
+      const newCursorPosition = selectionStart + 1;
+      this.elmInput.selectionStart = newCursorPosition;
+      this.elmInput.selectionEnd = newCursorPosition;
+      this.props.onChange?.(null, newValue);
+      return 
+    }
+    this.props.onKeyDown?.(event)
+  }
+
   elmInput: any = null;
   refInput = (elm: any) => {
     this.elmInput = elm;
@@ -216,7 +232,7 @@ export class TextEditor extends React.Component<{
             this.updateTextOverflowState();
           }
           }
-          onKeyDown={this.props.onKeyDown}
+          onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onBlur={this.props.onEditorBlur}
@@ -275,7 +291,7 @@ export class TextEditor extends React.Component<{
             this.currentValue = event.target.value;
             this.props.onChange && this.props.onChange(event, event.target.value);
           }}
-          onKeyDown={this.props.onKeyDown}
+          onKeyDown={this.handleKeyDown}
           onDoubleClick={this.props.onDoubleClick}
           onClick={this.props.onClick}
           onBlur={this.props.onEditorBlur}
