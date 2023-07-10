@@ -78,7 +78,7 @@ namespace Origam.OrigamEngine
                 }
                 .Select(ServiceManager.Services.GetService)
                 .ToList();
-            foreach (var service in services.OfType<IBackGroundService>())
+            foreach (var service in services.OfType<IBackgroundService>())
             {
                 service.StopTasks();
             }

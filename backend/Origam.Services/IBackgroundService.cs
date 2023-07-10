@@ -1,6 +1,6 @@
 ﻿namespace Origam.Workbench.Services;
 
-public interface IBackGroundService
+public interface IBackgroundService
 {
     // Should stop timers and other running tasks. This is useful when
     // unloading all services because they depend on each other. Not
