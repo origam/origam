@@ -538,7 +538,7 @@ namespace Origam.Workbench.Services
 		#endregion
 		
 		#region IWorkbenchService Members
-
+		
 		public void UnloadService()
 		{
             if (_schemaService != null)

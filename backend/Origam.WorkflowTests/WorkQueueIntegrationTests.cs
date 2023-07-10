@@ -48,9 +48,7 @@ public class WorkQueueIntegrationTests
     public void TearDown()
     {
         sqlManager.DeleteWorkQueueEntries();
-        Console.WriteLine(
-            "\nRunning DisconnectRuntime. There might be some errors logged here. " +
-            "These are probably not a problem.\n");
+        Console.WriteLine("\nRunning DisconnectRuntime.");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
 

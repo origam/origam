@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using Origam.DA;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Rule;
@@ -60,28 +62,31 @@ namespace Origam.OrigamEngine
         }
         public void UnloadServices()
         {
-            IWorkbenchService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService));
-            IWorkbenchService stateMachine = ServiceManager.Services.GetService(typeof(IStateMachineService));
-            IBusinessServicesService serviceAgent = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            IWorkbenchService documentation = ServiceManager.Services.GetService(typeof(IDocumentationService));
-            IWorkbenchService tracing = ServiceManager.Services.GetService(typeof(TracingService));
-            IDataLookupService dataLookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-            IWorkbenchService parameter = ServiceManager.Services.GetService(typeof(IParameterService));
-            IWorkbenchService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService));
-            IWorkbenchService workQueue = ServiceManager.Services.GetService(typeof(IWorkQueueService));
-            IWorkbenchService attachment = ServiceManager.Services.GetService(typeof(IAttachmentService));
-            IWorkbenchService ruleEngine = ServiceManager.Services.GetService(typeof(IRuleEngineService));
-            ServiceManager.Services.UnloadService(stateMachine);
-            ServiceManager.Services.UnloadService(parameter);
-            ServiceManager.Services.UnloadService(deployment);
-            ServiceManager.Services.UnloadService(dataLookupService);
-            ServiceManager.Services.UnloadService(tracing);
-            ServiceManager.Services.UnloadService(documentation);
-            ServiceManager.Services.UnloadService(serviceAgent);
-            ServiceManager.Services.UnloadService(persistence);
-            ServiceManager.Services.UnloadService(attachment);
-            ServiceManager.Services.UnloadService(ruleEngine);
-            ServiceManager.Services.UnloadService(workQueue);
+            List<IWorkbenchService> services = new []
+                {
+                    typeof(IPersistenceService),
+                    typeof(IStateMachineService),
+                    typeof(IBusinessServicesService),
+                    typeof(IDocumentationService),
+                    typeof(TracingService),
+                    typeof(IDataLookupService),
+                    typeof(IParameterService),
+                    typeof(IDeploymentService),
+                    typeof(IWorkQueueService),
+                    typeof(IAttachmentService),
+                    typeof(IRuleEngineService),
+                }
+                .Select(ServiceManager.Services.GetService)
+                .ToList();
+            foreach (var service in services.OfType<IBackgroundService>())
+            {
+                service.StopTasks();
+            }
+            foreach (var service in services)
+            {
+                ServiceManager.Services.UnloadService(service);
+            }
+            
         }
         protected virtual IParameterService CreateParameterService()
         {

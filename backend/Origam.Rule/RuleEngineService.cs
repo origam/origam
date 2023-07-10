@@ -33,7 +33,7 @@ namespace Origam.Rule
 		{
 		}
 		#region IWorkbenchService Members
-
+		
 		public void UnloadService()
 		{
 		}
