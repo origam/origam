@@ -358,8 +358,7 @@ namespace Origam.Utils
             };
             var persistenceProvider 
                 = (FilePersistenceProvider)persistenceService.SchemaProvider;
-            persistenceService.LoadSchema(settings.DefaultSchemaExtensionId,
-                false, false, "");
+            persistenceService.LoadSchema(settings.DefaultSchemaExtensionId);
             var documentation = new FileStorageDocumentationService(
                 persistenceProvider,
                 persistenceService.FileEventQueue);

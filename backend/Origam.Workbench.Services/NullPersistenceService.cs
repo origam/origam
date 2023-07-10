@@ -51,8 +51,7 @@ namespace Origam.Workbench.Services
             throw new NotImplementedException();
         }
 
-        public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation,
-            bool loadDeploymentScripts, string transactionId)
+        public Package LoadSchema(Guid schemaExtensionId)
         {
             throw new NotImplementedException();
         }

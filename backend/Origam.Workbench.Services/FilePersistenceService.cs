@@ -173,11 +173,7 @@ namespace Origam.Workbench.Services
         public Maybe<XmlLoadError> Reload() => 
             schemaProvider.ReloadFiles();
         
-        public Package LoadSchema(Guid schemaExtensionId, 
-            bool loadDocumentation, bool loadDeploymentScripts,
-            string transactionId) => LoadSchema(schemaExtensionId);
-
-        private Package LoadSchema(Guid schemaExtensionId)
+        public Package LoadSchema(Guid schemaExtensionId)
         {
             schemaProvider.FlushCache();
             var loadedSchema = schemaProvider
@@ -193,12 +189,7 @@ namespace Origam.Workbench.Services
             schemaProvider.LoadedPackages = loadedPackageIds; 
             return loadedSchema;
         }
-
-        public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
-        {
-            return LoadSchema(schemaExtensionId);
-        }
-
+        
         public void InitializeService()
         {
         }

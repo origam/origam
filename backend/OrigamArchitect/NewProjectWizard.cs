@@ -132,7 +132,7 @@ namespace OrigamArchitect
                 WorkbenchSingleton.Workbench.Connect(_project.Name);
                 WorkbenchSchemaService schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
                    as WorkbenchSchemaService;
-                schema.LoadSchema(new Guid(_project.NewPackageId), false, true);
+                schema.LoadSchema(new Guid(_project.NewPackageId));
                 ViewSchemaBrowserPad cmdViewBrowser = new ViewSchemaBrowserPad();
                 cmdViewBrowser.Run();
             }

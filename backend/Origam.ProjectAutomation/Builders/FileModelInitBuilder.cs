@@ -39,7 +39,7 @@ namespace Origam.ProjectAutomation
                 ServiceManager.Services.GetService<SchemaService>();
             try
             {
-                schema.LoadSchema(new Guid(project.BasePackageId), false, false);
+                schema.LoadSchema(new Guid(project.BasePackageId));
             } catch
             {
                 

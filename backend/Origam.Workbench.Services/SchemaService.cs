@@ -233,20 +233,15 @@ namespace Origam.Workbench.Services
 
 			return true;
 		}
-        
-		public bool LoadSchema(Guid schemaExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
-		{
-			return LoadSchema(schemaExtensionId, Guid.Empty, loadDocumentation, loadDeploymentScripts);
-		}
-
-		public bool LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
+		
+		public bool LoadSchema(Guid schemaExtensionId)
 		{
 			if( ! UnloadSchema()) return false;
 		
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
 			PropertyToNamespaceMapping.Init();
-			Package extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
+			Package extension = persistence.LoadSchema(schemaExtensionId);
 			
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
 			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey) as Package;

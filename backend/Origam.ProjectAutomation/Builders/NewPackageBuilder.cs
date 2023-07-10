@@ -48,7 +48,7 @@ namespace Origam.ProjectAutomation
                     break;
                 case TypeTemplate.Open:
                 case TypeTemplate.Template:
-                    schema.LoadSchema(new Guid(project.NewPackageId), false, false);
+                    schema.LoadSchema(new Guid(project.NewPackageId));
                     break;
                 default:
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
