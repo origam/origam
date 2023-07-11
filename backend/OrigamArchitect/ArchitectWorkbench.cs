@@ -2202,7 +2202,7 @@ namespace OrigamArchitect
 			{
 				return;
 			}
-			if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
+			if (isFirstProjectLoad || MessageBox.Show(strings.RunDeploymentScriptsQuestion,
 				    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo,
 				    MessageBoxIcon.Question,
 				    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
