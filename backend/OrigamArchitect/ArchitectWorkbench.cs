@@ -1715,7 +1715,25 @@ namespace OrigamArchitect
 			catch (Exception ex)
 			{
 				log.LogOrigamError(ex);
-				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+				string message = $"{ex.Message}\n{ex.StackTrace}";
+				if (ex is AggregateException aggregateException)
+				{
+					var innerExceptions = aggregateException
+						.Flatten()
+						.InnerExceptions
+						.ToList();
+					if (innerExceptions.Count == 1 && innerExceptions[0] is TaskCanceledException)
+					{
+						return true;
+					}
+					message = string.Join(
+						"\n\n",
+						innerExceptions
+						.Select(x => $"{x.Message}\n{x.StackTrace}")
+					);
+				}
+
+				MessageBox.Show(this, message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
 
