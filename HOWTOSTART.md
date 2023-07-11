@@ -44,7 +44,7 @@ choose `New Database...` name it `origam-demo` and click Ok.
 
 Then open the C# solution in Visual Studio. The solution file is at:
 ```
-backend\Origam.sln"
+backend\Origam.sln
 ```
 ### Open the Project in Architect
 Set the startup project to  **OrigamArchitect** switch the solution configuration to **Debug Architect** and run the project.
