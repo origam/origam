@@ -200,13 +200,13 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (!chkIntegratedAuthentication.Checked && string.IsNullOrEmpty(txtDatabaseUserName.Text))
+            if (string.IsNullOrEmpty(txtDatabaseUserName.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterDbUserName_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
                 return;
             }
-            if (!chkIntegratedAuthentication.Checked && string.IsNullOrEmpty(txtDatabasePassword.Text))
+            if (string.IsNullOrEmpty(txtDatabasePassword.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterDbPassword_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
@@ -218,22 +218,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if(Deployment == DeploymentType.Docker)
-            {
-                if(chkIntegratedAuthentication.Checked)
-                {
-                    AsMessageBox.ShowError(this, strings.CheckIntegratedAuthentication_Message, strings.NewProjectWizard_Title, null);
-                    e.Cancel = true;
-                    return;
-                }
-            }
             _project.Name = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
             _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
-            _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
             _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
@@ -259,16 +249,6 @@ namespace OrigamArchitect
                         txtDockerApiAdress.Text);
                 dockerManager.PullImage();
             }
-        }
-
-        private void chkIntegratedAuthentication_CheckedChanged(object sender, EventArgs e)
-        {
-            txtDatabasePassword.Enabled = !chkIntegratedAuthentication.Checked;
-            txtDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
-            lblDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
-            lblDatabasePassword.Enabled = !chkIntegratedAuthentication.Checked;
-            txtPort.Visible = !chkIntegratedAuthentication.Checked;
-            labelPort.Visible = !chkIntegratedAuthentication.Checked;
         }
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
@@ -594,27 +574,9 @@ namespace OrigamArchitect
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DatabaseType == DatabaseType.PgSql &&
-                Deployment == DeploymentType.Docker )
+            if(Deployment == DeploymentType.DockerPostgres)
             {
-                chkIntegratedAuthentication.Enabled = false;
-                chkIntegratedAuthentication.Checked = false;
-                txtPort.Visible = true;
-                labelPort.Visible = true;
-                chkIntegratedAuthentication.Visible = false;
-                IntegratedLabel.Visible = false;
-            }
-            else
-            {
-                if(Deployment == DeploymentType.DockerPostgres)
-                {
-                    txtPort.Text = "5433";
-                }
-                chkIntegratedAuthentication.Enabled = true;
-                txtPort.Visible = !chkIntegratedAuthentication.Checked;
-                labelPort.Visible = !chkIntegratedAuthentication.Checked;
-                chkIntegratedAuthentication.Visible = true;
-                IntegratedLabel.Visible = true;
+                txtPort.Text = "5433";
             }
             SetPort();
         }
