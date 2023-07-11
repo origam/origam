@@ -73,7 +73,7 @@ namespace OrigamArchitect
 			WorkQueue.SelectionForeColor = OrigamColorScheme.GridSelectionForeColor;
 
 			SchemaService schema =  ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-			schema.SchemaLoaded += new EventHandler(schema_SchemaLoaded);
+			schema.SchemaLoaded += schema_SchemaLoaded;
         }
 	   
 		#region Windows Form Designer generated code
@@ -378,7 +378,7 @@ namespace OrigamArchitect
             }
 		}
 
-		private void schema_SchemaLoaded(object sender, EventArgs e)
+		private void schema_SchemaLoaded(object sender, bool isFirstProjectLoad)
 		{
 			RefreshData();
 		}

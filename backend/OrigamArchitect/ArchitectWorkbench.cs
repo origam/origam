@@ -2094,7 +2094,7 @@ namespace OrigamArchitect
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void _schema_SchemaLoaded(object sender, EventArgs e)
+        private void _schema_SchemaLoaded(object sender, bool isFirstProjectLoad)
 		{
             OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
@@ -2156,7 +2156,7 @@ namespace OrigamArchitect
                 }
             }
 
-            RunDeploymentScripts(deployment);
+            RunDeploymentScripts(deployment, isFirstProjectLoad);
 
 #endif
 			try
@@ -2195,7 +2195,7 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-		private void RunDeploymentScripts(IDeploymentService deployment)
+		private void RunDeploymentScripts(IDeploymentService deployment, bool isFirstProjectLoad)
 		{
 			DeployVersion deployCommand = new DeployVersion();
 			if (!deployCommand.IsEnabled)
@@ -2209,7 +2209,7 @@ namespace OrigamArchitect
 			{
 				PackageVersion deployedPackageVersion =
 					deployment.CurrentDeployedVersion(_schema.ActiveExtension);
-				if (deployedPackageVersion == PackageVersion.Zero)
+				if (!isFirstProjectLoad && deployedPackageVersion == PackageVersion.Zero)
 				{
 					if (MessageBox.Show(
 						    strings.DeploySinglePackageQuestion,

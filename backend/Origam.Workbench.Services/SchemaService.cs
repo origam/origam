@@ -57,7 +57,7 @@ namespace Origam.Workbench.Services
 		public event SchemaServiceEventHandler ProviderAdded;
 		public event SchemaServiceEventHandler ProviderRemoved;
 		public event EventHandler ActiveNodeChanged;
-		public event EventHandler SchemaLoaded;
+		public event EventHandler<bool> SchemaLoaded;
 		public event EventHandler SchemaChanged;
 		public event CancelEventHandler SchemaUnloading;
         public event EventHandler SchemaUnloaded;
@@ -233,8 +233,8 @@ namespace Origam.Workbench.Services
 
 			return true;
 		}
-		
-		public bool LoadSchema(Guid schemaExtensionId)
+
+		public bool LoadSchema(Guid schemaExtensionId, bool isFirstProjectLoad = false)
 		{
 			if( ! UnloadSchema()) return false;
 		
@@ -246,7 +246,7 @@ namespace Origam.Workbench.Services
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
 			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey) as Package;
 
-			OnSchemaLoaded(EventArgs.Empty);
+			OnSchemaLoaded(isFirstProjectLoad);
 
 			return true;
 		}
@@ -420,13 +420,13 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		protected void OnSchemaLoaded(EventArgs e)
+		protected void OnSchemaLoaded(bool isFirstProjectLoad)
 		{
 			_isSchemaLoaded = true;
 
 			if (SchemaLoaded != null) 
 			{
-				SchemaLoaded(this, e);
+				SchemaLoaded(this, isFirstProjectLoad);
 			}
 		}
 
