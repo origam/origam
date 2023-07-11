@@ -196,8 +196,14 @@ namespace Origam.Workbench.Services
 
         public void UnloadService()
         {
-            schemaProvider.PersistIndex(true);
-            Dispose();
+            try
+            {
+                schemaProvider.PersistIndex(true);
+            }
+            finally
+            {
+                Dispose();
+            }
         }
 
         public object Clone()
