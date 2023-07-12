@@ -1,7 +1,14 @@
 # Setting up Development Environment for Origam
 The following is a guide to help you set up Origam development environment. You will need it if you wish to contribute to Origam backend or frontend. It will be quite helpful if you are going to develop your own plugin for Origam too.
 
-Origam can be developed on Windows only because the Architect application is written using Windows Forms. 
+If you wish to build the Architect, Server and the client application you will need 
+Windows. 
+
+If you have Linux or Mac you can build the client application with no problem.
+You can probably build and run the server too, although it is not typically done. 
+It is also possible to download the compiled server application from [here]() and just 
+build and debug the client application. 
+
 If you wish to run the server and front end only you can probably do that on Linux and Mac too.
 
 ## Download Software
@@ -47,9 +54,9 @@ Then open the C# solution in Visual Studio. The solution file is at:
 backend\Origam.sln
 ```
 ### Open the Project in Architect
-Set the startup project to  **OrigamArchitect** switch the solution configuration to **Debug Architect** and run the project.
+In Visual Studio set the startup project to  **OrigamArchitect** switch the solution configuration to **Debug Architect** and run the project.
 
-New project wizard will pop up. Click Cancel to close it. Next to go `File` &rarr; 
+Wait for the Architect to start up. You will be presented with the New project wizard pop up, click Cancel to close it. Next to go `File` &rarr; 
 `Connection Configuration...`. There are no configurations as you can see. The status 
 bar at the bottom of the application shows path of the loaded settings file.
 ```
@@ -145,7 +152,7 @@ WHERE Id = 'e42f864f-5018-4967-abdc-5910439adc9a'
 
 ```
 
-### Run the Server
+### Build the Client Application
 To run the demo project in Origam server you first have to build the client application.
 To do that open the folder `frontend-html` in your javascript IDE or CMD.exe and run the following.
 ```
@@ -162,7 +169,8 @@ now you should have a production build of the front end application in
 frontend-html\dist
 ```
 
-Next we have to create **OrigamSettings.config** for the server application.
+### Run the Server
+After building the client application we can run the server. First create **OrigamSettings.config** for the server application.
 Go to Visual Studio set the startup project to **Origam.Server** and switch the solution configuration to **Debug Server**.
 Build the project. The debug folder should be created now and you can copy the OrigamSettings.config from the Architect there.
 
