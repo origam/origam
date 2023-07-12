@@ -1,15 +1,16 @@
 # Setting up Development Environment for Origam
 The following is a guide to help you set up Origam development environment. You will need it if you wish to contribute to Origam backend or frontend. It will be quite helpful if you are going to develop your own plugin for Origam too.
 
-If you wish to build the Architect, Server and the client application you will need 
+If you wish to build and debug the Architect, the Server and the client application you will need 
 Windows. 
 
-If you have Linux or Mac you can build the client application with no problem.
-You can probably build and run the server too, although it is not typically done. 
-It is also possible to download the compiled server application from [here]() and just 
-build and debug the client application. 
-
-If you wish to run the server and front end only you can probably do that on Linux and Mac too.
+If you have Linux or Mac it is recommended to do the development in a 
+virtual Windows machine. You can develop the server and the client application 
+outside of Windows but if you wish to run and debug the Architect you will just need 
+ Windows.
+It is also possible to download the compiled server application 
+[here](https://github.com/origam/origam/releases) and just build and debug the 
+client application. 
 
 ## Download Software
 Here is what you have to install first. Make sure you have at least 50 GB of free 
