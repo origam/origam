@@ -22,7 +22,7 @@ Make sure you download at least version 14 of [Node.js](https://nodejs.org/en/).
 #### Javascript IDE
 Either [Visual Studio Code](https://code.visualstudio.com/), [JetBrains Webstorm](https://www.jetbrains.com/webstorm/) or something else.
 
-#### git
+#### Git
 You probably have a [git](https://git-scm.com/) client in your IDE. Just make sure that git is working you will need it do clone Origam repository.
 
 ## Clone Origam github Repository 
