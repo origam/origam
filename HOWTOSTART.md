@@ -96,7 +96,7 @@ DECLARE @userName NVARCHAR(max)
 DECLARE @passwordHash NVARCHAR(max)
 
 SET @userName = 'testUser'
-SET @passwordHash = 'FA000.AGJMo11O/0jTchE97kPtXfSzDM7qOaBltse7bOAINgMYNdyf7iv4P0DINxkdTdxRhA==' -- hash of: 9ECZJ83w4UNQPjrR
+SET @passwordHash = '1F4000.AOSufbh0cRh/jXwyPgGDtQI0KbvNHFgSaz2dgVMmsXvdDOFvw++tUOq4hovoSZoeDQ==' -- hash of: origam
 
 INSERT INTO [dbo].[BusinessPartner] (
 	UserName
@@ -311,7 +311,7 @@ your default browser should open with the login screen. Enter the following:
 
 **Username: testUser**
 
-**Password: 9ECZJ83w4UNQPjrR**
+**Password: origam**
 
 The production build of the client application located at `frontend-html\dist` will run after you login.
 
