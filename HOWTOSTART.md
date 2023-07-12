@@ -337,6 +337,6 @@ We have configured the Origam development environment. Now you can debug all par
 
 To debug the Architect in Visual Studio set the startup project to **OrigamArchitect** and switch the solution configuration to **Debug Architect**. Then run the project.
 
-If you wan to debug the server set the startup project to **Origam.Server** switch the solution configuration to **Debug Server** and run the project.
+If you want to debug the server set the startup project to **Origam.Server** switch the solution configuration to **Debug Server** and run the project.
 
 If you need to debug the front end application in browser run the Origam server (previous paragraph) and start the node development server with `yarn dev`. 
