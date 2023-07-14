@@ -1942,10 +1942,10 @@
   dependencies:
     "@types/geojson" "*"
 
-"@types/lodash-es@^4.17.7":
-  version "4.17.7"
-  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.7.tgz#22edcae9f44aff08546e71db8925f05b33c7cc40"
-  integrity sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==
+"@types/lodash-es@^4.17.8":
+  version "4.17.8"
+  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.8.tgz#cfffd0969507830c22da18dbb20d2ca126fdaa8b"
+  integrity sha512-euY3XQcZmIzSy7YH5+Unb3b2X12Wtk54YWINBvvGQ5SmMvwb11JQskGsfkH/5HXK77Kr8GF0wkVDIxzAisWtog==
   dependencies:
     "@types/lodash" "*"
 
@@ -2731,10 +2731,10 @@ co@^4.6.0:
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==
 
-codsen-utils@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/codsen-utils/-/codsen-utils-1.6.0.tgz#f7780e1f1c5f80cbeb1614971f01d51caca94d8c"
-  integrity sha512-VLP3jO/A31LiwYPcqSqNbhVt9R1xj+uqBVJkDvJvqSUeAJttkyuyPCeB/UnuUAPSmKz6yd7INqGcDCSkYcTXXw==
+codsen-utils@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/codsen-utils/-/codsen-utils-1.6.1.tgz#2b26b0b32b37bf3d99ba0cb205ccc1bef70865b8"
+  integrity sha512-ScCWKPLAuN392DLmcgcj/CvV4kWrCoHgS5bDLQAkn5Eq9a6W/V1DAAUmEc9eezw3RDelDc/KTBOV/bSS3V9ssw==
   dependencies:
     rfdc "^1.3.0"
 
@@ -3801,10 +3801,10 @@ html-encoding-sniffer@^3.0.0:
   dependencies:
     whatwg-encoding "^2.0.0"
 
-html-entities@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.3.tgz#117d7626bece327fc8baace8868fa6f5ef856e46"
-  integrity sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==
+html-entities@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.4.0.tgz#edd0cee70402584c8c76cc2c0556db09d1f45061"
+  integrity sha512-igBTJcNNNhvZFRtm8uA6xMY6xYleeDwn3PeBCkDz7tHttv4F2hsDI2aPgNERWzvRcNYHNT3ymRaQzllmXj4YsQ==
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -5961,36 +5961,36 @@ raf-schd@^4.0.2:
   resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.3.tgz#5d6c34ef46f8b2a0e880a8fcdb743efc5bfdbc1a"
   integrity sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==
 
-ranges-apply@^7.0.10:
-  version "7.0.10"
-  resolved "https://registry.yarnpkg.com/ranges-apply/-/ranges-apply-7.0.10.tgz#067ffa69c0f3180dac7c683488fd392739e71cf3"
-  integrity sha512-D03w2RvN9CQln3fz8omYtBAqRPxccCV5PY89n2wEGBC1XXiFnL7VI4fSPZojuttIU8SABocrQq2ZFEiMSgQx2A==
+ranges-apply@^7.0.11:
+  version "7.0.11"
+  resolved "https://registry.yarnpkg.com/ranges-apply/-/ranges-apply-7.0.11.tgz#dd813736553abcdb298510ad9a181c9299ec272b"
+  integrity sha512-+GPUCL1AnT+g2nlhRUOxAEP3VdlClOC+jurOT4eZ82MDP4zMx0gxHLLfXSX7CDHBJ56V+zWHYryowZQ6r+DhMA==
   dependencies:
-    ranges-merge "^9.0.10"
+    ranges-merge "^9.0.11"
     tiny-invariant "^1.3.1"
 
-ranges-merge@^9.0.10:
-  version "9.0.10"
-  resolved "https://registry.yarnpkg.com/ranges-merge/-/ranges-merge-9.0.10.tgz#7cbb54f899b69d70f88853a7a275737f81a4de3b"
-  integrity sha512-u16GKN3VqjFkRJEkH2ErpgqpUPTIrczzgIvV+wZfrIb9C8uhZp+1lTyy1om3WQEHRL0aS+Jh9Ru3ElCQJgvfug==
+ranges-merge@^9.0.11:
+  version "9.0.11"
+  resolved "https://registry.yarnpkg.com/ranges-merge/-/ranges-merge-9.0.11.tgz#ab7423b43d64111d473b7b098b43f315cf39519d"
+  integrity sha512-You+Xt4z18eAM4jYGMdbHvLVrydiAXu/5anC2zgZ1phmuaT8lYV65F5mEG8GrKE25CtzCvZ9Rbl7rrJ5vPHh2g==
   dependencies:
-    ranges-push "^7.0.10"
-    ranges-sort "^6.0.8"
+    ranges-push "^7.0.11"
+    ranges-sort "^6.0.9"
 
-ranges-push@^7.0.10:
-  version "7.0.10"
-  resolved "https://registry.yarnpkg.com/ranges-push/-/ranges-push-7.0.10.tgz#7e091741ef024d8b83556af9b3bad3ba05aa7d6d"
-  integrity sha512-Eu2UrdPCTjOhBr95i0tKtN1YM+AbHJU3xvNYJJc11hZih+JxzHfTvNdUuBZjNXxIl7XC6BPFjDQSnr8YWqqoEQ==
+ranges-push@^7.0.11:
+  version "7.0.11"
+  resolved "https://registry.yarnpkg.com/ranges-push/-/ranges-push-7.0.11.tgz#cbecd83d9067c207eceda2491a1a0dc7e53566af"
+  integrity sha512-KEmPQD3Izzu5TxR42ntAtZLjM1g5kx+IOS+me9pF46VrqKOpDJDHY7JHsBmZ6iVlw1jC95ziq8+OF+yzXCzuuw==
   dependencies:
-    codsen-utils "^1.6.0"
-    ranges-sort "^6.0.8"
-    string-collapse-leading-whitespace "^7.0.5"
-    string-trim-spaces-only "^5.0.7"
+    codsen-utils "^1.6.1"
+    ranges-sort "^6.0.9"
+    string-collapse-leading-whitespace "^7.0.6"
+    string-trim-spaces-only "^5.0.8"
 
-ranges-sort@^6.0.8:
-  version "6.0.8"
-  resolved "https://registry.yarnpkg.com/ranges-sort/-/ranges-sort-6.0.8.tgz#8c16da6c5ac2b27b2d0b55ff83a92abd499f49d6"
-  integrity sha512-sWIQdqC0oMfgSD9eJ1YhoXCTz1PVzjWX0kzlE2UbZBBVBymukM+vg2IZPVo04lFfstiN1Y+IKbBid0TCPtH6jg==
+ranges-sort@^6.0.9:
+  version "6.0.9"
+  resolved "https://registry.yarnpkg.com/ranges-sort/-/ranges-sort-6.0.9.tgz#6a53ebffbb7bfc09d627652a36eee71dee506ecb"
+  integrity sha512-KJsp43phcq1XI+0NBfINBpST7LFLrgxduDjpVm7X7Awgg3b5D4GQPj7E7nHIU+wD7lEQmX85g3sRPjWtlWsO/w==
 
 react-beautiful-dnd@^13.1.0:
   version "13.1.1"
@@ -6704,22 +6704,22 @@ stream-browserify@^3.0.0:
     inherits "~2.0.4"
     readable-stream "^3.5.0"
 
-string-collapse-leading-whitespace@^7.0.5:
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/string-collapse-leading-whitespace/-/string-collapse-leading-whitespace-7.0.5.tgz#d40a9b62cc77a092aa4978e9577e1af52f518747"
-  integrity sha512-cRzQCQwcp57UTFGy6bWVTfg1mkTH61TpYz9A4RDV4PyPQr3hYkPE0XmMS0zkgzYHwdtSM0eX09H9T8SMWUuFPw==
+string-collapse-leading-whitespace@^7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/string-collapse-leading-whitespace/-/string-collapse-leading-whitespace-7.0.6.tgz#1f03f695d86435d228cadc9fe09e6dd09e5e433b"
+  integrity sha512-FqOnt9H0+eeXukBb3Js2qPLLI0T5ebp96TfU0+AwoAuQQidETeoRMYJG6mUYebP4SBYZkap+HbAK6U/wGWxJvA==
 
 string-hash@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/string-hash/-/string-hash-1.1.3.tgz#e8aafc0ac1855b4666929ed7dd1275df5d6c811b"
   integrity sha512-kJUvRUFK49aub+a7T1nNE66EJbZBMnBgoC1UbCZ5n6bsZKBRga4KgBRTMn/pFkeCZSYtNeSyMxPDM0AXWELk2A==
 
-string-left-right@^6.0.13:
-  version "6.0.13"
-  resolved "https://registry.yarnpkg.com/string-left-right/-/string-left-right-6.0.13.tgz#ee85822a3efc63c4356eb95bceb182ea5736fd72"
-  integrity sha512-/CXF6HG4NpfNI+b45yGc3ULWk2mnsnITXeF88bssl+fa4EquBq4+KpPAAkiJBZLtkSFbSybzWfltkjE9DBkb9Q==
+string-left-right@^6.0.14:
+  version "6.0.14"
+  resolved "https://registry.yarnpkg.com/string-left-right/-/string-left-right-6.0.14.tgz#19778f6d513def1745587ba524bbec22e19f25ba"
+  integrity sha512-ixEvuKGjrwsbV7TNaA7XU26K5Zx7xuhQtlUA6GM19k/zeh7AuE9vkiThe9Sa3WI6M5St2pi57XNlclrvOyR38Q==
   dependencies:
-    codsen-utils "^1.6.0"
+    codsen-utils "^1.6.1"
     rfdc "^1.3.0"
 
 string-length@^4.0.1:
@@ -6730,23 +6730,23 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-string-strip-html@*, string-strip-html@^13.4.1:
-  version "13.4.1"
-  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.1.tgz#d918f01361e4845b97498158e0d19c70dc05e0c8"
-  integrity sha512-nIpqWHjSvNsNQHLrhiJgS51zhP5SUq210rkCZUoEEeEJo4eeUNFx6VAtuZbeFl1JV5EGormrIevS487hA9eSLw==
+string-strip-html@*, string-strip-html@^13.4.2:
+  version "13.4.2"
+  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.2.tgz#ad284dae336e44bdf70163b08f535b294b4f69e1"
+  integrity sha512-xkASShgDK6fQc1puILy2UoUh/LqiaSxJpmPLT4fmLs2zhBxUzgceIiNqvxw8CLTsePlyBL3TzcpE7x4GmzPrFA==
   dependencies:
-    "@types/lodash-es" "^4.17.7"
-    codsen-utils "^1.6.0"
-    html-entities "^2.3.3"
+    "@types/lodash-es" "^4.17.8"
+    codsen-utils "^1.6.1"
+    html-entities "^2.4.0"
     lodash-es "^4.17.21"
-    ranges-apply "^7.0.10"
-    ranges-push "^7.0.10"
-    string-left-right "^6.0.13"
+    ranges-apply "^7.0.11"
+    ranges-push "^7.0.11"
+    string-left-right "^6.0.14"
 
-string-trim-spaces-only@^5.0.7:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/string-trim-spaces-only/-/string-trim-spaces-only-5.0.7.tgz#ff244701a7c989d5a148c2348a6c22cf9f8ad28f"
-  integrity sha512-L/rhIYf1Lf+gvq8uSNDps471Ry3xhd0KjlPG0HwOFDSACLlX93fkoaJkuOM33uYEh+HpO8LcmTJDv4r6a9XIOQ==
+string-trim-spaces-only@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/string-trim-spaces-only/-/string-trim-spaces-only-5.0.8.tgz#45f840624b00efdc54edb90b145af7ae2632324a"
+  integrity sha512-dIiNcnxFglnihq30elOf4JFLeJrSQHtm7FocUDc8oTy/R9woUzSK3H4F6U8cqqmMxyjGS9un68/xYvDM4rDDjw==
 
 "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
