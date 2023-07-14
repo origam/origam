@@ -509,7 +509,7 @@ namespace Origam.DA
 						}
 
 						drTarget.EndEdit();
-						changed = true;
+						changed = drTarget.RowState != DataRowState.Unchanged;
 
 						if (changeList != null)
 						{
