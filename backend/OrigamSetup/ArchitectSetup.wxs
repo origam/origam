@@ -293,8 +293,8 @@
               <File Id="NPGSQL.DLL" Name="Npgsql.dll" Source="source\Npgsql.dll">
               </File>
             </Component>
-            <Component Id="NPOI.DLL" DiskId="1" Guid="13D0A240-3368-4760-8CEA-5066918CFF73">
-              <File Id="NPOI.DLL" Name="NPOI.dll" Source="source\NPOI.dll">
+            <Component Id="NPOI.CORE.DLL" DiskId="1" Guid="13D0A240-3368-4760-8CEA-5066918CFF73">
+              <File Id="NPOI.CORE.DLL" Name="NPOI.Core.dll" Source="source\NPOI.Core.dll">
               </File>
             </Component>
             <Component Id="NPOI.OOXML.DLL" DiskId="1" Guid="9beb19dc-505e-4c70-aec9-74bc0b8df2ab">
@@ -785,7 +785,7 @@
       </ComponentRef>
       <ComponentRef Id="NPGSQL.DLL">
       </ComponentRef>
-      <ComponentRef Id="NPOI.DLL">
+      <ComponentRef Id="NPOI.CORE.DLL">
       </ComponentRef>
       <ComponentRef Id="NPOI.OOXML.DLL">
       </ComponentRef>
