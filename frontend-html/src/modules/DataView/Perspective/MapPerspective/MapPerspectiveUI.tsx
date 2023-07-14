@@ -289,6 +289,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
                     obj.color !== undefined && obj.color !== 0 && obj.color !== null
                       ? flashColor2htmlColor(obj.color)
                       : "blue",
+                  weight: 2
                 }
               ).bindTooltip(obj.name),
             ];
@@ -303,6 +304,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
                     obj.color !== undefined && obj.color !== 0 && obj.color !== null
                       ? flashColor2htmlColor(obj.color)
                       : "blue",
+                  weight: 2
                 }
               ).bindTooltip(obj.name),
             ];
@@ -543,6 +545,14 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           featureGroup: this.leafletMapObjects,
           poly: {
             allowIntersection: true,
+            icon: new L.DivIcon({
+              iconSize: new L.Point(8, 8),
+              className: 'leaflet-div-icon leaflet-editing-icon'
+            }),
+            touchIcon: new L.DivIcon({
+              iconSize: new L.Point(8, 8),
+              className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+            }), 
           },
           circle: false,
           circlemarker: false,
@@ -551,6 +561,17 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           polygon: {
             allowIntersection: false,
             showArea: true,
+            icon: new L.DivIcon({
+              iconSize: new L.Point(8, 8),
+              className: 'leaflet-div-icon leaflet-editing-icon'
+            }),
+            touchIcon: new L.DivIcon({
+              iconSize: new L.Point(8, 8),
+              className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+            }), 
+            shapeOptions: {
+              weight: 2
+            }
           },
           circle: false,
           circlemarker: false,

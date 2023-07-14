@@ -107,7 +107,7 @@ namespace Origam.DA
 	    public bool EnforceConstraints { get; set; } = true;
 	    
 	    public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
-
+	    public bool Distinct { get; set; }
 	    public string Entity { get; set; }
 	    public bool ForceDatabaseCalculation { get; set; }
 	    public Grouping CustomGrouping { get; set; }

@@ -18,6 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .dialogContent {
-  padding: 10px;
-  white-space:pre-wrap;
+  padding: 12px;
+  white-space: pre-line;
 }

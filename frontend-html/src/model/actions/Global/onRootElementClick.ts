@@ -20,27 +20,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { flow } from "mobx";
 import { handleError } from "../handleError";
 import { executeWeblink } from "./executeWeblink";
+import React from "react";
 
 export function onRootElementClick(ctx: any) {
-  return flow(function*onRootElementClick(event: any): Generator {
+  return flow(function*onRootElementClick(event: React.MouseEvent<HTMLElement>): Generator {
     try {
-      const {target} = event;
-      const {nodeName} = target;
-
-      if (`${nodeName}`.toLowerCase() === "a") {
-        const href = target.getAttribute("href");
-        if (href && `${href}`.startsWith("web+origam-link://")) {
-          const actionUrl = href.replace("web+origam-link://", "");
-          event.preventDefault();
-          const urlParts = actionUrl.split("?");
-          const urlPath = urlParts[0];
-          const urlParams = new URLSearchParams(urlParts[1] || "");
-          const urlQuery: {[key: string]: any} = {};
-          for (let key of urlParams.keys()){
-            urlQuery[key] = urlParams.get(key);
-          }
-          yield*executeWeblink(ctx)(urlPath, urlQuery);
+      let potentialLinkNode = event.target as any;
+      while(potentialLinkNode)
+      {
+        const {nodeName} = potentialLinkNode;
+        if(!nodeName){
+          return;
         }
+        if (`${nodeName}`.toLowerCase() === "a") {
+          const href = potentialLinkNode.getAttribute("href");
+          if (href && `${href}`.startsWith("web+origam-link://")) {
+            const actionUrl = href.replace("web+origam-link://", "");
+            event.preventDefault();
+            const urlParts = actionUrl.split("?");
+            const urlPath = urlParts[0];
+            const urlParams = new URLSearchParams(urlParts[1] || "");
+            const urlQuery: {[key: string]: any} = {};
+            for (let key of urlParams.keys()){
+              urlQuery[key] = urlParams.get(key);
+            }
+            return yield* executeWeblink(ctx)(urlPath, urlQuery);
+          }
+        }
+        potentialLinkNode = potentialLinkNode.parentElement;
       }
     } catch (e) {
       yield*handleError(ctx)(e);

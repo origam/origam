@@ -27,6 +27,8 @@ import { FlowBusyMonitor } from "../../utils/flow";
 import { handleError } from "model/actions/handleError";
 import { flashColor2htmlColor } from "@origam/utils";
 
+const maxRowStatesInOneCall = 100;
+
 export enum IIdState {
   LOADING = "LOADING",
   ERROR = "ERROR"
@@ -67,8 +69,9 @@ export class RowState implements IRowState {
       try {
         while (true) {
           try {
-            for (let container of this.containers.values()) {
-              if(container.rowId && !container.isValid && !container.processingSate){
+            const containers =  Array.from(this.containers.values()).slice(-maxRowStatesInOneCall);
+            for (let container of containers) {
+              if (container.rowId && !container.isValid && !container.processingSate) {
                 containersToLoad.set(container.rowId, container);
               }
             }

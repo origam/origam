@@ -107,7 +107,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   killForm(): void;
 
-  start(initUIResult: any, isWorkQueueScreen?: boolean): Generator;
+  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
 
   loadGroups(rootDataView: IDataView, columnSettings: IGroupingSettings, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined): Promise<any[]>;
 

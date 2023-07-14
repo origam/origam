@@ -30,6 +30,7 @@ public abstract class SqlRenderer
     public abstract string StringConcatenationChar { get; }
     public bool GenerateConsoleUseSyntax { get; set; }
     public abstract string SelectClause(string finalQuery, int top);
+    public string SelectClauseWithDistinct(string finalQuery) => $"SELECT DISTINCT{finalQuery}";
     public abstract string ConvertGeoFromTextClause(string argument);
     public abstract string ConvertGeoToTextClause(string argument);
     internal abstract string Sequence(string entityName, string primaryKeyName);

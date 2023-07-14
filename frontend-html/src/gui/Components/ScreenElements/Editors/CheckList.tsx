@@ -297,7 +297,7 @@ export const CheckListItem: React.FC<{
         onMouseUp={()=> {
           requestFocus(refInput?.current);
         }}
-        className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
+        className={cx("content", S.label, (isFocused ? S.focusedLabel : S.unFocusedLabel))}>
         {props.label}
       </div>
     </div>

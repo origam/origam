@@ -109,6 +109,7 @@ namespace Origam.OrigamEngine
 
         public static void UnloadConnectedServices()
         {
+	        RestartTimer?.Stop();
             serviceFactory.UnloadServices();
             DataServiceFactory.ClearDataService();
         }
@@ -116,7 +117,6 @@ namespace Origam.OrigamEngine
         public static void DisconnectRuntime()
         {
 	        UnloadConnectedServices();
-	        RestartTimer?.Stop();
         }
 
 		public static void ConnectRuntime(

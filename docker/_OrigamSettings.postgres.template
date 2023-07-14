@@ -12,6 +12,8 @@
         <TitleText>OrigamSettings_Title</TitleText>
         <Name>OrigamSettings_Title</Name>
         <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
+		<WorkQueueProcessingMode>Linear</WorkQueueProcessingMode>
+		<AutoProcessWorkQueues>true</AutoProcessWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
         <WorkQueueListRefreshPeriod>60</WorkQueueListRefreshPeriod>
         <HelpUrl>doc.aspx</HelpUrl>

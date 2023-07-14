@@ -251,7 +251,7 @@ namespace Origam
 		public bool AutoProcessWorkQueues { get; set; } = false;
 		
 		[Category("Work Queue"), DefaultValue(WorkQueueProcessingMode.Linear)]
-		public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; }
+		public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; } = WorkQueueProcessingMode.Linear;
 		
 		[Category("Work Queue"), DefaultValue(3)]
 		public int RoundRobinBatchSize { get; set; } = 3;

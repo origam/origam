@@ -28,7 +28,7 @@ namespace Origam
 {
 	public class ConfigurationManager
 	{
-        private static string UserProfileFolder =>
+		public static string UserProfileFolder =>
                       Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                       "ORIGAM", GetVersion(), "OrigamSettings.config");
         private static OrigamSettings _activeConfiguration;

@@ -194,16 +194,7 @@ export class TablePanelView implements ITablePanelView {
       this.selectCell(this.dataTable.getRowId(row) as string, property.id);
     } else {
       const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(columnId, rowId);
-
-      if (!isReadOnly(property!, rowId)) {
-        yield*onFieldChangeG(this)({
-          event: undefined,
-          row: row,
-          property: property,
-          value: !getCellValue(this, row, property),
-        });
-      }
+      yield*this.selectCellAsync(rowId, columnId);
     }
     if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();

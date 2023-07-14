@@ -11,11 +11,14 @@
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
   xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
   xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
   xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
   xmlns:lf="http://schemas.origam.com/Origam.Schema.EntityModel.LookupField/6.0.0"
   xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sc2="http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
   xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
@@ -188,6 +191,64 @@
         asi:name="TagInputBindingKey1"
         ercpi:relatedEntityField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
     </eri:EntityRelation>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="942488fa-96ea-48e5-96b0-c0eeaf5f0b69"
+      euia:label="Multiple checkboxes action test"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="MultipleCheckboxes"
+      asi:name="MultipleCheckboxesTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="74dc7285-c0df-483f-b71f-90660e7d0776"
+        asi:name="AllDataTypes_MultipleCheckboxesActionTest"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes_MultipleCheckboxesActionTest.origam#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348" />
+    </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="a6076c0b-2c28-4d55-bb99-ebff40f13b16"
+      euia:label="Active record action test"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="ActiveRecordTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/DummyWorkflowDoingNotihng.origam#DummyWorkflowDoingNotihng/0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a">
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="81add448-6e02-4621-9421-a85079f206b3"
+        asi:name="AllDataTypes"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ewa:EntityUIAction>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"

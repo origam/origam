@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dlc="http://schemas.origam.com/Origam.Schema.MenuModel.DeepLinkCategory/1.0.1">
+  <dlc:DeepLinkCategory
+    asi:abstract="false"
+    x:id="f282855d-0ad5-49b3-94e3-5d18ec3fa300"
+    dlc:label="AllDataTypesLink"
+    dlc:lookup="Widgets/DataLookup/Widgets/AllDataTypes_LinkId.origam#AllDataTypes_LinkId/53c6ce34-22a8-4ff4-a9af-8067b135422d"
+    asi:name="AllDataTypesLink"
+    dlc:roles="*" />
+</x:file>
