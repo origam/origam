@@ -234,7 +234,7 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 
-		public bool LoadSchema(Guid schemaExtensionId, bool isFirstProjectLoad = false)
+		public bool LoadSchema(Guid schemaExtensionId, bool isInteractive = false)
 		{
 			if( ! UnloadSchema()) return false;
 		
@@ -246,7 +246,7 @@ namespace Origam.Workbench.Services
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
 			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey) as Package;
 
-			OnSchemaLoaded(isFirstProjectLoad);
+			OnSchemaLoaded(isInteractive);
 
 			return true;
 		}
@@ -420,13 +420,13 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		protected void OnSchemaLoaded(bool isFirstProjectLoad)
+		protected void OnSchemaLoaded(bool isInteractive)
 		{
 			_isSchemaLoaded = true;
 
 			if (SchemaLoaded != null) 
 			{
-				SchemaLoaded(this, isFirstProjectLoad);
+				SchemaLoaded(this, isInteractive);
 			}
 		}
 

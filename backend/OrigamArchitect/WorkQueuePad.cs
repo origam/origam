@@ -378,7 +378,7 @@ namespace OrigamArchitect
             }
 		}
 
-		private void schema_SchemaLoaded(object sender, bool isFirstProjectLoad)
+		private void schema_SchemaLoaded(object sender, bool isInteractive)
 		{
 			RefreshData();
 		}

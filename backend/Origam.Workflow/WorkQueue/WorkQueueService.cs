@@ -1788,7 +1788,7 @@ namespace Origam.Workflow.WorkQueue
             _queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
         }
 
-        private void schemaService_SchemaLoaded(object sender,  bool isFirstProjectLoad)
+        private void schemaService_SchemaLoaded(object sender,  bool isInteractive)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if(settings.LoadExternalWorkQueues)

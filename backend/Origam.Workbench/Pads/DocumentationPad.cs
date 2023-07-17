@@ -89,7 +89,7 @@ namespace Origam.Workbench.Pads
             _documentationService = null;
         }
 
-        private void _schemaService_SchemaLoaded(object sender,  bool isFirstProjectLoad)
+        private void _schemaService_SchemaLoaded(object sender,  bool isInteractive)
         {
             _documentationService = ServiceManager.Services.GetService<IDocumentationService>();
             if (_documentationService == null)
