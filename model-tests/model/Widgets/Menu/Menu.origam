@@ -5,7 +5,8 @@
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
   xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
-  xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
+  xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
+  xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
@@ -79,6 +80,7 @@
       frmi:refreshPortalAfterSave="false"
       frmi:requestSaveAfterUpdate="false"
       ami:roles="AllDataTypes"
+      frmi:ruleSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Test/bfc820a4-2065-439b-9a25-e2bce03c1ae4"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     <frmi:MenuItem
       asi:abstract="false"
@@ -408,4 +410,15 @@
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
   </s2:MenuItem>
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="RuleTest"
+    x:id="fec8466e-ced8-4f60-b683-2de37bde96a4"
+    asi:name="RuleTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/RuleTest.origam#RuleTest/00919bfb-7a64-40ef-a61e-6bd996652d16" />
 </x:file>
