@@ -1715,7 +1715,25 @@ namespace OrigamArchitect
 			catch (Exception ex)
 			{
 				log.LogOrigamError(ex);
-				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+				string message = $"{ex.Message}\n{ex.StackTrace}";
+				if (ex is AggregateException aggregateException)
+				{
+					var innerExceptions = aggregateException
+						.Flatten()
+						.InnerExceptions
+						.ToList();
+					if (innerExceptions.Count == 1 && innerExceptions[0] is TaskCanceledException)
+					{
+						return true;
+					}
+					message = string.Join(
+						"\n\n",
+						innerExceptions
+						.Select(x => $"{x.Message}\n{x.StackTrace}")
+					);
+				}
+
+				MessageBox.Show(this, message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
 
@@ -2076,7 +2094,7 @@ namespace OrigamArchitect
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void _schema_SchemaLoaded(object sender, EventArgs e)
+        private void _schema_SchemaLoaded(object sender, bool isInteractive)
 		{
             OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
@@ -2138,7 +2156,7 @@ namespace OrigamArchitect
                 }
             }
 
-            RunDeploymentScripts(deployment);
+            RunDeploymentScripts(deployment, isInteractive);
 
 #endif
 			try
@@ -2177,21 +2195,21 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-		private void RunDeploymentScripts(IDeploymentService deployment)
+		private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive)
 		{
 			DeployVersion deployCommand = new DeployVersion();
 			if (!deployCommand.IsEnabled)
 			{
 				return;
 			}
-			if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
+			if (isInteractive || MessageBox.Show(strings.RunDeploymentScriptsQuestion,
 				    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo,
 				    MessageBoxIcon.Question,
 				    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
 			{
 				PackageVersion deployedPackageVersion =
 					deployment.CurrentDeployedVersion(_schema.ActiveExtension);
-				if (deployedPackageVersion == PackageVersion.Zero)
+				if (!isInteractive && deployedPackageVersion == PackageVersion.Zero)
 				{
 					if (MessageBox.Show(
 						    strings.DeploySinglePackageQuestion,

@@ -297,7 +297,18 @@ namespace Origam.DA.Service
         public void StopTask()
         {
             IndexTaskCancellationTokenSource.Cancel();
-            task.Wait();
+            try
+            {
+                task.Wait();
+            }
+            catch (AggregateException ex)
+            {
+                var exceptions = ex.Flatten().InnerExceptions.ToList();
+                if (exceptions.Count != 1 || exceptions[0] is not TaskCanceledException)
+                {
+                    throw;
+                }
+            }
         }
     }
 

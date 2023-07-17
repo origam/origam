@@ -50,7 +50,7 @@ namespace Origam.Workbench.Commands
 			
 			SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 
-			if(schema.LoadSchema((Guid)extension.PrimaryKey["Id"], false, false))
+			if(schema.LoadSchema((Guid)extension.PrimaryKey["Id"]))
 			{
 				Commands.ViewSchemaBrowserPad cmd = new Origam.Workbench.Commands.ViewSchemaBrowserPad();
 				cmd.Run();

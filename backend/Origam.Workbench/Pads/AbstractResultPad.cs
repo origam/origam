@@ -64,7 +64,7 @@ namespace Origam.Workbench.Pads
                 {
                     if (sch.Id.Equals(SchemaExtensionIdItem))
                     {
-                        schema.LoadSchema(sch.Id, false, false);
+                        schema.LoadSchema(sch.Id);
                         ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                         cmd.Run();
                     }

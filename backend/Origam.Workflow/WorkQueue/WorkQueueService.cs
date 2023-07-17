@@ -78,7 +78,7 @@ namespace Origam.Workflow.WorkQueue
                 .GetService<IPersistenceService>();
             workQueueThrottle = new WorkQueueThrottle(persistenceService);
             workQueueUtils = new WorkQueueUtils(dataLookupService, schemaService);
-            schemaService.SchemaLoaded += new EventHandler(schemaService_SchemaLoaded);
+            schemaService.SchemaLoaded += schemaService_SchemaLoaded;
             schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
             schemaService.SchemaUnloading += new CancelEventHandler(schemaService_SchemaUnloading);
             
@@ -1788,7 +1788,7 @@ namespace Origam.Workflow.WorkQueue
             _queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
         }
 
-        private void schemaService_SchemaLoaded(object sender, EventArgs e)
+        private void schemaService_SchemaLoaded(object sender,  bool isInteractive)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if(settings.LoadExternalWorkQueues)

@@ -103,7 +103,7 @@ namespace Origam.Workbench
 		}
 		#endregion
 
-		private void _schemaService_SchemaLoaded(object sender, EventArgs e)
+		private void _schemaService_SchemaLoaded(object sender, bool isInteractive)
 		{
             EbrSchemaBrowser.RemoveAllNodes();
             EbrSchemaBrowser.AddRootNode(schemaService.ActiveExtension);

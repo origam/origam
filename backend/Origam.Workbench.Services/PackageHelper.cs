@@ -56,7 +56,7 @@ namespace Origam.Workbench.Services
             SchemaService schema =
                 ServiceManager.Services.GetService(typeof(SchemaService)) as
                     SchemaService;
-            schema.LoadSchema(packageId, false, false);
+            schema.LoadSchema(packageId, isInteractive: true);
             foreach (ISchemaItemProvider provider in schema.Providers)
             {
                 if (provider.AutoCreateFolder)

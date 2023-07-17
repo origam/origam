@@ -57,7 +57,7 @@ namespace Origam.Workbench.Services
 		public event SchemaServiceEventHandler ProviderAdded;
 		public event SchemaServiceEventHandler ProviderRemoved;
 		public event EventHandler ActiveNodeChanged;
-		public event EventHandler SchemaLoaded;
+		public event EventHandler<bool> SchemaLoaded;
 		public event EventHandler SchemaChanged;
 		public event CancelEventHandler SchemaUnloading;
         public event EventHandler SchemaUnloaded;
@@ -233,25 +233,20 @@ namespace Origam.Workbench.Services
 
 			return true;
 		}
-        
-		public bool LoadSchema(Guid schemaExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
-		{
-			return LoadSchema(schemaExtensionId, Guid.Empty, loadDocumentation, loadDeploymentScripts);
-		}
 
-		public bool LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
+		public bool LoadSchema(Guid schemaExtensionId, bool isInteractive = false)
 		{
 			if( ! UnloadSchema()) return false;
 		
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
 			PropertyToNamespaceMapping.Init();
-			Package extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
+			Package extension = persistence.LoadSchema(schemaExtensionId);
 			
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
 			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey) as Package;
 
-			OnSchemaLoaded(EventArgs.Empty);
+			OnSchemaLoaded(isInteractive);
 
 			return true;
 		}
@@ -425,13 +420,13 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		protected void OnSchemaLoaded(EventArgs e)
+		protected void OnSchemaLoaded(bool isInteractive)
 		{
 			_isSchemaLoaded = true;
 
 			if (SchemaLoaded != null) 
 			{
-				SchemaLoaded(this, e);
+				SchemaLoaded(this, isInteractive);
 			}
 		}
 
