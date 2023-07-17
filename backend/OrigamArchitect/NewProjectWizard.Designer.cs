@@ -134,8 +134,6 @@ namespace OrigamArchitect
             this.txtDatabaseType = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.IntegratedLabel = new System.Windows.Forms.Label();
-            this.chkIntegratedAuthentication = new System.Windows.Forms.CheckBox();
             this.cboWebRoot = new System.Windows.Forms.ComboBox();
             this.lblDatabasePassword = new System.Windows.Forms.Label();
             this.txtDatabasePassword = new System.Windows.Forms.TextBox();
@@ -1113,8 +1111,6 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
             this.pageLocalDeploymentSettings.Controls.Add(this.label4);
             this.pageLocalDeploymentSettings.Controls.Add(this.label2);
-            this.pageLocalDeploymentSettings.Controls.Add(this.IntegratedLabel);
-            this.pageLocalDeploymentSettings.Controls.Add(this.chkIntegratedAuthentication);
             this.pageLocalDeploymentSettings.Controls.Add(this.cboWebRoot);
             this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabasePassword);
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabasePassword);
@@ -1139,7 +1135,6 @@ namespace OrigamArchitect
             this.labelPort.Size = new System.Drawing.Size(29, 15);
             this.labelPort.TabIndex = 19;
             this.labelPort.Text = "Port";
-            this.labelPort.Visible = false;
             // 
             // txtPort
             // 
@@ -1148,7 +1143,6 @@ namespace OrigamArchitect
             this.txtPort.Size = new System.Drawing.Size(100, 23);
             this.txtPort.TabIndex = 18;
             this.txtPort.Text = "0";
-            this.txtPort.Visible = false;
             // 
             // labelPrivileges
             // 
@@ -1181,7 +1175,7 @@ namespace OrigamArchitect
             // label4
             // 
             this.label4.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label4.Location = new System.Drawing.Point(181, 166);
+            this.label4.Location = new System.Drawing.Point(157, 166);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(518, 53);
             this.label4.TabIndex = 14;
@@ -1198,27 +1192,6 @@ namespace OrigamArchitect
             this.label2.Text = "A new virtual directory/application will be created under the selected web site. " +
     "Example: Default Web Site";
             // 
-            // IntegratedLabel
-            // 
-            this.IntegratedLabel.AutoSize = true;
-            this.IntegratedLabel.Location = new System.Drawing.Point(7, 165);
-            this.IntegratedLabel.Name = "IntegratedLabel";
-            this.IntegratedLabel.Size = new System.Drawing.Size(143, 15);
-            this.IntegratedLabel.TabIndex = 11;
-            this.IntegratedLabel.Text = "Integrated Authentication";
-            // 
-            // chkIntegratedAuthentication
-            // 
-            this.chkIntegratedAuthentication.AutoSize = true;
-            this.chkIntegratedAuthentication.Checked = true;
-            this.chkIntegratedAuthentication.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIntegratedAuthentication.Location = new System.Drawing.Point(160, 166);
-            this.chkIntegratedAuthentication.Name = "chkIntegratedAuthentication";
-            this.chkIntegratedAuthentication.Size = new System.Drawing.Size(15, 14);
-            this.chkIntegratedAuthentication.TabIndex = 10;
-            this.chkIntegratedAuthentication.UseVisualStyleBackColor = true;
-            this.chkIntegratedAuthentication.CheckedChanged += new System.EventHandler(this.chkIntegratedAuthentication_CheckedChanged);
-            // 
             // cboWebRoot
             // 
             this.cboWebRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1232,7 +1205,6 @@ namespace OrigamArchitect
             // lblDatabasePassword
             // 
             this.lblDatabasePassword.AutoSize = true;
-            this.lblDatabasePassword.Enabled = false;
             this.lblDatabasePassword.Location = new System.Drawing.Point(7, 255);
             this.lblDatabasePassword.Name = "lblDatabasePassword";
             this.lblDatabasePassword.Size = new System.Drawing.Size(57, 15);
@@ -1241,7 +1213,6 @@ namespace OrigamArchitect
             // 
             // txtDatabasePassword
             // 
-            this.txtDatabasePassword.Enabled = false;
             this.txtDatabasePassword.Location = new System.Drawing.Point(160, 252);
             this.txtDatabasePassword.Name = "txtDatabasePassword";
             this.txtDatabasePassword.PasswordChar = '*';
@@ -1260,7 +1231,6 @@ namespace OrigamArchitect
             // lblDatabaseUserName
             // 
             this.lblDatabaseUserName.AutoSize = true;
-            this.lblDatabaseUserName.Enabled = false;
             this.lblDatabaseUserName.Location = new System.Drawing.Point(7, 225);
             this.lblDatabaseUserName.Name = "lblDatabaseUserName";
             this.lblDatabaseUserName.Size = new System.Drawing.Size(65, 15);
@@ -1287,7 +1257,6 @@ namespace OrigamArchitect
             // 
             // txtDatabaseUserName
             // 
-            this.txtDatabaseUserName.Enabled = false;
             this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 222);
             this.txtDatabaseUserName.Name = "txtDatabaseUserName";
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
@@ -1360,8 +1329,6 @@ namespace OrigamArchitect
         private AeroWizard.WizardPage pageReview;
         private System.Windows.Forms.ListView lstTasks;
         private System.Windows.Forms.ColumnHeader colText;
-        private System.Windows.Forms.Label IntegratedLabel;
-        private System.Windows.Forms.CheckBox chkIntegratedAuthentication;
         private System.Windows.Forms.ColumnHeader colStatus;
         private AeroWizard.WizardPage pagePaths;
         private System.Windows.Forms.Label lblBinFolderRoot;
