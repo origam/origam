@@ -451,6 +451,10 @@ namespace Origam.Server
             ExecuteActionQueryInput input)
         {
             EntityUIAction action = GetAction(input.ActionId);
+            // work queue commands are treated as actions,
+            // but they're not part of the model,
+            // so the GetAction can return null
+            // the subsequent code needs to be able to handle it
             if (action is EntityMenuAction menuAction)
             {
                 bool isAuthorized = SecurityManager.GetAuthorizationProvider().Authorize(
@@ -469,7 +473,7 @@ namespace Origam.Server
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
             if (sessionStore.IsDelayedLoading && 
-                action.Mode == PanelActionMode.MultipleCheckboxes && 
+                action?.Mode == PanelActionMode.MultipleCheckboxes && 
                 action is EntityWorkflowAction workflowAction &&
                 workflowAction.MergeType != ServiceOutputMethod.Ignore)
             {
