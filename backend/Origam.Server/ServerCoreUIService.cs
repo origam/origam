@@ -469,7 +469,7 @@ namespace Origam.Server
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
             if (sessionStore.IsDelayedLoading && 
-                action.Mode == PanelActionMode.MultipleCheckboxes && 
+                action?.Mode == PanelActionMode.MultipleCheckboxes && 
                 action is EntityWorkflowAction workflowAction &&
                 workflowAction.MergeType != ServiceOutputMethod.Ignore)
             {
