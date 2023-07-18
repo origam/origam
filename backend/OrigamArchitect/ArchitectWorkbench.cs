@@ -1473,7 +1473,8 @@ namespace OrigamArchitect
 
 				try
 				{
-					_schema.LoadSchema(settings.DefaultSchemaExtensionId, settings.ExtraSchemaExtensionId, false, AdministratorMode);
+					_schema.LoadSchema(
+						settings.DefaultSchemaExtensionId, isInteractive: true);
 				}
 				catch(Exception ex)
 				{
