@@ -88,22 +88,6 @@
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes_MultipleCheckboxesActionTest.origam#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348"
       frmi:sortSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518" />
-    <frmi:MenuItem
-      asi:abstract="false"
-      ami:alwaysOpenNew="false"
-      frmi:autoSaveOnListRecordChange="false"
-      ami:displayName="Widget Sections Hierarchical Application Roles Test"
-      x:id="c5f22db1-8771-4d2e-9671-1e366c8e9cee"
-      asi:name="WidgetSectionHierarchicalApplicationRolesTest"
-      ami:openExclusively="false"
-      ami:order="100"
-      frmi:readOnlyAccess="false"
-      frmi:refreshAfterSaveType="RefreshChangedRecords"
-      frmi:refreshOnFocus="false"
-      frmi:refreshPortalAfterSave="false"
-      frmi:requestSaveAfterUpdate="false"
-      ami:roles="FRM_WidgetSectionHierarchicalApplicationRolesTest"
-      frmi:screen="Widgets/FormControlSet/Widgets/WidgetSectionHierarchicalApplicationRolesTest.origam#WidgetSectionHierarchicalApplicationRolesTest/0248f017-10e0-4ab7-a67a-bfb356d29080" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"
@@ -249,6 +233,38 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetSectionTest"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetSectionTest.origam#WidgetSectionTest/87ac3988-10a4-47e0-a37a-6ef0826d1bcf" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Fixed split panel test"
+        x:id="55b09cc6-9d97-4f32-8b26-8b0f2a060eb8"
+        asi:name="WidgetSectionFixedSizeSplitPaneTest"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="*"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetSectionFixedSizeSplitPaneTest.origam#WidgetSectionFixedSizeSplitPaneTest/56918118-fe77-42ef-9ad9-b7eaa2810836" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Widget Sections Hierarchical Application Roles Test"
+        x:id="c5f22db1-8771-4d2e-9671-1e366c8e9cee"
+        asi:name="WidgetSectionHierarchicalApplicationRolesTest"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="FRM_WidgetSectionHierarchicalApplicationRolesTest"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetSectionHierarchicalApplicationRolesTest.origam#WidgetSectionHierarchicalApplicationRolesTest/0248f017-10e0-4ab7-a67a-bfb356d29080" />
       <frmi:MenuItem
         asi:abstract="false"
         ami:alwaysOpenNew="false"
