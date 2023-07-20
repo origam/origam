@@ -39,3 +39,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+:global(#form-field-portal) div div input{
+  width: 100%;
+  height: 12px;
+  position: unset;
+}
