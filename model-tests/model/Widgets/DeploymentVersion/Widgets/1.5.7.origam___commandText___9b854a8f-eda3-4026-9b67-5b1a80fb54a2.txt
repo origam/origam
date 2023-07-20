@@ -1,0 +1,2 @@
+﻿INSERT INTO [OrigamRole] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name], [Alias]) VALUES (N'639fd781-4111-4c8f-97ec-85b3385895ff', NULL, N'c2fb3351-e236-4322-9c03-2fa90185beaf', SYSDATETIME(), NULL, N'HierarchicalAppRolesTestRole', N'HááertéErko')
+

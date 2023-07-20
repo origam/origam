@@ -1,0 +1,8 @@
+﻿
+
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly, IsInitialScreen)
+VALUES (newid(), 'c2fb3351-e236-4322-9c03-2fa90185beaf', '7021d7d2-974b-42b2-bc74-0a44d9526593', getdate(), 1, 0)
+
+
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly, IsInitialScreen)
+VALUES (newid(), 'c2fb3351-e236-4322-9c03-2fa90185beaf', 'c66f3e75-8fcc-4c47-a32d-b06f5cef0383', getdate(), 0, 0)
