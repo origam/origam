@@ -274,15 +274,12 @@ export class TablePanelView implements ITablePanelView {
   lastSelectionRowIdUnderMouse: any = undefined;
   windowMouseMoveDeadPeriod = false;
   @observable shiftPressed = false;
-  //@observable selectionRangeIndex0: number | undefined = undefined;
-  //@observable selectionRangeIndex1: number | undefined = undefined;
   @observable selectionCellHoveredId: any = undefined;
   @observable selectionTargetState: boolean = true;
   @observable lastSelectedRowId: any = undefined;
 
-  @observable selectionFlowState: 'idle' | 'selectCell0' | 'selectCell1' = 'idle';
   @computed get selectionInProgress() {
-    return this.selectionFlowState !== 'idle';
+    return this.shiftPressed;
   }
 
   @computed get selectionRangeIndex0() {
@@ -305,31 +302,6 @@ export class TablePanelView implements ITablePanelView {
 
   windowMouseMoveDeadPeriodTimerHandle: any;
   *onSelectionCellMouseMove(event: any, row: any[], rowId: any) {
-    // Before simpler multiple selection method gets approved, this will be disabled for
-    // case the method is to be changed. After the approval this can be deleted.
-    // switch(this.selectionFlowState) {
-    //   case 'idle': 
-    //     break;
-    //   case 'selectCell0': 
-    //     if(event.shiftKey) {
-    //       this.shiftPressed = true;
-    //       const dataView = getDataView(this);
-    //       const rowIndex = dataView.getRowIndexById(rowId);
-    //       this.selectionRangeIndex0 = rowIndex;
-    //     }
-    //     break;
-    //   case 'selectCell1': 
-    //     if(event.shiftKey) {
-    //       this.shiftPressed = true;
-    //       const dataView = getDataView(this);
-    //       const rowIndex = dataView.getRowIndexById(rowId);
-    //       this.selectionRangeIndex1 = rowIndex;
-    //     }
-    //     break;
-    // }
-
-    // -----
-
     if(this.lastSelectionRowIdUnderMouse !== rowId) {
       if(this.lastSelectionRowIdUnderMouse) {
         yield* this.onSelectionCellMouseOut(event, this.lastSelectionRowIdUnderMouse)
@@ -345,80 +317,11 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onSelectionCellClick(event: any, row: any[], rowId: any) {
-    // Before simpler multiple selection method gets approved, this will be disabled for
-    // case the method is to be changed. After the approval this can be deleted.
-    // const selectionFlowState0 = this.selectionFlowState;
-    // switch(this.selectionFlowState) {
-    //   case 'idle': 
-    //     if(event.shiftKey) {
-    //       this.shiftPressed = true;
-    //       const dataView = getDataView(this);
-    //       const rowIndex = dataView.getRowIndexById(rowId);
-    //       this.selectionRangeIndex0 = rowIndex;
-    //       this.selectionFlowState = 'selectCell1';
-    //       this.selectionTargetState = !this.getIsRowSelected(rowId, row);
-    //       return;
-    //     }
-    //     break;
-    //   case 'selectCell0': 
-    //     if(event.shiftKey) {
-    //       this.shiftPressed = true;
-    //       const dataView = getDataView(this);
-    //       const rowIndex = dataView.getRowIndexById(rowId);
-    //       this.selectionRangeIndex0 = rowIndex;
-    //       this.selectionFlowState = 'selectCell1';
-    //       this.selectionTargetState = !this.getIsRowSelected(rowId, row);
-    //       return;
-    //     }
-    //     break;
-    //   case 'selectCell1': 
-    //     if(event.shiftKey) {
-    //       this.shiftPressed = true;
-    //       const dataView = getDataView(this);
-    //       const rowIndex = dataView.getRowIndexById(rowId);
-    //       this.selectionRangeIndex1 = rowIndex;
-    //       this.selectionFlowState = 'idle';
-    //     } else {
-    //       this.selectionRangeIndex0 = undefined;
-    //       this.selectionRangeIndex1 = undefined;
-    //       this.selectionFlowState = 'idle';
-    //     }
-    //     break;
-    // }
-
-    // // -----
-
-    // const dataTable = getDataTable(this);
-
-    
-    // if(
-    //   selectionFlowState0 !== 'idle' && this.selectionFlowState === 'idle' &&
-    //   this.selectionRangeIndex0 !== undefined &&
-    //   this.selectionRangeIndex1 !== undefined
-    // ) {
-    //   for(
-    //     let i = Math.min(this.selectionRangeIndex0, this.selectionRangeIndex1); 
-    //     i <= Math.max(this.selectionRangeIndex0, this.selectionRangeIndex1); 
-    //     i++) {
-    //     const rowItem = dataTable.getRowByExistingIdx(i)
-    //     const rowItemId = dataTable.getRowId(rowItem);
-    //     console.log({i, rowItem, rowItemId})
-    //     rowsToSelect.push({row: rowItem, id: rowItemId})
-    //   }
-    // } else {
-    //   rowsToSelect.push({row, id: rowId})
-    // }
-
     const dataTable = getDataTable(this);
-
     const rowsToSelect: {id: any, row: any[]}[] = [];
-
     if(event.shiftKey && this.lastSelectedRowId !== undefined) {
         const rowRangeStart = dataTable.getExistingRowIdxById(this.lastSelectedRowId);
         const rowRangeEnd = dataTable.getExistingRowIdxById(rowId);
-
-        console.log({rowRangeStart, rowRangeEnd})
-
         if(rowRangeStart !== undefined && rowRangeEnd !== undefined) {
           for(
             let i = Math.min(rowRangeStart, rowRangeEnd); 
@@ -427,7 +330,6 @@ export class TablePanelView implements ITablePanelView {
           ) {
             const rowItem = dataTable.getRowByExistingIdx(i)
             const rowItemId = dataTable.getRowId(rowItem);
-            console.log({i, rowItem, rowItemId})
             rowsToSelect.push({row: rowItem, id: rowItemId})
           }
         } else {
@@ -464,7 +366,6 @@ export class TablePanelView implements ITablePanelView {
         }
       }
     } else {
-      console.log({rowsToSelect})
       for (let rowToSelect of rowsToSelect) {
         yield*setSelectedStateRowId(this)(rowToSelect.id, newSelectionState);
       }
@@ -508,64 +409,12 @@ export class TablePanelView implements ITablePanelView {
     if(event.key === 'Shift') {
       this.shiftPressed = true;
     }
-    // Before simpler multiple selection method gets approved, this will be disabled for
-    // case the method is to be changed. After the approval this can be deleted.
-    // return;
-    // if(event.key === 'Shift') {
-    //   switch(this.selectionFlowState) {
-    //     case 'idle': 
-    //       // I want following to happen only for first keydown
-    //       // not for repeated keydowns when the key is held down.
-    //       if(!this.shiftPressed) {
-    //         this.selectionRangeIndex0 = undefined;
-    //         this.selectionRangeIndex1 = undefined;
-    //         this.selectionFlowState = 'selectCell0';
-    //       }
-    //       break;
-    //     case 'selectCell0': 
-    //       break;
-    //     case 'selectCell1': 
-    //       break;
-    //   }
-    //   this.shiftPressed = true;
-    // } else if (event.key === 'Escape' && event.shiftKey) {
-    //   switch(this.selectionFlowState) {
-    //     case 'idle': 
-    //       break;
-    //     case 'selectCell0': 
-    //       this.selectionRangeIndex0 = undefined;
-    //       this.selectionRangeIndex1 = undefined;
-    //       this.selectionFlowState = 'idle';
-    //       event.preventDefault();
-    //       break;
-    //     case 'selectCell1': 
-    //       this.selectionRangeIndex0 = undefined;
-    //       this.selectionRangeIndex1 = undefined;
-    //       this.selectionFlowState = 'idle';
-    //       event.preventDefault();
-    //       break;
-    //   }
-    // }
   }
 
   *onWindowKeyUp(event: any) {
     if(event.key === 'Shift') {
       this.shiftPressed = false;
     }
-    // Before simpler multiple selection method gets approved, this will be disabled for
-    // case the method is to be changed. After the approval this can be deleted.
-    // return;
-    // if(event.key === 'Shift') {
-    //   this.shiftPressed = false;
-    //   switch(this.selectionFlowState) {
-    //     case 'idle': break;
-    //     case 'selectCell0': break;
-    //     case 'selectCell1': break;
-    //   }
-    //   this.selectionRangeIndex0 = undefined;
-    //   this.selectionRangeIndex1 = undefined;
-    //   this.selectionFlowState = 'idle';
-    //}
   }
 
 

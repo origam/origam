@@ -74,18 +74,23 @@ export function selectionCheckboxCellsDraws() {
         const {
           selectionRangeIndex0, 
           selectionRangeIndex1, 
-          shiftPressed: selectionInProgress, 
+          selectionInProgress, 
           selectionTargetState
         } = tablePanelView();
       
-        const isSelectionCandidate = selectionInProgress && selectionRangeIndex0 !== undefined && selectionRangeIndex1 !== undefined && 
-          Math.min(selectionRangeIndex0, selectionRangeIndex1) <= rowIndex() && 
-          rowIndex() <= Math.max(selectionRangeIndex0, selectionRangeIndex1)
+        const isSelectionCandidate = 
+          selectionInProgress 
+          && selectionRangeIndex0 !== undefined 
+          && selectionRangeIndex1 !== undefined 
+          && Math.min(selectionRangeIndex0, selectionRangeIndex1) <= rowIndex() 
+          && rowIndex() <= Math.max(selectionRangeIndex0, selectionRangeIndex1)
 
         ctx2d.font = `${(isSelectionCandidate) ? 'bold' : ""} ${CPR() * checkBoxCharacterFontSize}px "Font Awesome 5 Free"`;
 
         ctx2d.fillText(
-          ((!isSelectionCandidate && state) || (isSelectionCandidate && selectionTargetState) ) ? "\uf14a" : "\uf0c8",
+          ((!isSelectionCandidate && state) || 
+          (isSelectionCandidate && selectionTargetState) ) 
+            ? "\uf14a" : "\uf0c8",
           CPR() * (currentColumnLeft() + checkBoxCellPaddingLeft),
           CPR() * (currentRowTop() + topTextOffset)
         );
