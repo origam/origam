@@ -56,6 +56,7 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { hasSelectedRowId, setSelectedStateRowId } from "model/actions-tree/selectionCheckboxes";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -278,12 +279,17 @@ export class TablePanelView implements ITablePanelView {
   @observable selectionTargetState: boolean = true;
   @observable lastSelectedRowId: any = undefined;
 
+  @computed get isMultiSelectEnabled() {
+    return !this.groupingConfiguration.isGrouping 
+      && !isLazyLoading(this)
+  }
+
   @computed get selectionInProgress() {
-    return this.shiftPressed;
+    return this.isMultiSelectEnabled && this.shiftPressed;
   }
 
   @computed get selectionRangeIndex0() {
-    if(this.lastSelectedRowId !== undefined) {
+    if(this.isMultiSelectEnabled && this.lastSelectedRowId !== undefined) {
       const dataTable = getDataTable(this);
       return dataTable.getExistingRowIdxById(this.lastSelectedRowId)
     } else {
@@ -292,7 +298,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @computed get selectionRangeIndex1() {
-    if(this.selectionCellHoveredId !== undefined) {
+    if(this.isMultiSelectEnabled && this.selectionCellHoveredId !== undefined) {
       const dataTable = getDataTable(this);
       return dataTable.getExistingRowIdxById(this.selectionCellHoveredId);
     } else {
@@ -319,7 +325,7 @@ export class TablePanelView implements ITablePanelView {
   *onSelectionCellClick(event: any, row: any[], rowId: any) {
     const dataTable = getDataTable(this);
     const rowsToSelect: {id: any, row: any[]}[] = [];
-    if(event.shiftKey && this.lastSelectedRowId !== undefined) {
+    if(this.isMultiSelectEnabled && event.shiftKey && this.lastSelectedRowId !== undefined) {
         const rowRangeStart = dataTable.getExistingRowIdxById(this.lastSelectedRowId);
         const rowRangeEnd = dataTable.getExistingRowIdxById(rowId);
         if(rowRangeStart !== undefined && rowRangeEnd !== undefined) {
