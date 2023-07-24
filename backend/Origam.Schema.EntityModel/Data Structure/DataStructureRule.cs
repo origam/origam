@@ -94,6 +94,7 @@ namespace Origam.Schema.EntityModel
 		[TypeConverter(typeof(DataRuleConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
         [XmlReference("valueRule", "ValueRuleId")]
+		[NotNullModelElementRule]
 		public IDataRule ValueRule
 		{
 			get => (IDataRule)PersistenceProvider.RetrieveInstance(
