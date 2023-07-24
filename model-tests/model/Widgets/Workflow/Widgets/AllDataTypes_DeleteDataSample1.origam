@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="1f61e5b1-cab6-4c17-b4c2-59661217743c"
+    asi:name="AllDataTypes_DeleteDataSample1"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="381bda79-fbe4-4714-9b43-e33e3fd0cf4c"
+      cs:isReturnValue="false"
+      asi:name="SD"
+      cs:structure="Root/DataStructure/__system/SD.origam#SD/2222e30c-a6cc-4da2-848c-2ed6de666101" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="ce4d8bcd-0021-47f7-892d-c66307007de0"
+      asi:name="ExecuteProcedure_AllDataTypes_DeleteData1"
+      wt:outputContextStore="Widgets/Workflow/Widgets/AllDataTypes_DeleteDataSample1.origam#AllDataTypes_DeleteDataSample1/SD/381bda79-fbe4-4714-9b43-e33e3fd0cf4c"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/ExecuteProcedure/7ae51467-4bca-43b2-98e5-00bf49b4855f">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="90faff04-5789-450e-b140-b9dd98a1aa60"
+        asi:name="EntityOrder"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/EntityOrder/cd009a2f-98d2-4f15-9c22-5adef626aa1f" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a57d97b4-6688-4826-903a-2141451cbd15"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Parameters/5b343cd3-659e-4e73-956d-17b3fd099fcc" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a8885519-2831-4b5e-85ad-cef6211fef57"
+        asi:name="Name"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Name/498f7b52-bd4c-4b19-ac22-0540cf1a4257">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/AllDataTypes_DeleteDataSample1.origam#AllDataTypes_DeleteDataSample1/SD/381bda79-fbe4-4714-9b43-e33e3fd0cf4c"
+          x:id="eadb27e9-8470-4815-b4e1-69e16225e4f3"
+          asi:name="'AllDataTypes_DeleteData1'"
+          cr:xPath="'AllDataTypes_DeleteData1'" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

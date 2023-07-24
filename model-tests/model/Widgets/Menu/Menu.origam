@@ -4,7 +4,8 @@
   xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
-  xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
+  xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
+  xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
   <s2:MenuItem
     asi:abstract="false"
     ami:displayName="Widgets"
@@ -354,6 +355,35 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetPlainTextTest"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetPlainTextTest.origam#WidgetPlainTextTest/d5b55166-38a5-4f88-b568-ca220f52f8aa" />
+    </s2:MenuItem>
+    <s2:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      ami:displayName="Test data creation / deletion"
+      x:id="df9aa44c-271b-4a4e-95f2-2de990ed132d"
+      s2:isHidden="false"
+      asi:name="TestDataScripts"
+      ami:order="100">
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="AllDataTypes - Create data sample 1"
+        x:id="486cc8e5-84a6-4796-bd74-6210840b6b87"
+        asi:name="AllDataTypes_CreateDataSample1"
+        ami:openExclusively="false"
+        ami:order="100"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/AllDataTypes_FillDataSample1.origam#AllDataTypes_FillDataSample1/404fa9b5-4d33-43d1-b614-66247a2c364b" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="AllDataTypes - Delete data sample 1"
+        x:id="4ed37912-0b1e-4dcb-8294-11e0e1a54c64"
+        asi:name="AllDataTypes_DeleteDataSample1"
+        ami:openExclusively="false"
+        ami:order="100"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/AllDataTypes_DeleteDataSample1.origam#AllDataTypes_DeleteDataSample1/1f61e5b1-cab6-4c17-b4c2-59661217743c" />
     </s2:MenuItem>
     <s2:MenuItem
       asi:abstract="false"
