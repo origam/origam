@@ -393,8 +393,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   private trySelectFirstRow() {
     if (this.dataTable.rows.length > 0) {
       this.cursorRowId = this.dataTable.getRowIdentifierByIndex(0);
-    }
-    else{
+    } else {
       this.cursorRowId = "";
     }
   }
