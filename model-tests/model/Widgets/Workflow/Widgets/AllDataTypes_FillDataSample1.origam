@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="404fa9b5-4d33-43d1-b614-66247a2c364b"
+    asi:name="AllDataTypes_FillDataSample1"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="8d54eb81-0e48-483b-91be-c974e5d46236"
+      cs:isReturnValue="false"
+      asi:name="SD"
+      cs:structure="Root/DataStructure/__system/SD.origam#SD/2222e30c-a6cc-4da2-848c-2ed6de666101" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="34a3e50f-b891-4f85-8247-cf8a2e1abffc"
+      asi:name="ExecuteProcedure_AllDataTypes_CreateData1"
+      wt:outputContextStore="Widgets/Workflow/Widgets/AllDataTypes_FillDataSample1.origam#AllDataTypes_FillDataSample1/_any/8d54eb81-0e48-483b-91be-c974e5d46236"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/ExecuteProcedure/7ae51467-4bca-43b2-98e5-00bf49b4855f">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="317bf88a-bad8-43e3-84de-4c0c0ab14823"
+        asi:name="EntityOrder"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/EntityOrder/cd009a2f-98d2-4f15-9c22-5adef626aa1f" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="484e8b68-b168-4ff8-8f08-692cc2431cde"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Parameters/5b343cd3-659e-4e73-956d-17b3fd099fcc" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="94b6b069-0197-4c86-89da-38d795a3e11d"
+        asi:name="Name"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Name/498f7b52-bd4c-4b19-ac22-0540cf1a4257">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/AllDataTypes_FillDataSample1.origam#AllDataTypes_FillDataSample1/_any/8d54eb81-0e48-483b-91be-c974e5d46236"
+          x:id="64e25f73-32b3-458d-9a4d-9d7a99270b98"
+          asi:name="'AllDataTypes_CreateData1'"
+          cr:xPath="'AllDataTypes_CreateData1'" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>
