@@ -1212,6 +1212,10 @@ namespace Origam.Rule
 
 				DatasetTools.GetDataSlice(dataSlice, new List<DataRow>{rowChanged});
 			    IDataDocument xmlSlice = DataDocumentFactory.New(dataSlice);
+			    if (rule.ValueRule == null)
+			    {
+				    throw new Exception($"{nameof(DataStructureRule.ValueRule)} in {nameof(DataStructureRule)} {rule.Id} is null");
+			    }
 
 				if(rule.ValueRule.IsPathRelative)
 				{
