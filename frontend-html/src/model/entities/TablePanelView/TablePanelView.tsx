@@ -280,8 +280,10 @@ export class TablePanelView implements ITablePanelView {
   @observable lastSelectedRowId: any = undefined;
 
   @computed get isMultiSelectEnabled() {
-    return !this.groupingConfiguration.isGrouping 
-      && !isLazyLoading(this)
+    return !(
+      this.groupingConfiguration.isGrouping ||
+      isLazyLoading(this) && !!getSelectionMember(this)
+    )
   }
 
   @computed get selectionInProgress() {
