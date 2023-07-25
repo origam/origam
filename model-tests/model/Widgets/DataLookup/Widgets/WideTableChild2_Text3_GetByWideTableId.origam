@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="a34af6bc-d6d2-45a8-a993-1d523a0500bc"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupWideTableChild2_Text3_GetByWideTableId.origam#LookupWideTableChild2_Text3_GetByWideTableId/067dfd7c-d7a3-4a88-8faf-59b3eb0a3af9"
+    adl:listDisplayMember="Text3"
+    adl:listValueMember="Id"
+    asi:name="WideTableChild2_Text3_GetByWideTableId"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupWideTableChild2_Text3_GetByWideTableId.origam#LookupWideTableChild2_Text3_GetByWideTableId/067dfd7c-d7a3-4a88-8faf-59b3eb0a3af9"
+    adl:valueDisplayMember="Text3"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupWideTableChild2_Text3_GetByWideTableId.origam#LookupWideTableChild2_Text3_GetByWideTableId/GetByWideTableId/e2ddf788-fdbf-4ef3-9f18-21d921ba63a2"
+    adl:valueValueMember="Id" />
+</x:file>

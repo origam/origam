@@ -1,0 +1,1 @@
+﻿INSERT INTO [WideTableStatus] ([Id],[Name]) VALUES ('989b8806-34e4-4728-bc51-fb2c7972edce','Running');

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="6ea095ca-1619-4ba9-ad40-0cfc7c75b76a"
+    asi:name="WideTable_DeleteAll"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="c8f56569-de3a-4998-a1dc-ca2cc28a165a"
+      cs:isReturnValue="false"
+      asi:name="SD"
+      cs:structure="Root/DataStructure/__system/SD.origam#SD/2222e30c-a6cc-4da2-848c-2ed6de666101" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="66023701-3d51-41ad-aa87-536960f35f11"
+      asi:name="ExecuteProcedure_WideTable_DeleteAll"
+      wt:outputContextStore="Widgets/Workflow/Widgets/WideTable_DeleteAll.origam#WideTable_DeleteAll/SD/c8f56569-de3a-4998-a1dc-ca2cc28a165a"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/ExecuteProcedure/7ae51467-4bca-43b2-98e5-00bf49b4855f">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="472ac738-1bc2-4db5-8a67-6cbc62e657fe"
+        asi:name="EntityOrder"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/EntityOrder/cd009a2f-98d2-4f15-9c22-5adef626aa1f" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8ae390ae-04cd-4275-b315-19654828ec72"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Parameters/5b343cd3-659e-4e73-956d-17b3fd099fcc" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c4bc6423-b3a0-4e21-b163-0f4f47603064"
+        asi:name="Name"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/ExecuteProcedure/Name/498f7b52-bd4c-4b19-ac22-0540cf1a4257">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/WideTable_DeleteAll.origam#WideTable_DeleteAll/SD/c8f56569-de3a-4998-a1dc-ca2cc28a165a"
+          x:id="0b61957c-7726-4ac0-8aff-7441e343ee9e"
+          asi:name="'WideTable_DeleteAll'"
+          cr:xPath="'WideTable_DeleteAll'" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

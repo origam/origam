@@ -1,0 +1,49 @@
+﻿
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refWideTableId_WideTable]
+	FOREIGN KEY (
+		[refWideTableId]
+	)
+
+	REFERENCES [WideTable] (
+		[Id]
+	);
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refMasterData1Id_MasterData1]
+	FOREIGN KEY (
+		[refMasterData1Id]
+	)
+
+	REFERENCES [MasterData1] (
+		[Id]
+	);
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refWideTableStatusId_WideTableStatus]
+	FOREIGN KEY (
+		[refWideTableStatusId]
+	)
+
+	REFERENCES [WideTableStatus] (
+		[Id]
+	);
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refMasterData2Id_MasterData2]
+	FOREIGN KEY (
+		[refMasterData2Id]
+	)
+
+	REFERENCES [MasterData2] (
+		[Id]
+	);
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refMasterData4Id_MasterData4]
+	FOREIGN KEY (
+		[refMasterData4Id]
+	)
+
+	REFERENCES [MasterData4] (
+		[Id]
+	);
+ALTER TABLE [WideTableChild6] ADD CONSTRAINT [FK_WideTableChild6_refMasterData3Id_MasterData3]
+	FOREIGN KEY (
+		[refMasterData3Id]
+	)
+
+	REFERENCES [MasterData3] (
+		[Id]
+	);

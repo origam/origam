@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="6d4df44a-7d94-441c-87bc-3578b7fb71ea"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupMasterData4.origam#LookupMasterData4/3c7230b2-ed05-4bdc-9009-33ef8581f5d7"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="MasterData4"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupMasterData4.origam#LookupMasterData4/3c7230b2-ed05-4bdc-9009-33ef8581f5d7"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupMasterData4.origam#LookupMasterData4/GetId/0f3c4b7a-366f-49a2-963a-5a1c92a0cc80"
+    adl:valueValueMember="Id" />
+</x:file>

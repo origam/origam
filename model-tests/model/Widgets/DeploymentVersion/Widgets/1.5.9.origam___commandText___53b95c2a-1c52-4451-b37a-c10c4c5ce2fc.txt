@@ -1,0 +1,8 @@
+﻿CREATE TABLE [MasterData1] (
+	[Name] NVarChar(200) NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE UNIQUE  INDEX  [ixUniqueName] ON [MasterData1] ([Name] ASC);
