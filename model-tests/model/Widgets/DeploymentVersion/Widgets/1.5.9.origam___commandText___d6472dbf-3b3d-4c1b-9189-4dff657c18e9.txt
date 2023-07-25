@@ -1,0 +1,1 @@
+﻿INSERT INTO [WideTableStatus] ([Id],[Name]) VALUES ('06532393-5915-4ffe-8d62-a7ef6b934b11','New');

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.2&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.4&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;bb8c67fb-44c1-4b41-8fce-4d50cd5a759d, 1.0.0&#xD;&#xA;255eec22-89c5-479a-b48d-e7bc9baa564a, 1.0.0"
+    x:id="491cb518-3c81-490c-86ef-84dd39881c7e"
+    asi:name="1.5.9"
+    dv:version="1.5.9">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="290"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___170f6e27-2223-44b4-b3cd-54f2932a1210.txt"
+      x:id="170f6e27-2223-44b4-b3cd-54f2932a1210"
+      asi:name="00290_Database_Entity_WideTableChild1"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="270"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___1ca50735-5f9c-406a-98a8-cc5d5c3223a9.txt"
+      x:id="1ca50735-5f9c-406a-98a8-cc5d5c3223a9"
+      asi:name="00270_Database_Entity_WideTableChild2"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="210"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___1da65291-292c-4c6b-ab2b-48edf4f22c82.txt"
+      x:id="1da65291-292c-4c6b-ab2b-48edf4f22c82"
+      asi:name="00210_Database_Entity_MasterData3"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="260"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___1fd3a588-e641-4254-8f2f-bd127c87d445.txt"
+      x:id="1fd3a588-e641-4254-8f2f-bd127c87d445"
+      asi:name="00260_Database_Entity_WideTableChild5"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="250"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___427596ad-5fe0-420d-9029-6fbe3c2e52f3.txt"
+      x:id="427596ad-5fe0-420d-9029-6fbe3c2e52f3"
+      asi:name="00250_Database_Entity_WideTableChild4"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="230"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___454acbda-db0d-4711-bb14-affadf2679d0.txt"
+      x:id="454acbda-db0d-4711-bb14-affadf2679d0"
+      asi:name="00230_Database_Entity_MasterData4"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="120"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___5039fcba-9629-47ed-a31f-db56a9a9f5f3.txt"
+      x:id="5039fcba-9629-47ed-a31f-db56a9a9f5f3"
+      asi:name="00120_Database_Entity_WideTableChild6"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="200"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___53b95c2a-1c52-4451-b37a-c10c4c5ce2fc.txt"
+      x:id="53b95c2a-1c52-4451-b37a-c10c4c5ce2fc"
+      asi:name="00200_Database_Entity_MasterData1"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="190"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___5b74470f-3b8b-4962-bc30-0d5b84ef2a82.txt"
+      x:id="5b74470f-3b8b-4962-bc30-0d5b84ef2a82"
+      asi:name="00190_Database_Entity_WideTable"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="310"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___5f9d7f71-7fe0-4c00-9023-6db8137bbded.txt"
+      x:id="5f9d7f71-7fe0-4c00-9023-6db8137bbded"
+      asi:name="00310_SP_WideTable_DeleteAll"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="170"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___61fe2006-be44-4174-9aac-924c6f8b27de.txt"
+      x:id="61fe2006-be44-4174-9aac-924c6f8b27de"
+      asi:name="00170_Database_Entity_WideTableChild1"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="220"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___7525ec7f-839f-4075-89ea-d0d763c60114.txt"
+      x:id="7525ec7f-839f-4075-89ea-d0d763c60114"
+      asi:name="00220_Database_Entity_MasterData2"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="240"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___756ecb5f-df90-4750-8d6a-52975560938b.txt"
+      x:id="756ecb5f-df90-4750-8d6a-52975560938b"
+      asi:name="00240_Database_Entity_WideTableChild6"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___7cf6af15-4b50-4c7a-af16-69ef26f175af.txt"
+      x:id="7cf6af15-4b50-4c7a-af16-69ef26f175af"
+      asi:name="00100_Database_Entity_WideTableStatus"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="160"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___7ebc855e-37f5-43b3-9c4d-d9122e66a60d.txt"
+      x:id="7ebc855e-37f5-43b3-9c4d-d9122e66a60d"
+      asi:name="00160_Database_Entity_WideTableChild3"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="140"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___9d14f38d-1d76-4607-b729-8ff0d80b97c5.txt"
+      x:id="9d14f38d-1d76-4607-b729-8ff0d80b97c5"
+      asi:name="00140_Database_Entity_WideTableChild5"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="150"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___bd6ccd84-ede7-4b8a-b856-3952e15563c5.txt"
+      x:id="bd6ccd84-ede7-4b8a-b856-3952e15563c5"
+      asi:name="00150_Database_Entity_WideTableChild2"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="280"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___cafa8f6f-5161-4ab1-a611-b3a536ab5a9b.txt"
+      x:id="cafa8f6f-5161-4ab1-a611-b3a536ab5a9b"
+      asi:name="00280_Database_Entity_WideTableChild3"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="123"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___cd7e21f5-0a20-46ba-8c92-920353de3a52.txt"
+      x:id="cd7e21f5-0a20-46ba-8c92-920353de3a52"
+      asi:name="00123_WideTableStatus_values"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="130"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___ced741ad-163c-42dc-89be-28a593ce80a9.txt"
+      x:id="ced741ad-163c-42dc-89be-28a593ce80a9"
+      asi:name="00130_Database_Entity_WideTableChild4"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="121"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___d6472dbf-3b3d-4c1b-9189-4dff657c18e9.txt"
+      x:id="d6472dbf-3b3d-4c1b-9189-4dff657c18e9"
+      asi:name="00121_WideTableStatus_values"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="124"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___eda56b1e-5d40-4121-91af-c5b00d0f9227.txt"
+      x:id="eda56b1e-5d40-4121-91af-c5b00d0f9227"
+      asi:name="00124_WideTableStatus_values"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="300"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___f74eb70d-74cc-4bbe-a51e-bebb01d0a071.txt"
+      x:id="f74eb70d-74cc-4bbe-a51e-bebb01d0a071"
+      asi:name="00300_Database_Entity_WideTable"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="122"
+      scusa:commandText="-***-ExternalFile:1.5.9.origam___commandText___f787070e-9028-4fb3-84da-8b887e520ecf.txt"
+      x:id="f787070e-9028-4fb3-84da-8b887e520ecf"
+      asi:name="00122_WideTableStatus_values"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

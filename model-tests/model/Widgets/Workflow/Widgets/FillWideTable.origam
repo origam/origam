@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="e2d36a13-8522-4159-ba65-28b2a710830d"
+    asi:name="FillWideTable"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="e3a32218-c24a-4d04-b982-c58b7b2516c1"
+      cs:isReturnValue="false"
+      asi:name="WideTableWithDetails"
+      cs:structure="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/41d24347-e097-40b5-974e-d3adf6a53d77" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="8285e01e-6436-4506-9e19-63f612667dac"
+      asi:name="03_StoreData_WideTableWithDetails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="29795fd1-ec49-4991-860b-60dc1d3be4c7"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
+          x:id="e905b7e0-401a-479b-82aa-f159deaf67cc"
+          asi:name="WideTableWithDetails"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="37ff681e-fd48-4285-ad62-d32982f79693"
+        asi:name="ForceBulkInsert"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd">
+        <dcr:DataConstantReference
+          asi:abstract="false"
+          dcr:constant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+          x:id="f12b9e05-ce07-4fd7-8d11-91dd4a261e11"
+          asi:name="true" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="443b333c-c534-4105-a8fb-1233983a6f2a"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/41d24347-e097-40b5-974e-d3adf6a53d77"
+          x:id="1d822791-77ee-4c83-a5bd-51ecfe7c707f"
+          asi:name="WideTableWithDetails" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="7c92c420-4448-46b7-905b-fddafa43193a"
+        asi:name="After_02_Transform_WideTableWithDetails"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/02_Transform_WideTableWithDetails/cf2412ce-de1f-485a-9a70-cd2fd42598a0" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="cf2412ce-de1f-485a-9a70-cd2fd42598a0"
+      asi:name="02_Transform_WideTableWithDetails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="45f01f65-7dee-419e-8a92-6e46d37ec6d9"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
+          x:id="a3f7a68e-6e8c-4c34-bc76-574244f98ea4"
+          asi:name="WideTableWithDetails"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="ade78046-d5aa-49f1-b079-93c4b4df2248"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="68f4d2ce-8b20-406f-b0b7-4c69185aa578"
+          asi:name="WideTable_Fill"
+          tr:transformation="Widgets/Transformation/Widgets/WideTable_Fill.origam#WideTable_Fill/3ad3aa0c-7555-4961-8017-8cba3f1fcc0c" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="dbe69777-659f-4e58-9988-0b53c0613527"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ecf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityConditionalFormatting/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="b091c742-315c-45ed-bab3-5939267539ee"
+    tmi:mappedObjectName="WideTable"
+    asi:name="WideTable"
+    ade:readOnly="false">
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="05b46e5e-22fe-4822-93e4-35c3697d977a"
+      ecf:level="92"
+      asi:name="92_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-4128832"
+      x:id="0ae8cdb4-441b-40a4-8033-6f395f5570d2"
+      ecf:level="100"
+      asi:name="100_Color [A=255, R=192, G=255, B=192]_WideTable_IsProcessed_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_IsProcessed.origam#WideTable_IsProcessed/2d92bf81-da23-4dcb-a5df-449a97ed778a" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="187dfd7f-eb6c-47ad-ab57-cd5aaf748228"
+      ecf:level="95"
+      asi:name="95_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-16129"
+      x:id="214cc794-ca9a-4289-84ee-9da09dabfaba"
+      ecf:level="200"
+      asi:name="200_Color [A=255, R=255, G=192, B=255]_Child1Text3IsEmptyAndChild2Text3IsEmpty_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/Child1Text3IsEmptyAndChild2Text3IsEmpty.origam#Child1Text3IsEmptyAndChild2Text3IsEmpty/d70895b7-bd62-420c-958b-9f9046a966cf" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="29361d57-dad9-406d-a080-f94fa98e1132"
+      ecf:level="97"
+      asi:name="97_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="3c6d4d66-95b0-4f1d-bd4c-58db8354bfda"
+      ecf:level="93"
+      asi:name="93_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="67641787-b9f1-436f-b673-3443197c66ef"
+      ecf:level="90"
+      asi:name="90_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="735628ce-9824-4a86-bd8f-819b4059c5b1"
+      ecf:level="94"
+      asi:name="94_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-4128769"
+      x:id="9a1cac91-ae9d-4764-bbc8-de83e4d4d560"
+      ecf:level="300"
+      asi:name="300_Color [A=255, R=192, G=255, B=255]_Child1Text3IsEmptyOrChild2Text3IsEmpty_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/Child1Text3IsEmptyOrChild2Text3IsEmpty.origam#Child1Text3IsEmptyOrChild2Text3IsEmpty/c124de48-bdaf-4db5-810c-52c96fb2b662" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="a477bec9-a88a-43c5-9c20-6465d8844d45"
+      ecf:level="99"
+      asi:name="99_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-12582848"
+      x:id="baf7924b-6a3d-4335-9e13-bb779d94b13f"
+      ecf:level="91"
+      asi:name="91_Color [A=255, R=64, G=0, B=64]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-128"
+      x:id="bdb74165-6dff-4a7b-b3c1-4451f1e8a753"
+      ecf:level="120"
+      asi:name="120_Color [A=255, R=255, G=255, B=128]_WideTable_Int1IsGreaterThan70000_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_Int1IsGreaterThan70000.origam#WideTable_Int1IsGreaterThan70000/3df206dc-1474-46e1-b72d-4fef5b5b9d82" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="c657e5fe-a698-4cb3-b457-3eafebdd8b56"
+      ecf:level="96"
+      asi:name="96_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      x:id="c768ee2b-03b0-4c08-bd94-369ba3aa57a0"
+      ecf:level="98"
+      asi:name="98_Color [A=0, R=0, G=0, B=0]_WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)_*"
+      ecf:roles="*"
+      ecf:rule="Widgets/Rule/Widgets/WideTable_OterIdInt1SumEqualsTo1000 (unreal condition).origam#WideTable_OterIdInt1SumEqualsTo1000 (unreal condition)/052a96b3-4981-4a17-a63f-405b78241b8d" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="1a5e1175-13e9-4774-90e1-45806fd5b481"
+      asi:name="WideTableChild4"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild4.origam#WideTableChild4/5f97aaf2-e6a4-4253-ad32-3516a68fd898"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c0b2b057-6a68-4dbe-ab3c-13c7110f8ada"
+        asi:name="WideTableChild4Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild4.origam#WideTableChild4/refWideTableId/221a732a-f308-40ef-a7b2-543a7efb0a3b" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="28a46a27-2d03-4765-8d3a-215eae5bc060"
+      asi:name="WideTableChild6"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild6.origam#WideTableChild6/a7986919-ab1b-4c90-a84f-110c92b94c6f"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="a47f9c27-665e-4387-b079-7bb8bfe8ff4a"
+        asi:name="WideTableChild6Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild6.origam#WideTableChild6/refWideTableId/43ff588c-4d85-461e-a6fa-148ba47abb29" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="2a11ee2f-06ee-4db7-b17d-5a0254b3a1b9"
+      asi:name="WideTableChild1"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild1.origam#WideTableChild1/cbfef88f-d0d3-45ae-8634-d965f4d4cd9a"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="df13d6d0-cf33-4adf-8507-6d98dd5a5399"
+        asi:name="WideTableChild1Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild1.origam#WideTableChild1/refWideTableId/c6e1d8ae-ad00-4590-82bc-8c2d92858155" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="6abf0c8c-6f6b-4383-b520-976b82380402"
+      asi:name="WideTableChild2"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/747db5cc-33f0-4ef8-bcd6-69f5767b1b86"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="cb35cc51-9264-410e-96b6-cca56443d6bd"
+        asi:name="WideTableChild2Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/refWideTableId/49bd4c52-47d8-47d1-b4e0-c6f8219d8162" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="ab5d5c6c-422e-4b6e-bd11-f9d67224cb34"
+      asi:name="WideTableChild5"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild5.origam#WideTableChild5/48d2554f-c356-4f77-bc74-13e0f5188d77"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="97d5fb67-e7bd-4d24-bbda-b47c67131280"
+        asi:name="WideTableChild5Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild5.origam#WideTableChild5/refWideTableId/0e66d163-5c9e-4fd0-8836-672c3642023e" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="f6e80075-d2b1-4b07-ab32-c5c9ab2f4852"
+      asi:name="WideTableChild3"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/WideTableChild3.origam#WideTableChild3/0d386f5e-426e-4d33-872e-814d258dd513"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="a20282e9-97ac-4311-a0f4-e37d8b44a7c1"
+        asi:name="WideTableChild3Key1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/WideTableChild3.origam#WideTableChild3/refWideTableId/8b925e73-825d-47f5-b641-4bbf0ea6ae96" />
+    </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/6459dd24-feda-4dd6-8e7e-72711b019fc7"
+      x:id="fa05b9d6-c5d1-4340-8c17-597a876075d3" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="fdd24c40-6f69-469b-8880-dbe8d2525dc9" />
+  </tmi:DataEntity>
+</x:file>

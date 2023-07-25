@@ -1,0 +1,1 @@
+﻿INSERT INTO [WideTableStatus] ([Id],[Name]) VALUES ('aec4cea9-5ee9-4e21-b368-d03ee82ba271','Processed');
