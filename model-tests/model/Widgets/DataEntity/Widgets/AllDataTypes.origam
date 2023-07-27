@@ -12,6 +12,7 @@
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
   xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
   xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
   xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
   xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
@@ -248,6 +249,36 @@
         x:id="81add448-6e02-4621-9421-a85079f206b3"
         asi:name="AllDataTypes"
         sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="f1af22b2-8a5c-4bef-a462-98c3d59bd07c"
+      euia:label="Show Notification"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="ShowNotifification"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/1031c502-9b9e-4786-b912-f953547aa3d1">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="Id"
+        x:id="1d68edff-cfbb-4ec7-bec4-c1dcada4fa5f"
+        asi:name="DataTypeId"
+        euiapm:type="Current" />
     </ewa:EntityUIAction>
     <fmi:DataEntityColumn
       asi:abstract="false"
