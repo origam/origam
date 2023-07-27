@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:swpt="http://schemas.origam.com/Origam.Schema.WorkflowModel.SetWorkflowPropertyTask/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="1031c502-9b9e-4786-b912-f953547aa3d1"
+    asi:name="ShowNotification"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="ec554bb6-2986-4de3-b6f5-703cfc121c5d"
+      cs:isReturnValue="false"
+      asi:name="DataTypeId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="f798b235-f8a1-497d-9fa3-1e4af6030075"
+      asi:name="LoadData_AllDataTypes"
+      wt:outputContextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/AllDataTypes/6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="352c7bd1-4805-4897-b6b0-99bacb40fea2"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="1bec5aed-7e1d-4c73-a4bb-f6232bdf4bc0"
+          dsr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="48265877-b663-46a2-ba36-7efccf2302b7"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/DataTypeId/ec554bb6-2986-4de3-b6f5-703cfc121c5d"
+          x:id="c6171bb5-af6c-435a-9598-d311f79554a0"
+          asi:name="AllDataTypes_parId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="0bd3063f-215b-403b-b63d-b105a97e6157"
+        asi:name="After_SetNotification"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/SetNotification/84bbad92-7fd8-4377-9a97-8fc87fabcba3" />
+    </smct:WorkflowTask>
+    <swpt:WorkflowTask
+      asi:abstract="false"
+      swpt:contextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/AllDataTypes/6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
+      x:id="84bbad92-7fd8-4377-9a97-8fc87fabcba3"
+      swpt:method="Add"
+      asi:name="SetNotification"
+      aws:roles="*"
+      swpt:workflowProperty="Notification"
+      swpt:xPath="'Testovani Notifikace'" />
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="47d491f2-4225-4d0c-9961-95e37aa9e8b9"
+      uift:isFinalForm="false"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="ShowData"
+      wt:outputContextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/AllDataTypes/6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="e8ff5386-98d8-4674-baf3-d15431eee9be"
+        asi:name="After_LoadData_AllDataTypes"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/LoadData_AllDataTypes/f798b235-f8a1-497d-9fa3-1e4af6030075" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>
