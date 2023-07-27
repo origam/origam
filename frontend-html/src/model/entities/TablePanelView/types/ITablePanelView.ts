@@ -115,6 +115,8 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
 
+  handleEditorKeyDown(event: any): void;
+
   clearCurrentCellEditData(): void;
 
   parent?: any;
