@@ -436,9 +436,24 @@ export class TablePanelView implements ITablePanelView {
     const _this = this;
     flow(function*() {
       if (_this.isEditing) {
+        if(!_this.isScrollByKeyboard) {
+          _this.setEditing(false);
+        }
         yield*flushCurrentRowData(_this)();
       }
     })();
+  }
+
+  hScrollDead: any;
+  isScrollByKeyboard = false;
+  @action.bound handleEditorKeyDown(event: any) {
+    if (event.key === "Tab" || event.key === "Enter") {
+      clearTimeout(this.hScrollDead);
+      this.isScrollByKeyboard = true;
+      this.hScrollDead = setTimeout(() => {
+        this.isScrollByKeyboard = false;
+      });
+    }
   }
 
   dontHandleNextScroll() {
