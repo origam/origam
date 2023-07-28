@@ -41,6 +41,7 @@ export function onFieldKeyDown(ctx: any) {
     try {
       const dataView = getDataView(ctx);
       const tablePanelView = getTablePanelView(ctx);
+      tablePanelView.handleEditorKeyDown(event);
       if( isSaveShortcut(event)){
         tablePanelView.setEditing(false);
         yield*flushCurrentRowData(ctx)();
