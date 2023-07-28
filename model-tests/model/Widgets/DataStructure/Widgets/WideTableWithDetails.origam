@@ -8,6 +8,9 @@
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
   xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsr1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRule/6.0.0"
+  xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
+  xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0"
   xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
   xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds1:DataStructure
@@ -106,6 +109,146 @@
         asi:name="WideTable_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="250acb24-65b4-4197-a944-386d2f6cbc79"
+      asi:name="WideTableRules">
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="155df60a-64b8-4cae-94bb-0bc3555a5f68"
+        asi:name="FillMemo6WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo6/215a7953-8cfb-44b6-8633-f81043bf7ea3"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="f3c61070-61c5-4a66-b4de-db21446084b2"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="1751b275-b227-4f69-8da8-fb3dfcfec844"
+        asi:name="FillText4WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Text4/bc40007a-6e85-43f9-950c-436835b6fa42"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="dd0ceba9-2f01-4fdd-8752-8a12d52aa389"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="386977fe-98a0-4cf3-97a7-6430513d4ad0"
+        asi:name="FillMemo5WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo5/61f5c1ef-1ed7-4d51-9e21-97d20e7dfeea"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="fa84a093-23f5-4df6-ad0a-2c9d5be3ef17"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="469143ef-ce33-4bd8-b909-429f33b5d78f"
+        asi:name="FillMemo3WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo3/6e40e643-ffbb-4ba5-a24a-edf9cafa96c6"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="56d72eb0-3833-4320-ba17-8034705b3a9e"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="4cd8cbef-9e26-48fe-9ae7-e6e32a39f87a"
+        asi:name="FillText3WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Text3/ae61d6cf-641f-443c-bad5-9e67da7586d2"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="295bf086-23d5-4089-8095-339eccedfac2"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="616d113f-ef73-4d16-8877-1a086603dccb"
+        asi:name="FillText5WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Text5/89d110ae-c570-419b-bdfb-d597ae63dd99"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="73b131b6-3c51-4f5a-ac41-e8ddd3a63014"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="85feaddf-14d5-4437-a03b-5b53dd433081"
+        asi:name="FillMemo4WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo4/236bff6d-a974-4d9d-889d-0009a3097ff0"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="4b98dfad-f342-40d2-9188-5a06d3853a33"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="9d371d21-2f82-42d3-ad83-690d8b3ecafa"
+        asi:name="FillMemo2WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo2/20e7d68e-e46c-4683-b76b-df84e868b825"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="e3ddded8-0e6e-4f79-9be4-deaed83968fe"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+        x:id="9f41fb99-2c35-4d49-aa44-74ffa7773765"
+        asi:name="FillText6WhenMemo1Changes"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Text6/d9c89012-46a6-4cbf-836e-b4db7fa20449"
+        dsr1:valueRule="Widgets/Rule/Widgets/GetSumOfInt1OfOtherChildren.origam#GetSumOfInt1OfOtherChildren/97009914-812d-4122-a04f-5eb1f62f27c5">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTable/b62f1e4b-e75f-4664-bb00-8b7779d5530b"
+          dsrd:field="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/Memo1/1f04a53f-3248-466e-a333-77012160ff01"
+          x:id="b20671dd-6c6f-4dc1-8201-79cba7eed226"
+          asi:name="WideTable_Memo1" />
+      </dsr1:DataStructureRule>
+    </dsrs:DataStructureRuleSet>
     <dsss:DataStructureSortSet
       asi:abstract="false"
       x:id="cb627bad-ca0f-4c10-a03c-b6c2c1a34fdd"

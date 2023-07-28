@@ -237,6 +237,7 @@
         frmi:refreshPortalAfterSave="false"
         frmi:requestSaveAfterUpdate="false"
         ami:roles="*"
+        frmi:ruleSet="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTableRules/250acb24-65b4-4197-a944-386d2f6cbc79"
         frmi:screen="Widgets/FormControlSet/Widgets/WideTableWithDetails.origam#WideTableWithDetails/e35d7ddc-1aae-4b76-994b-8d852f28d5dd"
         frmi:sortSet="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/ByText3/cb627bad-ca0f-4c10-a03c-b6c2c1a34fdd" />
       <frmi:MenuItem
@@ -254,6 +255,7 @@
         frmi:refreshPortalAfterSave="false"
         frmi:requestSaveAfterUpdate="false"
         ami:roles="*"
+        frmi:ruleSet="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/WideTableRules/250acb24-65b4-4197-a944-386d2f6cbc79"
         frmi:screen="Widgets/FormControlSet/Widgets/WideTableWithDetails.origam#WideTableWithDetails/e35d7ddc-1aae-4b76-994b-8d852f28d5dd"
         frmi:sortSet="Widgets/DataStructure/Widgets/WideTableWithDetails.origam#WideTableWithDetails/ByText3/cb627bad-ca0f-4c10-a03c-b6c2c1a34fdd" />
     </s2:MenuItem>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:sdr="http://schemas.origam.com/Origam.Schema.RuleModel.SimpleDataRule/6.0.0"
+  xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
+  <sdr:Rule
+    asi:abstract="false"
+    ar1:dataType="String"
+    x:id="97009914-812d-4122-a04f-5eb1f62f27c5"
+    xpr:isPathRelative="true"
+    asi:name="GetSumOfInt1OfOtherChildren"
+    xpr:xPath="concat( string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)), '-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', 'f7ae64c1-dbbe-447b-a7e1-3abff91f96ba')),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', '081fbdb7-9e3f-4117-a460-46db0c6ea40f')),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', '4a7fd93c-0b7f-4165-85b7-1a41b66e3009')),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', '54d86e56-feac-4058-a31d-bda209c0e771')),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)),'-', string(AS:LookupValue('90bd68e2-b1db-4807-b2f6-700ae76a19a3', @Id)) )" />
+</x:file>
