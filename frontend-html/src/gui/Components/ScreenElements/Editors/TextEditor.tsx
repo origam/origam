@@ -39,6 +39,7 @@ export class TextEditor extends React.Component<{
   id?: string;
   value: string | null;
   isMultiline?: boolean;
+  isAllowTab?: boolean;
   isReadOnly: boolean;
   isPassword?: boolean;
   backgroundColor?: string;
@@ -117,7 +118,8 @@ export class TextEditor extends React.Component<{
 
   @action.bound
   handleKeyDown(event: any) {
-    if(event.key === ' ' && event.ctrlKey) {
+    if(this.props.isAllowTab && event.key === 'Tab') {
+      event.preventDefault();
       const {selectionStart, selectionEnd} = this.elmInput;
       const value = this.props.value || '';
       const newValue = value.substring(0, selectionStart) + '\t' + value.substring(selectionEnd);
