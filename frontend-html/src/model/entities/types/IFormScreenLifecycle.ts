@@ -23,7 +23,6 @@ import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IGroupingSettings } from "./IGroupingConfiguration";
 import { UpdateRequestAggregator } from "model/entities/FormScreenLifecycle/UpdateRequestAggregator";
-import { IProperty } from "model/entities/types/IProperty";
 
 export interface IFormScreenLifecycleData {
 }
@@ -68,7 +67,6 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   rowSelectedReactionsDisabled(dataView: IDataView): boolean;
 
   onFlushData(): Generator;
-  // onFlushColumnData(property: IProperty): Generator;
 
   throwChangesAway(dataView: IDataView): Generator;
 

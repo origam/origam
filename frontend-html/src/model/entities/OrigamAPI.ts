@@ -381,15 +381,11 @@ export class OrigamAPI implements IApi {
   async restoreData(data: { SessionFormIdentifier: string; ObjectId: string }) {
     return (await this.axiosInstance.post("/UIService/RestoreData", data)).data;
   }
-
-  i = 0;
-
   async updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
     UpdateData: IUpdateData[];
   }): Promise<any> {
-    this.i++;
     return (await this.axiosInstance.post("/UIService/UpdateObject", data)).data;
   }
 
