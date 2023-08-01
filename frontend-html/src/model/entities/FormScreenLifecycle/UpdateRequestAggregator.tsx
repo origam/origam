@@ -158,8 +158,8 @@ export class UpdateRequestAggregator {
   );
 
   enqueue(data: IUpdateObjectData): Promise<any | null> {
-    this.removePreviouslyRequestedValues(data);
-    if (data.UpdateData.length == 0) {
+    this.removeCurrentlyProcessedValues(data);
+    if (data.UpdateData.length === 0) {
       return Promise.resolve(null);
     }
 
@@ -172,24 +172,21 @@ export class UpdateRequestAggregator {
     return itemJustEnqueued!.promise;
   }
 
-  private removePreviouslyRequestedValues(newData: IUpdateObjectData) {
-    for (const dataInProgress of [...this.registeredRequests, this.currentRequest]) {
-      if (
-        !dataInProgress ||
-        dataInProgress.SessionFormIdentifier !== newData.SessionFormIdentifier ||
-        dataInProgress.Entity !== newData.Entity
-      ) {
-        continue;
-      }
-      for (const newUpdateData of Array.from(newData.UpdateData)) {
-        for (const updateDataInProgress of dataInProgress.UpdateData) {
-          if (updateDataInProgress.RowId == newUpdateData.RowId) {
-            this.removeDuplicateProperties({
-              removeFrom: newUpdateData,
-              source: updateDataInProgress});
-            if (Object.keys(newUpdateData.Values).length === 0) {
-              newData.UpdateData.remove(newUpdateData);
-            }
+  private removeCurrentlyProcessedValues(newData: IUpdateObjectData) {
+    if (
+      !this.currentRequest ||
+      this.currentRequest.Entity !== newData.Entity
+    ) {
+      return;
+    }
+    for (const newUpdateData of Array.from(newData.UpdateData)) {
+      for (const updateDataInProgress of this.currentRequest.UpdateData) {
+        if (updateDataInProgress.RowId === newUpdateData.RowId) {
+          this.removeDuplicateProperties({
+            removeFrom: newUpdateData,
+            source: updateDataInProgress});
+          if (Object.keys(newUpdateData.Values).length === 0) {
+            newData.UpdateData.remove(newUpdateData);
           }
         }
       }
@@ -199,7 +196,7 @@ export class UpdateRequestAggregator {
   private removeDuplicateProperties(args: {removeFrom: IUpdateData, source: IUpdateData}) {
     for (const processedColumn of Object.keys(args.source.Values)) {
       for (const newColumn of Object.keys(args.removeFrom.Values)) {
-        if (processedColumn == newColumn &&
+        if (processedColumn === newColumn &&
           _.isEqual(args.source.Values[processedColumn], args.removeFrom.Values[newColumn])) {
           delete args.removeFrom.Values[newColumn];
         }
