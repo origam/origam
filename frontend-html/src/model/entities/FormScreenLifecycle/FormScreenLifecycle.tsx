@@ -789,7 +789,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Entity: dataView.entity,
       UpdateData: updateData,
     });
-
+    if (updateObjectResult === null){
+      return false;
+    }
     dataView.formFocusManager.stopAutoFocus();
 
     // This might run more times in parallel, but we want to apply the result just once.
@@ -820,7 +822,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           },
         ],
       });
-
+      if (updateObjectResult === null){
+        return;
+      }
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
 
       if (formScreen.requestSaveAfterUpdate) {
