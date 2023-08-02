@@ -130,7 +130,7 @@ export class RowState implements IRowState {
   getValue(rowId: string) {
     if (!this.containers.has(rowId)) {
       this.containers.set(rowId, new RowStateContainer(rowId));
-      if (this.suppressWorkingStatus) {
+      if (!this.suppressWorkingStatus) {
         this.setWorkingStatus();
       }
     }
