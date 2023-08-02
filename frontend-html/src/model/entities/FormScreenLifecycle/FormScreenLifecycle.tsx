@@ -786,7 +786,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Entity: dataView.entity,
       UpdateData: updateData,
     });
-    if(updateObjectResult === null){
+    if (updateObjectResult === null){
       return false;
     }
     dataView.formFocusManager.stopAutoFocus();
