@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -135,6 +136,7 @@ namespace Origam.Schema.WorkflowModel
 		[TypeConverter(typeof(DataStructureConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
         [NotNullModelElementRule()]
+		[StructureMustHaveGetByIdFilterRule]
 		[XmlReference("workQueueStructure", "WorkQueueStructureId")]
         public DataStructure WorkQueueStructure
 		{
@@ -357,5 +359,38 @@ namespace Origam.Schema.WorkflowModel
 		[XmlAttribute ("defaultPanelConfiguration")]
 		public string DefaultPanelConfiguration { get; set; } = "";
 		#endregion
+	}
+	
+	[AttributeUsage(AttributeTargets.Property)]
+	public class StructureMustHaveGetByIdFilterRule : AbstractModelElementRuleAttribute 
+	{
+		public override Exception CheckRule(object instance)
+		{
+			if (!(instance is WorkQueueClass workQueueClass))
+			{
+				throw new Exception(
+					$"{nameof(StructureMustHaveGetByIdFilterRule)} can be only applied to type {nameof(WorkQueueClass)}");  
+			}
+			if (workQueueClass.WorkQueueStructure == null)
+			{
+				return null;
+			}
+
+			DataStructureFilterSet getByIdFilterSet = workQueueClass.WorkQueueStructure
+				.ChildItems.ToGeneric()
+				.OfType<DataStructureFilterSet>()
+				.FirstOrDefault(filterSet => filterSet.Name == "GetById");
+
+			return getByIdFilterSet == null
+				? new Exception($"The {nameof(workQueueClass.WorkQueueStructure)} of " +
+				                $"{nameof(WorkQueueClass)} {workQueueClass.Name}, " +
+				                $"Id: {workQueueClass.Id} does not have filter set named GetById which is required.")
+				: null;
+		}
+		
+		public override Exception CheckRule(object instance, string memberName)
+		{
+			return CheckRule(instance);
+		}
 	}
 }
