@@ -417,7 +417,6 @@ export class DataView implements IDataView {
   @computed get isWorking() {
     return (
       this.lifecycle.isWorking ||
-      getRowStates(this).isWorking ||
       getLookupLoader(this).isWorking
     );
   }
