@@ -36,7 +36,6 @@ import { T } from "utils/translation";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import {getRowStates} from "../../model/selectors/RowState/getRowStates";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -61,15 +60,6 @@ export class CScreenHeader extends React.Component {
 
 @observer
 class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }> {
-
-  areRowStatesLoading(){
-    const dataViews = this.props.activeScreen.content.formScreen?.dataViews;
-    if(!dataViews){
-      return false;
-    }
-    return dataViews.some(dataView => getRowStates(dataView).isWorking)
-  }
-
   render() {
     const {activeScreen} = this.props;
     const {content} = activeScreen;
@@ -81,10 +71,7 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
       <>
         <h1 className={"printOnly"}>{activeScreen.formTitle}</h1>
         <ScreenHeader
-          isLoading={
-            content.isLoading ||
-            getIsScreenOrAnyDataViewWorking(content.formScreen!) ||
-            this.areRowStatesLoading()}
+          isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
         >
           <h1>{activeScreen.formTitle}</h1>
           {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
