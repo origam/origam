@@ -28,7 +28,6 @@ import { FlowBusyMonitor } from "../../utils/flow";
 import { handleError } from "model/actions/handleError";
 
 const maxRowStatesInOneCall = 100;
-const loadingDelay = 666;
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -45,12 +44,8 @@ export class RowState implements IRowState {
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  @observable
-  _isWorking = false;
-  workingTimeout: NodeJS.Timeout | undefined;
-
   get isWorking() {
-    return this.monitor.isWorkingDelayed || this._isWorking;
+    return this.monitor.isWorkingDelayed;
   }
 
   @observable firstLoadingPerformed = false;
@@ -125,14 +120,11 @@ export class RowState implements IRowState {
     }.bind(this)
   );
 
-  triggerLoad = _.debounce(this.triggerLoadImm, loadingDelay);
+  triggerLoad = _.debounce(this.triggerLoadImm, 666);
 
   getValue(rowId: string) {
     if (!this.containers.has(rowId)) {
       this.containers.set(rowId, new RowStateContainer(rowId));
-      if (!this.suppressWorkingStatus) {
-        this.setWorkingStatus();
-      }
     }
     let container = this.containers.get(rowId)!;
     if (!container.atom) {
@@ -153,16 +145,6 @@ export class RowState implements IRowState {
     } else {
       return this.containers.get(rowId)?.rowStateItem;
     }
-  }
-
-  private setWorkingStatus() {
-    clearTimeout(this.workingTimeout)
-    this.workingTimeout = setTimeout(() => {
-      this._isWorking = true;
-    });
-    this.workingTimeout = setTimeout(() => {
-      this._isWorking = false;
-    }, loadingDelay);
   }
 
   async loadValues(rowIds: string[]) {
