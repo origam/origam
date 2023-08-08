@@ -23,11 +23,13 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
-import { FlowBusyMonitor } from "../../utils/flow";
+import { FlowBusyMonitor } from "utils/flow";
 import { handleError } from "model/actions/handleError";
 import { flashColor2htmlColor } from "@origam/utils";
+import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
+import { getDataSource } from "model/selectors/DataSources/getDataSource";
 
-const maxRowStatesInOneCall = 100;
+const defaultRowStatesToFetch = 100;
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -37,9 +39,17 @@ export enum IIdState {
 export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
   suppressWorkingStatus: boolean = false;
+  visibleRowIds: string[] = [];
 
   constructor(data: IRowStateData) {
     Object.assign(this, data);
+    visibleRowsChanged.subscribe((visibleRows) => {
+      const dataSource = getDataSource(this);
+      if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
+        return;
+      }
+      this.visibleRowIds = visibleRows.rowIds;
+    });
   }
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -59,9 +69,18 @@ export class RowState implements IRowState {
   @observable
   isSomethingLoading = false;
 
-  triggerLoadImm = flow(() => this.triggerLoad(maxRowStatesInOneCall));
+  triggerLoadImm = flow(() => this.triggerLoad(false));
 
-  *triggerLoad(rowStatesToLoad?: number): any {
+  private getContainersToLoad(loadAll: boolean){
+    if(loadAll){
+      return this.containers.values()
+    }
+    return this.visibleRowIds.length === 0
+      ? Array.from(this.containers.values()).slice(-defaultRowStatesToFetch)
+      : this.visibleRowIds.map(rowId => this.containers.get(rowId)!);
+  }
+
+  *triggerLoad(loadAll: boolean): any {
     if (this.isSomethingLoading) {
       return;
     }
@@ -70,9 +89,8 @@ export class RowState implements IRowState {
     try {
       while (true) {
         try {
-          const containers = rowStatesToLoad
-            ?  Array.from(this.containers.values()).slice(-rowStatesToLoad)
-            : this.containers.values();
+          const containers = this.getContainersToLoad(loadAll);
+
           for (let container of containers) {
             if (container.rowId && !container.isValid && !container.processingSate){
               containersToLoad.set(container.rowId, container);
@@ -121,7 +139,7 @@ export class RowState implements IRowState {
       this.temporaryContainersValues = undefined;
     }
   }
-  triggerLoadDebounced = _.debounce(this.triggerLoadImm, 666);
+  triggerLoadDebounced = _.debounce(this.triggerLoadImm, 200);
 
   getValue(rowId: string) {
     if (!this.containers.has(rowId)) {
@@ -154,7 +172,7 @@ export class RowState implements IRowState {
         this.containers.set(rowId, new RowStateContainer(rowId));
       }
     }
-    await flow(this.triggerLoad.bind(this))();
+    await flow(() => this.triggerLoad(true))();
   }
 
   hasValue(rowId: string): boolean {
