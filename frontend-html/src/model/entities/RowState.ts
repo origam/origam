@@ -74,12 +74,12 @@ export class RowState implements IRowState {
             ?  Array.from(this.containers.values()).slice(-rowStatesToLoad)
             : this.containers.values();
           for (let container of containers) {
-            if(container.rowId && !container.isValid && !container.processingSate){
+            if (container.rowId && !container.isValid && !container.processingSate){
               containersToLoad.set(container.rowId, container);
             }
           }
           reportBusyStatus = Array.from(containersToLoad.values()).every(container => !container.suppressWorkingStatus);
-          if(reportBusyStatus){
+          if (reportBusyStatus){
             this.monitor.inFlow++;
           }
           if (containersToLoad.size === 0) {
