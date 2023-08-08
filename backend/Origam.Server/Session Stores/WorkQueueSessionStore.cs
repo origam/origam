@@ -139,11 +139,16 @@ namespace Origam.Server
        
         private DataSet LoadDataPiece(object parentId)
         {
-            Guid methodId = WQClass
+            Guid? methodId = WQClass
                 .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
-                .First(x => x.Name == "GetById")
-                .Id;
-            return core.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId, 
+                .FirstOrDefault(x => x.Name == "GetById")
+                ?.Id;
+            if (methodId == null)
+            {
+                throw new Exception($"Data structure filter set with name GetById was not found under WorkQueueStructure {WQClass.WorkQueueStructure.Id}");
+            }
+
+            return core.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId.Value, 
                 Guid.Empty, WQClass.WorkQueueStructureSortSetId, null, 
                 "WorkQueueEntry_parId", parentId);
         }
