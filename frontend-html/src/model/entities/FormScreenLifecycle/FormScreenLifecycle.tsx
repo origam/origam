@@ -564,6 +564,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       args.initUIResult.workflowTaskId,
       openedScreen.lazyLoading
     );
+    screen.notifications = args.initUIResult.notifications;
     const api = getApi(openedScreen);
     const cacheDependencies = getWorkbench(openedScreen).lookupMultiEngine.cacheDependencies;
     const lookupIdsToQuery = cacheDependencies.getUnhandledLookupIds(foundLookupIds);
