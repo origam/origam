@@ -141,7 +141,7 @@ export class RowState implements IRowState {
       this.temporaryRequestsValues = undefined;
     }
   }
-  triggerLoadDebounced = _.debounce(this.triggerLoadImm, 200);
+  triggerLoadDebounced = _.debounce(this.triggerLoadImm, 0);
 
   getValue(rowId: string) {
     if (!this.requests.has(rowId)) {
