@@ -77,7 +77,9 @@ export class RowState implements IRowState {
     }
     return this.visibleRowIds.length === 0
       ? Array.from(this.requests.values()).slice(-defaultRowStatesToFetch)
-      : this.visibleRowIds.map(rowId => this.requests.get(rowId)!);
+      : this.visibleRowIds
+            .map(rowId => this.requests.get(rowId))
+            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>;
   }
 
   *triggerLoad(loadAll: boolean): any {
