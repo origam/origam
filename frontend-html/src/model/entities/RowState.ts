@@ -28,6 +28,7 @@ import { handleError } from "model/actions/handleError";
 import { flashColor2htmlColor } from "@origam/utils";
 import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
+import { CancellablePromise } from "mobx/lib/api/flow";
 
 const defaultRowStatesToFetch = 100;
 
@@ -41,8 +42,10 @@ export class RowState implements IRowState {
   suppressWorkingStatus: boolean = false;
   visibleRowIds: string[] = [];
 
-  constructor(data: IRowStateData) {
-    Object.assign(this, data);
+  constructor(debouncingDelayMilliSeconds?: number) {
+    this.triggerLoadDebounced = _.debounce(
+      this.triggerLoadImm,
+      debouncingDelayMilliSeconds == undefined ? 200 : debouncingDelayMilliSeconds);
     visibleRowsChanged.subscribe((visibleRows) => {
       const dataSource = getDataSource(this);
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
@@ -141,7 +144,7 @@ export class RowState implements IRowState {
       this.temporaryRequestsValues = undefined;
     }
   }
-  triggerLoadDebounced = _.debounce(this.triggerLoadImm, 0);
+  triggerLoadDebounced: any;
 
   getValue(rowId: string) {
     if (!this.requests.has(rowId)) {

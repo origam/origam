@@ -550,6 +550,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       showWorkQueues: portalInfo.workQueueListRefreshInterval > 0,
       helpUrl: portalInfo.helpUrl,
       showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
+      rowStatesDebouncingDelayMilliSeconds: portalInfo.rowStatesDebouncingDelayMilliSeconds,
       filterConfig: {
         caseSensitive: portalInfo.filteringConfig.caseSensitive,
         accentSensitive: portalInfo.filteringConfig.accentSensitive
