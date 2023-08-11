@@ -142,7 +142,7 @@
   },
   "HtmlClientConfig":{
     "ShowToolTipsForMemoFieldsOnly" : "false",
-    "RowStatesDebouncingDelayMilliSeconds": 200
+    "RowStatesDebouncingDelayMilliseconds": 200
   },
   "Logging": {
 	"LogLevel": {
