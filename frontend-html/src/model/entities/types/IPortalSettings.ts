@@ -24,5 +24,6 @@ export interface IPortalSettings {
   showWorkQueues: boolean;
   helpUrl: string;
   showToolTipsForMemoFieldsOnly: boolean;
+  rowStatesDebouncingDelayMilliSeconds: number;
   filterConfig: IFilterConfig;
 }
