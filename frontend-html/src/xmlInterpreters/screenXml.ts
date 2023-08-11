@@ -333,7 +333,7 @@ export function*interpretScreenXml(
     // isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
-        rowState: new RowState(workbenchLifeCycle.portalSettings?.rowStatesDebouncingDelayMilliSeconds),
+        rowState: new RowState(workbenchLifeCycle.portalSettings?.rowStatesDebouncingDelayMilliseconds),
         entity: dataSource.attributes.Entity,
         dataStructureEntityId: dataSource.attributes.DataStructureEntityId,
         identifier: dataSource.attributes.Identifier,

@@ -42,10 +42,10 @@ export class RowState implements IRowState {
   suppressWorkingStatus: boolean = false;
   visibleRowIds: string[] = [];
 
-  constructor(debouncingDelayMilliSeconds?: number) {
+  constructor(debouncingDelayMilliseconds?: number) {
     this.triggerLoadDebounced = _.debounce(
       this.triggerLoadImm,
-      debouncingDelayMilliSeconds == undefined ? 200 : debouncingDelayMilliSeconds);
+      debouncingDelayMilliseconds == undefined ? 200 : debouncingDelayMilliseconds);
     visibleRowsChanged.subscribe((visibleRows) => {
       const dataSource = getDataSource(this);
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
