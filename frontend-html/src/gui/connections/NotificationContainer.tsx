@@ -58,25 +58,9 @@ export class NotificationContainer extends React.Component<{}> {
         {formScreen.notifications.map(x =>
           <div className={S.row}>
             <div className={S.iconContainer}>
-              {this.getIcon("info")}
+              {this.getIcon(x.icon)}
             </div>
-            <div>{"Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child: Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child:"}</div>
-          </div>
-        )}
-        {formScreen.notifications.map(x =>
-          <div className={S.row}>
-            <div className={S.iconContainer}>
-              {this.getIcon("warning")}
-            </div>
-            <div>{"Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child: Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child:"}</div>
-          </div>
-        )}
-        {formScreen.notifications.map(x =>
-          <div className={S.row}>
-            <div className={S.iconContainer}>
-              {this.getIcon("error")}
-            </div>
-            <div>{"Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child: Make it simple: You can apply your style to all the div and re-initialize the last one with :last-child:"}</div>
+            <div>{x.text}</div>
           </div>
         )}
       </div>
