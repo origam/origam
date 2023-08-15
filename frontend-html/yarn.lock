@@ -1597,7 +1597,7 @@
   dependencies:
     moment "^2.29.4"
 
-"@origam/utils@^1.3.4":
+"@origam/utils@^1.3.5":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.3.5.tgz#f9e2fc5dec941a247be1a3f84c87756e90a05c52"
   integrity sha512-p41FbnRop9R0T/pChGI06yYDmHqMiCXpDWsWIrOVeWnm68nVKerO5j4pQJqNxh2AT1QXVcwIEges49cZBMgagg==
