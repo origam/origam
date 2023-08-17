@@ -132,7 +132,7 @@ namespace Origam.Workbench.Commands
 			}
 			catch(Exception ex)
 			{
-				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window, ex.Message, "Chyba pøi ukládání dat formuláøe '" + WorkbenchSingleton.Workbench.ActiveDocument.TitleName + "'", ex);
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window, ex.Message, ResourceUtils.GetString("ErrorWhenSaving", WorkbenchSingleton.Workbench.ActiveDocument.TitleName), ex);
 			}
 		}
 	}
