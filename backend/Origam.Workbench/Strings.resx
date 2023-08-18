@@ -416,4 +416,7 @@
   <data name="CannotLoadItem" xml:space="preserve">
     <value>Could not load toolbox item {0} because its type and/or namespace is not specified</value>
   </data>
+  <data name="ErrorWhenSaving" xml:space="preserve">
+    <value>Error in saving form data  '{0}'</value>
+  </data>
 </root>
