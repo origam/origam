@@ -33,7 +33,13 @@ import Cookie from "js-cookie";
 import { translationsInit } from "./utils/translation";
 import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
 import moment from "moment";
-import "moment/min/locales";
+import 'moment/dist/locale/de';
+import 'moment/dist/locale/de-at';
+import 'moment/dist/locale/de-ch';
+import 'moment/dist/locale/fr.js';
+import 'moment/dist/locale/fr-ch.js';
+import 'moment/dist/locale/fr-ca.js';
+import 'moment/dist/locale/cs';
 import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
