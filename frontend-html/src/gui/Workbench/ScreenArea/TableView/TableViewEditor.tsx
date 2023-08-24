@@ -198,6 +198,7 @@ export class TableViewEditor extends React.Component<{
             xmlNode={this.props.property!.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
+            customStyle={resolveCellAlignment(this.props.property?.style, isFirsColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
