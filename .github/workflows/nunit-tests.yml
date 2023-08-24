@@ -59,12 +59,12 @@ jobs:
       # We really want to specify the version the tests run on. 
       # The latest dotnet version is already installed that is why we can run "dotnet" now.
       run: |
-        dotnet new globaljson --sdk-version 6.0.210
+        dotnet new globaljson --sdk-version 6.0.413
         
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.210'
+        dotnet-version: '6.0.413'
         
     - name: Download testing artefact
       uses: actions/download-artifact@v2
