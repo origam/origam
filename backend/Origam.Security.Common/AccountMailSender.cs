@@ -170,7 +170,7 @@ namespace Origam.Security.Common
                     if (log.IsErrorEnabled)
                     {
                         log.ErrorFormat("Unlocking user: Failed to generate a mail"
-                                        + " for a user `{0}' to `{1}': {2}"
+                                        + " for a user '{0}' to '{1}': {2}"
                             , username, email, ex);
                     }
 
@@ -187,7 +187,7 @@ namespace Origam.Security.Common
                 if (log.IsErrorEnabled)
                 {
                     log.ErrorFormat("Unlocking user: Failed to send a mail"
-                                    + " for a user `{0}' to `{1}': {2}"
+                                    + " for a user '{0}' to '{1}': {2}"
                         , username, email, ex);
                 }
 
@@ -201,8 +201,8 @@ namespace Origam.Security.Common
 
             if (log.IsDebugEnabled)
             {
-                log.DebugFormat("User `{0}' has been unlocked and the"
-                                + " notification mail has been sent to `{1}'.",
+                log.DebugFormat("User '{0}' has been unlocked and the"
+                                + " notification mail has been sent to '{1}'.",
                     username, email);
             }
 
@@ -357,7 +357,7 @@ namespace Origam.Security.Common
                     if (log.IsErrorEnabled)
                     {
                         log.ErrorFormat("Failed to generate a password reset mail "
-                                        + " for the user `{0}' to email `{1}': {2}",
+                                        + " for the user '{0}' to email '{1}': {2}",
                             username, email, ex);
                     }
 
@@ -375,7 +375,7 @@ namespace Origam.Security.Common
                 if (log.IsErrorEnabled)
                 {
                     log.LogOrigamError(string.Format("Failed to send password reset "
-                                            + "mail for username `{0}', email `{1}'",
+                                            + "mail for username '{0}', email '{1}'",
                         username, email), ex);
                 }
 
@@ -390,8 +390,8 @@ namespace Origam.Security.Common
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat(
-                    "A new password for the user `{0}' " +
-                    "successfully generated and sent to `{1}'."
+                    "A new password for the user '{0}' " +
+                    "successfully generated and sent to '{1}'."
                     , username, email);
             }
 
