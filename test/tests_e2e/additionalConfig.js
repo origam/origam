@@ -1,12 +1,13 @@
+
 const userName = "washi";
 const password = "blabla";
-const backEndUrl = "https://localhost";
+const backEndUrl = "https://localhost:44357";
 
-const sqlDatabase = "origam";
-const sqlServer = "databasesql";
+const sqlDatabase = "origam-demo";
+const sqlServer = "localhost";
 const sqlPort = 1433;
-const sqlUser = "origam";
-const sqlPassword  = "89d0b46E607";
-const sqlOptions  = "";
+const sqlUser = undefined;
+const sqlPassword  = undefined;
+const sqlOptions  = {trustedConnection: true};
 
 module.exports = {userName, password, backEndUrl,sqlDatabase,sqlServer,sqlPort,sqlUser,sqlPassword,sqlOptions};
