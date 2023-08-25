@@ -10,7 +10,7 @@
   },
   "homepage": "./",
   "scripts": {
-    "test:e2e": "xvfb-run --auto-servernum jest --runInBand --config jest.config.js",
+    "test:e2e": "jest --runInBand --config jest.config.js -t \"Should ask user whether to save changes after changing row\"",
     "test:debug": "node --inspect node_modules/jest-cli/bin/jest.js --runInBand  --config jest.config.js"
   },
   "eslintConfig": {
