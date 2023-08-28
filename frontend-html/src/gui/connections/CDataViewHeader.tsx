@@ -76,7 +76,7 @@ import {
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
   isFilterRecordShortcut
-} from "utils/shortcuts";
+} from "utils/keyShortcuts";
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{

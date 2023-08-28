@@ -24,3 +24,25 @@ export function isSaveShortcut(event: any) {
 export function isRefreshShortcut(event: any) {
   return event.key === "r" && (event.ctrlKey || event.metaKey);
 }
+
+export function isAddRecordShortcut(event: any) {
+  return (
+    ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
+    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j") ||
+    event.key === "Insert"
+  );
+}
+
+export function isDeleteRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "Delete";
+}
+
+export function isDuplicateRecordShortcut(event: any) {
+  return (
+    (event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "d" || event.key === "k")
+  );
+}
+
+export function isFilterRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && event.key === "f";
+}
