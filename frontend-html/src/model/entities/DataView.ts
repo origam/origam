@@ -862,6 +862,10 @@ export class DataView implements IDataView {
     this.dataTable.unlockAddedRowPosition();
   }
 
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean){
+    return this.dataTable.insertRecord(index, row, shouldLockNewRowAtTop);
+  }
+
   attributes: any;
 
   async exportToExcel() {

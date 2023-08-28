@@ -200,6 +200,8 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 
   isLazyLoading: Boolean;
+
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 }
 
 export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;
