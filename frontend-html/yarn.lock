@@ -3962,10 +3962,10 @@ immer@^10.0.2:
   resolved "https://registry.yarnpkg.com/immer/-/immer-10.0.2.tgz#11636c5b77acf529e059582d76faf338beb56141"
   integrity sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==
 
-immutable@^4.0.0, immutable@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.3.tgz#8934ff6826d996a7642c8dc4b46e694dd19561e3"
-  integrity sha512-808ZFYMsIRAjLAu5xkKo0TsbY9LBy9H5MazTKIEHerNkg0ymgilGfBPMR/3G7d/ihGmuK2Hw8S1izY2d3kd3wA==
+immutable@^4.0.0, immutable@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.4.tgz#2e07b33837b4bb7662f288c244d1ced1ef65a78f"
+  integrity sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==
 
 immutable@~3.7.4:
   version "3.7.6"
