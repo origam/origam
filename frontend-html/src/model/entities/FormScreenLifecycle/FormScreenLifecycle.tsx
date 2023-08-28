@@ -157,7 +157,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     rowId: string,
     dataView: IDataView
   ): Generator<unknown, any, unknown> {
-    yield*this.onRequestDeleteRow(entity, rowId, dataView);
+    if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
+      yield*this.deleteRow(entity, rowId, dataView);
+    }
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
@@ -175,12 +177,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       return;
     }
     yield*this.executeAction(gridId, entity, action, selectedItems);
-  }
-
-  *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView): any {
-    if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
-      yield*this.deleteRow(entity, rowId, dataView);
-    }
   }
 
   *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
