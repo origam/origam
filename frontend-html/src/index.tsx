@@ -49,7 +49,7 @@ import {
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
   isFilterRecordShortcut
-} from "utils/shortcuts";
+} from "utils/keyShortcuts";
 
 if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
