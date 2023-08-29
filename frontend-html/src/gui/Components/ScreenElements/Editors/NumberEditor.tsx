@@ -128,9 +128,6 @@ export class NumberEditor extends React.Component<{
       action: async () => {
         await this.onChange();
         await this.props.onEditorBlur?.(event);
-        this.setState(
-          { value: this.formatForDisplay(this.state.value)}
-        );
       }})
   }
 
