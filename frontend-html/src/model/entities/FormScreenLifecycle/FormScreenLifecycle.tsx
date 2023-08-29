@@ -155,9 +155,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *onDeleteRow(
     entity: string,
     rowId: string,
-    dataView: IDataView
+    dataView: IDataView,
+    doNotAskForConfirmation? : boolean
   ): Generator<unknown, any, unknown> {
-    if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
+    if (doNotAskForConfirmation || (yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
       yield*this.deleteRow(entity, rowId, dataView);
     }
   }
@@ -1138,13 +1139,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield*refreshWorkQueues(this)();
       yield*processCRUDResult(this, result);
-      getFormScreen(this).dataViews.forEach((dataView) =>
-        dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true})
+      getFormScreen(this).dataViews.forEach((dataView) => {
+          dataView.rowIdForImmediateDeletion = undefined;
+          dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true})
+        }
       );
       yield*this.updateTotalRowCounts();
-      // getFormScreen(this).dataViews.forEach((dataView) =>
-      //     yield dataView.reloadAggregations()
-      // );
     } finally {
       this.monitor.inFlow--;
     }
@@ -1331,6 +1331,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
+    openedScreen.content.formScreen?.focusManager?.dispose();
   }
 
   *closeForm() {

@@ -4,10 +4,42 @@ import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { getActivePerspective } from "model/selectors/DataView/getActivePerspective";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { EventHandler } from "utils/events";
 
 export class ScreenFocusManager {
   gridManagers: GridFocusManager[] = [];
   formManagers: FormFocusManager[] = [];
+  focusOutsideOfGridEditor = new EventHandler<FocusEvent>();
+  private boundOnFocus = this.onFocus.bind(this);
+
+  constructor() {
+    window.addEventListener("focus", this.boundOnFocus, true);
+  }
+
+  dispose(){
+    window.removeEventListener("focus", this.boundOnFocus, true);
+  }
+
+  private onFocus(event: FocusEvent) {
+    if(!event.relatedTarget){
+      const target = event.target as HTMLElement;
+      if(!this.isGridEditor(target)){
+        this.focusOutsideOfGridEditor.trigger(event);
+        console.log("focusOutsideOfGridEditor " + event.timeStamp);
+      }
+    }
+  }
+
+  private isGridEditor(element: HTMLElement){
+    let parent = element.parentElement;
+    while(parent){
+      if(parent.id === "form-field-portal"){
+        return true;
+      }
+      parent = parent.parentElement;
+    }
+    return false;
+  }
 
   registerGridFocusManager(manager:GridFocusManager) {
     this.gridManagers.push(manager);

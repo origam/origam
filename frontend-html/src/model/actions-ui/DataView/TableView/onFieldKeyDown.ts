@@ -118,6 +118,11 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Escape": {
+          if(dataView.rowIdForImmediateDeletion){
+            dataView.rowIdForImmediateDeletion = undefined;
+            console.log("Escape " + event.timeStamp);
+            yield onDeleteRowClick(dataView)(event, true);
+          }
           tablePanelView.setEditing(false);
           tablePanelView.clearCurrentCellEditData();
           tablePanelView.triggerOnFocusTable();
