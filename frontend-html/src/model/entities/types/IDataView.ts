@@ -102,6 +102,7 @@ export interface IDataView extends IDataViewData {
   bindingParent: IDataView | undefined;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
+  rowIdForImmediateDeletion: string | undefined;
   selectedRowIndex: number | undefined;
   trueSelectedRowIndex: number | undefined;
   totalRowCount: number | undefined;

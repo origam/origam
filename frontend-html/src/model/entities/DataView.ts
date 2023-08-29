@@ -116,6 +116,10 @@ export class DataView implements IDataView {
     this.serverSideGrouper.parent = this;
     this.focusManager.registerGridFocusManager(this.gridFocusManager);
     this.focusManager.registerFormFocusManager(this.formFocusManager);
+    this.focusManager.focusOutsideOfGridEditor.subscribe(
+      (event?: FocusEvent) => {
+          this.rowIdForImmediateDeletion = undefined
+      });
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
@@ -229,6 +233,15 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
 
   @observable selectedRowId: string | undefined;
+  private _rowIdForImmediateDeletion: string | undefined;
+
+  get rowIdForImmediateDeletion(): string | undefined {
+    return this._rowIdForImmediateDeletion;
+  }
+
+  set rowIdForImmediateDeletion(value: string | undefined) {
+    this._rowIdForImmediateDeletion = value;
+  }
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
@@ -709,6 +722,9 @@ export class DataView implements IDataView {
     if (this.selectedRowId === id) {
       return;
     }
+    if (id != this._rowIdForImmediateDeletion) {
+      this.rowIdForImmediateDeletion = undefined;
+    }
     this.selectedRowId = id;
     if (this.isBindingParent) {
       this.childBindings.forEach((binding) =>
@@ -863,6 +879,7 @@ export class DataView implements IDataView {
   }
 
   insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean){
+    this.rowIdForImmediateDeletion = this.dataTable.getRowId(row);
     return this.dataTable.insertRecord(index, row, shouldLockNewRowAtTop);
   }
 
