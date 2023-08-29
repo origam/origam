@@ -36,6 +36,10 @@ import { T } from "utils/translation";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
+import { isAddRecordShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
+import { WorkflowAction } from "gui/connections/WorkflowAction";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -76,20 +80,20 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
           <h1>{activeScreen.formTitle}</h1>
           {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
           {isCancelButton && (
-            <button
+            <WorkflowAction
               className={S.workflowActionBtn}
               onClick={onWorkflowAbortClick(content.formScreen!)}
-            >
-              {T("Cancel", "button_cancel")}
-            </button>
+              label= {T("Cancel", "button_cancel")}
+            />
           )}
           {isNextButton && (
-            <button
+            <WorkflowAction
               className={S.workflowActionBtn}
               onClick={onWorkflowNextClick(content.formScreen!)}
-            >
-              {T("Next", "button_next")}
-            </button>
+              onShortcut={onWorkflowNextClick(content.formScreen!)}
+              shortcutPredicate={isSaveShortcut}
+              label= {T("Next", "button_next")}
+            />
           )}
           <ScreenHeaderPusher/>
           <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
