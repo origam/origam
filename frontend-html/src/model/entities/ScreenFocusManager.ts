@@ -25,7 +25,6 @@ export class ScreenFocusManager {
       const target = event.target as HTMLElement;
       if(!this.isGridEditor(target)){
         this.focusOutsideOfGridEditor.trigger(event);
-        console.log("focusOutsideOfGridEditor " + event.timeStamp);
       }
     }
   }
