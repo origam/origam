@@ -48,7 +48,7 @@ import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
-  isFilterRecordShortcut
+  isFilterRecordShortcut, isSaveShortcut
 } from "utils/keyShortcuts";
 
 if (import.meta.env.DEV) {
@@ -75,6 +75,7 @@ function disableCollidingBrowserShortcuts() {
       isAddRecordShortcut(event) ||
       isDuplicateRecordShortcut(event) ||
       isDeleteRecordShortcut(event) ||
+      isSaveShortcut(event) ||
       isFilterRecordShortcut(event)
     ) {
       event.preventDefault();
