@@ -723,7 +723,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         } else {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
-            rootDataView: rootDataView
+            rootDataView: rootDataView,
+            runChangeRowReaction: true
           });
         }
       }
@@ -877,7 +878,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *readFirstChunkOfRows(args: {
-    rootDataView: IDataView
+    rootDataView: IDataView,
+    runChangeRowReaction: boolean
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
@@ -914,7 +916,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       rootDataView.restoreViewState();
     } finally {
-      rootDataView.lifecycle.startSelectedRowReaction(true);
+      if(args.runChangeRowReaction) {
+        rootDataView.lifecycle.startSelectedRowReaction(true);
+      }
       this.monitor.inFlow--;
     }
   }
@@ -932,7 +936,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       do {
         this._readFirstChunkOfRowsScheduled = false;
         yield*this.readFirstChunkOfRows({
-          rootDataView: rootDataView
+          rootDataView: rootDataView,
+          runChangeRowReaction: false
         });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {

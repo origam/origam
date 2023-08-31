@@ -52,12 +52,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     return this.monitor.isWorkingDelayed;
   }
 
-  disposers: any[] = [];
-
   @action.bound
   start(): void {
     if (isLazyLoading(this)) {
-      this.disposers.push(this.startSelectedRowReaction());
+      this.startSelectedRowReaction();
     }
   }
 
@@ -91,6 +89,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     if (fireImmediately) {
       await this.onSelectedRowIdChangeImm();
     }
+
+    if (this._selectedRowReactionDisposer){
+      return;
+    }
+
+    this.stopSelectedRowReaction();
 
     const self = this;
     return (this._selectedRowReactionDisposer = reaction(
