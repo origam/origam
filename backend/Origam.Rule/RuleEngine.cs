@@ -1123,7 +1123,7 @@ namespace Origam.Rule
 	        return outputPad;
 	    }
 
-	    private bool ProcessRulesLookupFields(DataRow row, string columnName)
+	    public bool ProcessRulesLookupFields(DataRow row, string columnName)
 		{
 			bool changed = false;
 			DataTable t = row.Table;
@@ -1643,7 +1643,7 @@ namespace Origam.Rule
 #endregion
 
 #region Row Level Security Functions
-		public bool RowLevelSecurityState(DataRow row, string field, CredentialType type)
+		public bool EvaluateRowLevelSecurityState(DataRow row, string field, CredentialType type)
 		{
 			if(! DatasetTools.HasRowValidParent(row)) return true;
 
@@ -1658,152 +1658,11 @@ namespace Origam.Rule
 				fieldId = (Guid)row.Table.Columns[field].ExtendedProperties["Id"];
 				entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
 
-				return RowLevelSecurityState(originalData, actualData, field, type, entityId, fieldId, row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached);
+				return EvaluateRowLevelSecurityState(originalData, actualData, field, type, entityId, fieldId, row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached);
 			}
 			else
 			{
 				return true;
-			}
-		}
-
-		public RowSecurityState RowLevelSecurityState(DataRow row,
-			object profileId)
-		{
-			return RowLevelSecurityState(row, profileId, Guid.Empty);
-		}
-
-		public RowSecurityState RowLevelSecurityState(DataRow row, object profileId, Guid formId)
-		{
-			if(! DatasetTools.HasRowValidParent(row)) return null;
-			
-			if(row.Table.ExtendedProperties.Contains("EntityId"))
-			{
-				Guid entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
-				XmlContainer originalData = DatasetTools.GetRowXml(row,
-                    DataRowVersion.Original);
-				XmlContainer actualData = DatasetTools.GetRowXml(row, 
-                    row.HasVersion(DataRowVersion.Proposed) 
-                    ? DataRowVersion.Proposed : DataRowVersion.Default);
-				EntityFormatting formatting = Formatting(actualData, 
-                    entityId, Guid.Empty, null);
-				bool isNew = row.RowState == DataRowState.Added 
-                    || row.RowState == DataRowState.Detached;
-				RowSecurityState result = new RowSecurityState
-                {
-                    Id = DatasetTools.PrimaryKey(row)[0],
-                    BackgroundColor = formatting.BackColor.ToArgb(),
-                    ForegroundColor = formatting.ForeColor.ToArgb(),
-                    AllowDelete = RowLevelSecurityState(originalData,
-                        actualData, null, CredentialType.Delete, entityId,
-                    Guid.Empty, isNew),
-                    AllowCreate = RowLevelSecurityState(originalData,
-                        actualData, null, CredentialType.Create, entityId,
-                        Guid.Empty, isNew)
-                };
-
-				// columns
-				foreach(DataColumn col in row.Table.Columns)
-				{
-					if(col.ExtendedProperties.Contains("Id"))
-					{
-						Guid fieldId = (Guid)col.ExtendedProperties["Id"];
-
-						bool allowUpdate = RowLevelSecurityState(originalData, 
-                            actualData, col.ColumnName, CredentialType.Update,
-                            entityId, fieldId, isNew);
-						bool allowRead = RowLevelSecurityState(originalData, 
-                            actualData, col.ColumnName, CredentialType.Read, 
-                            entityId, fieldId, isNew);
-
-						EntityFormatting fieldFormatting = Formatting(actualData, 
-                            entityId, fieldId, null);
-						string dynamicLabel = this.DynamicLabel(actualData, 
-                            entityId, fieldId, null);
-
-						result.Columns.Add(new FieldSecurityState(col.ColumnName,
-                            allowUpdate, allowRead, dynamicLabel, 
-                            fieldFormatting.BackColor.ToArgb(), 
-                            fieldFormatting.ForeColor.ToArgb()));
-					}
-				}
-
-				// relations
-                foreach (DataRelation rel in row.Table.ChildRelations)
-                {
-                    Guid childEntityId = (Guid)rel.ChildTable.ExtendedProperties["EntityId"];
-                    bool isDummyRow = false;
-                    DataRow childRow = null;
-                    DataRow[] childRows = row.GetChildRows(rel);
-                    try
-                    {
-                        if (childRows.Length > 0)
-                        {
-                            childRow = childRows[0];
-                        }
-                        else
-                        {
-                            isDummyRow = true;
-                            childRow = DatasetTools.CreateRow(row, rel.ChildTable, rel, profileId);
-
-                            // go through each column and lookup any looked-up column values
-                            foreach (DataColumn childCol in childRow.Table.Columns)
-                            {
-#if !ORIGAM_SERVER
-                                if (childRow.RowState != DataRowState.Unchanged
-                                    && childRow.RowState != DataRowState.Detached)
-                                {
-#endif
-                                    this.ProcessRulesLookupFields(childRow, childCol.ColumnName);
-#if !ORIGAM_SERVER
-                                }
-#endif
-                            }
-                        }
-
-                        XmlContainer originalChildData = DatasetTools.GetRowXml(
-                            childRow, DataRowVersion.Original);
-                        XmlContainer actualChildData = DatasetTools.GetRowXml(
-                            childRow, childRow.HasVersion(DataRowVersion.Proposed)
-                            ? DataRowVersion.Proposed : DataRowVersion.Default);
-
-                        bool allowRelationCreate = RowLevelSecurityState(originalChildData,
-                            actualChildData,
-                            null,
-                            CredentialType.Create,
-                            childEntityId,
-                            Guid.Empty,
-                            row.RowState == DataRowState.Added || row.RowState == DataRowState.Detached
-                            );
-
-                        result.Relations.Add(new RelationSecurityState(
-                            rel.ChildTable.TableName, allowRelationCreate));
-                    }
-                    catch (Exception ex)
-                    {
-                        if (log.IsErrorEnabled)
-                        {
-                            log.LogOrigamError(string.Format(
-                                "Failed evaluating security rule for child relation {0} for entity {1}", 
-                                rel?.RelationName, entityId), ex);
-                        }
-                        throw;
-                    }
-                    finally
-                    {
-                        if (isDummyRow && childRow != null) childRow.Delete();
-                    }
-                }
-
-				// action buttons
-				// TODO: resolve only those action buttons valid for a current form - passing
-				// a screen/section id would be neccessary
-                result.DisabledActions = GetDisabledActions(
-                    originalData, actualData, entityId, formId);
-				return result;
-			}
-			else
-			{
-				return null;
 			}
 		}
 
@@ -1896,7 +1755,7 @@ namespace Origam.Rule
 				        dataToUseForRule, action.Rule, action.Roles, null);
 		}
 
-		public bool RowLevelSecurityState(XmlContainer originalData, XmlContainer actualData, string field, CredentialType type, Guid entityId, Guid fieldId, bool isNewRow)
+		public bool EvaluateRowLevelSecurityState(XmlContainer originalData, XmlContainer actualData, string field, CredentialType type, Guid entityId, Guid fieldId, bool isNewRow)
 		{
 			ArrayList rules = new ArrayList();
 				
@@ -1991,7 +1850,7 @@ namespace Origam.Rule
 		private bool IsRuleMatching(XmlContainer data, IRule rule, string roles, XPathNodeIterator contextPosition)
 		{
 			// check roles
-			if(!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
+			if (!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
 			{
 				return false;
 			}
@@ -2000,8 +1859,7 @@ namespace Origam.Rule
 			if(rule != null)
 			{
 				object result = this.EvaluateRule(rule, data, contextPosition);
-
-				if(result is bool)
+				if (result is bool)
 				{
 					return (bool)result;
 				}

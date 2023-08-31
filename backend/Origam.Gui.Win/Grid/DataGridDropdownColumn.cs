@@ -142,7 +142,7 @@ namespace Origam.Gui.Win
 				{
 					if(_ruleEngine != null)
 					{
-						_dropDown.ReadOnly = ! _ruleEngine.RowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
+						_dropDown.ReadOnly = ! _ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
 					}
 				}
 				else
