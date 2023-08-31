@@ -41,6 +41,7 @@ using System.Linq;
 using System.Web;
 using Origam.Extensions;
 using Origam.Service.Core;
+using ImageMagick;
 
 namespace Origam.Server.Pages
 {
@@ -633,11 +634,11 @@ namespace Origam.Server.Pages
             else
             {
                 // get a thumbnail
-                Image img = null;
+                MagickImage img = null;
 
                 try
                 {
-                    img = Image.FromStream(file.InputStream);
+                    img = new MagickImage(file.InputStream);
                 }
                 catch
                 {
