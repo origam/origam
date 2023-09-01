@@ -168,6 +168,7 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
         return (
           <CScreenSectionTabbedView
             key={xso.$iid}
+            id={xso.attributes["Id"]}
             boxes={findBoxes(xso)}
             nextNode={run}
             dataViewMap={dataViewMap}

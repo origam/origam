@@ -45,7 +45,7 @@ import { RootError } from "RootError";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ArrayPrototypes } from "@origam/utils"
 import {
-  isAddRecordShortcut,
+  isAddRecordShortcut, isCycleSectionsShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
   isFilterRecordShortcut, isSaveShortcut
@@ -72,6 +72,7 @@ function disableAutoZoomingOnIPhone(){
 function disableCollidingBrowserShortcuts() {
   const ignoreShortcuts = (event: KeyboardEvent) => {
     if (
+      isCycleSectionsShortcut(event) ||
       isAddRecordShortcut(event) ||
       isDuplicateRecordShortcut(event) ||
       isDeleteRecordShortcut(event) ||
