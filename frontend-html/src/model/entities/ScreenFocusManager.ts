@@ -5,6 +5,7 @@ import { getActivePerspective } from "model/selectors/DataView/getActivePerspect
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { EventHandler } from "utils/events";
 import { findStopping } from "xmlInterpreters/xmlUtils";
+import { IPanelViewType } from "model/entities/types/IPanelViewType";
 
 export class ScreenFocusManager {
   private gridManagers: GridFocusManager[] = [];
@@ -22,6 +23,10 @@ export class ScreenFocusManager {
     window.addEventListener("keydown", this.boundOnKeyDown, true);
   }
 
+  private get dataViews(){
+    return getFormScreen(this).dataViews;
+  }
+
   dispose(){
     window.removeEventListener("focus", this.boundOnFocus, true);
     window.removeEventListener("keydown", this.boundOnKeyDown, true);
@@ -31,20 +36,26 @@ export class ScreenFocusManager {
     if(event.key === "F6"){
       console.log("F6");
       const activeDataViewModelInstanceId = this.getDataViewId(document.activeElement);
-      const gridManager = this.getNextVisibleGridManager(activeDataViewModelInstanceId)
-      gridManager.focusTableIfNeeded();
+      const dataView = this.getNextVisibleDataView(activeDataViewModelInstanceId)
+      const perspective = getActivePerspective(dataView);
+      if(perspective === IPanelViewType.Form){
+        dataView.formFocusManager.forceAutoFocus();
+      }
+      else if(perspective === IPanelViewType.Table){
+        dataView.gridFocusManager.focusTableIfNeeded();
+      }
     }
   }
 
-  private getNextVisibleGridManager(dataViewModelInstanceId: string | null){
-    const visibleGridManagers=  this.gridManagers.filter(x => this.isVisible(x.dataViewModelInstanceId));
+  private getNextVisibleDataView(dataViewModelInstanceId: string | null){
+    const visibleDataViews=  this.dataViews.filter(x => this.isVisible(x.modelInstanceId));
     if(!dataViewModelInstanceId){
-      return visibleGridManagers[0];
+      return visibleDataViews[0];
     }
-    const currentIndex = visibleGridManagers.findIndex(x => x.dataViewModelInstanceId === dataViewModelInstanceId);
-    return currentIndex == visibleGridManagers.length - 1
-      ? visibleGridManagers[0]
-      : visibleGridManagers[currentIndex + 1];
+    const currentIndex = visibleDataViews.findIndex(x => x.modelInstanceId === dataViewModelInstanceId);
+    return currentIndex == visibleDataViews.length - 1
+      ? visibleDataViews[0]
+      : visibleDataViews[currentIndex + 1];
   }
 
   private getDataViewId(element: Element | null){
