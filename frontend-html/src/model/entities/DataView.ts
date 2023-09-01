@@ -97,8 +97,8 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  formFocusManager: FormFocusManager = new FormFocusManager(this);
-  gridFocusManager: GridFocusManager = new GridFocusManager(this);
+  formFocusManager: FormFocusManager;
+  gridFocusManager: GridFocusManager;
 
   @observable aggregationData: IAggregation[] = [];
 
@@ -114,6 +114,8 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
+    this.formFocusManager = new FormFocusManager(this);
+    this.gridFocusManager = new GridFocusManager(this);
     this.focusManager.registerGridFocusManager(this.gridFocusManager);
     this.focusManager.registerFormFocusManager(this.formFocusManager);
     this.focusManager.focusOutsideOfGridEditor.subscribe(

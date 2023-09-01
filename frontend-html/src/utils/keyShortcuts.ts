@@ -17,6 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+export function isCycleSectionsShortcut(event: any) {
+  return event.key === "F6";
+}
+
 export function isSaveShortcut(event: any) {
   return event.key === "s" && (event.ctrlKey || event.metaKey) || event.key === "F5";
 }
