@@ -20,12 +20,11 @@ namespace Origam.Rule
         public RowSecurityState Result { get; private set; }
         private DataRow row;
         private RuleEngine ruleEngine;
-
         private Guid entityId;
         private bool isNew;
         private XmlContainer originalData;
         private XmlContainer actualData;
-        public bool isBuildable;
+        private bool isBuildable;
 
 
         public static RowSecurityState BuildFull(RuleEngine ruleEngine,
