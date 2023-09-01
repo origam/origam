@@ -8,8 +8,6 @@ import { findStopping } from "xmlInterpreters/xmlUtils";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 
 export class ScreenFocusManager {
-  private gridManagers: GridFocusManager[] = [];
-  private formManagers: FormFocusManager[] = [];
   focusOutsideOfGridEditor = new EventHandler<FocusEvent>();
   parent: any;
   private visibleDataViews = new Map<string, string[]>();
@@ -89,17 +87,9 @@ export class ScreenFocusManager {
     return false;
   }
 
-  registerGridFocusManager(manager:GridFocusManager) {
-    this.gridManagers.push(manager);
-  }
-  registerFormFocusManager(manager:FormFocusManager) {
-    this.formManagers.push(manager);
-  }
-
   setFocus() {
     const managerWithOpenEditor =
-      this.gridManagers.some(x => x.activeEditor) ||
-      this.formManagers.some(x => x.lastFocused);
+      this.dataViews.some(x => x.formFocusManager.lastFocused || x.gridFocusManager.activeEditor);
     if (!managerWithOpenEditor) {
       const formScreen = getFormScreen(this.parent);
       if (formScreen.rootDataViews.length === 1) {
@@ -109,8 +99,7 @@ export class ScreenFocusManager {
   }
 
   async activeEditorCloses(){
-    for (const gridManager of this.gridManagers) {
-      const dataView = getDataView(gridManager);
+    for (const dataView of this.dataViews) {
       if(dataView.isFormViewActive())
       {
         await dataView.formFocusManager.activeEditorCloses();

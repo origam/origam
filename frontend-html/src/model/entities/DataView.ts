@@ -116,8 +116,6 @@ export class DataView implements IDataView {
     this.serverSideGrouper.parent = this;
     this.formFocusManager = new FormFocusManager(this);
     this.gridFocusManager = new GridFocusManager(this);
-    this.focusManager.registerGridFocusManager(this.gridFocusManager);
-    this.focusManager.registerFormFocusManager(this.formFocusManager);
     this.focusManager.focusOutsideOfGridEditor.subscribe(
       (event?: FocusEvent) => {
           this.rowIdForImmediateDeletion = undefined
