@@ -56,6 +56,7 @@ using System.Security.Principal;
 using System.Text;
 using Origam.Server;
 using Origam.Server.Pages;
+using ImageMagick;
 
 namespace Origam.Server
 {
@@ -232,15 +233,15 @@ namespace Origam.Server
 //            }
 //        }
 
-        public static byte[] FixedSizeBytes(Image img, int width, int height)
+        public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
         {
-            using (Image thumbnail = FixedSize(img, width, height))
+            using (MagickImage thumbnail = FixedSize(img, width, height))
             {
                 MemoryStream ms = new MemoryStream();
 
                 try
                 {
-                    thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    thumbnail.Write(ms);
                     return ms.GetBuffer();
                 }
                 finally
@@ -272,21 +273,17 @@ namespace Origam.Server
 //            return true;
 //        }
 
-        public static Image FixedSize(Image imgPhoto, int Width, int Height)
+        public static MagickImage FixedSize(MagickImage imgPhoto, int Width, int Height)
         {
             int sourceWidth = imgPhoto.Width;
             int sourceHeight = imgPhoto.Height;
-            int sourceX = 0;
-            int sourceY = 0;
             int destX = 0;
             int destY = 0;
 
             float nPercent = 0;
-            float nPercentW = 0;
-            float nPercentH = 0;
 
-            nPercentW = ((float)Width / (float)sourceWidth);
-            nPercentH = ((float)Height / (float)sourceHeight);
+            float nPercentW = ((float)Width / (float)sourceWidth);
+            float nPercentH = ((float)Height / (float)sourceHeight);
             if (nPercentH < nPercentW)
             {
                 nPercent = nPercentH;
@@ -303,23 +300,12 @@ namespace Origam.Server
             int destWidth = (int)(sourceWidth * nPercent);
             int destHeight = (int)(sourceHeight * nPercent);
 
-            Bitmap bmPhoto = new Bitmap(Width, Height,
-                PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
-                imgPhoto.VerticalResolution);
-            bmPhoto.MakeTransparent(Color.Transparent);
+            var bmPhoto = new MagickImage(MagickColors.Black, Width, Height);
+            bmPhoto.Format = MagickFormat.Png;
 
-            System.Drawing.Graphics grPhoto = System.Drawing.Graphics.FromImage(bmPhoto);
-            grPhoto.Clear(Color.Transparent);
-            grPhoto.InterpolationMode =
-                InterpolationMode.HighQualityBicubic;
+            imgPhoto.Resize(destWidth, destHeight);
 
-            grPhoto.DrawImage(imgPhoto,
-                new Rectangle(destX, destY, destWidth, destHeight),
-                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-                GraphicsUnit.Pixel);
-
-            grPhoto.Dispose();
+            bmPhoto.Composite(imgPhoto, destX, destY);
             return bmPhoto;
         }
     }
