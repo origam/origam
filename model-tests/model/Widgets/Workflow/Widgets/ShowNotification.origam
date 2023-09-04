@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:swpt="http://schemas.origam.com/Origam.Schema.WorkflowModel.SetWorkflowPropertyTask/6.0.0"
   xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="1031c502-9b9e-4786-b912-f953547aa3d1"
     asi:name="ShowNotification"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -37,6 +38,7 @@
       asi:abstract="false"
       x:id="f798b235-f8a1-497d-9fa3-1e4af6030075"
       asi:name="LoadData_AllDataTypes"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/AllDataTypes/6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -80,6 +82,7 @@
       x:id="84bbad92-7fd8-4377-9a97-8fc87fabcba3"
       swpt:method="Add"
       asi:name="SetNotification"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       swpt:workflowProperty="Notification"
       swpt:xPath="'Testovani Notifikace'" />
@@ -91,6 +94,7 @@
       uift:isFinalForm="false"
       uift:isRefreshSuppressedBeforeFirstSave="true"
       asi:name="ShowData"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Widgets/Workflow/Widgets/ShowNotification.origam#ShowNotification/AllDataTypes/6368cf1a-52ec-4acb-8ed6-c85d8f20df3c"
       wt:outputMethod="FullMerge"
       uift:refreshPortalAfterSave="False"

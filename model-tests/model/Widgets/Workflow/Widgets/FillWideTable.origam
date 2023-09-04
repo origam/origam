@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="e2d36a13-8522-4159-ba65-28b2a710830d"
     asi:name="FillWideTable"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -30,6 +31,7 @@
       asi:abstract="false"
       x:id="8285e01e-6436-4506-9e19-63f612667dac"
       asi:name="03_StoreData_WideTableWithDetails"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -81,6 +83,7 @@
       asi:abstract="false"
       x:id="cf2412ce-de1f-485a-9a70-cd2fd42598a0"
       asi:name="02_Transform_WideTableWithDetails"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Widgets/Workflow/Widgets/FillWideTable.origam#FillWideTable/WideTableWithDetails/e3a32218-c24a-4d04-b982-c58b7b2516c1"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
