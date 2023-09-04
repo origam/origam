@@ -48,6 +48,7 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { isAddRecordShortcut } from "utils/keyShortcuts";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
+import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
 
 
 @inject(({property, formPanelView}) => {
@@ -335,6 +336,11 @@ export class FormViewEditor extends React.Component<{
           }
           if (isAddRecordShortcut(event)) {
             await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (event.key === "Escape") {
+            await onEscapePressed(dataView, event);
+            return;
           }
           if (this.props.property!.multiline) {
             return;
