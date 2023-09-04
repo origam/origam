@@ -6,6 +6,8 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { EventHandler } from "utils/events";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { current } from "immer";
 
 export class ScreenFocusManager {
   focusOutsideOfGridEditor = new EventHandler<FocusEvent>();
@@ -34,13 +36,16 @@ export class ScreenFocusManager {
     if(event.key === "F6"){
       console.log("F6");
       const activeDataViewModelInstanceId = this.getDataViewId(document.activeElement);
-      const dataView = this.getNextVisibleDataView(activeDataViewModelInstanceId)
-      const perspective = getActivePerspective(dataView);
+      const {currentDatView, nextDataView} = this.getNextVisibleDataView(activeDataViewModelInstanceId)
+      const currentTablePanelView = getTablePanelView(currentDatView);
+      currentTablePanelView.setEditing(false);
+
+      const perspective = getActivePerspective(nextDataView);
       if(perspective === IPanelViewType.Form){
-        dataView.formFocusManager.forceAutoFocus();
+        nextDataView.formFocusManager.forceAutoFocus();
       }
       else if(perspective === IPanelViewType.Table){
-        dataView.gridFocusManager.focusTableIfNeeded();
+        nextDataView.gridFocusManager.focusTableIfNeeded();
       }
     }
   }
@@ -48,12 +53,19 @@ export class ScreenFocusManager {
   private getNextVisibleDataView(dataViewModelInstanceId: string | null){
     const visibleDataViews=  this.dataViews.filter(x => this.isVisible(x.modelInstanceId));
     if(!dataViewModelInstanceId){
-      return visibleDataViews[0];
+      return {
+        currentDatView: undefined,
+        nextDataView: visibleDataViews[0]
+      };
     }
     const currentIndex = visibleDataViews.findIndex(x => x.modelInstanceId === dataViewModelInstanceId);
-    return currentIndex == visibleDataViews.length - 1
+    const nextDataView = currentIndex == visibleDataViews.length - 1
       ? visibleDataViews[0]
       : visibleDataViews[currentIndex + 1];
+    return {
+      currentDatView: visibleDataViews[currentIndex],
+      nextDataView: nextDataView
+    };
   }
 
   private getDataViewId(element: Element | null){
@@ -61,6 +73,9 @@ export class ScreenFocusManager {
     while(parent){
       if(parent.id.startsWith("dataView_")){
         return parent.id.substring(9);
+      }
+      if(parent.id.startsWith("editor_dataView_")){
+        return parent.id.substring(16);
       }
       parent = parent.parentElement;
     }
