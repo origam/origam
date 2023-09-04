@@ -202,6 +202,11 @@ export class TableViewEditor extends React.Component<{
             customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
+            onBlur={()=>{
+              const gridFocusManager = getGridFocusManager(dataView);
+              gridFocusManager.activeEditor = undefined;
+              gridFocusManager.editorBlur = undefined;
+            }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>

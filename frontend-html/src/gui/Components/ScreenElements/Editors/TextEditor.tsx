@@ -102,6 +102,7 @@ export class TextEditor extends React.Component<{
   }
 
   componentWillUnmount() {
+    this.props.onEditorBlur?.(null);
     this.disposers.forEach((d) => d());
   }
 
