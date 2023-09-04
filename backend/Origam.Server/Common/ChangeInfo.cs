@@ -40,6 +40,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.Rule;
 
 namespace Origam.Server
@@ -154,6 +155,24 @@ namespace Origam.Server
             ChangeInfo ci = new ChangeInfo();
             ci.Operation = Operation.DeleteAllData;
             return ci;
+        }
+
+        protected bool Equals(ChangeInfo other)
+        {
+            return entity == other.entity && operation == other.operation && Equals(objectId, other.objectId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ChangeInfo)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(entity, (int)operation, objectId);
         }
     }
 }
