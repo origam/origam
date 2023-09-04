@@ -1428,16 +1428,6 @@
     slash "^3.0.0"
     strip-ansi "^6.0.0"
 
-"@jest/environment@^29.6.3":
-  version "29.6.3"
-  resolved "https://registry.yarnpkg.com/@jest/environment/-/environment-29.6.3.tgz#bb02535c729393a0345b8d2c5eef94d34f7b35a3"
-  integrity sha512-u/u3cCztYCfgBiGHsamqP5x+XvucftOGPbf5RJQxfpeC1y4AL8pCjKvPDA3oCmdhZYPgk5AE0VOD/flweR69WA==
-  dependencies:
-    "@jest/fake-timers" "^29.6.3"
-    "@jest/types" "^29.6.3"
-    "@types/node" "*"
-    jest-mock "^29.6.3"
-
 "@jest/environment@^29.6.4":
   version "29.6.4"
   resolved "https://registry.yarnpkg.com/@jest/environment/-/environment-29.6.4.tgz#78ec2c9f8c8829a37616934ff4fea0c028c79f4f"
@@ -1462,18 +1452,6 @@
   dependencies:
     expect "^29.6.4"
     jest-snapshot "^29.6.4"
-
-"@jest/fake-timers@^29.6.3":
-  version "29.6.3"
-  resolved "https://registry.yarnpkg.com/@jest/fake-timers/-/fake-timers-29.6.3.tgz#7e780b05b14ad59dca68bdc188f6cf085552a0e8"
-  integrity sha512-pa1wmqvbj6eX0nMvOM2VDAWvJOI5A/Mk3l8O7n7EsAh71sMZblaKO9iT4GjIj0LwwK3CP/Jp1ypEV0x3m89RvA==
-  dependencies:
-    "@jest/types" "^29.6.3"
-    "@sinonjs/fake-timers" "^10.0.2"
-    "@types/node" "*"
-    jest-message-util "^29.6.3"
-    jest-mock "^29.6.3"
-    jest-util "^29.6.3"
 
 "@jest/fake-timers@^29.6.4":
   version "29.6.4"
@@ -3962,10 +3940,10 @@ immer@^10.0.2:
   resolved "https://registry.yarnpkg.com/immer/-/immer-10.0.2.tgz#11636c5b77acf529e059582d76faf338beb56141"
   integrity sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==
 
-immutable@^4.0.0, immutable@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.3.tgz#8934ff6826d996a7642c8dc4b46e694dd19561e3"
-  integrity sha512-808ZFYMsIRAjLAu5xkKo0TsbY9LBy9H5MazTKIEHerNkg0ymgilGfBPMR/3G7d/ihGmuK2Hw8S1izY2d3kd3wA==
+immutable@^4.0.0, immutable@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.4.tgz#2e07b33837b4bb7662f288c244d1ced1ef65a78f"
+  integrity sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==
 
 immutable@~3.7.4:
   version "3.7.6"
@@ -4415,13 +4393,13 @@ jest-each@^29.6.3:
     jest-util "^29.6.3"
     pretty-format "^29.6.3"
 
-jest-environment-jsdom@^29.6.3:
-  version "29.6.3"
-  resolved "https://registry.yarnpkg.com/jest-environment-jsdom/-/jest-environment-jsdom-29.6.3.tgz#c9f394f5a89f399532c794d09bd3a746d9b3e0df"
-  integrity sha512-nMJz/i27Moit9bv8Z323/13Melj4FEQH93yRu7GnilvBmPBMH4EGEkEfBTJXYuubyzhMO7w/VHzljIDV+Q/SeQ==
+jest-environment-jsdom@^29.6.4:
+  version "29.6.4"
+  resolved "https://registry.yarnpkg.com/jest-environment-jsdom/-/jest-environment-jsdom-29.6.4.tgz#0daf44454041f9e1ef7fa82eb1bd43426a82eb1c"
+  integrity sha512-K6wfgUJ16DoMs02JYFid9lOsqfpoVtyJxpRlnTxUHzvZWBnnh2VNGRB9EC1Cro96TQdq5TtSjb3qUjNaJP9IyA==
   dependencies:
-    "@jest/environment" "^29.6.3"
-    "@jest/fake-timers" "^29.6.3"
+    "@jest/environment" "^29.6.4"
+    "@jest/fake-timers" "^29.6.4"
     "@jest/types" "^29.6.3"
     "@types/jsdom" "^20.0.0"
     "@types/node" "*"
@@ -6146,10 +6124,10 @@ react-highlight-words@^0.20.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
-react-inlinesvg@*, react-inlinesvg@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.2.tgz#3f653582600634231db356114a7d91a32c5e3579"
-  integrity sha512-JHYNAABfVsFe6RXJtwS4q38XRVm75GCAof6fVvOJ+AwXi15SVWK1Ow6ZXbI/azbaZ6vjD/4gnjag2VnDoD2NvA==
+react-inlinesvg@*, react-inlinesvg@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.3.tgz#69aa4d9c01b037abb800bfa103cb5591c6f3fe76"
+  integrity sha512-qPSqksbgDc6uVX6w256XY6JmdkLpzA4RiajvHi8u2qszXrhjDl6JwhW8x3VMkO4BxL9ll+/IeKR9ZxgM8wLcKQ==
   dependencies:
     react-from-dom "^0.6.2"
 

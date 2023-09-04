@@ -723,7 +723,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
             rootDataView: rootDataView,
-            preloadIsDirty: preloadIsDirty
+            preloadIsDirty: preloadIsDirty,
+            runChangeRowReaction: true
           });
         }
       }
@@ -878,6 +879,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *readFirstChunkOfRows(args: {
     rootDataView: IDataView,
+    runChangeRowReaction: boolean
     preloadIsDirty?: boolean
   }): any {
     const rootDataView = args.rootDataView;
@@ -920,7 +922,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       rootDataView.restoreViewState();
     } finally {
-      rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
+      if(args.runChangeRowReaction){
+        rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
+      }
       this.monitor.inFlow--;
     }
   }
@@ -964,7 +968,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       do {
         this._readFirstChunkOfRowsScheduled = false;
         yield*this.readFirstChunkOfRows({
-          rootDataView: rootDataView
+          rootDataView: rootDataView,
+          runChangeRowReaction: false
         });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {
