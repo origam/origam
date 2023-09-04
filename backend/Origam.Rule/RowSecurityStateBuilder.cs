@@ -47,7 +47,10 @@ namespace Origam.Rule
             DataRow row, object profileId, Guid formId)
         {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
-            if (!builder.isBuildable) return null;
+            if (!builder.isBuildable)
+            {
+                return null;
+            }
             return builder.AddMainEntityRowStateAndFormatting()
                 .AddMainEntityFieldStates()
                 .AddRelations(profileId)
@@ -59,7 +62,10 @@ namespace Origam.Rule
             RuleEngine ruleEngine, DataRow row)
         {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
-            if (!builder.isBuildable) return null;
+            if (!builder.isBuildable)
+            {
+                return null;
+            }
             return builder.AddMainEntityRowStateAndFormatting()
                 .AddMainEntityFieldStates()
                 .Result;
@@ -70,7 +76,10 @@ namespace Origam.Rule
             DataRow row)
         {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
-            if (!builder.isBuildable) return null;
+            if (!builder.isBuildable)
+            {
+                return null;
+            }
             return builder.AddMainEntityRowStateAndFormatting()
                 .Result;
         }
@@ -100,7 +109,10 @@ namespace Origam.Rule
 
         private RowSecurityStateBuilder AddMainEntityRowStateAndFormatting()
         {
-            if (!isBuildable) return this;
+            if (!isBuildable)
+            {
+                return this;
+            }
             EntityFormatting formatting = ruleEngine.Formatting(actualData,
             entityId, Guid.Empty, null);
 
@@ -121,7 +133,10 @@ namespace Origam.Rule
 
         private RowSecurityStateBuilder AddMainEntityFieldStates()
         {
-            if (!isBuildable) return this;
+            if (!isBuildable)
+            {
+                return this;
+            }
             foreach (DataColumn col in row.Table.Columns)
             {
                 if (col.ExtendedProperties.Contains("Id"))
@@ -154,7 +169,10 @@ namespace Origam.Rule
 
         private RowSecurityStateBuilder AddRelations(object profileId)
         {
-            if (!isBuildable) return this;
+            if (!isBuildable)
+            {
+                return this;
+            }
             foreach (DataRelation rel in row.Table.ChildRelations)
             {
                 Guid childEntityId = (Guid)rel.ChildTable.
@@ -228,7 +246,10 @@ namespace Origam.Rule
 
         private RowSecurityStateBuilder AddDisabledActions(Guid formId)
         {
-            if (!isBuildable) return this;
+            if (!isBuildable)
+            {
+                return this;
+            }
             Result.DisabledActions = ruleEngine.GetDisabledActions(
                 originalData, actualData, entityId, formId);            
             return this;
