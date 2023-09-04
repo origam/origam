@@ -93,7 +93,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/react-beautiful-dnd": "^13.1.4",
-    "@types/uuid": "^9.0.2",
+    "@types/uuid": "^9.0.3",
     "@vitejs/plugin-react": "^4.0.4",
     "browserslist-useragent-regexp": "^3.0.2",
     "identity-obj-proxy": "^3.0.0",
