@@ -8,6 +8,7 @@ import { findStopping } from "xmlInterpreters/xmlUtils";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { current } from "immer";
+import { isCycleSectionsShortcut } from "utils/keyShortcuts";
 
 export class ScreenFocusManager {
   focusOutsideOfGridEditor = new EventHandler<FocusEvent>();
@@ -33,18 +34,17 @@ export class ScreenFocusManager {
   }
 
   private onKeyDown(event: KeyboardEvent){
-    if(event.key === "F6"){
-      console.log("F6");
+    if (isCycleSectionsShortcut(event))  {
       const activeDataViewModelInstanceId = this.getDataViewId(document.activeElement);
       const {currentDatView, nextDataView} = this.getNextVisibleDataView(activeDataViewModelInstanceId)
       const currentTablePanelView = getTablePanelView(currentDatView);
       currentTablePanelView.setEditing(false);
 
       const perspective = getActivePerspective(nextDataView);
-      if(perspective === IPanelViewType.Form){
+      if (perspective === IPanelViewType.Form) {
         nextDataView.formFocusManager.forceAutoFocus();
       }
-      else if(perspective === IPanelViewType.Table){
+      else if (perspective === IPanelViewType.Table) {
         nextDataView.gridFocusManager.focusTableIfNeeded();
       }
     }
