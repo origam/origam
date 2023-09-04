@@ -1984,10 +1984,10 @@
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet-draw@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.7.tgz#2013eeb3a139a14baad80122d6c845faac985e0a"
-  integrity sha512-Tje5jjUC9aPmy9NSYx8HbPIVpX2VT3JyBk6wZ46PqneJzgev+UyBuK72Emvu8xaSmAEBkhlsImR7SACsdItXSw==
+"@types/leaflet-draw@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.8.tgz#d8c24fe5f42a760786683a056fb2b23a8e1f1bc5"
+  integrity sha512-Xtws1fwT58Gst6l4FnOoX4dUSuiBK34yIYI1nnhI2vgyXaTwbBHbzaZgHOm7lpbJmEicoyu1g2AntVjvo9ztKg==
   dependencies:
     "@types/leaflet" "*"
 
