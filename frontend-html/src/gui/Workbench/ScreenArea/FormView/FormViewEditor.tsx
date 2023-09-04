@@ -46,6 +46,8 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
+import { isAddRecordShortcut } from "utils/keyShortcuts";
+import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 
 
 @inject(({property, formPanelView}) => {
@@ -330,6 +332,9 @@ export class FormViewEditor extends React.Component<{
               this.focusManager.focusNext(document.activeElement);
             }
             return;
+          }
+          if (isAddRecordShortcut(event)) {
+            await onCreateRowClick(dataView)(event);
           }
           if (this.props.property!.multiline) {
             return;
