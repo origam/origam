@@ -42,19 +42,29 @@ export class CScreenSectionTabbedView extends React.Component<{
 
   @action.bound activateTab(tabId: string) {
     this.activePanelId = tabId;
-    const activeBox = this.props.boxes.find(box => box.attributes["Id"] === tabId);
+    this.onTabChanged({requestFocus: true});
+  }
+
+  private onTabChanged(args:{requestFocus: boolean}) {
+    const activeBox = this.props.boxes.find(box => box.attributes["Id"] === this.activePanelId);
     const gridBoxes = find(activeBox, (node) => node?.attributes?.Type === "Grid");
 
     if (gridBoxes.length > 0) {
       const firstGridId = gridBoxes[0].attributes["Id"] as string
       const dataView = this.props.dataViewMap.get(firstGridId);
-      const tablePanelView = getTablePanelView(dataView);
-      tablePanelView.triggerOnFocusTable();
+      if(args.requestFocus){
+        const tablePanelView = getTablePanelView(dataView);
+        tablePanelView.triggerOnFocusTable();
+      }
 
       const modelInstanceIds = gridBoxes.map(element => element.attributes["ModelInstanceId"] as string)
       const screenFocusManager = getScreenFocusManager(dataView);
       screenFocusManager.setVisibleDataViews(this.props.id, modelInstanceIds);
     }
+  }
+
+  componentDidMount() {
+    this.onTabChanged({requestFocus: false});
   }
 
   render() {
