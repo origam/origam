@@ -45,7 +45,7 @@ export class RowState implements IRowState {
   constructor(debouncingDelayMilliseconds?: number) {
     this.triggerLoadDebounced = _.debounce(
       this.triggerLoadImm,
-      debouncingDelayMilliseconds == undefined ? 200 : debouncingDelayMilliseconds);
+      debouncingDelayMilliseconds == undefined ? 0 : debouncingDelayMilliseconds);
     visibleRowsChanged.subscribe((visibleRows) => {
       const dataSource = getDataSource(this);
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
