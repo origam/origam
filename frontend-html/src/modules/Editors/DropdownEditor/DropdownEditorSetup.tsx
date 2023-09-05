@@ -50,6 +50,7 @@ export function DropdownEditorSetupFromXml(
   const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
   let index = 0;
   const drivers = new DropdownColumnDrivers();
+  drivers.customFieldStyle = customStyle;
   if (attributes.SuppressEmptyColumns === "true") {
     drivers.driversFilter = (driver) => {
       return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;

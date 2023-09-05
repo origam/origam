@@ -221,7 +221,10 @@ export class DropdownEditorTable extends  React.Component<{
       let cellWidth = 100;
       for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
         const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding;
+        const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
+        const currentCellWidth =
+          Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
+        const customFieldStyle = this.props.drivers.customFieldStyle;
         if (currentCellWidth > cellWidth) {
           cellWidth = currentCellWidth;
         }
@@ -230,4 +233,16 @@ export class DropdownEditorTable extends  React.Component<{
     }
     return widths;
   }
+}
+
+function parsePaddingValue(paddingValue: string | undefined){
+  if(!paddingValue){
+    return 0;
+  }
+  const regExp = new RegExp("(\\d+)px");
+  const result = regExp.exec(paddingValue);
+  if(result){
+    return parseInt(result[0]);
+  }
+  return 0;
 }
