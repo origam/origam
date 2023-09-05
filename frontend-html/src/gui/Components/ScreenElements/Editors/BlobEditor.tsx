@@ -143,7 +143,7 @@ export class BlobEditor extends React.Component<{
             Property: this.props.Property!,
             FileName: this.props.value,
             parameters: this.props.parameters,
-            DateCreated: "2010-01-01",
+            DateCreated: toOrigamServerString(moment(file.lastModifiedDate)), // DateCreated is not available in the browser
             DateLastModified: toOrigamServerString(moment(file.lastModifiedDate)),
           });
 
