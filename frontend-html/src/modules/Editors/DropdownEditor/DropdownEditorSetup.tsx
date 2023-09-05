@@ -34,22 +34,22 @@ export function DropdownEditorSetupFromXml(
   dropdownEditorBehavior: IDriverState,
   isLink: boolean | undefined
 ): DropdownEditorSetup {
-  const rat = xmlNode.attributes;
-  const lookupId = rat.LookupId;
-  const propertyId = rat.Id;
-  const showUniqueValues = rat.DropDownShowUniqueValues === "true";
-  const identifier = rat.Identifier;
+  const attributes = xmlNode.attributes;
+  const lookupId = attributes.LookupId;
+  const propertyId = attributes.Id;
+  const showUniqueValues = attributes.DropDownShowUniqueValues === "true";
+  const identifier = attributes.Identifier;
   let identifierIndex = 0;
-  const dropdownType = rat.DropDownType;
-  const cached = rat.Cached === "true";
-  const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
+  const dropdownType = attributes.DropDownType;
+  const cached = attributes.Cached === "true";
+  const searchByFirstColumnOnly = attributes.SearchByFirstColumnOnly === "true";
 
   const columnNames: string[] = [identifier];
   const visibleColumnNames: string[] = [];
   const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
   let index = 0;
   const drivers = new DropdownColumnDrivers();
-  if (rat.SuppressEmptyColumns === "true") {
+  if (attributes.SuppressEmptyColumns === "true") {
     drivers.driversFilter = (driver) => {
       return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
     };
