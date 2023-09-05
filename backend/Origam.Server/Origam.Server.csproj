@@ -83,6 +83,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.AspNetCore.Mvc\MiniProfiler.AspNetCore.Mvc.csproj" />
+    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.AspNetCore\MiniProfiler.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\miniprofilerdotnet\src\MiniProfiler.Shared\MiniProfiler.Shared.csproj" />
     <ProjectReference Include="..\origam-utils\origam-utils.csproj" />
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj" />
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj" />

@@ -37,6 +37,8 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.Workbench.Services;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 
 namespace Origam.DA.Service
 {
@@ -110,6 +112,9 @@ namespace Origam.DA.Service
 					Query.Parameters, 
 					dbDataAdapter.SelectCommand.Parameters, 
 					CurrentProfile);
+				ProfiledDbDataAdapter profiledAdapter =
+					new ProfiledDbDataAdapter(dbDataAdapter,
+					MiniProfiler.Current);
 				try
 				{
 					if(Transaction == null)
@@ -118,8 +123,8 @@ namespace Origam.DA.Service
 					}
 					Dataset.Tables[Entity.Name].BeginLoadData();
 					DataService.TraceCommand(
-						dbDataAdapter.SelectCommand, TransactionId);
-					adapter.Fill(Dataset);
+						profiledAdapter.SelectCommand, TransactionId);					
+					profiledAdapter.Fill(Dataset);
 					Dataset.Tables[Entity.Name].EndLoadData();
 				}
 				catch(Exception ex)
@@ -1064,9 +1069,13 @@ namespace Origam.DA.Service
 					query.Parameters, command.Parameters, currentProfile);
 				command.Connection = connection;
 				command.Transaction = transaction;
+				
 				TraceCommand(command, transactionId);
-				result = command.ExecuteScalar();
-				var dataType = OrigamDataType.Xml;
+				//result = command.ExecuteScalar();
+				var profiledDbCommand = new ProfiledDbCommand(command as DbCommand, (command as DbCommand).Connection, MiniProfiler.Current);
+				result = profiledDbCommand.ExecuteScalar();
+
+                var dataType = OrigamDataType.Xml;
 				foreach(DataStructureColumn column 
 				        in (dataStructure.Entities[0] as DataStructureEntity)
 				        .Columns)
@@ -1117,7 +1126,8 @@ namespace Origam.DA.Service
 				// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 
 				// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
 				// For more information about isolation levels, see SQL Server Books Online.
-				ResetTransactionIsolationLevel(command);
+				ResetTransactionIsolationLevel(profiledDbCommand);
+				profiledDbCommand.Dispose();
 			}
 			catch(Exception ex)
 			{
@@ -1736,7 +1746,11 @@ namespace Origam.DA.Service
             {
                 connection.Open();
             }
-            return adapter.SelectCommand.ExecuteReader(commandBehavior);
+			var profiledCommand = new ProfiledDbCommand(adapter.SelectCommand, adapter.SelectCommand.Connection, MiniProfiler.Current);
+			DbDataReader reader = profiledCommand.ExecuteReader(commandBehavior);
+			profiledCommand.Dispose();
+			return reader;
+            //return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
         
         public override IEnumerable<IEnumerable<object>> ExecuteDataReader(

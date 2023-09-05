@@ -102,5 +102,10 @@ namespace Origam.Server.Configuration
         
         public bool ReloadModelWhenFilesChangesDetected =>
             configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
+
+        public bool EnableMiniProfiler =>
+            configuration
+                .GetSection("MiniProfiler")
+                .GetValue("Enabled", false);
     }
 }

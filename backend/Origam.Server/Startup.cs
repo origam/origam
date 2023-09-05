@@ -205,6 +205,25 @@ namespace Origam.Server
                 services.AddControllers()
                     .AddApplicationPart(customControllerAssembly);
             }
+            if (startUpConfiguration.EnableMiniProfiler)
+            {
+                services.AddMiniProfiler(options =>
+                {
+                    // All of this is optional. You can simply call .AddMiniProfiler() for all defaults
+                    // (Optional) Path to use for profiler URLs, default is /mini-profiler-resources
+                    options.RouteBasePath = "/profiler";
+                    // Optionally change the number of decimal places shown for millisecond timings.
+                    // (defaults to 2)
+                    options.PopupDecimalPlaces = 1;
+                    // ...see, https://miniprofiler.com/dotnet/AspDotNetCore for more
+
+                    // profiling result is available to logged-in users having
+                    // ViewMiniProfilerResults application role assigned
+                    options.ResultsAuthorize = request =>
+                        SecurityManager.GetAuthorizationProvider()
+                        .Authorize(SecurityManager.CurrentPrincipal, "ViewMiniProfilerResults");
+                });
+            }
         }
 
         private void ConfigureAuthentication(IServiceCollection services)
@@ -347,6 +366,10 @@ namespace Origam.Server
             });
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            if (startUpConfiguration.EnableMiniProfiler)
+            {
+                app.UseMiniProfiler();
+            }
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller}/{action=Index}/{id?}");

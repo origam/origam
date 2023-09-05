@@ -42,6 +42,7 @@ using System.Security.Principal;
 using System.Threading;
 using Origam.Extensions;
 using Origam.Service.Core;
+using StackExchange.Profiling;
 
 namespace Origam.Workflow
 {
@@ -632,7 +633,12 @@ namespace Origam.Workflow
 						workflowStackTrace.RecordStepStart(WorkflowBlock.Name, currentModelStep?.Name);
 						SetStepStatus(currentModelStep, WorkflowStepResult.Running);
 						engineTask.Finished += new WorkflowEngineTaskFinished(engineTask_Finished);
-						engineTask.Execute();
+						using (MiniProfiler.Current.Step(
+							WorkflowBlock.Name + ":"
+							+ currentModelStep?.Name))
+						{
+							engineTask.Execute();
+						}
 						break;
 					}
 					else
