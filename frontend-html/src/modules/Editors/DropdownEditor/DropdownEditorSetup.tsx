@@ -32,6 +32,7 @@ export function DropdownEditorSetupFromXml(
   xmlNode: any,
   dropdownEditorDataTable: DropdownDataTable,
   dropdownEditorBehavior: IDriverState,
+  customStyle: {[key: string]: string} | undefined,
   isLink: boolean | undefined
 ): DropdownEditorSetup {
   const attributes = xmlNode.attributes;
@@ -74,7 +75,8 @@ export function DropdownEditorSetupFromXml(
         bodyCellDriver = new TextCellDriver(
           index,
           dropdownEditorDataTable,
-          dropdownEditorBehavior
+          dropdownEditorBehavior,
+          index == 1 ? customStyle : undefined
         );
         break;
       case "Number":
@@ -105,7 +107,7 @@ export function DropdownEditorSetupFromXml(
 
     drivers.allDrivers.push({
       columnId: id,
-      headerCellDriver: new DefaultHeaderCellDriver(name),
+      headerCellDriver: new DefaultHeaderCellDriver(name, index == 1 ? customStyle : undefined),
       bodyCellDriver,
     });
   }

@@ -27,7 +27,8 @@ export class TextCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private driverState: IDriverState
+    private driverState: IDriverState,
+    private customStyle: {[key: string]: string} | undefined
   ) {
   }
 
@@ -47,6 +48,7 @@ export class TextCellDriver implements IBodyCellDriver {
           this.driverState.chosenRowId === rowId,
           this.driverState.cursorRowId === rowId
         )}
+        style={this.customStyle}
         onClick={(e) => {
           this.driverState.handleTableCellClicked(e, rowIndex)
         }
