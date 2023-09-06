@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IDataView } from "model/entities/types/IDataView";
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 
-export async function onEscapePressed(dataView: IDataView, event: KeyboardEvent) {
-  if (dataView.rowIdForImmediateDeletion) {
+export async function onEscapePressed(dataView: IDataView, event: any) {
+  if (dataView.rowIdForImmediateDeletion && !event.closedADropdown) {
     dataView.rowIdForImmediateDeletion = undefined;
     await onDeleteRowClick(dataView)(event, true);
   }

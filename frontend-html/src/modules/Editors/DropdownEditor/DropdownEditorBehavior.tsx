@@ -210,13 +210,17 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
 
   @action.bound
   handleInputKeyDown(event: any) {
+    const wasDropped = this.isDropped;
     switch (event.key) {
       case "Escape":
         this.dropUp();
         this.userEnteredValue = undefined;
+        if (wasDropped) {
+          event.closedADropdown = true;
+          return;
+        }
         break;
       case "Enter":
-        const wasDropped = this.isDropped;
         if (this.isDropped && !this.isWorking) {
           this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           this.dropUp();
