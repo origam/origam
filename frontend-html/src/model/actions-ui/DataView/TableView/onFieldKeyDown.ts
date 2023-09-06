@@ -119,10 +119,12 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Escape": {
-          yield onEscapePressed(dataView, event);
-          tablePanelView.setEditing(false);
-          tablePanelView.clearCurrentCellEditData();
-          tablePanelView.triggerOnFocusTable();
+          if(!event.closedADropdown){
+            yield onEscapePressed(dataView, event);
+            tablePanelView.setEditing(false);
+            tablePanelView.clearCurrentCellEditData();
+            tablePanelView.triggerOnFocusTable();
+          }
           break;
         }
         default: {
