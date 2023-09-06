@@ -67,7 +67,7 @@ namespace Origam.Gui.Win
 					RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
 					if(ruleEngine != null)
 					{
-						this.ReadOnly = ! ruleEngine.RowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
+						this.ReadOnly = ! ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
 					}
 				}
 				else

@@ -1359,7 +1359,8 @@ namespace Origam.Server
                                     }
                                     else
                                     {
-                                        result.Add(RuleEngine.RowLevelSecurityState(row, profileId, FormId));
+                                        result.Add(RowSecurityStateBuilder.BuildFull(
+                                            RuleEngine, row, profileId, FormId));
                                     }
                                 }
                                 finally
@@ -1383,16 +1384,18 @@ namespace Origam.Server
             RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
             foreach (var row in rowSearchResult.Rows)
             {
-                result.Add(RuleEngine.RowLevelSecurityState(row, profileId, FormId));
+                result.Add(RowSecurityStateBuilder.BuildFull(RuleEngine, row, profileId, FormId));
             }
 
             // try to get the rest from the database
             if (rowSearchResult.IdsNotFoundInStore.Count > 0)
             {
-                var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
+                DataRowCollection loadedRows = LoadMissingRows(entity,
+                    rowSearchResult.IdsNotFoundInStore);
                 foreach (DataRow row in loadedRows)
                 {
-                    RowSecurityState rowSecurity = this.RuleEngine.RowLevelSecurityState(row, profileId, FormId);
+                    RowSecurityState rowSecurity = RowSecurityStateBuilder.
+                        BuildJustMainEntityRowLevelEvenWithoutFields(this.RuleEngine, row);
                     if (rowSecurity != null)
                     {
                         result.Add(rowSecurity);
@@ -1577,7 +1580,8 @@ namespace Origam.Server
                 }
 
                 table.Rows.Add(newRow);
-                if (!this.RuleEngine.RowLevelSecurityState(newRow, profile.Id, FormId).AllowCreate)
+                if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
+                    RuleEngine, newRow).AllowCreate)
                 {
                     table.Rows.Remove(newRow);
                     throw new Exception(Resources.ErrorCreateRecordNotAllowed);
@@ -1980,7 +1984,8 @@ namespace Origam.Server
                 try
                 {
                     DataRow newTmpRow = tmpDS.Tables[table.TableName].Rows[0];
-                    if (!this.RuleEngine.RowLevelSecurityState(newTmpRow, profile.Id, FormId).AllowCreate)
+                    if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
+                        RuleEngine, newTmpRow).AllowCreate)
                     {
                         throw new Exception(Resources.ErrorCreateRecordNotAllowed);
                     }
