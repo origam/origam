@@ -87,6 +87,11 @@ export class DropdownEditorTable extends  React.Component<{
   columnCount = 0;
   readonly cellPadding = 20;
   readonly maxHeight = 150;
+  disposer: any;
+
+  componentDidMount() {
+    this.refMultiGrid.current?.recomputeGridSize();
+  }
 
   get rowCount(){
     return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
