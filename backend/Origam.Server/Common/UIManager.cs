@@ -423,7 +423,7 @@ namespace Origam.Server
                     XmlContainer newRecordData = new XmlContainer();
                     newRecordData.Xml.AppendChild(
                         newRecordData.Xml.CreateElement("ROOT"));
-                    panelConfig.AllowCreate = re.RowLevelSecurityState(
+                    panelConfig.AllowCreate = re.EvaluateRowLevelSecurityState(
                         newRecordData, newRecordData, null,
                         CredentialType.Create,
                         (Guid) data.Tables[panel.Entity]
