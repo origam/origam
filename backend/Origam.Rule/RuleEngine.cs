@@ -1850,7 +1850,7 @@ namespace Origam.Rule
 		private bool IsRuleMatching(XmlContainer data, IRule rule, string roles, XPathNodeIterator contextPosition)
 		{
 			// check roles
-			if (!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
+			if(!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
 			{
 				return false;
 			}
