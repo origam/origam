@@ -168,7 +168,7 @@ namespace Origam.Gui.Win
                             this.AsTextBox.Bounds = Rectangle.Empty;
                             return;
                         }
-                        AsTextBox.ReadOnly = !ruleEngine.RowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, CredentialType.Update);
+                        AsTextBox.ReadOnly = !ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, CredentialType.Update);
 					}
 				}
 				else
@@ -221,7 +221,7 @@ namespace Origam.Gui.Win
 
         private bool IsReadDenied(DataRow row, RuleEngine ruleEngine)
         {
-            return !ruleEngine.RowLevelSecurityState(row, this.MappingName, CredentialType.Read);
+            return !ruleEngine.EvaluateRowLevelSecurityState(row, this.MappingName, CredentialType.Read);
         }
 
 
