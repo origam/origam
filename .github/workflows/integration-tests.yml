@@ -85,12 +85,6 @@ jobs:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net6.0/publish"
 
-    - name: Upload workflow integration tests artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: workflowbuild
-        path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
-        
   tests:
     needs: [frontend,server]
     name: tests
@@ -121,12 +115,6 @@ jobs:
         name: htmlfrontendbuild
         path: test/HTML5/clients/origam
 
-    - name: Download workflow integration tests artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: workflowbuild
-        path: test/HTML5_TESTS
-        
     - name: Copy model to test directory
       run: |
         mkdir test/model
