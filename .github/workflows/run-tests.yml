@@ -1,10 +1,13 @@
-name: "RunTests"
+# Each release branch uses its own script, 
+# there's no need to have multiple scripts
+# per release.
+name: "Run Tests"
 
 on:
   push:
-    branches: [ 20* ]
+    branches: [ * ]
   pull_request:
-    branches: [ 20* ]
+    branches: [ * ]
 
 jobs:
 
@@ -26,7 +29,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: setup node
+    - name: Setup node
       uses: actions/setup-node@v2
       with:
        node-version: '14'
@@ -49,9 +52,9 @@ jobs:
         path: "frontend-html/dist"   
 
     
-  analyze:
+  server:
     needs: frontend
-    name: Analyze
+    name: server
     runs-on: windows-2022
     permissions:
       actions: read
@@ -70,7 +73,7 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Build Html Server
+    - name: Build Server
       run: |
        cd backend
        msbuild Origam.sln -t:restore /p:Configuration="Release Server"
@@ -89,9 +92,9 @@ jobs:
         name: workflowbuild
         path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
-  compose:
-    needs: analyze
-    name: Compose
+  tests:
+    needs: server
+    name: tests
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -130,12 +133,12 @@ jobs:
         mkdir test/model
         cp -r model-tests test/model
         
-    - name: Start containers
+    - name: Run Tests
       run: |
         cd test
         docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit 
 
-    - name: Stop containers
+    - name: Clean up
       if: always()
       run: |
         cd test
