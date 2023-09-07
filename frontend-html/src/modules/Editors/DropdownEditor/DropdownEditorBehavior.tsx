@@ -61,7 +61,7 @@ export interface IBehaviorData {
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
 }
 
-export class DropdownEditorBehavior implements IDropdownEditorBehavior{
+export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   private api: IDropdownEditorApi;
   private data: IDropdownEditorData;
@@ -77,7 +77,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 
-   constructor(args: IBehaviorData) {
+  constructor(args: IBehaviorData) {
     this.api = args.api;
     this.data = args.data;
     this.dataTable = args.dataTable;
