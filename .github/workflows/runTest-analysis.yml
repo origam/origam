@@ -1,4 +1,4 @@
-name: "RunTests-master"
+name: "RunTests"
 
 on:
   push:
