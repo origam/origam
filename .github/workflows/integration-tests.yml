@@ -1,7 +1,7 @@
 # Each release branch uses its own script, 
 # there's no need to have multiple scripts
 # per release.
-name: "Run Tests"
+name: "Integration Tests"
 
 on:
   push:
