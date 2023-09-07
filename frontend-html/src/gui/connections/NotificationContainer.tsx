@@ -49,7 +49,7 @@ export class NotificationContainer extends React.Component<{}> {
 
   render() {
     const activeScreen = getActiveScreen(this.workbench);
-    const formScreen = activeScreen?.content.formScreen;
+    const formScreen = activeScreen?.content?.formScreen;
     if(!formScreen || formScreen.notifications.length === 0){
       return null;
     }
