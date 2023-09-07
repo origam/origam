@@ -102,6 +102,7 @@ export interface IDataView extends IDataViewData {
   bindingParent: IDataView | undefined;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
+  rowIdForImmediateDeletion: string | undefined;
   selectedRowIndex: number | undefined;
   trueSelectedRowIndex: number | undefined;
   totalRowCount: number | undefined;
@@ -200,6 +201,8 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 
   isLazyLoading: Boolean;
+
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 }
 
 export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;
