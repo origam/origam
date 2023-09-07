@@ -162,9 +162,7 @@ namespace Origam.Workbench.ServicesTests
         }
 
         protected static readonly DirectoryInfo projectDir =
-            new DirectoryInfo(TestContext.CurrentContext.TestDirectory)
-                .Parent
-                .Parent;
+            new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
 
         protected DirectoryInfo WritingTestFiles {
             get
