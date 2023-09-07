@@ -77,7 +77,6 @@ jobs:
        cd backend
        msbuild Origam.sln -t:restore /p:Configuration="Release Server"
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
-       msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
     - name: Upload server artifact
       uses: actions/upload-artifact@v2
