@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
         node-version: [14.x]
         
     steps:
@@ -51,7 +51,6 @@ jobs:
 
     
   server:
-    needs: frontend
     name: server
     runs-on: windows-2022
     permissions:
@@ -62,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
 
     steps:
     - name: Checkout repository
@@ -91,7 +90,7 @@ jobs:
         path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
   tests:
-    needs: server
+    needs: [frontend,server]
     name: tests
     runs-on: ubuntu-latest
     permissions:
@@ -102,7 +101,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
         
     steps:
     - name: Checkout repository
