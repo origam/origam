@@ -117,7 +117,7 @@ namespace Origam.Gui.Win
 				{
 					if(_ruleEngine != null)
 					{
-						_blobControl.ReadOnly = ! _ruleEngine.RowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
+						_blobControl.ReadOnly = ! _ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
 					}
 				}
 				else
