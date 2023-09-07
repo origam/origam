@@ -1,4 +1,4 @@
-name: "RunTests"
+name: "RunTests-master"
 
 on:
   push:
@@ -39,10 +39,10 @@ jobs:
         cd frontend-html
         yarn -version
         node --version
-        yarn
+        yarn --frozen-lockfile
         yarn build
 
-    - name: Upload frontend artefact
+    - name: Upload frontend artifact
       uses: actions/upload-artifact@v2
       with:
         name: htmlfrontendbuild
@@ -77,17 +77,17 @@ jobs:
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
-    - name: Upload server artefact
+    - name: Upload server artifact
       uses: actions/upload-artifact@v2
       with:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net6.0/publish"
-    
+
     - name: Upload workflow integration tests artifact
       uses: actions/upload-artifact@v2
       with:
         name: workflowbuild
-        path: "backend/Origam.WorkflowTests/bin/Release/net6.0/publish"
+        path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
   compose:
     needs: analyze
@@ -107,13 +107,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Download HTML5 artefact
+    - name: Download HTML5 artifact
       uses: actions/download-artifact@v2
       with:
         name: htmlserverbuild
         path: test/HTML5
         
-    - name: Download Frontend artefact
+    - name: Download Frontend artifact
       uses: actions/download-artifact@v2
       with:
         name: htmlfrontendbuild
@@ -124,7 +124,7 @@ jobs:
       with:
         name: workflowbuild
         path: test/HTML5_TESTS
-
+        
     - name: Copy model to test directory
       run: |
         mkdir test/model
