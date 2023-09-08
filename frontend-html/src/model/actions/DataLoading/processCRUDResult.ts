@@ -94,7 +94,7 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
 
         if (dataView.isLazyLoading) {
-          yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
+          yield dataView.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
           try {
             dataView.lifecycle.stopSelectedRowReaction();
             dataView.selectRow(dataSourceRow);
@@ -103,7 +103,7 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
             dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
-          yield dataView.dataTable.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
+          yield dataView.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
           dataView.selectRow(dataSourceRow);
         }
         getDataViewCache(dataView).UpdateData(dataView);

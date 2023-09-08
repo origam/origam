@@ -67,6 +67,10 @@ export default class ColorEditor extends React.Component<{
     });
   }
 
+  componentWillUnmount() {
+    this.props.onBlur?.();
+  }
+
   machine = interpret(
     createMachine(
       {

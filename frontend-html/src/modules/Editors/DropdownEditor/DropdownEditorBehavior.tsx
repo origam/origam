@@ -54,6 +54,7 @@ export interface IBehaviorData {
   isReadOnly: boolean,
   onDoubleClick?: (event: any) => void,
   onClick?: (event: any) => void,
+  onBlur?: () => void,
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
@@ -70,12 +71,13 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   public isReadOnly: boolean;
   public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
+  public onBlur?: () => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
   private onKeyDown?: (event: any) => void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 
-  constructor(args: IBehaviorData) {
+   constructor(args: IBehaviorData) {
     this.api = args.api;
     this.data = args.data;
     this.dataTable = args.dataTable;
@@ -84,6 +86,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
     this.isReadOnly = args.isReadOnly;
     this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
+    this.onBlur = args.onBlur;
     this.subscribeToFocusManager = args.subscribeToFocusManager;
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
@@ -207,13 +210,17 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
 
   @action.bound
   handleInputKeyDown(event: any) {
+    const wasDropped = this.isDropped;
     switch (event.key) {
       case "Escape":
         this.dropUp();
         this.userEnteredValue = undefined;
+        if (wasDropped) {
+          event.closedADropdown = true;
+          return;
+        }
         break;
       case "Enter":
-        const wasDropped = this.isDropped;
         if (this.isDropped && !this.isWorking) {
           this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           this.dropUp();
