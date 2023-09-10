@@ -37,7 +37,7 @@ namespace Origam.Server.Middleware;
 /// </summary>
 public class UserApiTokenAuthenticationMiddleware
 {
-    private readonly RequestDelegate _next;
+    protected readonly RequestDelegate _next;
 
     public UserApiTokenAuthenticationMiddleware(RequestDelegate next,
         IAuthenticationSchemeProvider schemes)
@@ -86,10 +86,16 @@ public class UserApiTokenAuthenticationMiddleware
         }
         else
         {
-            context.Response.StatusCode = 401;
+            await HandleUnauthorizedRequest(context);
             return;
         }
         await _next(context);
+    }
+
+    protected virtual Task HandleUnauthorizedRequest(HttpContext context)
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
     }
 }
 
