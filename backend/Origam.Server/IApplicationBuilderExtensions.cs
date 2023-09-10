@@ -114,6 +114,7 @@ namespace Origam.Server
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
                 apiBranch =>
                 {
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
                     apiBranch.UseMvc(routes =>
                     {
                         routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
