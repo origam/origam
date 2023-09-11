@@ -1,0 +1,7 @@
+﻿CREATE TABLE "WorkQueueRetryType" (
+	"Name" Varchar(200) NOT NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdated" Timestamp(3) NULL);

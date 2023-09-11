@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "ExponentialRetryBase" Numeric(28,10) NOT NULL CONSTRAINT "DF_WorkQueue_ExponentialRetryBase" DEFAULT 2;
+ALTER TABLE "WorkQueue" ALTER COLUMN "ExponentialRetryBase" DROP DEFAULT;
