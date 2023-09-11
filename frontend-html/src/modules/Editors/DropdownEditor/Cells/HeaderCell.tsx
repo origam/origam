@@ -24,7 +24,7 @@ import { TypeSymbol } from "dic/Container";
 export class DefaultHeaderCellDriver implements IHeaderCellDriver {
   constructor(
     private name: string,
-    private customStyle: {[key: string]: string} | undefined) {
+    private customStyle?: {[key: string]: string} | undefined) {
   }
 
   render() {

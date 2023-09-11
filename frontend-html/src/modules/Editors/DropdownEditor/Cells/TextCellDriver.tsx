@@ -28,7 +28,7 @@ export class TextCellDriver implements IBodyCellDriver {
     private dataIndex: number,
     private dataTable: DropdownDataTable,
     private driverState: IDriverState,
-    private customStyle: {[key: string]: string} | undefined
+    private customStyle?: {[key: string]: string} | undefined
   ) {
   }
 
