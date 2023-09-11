@@ -27,11 +27,13 @@ import { TabbedView } from "gui/Components/TabbedView/TabbedView";
 import { TabbedViewPanelsContainer } from "gui/Components/TabbedView/TabbedViewPanelsContainer";
 import { IDataView } from "model/entities/types/IDataView";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { findStopping, findUIChildren } from "xmlInterpreters/xmlUtils";
+import { find, findUIChildren } from "xmlInterpreters/xmlUtils";
+import { getScreenFocusManager } from "model/selectors/FormScreen/getScreenFocusManager";
 
 @observer
 export class CScreenSectionTabbedView extends React.Component<{
   boxes: any[];
+  id: string;
   nextNode: (node: any) => React.ReactNode;
   dataViewMap: Map<string, IDataView>
 }> {
@@ -40,19 +42,29 @@ export class CScreenSectionTabbedView extends React.Component<{
 
   @action.bound activateTab(tabId: string) {
     this.activePanelId = tabId;
-    const activeBox = this.props.boxes.find(box => box.attributes["Id"] === tabId);
-    const firstGridId = this.getFirstGridId(activeBox)
-    if (firstGridId) {
+    this.onTabChanged({requestFocus: true});
+  }
+
+  private onTabChanged(args:{requestFocus: boolean}) {
+    const activeBox = this.props.boxes.find(box => box.attributes["Id"] === this.activePanelId);
+    const gridBoxes = find(activeBox, (node) => node?.attributes?.Type === "Grid");
+
+    if (gridBoxes.length > 0) {
+      const firstGridId = gridBoxes[0].attributes["Id"] as string
       const dataView = this.props.dataViewMap.get(firstGridId);
-      const tablePanelView = getTablePanelView(dataView);
-      tablePanelView.triggerOnFocusTable();
+      if(args.requestFocus){
+        const tablePanelView = getTablePanelView(dataView);
+        tablePanelView.triggerOnFocusTable();
+      }
+
+      const modelInstanceIds = gridBoxes.map(element => element.attributes["ModelInstanceId"] as string)
+      const screenFocusManager = getScreenFocusManager(dataView);
+      screenFocusManager.setVisibleDataViews(this.props.id, modelInstanceIds);
     }
   }
 
-  getFirstGridId(box: any) {
-    return findStopping(box, (node) => node?.attributes?.Type === "Grid")
-      .map(element => element.attributes["Id"])
-      .find(element => element)
+  componentDidMount() {
+    this.onTabChanged({requestFocus: false});
   }
 
   render() {

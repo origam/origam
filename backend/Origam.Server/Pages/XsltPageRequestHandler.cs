@@ -268,7 +268,7 @@ namespace Origam.Server.Pages
                     dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
                     foreach (DataRow dataRow in dt.Rows)
                     {
-                        RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
+                        RowSecurityState rowSecurity = RowSecurityStateBuilder.BuildWithoutRelationsAndActions(ruleEngine, dataRow);
                         if (rowSecurity != null)
                         {
                             List<FieldSecurityState> listState = rowSecurity.Columns.Cast<FieldSecurityState>().Where(columnState => !columnState.AllowRead).ToList();

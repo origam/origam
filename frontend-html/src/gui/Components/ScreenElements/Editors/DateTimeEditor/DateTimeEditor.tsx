@@ -121,6 +121,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   componentWillUnmount() {
+    this.props.onEditorBlur?.(null);
     this.disposers.forEach((d) => d());
   }
 
@@ -175,7 +176,11 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleKeyDown(event: any) {
     if (event.key === "Escape") {
-      this.setShowFormatHint(false);
+      this.setShowFormatHint(false)
+      if(this.elmDropdowner?.isDropped){
+        event.closedADropdown = true;
+        this.elmDropdowner.setDropped(false);
+      }
     }
     this.editorModel.handleKeyDown(event);
   }

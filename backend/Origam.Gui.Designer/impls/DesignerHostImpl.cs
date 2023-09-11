@@ -263,7 +263,7 @@ namespace Origam.Gui.Designer
 			Type newType =
 				dynamicTypeFactory.CreateNewTypeWithDynamicProperties(
 					parentType: type,
-					inheritor: baseControl,
+					inheritor: refControl,
 					dynamicProperties: missingPropertyItems.Select(propItem =>
 						new DynamicProperty
 						{

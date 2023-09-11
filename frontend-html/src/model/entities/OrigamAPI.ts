@@ -764,6 +764,8 @@ export class OrigamAPI implements IApi {
         IsPreview: false,
         Parameters: data.parameters,
         SubmitImmediately: "true",
+        DateLastModified: data.DateLastModified,
+        DateCreated: data.DateCreated
       })
     ).data;
   }

@@ -3,15 +3,22 @@ import { getDataView } from "../selectors/DataView/getDataView";
 import { IFocusable } from "./FormFocusManager";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { requestFocus } from "utils/focus";
+import { IDataView } from "model/entities/types/IDataView";
 
 export class GridFocusManager {
   private _activeEditor: IFocusable | undefined;
   public focusTableOnReload: boolean = true;
+  private readonly _dataViewModelInstanceId: string;
   get canFocusTable(){
     return !this._activeEditor;
   }
 
-  constructor(public parent: any) {
+  get dataViewModelInstanceId(): string {
+    return this._dataViewModelInstanceId;
+  }
+
+  constructor(public parent: IDataView) {
+    this._dataViewModelInstanceId = parent.modelInstanceId;
   }
 
   focusTableIfNeeded() {

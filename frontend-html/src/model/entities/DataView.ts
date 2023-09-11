@@ -97,8 +97,8 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  formFocusManager: FormFocusManager = new FormFocusManager(this);
-  gridFocusManager: GridFocusManager = new GridFocusManager(this);
+  formFocusManager: FormFocusManager;
+  gridFocusManager: GridFocusManager;
 
   @observable aggregationData: IAggregation[] = [];
 
@@ -114,8 +114,12 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
-    this.focusManager.registerGridFocusManager(this.gridFocusManager);
-    this.focusManager.registerFormFocusManager(this.formFocusManager);
+    this.formFocusManager = new FormFocusManager(this);
+    this.gridFocusManager = new GridFocusManager(this);
+    this.focusManager.focusOutsideOfGridEditor.subscribe(
+      (event?: FocusEvent) => {
+          this.rowIdForImmediateDeletion = undefined
+      });
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
@@ -229,6 +233,15 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
 
   @observable selectedRowId: string | undefined;
+  private _rowIdForImmediateDeletion: string | undefined;
+
+  get rowIdForImmediateDeletion(): string | undefined {
+    return this._rowIdForImmediateDeletion;
+  }
+
+  set rowIdForImmediateDeletion(value: string | undefined) {
+    this._rowIdForImmediateDeletion = value;
+  }
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
@@ -709,6 +722,9 @@ export class DataView implements IDataView {
     if (this.selectedRowId === id) {
       return;
     }
+    if (id != this._rowIdForImmediateDeletion) {
+      this.rowIdForImmediateDeletion = undefined;
+    }
     this.selectedRowId = id;
     if (this.isBindingParent) {
       this.childBindings.forEach((binding) =>
@@ -860,6 +876,11 @@ export class DataView implements IDataView {
 
   onReload() {
     this.dataTable.unlockAddedRowPosition();
+  }
+
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean){
+    this.rowIdForImmediateDeletion = this.dataTable.getRowId(row);
+    return this.dataTable.insertRecord(index, row, shouldLockNewRowAtTop);
   }
 
   attributes: any;

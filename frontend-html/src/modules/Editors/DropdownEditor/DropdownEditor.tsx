@@ -97,6 +97,7 @@ export function XmlBuildDropdownEditor(props: {
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
+  onBlur?: () => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
@@ -134,6 +135,7 @@ export function XmlBuildDropdownEditor(props: {
       isReadOnly: props.isReadOnly,
       onDoubleClick: props.onDoubleClick,
       onClick: props.onClick,
+      onBlur: props.onBlur,
       subscribeToFocusManager: props.subscribeToFocusManager,
       onKeyDown: props.onKeyDown,
       autoSort: props.autoSort,

@@ -46,6 +46,7 @@ import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
+import S from "./TableViewEditor.module.scss";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -201,6 +202,11 @@ export class TableViewEditor extends React.Component<{
             customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
+            onBlur={()=>{
+              const gridFocusManager = getGridFocusManager(dataView);
+              gridFocusManager.activeEditor = undefined;
+              gridFocusManager.editorBlur = undefined;
+            }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
@@ -284,6 +290,16 @@ export class TableViewEditor extends React.Component<{
   }
 
   render() {
-    return <Provider property={this.props.property}>{this.getEditor()}</Provider>;
+    const dataView = getDataView(this.props.property);
+    return <Provider property={this.props.property}>
+      {
+        <div
+          id={"editor_dataView_" + dataView.modelInstanceId}
+          className={S.container}
+        >
+          {this.getEditor()}
+        </div>
+      }
+    </Provider>;
   }
 }

@@ -2119,7 +2119,7 @@ namespace Origam.Gui.Win
 						string field = b.BindingMemberInfo.BindingField;
 						fieldId = (Guid)row.Table.Columns[field].ExtendedProperties["Id"];
 
-						control.Enabled = ruleEngine.RowLevelSecurityState(originalData, actualData, field, CredentialType.Update, entityId, fieldId, isNewRow);
+						control.Enabled = ruleEngine.EvaluateRowLevelSecurityState(originalData, actualData, field, CredentialType.Update, entityId, fieldId, isNewRow);
 
 						if(control is IAsCaptionControl)
 						{
@@ -2134,7 +2134,7 @@ namespace Origam.Gui.Win
 						}
 						else
 						{
-							control.Visible = ruleEngine.RowLevelSecurityState(originalData, actualData, field, CredentialType.Read, entityId, fieldId, isNewRow);
+							control.Visible = ruleEngine.EvaluateRowLevelSecurityState(originalData, actualData, field, CredentialType.Read, entityId, fieldId, isNewRow);
 						}
 					}
 				}
@@ -2142,12 +2142,12 @@ namespace Origam.Gui.Win
 
 			if(_originalDisplayDeleteButton)
 			{
-				this.ShowDeleteButton = ruleEngine.RowLevelSecurityState(originalData, actualData, null, CredentialType.Delete, entityId, fieldId, isNewRow);
+				this.ShowDeleteButton = ruleEngine.EvaluateRowLevelSecurityState(originalData, actualData, null, CredentialType.Delete, entityId, fieldId, isNewRow);
 			}
 
 			if(OriginalShowNewButton)
 			{
-				this.ShowNewButton = ruleEngine.RowLevelSecurityState(originalData, actualData, null, CredentialType.Create, entityId, fieldId, isNewRow);
+				this.ShowNewButton = ruleEngine.EvaluateRowLevelSecurityState(originalData, actualData, null, CredentialType.Create, entityId, fieldId, isNewRow);
 			}
 			_lastRowLevelSecurityRecordId = this.RecordId;
 		}

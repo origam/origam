@@ -40,6 +40,8 @@ namespace Origam.Schema.EntityModel
 
 		public DataStructureTemplateSet(Key primaryKey) 
 			: base(primaryKey)	{}
+
+		public DataStructureTemplateSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	
 		#region Properties
 		[Browsable(false)]
