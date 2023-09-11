@@ -2034,10 +2034,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.198.tgz#4d27465257011aedc741a809f1269941fa2c5d4c"
   integrity sha512-trNJ/vtMZYMLhfN45uLq4ShQSw0/S7xCTLLVM+WM1rmFpba/VS42jVUgaO3w/NOLiWR/09lnYk0yMaA/atdIsg==
 
-"@types/mapbox__geojson-area@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@types/mapbox__geojson-area/-/mapbox__geojson-area-0.2.1.tgz#ca3485ae01097186b93d630d1ea82043b86e11af"
-  integrity sha512-KIVIE69HLIY+g6+N6FsTkQ8nTVJfzozaCJeualc106aZOe8DqswxFeQI4gKewHYIFhTN1NHWX2Iv3mXaKjm41Q==
+"@types/mapbox__geojson-area@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@types/mapbox__geojson-area/-/mapbox__geojson-area-0.2.2.tgz#de30b036c314da682ee7845ca148f1e4f94eff51"
+  integrity sha512-d+HHIbd6Rfo3xplRDeay3MgThP963/uLTZ8fcDkBLEsBobjgSQlw2PPygaXmJgPe3v+Hnf5NDw+mBul5/8nkiQ==
   dependencies:
     "@types/geojson" "*"
 
