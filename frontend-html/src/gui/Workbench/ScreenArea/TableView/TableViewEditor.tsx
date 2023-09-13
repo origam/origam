@@ -44,8 +44,8 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
+import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 import S from "./TableViewEditor.module.scss";
 
 @inject(({tablePanelView}) => {
@@ -302,15 +302,4 @@ export class TableViewEditor extends React.Component<{
       }
     </Provider>;
   }
-}
-
-// Makes sure the editor alignment will be the same as the table cell alignment.
-// Needed on columns where the alignment can be set in the model.
-function resolveCellAlignment(customStyle: { [p: string]: string } | undefined, isFirsColumn: boolean, type: string){
-  let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);
-  const style = customStyle ?Object.assign({},customStyle) :{};
-  style["paddingRight"] = cellAlignment.paddingRight - 1 + "px";
-  style["paddingLeft"] = cellAlignment.paddingLeft + "px";
-  style["textAlign"] = cellAlignment.alignment;
-  return style;
 }
