@@ -80,7 +80,7 @@
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.4.3",
     "typescript": "^5.2.2",
-    "uuid": "^9.0.0",
+    "uuid": "^9.0.1",
     "vite-tsconfig-paths": "^4.2.1",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
