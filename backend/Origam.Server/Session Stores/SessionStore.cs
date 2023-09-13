@@ -41,6 +41,7 @@ using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
 using Origam.Service.Core;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace Origam.Server
 {
@@ -1597,40 +1598,64 @@ namespace Origam.Server
             }
         }
 
-        public virtual IEnumerable<ChangeInfo> UpdateObject(string entity, object id, string property, object newValue)
+        public virtual IEnumerable<ChangeInfo> UpdateObjectAndGetChanges(
+            string entity, object id, string property, object newValue)
         {
             lock (_lock)
             {
-                UserProfile profile = SecurityTools.CurrentUserProfile();
-                DataRow row = GetSessionRow(entity, id);
-                if (row == null )
-                {
-                    throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
-                }
-
-                DataColumn dataColumn = row.Table.Columns[property];
-                if (dataColumn == null)
-                {
-                    throw new NullReferenceException(
-                        String.Format(Resources.ErrorColumnNotFound, property));
-                }
-                if (IsColumnArray(dataColumn))
-                {
-                    UpdateRowColumnArray(newValue, profile, row, dataColumn);
-                }
-                else
-                {
-                    UpdateRowColumn(property, newValue, profile, row);
-                }
-                List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
-                    Operation.Update, this.Data.HasErrors, 
-                    this.Data.HasChanges(), false);
-                if (!this.Data.HasChanges())
-                {
-                    listOfChanges.Add(ChangeInfo.SavedChangeInfo());
-                }
-                return listOfChanges;
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+                return GetChanges(row);
             }
+        }
+
+        public virtual void UpdateObject(
+            string entity, object id, string property, object newValue)
+        {
+            lock (_lock)
+            {
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+            }
+        }
+
+        private IEnumerable<ChangeInfo> GetChanges(DataRow row)
+        {
+            List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
+                Operation.Update, this.Data.HasErrors,
+                this.Data.HasChanges(), false);
+            if (!this.Data.HasChanges())
+            {
+                listOfChanges.Add(ChangeInfo.SavedChangeInfo());
+            }
+            return listOfChanges;
+        }
+
+        private DataRow UpdateObjectInternal(string entity, object id,
+            string property, object newValue)
+        {
+            UserProfile profile = SecurityTools.CurrentUserProfile();
+            DataRow row = GetSessionRow(entity, id);
+            if (row == null)
+            {
+                throw new ArgumentOutOfRangeException("id", id,
+                    Resources.ErrorRecordNotFound);
+            }
+
+            DataColumn dataColumn = row.Table.Columns[property];
+            if (dataColumn == null)
+            {
+                throw new NullReferenceException(
+                    String.Format(Resources.ErrorColumnNotFound, property));
+            }
+            if (IsColumnArray(dataColumn))
+            {
+                UpdateRowColumnArray(newValue, profile, row, dataColumn);
+            }
+            else
+            {
+                UpdateRowColumn(property, newValue, profile, row);
+            }
+
+            return row;
         }
 
         private static void UpdateRowColumnArray(object newValue, UserProfile profile, DataRow row, DataColumn dataColumn)
@@ -2174,7 +2199,7 @@ namespace Origam.Server
             {
                 foreach (DictionaryEntry entry in values)
                 {
-                    result.AddRange(UpdateObject(entity, entry.Key, property, entry.Value));
+                    result.AddRange(UpdateObjectAndGetChanges(entity, entry.Key, property, entry.Value));
                 }
             }
 
@@ -2189,7 +2214,7 @@ namespace Origam.Server
             {
                 foreach (DictionaryEntry entry in values)
                 {
-                    result.AddRange(UpdateObject(entity, id, (string)entry.Key, entry.Value));
+                    result.AddRange(UpdateObjectAndGetChanges(entity, id, (string)entry.Key, entry.Value));
                 }
             }
 
@@ -2205,7 +2230,7 @@ namespace Origam.Server
                 {
                     foreach (KeyValuePair<string, object> entry in updateData.Values)
                     {
-                        result.AddRange(UpdateObject(entity, updateData.RowId, (string)entry.Key, entry.Value));
+                        result.AddRange(UpdateObjectAndGetChanges(entity, updateData.RowId, (string)entry.Key, entry.Value));
                     }
                 }
             }

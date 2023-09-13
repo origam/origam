@@ -173,7 +173,7 @@ namespace Origam.Server.Controllers
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(updateData.SessionFormIdentifier);
-                IEnumerable<ChangeInfo> output = ss.UpdateObject(
+                IEnumerable<ChangeInfo> output = ss.UpdateObjectAndGetChanges(
                     entity: updateData.Entity,
                     id: updateData.Id,
                     property: updateData.Property,

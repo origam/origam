@@ -41,6 +41,7 @@ namespace Origam.Rule
         private XmlContainer originalData;
         private XmlContainer actualData;
         private bool isBuildable;
+        private RuleEvaluationCache ruleEvaluationCache;
 
 
         public static RowSecurityState BuildFull(RuleEngine ruleEngine,
@@ -104,6 +105,7 @@ namespace Origam.Rule
             actualData = DatasetTools.GetRowXml(row,
                     row.HasVersion(DataRowVersion.Proposed)
                     ? DataRowVersion.Proposed : DataRowVersion.Default);
+            ruleEvaluationCache = new RuleEvaluationCache();
             isBuildable = true;
         }
 
@@ -123,10 +125,10 @@ namespace Origam.Rule
                 ForegroundColor = formatting.ForeColor.ToArgb(),
                 AllowDelete = ruleEngine.EvaluateRowLevelSecurityState(
                     originalData, actualData, null, CredentialType.Delete,
-                    entityId, Guid.Empty, isNew),
+                    entityId, Guid.Empty, isNew, ruleEvaluationCache),
                 AllowCreate = ruleEngine.EvaluateRowLevelSecurityState(
                     originalData, actualData, null, CredentialType.Create,
-                    entityId, Guid.Empty, isNew)
+                    entityId, Guid.Empty, isNew, ruleEvaluationCache)
             };            
             return this;
         }
@@ -147,12 +149,12 @@ namespace Origam.Rule
                         EvaluateRowLevelSecurityState(originalData,
                             actualData, col.ColumnName,
                             CredentialType.Update,
-                            entityId, fieldId, isNew);
+                            entityId, fieldId, isNew, ruleEvaluationCache);
                     bool allowRead = ruleEngine.
                         EvaluateRowLevelSecurityState(originalData,
                             actualData, col.ColumnName,
                             CredentialType.Read,
-                            entityId, fieldId, isNew);
+                            entityId, fieldId, isNew, ruleEvaluationCache);
                     EntityFormatting fieldFormatting = ruleEngine.
                         Formatting(actualData, entityId, fieldId, null);
                     string dynamicLabel = ruleEngine.DynamicLabel(
@@ -220,7 +222,8 @@ namespace Origam.Rule
                         CredentialType.Create,
                         childEntityId, Guid.Empty,
                         row.RowState == DataRowState.Added 
-                            || row.RowState == DataRowState.Detached
+                            || row.RowState == DataRowState.Detached,
+                        ruleEvaluationCache
                     );
                     Result.Relations.Add(new RelationSecurityState(
                         rel.ChildTable.TableName, allowRelationCreate));
