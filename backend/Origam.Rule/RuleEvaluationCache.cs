@@ -1,29 +1,41 @@
-﻿using Origam.Extensions;
+﻿#region license
+/*
+Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
 using Origam.Schema.EntityModel;
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Origam.Rule
 {
     public class RuleEvaluationCache
     {
-        Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> ruleCacheDict;
-        Dictionary<Tuple<Guid, CredentialType>, bool>
-            rulelessFieldSecurityRuleResultDict;
+        private readonly Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> 
+            rules = new();
+        private readonly Dictionary<Tuple<Guid, CredentialType>, bool>
+            rulelessFieldSecurityRuleResults = new();
 
-
-        public RuleEvaluationCache() {
-            ruleCacheDict =
-                new Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool>();
-            rulelessFieldSecurityRuleResultDict =
-                new Dictionary<Tuple<Guid, CredentialType>, bool>();
-        }
-        public Boolean? Get(AbstractEntitySecurityRule rule, Guid entityId)
+        public bool? Get(AbstractEntitySecurityRule rule, Guid entityId)
         {
-            bool result;
-            if (ruleCacheDict.TryGetValue(new Tuple<Guid, CredentialValueType,
-                Guid>(rule.Id, rule.ValueType, entityId), out result))
+            if (rules.TryGetValue(new Tuple<Guid, CredentialValueType,
+                    Guid>(rule.Id, rule.ValueType, entityId), out var result))
             {
                 return result;
             }
@@ -32,16 +44,15 @@ namespace Origam.Rule
         public void Put(AbstractEntitySecurityRule rule, Guid entityId,
             bool value)
         {
-            ruleCacheDict.Add(new Tuple<Guid, CredentialValueType, Guid>
+            rules.Add(new Tuple<Guid, CredentialValueType, Guid>
                 (rule.Id, rule.ValueType, entityId), value);
         }
 
-        public Boolean? GetRulelessFieldResult(Guid entityId,
-            CredentialType type)
+        public bool? GetRulelessFieldResult(Guid entityId, CredentialType type)
         {
-            bool result;
-            if (rulelessFieldSecurityRuleResultDict.TryGetValue(
-                new Tuple<Guid, CredentialType>(entityId, type), out result))
+            if (rulelessFieldSecurityRuleResults.TryGetValue(
+                    new Tuple<Guid, CredentialType>(entityId, type), 
+                    out var result))
             {
                 return result;
             }
@@ -51,7 +62,7 @@ namespace Origam.Rule
         public void PutRulelessFieldResult(Guid entityId, CredentialType type,
             bool value)
         {
-            rulelessFieldSecurityRuleResultDict.Add(
+            rulelessFieldSecurityRuleResults.Add(
                 new Tuple<Guid, CredentialType>(entityId, type), value);
         }
     }
