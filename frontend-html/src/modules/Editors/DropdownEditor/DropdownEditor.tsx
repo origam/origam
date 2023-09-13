@@ -89,7 +89,7 @@ export function XmlBuildDropdownEditor(props: {
   isReadOnly: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
-  customStyle?: any;
+  customStyle?: {[key: string]: string};
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
@@ -140,7 +140,11 @@ export function XmlBuildDropdownEditor(props: {
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(
-      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
+      props.xmlNode,
+      dropdownEditorDataTable,
+      dropdownEditorBehavior,
+      props.customStyle,
+      props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,
