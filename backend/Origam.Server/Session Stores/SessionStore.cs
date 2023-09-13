@@ -1598,7 +1598,7 @@ namespace Origam.Server
             }
         }
 
-        public virtual IEnumerable<ChangeInfo> UpdateObjectAndGetChanges(
+        public virtual IEnumerable<ChangeInfo> UpdateObject(
             string entity, object id, string property, object newValue)
         {
             lock (_lock)
@@ -1608,7 +1608,7 @@ namespace Origam.Server
             }
         }
 
-        public virtual void UpdateObject(
+        public void UpdateObjectsWithoutGetChanges(
             string entity, object id, string property, object newValue)
         {
             lock (_lock)
@@ -2199,7 +2199,7 @@ namespace Origam.Server
             {
                 foreach (DictionaryEntry entry in values)
                 {
-                    result.AddRange(UpdateObjectAndGetChanges(entity, entry.Key, property, entry.Value));
+                    result.AddRange(UpdateObject(entity, entry.Key, property, entry.Value));
                 }
             }
 
@@ -2214,7 +2214,7 @@ namespace Origam.Server
             {
                 foreach (DictionaryEntry entry in values)
                 {
-                    result.AddRange(UpdateObjectAndGetChanges(entity, id, (string)entry.Key, entry.Value));
+                    result.AddRange(UpdateObject(entity, id, (string)entry.Key, entry.Value));
                 }
             }
 
@@ -2230,7 +2230,7 @@ namespace Origam.Server
                 {
                     foreach (KeyValuePair<string, object> entry in updateData.Values)
                     {
-                        result.AddRange(UpdateObjectAndGetChanges(entity, updateData.RowId, (string)entry.Key, entry.Value));
+                        result.AddRange(UpdateObject(entity, updateData.RowId, (string)entry.Key, entry.Value));
                     }
                 }
             }

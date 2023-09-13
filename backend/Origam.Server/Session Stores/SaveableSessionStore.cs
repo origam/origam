@@ -233,10 +233,17 @@ namespace Origam.Server
             }
         }
 
+        public override IEnumerable<ChangeInfo> UpdateObject(
+            string entity, object id, string property, object newValue)
+        {
+            return UpdateObjectWithDependenies(entity, id,
+				property, newValue, true);
+        }
+
         public IEnumerable<ChangeInfo>
             UpdateObjectWithDependenies(
             string entity, object id, string property, object newValue,
-            bool isTopLevel = true)
+            bool isTopLevel)
         {
             InitializeFieldDependencies();
             DataTable table = GetTable(entity, this.Data);
@@ -269,12 +276,12 @@ namespace Origam.Server
             // (last) update
             if (isTopLevel)
             {
-                return base.UpdateObjectAndGetChanges(entity, id,
+                return base.UpdateObject(entity, id,
                     property, newValue);
             }
             else 
             {
-                base.UpdateObject(entity, id, property, newValue);
+                base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
                 return new List<ChangeInfo>();
             }
         }
