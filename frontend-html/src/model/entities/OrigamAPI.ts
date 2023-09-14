@@ -872,7 +872,7 @@ export class OrigamAPI implements IApi {
   }
 
   async callUserApi(screenUrl: string): Promise<Blob>{
-    return (await this.axiosInstance.get(
+    return (await axios.get(
       screenUrl,
       { responseType: 'blob'}))
       .data;
