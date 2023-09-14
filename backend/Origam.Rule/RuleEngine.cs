@@ -1759,23 +1759,43 @@ namespace Origam.Rule
 				        dataToUseForRule, action.Rule, action.Roles, null);
 		}
 
-		public bool EvaluateRowLevelSecurityState(XmlContainer originalData, XmlContainer actualData, string field, CredentialType type, Guid entityId, Guid fieldId, bool isNewRow)
+		public bool EvaluateRowLevelSecurityState(XmlContainer originalData,
+			XmlContainer actualData, string field, CredentialType type,
+			Guid entityId, Guid fieldId, bool isNewRow,
+			RuleEvaluationCache ruleEvaluationCache = null)
 		{
 			ArrayList rules = new ArrayList();
 				
 			IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 
 			// field-level rules
-			if(field != null)
+			IDataEntityColumn column = null;
+			if (field != null)
 			{
 				// we retrieve the column from the child-items list
-				// this is very cost efficient, because when retrieving abstract columns (i.e. Id, RecordCreated, RecordUpdated), they are never cached
-				IDataEntityColumn column = entity.GetChildById(fieldId) as IDataEntityColumn;
+				// this is very cost efficient, because when retrieving
+				// abstract columns (i.e. Id, RecordCreated, RecordUpdated), they are never cached
+				column = entity.GetChildById(fieldId) as IDataEntityColumn;
 
-				// field not found, this would be e.g. a looked up column, which does not point to a real entity field id
+				// field not found, this would be e.g. a looked up column,
+				// which does not point to a real entity field id
 				if(column != null)
 				{
-					rules.AddRange(column.RowLevelSecurityRules);
+					if (column.RowLevelSecurityRules.Count == 0)
+					{
+						// shortcircuit processing of row level security rules
+						// for a column without it's own rules 
+						Boolean? result = ruleEvaluationCache?.GetRulelessFieldResult(
+							entityId, type);
+						if (result != null)
+						{
+							return result.Value;
+						}
+					}
+					else
+					{
+						rules.AddRange(column.RowLevelSecurityRules);
+					}
 				}
 			}
 
@@ -1785,9 +1805,12 @@ namespace Origam.Rule
 			{
 				rules.AddRange(entityRules);
 			}
-				
+
 			// no rules - permit
-			if(rules.Count == 0) return true;
+			if (rules.Count == 0)
+			{
+				return true;
+			}
 
 			rules.Sort();
 
@@ -1800,7 +1823,8 @@ namespace Origam.Rule
 					if(entityRule.DeleteCredential && type == CredentialType.Delete && isNewRow)
 					{
 						// always allow to delete new (not saved) records
-						return true;
+						return PutToRulelessCache(type, entityId,
+							ruleEvaluationCache, column, true);
 					}
 					else if(
 						(entityRule.UpdateCredential && type == CredentialType.Update)
@@ -1809,9 +1833,19 @@ namespace Origam.Rule
 						|| (entityRule.DeleteCredential && type == CredentialType.Delete)
 						)
 					{
-						if(IsRowLevelSecurityRuleMatching(entityRule, entityRule.ValueType == CredentialValueType.ActualValue ? actualData : originalData))
+						Boolean? result = ruleEvaluationCache?.Get(entityRule, entityId);
+						if (result == null)
 						{
-							return entityRule.Type == PermissionType.Permit;
+							result = IsRowLevelSecurityRuleMatching(entityRule,
+								entityRule.ValueType == CredentialValueType.ActualValue ?
+									actualData : originalData);
+							ruleEvaluationCache?.Put(entityRule, entityId, result.Value);
+						}
+						if (result.Value)
+						{
+							return PutToRulelessCache(type, entityId,
+								ruleEvaluationCache, column,
+								entityRule.Type == PermissionType.Permit);                            
 						}
 					}
 				}
@@ -1825,9 +1859,19 @@ namespace Origam.Rule
 						| (fieldRule.ReadCredential & type == CredentialType.Read)
 						)
 					{
-						if(IsRowLevelSecurityRuleMatching(fieldRule, fieldRule.ValueType == CredentialValueType.ActualValue ? actualData : originalData))
+						Boolean? result = ruleEvaluationCache?.Get(fieldRule, entityId);
+						if (result == null)
 						{
-							return fieldRule.Type == PermissionType.Permit;
+							result = IsRowLevelSecurityRuleMatching(fieldRule,
+								fieldRule.ValueType == CredentialValueType.ActualValue
+									? actualData : originalData);
+							ruleEvaluationCache?.Put(fieldRule, entityId, result.Value);
+						}
+						if (result.Value)
+						{
+							return PutToRulelessCache(type, entityId,
+								ruleEvaluationCache, column, 
+								fieldRule.Type == PermissionType.Permit);
 						}
 					}
 				}
@@ -1836,14 +1880,26 @@ namespace Origam.Rule
 			// no match
 			if(type == CredentialType.Read)
 			{
-				// permit for read
-				return true;
+				return PutToRulelessCache(type, entityId,
+					ruleEvaluationCache, column, true);
 			}
 			else
 			{
-				// deny for all the others
-				return false;
+				return PutToRulelessCache(type, entityId,
+					ruleEvaluationCache, column, false);
 			}
+		}
+
+		private static bool PutToRulelessCache(CredentialType type, Guid entityId,
+			RuleEvaluationCache ruleEvaluationCache, IDataEntityColumn column, bool value)
+		{
+			if (column?.RowLevelSecurityRules.Count == 0
+				&& ruleEvaluationCache != null)
+			{
+				ruleEvaluationCache.PutRulelessFieldResult(entityId, type,
+					value);
+			}
+			return value;
 		}
 
 		private bool IsRowLevelSecurityRuleMatching(AbstractEntitySecurityRule rule, XmlContainer data)
