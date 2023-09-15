@@ -9,6 +9,9 @@
     p:name="Widgets"
     p:version="1.5.4">
     <pr:packageReference
+      x:id="3d770e3e-52a3-41e4-a622-25a5891e84bf"
+      pr:referencedPackage="Chat/.origamPackage#261b7cd5-4ba1-46a0-8963-27793379ac11" />
+    <pr:packageReference
       x:id="3de8351f-ea09-4ffd-a5eb-f847b4355614"
       pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
     <pr:packageReference
