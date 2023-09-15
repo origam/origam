@@ -592,6 +592,11 @@ namespace Origam.Workbench.Services
 				if(constants == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorModelNotLoaded"));
 				foreach(DataConstant constant in constants.ChildItems)
 				{
+					if(_constantIdByName.ContainsKey(constant.Name))
+					{
+						throw new Exception(ResourceUtils.GetString(
+							"MultipleConstantsWithSameName", constant.Name));
+					}
 					_constantIdByName.Add(constant.Name, constant.Id);
 					object val = constant.Value;
 					_constantsById.Add(constant.Id, val);
