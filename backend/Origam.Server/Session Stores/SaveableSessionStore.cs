@@ -233,9 +233,18 @@ namespace Origam.Server
             }
         }
 
-        public override IEnumerable<ChangeInfo> UpdateObject(string entity, object id, string property, object newValue)
+        public override IEnumerable<ChangeInfo> UpdateObject(
+            string entity, object id, string property, object newValue)
         {
-            var result = new HashSet<ChangeInfo>();
+            return UpdateObjectWithDependenies(entity, id,
+				property, newValue, true);
+        }
+
+        public IEnumerable<ChangeInfo>
+            UpdateObjectWithDependenies(
+            string entity, object id, string property, object newValue,
+            bool isTopLevel)
+        {
             InitializeFieldDependencies();
             DataTable table = GetTable(entity, this.Data);
             Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
@@ -248,10 +257,10 @@ namespace Origam.Server
                     foreach(Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
                     {
                         string dependentColumnName = ColumnNameById(table, dependentColumnId);
-                        IEnumerable<ChangeInfo> changes;
                         try
                         {
-                            changes = this.UpdateObject(entity, id, dependentColumnName, null);
+                            this.UpdateObjectWithDependenies(
+                                entity, id,	dependentColumnName, null, false);
                         }
                         catch (NullReferenceException e) 
                         {
@@ -259,22 +268,22 @@ namespace Origam.Server
                                 String.Format(Resources.ErrorDependentColumnNotFound,
                                 dependentColumnName, property, entity, e.Message));
                         }
-
-                        foreach (var o in changes)
-                        {
-                            result.Add(o);
-                        }
                     }
                 }
             }
 
-            IEnumerable<ChangeInfo> baseChanges = base.UpdateObject(entity, id, property, newValue);
-            foreach (var o in baseChanges)
+            // call actual UpdateObject, do rowstates only for toplevel
+            // (last) update
+            if (isTopLevel)
             {
-                result.Add(o);
+                return base.UpdateObject(entity, id,
+                    property, newValue);
             }
-
-            return result;
+            else 
+            {
+                base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
+                return new List<ChangeInfo>();
+            }
         }
 
         private static string ColumnNameById(DataTable table, Guid columnId)
