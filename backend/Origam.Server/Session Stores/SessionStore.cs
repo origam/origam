@@ -1597,40 +1597,64 @@ namespace Origam.Server
             }
         }
 
-        public virtual IEnumerable<ChangeInfo> UpdateObject(string entity, object id, string property, object newValue)
+        public virtual IEnumerable<ChangeInfo> UpdateObject(
+            string entity, object id, string property, object newValue)
         {
             lock (_lock)
             {
-                UserProfile profile = SecurityTools.CurrentUserProfile();
-                DataRow row = GetSessionRow(entity, id);
-                if (row == null )
-                {
-                    throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
-                }
-
-                DataColumn dataColumn = row.Table.Columns[property];
-                if (dataColumn == null)
-                {
-                    throw new NullReferenceException(
-                        String.Format(Resources.ErrorColumnNotFound, property));
-                }
-                if (IsColumnArray(dataColumn))
-                {
-                    UpdateRowColumnArray(newValue, profile, row, dataColumn);
-                }
-                else
-                {
-                    UpdateRowColumn(property, newValue, profile, row);
-                }
-                List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
-                    Operation.Update, this.Data.HasErrors, 
-                    this.Data.HasChanges(), false);
-                if (!this.Data.HasChanges())
-                {
-                    listOfChanges.Add(ChangeInfo.SavedChangeInfo());
-                }
-                return listOfChanges;
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+                return GetChanges(row);
             }
+        }
+
+        public void UpdateObjectsWithoutGetChanges(
+            string entity, object id, string property, object newValue)
+        {
+            lock (_lock)
+            {
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+            }
+        }
+
+        private IEnumerable<ChangeInfo> GetChanges(DataRow row)
+        {
+            List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
+                Operation.Update, this.Data.HasErrors,
+                this.Data.HasChanges(), false);
+            if (!this.Data.HasChanges())
+            {
+                listOfChanges.Add(ChangeInfo.SavedChangeInfo());
+            }
+            return listOfChanges;
+        }
+
+        private DataRow UpdateObjectInternal(string entity, object id,
+            string property, object newValue)
+        {
+            UserProfile profile = SecurityTools.CurrentUserProfile();
+            DataRow row = GetSessionRow(entity, id);
+            if (row == null)
+            {
+                throw new ArgumentOutOfRangeException("id", id,
+                    Resources.ErrorRecordNotFound);
+            }
+
+            DataColumn dataColumn = row.Table.Columns[property];
+            if (dataColumn == null)
+            {
+                throw new NullReferenceException(
+                    String.Format(Resources.ErrorColumnNotFound, property));
+            }
+            if (IsColumnArray(dataColumn))
+            {
+                UpdateRowColumnArray(newValue, profile, row, dataColumn);
+            }
+            else
+            {
+                UpdateRowColumn(property, newValue, profile, row);
+            }
+
+            return row;
         }
 
         private static void UpdateRowColumnArray(object newValue, UserProfile profile, DataRow row, DataColumn dataColumn)
