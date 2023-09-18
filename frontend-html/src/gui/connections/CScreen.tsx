@@ -54,7 +54,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     }
     const frameWindow = refIFrame.current as HTMLIFrameElement;
     const fetchData = async () => {
-      if(!props.openedScreen.screenUrl){
+      if(!props.openedScreen.screenUrl || frameWindow.src){
         return;
       }
       const api = getApi(props.openedScreen);
