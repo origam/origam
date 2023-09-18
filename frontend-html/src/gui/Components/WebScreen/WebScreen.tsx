@@ -59,6 +59,7 @@ export const WebScreen: React.FC<{
         onLoadStart={props.onLoadStart}
         ref={refIFrame}
         className={S.webContent}
+        src={ props.url.startsWith("internalApi/") ? undefined : props.url}
       />
       <div className={cx(S.transparentOverlay, {isVisible: mouseDowned})}/>
     </div>
