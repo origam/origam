@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="fab83217-6cb4-4693-b10e-6ded25a23abf"
@@ -18,14 +25,14 @@
       dse:useUpsert="false">
       <dse:DataStructureEntity
         asi:abstract="false"
-        dse:allFields="true"
+        dse:allFields="false"
         dse:concurrencyHandling="Standard"
-        dse:entity="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/BusinessPartner/0ee15f2b-9924-479f-b13a-9b533449d2cc"
-        x:id="f0110493-6cf5-4b80-9c1b-0543e8149964"
+        dse:entity="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/BusinessPartnerLookup/0ee15f2b-9924-479f-b13a-9b533449d2cc"
+        x:id="25d6620c-caf4-4be4-864a-fa41cfbac310"
         dse:ignoreCondition="None"
         dse:ignoreImplicitFilters="false"
-        asi:name="BusinessPartner"
-        dse:relationType="Normal"
+        asi:name="BusinessPartnerLookup"
+        dse:relationType="FilterParent"
         dse:useUpsert="false" />
       <dse:DataStructureEntity
         asi:abstract="false"
@@ -61,25 +68,36 @@
           dse:relationType="Normal"
           dse:useUpsert="false" />
       </dse:DataStructureEntity>
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/BusinessPartner/41c0be69-6713-4965-93be-cad544577589"
+        x:id="f0110493-6cf5-4b80-9c1b-0543e8149964"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="BusinessPartner"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="f7d1096f-4dfc-4b66-bef5-f54c7a1d9ee1"
-      asi:name="GetParticipants">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
-        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByOrigamChatRoomId/d1879bc1-304e-49dc-8cfb-5a1a7557dd9f"
-        x:id="aded2d31-bb75-4278-b7fc-a5ec5dc98e53"
-        asi:name="OrigamChatRoomBusinessPartner_GetByOrigamChatRoomId"
-        dsfsf:passWhenParameterMatch="false" />
+      x:id="36fd5fb8-5aba-4e87-85c2-e412516888ad"
+      asi:name="GetByBusinessPartnerId_IsInvited">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
         dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByIsInvited/efcb6e0b-11e5-4453-bb0b-38d171781e7b"
-        x:id="14104789-05ed-44cd-9684-f234919d7297"
+        x:id="4b948d6b-412c-47df-9198-e8954f86e73b"
         asi:name="OrigamChatRoomBusinessPartner_GetByIsInvited"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
+        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByBusinessPartnerId/42c019b6-803d-43b2-b1c0-9fccb07a667f"
+        x:id="86ba1c1a-32d3-45a7-add4-c0001fd6c4d7"
+        asi:name="OrigamChatRoomBusinessPartner_GetByBusinessPartnerId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
@@ -105,21 +123,54 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="36fd5fb8-5aba-4e87-85c2-e412516888ad"
-      asi:name="GetByBusinessPartnerId_IsInvited">
+      x:id="c69ed9ec-df67-4c6e-b99a-726e40316b5e"
+      asi:name="GetByOrigamChatRoomId">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
-        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByBusinessPartnerId/42c019b6-803d-43b2-b1c0-9fccb07a667f"
-        x:id="86ba1c1a-32d3-45a7-add4-c0001fd6c4d7"
-        asi:name="OrigamChatRoomBusinessPartner_GetByBusinessPartnerId"
+        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByOrigamChatRoomId/d1879bc1-304e-49dc-8cfb-5a1a7557dd9f"
+        x:id="c4109efe-5fa8-4229-a870-cb2141244cf4"
+        asi:name="OrigamChatRoomBusinessPartner_GetByOrigamChatRoomId"
         dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="f7d1096f-4dfc-4b66-bef5-f54c7a1d9ee1"
+      asi:name="GetParticipants">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
         dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByIsInvited/efcb6e0b-11e5-4453-bb0b-38d171781e7b"
-        x:id="4b948d6b-412c-47df-9198-e8954f86e73b"
+        x:id="14104789-05ed-44cd-9684-f234919d7297"
         asi:name="OrigamChatRoomBusinessPartner_GetByIsInvited"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
+        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByOrigamChatRoomId/d1879bc1-304e-49dc-8cfb-5a1a7557dd9f"
+        x:id="aded2d31-bb75-4278-b7fc-a5ec5dc98e53"
+        asi:name="OrigamChatRoomBusinessPartner_GetByOrigamChatRoomId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="fda05fef-8069-41a2-a8fb-d67395e9cea8"
+      asi:name="GetByOrigamChatRoomIdSearch">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/dc81be79-27a3-40a4-aba0-d97d67742850"
+        dsfsf:filter="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/GetByOrigamChatRoomId/d1879bc1-304e-49dc-8cfb-5a1a7557dd9f"
+        x:id="5bd0a822-1021-4607-a076-a2fa2f616f34"
+        asi:name="OrigamChatRoomBusinessPartner_GetByOrigamChatRoomId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/OrigamChatRoomBusinessPartner/BusinessPartnerLookup/25d6620c-caf4-4be4-864a-fa41cfbac310"
+        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LikeLookupTextOrReferenceCode/f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
+        x:id="b3912ed0-5e1c-4ed8-b21b-eef16bfd7538"
+        asi:name="BusinessPartnerLookup_LikeLookupTextOrReferenceCode"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
   </ds:DataStructure>

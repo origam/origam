@@ -4,6 +4,6 @@
 	[ReferenceEntity] NVarChar(50) NULL,
 	[RecordCreatedBy] UniqueIdentifier NULL,
 	[RecordUpdatedBy] UniqueIdentifier NULL,
-	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
 	[RecordCreated] DateTime NULL,
 	[RecordUpdated] DateTime NULL);

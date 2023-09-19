@@ -35,6 +35,7 @@ import { getApi } from "model/selectors/getApi";
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const {openedScreen} = props;
   const [isLoading, setLoading] = useState(false);
+  const [source, setSource] = useState("");
   const refIFrame = useRef<any>(null);
 
   const setTabTitleFromIFrame = useMemo(
@@ -47,22 +48,27 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     },
     [openedScreen]
   );
-
+  function loadInternalApiDataWithAuthentication() {
+    const fetchData = async () => {
+      if (!openedScreen.screenUrl) {
+        return;
+      }
+      if (!openedScreen.screenUrl.startsWith("internalApi/")){
+        setSource(openedScreen.screenUrl);
+        return;
+      }
+      const api = getApi(props.openedScreen);
+      const url = openedScreen.screenUrl.replace("internalApi/", "")
+      const content = await api.callUserApi(url);
+      setSource(URL.createObjectURL(content));
+    }
+    fetchData().catch(error => console.error(error));
+  }
   useEffect(() => {
     if (openedScreen.screenUrl) {
       setLoading(true);
     }
-    const frameWindow = refIFrame.current as HTMLIFrameElement;
-    const fetchData = async () => {
-      if(!props.openedScreen.screenUrl){
-        return;
-      }
-      const api = getApi(props.openedScreen);
-      const url = props.openedScreen.screenUrl.replace("internalApi/", "")
-      const content = await api.callUserApi(url);
-      frameWindow.src = URL.createObjectURL(content)
-    }
-    fetchData().catch(error => console.error(error));
+    loadInternalApiDataWithAuthentication();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handle = setInterval(() => {
@@ -112,7 +118,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   return (
     <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
       <WebScreen
-        url={openedScreen.screenUrl || ""}
+        source={source || ""}
         isLoading={isLoading}
         onLoad={(event: any) => {
           event.persist();
