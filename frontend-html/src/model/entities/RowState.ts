@@ -23,12 +23,11 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
-import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
+import { IRowState, IRowStateColumnItem, IRowStateItem } from "./types/IRowState";
 import { FlowBusyMonitor } from "utils/flow";
 import { handleError } from "model/actions/handleError";
 import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
-import { CancellablePromise } from "mobx/lib/api/flow";
 
 const defaultRowStatesToFetch = 100;
 
@@ -51,7 +50,14 @@ export class RowState implements IRowState {
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
         return;
       }
-      this.visibleRowIds = visibleRows.rowIds;
+      // The event is sometimes raised with empty no ids, then some ids, then no ids...
+      // Ignoring the no ids makes sure that the triggerLoadDebounced will not run with no ids
+      // when some are actually visible. This problem was not really observed so may be the
+      // if statement could be removed if this results in more RowState calls then necessary.
+      if(visibleRows.rowIds.length > 0){
+        this.visibleRowIds = visibleRows.rowIds;
+      }
+      this.triggerLoadDebounced();
     });
   }
 
