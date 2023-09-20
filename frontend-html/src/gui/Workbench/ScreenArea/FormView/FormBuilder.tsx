@@ -178,9 +178,9 @@ export class FormBuilder extends React.Component<{
                   return <></>;
                 }
 
-                const isHidden =
-                  (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                    getRowStateMayCauseFlicker(property)) && !!row;
+                let mayCauseFlicker = getRowStateMayCauseFlicker(property);
+                let rowStateAllowRead = getRowStateAllowRead(property, rowId || "", property.id);
+                const isHidden = (!rowStateAllowRead || mayCauseFlicker) && !!row;
 
                   if (property.column === "CheckBox") {
                     return (
