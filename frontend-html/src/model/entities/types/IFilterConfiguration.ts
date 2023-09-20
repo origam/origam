@@ -29,6 +29,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   isFilterControlsDisplayed: boolean;
   activeFilters: IFilter[];
+  activeCompleteFilters: IFilter[];
 
   filteringFunction(ignorePropertyId?: string): (row: any[], forceRowId?: string) => boolean;
 
