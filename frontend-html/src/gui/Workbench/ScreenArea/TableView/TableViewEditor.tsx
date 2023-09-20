@@ -44,8 +44,9 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
+import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
+import S from "./TableViewEditor.module.scss";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -201,6 +202,11 @@ export class TableViewEditor extends React.Component<{
             customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
+            onBlur={()=>{
+              const gridFocusManager = getGridFocusManager(dataView);
+              gridFocusManager.activeEditor = undefined;
+              gridFocusManager.editorBlur = undefined;
+            }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
@@ -284,17 +290,16 @@ export class TableViewEditor extends React.Component<{
   }
 
   render() {
-    return <Provider property={this.props.property}>{this.getEditor()}</Provider>;
+    const dataView = getDataView(this.props.property);
+    return <Provider property={this.props.property}>
+      {
+        <div
+          id={"editor_dataView_" + dataView.modelInstanceId}
+          className={S.container}
+        >
+          {this.getEditor()}
+        </div>
+      }
+    </Provider>;
   }
-}
-
-// Makes sure the editor alignment will be the same as the table cell alignment.
-// Needed on columns where the alignment can be set in the model.
-function resolveCellAlignment(customStyle: { [p: string]: string } | undefined, isFirsColumn: boolean, type: string){
-  let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);
-  const style = customStyle ?Object.assign({},customStyle) :{};
-  style["paddingRight"] = cellAlignment.paddingRight - 1 + "px";
-  style["paddingLeft"] = cellAlignment.paddingLeft + "px";
-  style["textAlign"] = cellAlignment.alignment;
-  return style;
 }

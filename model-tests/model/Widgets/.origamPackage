@@ -15,6 +15,9 @@
       x:id="7d9fe785-5301-4da1-b018-3d507d453b38"
       pr:referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
     <pr:packageReference
+      x:id="d1a45ba3-2e86-4097-a2f5-71908475aa81"
+      pr:referencedPackage="Chat/.origamPackage#261b7cd5-4ba1-46a0-8963-27793379ac11" />
+    <pr:packageReference
       x:id="e3000c9f-0d78-426c-9506-de91a6a56164"
       pr:referencedPackage="Attachments/.origamPackage#bb8c67fb-44c1-4b41-8fce-4d50cd5a759d" />
     <pr:packageReference

@@ -306,7 +306,7 @@ export function*interpretScreenXml(
   const foundLookupIds = new Set<string>();
   const uiRoot = findUIRoot(windowXml);
 
-  const focusManager = new ScreenFocusManager();
+  const focusManager = new ScreenFocusManager(uiRoot);
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
     focusManager: focusManager,

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading;
@@ -172,7 +173,7 @@ namespace Origam.Server.Controllers
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(updateData.SessionFormIdentifier);
-                IList output = ss.UpdateObject(
+                IEnumerable<ChangeInfo> output = ss.UpdateObject(
                     entity: updateData.Entity,
                     id: updateData.Id,
                     property: updateData.Property,

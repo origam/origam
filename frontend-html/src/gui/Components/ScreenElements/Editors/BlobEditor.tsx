@@ -45,6 +45,8 @@ import { T } from "utils/translation";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { toOrigamServerString } from "@origam/utils";
+import moment from "moment";
 
 @inject(({property}: { property: IProperty }, {value}) => {
   return {
@@ -141,8 +143,8 @@ export class BlobEditor extends React.Component<{
             Property: this.props.Property!,
             FileName: this.props.value,
             parameters: this.props.parameters,
-            DateCreated: "2010-01-01",
-            DateLastModified: "2010-01-01",
+            DateCreated: toOrigamServerString(moment(file.lastModifiedDate)), // DateCreated is not available in the browser
+            DateLastModified: toOrigamServerString(moment(file.lastModifiedDate)),
           });
 
           let lastTime: number | undefined;

@@ -121,6 +121,12 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
         beh.elmInputElement?.value, // eslint-disable-line react-hooks/exhaustive-deps
       ]);
 
+      useEffect(() => {
+        return () => {
+         props.onEditorBlur?.(null);
+        }
+      }, []);
+
       function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
           removeItem(event, value[value.length - 1]);

@@ -155,9 +155,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *onDeleteRow(
     entity: string,
     rowId: string,
-    dataView: IDataView
+    dataView: IDataView,
+    doNotAskForConfirmation? : boolean
   ): Generator<unknown, any, unknown> {
-    yield*this.onRequestDeleteRow(entity, rowId, dataView);
+    if (doNotAskForConfirmation || (yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
+      yield*this.deleteRow(entity, rowId, dataView);
+    }
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
@@ -175,12 +178,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       return;
     }
     yield*this.executeAction(gridId, entity, action, selectedItems);
-  }
-
-  *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView): any {
-    if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
-      yield*this.deleteRow(entity, rowId, dataView);
-    }
   }
 
   *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
@@ -727,7 +724,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield*this.readFirstChunkOfRows({
             rootDataView: rootDataView,
             preloadIsDirty: preloadIsDirty,
-            runChangeRowReaction: true
           });
         }
       }
@@ -882,7 +878,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *readFirstChunkOfRows(args: {
     rootDataView: IDataView,
-    runChangeRowReaction: boolean
     preloadIsDirty?: boolean
   }): any {
     const rootDataView = args.rootDataView;
@@ -925,9 +920,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       rootDataView.restoreViewState();
     } finally {
-      if(args.runChangeRowReaction){
-        rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
-      }
+      rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
       this.monitor.inFlow--;
     }
   }
@@ -971,8 +964,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       do {
         this._readFirstChunkOfRowsScheduled = false;
         yield*this.readFirstChunkOfRows({
-          rootDataView: rootDataView,
-          runChangeRowReaction: false
+          rootDataView: rootDataView
         });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {
@@ -1147,13 +1139,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield*refreshWorkQueues(this)();
       yield*processCRUDResult(this, result);
-      getFormScreen(this).dataViews.forEach((dataView) =>
-        dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true})
+      getFormScreen(this).dataViews.forEach((dataView) => {
+          dataView.rowIdForImmediateDeletion = undefined;
+          dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true})
+        }
       );
       yield*this.updateTotalRowCounts();
-      // getFormScreen(this).dataViews.forEach((dataView) =>
-      //     yield dataView.reloadAggregations()
-      // );
     } finally {
       this.monitor.inFlow--;
     }
@@ -1340,6 +1331,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
+    openedScreen.content.formScreen?.focusManager?.dispose();
   }
 
   *closeForm() {

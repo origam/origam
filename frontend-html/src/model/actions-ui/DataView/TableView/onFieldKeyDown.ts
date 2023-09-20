@@ -39,6 +39,7 @@ import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
+import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -118,9 +119,12 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Escape": {
-          tablePanelView.setEditing(false);
-          tablePanelView.clearCurrentCellEditData();
-          tablePanelView.triggerOnFocusTable();
+          if(!event.closedADropdown){
+            yield onEscapePressed(dataView, event);
+            tablePanelView.setEditing(false);
+            tablePanelView.clearCurrentCellEditData();
+            tablePanelView.triggerOnFocusTable();
+          }
           break;
         }
         default: {

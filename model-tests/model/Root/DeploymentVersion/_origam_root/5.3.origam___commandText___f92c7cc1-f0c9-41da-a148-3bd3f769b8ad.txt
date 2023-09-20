@@ -1,20 +1,40 @@
-﻿INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Keine Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-DE%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Keine Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-CH%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Bez opakování', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%cs-CZ%'))
+﻿IF EXISTS(select Id from language where TagIETF like '%de-DE%')
+BEGIN
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Keine Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-DE%'))
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineare Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-DE%'))
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponentielle Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-DE%'))
+END
 
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineare Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-DE%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineare Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-CH%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineární opakování', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%cs-CZ%'))
+IF EXISTS(select Id from language where TagIETF like '%de-CH%')
+BEGIN
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Keine Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-CH%'))
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineare Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-CH%'))
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponentielle Wiederholung', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%de-CH%'))
+END
 
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponentielle Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-DE%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponentielle Wiederholung', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%de-CH%'))
-INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
-     VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponenciální opakování', SYSDATETIME(), NEWID(), (select Id from language where TagIETF like '%cs-CZ%'))
+IF EXISTS(select Id from language where TagIETF like '%cs-CZ%')
+BEGIN
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('69460BCF-81D4-4A97-94F7-5A391D16F771', 'Bez opakování', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%cs-CZ%'))
+
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('8A5C793F-73B8-41EF-A459-618A8E6FE4FA', 'Lineární opakování', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%cs-CZ%'))
+
+	INSERT INTO [dbo].[WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId],[Name],[RecordCreated],[Id],[refLanguageId])
+		VALUES ('57AD4C10-1F43-4CCF-A48A-132E7E418D53', 'Exponenciální opakování', SYSDATETIME(), NEWID(), 
+			(select Id from language where TagIETF like '%cs-CZ%'))
+END

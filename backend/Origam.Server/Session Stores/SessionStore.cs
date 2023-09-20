@@ -827,7 +827,7 @@ namespace Origam.Server
             return false;
         }
 
-        public ArrayList GetChangesByRow(
+        public List<ChangeInfo> GetChangesByRow(
             string requestingGrid, DataRow row, Operation operation, 
             bool hasErrors, bool hasChanges, bool fromTemplate)
         {
@@ -835,12 +835,12 @@ namespace Origam.Server
                 hasErrors, hasChanges, fromTemplate);
         }
 
-        internal ArrayList GetChangesByRow(
+        internal List<ChangeInfo> GetChangesByRow(
             string requestingGrid, DataRow row, Operation operation, 
             Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, 
             bool hasChanges, bool fromTemplate)
         {
-            ArrayList listOfChanges = new ArrayList();
+            var listOfChanges = new List<ChangeInfo>();
             DataRow rootRow = DatasetTools.RootRow(row);
             DatasetTools.CheckRowErrorRecursive(rootRow, null, false);
 
@@ -925,20 +925,20 @@ namespace Origam.Server
             }
         }
 
-        public ArrayList GetChanges(string entity, object id, Operation operation, bool hasErrors, bool hasChanges)
+        public List<ChangeInfo> GetChanges(string entity, object id, Operation operation, bool hasErrors, bool hasChanges)
         {
             return GetChangesByRow(null, this.GetSessionRow(entity, id), 
                 operation, hasErrors, hasChanges, false);
         }
 
-        public ArrayList GetChanges(string entity, object id, Operation operation, Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, bool hasChanges)
+        public List<ChangeInfo> GetChanges(string entity, object id, Operation operation, Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, bool hasChanges)
         {
             return GetChangesByRow(null, this.GetSessionRow(entity, id), 
                 operation, ignoreKeys, includeRowStates, hasErrors, hasChanges,
                 false);
         }
 
-        private void GetChangesRecursive(ArrayList changes, string requestingGrid, DataRow row, Operation operation, DataRow changedRow, bool allDetails, Hashtable ignoreKeys, bool includeRowStates)
+        private void GetChangesRecursive(List<ChangeInfo> changes, string requestingGrid, DataRow row, Operation operation, DataRow changedRow, bool allDetails, Hashtable ignoreKeys, bool includeRowStates)
         {
             if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached)
             {
@@ -1359,7 +1359,8 @@ namespace Origam.Server
                                     }
                                     else
                                     {
-                                        result.Add(RuleEngine.RowLevelSecurityState(row, profileId, FormId));
+                                        result.Add(RowSecurityStateBuilder.BuildFull(
+                                            RuleEngine, row, profileId, FormId));
                                     }
                                 }
                                 finally
@@ -1383,16 +1384,18 @@ namespace Origam.Server
             RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
             foreach (var row in rowSearchResult.Rows)
             {
-                result.Add(RuleEngine.RowLevelSecurityState(row, profileId, FormId));
+                result.Add(RowSecurityStateBuilder.BuildFull(RuleEngine, row, profileId, FormId));
             }
 
             // try to get the rest from the database
             if (rowSearchResult.IdsNotFoundInStore.Count > 0)
             {
-                var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
+                DataRowCollection loadedRows = LoadMissingRows(entity,
+                    rowSearchResult.IdsNotFoundInStore);
                 foreach (DataRow row in loadedRows)
                 {
-                    RowSecurityState rowSecurity = this.RuleEngine.RowLevelSecurityState(row, profileId, FormId);
+                    RowSecurityState rowSecurity = RowSecurityStateBuilder.
+                        BuildJustMainEntityRowLevelEvenWithoutFields(this.RuleEngine, row);
                     if (rowSecurity != null)
                     {
                         result.Add(rowSecurity);
@@ -1488,7 +1491,7 @@ namespace Origam.Server
         }
 
         #region CUD
-        public virtual ArrayList CreateObject(string entity, IDictionary<string, object> values,
+        public virtual List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values,
             IDictionary<string, object> parameters, string requestingGrid)
         {
             lock (_lock)
@@ -1577,7 +1580,8 @@ namespace Origam.Server
                 }
 
                 table.Rows.Add(newRow);
-                if (!this.RuleEngine.RowLevelSecurityState(newRow, profile.Id, FormId).AllowCreate)
+                if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
+                    RuleEngine, newRow).AllowCreate)
                 {
                     table.Rows.Remove(newRow);
                     throw new Exception(Resources.ErrorCreateRecordNotAllowed);
@@ -1585,7 +1589,7 @@ namespace Origam.Server
 
                 NewRowToDataList(newRow);
 
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, 
+                List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
                     newRow, Operation.Create, this.Data.HasErrors, 
                     this.Data.HasChanges(), false);
 
@@ -1593,40 +1597,64 @@ namespace Origam.Server
             }
         }
 
-        public virtual ArrayList UpdateObject(string entity, object id, string property, object newValue)
+        public virtual IEnumerable<ChangeInfo> UpdateObject(
+            string entity, object id, string property, object newValue)
         {
             lock (_lock)
             {
-                UserProfile profile = SecurityTools.CurrentUserProfile();
-                DataRow row = GetSessionRow(entity, id);
-                if (row == null )
-                {
-                    throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
-                }
-
-                DataColumn dataColumn = row.Table.Columns[property];
-                if (dataColumn == null)
-                {
-                    throw new NullReferenceException(
-                        String.Format(Resources.ErrorColumnNotFound, property));
-                }
-                if (IsColumnArray(dataColumn))
-                {
-                    UpdateRowColumnArray(newValue, profile, row, dataColumn);
-                }
-                else
-                {
-                    UpdateRowColumn(property, newValue, profile, row);
-                }
-                ArrayList listOfChanges = GetChangesByRow(null, row,
-                    Operation.Update, this.Data.HasErrors, 
-                    this.Data.HasChanges(), false);
-                if (!this.Data.HasChanges())
-                {
-                    listOfChanges.Add(ChangeInfo.SavedChangeInfo());
-                }
-                return listOfChanges;
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+                return GetChanges(row);
             }
+        }
+
+        public void UpdateObjectsWithoutGetChanges(
+            string entity, object id, string property, object newValue)
+        {
+            lock (_lock)
+            {
+                DataRow row = UpdateObjectInternal(entity, id, property, newValue);
+            }
+        }
+
+        private IEnumerable<ChangeInfo> GetChanges(DataRow row)
+        {
+            List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
+                Operation.Update, this.Data.HasErrors,
+                this.Data.HasChanges(), false);
+            if (!this.Data.HasChanges())
+            {
+                listOfChanges.Add(ChangeInfo.SavedChangeInfo());
+            }
+            return listOfChanges;
+        }
+
+        private DataRow UpdateObjectInternal(string entity, object id,
+            string property, object newValue)
+        {
+            UserProfile profile = SecurityTools.CurrentUserProfile();
+            DataRow row = GetSessionRow(entity, id);
+            if (row == null)
+            {
+                throw new ArgumentOutOfRangeException("id", id,
+                    Resources.ErrorRecordNotFound);
+            }
+
+            DataColumn dataColumn = row.Table.Columns[property];
+            if (dataColumn == null)
+            {
+                throw new NullReferenceException(
+                    String.Format(Resources.ErrorColumnNotFound, property));
+            }
+            if (IsColumnArray(dataColumn))
+            {
+                UpdateRowColumnArray(newValue, profile, row, dataColumn);
+            }
+            else
+            {
+                UpdateRowColumn(property, newValue, profile, row);
+            }
+
+            return row;
         }
 
         private static void UpdateRowColumnArray(object newValue, UserProfile profile, DataRow row, DataColumn dataColumn)
@@ -1748,7 +1776,7 @@ namespace Origam.Server
             }
         }
 
-        public virtual ArrayList DeleteObject(string entity, object id)
+        public virtual List<ChangeInfo> DeleteObject(string entity, object id)
         {
             lock(_lock)
             {
@@ -1757,7 +1785,7 @@ namespace Origam.Server
                 DataSet dataset = row.Table.DataSet;
 
                 // get the changes for the deleted row before we actually deleted, because then the row would be inaccessible
-                ArrayList deletedItems = new ArrayList();
+                var deletedItems = new List<ChangeInfo>();
                 Dictionary<string, List<DeletedRowInfo>> backup = BackupDeletedRows(row);
                 object[] listRowBackup = null;
 
@@ -1800,7 +1828,7 @@ namespace Origam.Server
                     // handle rules for the data changes after the row has been deleted
                     this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
 
-                    ArrayList listOfChanges = new ArrayList();
+                    var listOfChanges = new List<ChangeInfo>();
 
 
                     // get the changes - from root - e.g. recalculated totals after deletion
@@ -1831,7 +1859,8 @@ namespace Origam.Server
                             table.AcceptChanges();
                         }
                         // save the data
-                        listOfChanges.AddRange((IList)this.ExecuteAction(SessionStore.ACTION_SAVE));
+                        var actionResult = ((IList)ExecuteAction(ACTION_SAVE)).ToList<ChangeInfo>();
+                        listOfChanges.AddRange(actionResult);
                     }
                     return listOfChanges;
                 }
@@ -1947,7 +1976,7 @@ namespace Origam.Server
             }
         }
 
-        public ArrayList CopyObject(string entity, object originalId,
+        public List<ChangeInfo> CopyObject(string entity, object originalId,
             string requestingGrid, ArrayList entities,
             IDictionary<string, object> forcedValues)
         {
@@ -1979,7 +2008,8 @@ namespace Origam.Server
                 try
                 {
                     DataRow newTmpRow = tmpDS.Tables[table.TableName].Rows[0];
-                    if (!this.RuleEngine.RowLevelSecurityState(newTmpRow, profile.Id, FormId).AllowCreate)
+                    if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
+                        RuleEngine, newTmpRow).AllowCreate)
                     {
                         throw new Exception(Resources.ErrorCreateRecordNotAllowed);
                     }
@@ -2145,7 +2175,7 @@ namespace Origam.Server
         }
         #endregion
 
-        private void AddChildDeletedItems(ArrayList deletedItems, DataRow deletedRow)
+        private void AddChildDeletedItems(List<ChangeInfo> deletedItems, DataRow deletedRow)
         {
             foreach (DataRelation child in deletedRow.Table.ChildRelations)
             {
@@ -2160,9 +2190,9 @@ namespace Origam.Server
 
         #endregion
 
-        public ArrayList UpdateObjectBatch(string entity, string property, Hashtable values)
+        public List<ChangeInfo> UpdateObjectBatch(string entity, string property, Hashtable values)
         {
-            ArrayList result = new ArrayList();
+            var result = new List<ChangeInfo>();
 
             lock (_lock)
             {
@@ -2175,9 +2205,9 @@ namespace Origam.Server
             return result;
         }
 
-        public ArrayList UpdateObjectEx(string entity, object id, Hashtable values)
+        public List<ChangeInfo> UpdateObjectEx(string entity, object id, Hashtable values)
         {
-            ArrayList result = new ArrayList();
+            var result = new List<ChangeInfo>();
 
             lock (_lock)
             {
@@ -2189,9 +2219,9 @@ namespace Origam.Server
 
             return result;
         }  
-        public ArrayList UpdateObjectBatch(string entity, UpdateData[] updateDataArray) 
+        public List<ChangeInfo> UpdateObjectBatch(string entity, UpdateData[] updateDataArray) 
         {
-            ArrayList result = new ArrayList();
+            var result = new List<ChangeInfo>();
 
             lock (_lock)
             {

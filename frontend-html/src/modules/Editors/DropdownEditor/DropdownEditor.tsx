@@ -90,13 +90,14 @@ export function XmlBuildDropdownEditor(props: {
   isReadOnly: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
-  customStyle?: any;
+  customStyle?: {[key: string]: string};
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
+  onBlur?: () => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
@@ -134,6 +135,7 @@ export function XmlBuildDropdownEditor(props: {
       isReadOnly: props.isReadOnly,
       onDoubleClick: props.onDoubleClick,
       onClick: props.onClick,
+      onBlur: props.onBlur,
       subscribeToFocusManager: props.subscribeToFocusManager,
       onKeyDown: props.onKeyDown,
       autoSort: props.autoSort,
@@ -141,7 +143,11 @@ export function XmlBuildDropdownEditor(props: {
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(
-      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
+      props.xmlNode,
+      dropdownEditorDataTable,
+      dropdownEditorBehavior,
+      props.customStyle,
+      props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,

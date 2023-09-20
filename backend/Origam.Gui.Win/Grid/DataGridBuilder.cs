@@ -665,7 +665,7 @@ namespace Origam.Gui.Win
 								// Now we change the value.
 								if(grid.DataSource != null && hti.Row < grid.BindingContext[grid.DataSource, grid.DataMember].Count)
 								{
-									bool canEdit = ruleEngine.RowLevelSecurityState((cm.Current as DataRowView).Row, grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName, Schema.EntityModel.CredentialType.Update);
+									bool canEdit = ruleEngine.EvaluateRowLevelSecurityState((cm.Current as DataRowView).Row, grid.TableStyles[0].GridColumnStyles[hti.Column].MappingName, Schema.EntityModel.CredentialType.Update);
 
 									if(canEdit)
 									{
@@ -701,7 +701,7 @@ namespace Origam.Gui.Win
 								string columnName = grid.TableStyles[0].GridColumnStyles[hti.Column].PropertyDescriptor.Name;
 								foreach(DataRow row in selectedRows)
 								{
-									bool canEdit = ruleEngine.RowLevelSecurityState(row, columnName, Schema.EntityModel.CredentialType.Update);
+									bool canEdit = ruleEngine.EvaluateRowLevelSecurityState(row, columnName, Schema.EntityModel.CredentialType.Update);
 
 									if(canEdit)
 									{

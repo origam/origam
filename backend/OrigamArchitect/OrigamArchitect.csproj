@@ -487,7 +487,7 @@
       <Version>0.27.2</Version>
     </PackageReference>
     <PackageReference Include="NPOI">
-      <Version>2.6.1</Version>
+      <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="Origam.Service.Core">
       <Version>2.1.1</Version>

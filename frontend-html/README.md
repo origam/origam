@@ -62,4 +62,14 @@ Try running it with the browser path specified:
 
 ```BROWSER=/usr/bin/firefox yarn start```
 
+#### Debug Constants
+You can set these constants in the browser's local storage:
+
+`debugNoPolling` will prevent work queue refresh from running
+
+`debugNoPolling_notificationBox` will prevent notifications refresh from running
+
+`debugNoPolling_chatrooms` will prevent chat refresh from running
+
+
 
