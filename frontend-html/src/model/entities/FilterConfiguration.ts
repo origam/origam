@@ -39,6 +39,11 @@ export class FilterConfiguration implements IFilterConfiguration {
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
 
+  @computed
+  get activeCompleteFilters(){
+    return this.activeFilters.filter(x=> x.setting.isComplete);
+  }
+
   registerFilteringOnOffHandler(handler: (filteringOn: boolean) => void) {
     this.filteringOnOffHandlers.push(handler);
   }
@@ -107,7 +112,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           return false;
         }
       }
-      for (let term of this.activeFilters) {
+      for (let term of this.activeCompleteFilters) {
         if ((!ignorePropertyId || ignorePropertyId !== term.propertyId) &&
           !this.userFilterPredicate(row, term)) {
           return false;
