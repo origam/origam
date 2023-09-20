@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="ad82cbff-2167-408c-949d-0145031d59fb"
+    ds1:localized="false"
+    asi:name="WideTable_List">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/WideTable.origam#WideTable/b091c742-315c-45ed-bab3-5939267539ee"
+      x:id="7c112ba7-3d79-4fb5-91a7-0b0adef10df5"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WideTable"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="370b2c55-2234-47c4-bf79-059824849296"
+      asi:name="ByText3">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Widgets/DataStructure/Widgets/WideTable_List.origam#WideTable_List/WideTable/7c112ba7-3d79-4fb5-91a7-0b0adef10df5"
+        dsssi:fieldName="Text3"
+        x:id="8c3ba59b-8a91-4264-957f-b4ecc1e76e2f"
+        asi:name="WideTable_0_Text3"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds1:DataStructure>
+</x:file>

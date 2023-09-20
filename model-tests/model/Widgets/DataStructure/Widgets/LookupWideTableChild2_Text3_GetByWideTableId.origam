@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="067dfd7c-d7a3-4a88-8faf-59b3eb0a3af9"
+    ds1:localized="false"
+    asi:name="LookupWideTableChild2_Text3_GetByWideTableId">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/747db5cc-33f0-4ef8-bcd6-69f5767b1b86"
+      x:id="88f37c4c-c61b-430e-b057-87c3860828ff"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WideTableChild2"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="5b5f607f-69af-48e8-b46a-64526a87dff6"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/Text3/ae61d6cf-641f-443c-bad5-9e67da7586d2"
+        dsc:hideInOutput="false"
+        x:id="6d834065-27f8-4903-bcd2-9a5b7ac0cbf8"
+        asi:name="Text3"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="e2ddf788-fdbf-4ef3-9f18-21d921ba63a2"
+      asi:name="GetByWideTableId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupWideTableChild2_Text3_GetByWideTableId.origam#LookupWideTableChild2_Text3_GetByWideTableId/WideTableChild2/88f37c4c-c61b-430e-b057-87c3860828ff"
+        dsfsf:filter="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/GetByWideTableId/b4bdcb09-909f-41e2-96d5-1b08d8e3b493"
+        x:id="1aa7240b-721d-4fec-8510-6d04294045f6"
+        asi:name="WideTableChild2_GetByWideTableId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

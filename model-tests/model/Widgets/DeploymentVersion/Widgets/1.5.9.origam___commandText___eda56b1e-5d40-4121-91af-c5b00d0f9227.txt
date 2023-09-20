@@ -1,0 +1,1 @@
+﻿INSERT INTO [WideTableStatus] ([Id],[Name]) VALUES ('e85a19c2-e521-4619-8987-94404568b216','Failed');

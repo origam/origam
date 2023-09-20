@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="90bd68e2-b1db-4807-b2f6-700ae76a19a3"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupWideTable_Int1Sum_ByGetNotId.origam#LookupWideTable_Int1Sum_ByGetNotId/bfe19ae0-046f-4e32-bb14-4030837b604b"
+    adl:listDisplayMember="Int1Sum"
+    adl:listValueMember="Id"
+    asi:name="WideTable_Int1Sum_ByGetNotId"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupWideTable_Int1Sum_ByGetNotId.origam#LookupWideTable_Int1Sum_ByGetNotId/bfe19ae0-046f-4e32-bb14-4030837b604b"
+    adl:valueDisplayMember="Int1Sum"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupWideTable_Int1Sum_ByGetNotId.origam#LookupWideTable_Int1Sum_ByGetNotId/GetNotId/a6c898cb-aafe-4cb6-97f6-24331ee3fcff"
+    adl:valueValueMember="Id" />
+</x:file>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:er2="http://schemas.origam.com/Origam.Schema.RuleModel.EntityRule/6.0.0"
+  xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
+  <er2:Rule
+    asi:abstract="false"
+    ar1:dataType="Boolean"
+    x:id="b27abcc8-297f-421c-a1ce-83d68d06d3de"
+    xpr:isPathRelative="false"
+    asi:name="WdeTable_Text3_IsEmpty"
+    xpr:xPath="string(/row/@Text3) = ''" />
+</x:file>

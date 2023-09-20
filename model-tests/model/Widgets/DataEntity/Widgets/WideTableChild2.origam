@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr1="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="747db5cc-33f0-4ef8-bcd6-69f5767b1b86"
+    tmi:mappedObjectName="WideTableChild2"
+    asi:name="WideTableChild2"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="a16b89b7-2e4a-4d4b-b0a1-3db42828da82"
+      asi:name="ix_WideTable"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/refWideTableId/49bd4c52-47d8-47d1-b4e0-c6f8219d8162"
+        x:id="de3ff178-1519-48fe-a548-69245b19a472"
+        asi:name="0_refWideTableId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="UniqueIdentifier"
+      x:id="93add5d0-8769-4f73-8be7-511d0119210b"
+      asi:name="parWideTableId" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="b4bdcb09-909f-41e2-96d5-1b08d8e3b493"
+      asi:name="GetByWideTableId">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="c0f38b88-ccb3-4b41-9504-31ee6326edf3"
+        adec:isPrimaryKey="false"
+        asi:name="Equal"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="736d4a1c-9abb-45f6-a7f0-baa7a26eec8a"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="bb0fbc0c-14aa-428e-83e2-a7c54dce2916"
+            asi:name="parWideTableId"
+            pr1:parameter="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/parWideTableId/93add5d0-8769-4f73-8be7-511d0119210b" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="ef19ff80-68a2-47c8-ba4b-a4a6b870fde0"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/WideTableChild2.origam#WideTableChild2/refWideTableId/49bd4c52-47d8-47d1-b4e0-c6f8219d8162"
+            x:id="9837c76f-69e8-433a-885f-e3c50bdb58ef"
+            asi:name="refWideTableId" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/WideTable.origam#WideTable/b091c742-315c-45ed-bab3-5939267539ee"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="49bd4c52-47d8-47d1-b4e0-c6f8219d8162"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refWideTableId"
+      asi:name="refWideTableId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/6459dd24-feda-4dd6-8e7e-72711b019fc7"
+      x:id="0a4161b5-34b1-4e34-92e3-8276010dfea0" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="d298c739-ab27-4c70-8fc6-efc899f516c0" />
+  </tmi:DataEntity>
+</x:file>

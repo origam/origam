@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="a4d3ad45-ebeb-46e9-973a-0ae75fac96ee"
+    dc:lookup="Widgets/DataLookup/Widgets/WideTableStatus.origam#WideTableStatus/33ce7b9d-7c2c-4786-b6c1-b357dd95e221"
+    asi:name="WideTableStatus_Processed"
+    dc:userDefinable="false"
+    dc:value="aec4cea9-5ee9-4e21-b368-d03ee82ba271" />
+</x:file>

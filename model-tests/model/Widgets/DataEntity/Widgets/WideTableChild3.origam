@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="0d386f5e-426e-4d33-872e-814d258dd513"
+    tmi:mappedObjectName="WideTableChild3"
+    asi:name="WideTableChild3"
+    ade:readOnly="false">
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="0c0c2996-104e-4737-a3ec-6f576a87c08f"
+      asi:name="ix_WideTable"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Widgets/DataEntity/Widgets/WideTableChild3.origam#WideTableChild3/refWideTableId/8b925e73-825d-47f5-b641-4bbf0ea6ae96"
+        x:id="d5c87c35-c2d1-4157-bf9e-4303855aa1c2"
+        asi:name="0_refWideTableId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/WideTable.origam#WideTable/b091c742-315c-45ed-bab3-5939267539ee"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="8b925e73-825d-47f5-b641-4bbf0ea6ae96"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refWideTableId"
+      asi:name="refWideTableId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="add6e2c6-b1ac-4881-8f51-2d5578fa2804" />
+    <sia:ancestor
+      sia:ancestor="Widgets/DataEntity/Widgets/WideTableColumns.origam#WideTableColumns/6459dd24-feda-4dd6-8e7e-72711b019fc7"
+      x:id="ffeccf1c-f585-4c98-b772-bda018653a01" />
+  </tmi:DataEntity>
+</x:file>
