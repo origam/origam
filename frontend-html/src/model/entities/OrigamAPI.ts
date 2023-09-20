@@ -611,6 +611,7 @@ export class OrigamAPI implements IApi {
         + "</TableConfiguration>"
     })
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
+      SessionFormIdentifier: data.sessionFormIdentifier,
       ObjectInstanceId: data.instanceId,
       SectionNameAndData: {
         tableConfigurations: tableConfigurationsXml.join("\n"),
