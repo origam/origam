@@ -6156,10 +6156,10 @@ react-highlight-words@^0.20.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
-react-inlinesvg@*, react-inlinesvg@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.3.tgz#69aa4d9c01b037abb800bfa103cb5591c6f3fe76"
-  integrity sha512-qPSqksbgDc6uVX6w256XY6JmdkLpzA4RiajvHi8u2qszXrhjDl6JwhW8x3VMkO4BxL9ll+/IeKR9ZxgM8wLcKQ==
+react-inlinesvg@*, react-inlinesvg@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.4.tgz#100e377ed13f71f24e08055882a4b8981038e638"
+  integrity sha512-OnXi+IHoY2zj6rt+kLmXQth9HZ3rS1TDtDwjFbELcCZngAJC32nXp2ZzLp4FpijzISDe7YfHI3SFs9qALWv+xw==
   dependencies:
     react-from-dom "^0.6.2"
 
