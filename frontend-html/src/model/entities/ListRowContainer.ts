@@ -90,7 +90,7 @@ export class ListRowContainer implements IRowsContainer {
       .map(ordering => this.getOrderingProperty(dataView, ordering))
       .filter((prop) => prop.column === "ComboBox");
 
-    const filterComboProps = this.filterConfiguration.activeFilters
+    const filterComboProps = this.filterConfiguration.activeCompleteFilters
       .map((term) => getDataViewPropertyById(this.filterConfiguration, term.propertyId)!)
       .filter((prop) => prop.column === "ComboBox");
     const allComboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));
