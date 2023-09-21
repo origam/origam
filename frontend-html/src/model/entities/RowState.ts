@@ -39,7 +39,7 @@ export enum IIdState {
 export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
   suppressWorkingStatus: boolean = false;
-  visibleRowIds: string[] = [];
+  dataViewVisibleRows: Map<string,string[]> = new Map();
 
   constructor(debouncingDelayMilliseconds?: number) {
     this.triggerLoadDebounced = _.debounce(
@@ -54,10 +54,10 @@ export class RowState implements IRowState {
       // Ignoring the no ids makes sure that the triggerLoadDebounced will not run with no ids
       // when some are actually visible. This problem was not really observed so may be the
       // "if" statement could be removed if this results in more RowState calls then necessary.
-      if(visibleRows.rowIds.length > 0){
-        this.visibleRowIds = visibleRows.rowIds;
+      if(visibleRows.rowIds.length > 0) {
+        this.dataViewVisibleRows.set(visibleRows.dataViewModelInstanceId, visibleRows.rowIds);
+        this.triggerLoadDebounced();
       }
-      this.triggerLoadDebounced();
     });
   }
 
@@ -84,11 +84,18 @@ export class RowState implements IRowState {
     if(loadAll){
       return this.requests.values()
     }
-    return this.visibleRowIds.length === 0
-      ? Array.from(this.requests.values()).slice(-defaultRowStatesToFetch)
-      : this.visibleRowIds
+    if (this.dataViewVisibleRows.size === 0) {
+      return Array.from(this.requests.values()).slice(-defaultRowStatesToFetch);
+    } else {
+      let requestForVisibleRows: RowStateRequest[] = [];
+      for (let visibleRowIds of this.dataViewVisibleRows.values()) {
+        const requestsForDataView = visibleRowIds
             .map(rowId => this.requests.get(rowId))
-            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>;
+            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>
+        requestForVisibleRows = [...requestForVisibleRows, ...requestsForDataView];
+      }
+      return requestForVisibleRows;
+    }
   }
 
   *triggerLoad(loadAll: boolean): any {
