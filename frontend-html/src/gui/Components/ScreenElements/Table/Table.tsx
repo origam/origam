@@ -366,7 +366,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   @action.bound handleScrollerClick(event: any) {
     const {handled} = this.tableRenderer.handleClick(event);
-    if(!this.tablePanelView.isEditing || !handled){
+    if (!this.tablePanelView.isEditing || !handled) {
       this.focusTable();
     }
     if (!handled) {
