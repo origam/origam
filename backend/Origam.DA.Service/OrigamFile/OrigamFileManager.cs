@@ -67,7 +67,10 @@ namespace Origam.DA.Service
                 Path.Combine(dirToRename.Parent.FullName, newName);
             if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
             fileEventQueue.Pause();
-            Directory.Move(dirToRename.FullName, newDirPath);
+            if (Directory.Exists(dirToRename.FullName))
+            {
+                Directory.Move(dirToRename.FullName, newDirPath);
+            }
             index.RenameDirectory(dirToRename, newDirPath);
             fileEventQueue.Continue();
         }
@@ -87,6 +90,11 @@ namespace Origam.DA.Service
 
         public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
         {
+            if (!Directory.Exists(oldFullDirectory.FullName))
+            {
+                return;
+            }
+
             bool isEmpty = !oldFullDirectory
                 .GetAllFilesInSubDirectories()
                 .Any();
