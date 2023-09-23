@@ -74,9 +74,8 @@ namespace Origam.DA.Service
                 RemoveFromFile(instance, currentOrigamFile);
             }
 
-            UpdateFile(instance, newOrigamFile);
-            
             RenameRelatedItems(instance, currentOrigamFile);
+            UpdateFile(instance, newOrigamFile);
             
             if (!IsInTransaction)
             {
@@ -179,6 +178,11 @@ namespace Origam.DA.Service
         private void RenameRelatedItems(IFilePersistent instance,
             OrigamFile containingFile)
         {
+            if (containingFile == null)
+            {
+                return;
+            }
+
             switch (instance)
             {
                 case Package extension:
