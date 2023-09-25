@@ -40,12 +40,13 @@ export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
   suppressWorkingStatus: boolean = false;
   dataViewVisibleRows: Map<string,string[]> = new Map();
+  disposers: (()=> void)[] = [];
 
   constructor(debouncingDelayMilliseconds?: number) {
     this.triggerLoadDebounced = _.debounce(
       this.triggerLoadImm,
       debouncingDelayMilliseconds == undefined ? 0 : debouncingDelayMilliseconds);
-    visibleRowsChanged.subscribe((visibleRows) => {
+    const disposer = visibleRowsChanged.subscribe((visibleRows) => {
       const dataSource = getDataSource(this);
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
         return;
@@ -59,6 +60,7 @@ export class RowState implements IRowState {
         this.triggerLoadDebounced();
       }
     });
+    this.disposers.push(disposer);
   }
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -126,8 +128,9 @@ export class RowState implements IRowState {
           }
           this.isSomethingLoading = true;
           const api = getApi(this);
+          const sessionId = getSessionId(this);
           const states = yield api.getRowStates({
-            SessionFormIdentifier: getSessionId(this),
+            SessionFormIdentifier: sessionId,
             Entity: getEntity(this),
             Ids: Array.from(requestsToLoad.values()).map(request => request.rowId)
           });
@@ -160,6 +163,10 @@ export class RowState implements IRowState {
   triggerLoadDebounced: any;
 
   getValue(rowId: string) {
+    const sessionId = getSessionId(this);
+    if(sessionId === (window as any).debugSessionId){
+      debugger;
+    }
     if (!this.requests.has(rowId)) {
       this.requests.set(rowId, new RowStateRequest(rowId));
     }
@@ -255,6 +262,10 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = false;
     this.temporaryRequestsValues = undefined;
     // TODO: Wait when something is currently loading.
+  }
+
+  dispose(){
+    this.disposers.forEach(x => x());
   }
 
   parent?: any;
