@@ -251,8 +251,13 @@ export class FormScreen implements IFormScreen {
     console.log("End of View bindings");
     console.log("");
   }
-
   /* eslint-enable no-console */
+
+  dispose(){
+    for (let dataSource of this.dataSources) {
+      dataSource.dispose();
+    }
+  }
 }
 
 export class FormScreenEnvelope implements IFormScreenEnvelope {
