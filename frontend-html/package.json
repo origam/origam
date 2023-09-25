@@ -16,7 +16,7 @@
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
     "@messageformat/core": "^3.2.0",
-    "@origam/components": "^1.6.2",
+    "@origam/components": "^1.6.3",
     "@origam/plugin-audit": "^2.0.1",
     "@origam/plugin-chart": "^2.0.3",
     "@origam/plugin-filter": "^2.0.2",

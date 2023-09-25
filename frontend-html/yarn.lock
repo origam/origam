@@ -1725,6 +1725,13 @@
   dependencies:
     react-inlinesvg "^3.0.1"
 
+"@origam/components@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.3.tgz#1d01d9c0d7c0a02af72d361be59bad401ffa7520"
+  integrity sha512-7jWHD0u2yaSTS8DG2FkIosMcnRbntctN6XMeH6s+R4VCnHO2nJU+0wjuZUgN1pOaH4wgIEkcEFO3SyNEbnPaxA==
+  dependencies:
+    react-inlinesvg "^4.0.3"
+
 "@origam/plugin-audit@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@origam/plugin-audit/-/plugin-audit-2.0.1.tgz#bb996117ed77d8bf66d1992db891448f9b1bc6f5"
@@ -6156,7 +6163,7 @@ react-highlight-words@^0.20.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
-react-inlinesvg@*, react-inlinesvg@^4.0.4:
+react-inlinesvg@*, react-inlinesvg@^4.0.3, react-inlinesvg@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.4.tgz#100e377ed13f71f24e08055882a4b8981038e638"
   integrity sha512-OnXi+IHoY2zj6rt+kLmXQth9HZ3rS1TDtDwjFbELcCZngAJC32nXp2ZzLp4FpijzISDe7YfHI3SFs9qALWv+xw==
