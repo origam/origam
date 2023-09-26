@@ -1053,6 +1053,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield*processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
       getTablePanelView(targetDataView)!.scrollToCurrentRow();
+      if (targetDataView.isTableViewActive()) {
+        yield*startEditingFirstCell(targetDataView)();
+      } else if (targetDataView.isFormViewActive()) {
+        getFormFocusManager(targetDataView).forceAutoFocus();
+      }
     } finally {
       this.monitor.inFlow--;
     }
