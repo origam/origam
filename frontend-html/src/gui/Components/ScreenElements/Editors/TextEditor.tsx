@@ -33,6 +33,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IDockType } from "model/entities/types/IProperty";
 import { AutoSizer, List, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
+import { isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -130,6 +131,9 @@ export class TextEditor extends React.Component<{
       this.props.onChange?.(null, newValue);
       return 
     }
+    if(isSaveShortcut(event)){
+      this.onChange(event);
+    }
     this.props.onKeyDown?.(event)
   }
 
@@ -181,6 +185,11 @@ export class TextEditor extends React.Component<{
     return S.readonlyDiv + " " + S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
   }
 
+  private onChange(event: any) {
+    this.props.onChange && this.props.onChange(event, event.target.value)
+    this.updateTextOverflowState();
+  }
+
   private renderValueTag() {
     const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
     if (this.props.isRichText) {
@@ -205,9 +214,7 @@ export class TextEditor extends React.Component<{
           <div className={S.richTextWrappContainer} >
               <RichTextEditor 
                 value={this.props.value ?? ""}
-                onChange={(newValue: any) => {
-                  this.props.onChange?.(undefined, newValue);
-                }}
+                onChange={(event: any) => this.onChange(event)}
                 refInput={this.refInput}
                 onBlur={this.props.onEditorBlur}
                 onFocus={this.handleFocus}
@@ -228,11 +235,7 @@ export class TextEditor extends React.Component<{
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
           ref={this.refInput}
-          onChange={(event: any) => {
-            this.props.onChange && this.props.onChange(event, event.target.value)
-            this.updateTextOverflowState();
-          }
-          }
+          onChange={(event: any) => this.onChange(event)}
           onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
@@ -288,9 +291,7 @@ export class TextEditor extends React.Component<{
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
           maxLength={maxLength}
-          onChange={(event: any) => {
-            this.props.onChange && this.props.onChange(event, event.target.value);
-          }}
+          onChange={(event: any) => this.onChange(event)}
           onKeyDown={this.handleKeyDown}
           onDoubleClick={this.props.onDoubleClick}
           onClick={this.props.onClick}

@@ -40,6 +40,7 @@ import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -131,6 +132,8 @@ export function onFieldKeyDown(ctx: any) {
           if (isSaveShortcut(event)) {
             tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
+            const formScreenLifecycle = getFormScreenLifecycle(ctx);
+            yield*formScreenLifecycle.onSaveSession();
           } else if (isAddRecordShortcut(event)) {
             yield onCreateRowClick(dataView)(event);
           } else if (isDeleteRecordShortcut(event)) {
