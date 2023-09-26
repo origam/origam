@@ -39,7 +39,7 @@ export enum IIdState {
 export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
   suppressWorkingStatus: boolean = false;
-  visibleRowIds: string[] = [];
+  dataViewVisibleRows: Map<string,string[]> = new Map();
   disposers: (()=> void)[] = [];
 
   constructor(debouncingDelayMilliseconds?: number) {
@@ -55,10 +55,10 @@ export class RowState implements IRowState {
       // Ignoring the no ids makes sure that the triggerLoadDebounced will not run with no ids
       // when some are actually visible. This problem was not really observed so may be the
       // "if" statement could be removed if this results in more RowState calls then necessary.
-      if(visibleRows.rowIds.length > 0){
-        this.visibleRowIds = visibleRows.rowIds;
+      if(visibleRows.rowIds.length > 0) {
+        this.dataViewVisibleRows.set(visibleRows.dataViewModelInstanceId, visibleRows.rowIds);
+        this.triggerLoadDebounced();
       }
-      this.triggerLoadDebounced();
     });
     this.disposers.push(disposer);
   }
@@ -86,11 +86,18 @@ export class RowState implements IRowState {
     if(loadAll){
       return this.requests.values()
     }
-    return this.visibleRowIds.length === 0
-      ? Array.from(this.requests.values()).slice(-defaultRowStatesToFetch)
-      : this.visibleRowIds
+    if (this.dataViewVisibleRows.size === 0) {
+      return Array.from(this.requests.values()).slice(-defaultRowStatesToFetch);
+    } else {
+      let requestForVisibleRows: RowStateRequest[] = [];
+      for (let visibleRowIds of this.dataViewVisibleRows.values()) {
+        const requestsForDataView = visibleRowIds
             .map(rowId => this.requests.get(rowId))
-            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>;
+            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>
+        requestForVisibleRows = [...requestForVisibleRows, ...requestsForDataView];
+      }
+      return requestForVisibleRows;
+    }
   }
 
   *triggerLoad(loadAll: boolean): any {
@@ -121,9 +128,8 @@ export class RowState implements IRowState {
           }
           this.isSomethingLoading = true;
           const api = getApi(this);
-          const sessionId = getSessionId(this);
           const states = yield api.getRowStates({
-            SessionFormIdentifier: sessionId,
+            SessionFormIdentifier: getSessionId(this),
             Entity: getEntity(this),
             Ids: Array.from(requestsToLoad.values()).map(request => request.rowId)
           });
@@ -156,10 +162,6 @@ export class RowState implements IRowState {
   triggerLoadDebounced: any;
 
   getValue(rowId: string) {
-    const sessionId = getSessionId(this);
-    if(sessionId === (window as any).debugSessionId){
-      debugger;
-    }
     if (!this.requests.has(rowId)) {
       this.requests.set(rowId, new RowStateRequest(rowId));
     }
