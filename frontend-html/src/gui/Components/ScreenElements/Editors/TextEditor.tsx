@@ -58,7 +58,6 @@ export class TextEditor extends React.Component<{
   dock?: IDockType;
 }> {
   disposers: any[] = [];
-  currentValue = this.props.value;
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;
   refGrid = React.createRef<MultiGrid>();
@@ -207,7 +206,6 @@ export class TextEditor extends React.Component<{
               <RichTextEditor 
                 value={this.props.value ?? ""}
                 onChange={(newValue: any) => {
-                  this.currentValue = newValue;
                   this.props.onChange?.(undefined, newValue);
                 }}
                 refInput={this.refInput}
@@ -291,7 +289,6 @@ export class TextEditor extends React.Component<{
           ref={this.refInput}
           maxLength={maxLength}
           onChange={(event: any) => {
-            this.currentValue = event.target.value;
             this.props.onChange && this.props.onChange(event, event.target.value);
           }}
           onKeyDown={this.handleKeyDown}
