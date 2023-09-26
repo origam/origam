@@ -128,9 +128,8 @@ export class RowState implements IRowState {
           }
           this.isSomethingLoading = true;
           const api = getApi(this);
-          const sessionId = getSessionId(this);
           const states = yield api.getRowStates({
-            SessionFormIdentifier: sessionId,
+            SessionFormIdentifier: getSessionId(this),
             Entity: getEntity(this),
             Ids: Array.from(requestsToLoad.values()).map(request => request.rowId)
           });
@@ -163,10 +162,6 @@ export class RowState implements IRowState {
   triggerLoadDebounced: any;
 
   getValue(rowId: string) {
-    const sessionId = getSessionId(this);
-    if(sessionId === (window as any).debugSessionId){
-      debugger;
-    }
     if (!this.requests.has(rowId)) {
       this.requests.set(rowId, new RowStateRequest(rowId));
     }
