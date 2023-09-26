@@ -386,6 +386,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     if (openedScreen.content) {
       if (openedScreen.content.formScreen) {
+        openedScreen.content.formScreen.dispose();
         yield api.destroyUI({FormSessionId: getSessionId(openedScreen.content.formScreen)});
       } else if (openedScreen.content.preloadedSessionId) {
         yield api.destroyUI({FormSessionId: openedScreen.content.preloadedSessionId});

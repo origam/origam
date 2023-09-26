@@ -41,6 +41,8 @@ export interface IRowState extends IRowStateData {
   reload(): void;
 
   parent?: any;
+
+  dispose(): void;
 }
 
 export interface IRowStateItem {
