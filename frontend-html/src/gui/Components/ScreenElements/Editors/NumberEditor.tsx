@@ -29,6 +29,7 @@ import {
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { isSaveShortcut } from "utils/keyShortcuts";
 
 export class NumberEditor extends React.Component<{
   value: string | number | null;
@@ -155,7 +156,7 @@ export class NumberEditor extends React.Component<{
     await runInFlowWithHandler({
       ctx: this.props.property,
       action: async () => {
-        if (event.key === "Enter" || event.key === "Tab"){
+        if (event.key === "Enter" || event.key === "Tab" || isSaveShortcut(event)){
           await this.onChange();
         }
         this.props.onKeyDown && this.props.onKeyDown(event);
