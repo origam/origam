@@ -101,6 +101,12 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
         const tablePanelView = getTablePanelView(this.props.dataView);
         tablePanelView.triggerOnFocusTable();
       }
+      else
+      {
+        setInterval(()=>{
+          this.props.dataView?.formFocusManager?.autoFocus();
+        }, 100);
+      }
     }
   }
 
