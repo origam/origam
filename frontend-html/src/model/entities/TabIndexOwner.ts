@@ -18,17 +18,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface ITabIndexOwner {
-  tabIndex: string | undefined;
+  tabIndex: TabIndex;
 }
 
-function getTabIndexFractions(tabIndexOwner: ITabIndexOwner): number[] {
-  if (tabIndexOwner.tabIndex) {
-    return tabIndexOwner.tabIndex
-      .split(".")
-      .filter((x) => x !== "")
-      .map((x) => parseInt(x));
+export class TabIndex {
+
+  private _fractions: number[];
+
+  get fractions(){
+    return this._fractions;
   }
-  return [1e6];
+
+  public static Min = new TabIndex("-1");
+  public static Max = new TabIndex("1000000");
+
+  constructor(tabIndex: string | undefined) {
+    this._fractions = this.getTabIndexFractions(tabIndex);
+  }
+
+  private getTabIndexFractions(tabIndex: string | undefined): number[] {
+    if (tabIndex) {
+      return tabIndex
+        .split(".")
+        .filter((x) => x !== "")
+        .map((x) => parseInt(x));
+    }
+    return TabIndex.Max.fractions;
+  }
 }
 
 // TabIndex is a string separated by decimal points for example: 13, 14.0, 14.2, 14.15
@@ -53,7 +69,7 @@ function compareFraction(
     return 0;
   }
 
-  const fractionDifference = getTabIndexFractions(x)[fractionIndex] - getTabIndexFractions(y)[fractionIndex];
+  const fractionDifference = x.tabIndex.fractions[fractionIndex] - y.tabIndex.fractions[fractionIndex];
   if (fractionDifference !== 0) {
     return fractionDifference;
   }
@@ -62,5 +78,5 @@ function compareFraction(
 }
 
 function has(tabIndexOwner: ITabIndexOwner, fractionIndex: number) {
-  return getTabIndexFractions(tabIndexOwner).length - 1 >= fractionIndex;
+  return tabIndexOwner.tabIndex.fractions.length - 1 >= fractionIndex;
 }

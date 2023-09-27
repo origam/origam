@@ -21,6 +21,7 @@ import { ICaptionPosition } from "./ICaptionPosition";
 import { IPropertyColumn } from "./IPropertyColumn";
 import { ILookup } from "./ILookup";
 import { ILookupIndividualEngine } from "../Property";
+import { TabIndex } from "model/entities/TabIndexOwner";
 
 export enum IDockType {
   Dock = "Dock",
@@ -29,7 +30,7 @@ export enum IDockType {
 
 export interface IPropertyData {
   id: string;
-  tabIndex: string | undefined;
+  tabIndex: TabIndex;
   modelInstanceId: string;
   name: string;
   readOnly: boolean;
