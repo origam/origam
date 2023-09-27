@@ -38,7 +38,7 @@ export class ScreenFocusManager {
       const activeDataViewModelInstanceId = this.getDataViewId(document.activeElement);
       const {currentDatView, nextDataView} = this.getNextVisibleDataView(activeDataViewModelInstanceId)
       const currentTablePanelView = getTablePanelView(currentDatView);
-      currentTablePanelView.setEditing(false);
+      currentTablePanelView?.setEditing(false);
 
       const perspective = getActivePerspective(nextDataView);
       if (perspective === IPanelViewType.Form) {
