@@ -140,7 +140,7 @@ export class FormBuilder extends React.Component<{
             checked={checked}
             onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id, new TabIndex(xfo.attributes.TabIndex))
+              focusManager.subscribe(radioInput, xfo.attributes.Id, TabIndex.create(xfo.attributes.TabIndex))
             }
             labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
