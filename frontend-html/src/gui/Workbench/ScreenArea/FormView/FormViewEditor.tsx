@@ -46,9 +46,18 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
-import { isAddRecordShortcut } from "utils/keyShortcuts";
+import {
+  isAddRecordShortcut,
+  isDeleteRecordShortcut,
+  isDuplicateRecordShortcut, isFilterRecordShortcut,
+  isSaveShortcut
+} from "utils/keyShortcuts";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
+import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
+import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 
 
 @inject(({property, formPanelView}) => {
@@ -336,6 +345,18 @@ export class FormViewEditor extends React.Component<{
           }
           if (isAddRecordShortcut(event)) {
             await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (isAddRecordShortcut(event)) {
+            await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (isDeleteRecordShortcut(event)) {
+            await onDeleteRowClick(dataView)(event);
+            return;
+          }
+          if (isDuplicateRecordShortcut(event)) {
+            await onCopyRowClick(dataView)(event);
             return;
           }
           if (event.key === "Escape") {
