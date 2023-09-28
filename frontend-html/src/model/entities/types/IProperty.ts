@@ -21,14 +21,14 @@ import { ICaptionPosition } from "./ICaptionPosition";
 import { IPropertyColumn } from "./IPropertyColumn";
 import { ILookup } from "./ILookup";
 import { ILookupIndividualEngine } from "../Property";
-import { TabIndex } from "model/entities/TabIndexOwner";
+import {ITabIndexOwner, TabIndex} from "model/entities/TabIndexOwner";
 
 export enum IDockType {
   Dock = "Dock",
   Fill = "Fill",
 }
 
-export interface IPropertyData {
+export interface IPropertyData extends ITabIndexOwner{
   id: string;
   tabIndex: TabIndex;
   modelInstanceId: string;

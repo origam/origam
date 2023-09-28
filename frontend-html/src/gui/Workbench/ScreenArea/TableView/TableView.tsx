@@ -59,6 +59,7 @@ import S from "./TableView.module.scss";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import cx from "classnames";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
+import {getScreenFocusManager} from "../../../../model/selectors/FormScreen/getScreenFocusManager";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -91,12 +92,8 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
 
   componentDidMount() {
     const openScreen = getOpenedScreen(this.props.dataView);
-    const dataViews = openScreen.content.formScreen?.dataViews;
-    const isMainDataView =
-      (dataViews && dataViews.length > 0 && this.props.dataView?.isBindingRoot) ||
-      dataViews?.length === 1;
-
-    if (openScreen.isActive && isMainDataView) {
+    const screenFocusManager = getScreenFocusManager(this.props.dataView);
+    if (openScreen.isActive && this.props.dataView?.modelInstanceId === screenFocusManager.dataViewModelInstanceIdToFocusAfterOpening) {
       if (!this.props.dataView?.isFormViewActive()) {
         const tablePanelView = getTablePanelView(this.props.dataView);
         tablePanelView.triggerOnFocusTable();
