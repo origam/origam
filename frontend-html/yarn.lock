@@ -2132,10 +2132,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-draft-wysiwyg@^1.13.4":
-  version "1.13.4"
-  resolved "https://registry.yarnpkg.com/@types/react-draft-wysiwyg/-/react-draft-wysiwyg-1.13.4.tgz#df951c76afb47e311061d363f41a10c76de04ac8"
-  integrity sha512-wasD1t78JDmQvdPDRPf/mf5FSHMlncunW0F6KMOKB3awzi3Wi21yHMGsRAUOkfTr3R8F+yceG8fSLz0kYWu/QA==
+"@types/react-draft-wysiwyg@^1.13.5":
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/@types/react-draft-wysiwyg/-/react-draft-wysiwyg-1.13.5.tgz#5889da9c940b0d9c6e17eefb9181bff6ce69718c"
+  integrity sha512-XfCHpRfhlPvcahQ1QAKZujkMFNNn8nEpnEFXmzFzuEvZvJmr9JutKHgLH6ESk1S95G+lBVCTTSToVmn9PeuqwQ==
   dependencies:
     "@types/draft-js" "*"
     "@types/react" "*"
