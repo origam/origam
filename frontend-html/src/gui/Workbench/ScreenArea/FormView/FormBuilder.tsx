@@ -42,6 +42,7 @@ import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
 import { findStrings } from "xmlInterpreters/xmlUtils";
+import { TabIndex } from "model/entities/TabIndexOwner";
 
 
 @inject(({dataView}) => {
@@ -139,7 +140,7 @@ export class FormBuilder extends React.Component<{
             checked={checked}
             onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
+              focusManager.subscribe(radioInput, xfo.attributes.Id, TabIndex.create(xfo.attributes.TabIndex))
             }
             labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}

@@ -1,14 +1,11 @@
-import { FormFocusManager } from "model/entities/FormFocusManager";
-import { GridFocusManager } from "model/entities/GridFocusManager";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { getActivePerspective } from "model/selectors/DataView/getActivePerspective";
-import { getDataView } from "model/selectors/DataView/getDataView";
 import { EventHandler } from "utils/events";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { current } from "immer";
 import { isCycleSectionsShortcut } from "utils/keyShortcuts";
+import {compareTabIndexOwners} from "./TabIndexOwner";
 
 export class ScreenFocusManager {
   focusOutsideOfGridEditor = new EventHandler<FocusEvent>();
@@ -28,6 +25,12 @@ export class ScreenFocusManager {
     return getFormScreen(this).dataViews;
   }
 
+  public get dataViewModelInstanceIdToFocusAfterOpening(){
+    let sortedDataViews = Array.from(this.dataViews).sort(compareTabIndexOwners);
+    const lowestTabIndexDataView = sortedDataViews[0];
+    return lowestTabIndexDataView.modelInstanceId;
+  }
+
   dispose(){
     window.removeEventListener("focus", this.boundOnFocus, true);
     window.removeEventListener("keydown", this.boundOnKeyDown, true);
@@ -38,7 +41,7 @@ export class ScreenFocusManager {
       const activeDataViewModelInstanceId = this.getDataViewId(document.activeElement);
       const {currentDatView, nextDataView} = this.getNextVisibleDataView(activeDataViewModelInstanceId)
       const currentTablePanelView = getTablePanelView(currentDatView);
-      currentTablePanelView.setEditing(false);
+      currentTablePanelView?.setEditing(false);
 
       const perspective = getActivePerspective(nextDataView);
       if (perspective === IPanelViewType.Form) {
