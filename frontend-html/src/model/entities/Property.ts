@@ -28,6 +28,7 @@ import { IDataSourceField } from "./types/IDataSourceField";
 import { LookupResolver } from "modules/Lookup/LookupResolver";
 import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { TabIndex } from "model/entities/TabIndexOwner";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -41,7 +42,7 @@ export class Property implements IProperty {
 
   autoSort: boolean = false;
   id: string = "";
-  tabIndex: string | undefined;
+  tabIndex: TabIndex = null as any;
   modelInstanceId: string = "";
   name: string = "";
   nameOverride: string | null | undefined = null;

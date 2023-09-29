@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
-import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
+import { compareTabIndexOwners, ITabIndexOwner, TabIndex } from "model/entities/TabIndexOwner";
 import { requestFocus } from "utils/focus";
 
 export class FormFocusManager {
@@ -39,12 +39,12 @@ export class FormFocusManager {
   }
 
   subscribe(focusableObject: IFocusable, name: string | undefined,
-            tabIndex: string | undefined,
+            tabIndex: TabIndex,
             onBlur?: ()=>Promise<void>) {
     if (!focusableObject) {
       return;
     }
-    const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex, onBlur);
+    const focusableContainer = new FocusableObjectContainer(focusableObject, name,  tabIndex, onBlur);
     const existingContainer = this.focusableContainers
       .find(container => container.name && container.name === name ||
         container.focusable === focusableObject);
@@ -138,11 +138,11 @@ export class FormFocusManager {
   }
 }
 
-class FocusableObjectContainer {
+class FocusableObjectContainer implements ITabIndexOwner {
   constructor(
     public focusable: IFocusable,
     public name: string | undefined,
-    public tabIndex: string | undefined,
+    public tabIndex: TabIndex,
     public onBlur?: ()=>Promise<void>
   ) {
   }
