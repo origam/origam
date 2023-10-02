@@ -1108,7 +1108,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
 			DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
-			bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null)
+			bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null, string parentTabIndex = null)
 		{
 			ControlSetItem control = item as ControlSetItem;
 			IParameterService parameterService = ServiceManager.Services.GetService (typeof(IParameterService)) as IParameterService;
@@ -1166,7 +1166,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			if (renderData.TabIndex == 0 && parentControlElement != null && parentControlElement.GetAttribute ("Type") == "HBox") {
 				parentNode.SetAttribute ("Width", XmlConvert.ToString (renderData.Width));
 			}
-
+            string tabIndex = string.IsNullOrEmpty(parentTabIndex)
+	            ? renderData.TabIndex.ToString() 
+	            : $"{parentTabIndex}.{renderData.TabIndex}";
 			bool isIndependent = renderData.IndependentDataSourceId != Guid.Empty;
 			if (!control.ControlItem.IsComplexType)
 			{
@@ -1274,8 +1276,17 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 RenderActions(parameterService, validActions, actionsElement,
                     new Hashtable());
                 // render controls (both directly placed edit controls and containers)
-                RenderPanel(control, xmlOutput, table, formRootElement, propertiesElement,
-                    FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet), true, true, forceReadOnly);
+                RenderPanel(
+	                panel: control, 
+	                xmlOutput: xmlOutput, 
+	                table: table, 
+	                parentElement: formRootElement, 
+	                propertiesElement: propertiesElement,
+                    item: FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet), 
+	                processContainers: true, 
+	                processEditControls: true, 
+	                forceReadOnly: forceReadOnly, 
+	                parentTabIndex: tabIndex);
             }
 
             // add config
@@ -1291,9 +1302,20 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				foreach (AbstractSchemaItem child in sortedChildren) {
 					XmlElement el = xmlOutput.Document.CreateElement ("UIElement");
 					children.AppendChild (el);
-					if (!RenderUIElement (xmlOutput, el, child, dataset, dataSources, 
-						ref controlCounter, isPreloaded, formId, menuWorkflowId,
-						forceReadOnly, confirmSelectionChangeEntity, structure)) {
+					if (!RenderUIElement (
+						    xmlOutput: xmlOutput, 
+						    parentNode: el, 
+						    item: child, 
+						    dataset: dataset, 
+						    dataSources: dataSources, 
+							controlCounter: ref controlCounter,
+						    isPreloaded: isPreloaded, 
+						    formId: formId, 
+						    menuWorkflowId: menuWorkflowId,
+							forceReadOnly: forceReadOnly, 
+						    confirmSelectionChangeEntity: confirmSelectionChangeEntity, 
+						    structure: structure, 
+						    parentTabIndex: tabIndex)) {
 						children.RemoveChild (el);
 					}
 				}
@@ -1470,15 +1492,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
 			XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
-			bool processContainers, bool processEditControls, bool forceReadOnly, string itemTabIndex = null)
+			bool processContainers, bool processEditControls, bool forceReadOnly, string parentTabIndex = null)
 		{
 
-			if (string.IsNullOrWhiteSpace(itemTabIndex))
+			if (string.IsNullOrWhiteSpace(parentTabIndex))
 			{
-				int parentTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
+				int itemTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
 					.Cast<PropertyValueItem>()
 					.FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")?.IntValue ?? -1;
-				itemTabIndex = parentTabIndex.ToString();
+				parentTabIndex = itemTabIndex.ToString();
 			}
 
 			XmlElement childrenElement = xmlOutput.Document.CreateElement("Children");
@@ -1622,7 +1644,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					
 					if (int.Parse(tabIndex) >= 0)
 					{
-						tabIndex = itemTabIndex + "." + tabIndex;
+						tabIndex = parentTabIndex + "." + tabIndex;
 					}
 
 					if(csi.ControlItem.Name == "Label" && processContainers)
@@ -1683,7 +1705,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							processContainers: true, 
 							processEditControls: true, 
 							forceReadOnly: readOnly, 
-							itemTabIndex: tabIndex);
+							parentTabIndex: tabIndex);
 					}
 					else if(bindingMember != "" & processEditControls) // property (entry field)
 					{

@@ -96,6 +96,7 @@ import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePan
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import {getCommonTabIndex, TabIndex} from "../model/entities/TabIndexOwner";
 
 
 function getPropertyParameters(node: any) {
@@ -122,7 +123,7 @@ function parseProperty(node: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: node,
     id: node.attributes.Id,
-    tabIndex: node.attributes.TabIndex,
+    tabIndex: TabIndex.create(node.attributes.TabIndex),
     controlPropertyId: node.attributes.ControlPropertyId,
     controlPropertyValue: node.attributes.ControlPropertyValue,
     modelInstanceId: node.attributes.ModelInstanceId || "",
@@ -400,6 +401,7 @@ export function*interpretScreenXml(
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
+        tabIndex: getCommonTabIndex(properties),
         focusManager: focusManager,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
