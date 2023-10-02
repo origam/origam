@@ -359,6 +359,10 @@ export class FormViewEditor extends React.Component<{
             await onCopyRowClick(dataView)(event);
             return;
           }
+          if (isFilterRecordShortcut(event)) {
+            await onFilterButtonClick(dataView)(event);
+            return;
+          }
           if (event.key === "Escape") {
             await onEscapePressed(dataView, event);
             return;
