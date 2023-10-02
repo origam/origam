@@ -23,7 +23,7 @@ import { toOrigamServerString } from "@origam/utils";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
-import { isSaveShortcut } from "utils/keyShortcuts";
+import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 export interface IEditorState{
   value: string | null;
@@ -100,7 +100,12 @@ export class DateEditorModel {
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Enter" || event.key === "Tab" || isSaveShortcut(event)) {
+    if (
+      event.key === "Enter" ||
+      event.key === "Tab" ||
+      isSaveShortcut(event) ||
+      isRefreshShortcut(event)
+    ) {
       const completedMoment = this.autoCompletedMoment;
       if (completedMoment) {
         this.onChange?.(event, toOrigamServerString(completedMoment));
