@@ -453,8 +453,20 @@ namespace Origam.Workbench.Services
 
 		public bool IsEmptyDatabase()
         {
-			TryLoadVersions();
-			return _versionsLoaded == false;
+	        string localTransaction = Guid.NewGuid().ToString();
+	        DataSet versionDataFromOrigamModelVersion =
+		        LoadVersionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
+	        if (versionDataFromOrigamModelVersion == null)
+	        {
+		        DataSet versionDataFromAsapModelVersion =
+			        LoadVersionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
+		        if (versionDataFromAsapModelVersion == null)
+		        {
+			        return true;
+		        }
+	        }
+
+	        return false;
         }
 
 		private void ClearVersions()

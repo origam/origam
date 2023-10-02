@@ -89,6 +89,7 @@ import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
+import {TabIndex} from "./TabIndexOwner";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {
@@ -137,6 +138,8 @@ export class DataView implements IDataView {
       () => (this.selectAllCheckboxChecked = false)
     );
   }
+
+  tabIndex: TabIndex = null as any;
 
   private _isFormViewActive = () => false;
 

@@ -46,10 +46,20 @@ import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runIn
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
-import { isAddRecordShortcut, isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import {
+  isAddRecordShortcut,
+  isDeleteRecordShortcut,
+  isDuplicateRecordShortcut, 
+  isFilterRecordShortcut,
+  isRefreshShortcut,
+  isSaveShortcut
+} from "utils/keyShortcuts";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
+import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
+import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 
@@ -92,32 +102,33 @@ export class FormViewEditor extends React.Component<{
   }
 
   getEditor() {
-    const rowId = getSelectedRowId(this.props.property);
-    const row = getSelectedRow(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const  dataView = getDataView(this.props.property);
+    const property = this.props.property!;
+    const rowId = getSelectedRowId(property);
+    const row = getSelectedRow(property);
+    const foregroundColor = getRowStateForegroundColor(property, rowId || "");
+    const  dataView = getDataView(property);
     const readOnly =
       !row ||
-      isReadOnly(this.props.property!, rowId) ||
-      (dataView.orderProperty !== undefined && this.props.property?.name === dataView.orderProperty.name);
+      isReadOnly(property, rowId) ||
+      (dataView.orderProperty !== undefined && property?.name === dataView.orderProperty.name);
     const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
 
-    switch (this.props.property!.column) {
+    switch (property.column) {
       case "Number":
         return (
           <NumberEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
-            isPassword={this.props.property!.isPassword}
-            property={this.props.property}
-            maxLength={this.props.property?.maxLength}
+            isPassword={property.isPassword}
+            property={property}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customNumberFormat={this.props.property!.customNumericFormat}
-            customStyle={resolveNumericCellAlignment(this.props.property?.style)}
+            customNumberFormat={property.customNumericFormat}
+            customStyle={resolveNumericCellAlignment(property.style)}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onEditorBlur={this.props.onEditorBlur}
@@ -125,8 +136,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 onBlur);
               }
             }
@@ -135,14 +146,14 @@ export class FormViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
-            isMultiline={this.props.property!.multiline}
-            isAllowTab={this.props.property!.isAllowTab}
-            isPassword={this.props.property!.isPassword}
-            customStyle={this.props.property?.style}
-            maxLength={this.props.property?.maxLength}
+            isMultiline={property.multiline}
+            isAllowTab={property.isAllowTab}
+            isPassword={property.isPassword}
+            customStyle={property.style}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
@@ -154,8 +165,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 this.props.onEditorBlur
               )
             }
@@ -166,8 +177,8 @@ export class FormViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.value}
-            outputFormat={this.props.property!.formatterPattern}
-            outputFormatToShow={this.props.property!.modelFormatterPattern}
+            outputFormat={property.formatterPattern}
+            outputFormatToShow={property.modelFormatterPattern}
             isReadOnly={readOnly}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
@@ -176,8 +187,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex,
+                property.id,
+                property.tabIndex,
                 onBlur);
             }
             }
@@ -195,8 +206,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
           />
@@ -211,17 +222,17 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
-            autoSort={this.props.property?.autoSort}
+            autoSort={property.autoSort}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customStyle={this.props.property?.style}
-            isLink={this.props.property?.isLink}
+            customStyle={property.style}
+            isLink={property.isLink}
             onClick={(event) => {
-              onDropdownEditorClick(this.props.property)(event, this.props.property, row);
+              onDropdownEditorClick(property)(event, property, row);
             }}
             onKeyDown={this.makeOnKeyDownCallBack()}
           />
@@ -235,18 +246,18 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(
                 firstCheckInput,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
-            autoSort={this.props.property?.autoSort}
+            autoSort={property.autoSort}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
                 isReadOnly={readOnly}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
-                customStyle={this.props.property?.style}
+                customStyle={property.style}
                 onChange={this.props.onChange}
                 onKeyDown={this.makeOnKeyDownCallBack()}
                 onEditorBlur={this.props.onEditorBlur}
@@ -263,8 +274,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(
                 firstCheckInput,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
@@ -282,8 +293,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
           />
@@ -291,7 +302,7 @@ export class FormViewEditor extends React.Component<{
       case "Image":
         return <ImageEditor value={this.props.value}/>;
       case "Blob":
-        const isDirty = getIsFormScreenDirty(this.props.property);
+        const isDirty = getIsFormScreenDirty(property);
         return (
           <BlobEditor
             isReadOnly={readOnly}
@@ -301,8 +312,8 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(
                 inputEditor,
-                this.props.property?.id,
-                this.props.property?.tabIndex
+                property.id,
+                property.tabIndex
               )
             }
             onChange={this.props.onChange}
@@ -313,7 +324,7 @@ export class FormViewEditor extends React.Component<{
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`); // eslint-disable-line no-console
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered` // eslint-disable-line no-console
+        console.warn(`Unknown column type "${property.column}", no editor was rendered` // eslint-disable-line no-console
         );
         return "";
     }
@@ -340,7 +351,7 @@ export class FormViewEditor extends React.Component<{
             await onCreateRowClick(dataView)(event);
             return;
           }
-          if(isSaveShortcut(event)){
+          if (isSaveShortcut(event)){
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {
@@ -351,7 +362,7 @@ export class FormViewEditor extends React.Component<{
             });
             return;
           }
-          if(isRefreshShortcut(event)){
+          if (isRefreshShortcut(event)){
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {
@@ -360,6 +371,22 @@ export class FormViewEditor extends React.Component<{
                 yield*formScreenLifecycle.onRequestScreenReload();
               }()
             });
+            return;
+          }
+          if (isAddRecordShortcut(event)) {
+            await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (isDeleteRecordShortcut(event)) {
+            await onDeleteRowClick(dataView)(event);
+            return;
+          }
+          if (isDuplicateRecordShortcut(event)) {
+            await onCopyRowClick(dataView)(event);
+            return;
+          }
+          if (isFilterRecordShortcut(event)) {
+            await onFilterButtonClick(dataView)(event);
             return;
           }
           if (event.key === "Escape") {

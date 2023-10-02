@@ -40,8 +40,9 @@ import { IInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/Infini
 import { IAggregation } from "./IAggregation";
 import { GridFocusManager } from "../GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
+import {ITabIndexOwner} from "../TabIndexOwner";
 
-export interface IDataViewData {
+export interface IDataViewData extends ITabIndexOwner {
   id: string;
   modelInstanceId: string;
   name: string;

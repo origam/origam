@@ -93,7 +93,7 @@ namespace Origam.Server.Configuration
         {
             var serverClientSection = identityServerSection
                 .GetSection("ServerClient");
-            if (identityServerSection.GetChildren().Any())
+            if (serverClientSection.Value != null)
             {
                 return new ServerClient
                 {

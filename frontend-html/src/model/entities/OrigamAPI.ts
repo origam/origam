@@ -872,13 +872,6 @@ export class OrigamAPI implements IApi {
     fileDownload(response.data, fileName);
   }
 
-  async callUserApi(screenUrl: string): Promise<Blob>{
-    return (await this.axiosInstance.get(
-      screenUrl,
-      { responseType: 'blob'}))
-      .data;
-  }
-
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
     return (await this.axiosInstance.post(`/DeepLink/GetMenuId`, data)).data;
   }

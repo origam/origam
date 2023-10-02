@@ -197,7 +197,7 @@ export class ListRowContainer implements IRowsContainer {
     if (shouldLockNewRowPosition) {
       this.forcedLastRowId = this.rowIdGetter(row);
     }
-    await this.updateSortAndFilter();
+    await this.updateSortAndFilter({retainPreviousSelection: true});
   }
 
   async set(rowsIn: any[][], rowOffset: number): Promise<any> {

@@ -441,8 +441,6 @@ export interface IApi {
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
-
-  callUserApi(screenUrl: string): Promise<Blob>;
 }
 
 export interface ILazyLoadedEntityInput {
