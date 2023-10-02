@@ -33,7 +33,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IDockType } from "model/entities/types/IProperty";
 import { AutoSizer, List, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
-import { isSaveShortcut } from "utils/keyShortcuts";
+import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -131,7 +131,7 @@ export class TextEditor extends React.Component<{
       this.props.onChange?.(null, newValue);
       return 
     }
-    if(isSaveShortcut(event)){
+    if(isSaveShortcut(event) || isRefreshShortcut(event)){
       this.onChange(event);
     }
     this.props.onKeyDown?.(event)

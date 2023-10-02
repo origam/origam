@@ -33,7 +33,7 @@ import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
-  isFilterRecordShortcut
+  isFilterRecordShortcut, isRefreshShortcut
 } from "utils/keyShortcuts";
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
@@ -134,13 +134,23 @@ export function onFieldKeyDown(ctx: any) {
             yield*flushCurrentRowData(ctx)();
             const formScreenLifecycle = getFormScreenLifecycle(ctx);
             yield*formScreenLifecycle.onSaveSession();
-          } else if (isAddRecordShortcut(event)) {
+          }
+          else if (isRefreshShortcut(event)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
+            const formScreenLifecycle = getFormScreenLifecycle(ctx);
+            yield*formScreenLifecycle.onRequestScreenReload();
+          }
+          else if (isAddRecordShortcut(event)) {
             yield onCreateRowClick(dataView)(event);
-          } else if (isDeleteRecordShortcut(event)) {
+          }
+          else if (isDeleteRecordShortcut(event)) {
             yield onDeleteRowClick(dataView)(event);
-          } else if (isDuplicateRecordShortcut(event)) {
+          }
+          else if (isDuplicateRecordShortcut(event)) {
             yield onCopyRowClick(dataView)(event);
-          } else if (isFilterRecordShortcut(event)) {
+          }
+          else if (isFilterRecordShortcut(event)) {
             yield onFilterButtonClick(dataView)(event);
           }
         }

@@ -239,7 +239,11 @@ export class CScreenToolbar extends React.Component<{}> {
               {actionButtonsState.isRefreshButtonVisible && (
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
-                  onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={event => {
+                    if(event.target.tagName !== "INPUT"){
+                      onRefreshSessionClick(actionButtonsState.formScreen)
+                    }
+                  }}
                   id={"refreshButton"}
                   className={"isHoverBlue"}
                   shortcutPredicate={isRefreshShortcut}
