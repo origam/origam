@@ -33,13 +33,14 @@ import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
-  isFilterRecordShortcut
+  isFilterRecordShortcut, isRefreshShortcut
 } from "utils/keyShortcuts";
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -131,13 +132,25 @@ export function onFieldKeyDown(ctx: any) {
           if (isSaveShortcut(event)) {
             tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
-          } else if (isAddRecordShortcut(event)) {
+            const formScreenLifecycle = getFormScreenLifecycle(ctx);
+            yield*formScreenLifecycle.onSaveSession();
+          }
+          else if (isRefreshShortcut(event)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
+            const formScreenLifecycle = getFormScreenLifecycle(ctx);
+            yield*formScreenLifecycle.onRequestScreenReload();
+          }
+          else if (isAddRecordShortcut(event)) {
             yield onCreateRowClick(dataView)(event);
-          } else if (isDeleteRecordShortcut(event)) {
+          }
+          else if (isDeleteRecordShortcut(event)) {
             yield onDeleteRowClick(dataView)(event);
-          } else if (isDuplicateRecordShortcut(event)) {
+          }
+          else if (isDuplicateRecordShortcut(event)) {
             yield onCopyRowClick(dataView)(event);
-          } else if (isFilterRecordShortcut(event)) {
+          }
+          else if (isFilterRecordShortcut(event)) {
             yield onFilterButtonClick(dataView)(event);
           }
         }

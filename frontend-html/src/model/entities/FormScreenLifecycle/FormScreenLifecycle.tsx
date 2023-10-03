@@ -208,6 +208,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenReload(): Generator<unknown, any, unknown> {
+    yield*this.flushData();
     if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield*this.refreshSession();
       return;
