@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="17d67919-7bdc-44d7-abe0-2b9cd9d5f067"
@@ -15,18 +20,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___a62b9497-c609-4308-933d-03e2ba548985.txt"
-      x:id="a62b9497-c609-4308-933d-03e2ba548985"
-      asi:name="00010_AddRole_FRM_OrigamRole"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="110"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___7e3778d7-58fa-4095-942b-19c026c05f99.txt"
-      x:id="7e3778d7-58fa-4095-942b-19c026c05f99"
-      asi:name="00110_AddRole_FRM_WorkQueue"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___26184145-16aa-48b8-b1d5-b176909218d1.txt"
+      x:id="26184145-16aa-48b8-b1d5-b176909218d1"
+      asi:name="00080_AddRole_FRM_Colors"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -39,22 +36,6 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="100"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___e21edf5e-2da5-425f-bf16-31a59780f9e9.txt"
-      x:id="e21edf5e-2da5-425f-bf16-31a59780f9e9"
-      asi:name="00100_AddRole_FRM_Language"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="90"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___9400da6c-8d76-4290-9a9d-4f9b0834b712.txt"
-      x:id="9400da6c-8d76-4290-9a9d-4f9b0834b712"
-      asi:name="00090_AddRole_FRM_SerialNumberRanges"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="30"
       scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___2aa3b660-d5f7-42ee-b9b0-74b0103727aa.txt"
       x:id="2aa3b660-d5f7-42ee-b9b0-74b0103727aa"
@@ -63,18 +44,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d5395b83-7d8b-471a-9372-7ce064215f6e.txt"
-      x:id="d5395b83-7d8b-471a-9372-7ce064215f6e"
-      asi:name="00040_AddRole_WF_NewUser"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="70"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d319acee-cd74-4b91-ad73-81555f90e9ed.txt"
-      x:id="d319acee-cd74-4b91-ad73-81555f90e9ed"
-      asi:name="00070_AddRole_FRM_Features"
+      ausa:activityOrder="110"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___7e3778d7-58fa-4095-942b-19c026c05f99.txt"
+      x:id="7e3778d7-58fa-4095-942b-19c026c05f99"
+      asi:name="00110_AddRole_FRM_WorkQueue"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -87,10 +60,42 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="80"
-      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___26184145-16aa-48b8-b1d5-b176909218d1.txt"
-      x:id="26184145-16aa-48b8-b1d5-b176909218d1"
-      asi:name="00080_AddRole_FRM_Colors"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___9400da6c-8d76-4290-9a9d-4f9b0834b712.txt"
+      x:id="9400da6c-8d76-4290-9a9d-4f9b0834b712"
+      asi:name="00090_AddRole_FRM_SerialNumberRanges"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___a62b9497-c609-4308-933d-03e2ba548985.txt"
+      x:id="a62b9497-c609-4308-933d-03e2ba548985"
+      asi:name="00010_AddRole_FRM_OrigamRole"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d319acee-cd74-4b91-ad73-81555f90e9ed.txt"
+      x:id="d319acee-cd74-4b91-ad73-81555f90e9ed"
+      asi:name="00070_AddRole_FRM_Features"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d5395b83-7d8b-471a-9372-7ce064215f6e.txt"
+      x:id="d5395b83-7d8b-471a-9372-7ce064215f6e"
+      asi:name="00040_AddRole_WF_NewUser"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___e21edf5e-2da5-425f-bf16-31a59780f9e9.txt"
+      x:id="e21edf5e-2da5-425f-bf16-31a59780f9e9"
+      asi:name="00100_AddRole_FRM_Language"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
