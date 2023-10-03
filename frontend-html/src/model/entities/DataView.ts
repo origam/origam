@@ -639,7 +639,7 @@ export class DataView implements IDataView {
       return;
     }
     const value = row[fieldIndex];
-    if(!value){
+    if (!value){
       return;
     }
     const menuId = yield selectors.column.getLinkMenuId(property, value);
