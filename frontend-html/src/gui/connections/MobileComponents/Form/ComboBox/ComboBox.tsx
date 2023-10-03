@@ -153,7 +153,7 @@ export function XmlBuildDropdownEditor(props: {
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(
-      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
+      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, undefined, props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,
