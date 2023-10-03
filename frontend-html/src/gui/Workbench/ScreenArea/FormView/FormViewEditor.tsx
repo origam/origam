@@ -42,14 +42,16 @@ import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
-  isDuplicateRecordShortcut, isFilterRecordShortcut,
+  isDuplicateRecordShortcut, 
+  isFilterRecordShortcut,
+  isRefreshShortcut,
   isSaveShortcut
 } from "utils/keyShortcuts";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
@@ -58,6 +60,7 @@ import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurre
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 
 @inject(({property, formPanelView}) => {
@@ -346,6 +349,28 @@ export class FormViewEditor extends React.Component<{
           }
           if (isAddRecordShortcut(event)) {
             await onCreateRowClick(dataView)(event);
+            return;
+          }
+          if (isSaveShortcut(event)){
+            await runGeneratorInFlowWithHandler({
+              ctx: dataView,
+              generator: function*() {
+                yield*flushCurrentRowData(dataView)();
+                const formScreenLifecycle = getFormScreenLifecycle(dataView);
+                yield*formScreenLifecycle.onSaveSession();
+              }()
+            });
+            return;
+          }
+          if (isRefreshShortcut(event)){
+            await runGeneratorInFlowWithHandler({
+              ctx: dataView,
+              generator: function*() {
+                yield*flushCurrentRowData(dataView)();
+                const formScreenLifecycle = getFormScreenLifecycle(dataView);
+                yield*formScreenLifecycle.onRequestScreenReload();
+              }()
+            });
             return;
           }
           if (isAddRecordShortcut(event)) {
