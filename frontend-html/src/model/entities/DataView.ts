@@ -635,8 +635,13 @@ export class DataView implements IDataView {
   *navigateLookupLink(property: IProperty, row: any[]): any {
     const columnId = property.id;
     const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
-    if (fieldIndex === undefined) return;
+    if (fieldIndex === undefined) {
+      return;
+    }
     const value = row[fieldIndex];
+    if(!value){
+      return;
+    }
     const menuId = yield selectors.column.getLinkMenuId(property, value);
     let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
     if (menuItem) {
