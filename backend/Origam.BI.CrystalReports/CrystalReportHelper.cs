@@ -82,6 +82,28 @@ namespace Origam.BI.CrystalReports
             throw new Exception("Invalid data returned. Expected byte array.");
         }
 
+        public string PrepareReport(CrystalReport report, DataSet data,
+            Hashtable parameters, string format)
+        {
+            // get report model element            
+            parameters = PrepareParameters(data, parameters, report);
+            // get report
+            object result = SendReportRequest("Report/PrepareViewer",
+                report.ReportFileName, data, parameters, report, "");
+            if (result is Origam.Service.Core.XmlContainer xml)
+            {
+                var innerXml = xml.Xml.InnerXml;
+                var settings = ConfigurationManager.GetActiveConfiguration();
+                string baseUrl = ParseConnectionString(
+                    settings.ReportConnectionString, out int? timeout);
+                string id = xml.Xml["ROOT"]["ViewerUrl"].InnerText;
+                string url = baseUrl + $"ViewReport.aspx?Id={id}";
+                return url;
+            }
+
+            throw new Exception("Invalid data returned. Expected byte array.");
+        }
+
         public void PrintReport(Guid reportId, DataSet data, 
             Hashtable parameters, string printerName, int copies)
         {

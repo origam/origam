@@ -32,6 +32,7 @@ namespace Origam.Schema.GuiModel
         , CSV = 5
         , TEXT = 6
         , XML = 7
+        , RPT = 8
     }
 
     public static class DataReportExportFormatTypeExtensions
@@ -46,6 +47,7 @@ namespace Origam.Schema.GuiModel
             , "text/csv"
             , "text/plain"
             , "text/xml"
+            , "application/rpt"
         };
 
         private static readonly string[] extensions =
@@ -58,6 +60,7 @@ namespace Origam.Schema.GuiModel
             , "csv"
             , "txt"
             , "xml"
+            , "rpt"
         };
 
         public static string GetString(this DataReportExportFormatType value)

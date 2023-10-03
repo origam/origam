@@ -151,6 +151,12 @@ namespace Origam.BI.CrystalReports
         {
             // do nothing unless we need to trace
         }
-        #endregion
+
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
