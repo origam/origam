@@ -76,6 +76,25 @@ namespace Origam.BI.CrystalReports
         {
             // do nothing unless we need to trace
         }
+
+        public string PrepareExternalReportViewer(Guid reportId,
+			IXmlContainer data, string format, Hashtable parameters,
+			string dbTransaction)
+        {
+            var report = ReportHelper.GetReportElement<CrystalReport>(
+				reportId);
+            var xmlDataDoc = ReportHelper
+                .LoadOrUseReportData(report, data, parameters, dbTransaction);
+            using (var langSwitcher = new LanguageSwitcher(
+				ReportHelper.ResolveLanguage(xmlDataDoc, report)))
+            {
+                ReportHelper.LogInfo(System.Reflection.MethodBase
+                    .GetCurrentMethod().DeclaringType,
+                    "Exporting report '" + report.Name + "' to " + format);
+                return _helper.PrepareReport(report, xmlDataDoc.DataSet,
+                    parameters, format);
+            }
+        }
         #endregion
     }
 }
