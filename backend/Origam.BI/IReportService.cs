@@ -33,16 +33,7 @@ namespace Origam.BI
     {
 		void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
 		object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);
-		/// <summary>
-		/// Prepare report and return an external web report url
-		/// with external report viewer 
-		/// </summary>
-		/// <param name="reportId"></param>
-		/// <param name="data"></param>
-		/// <param name="format"></param>
-		/// <param name="parameters"></param>
-		/// <param name="dbTransaction"></param>
-		/// <returns></returns>
+  		// Prepare report and return an external web report url with exteranl report viewer
 		string PrepareExternalReportViewer(Guid reportId, IXmlContainer data,
 			string format, Hashtable parameters, string dbTransaction);
 	}
