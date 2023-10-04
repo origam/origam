@@ -100,6 +100,17 @@ namespace Origam.Server.Controller
                 RemoveRequest(reportRequestId);
             }
         }
+
+        private IActionResult HandleReportWithExternalViewer(Guid reportId,
+            AbstractReport report, Hashtable parameters)
+        {
+            var reportService = ReportServiceAgent.GetService(report);
+            string url = reportService.PrepareExternalReportViewer(reportId,
+                null, DataReportExportFormatType.ExternalViewer.ToString(),
+                parameters, null);
+            return Redirect(url);
+        }
+
         [HttpGet("[action]")]
         public IActionResult GetReportInfo(Guid reportRequestId)
         {
