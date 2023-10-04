@@ -47,6 +47,7 @@ import { getGridFocusManager } from "model/entities/GridFocusManager";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 import S from "./TableViewEditor.module.scss";
+import { NewRecordScreen } from "model/entities/Lookup";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -207,6 +208,8 @@ export class TableViewEditor extends React.Component<{
               gridFocusManager.activeEditor = undefined;
               gridFocusManager.editorBlur = undefined;
             }}
+            newRecordScreen={this.props.property?.lookup?.newRecordScreen}
+            onAddNewRecordClick={() => {console.log("Add new click")}}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>

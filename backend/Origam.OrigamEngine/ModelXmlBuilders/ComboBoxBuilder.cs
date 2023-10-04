@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Data;
-
+using System.Linq;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
@@ -160,6 +160,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				{
 					useCache = false;
 				}
+			}
+			
+			var dataLookupService = ServiceManager.Services.GetService<DataLookupService>();
+			NewRecordScreenBinding newRecordScreenBinding = dataLookupService.GetNewRecordScreenBinding(lookup);
+			if (newRecordScreenBinding != null)
+			{
+				XmlElement newRecordElement = propertyElement.OwnerDocument.CreateElement("NewRecordScreen");
+				newRecordElement.SetAttribute("Width", XmlConvert.ToString(newRecordScreenBinding.DialogWidth));
+				newRecordElement.SetAttribute("Height", XmlConvert.ToString(newRecordScreenBinding.DialogHeight));
+				propertyElement.AppendChild(newRecordElement);
 			}
 
 			propertyElement.SetAttribute("Cached", XmlConvert.ToString(useCache));

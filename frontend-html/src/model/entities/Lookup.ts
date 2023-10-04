@@ -25,6 +25,26 @@ export enum IIdState {
   ERROR = "ERROR",
 }
 
+export class NewRecordScreen {
+  private _width: number;
+  private _height: number;
+  constructor(args: {
+    width: number,
+    height: number}
+  ) {
+    this._width = args.width;
+    this._height = args.height;
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
+  }
+}
+
 export class Lookup implements ILookup {
   constructor(data: ILookupData) {
     Object.assign(this, data);
@@ -34,6 +54,7 @@ export class Lookup implements ILookup {
   $type_ILookup: 1 = 1;
 
   lookupId: string = "";
+  newRecordScreen?: NewRecordScreen = null as any;
   dropDownShowUniqueValues: boolean = false;
   identifier: string = "";
   identifierIndex: number = 0;

@@ -353,7 +353,8 @@ namespace Origam.Schema.LookupModel
 		public override Type[] NewItemTypes => new[] 
 		{ 
 			typeof(DataLookupMenuBinding),
-			typeof(DataServiceDataTooltip)
+			typeof(DataServiceDataTooltip),
+			typeof(NewRecordScreenBinding)
 		};
 
 		public override T NewItem<T>(

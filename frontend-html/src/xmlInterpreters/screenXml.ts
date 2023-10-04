@@ -31,7 +31,7 @@ import { DropDownColumn } from "model/entities/DropDownColumn";
 import { FilterConfiguration } from "model/entities/FilterConfiguration";
 import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "model/entities/FormScreen";
-import { Lookup } from "model/entities/Lookup";
+import { Lookup, NewRecordScreen } from "model/entities/Lookup";
 import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
 import { Property } from "model/entities/Property";
 import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
@@ -119,6 +119,22 @@ export function fixColumnWidth(width: number) {
   }
 }
 
+function getNewRecordScreen(node: any){
+  const childNodes = findStopping(node, (n) => n.name === "NewRecordScreen");
+  if (childNodes.length === 0) {
+    return undefined;
+  }
+  if(childNodes.length > 1) {
+    throw new Error("More than one NewRecordScreenBinding node found in xml");
+  }
+  const newRecordScreenNode = childNodes[0];
+  return new NewRecordScreen(
+    {
+      width: parseInt(newRecordScreenNode.attributes.Width),
+      height: parseInt(newRecordScreenNode.attributes.Height)
+    });
+}
+
 function parseProperty(node: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: node,
@@ -163,6 +179,7 @@ function parseProperty(node: any, idx: number): IProperty {
     lookup: !node.attributes.LookupId
       ? undefined
       : new Lookup({
+        newRecordScreen: getNewRecordScreen(node),
         dropDownShowUniqueValues: node.attributes.DropDownShowUniqueValues === "true",
         lookupId: node.attributes.LookupId,
         identifier: node.attributes.Identifier,

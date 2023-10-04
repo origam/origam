@@ -33,6 +33,7 @@ import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+import { NewRecordScreen } from "model/entities/Lookup";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -98,6 +99,8 @@ export function XmlBuildDropdownEditor(props: {
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
   onBlur?: () => void;
+  newRecordScreen? : NewRecordScreen;
+  onAddNewRecordClick?: () => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
@@ -140,6 +143,8 @@ export function XmlBuildDropdownEditor(props: {
       onKeyDown: props.onKeyDown,
       autoSort: props.autoSort,
       onTextOverflowChanged: props.onTextOverflowChanged,
+      newRecordScreen: props.newRecordScreen,
+      onAddNewRecordClick: props.onAddNewRecordClick
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(

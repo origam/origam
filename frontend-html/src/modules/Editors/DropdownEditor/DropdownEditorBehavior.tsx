@@ -29,12 +29,15 @@ import { compareStrings } from "../../../utils/string";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { requestFocus } from "utils/focus";
+import { NewRecordScreen } from "model/entities/Lookup";
 
 export const  dropdownPageSize = 100;
 
 export interface IDropdownEditorBehavior extends IDriverState{
+  onAddNewRecordClick?: () => void;
   scrollToRowIndex: number | undefined;
   willLoadPage: number;
+  hasNewScreenButton: boolean;
   handleScroll(args: {
     clientHeight: number;
     clientWidth: number;
@@ -59,6 +62,8 @@ export interface IBehaviorData {
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  newRecordScreen?: NewRecordScreen,
+  onAddNewRecordClick?: () => void;
 }
 
 export class DropdownEditorBehavior implements IDropdownEditorBehavior {
@@ -76,6 +81,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onKeyDown?: (event: any) => void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private newRecordScreen?: NewRecordScreen;
+  public onAddNewRecordClick?: () => void;
+
+  get hasNewScreenButton(){
+    return !!this.newRecordScreen;
+  }
 
   constructor(args: IBehaviorData) {
     this.api = args.api;
@@ -91,6 +102,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
+    this.newRecordScreen = args.newRecordScreen
+    this.onAddNewRecordClick = args.onAddNewRecordClick
   }
 
   @observable isDropped = false;
@@ -105,7 +118,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   willLoadNextPage = true;
 
   @computed get isBodyDisplayed() {
-    return this.isDropped && this.dataTable.rowCount > 0;
+    return this.isDropped && (this.dataTable.rowCount > 0 || this.hasNewScreenButton);
   }
 
   @computed get chosenRowId() {

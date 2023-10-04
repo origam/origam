@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { observer, Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo, createRef } from "react";
+import React, { createRef, useContext, useEffect, useMemo } from "react";
 import { GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
 import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
@@ -82,9 +82,7 @@ export class DropdownEditorTable extends  React.Component<{
   refMultiGrid = createRef<MultiGrid>();
   @observable
   scrollbarSize = { horiz: 0, vert: 0 };
-  hasHeader: boolean;
   hoveredRowIndex= - 1;
-  columnCount = 0;
   readonly cellPadding = 20;
   readonly maxHeight = 150;
   disposer: any;
@@ -94,7 +92,23 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   get rowCount(){
-    return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
+    return this.showAddNewRecord
+      ? 1 // will show single row: "Add New Record"
+      : this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
+  }
+
+  get columnCount(){
+    return this.showAddNewRecord
+      ? 1
+      : this.props.drivers.driverCount;
+  }
+
+  get hasHeader(){
+    return this.columnCount > 1
+  }
+
+  get showAddNewRecord(){
+    return this.props.beh.hasNewScreenButton && this.props.dataTable.rowCount === 0;
   }
 
   get height(){
@@ -110,8 +124,6 @@ export class DropdownEditorTable extends  React.Component<{
 
   constructor(props: any) {
     super(props);
-    this.columnCount = this.props.drivers.driverCount;
-    this.hasHeader = this.columnCount > 1;
   }
 
   handleScrollbarPresenceChange(args: {
@@ -128,6 +140,16 @@ export class DropdownEditorTable extends  React.Component<{
 
   renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
+    if (this.showAddNewRecord) {
+      return(
+        <div
+          style={style}
+          className={"cell"}
+          onClick={this.props.beh.onAddNewRecordClick}
+        >
+          Add New Record
+        </div>);
+    }
     return (
       <Prov
         key={key}
