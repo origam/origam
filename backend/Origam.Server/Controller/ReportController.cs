@@ -75,25 +75,17 @@ namespace Origam.Server.Controller
                         return HandleFileSystemReport(
                             reportRequest, fileSystemReport);
                     }
-                    case CrystalReport crystalReport:
-                    {
-                        if (reportRequest.DataReportExportFormatType
-                                == DataReportExportFormatType.RPT)
-                        {
-                            return HandleReportWithExternalViewer(
-                                new Guid(reportRequest.ReportId),
-                                crystalReport,
-                                reportRequest.Parameters);
-                        }
-                        else
-                        {
-                            return HandleReport(reportRequest, report.Name);
-                        }
-                    }
                     default:
                     {
                         if(report != null)
                         {
+                            if (reportRequest.DataReportExportFormatType
+                                == DataReportExportFormatType.ExternalViewer)
+                            {
+                                return HandleReportWithExternalViewer(
+                                    new Guid(reportRequest.ReportId),
+                                    report, reportRequest.Parameters);
+                            }
                             // handle all other report by running
                             // report service agent's GetReport method
                             return HandleReport(reportRequest, report.Name);
@@ -118,7 +110,8 @@ namespace Origam.Server.Controller
         {
             var reportService = ReportServiceAgent.GetService(report);
             string url = reportService.PrepareExternalReportViewer(reportId,
-                null, "RPT", parameters, null);
+                null, DataReportExportFormatType.ExternalViewer.ToString(),
+                parameters, null);
             return Redirect(url);
         }
 
