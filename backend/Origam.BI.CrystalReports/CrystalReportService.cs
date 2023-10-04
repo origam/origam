@@ -92,7 +92,7 @@ namespace Origam.BI.CrystalReports
                     .GetCurrentMethod().DeclaringType,
                     "Exporting report '" + report.Name + "' to " + format);
                 return _helper.PrepareReport(report, xmlDataDoc.DataSet,
-                    parameters, format);
+                    parameters, DataReportExportFormatType.RPT.ToString());
             }
         }
         #endregion
