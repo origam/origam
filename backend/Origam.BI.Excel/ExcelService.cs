@@ -282,5 +282,12 @@ namespace Origam.BI.Excel
         {
             // do nothing unless we want something to trace
         }
+
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

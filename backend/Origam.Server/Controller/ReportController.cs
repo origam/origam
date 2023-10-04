@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,14 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.BI;
+using Origam.BI.CrystalReports;
+using Origam.CrystalReportsService.Models;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server.Model.Report;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
 
 namespace Origam.Server.Controller
 {
@@ -71,10 +75,27 @@ namespace Origam.Server.Controller
                         return HandleFileSystemReport(
                             reportRequest, fileSystemReport);
                     }
+                    case CrystalReport crystalReport:
+                    {
+                        if (reportRequest.DataReportExportFormatType
+                                == DataReportExportFormatType.RPT)
+                        {
+                            return HandleReportWithExternalViewer(
+                                new Guid(reportRequest.ReportId),
+                                crystalReport,
+                                reportRequest.Parameters);
+                        }
+                        else
+                        {
+                            return HandleReport(reportRequest, report.Name);
+                        }
+                    }
                     default:
                     {
                         if(report != null)
                         {
+                            // handle all other report by running
+                            // report service agent's GetReport method
                             return HandleReport(reportRequest, report.Name);
                         }
                         return NotFound(localizer["ErrorReportNotAvailable"]
@@ -91,6 +112,16 @@ namespace Origam.Server.Controller
                 RemoveRequest(reportRequestId);
             }
         }
+
+        private IActionResult HandleReportWithExternalViewer(Guid reportId,
+            AbstractReport report, Hashtable parameters)
+        {
+            var reportService = ReportServiceAgent.GetService(report);
+            string url = reportService.PrepareExternalReportViewer(reportId,
+                null, "RPT", parameters, null);
+            return Redirect(url);
+        }
+
         [HttpGet("[action]")]
         public IActionResult GetReportInfo(Guid reportRequestId)
         {
