@@ -60,7 +60,7 @@ namespace Origam.Server.Controller
                 {
                     return NotFound(localizer["ErrorReportNotAvailable"].ToString());
                 }
-                switch(report)
+                switch (report)
                 {
                     case WebReport webReport:
                     {
@@ -73,8 +73,17 @@ namespace Origam.Server.Controller
                     }
                     default:
                     {
-                        if(report != null)
+                        if (report != null)
                         {
+                            if (reportRequest.DataReportExportFormatType
+                                == DataReportExportFormatType.ExternalViewer)
+                            {
+                                return HandleReportWithExternalViewer(
+                                    new Guid(reportRequest.ReportId),
+                                    report, reportRequest.Parameters);
+                            }
+                            // handle all other report by running
+                            // report service agent's GetReport method
                             return HandleReport(reportRequest, report.Name);
                         }
                         return NotFound(localizer["ErrorReportNotAvailable"]
@@ -82,7 +91,7 @@ namespace Origam.Server.Controller
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex);
             }
