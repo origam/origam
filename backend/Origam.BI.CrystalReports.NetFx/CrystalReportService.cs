@@ -44,8 +44,6 @@ namespace Origam.BI.CrystalReports
 		{
 		}
 
-		#region IReportService Members
-
 		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
 		{
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
