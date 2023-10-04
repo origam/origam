@@ -100,7 +100,6 @@ namespace Origam.BI.CrystalReports
                 string url = baseUrl + $"ViewReport.aspx?Id={id}";
                 return url;
             }
-
             throw new Exception("Invalid data returned. Expected byte array.");
         }
 
