@@ -30,12 +30,10 @@ import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundar
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import { getApi } from "model/selectors/getApi";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const {openedScreen} = props;
   const [isLoading, setLoading] = useState(false);
-  const [source, setSource] = useState("");
   const refIFrame = useRef<any>(null);
 
   const setTabTitleFromIFrame = useMemo(
@@ -48,28 +46,13 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
     },
     [openedScreen]
   );
-  function loadInternalApiDataWithAuthentication() {
-    const fetchData = async () => {
-      if (!openedScreen.screenUrl) {
-        return;
-      }
-      if (1){
-        setSource(openedScreen.screenUrl);
-        return;
-      }
-      const api = getApi(props.openedScreen);
-      const url = openedScreen.screenUrl.replace("internalApi/", "")
-      const content = await api.callUserApi(url);
-      setSource(URL.createObjectURL(content));
-    }
-    fetchData().catch(error => console.error(error));
-  }
+
   useEffect(() => {
     if (openedScreen.screenUrl) {
       setLoading(true);
     }
-    loadInternalApiDataWithAuthentication();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     const handle = setInterval(() => {
       setTabTitleFromIFrame();
@@ -118,7 +101,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   return (
     <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
       <WebScreen
-        source={source || ""}
+        source={openedScreen.screenUrl ?? ""}
         isLoading={isLoading}
         onLoad={(event: any) => {
           event.persist();
