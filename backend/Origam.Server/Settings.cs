@@ -38,6 +38,7 @@ namespace Origam.Server
                     AllowedGrantTypes = GrantTypes
                         .ResourceOwnerPasswordAndClientCredentials,
                     AllowedScopes = new List<string> {IdentityServerConstants.LocalApi.ScopeName},
+                    AccessTokenType = AccessTokenType.Reference
                 };
                 clients.Add(serverClient);
             }
