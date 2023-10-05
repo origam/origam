@@ -37,6 +37,7 @@ namespace Origam.Server
                     ClientSecrets = new[] {new Secret(identityServerConfig.ServerClient.ClientSecret.Sha256())},
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes = new List<string> {IdentityServerConstants.LocalApi.ScopeName},
+                    AccessTokenType = AccessTokenType.Reference
                 };
                 clients.Add(serverClient);
             }
