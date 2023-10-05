@@ -24,7 +24,7 @@
     <nrsb:NewRecordScreenBinding
       asi:abstract="false"
       x:id="afdaea57-edf1-45ef-a71d-c76369b2652c"
-      nrsb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/AllDataTypes/423a08e5-b1cf-4341-a342-d9b57667d1b9"
+      nrsb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/MasterData/TagInputSource/83efdf7d-fa37-4c5e-905f-ff9cff25bbf2"
       asi:name="NewRecordScreen"
       nrsb:roles="*" />
   </dsdl:DataLookup>
