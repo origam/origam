@@ -34,7 +34,6 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const {openedScreen} = props;
   const [isLoading, setLoading] = useState(false);
-  const [source, setSource] = useState("");
   const refIFrame = useRef<any>(null);
 
   const setTabTitleFromIFrame = useMemo(
@@ -101,7 +100,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   return (
     <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
       <WebScreen
-        source={source || ""}
+        source={openedScreen.screenUrl || ""}
         isLoading={isLoading}
         onLoad={(event: any) => {
           event.persist();
