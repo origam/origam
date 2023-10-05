@@ -275,7 +275,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     // TODO: Refactor to take real scrollbar sizes
     //const freeColIndex = columnIdx + this.fixedColumnCount;
     const {gridDimensions} = this.props;
-    const SCROLLBAR_SIZE = 20;
+    const SCROLLBAR_SIZE = 24;
+    const ROW_HEIGHT = 25;
     if (this.elmScroller) {
       const top = gridDimensions.getRowTop(rowIdx);
       const bottom = gridDimensions.getRowBottom(rowIdx);
@@ -295,9 +296,12 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       if (top - this.elmScroller.scrollTop < 0) {
         this.elmScroller.scrollTo({scrollTop: top});
       }
-      if (bottom - this.elmScroller.scrollTop > this.contentBounds.height - SCROLLBAR_SIZE) {
+      if (
+        bottom - this.elmScroller.scrollTop > this.contentBounds.height - 
+        SCROLLBAR_SIZE
+      ) {
         this.elmScroller.scrollTo({
-          scrollTop: bottom - this.contentBounds.height + SCROLLBAR_SIZE,
+          scrollTop: bottom - this.contentBounds.height + SCROLLBAR_SIZE + ROW_HEIGHT ,
         });
       }
     }

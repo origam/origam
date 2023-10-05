@@ -29,6 +29,7 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import _ from "lodash";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export class MapObjectsStore {
   constructor(private root: MapRootStore) {
@@ -158,6 +159,7 @@ export class MapObjectsStore {
   handleLayerClick(id: string) {
     if (this.setup.isReadOnlyView) {
       getDataView(this.dataView).setSelectedRowId(id);
+      getTablePanelView(this.dataView).scrollToCurrentRow();
       this.search.selectSearchResultById(id);
       this.navigationStore.highlightSelectedSearchResult();
     }
