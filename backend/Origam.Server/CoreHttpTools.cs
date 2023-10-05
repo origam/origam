@@ -43,6 +43,9 @@ namespace Origam.Server
             {
                 disposition = "attachment; " + disposition;
             }
+            response.AppendHeader(
+                "content-length", 
+                file == null ? "0" : file.Length.ToString());
             response.AppendHeader("content-disposition", disposition);
             response.OutputStreamWrite(file, 0, file.Length);
         }
