@@ -23,7 +23,7 @@ import "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { MobXProviderContext, observer } from "mobx-react";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { computed } from "mobx";
