@@ -32,6 +32,8 @@ namespace Origam.Schema.GuiModel
         , CSV = 5
         , TEXT = 6
         , XML = 7
+        , RPT = 8
+        , ExternalViewer = 9
     }
 
     public static class DataReportExportFormatTypeExtensions
@@ -46,6 +48,8 @@ namespace Origam.Schema.GuiModel
             , "text/csv"
             , "text/plain"
             , "text/xml"
+            , "application/rpt"
+            , null
         };
 
         private static readonly string[] extensions =
@@ -58,6 +62,8 @@ namespace Origam.Schema.GuiModel
             , "csv"
             , "txt"
             , "xml"
+            , "rpt"
+            , null
         };
 
         public static string GetString(this DataReportExportFormatType value)
@@ -67,12 +73,18 @@ namespace Origam.Schema.GuiModel
 
         public static string GetContentType(this DataReportExportFormatType value)
         {
-            return contentTypes[(int)value];
+            return contentTypes[(int)value] == null ? throw new
+                OrigamException("There isn't a content type" +
+                " defined for the DataReportExportFormatType")
+                : contentTypes[(int)value];
         }
 
         public static string GetExtension(this DataReportExportFormatType value)
         {
-            return extensions[(int)value];
+            return extensions[(int)value] == null ? throw new
+                OrigamException("There isn't a file extension" +
+                " defined for the DataReportExportFormatType")
+                : extensions[(int)value];
         }
     }
 }

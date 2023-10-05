@@ -44,8 +44,6 @@ namespace Origam.BI.CrystalReports
 		{
 		}
 
-		#region IReportService Members
-
 		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
 		{
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
@@ -151,6 +149,12 @@ namespace Origam.BI.CrystalReports
         {
             // do nothing unless we need to trace
         }
-        #endregion
+
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

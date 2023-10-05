@@ -65,7 +65,7 @@ namespace Origam.Workflow
             return report;
         }
 
-        private static IReportService GetService(AbstractReport report)
+        public static IReportService GetService(AbstractReport report)
         {
             string serviceName;
             if (report is CrystalReport)
