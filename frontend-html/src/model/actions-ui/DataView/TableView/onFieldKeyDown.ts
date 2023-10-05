@@ -53,6 +53,7 @@ export function onFieldKeyDown(ctx: any) {
     try {
       const dataView = getDataView(ctx);
       const tablePanelView = getTablePanelView(ctx);
+      const gridFocusManager = getGridFocusManager(tablePanelView);
       tablePanelView.handleEditorKeyDown(event);
       switch (event.key) {
         case "Tab": {
@@ -87,7 +88,7 @@ export function onFieldKeyDown(ctx: any) {
             tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
             yield*flushCurrentRowData(ctx)();
-            getGridFocusManager(ctx).focusEditor();
+            gridFocusManager.focusEditor();
           }
           break;
         }
@@ -116,6 +117,7 @@ export function onFieldKeyDown(ctx: any) {
         }
         case "F2": {
           tablePanelView.setEditing(false);
+          gridFocusManager.activeEditor = undefined;
           tablePanelView.triggerOnFocusTable();
           break;
         }
@@ -123,6 +125,7 @@ export function onFieldKeyDown(ctx: any) {
           if(!event.closedADropdown){
             yield onEscapePressed(dataView, event);
             tablePanelView.setEditing(false);
+            gridFocusManager.activeEditor = undefined;
             tablePanelView.clearCurrentCellEditData();
             tablePanelView.triggerOnFocusTable();
           }
