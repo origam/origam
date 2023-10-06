@@ -28,12 +28,16 @@ export enum IIdState {
 export class NewRecordScreen {
   private _width: number;
   private _height: number;
+  private _menuItemId: string;
+  
   constructor(args: {
     width: number,
-    height: number}
+    height: number,
+    menuItemId: string}
   ) {
     this._width = args.width;
     this._height = args.height;
+    this._menuItemId = args.menuItemId;
   }
 
   get width() {
@@ -42,6 +46,10 @@ export class NewRecordScreen {
 
   get height() {
     return this._height;
+  }
+  
+  get menuItemId() {
+    return this._menuItemId;
   }
 }
 

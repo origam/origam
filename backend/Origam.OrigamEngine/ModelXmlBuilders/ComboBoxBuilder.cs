@@ -169,6 +169,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				XmlElement newRecordElement = propertyElement.OwnerDocument.CreateElement("NewRecordScreen");
 				newRecordElement.SetAttribute("Width", XmlConvert.ToString(newRecordScreenBinding.DialogWidth));
 				newRecordElement.SetAttribute("Height", XmlConvert.ToString(newRecordScreenBinding.DialogHeight));
+				newRecordElement.SetAttribute("MenuItemId", XmlConvert.ToString(newRecordScreenBinding.MenuItemId));
 				propertyElement.AppendChild(newRecordElement);
 			}
 

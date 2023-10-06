@@ -131,7 +131,8 @@ function getNewRecordScreen(node: any){
   return new NewRecordScreen(
     {
       width: parseInt(newRecordScreenNode.attributes.Width),
-      height: parseInt(newRecordScreenNode.attributes.Height)
+      height: parseInt(newRecordScreenNode.attributes.Height),
+      menuItemId: newRecordScreenNode.attributes.MenuItemId
     });
 }
 
