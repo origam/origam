@@ -49,16 +49,6 @@ export function onTableKeyDown(ctx: any) {
           yield*selectNextRow(ctx)();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
-        case "ArrowLeft":
-          selectPrevColumn(ctx)();
-          event.preventDefault();
-          getTablePanelView(ctx).scrollToCurrentCell();
-          break;
-        case "ArrowRight":
-          selectNextColumn(ctx)();
-          event.preventDefault();
-          getTablePanelView(ctx).scrollToCurrentCell();
-          break;
         case "F2":
           getTablePanelView(ctx).setEditing(true);
           event.preventDefault();
