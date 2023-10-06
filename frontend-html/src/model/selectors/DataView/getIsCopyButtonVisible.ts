@@ -28,6 +28,9 @@ export function getIsCopyButtonVisible(ctx: any) {
     return false;
   }
   const dataView = getDataView(ctx);
+  if(dataView.isHeadless){
+    return false;
+  }
   if (getActivePerspective(ctx) === IPanelViewType.Map) {
     return false;
   }
