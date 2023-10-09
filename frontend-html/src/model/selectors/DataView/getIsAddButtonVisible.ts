@@ -24,6 +24,9 @@ import { getActivePerspective } from "model/selectors/DataView/getActivePerspect
 
 export function getIsAddButtonVisible(ctx: any) {
   const dataView = getDataView(ctx);
+  if (dataView.isHeadless){
+    return false;
+  }
   if (getActivePerspective(ctx) === IPanelViewType.Map) {
     return false;
   }
