@@ -24,7 +24,7 @@ import { IPanelViewType } from "model/entities/types/IPanelViewType";
 
 export function getIsDelButtonVisible(ctx: any) {
   const dataView = getDataView(ctx);
-  if(dataView.isHeadless){
+  if (dataView.isHeadless){
     return false;
   }
   if (getActivePerspective(ctx) === IPanelViewType.Map) {

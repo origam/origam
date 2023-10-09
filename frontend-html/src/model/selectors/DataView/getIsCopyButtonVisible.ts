@@ -24,11 +24,11 @@ import { getRelationState as getRelationRowState } from "model/selectors/RowStat
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 
 export function getIsCopyButtonVisible(ctx: any) {
-  if(!getIsAddButtonVisible(ctx)){
+  if (!getIsAddButtonVisible(ctx)){
     return false;
   }
   const dataView = getDataView(ctx);
-  if(dataView.isHeadless){
+  if (dataView.isHeadless){
     return false;
   }
   if (getActivePerspective(ctx) === IPanelViewType.Map) {
