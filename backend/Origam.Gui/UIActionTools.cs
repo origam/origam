@@ -54,8 +54,7 @@ namespace Origam.Gui
                         {
                             hasMultipleSelection = true;
                         }
-                        if (disableActionButtons == false 
-                        || action.Placement == ActionButtonPlacement.PanelHeader)
+                        if (disableActionButtons == false)
                         {
                             validActions.Add(action);
                         }
