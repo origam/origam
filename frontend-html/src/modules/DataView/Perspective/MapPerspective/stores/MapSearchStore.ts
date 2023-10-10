@@ -20,9 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { action, computed, observable } from "mobx";
 import { IMapObject } from "./MapObjectsStore";
 import { MapRootStore } from "./MapRootStore";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export class SearchStore {
   constructor(private root: MapRootStore) {
+  }
+
+  get dataView() {
+    return this.root.dataView;
   }
 
   get navigationStore() {
@@ -148,6 +154,8 @@ export class SearchStore {
 
   @action.bound
   handleSearchResultClick(event: any, resultId: string) {
+    getDataView(this.dataView).setSelectedRowId(resultId);
+    getTablePanelView(this.dataView).scrollToCurrentRow();
     this.selectSearchResultById(resultId);
     this.navigationStore.fitToSelectedSearchResult();
     this.navigationStore.highlightSelectedSearchResult();

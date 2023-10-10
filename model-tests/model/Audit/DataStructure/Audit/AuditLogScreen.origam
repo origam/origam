@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="ff521d8b-dee0-495a-b2c3-54b2be2ea57c"
@@ -7,237 +17,26 @@
     asi:name="AuditLogScreen">
     <dse:DataStructureEntity
       asi:abstract="false"
-      dse:allFields="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/1d8e4557-fa7c-4f1d-868d-9138ecf6bb97"
+      x:id="6f0373fe-987d-4b05-a681-6a02354f593e"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamDataAuditLog_Secondary"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
       dse:concurrencyHandling="Standard"
       dse:entity="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/1d8e4557-fa7c-4f1d-868d-9138ecf6bb97"
       x:id="c7785741-76ae-4301-81ab-72705fd27930"
       dse:ignoreCondition="None"
       dse:ignoreImplicitFilters="false"
-      asi:name="OrigamDataAuditLog"
+      asi:name="OrigamDataAuditLog_Primary"
       dse:relationType="Normal"
-      dse:useUpsert="false">
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
-        dsc:hideInOutput="false"
-        x:id="07f47d38-e258-4940-9f13-2a025f2efacb"
-        asi:name="RecordUpdatedServer"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/refColumnId/2610ed41-5927-4376-a36a-4ccc581e6a9b"
-        dsc:hideInOutput="false"
-        x:id="0a0de797-97ed-4798-8860-e998101adc8b"
-        dsc:lookup="Root/DataLookup/__system/ModelLookup_EntityDataColumn.origam#ModelLookup_EntityDataColumn/e541e716-6170-4674-b30c-39fad1582d35"
-        asi:name="refColumnId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreatedBy/253ce61e-509c-4d08-864f-c0e03d3eed4b"
-        dsc:hideInOutput="false"
-        x:id="32ecec67-1b29-440f-baef-fe0d2540ba78"
-        dsc:lookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
-        asi:name="RecordCreatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/refParentRecordEntityId/37560615-b9bc-4b55-8004-6cb68877ef70"
-        dsc:hideInOutput="false"
-        x:id="520988c8-7989-409c-8765-3425d77f3a0a"
-        asi:name="refParentRecordEntityId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/OldValueId/75cd57d6-22c4-4b3f-b943-9e6d4effad5f"
-        dsc:hideInOutput="false"
-        x:id="5885ed17-7f5e-40fe-be0a-1f11077aae4f"
-        asi:name="OldValueId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/SecondReferenceKey/a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
-        dsc:hideInOutput="false"
-        x:id="5fa46f0a-ec98-4fd7-aaf1-ffd24ca60343"
-        asi:name="SecondReferenceKey"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-        dsc:hideInOutput="false"
-        x:id="69c3628e-c316-4398-a810-852541e4d64c"
-        asi:name="Id"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
-        dsc:hideInOutput="false"
-        x:id="7ddbba19-9f0c-4ba1-bb08-dff65b39927b"
-        asi:name="refParentRecordId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/OldValue/5e053cd2-7ee2-42b9-a8cb-3f45269053db"
-        dsc:hideInOutput="false"
-        x:id="87fccde6-a9c1-42b4-94f7-449cf90ef937"
-        asi:name="OldValue"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
-        dsc:hideInOutput="false"
-        x:id="8e9c50c6-f715-4484-add9-6e788da7b7d4"
-        asi:name="RecordUpdated"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/ActionType/2455770c-cdd2-4ac3-820c-bfd067192d4c"
-        dsc:hideInOutput="false"
-        x:id="9a518891-3363-4fed-8657-3462855f0ce0"
-        asi:name="ActionType"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/NewValueId/6e3da925-c467-43bb-859a-50bece186161"
-        dsc:hideInOutput="false"
-        x:id="9b22d85a-5f24-4062-bbce-612ac47a9f55"
-        asi:name="NewValueId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/RecordCreatedServer/da9c4ff5-2e67-4744-935a-60a39b886828"
-        dsc:hideInOutput="false"
-        x:id="b97fecd8-1297-4552-b9af-7bfbc05ae9f4"
-        asi:name="RecordCreatedServer"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/NewValue/31bed106-accf-49ff-9c8f-8724258d9ec3"
-        dsc:hideInOutput="false"
-        x:id="f15eca4d-edd6-444f-94e2-c0a5dd919fb0"
-        asi:name="NewValue"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
-        dsc:hideInOutput="false"
-        x:id="f9a3daf6-446c-45dd-93c4-00ba5e03afd2"
-        asi:name="RecordUpdatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
-        dsc:hideInOutput="false"
-        x:id="ff6a0ad9-9498-45f9-ab89-7326d1095029"
-        asi:name="RecordCreated"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-    </dse:DataStructureEntity>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="2820c8e5-d94c-4c70-8eda-7007091c04e4"
-      asi:name="AggregateFilter">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/FromTime/7577e861-5e2e-4e24-a042-f87b37278536"
-        x:id="576068f2-ea65-49da-8e73-b650180cd16c"
-        asi:name="OrigamDataAuditLog_FromTime"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/ToTime/c3c3898e-7c36-4be2-baeb-99858933b3b5"
-        x:id="8ab42cad-fe1f-48a1-a90e-ef71604776ae"
-        asi:name="OrigamDataAuditLog_ToTime"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
-        x:id="f8463032-f0d1-4e26-a187-f95e389e24a6"
-        asi:name="OrigamDataAuditLog_GetByParentRecordId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
+      dse:useUpsert="false" />
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -245,30 +44,10 @@
       asi:name="GetId">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
+        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog_Primary/c7785741-76ae-4301-81ab-72705fd27930"
         dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="15665914-0046-4b3e-92bc-bf6c52709773"
-        asi:name="OrigamDataAuditLog_GetId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="daf98584-43ee-4c72-87ae-3aee38d124d0"
-      asi:name="Date">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/FromTime/7577e861-5e2e-4e24-a042-f87b37278536"
-        x:id="a4fc16fc-6ac5-497c-918b-78243b6cf893"
-        asi:name="OrigamDataAuditLog_FromTime"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/ToTime/c3c3898e-7c36-4be2-baeb-99858933b3b5"
-        x:id="c875a399-3926-428d-bac6-a1c2c08a2679"
-        asi:name="OrigamDataAuditLog_ToTime"
+        asi:name="OrigamDataAuditLog_Primary_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
@@ -278,24 +57,17 @@
       asi:name="ScreenFilter">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/ToTime/c3c3898e-7c36-4be2-baeb-99858933b3b5"
-        x:id="d4edc91a-4eb2-4b3d-8b67-138627464ca3"
-        asi:name="OrigamDataAuditLog_ToTime"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/GetByParentRecordIdOrSecondReferenceKey/07192def-61bf-4ddf-a18d-4cf33aac3df7"
+        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog_Primary/c7785741-76ae-4301-81ab-72705fd27930"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
         x:id="736f67e2-37cd-40be-bcd1-dfe218134c73"
-        asi:name="OrigamDataAuditLog_GetByParentRecordIdOrSecondReferenceKey"
+        asi:name="OrigamDataAuditLog_Primary_GetByParentRecordId"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
-        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-        dsfsf:filter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/FromTime/7577e861-5e2e-4e24-a042-f87b37278536"
-        x:id="cb6c1330-a35c-4e0a-acd1-caa4aa616a65"
-        asi:name="OrigamDataAuditLog_FromTime"
+        dsfsf:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog_Secondary/6f0373fe-987d-4b05-a681-6a02354f593e"
+        dsfsf:filter="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/GetBySecondReferenceKey/d0696caf-72ee-4afc-8a6c-1dadb4cc8bd7"
+        x:id="e3c68673-572e-4ab1-9b29-4ebe00f18198"
+        asi:name="OrigamDataAuditLog_Secondary_GetBySecondReferenceKey"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsss:DataStructureSortSet
@@ -304,10 +76,17 @@
       asi:name="Sort">
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
-        dsssi:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
+        dsssi:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog_Primary/c7785741-76ae-4301-81ab-72705fd27930"
+        dsssi:fieldName="RecordCreated"
+        x:id="9838fee8-3d6a-4c40-8bb9-45b9eb7e5b56"
+        asi:name="OrigamDataAuditLog_Primary_0_RecordCreated"
+        dsssi:sortDirection="Descending" />
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog_Secondary/6f0373fe-987d-4b05-a681-6a02354f593e"
         dsssi:fieldName="RecordCreated"
         x:id="c62c4a68-7f2f-404b-aec0-cf2e577b8137"
-        asi:name="OrigamDataAuditLog_0_RecordCreated"
+        asi:name="OrigamDataAuditLog_Secondary_0_RecordCreated"
         dsssi:sortDirection="Descending" />
     </dsss:DataStructureSortSet>
   </ds:DataStructure>

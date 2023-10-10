@@ -6,16 +6,16 @@
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
   <ci:Control
     asi:abstract="false"
-    x:id="ee12f8a9-a5a6-4b4b-a5b5-a19a8568e6ba"
+    x:id="689b2338-116a-4847-9c4c-ef35b7cbdf6c"
     ci:isComplex="true"
-    asi:name="AttachmentParent"
+    asi:name="OrigamDataAuditLog_Secondary"
     ci:namespace="Origam.Schema.GuiModel"
     ci:requestSaveAfterChangeAllowed="false"
-    ci:screenSection="Attachments/PanelControlSet/Attachments/AttachmentParent.origam#AttachmentParent/ff41ef22-e6ff-4d2c-a0f1-4603caf128e3"
+    ci:screenSection="Audit/PanelControlSet/Audit/OrigamDataAuditLog_Secondary.origam#OrigamDataAuditLog_Secondary/5a4e8946-5c3a-4d82-8a66-030bfe5e2025"
     ci:toolboxVisibility="FormDesigner"
     ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
     <sia:ancestor
       sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
-      x:id="efb47664-d592-490d-af38-8c30a7436442" />
+      x:id="3dfcd525-6dd8-43cc-9fce-1e5f58f1f3c9" />
   </ci:Control>
 </x:file>

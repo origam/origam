@@ -51,7 +51,7 @@ import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
 import { showDialog } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
@@ -219,7 +219,11 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
                   onClick={onSaveSessionClick(actionButtonsState.formScreen)}
-                  onShortcut={onSaveSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={event => {
+                    if(event.target.tagName !== "INPUT"){
+                      onSaveSessionClick(actionButtonsState.formScreen)
+                    }
+                  }}
                   id={"saveButton"}
                   shortcutPredicate={isSaveShortcut}
                   icon={
@@ -235,7 +239,11 @@ export class CScreenToolbar extends React.Component<{}> {
               {actionButtonsState.isRefreshButtonVisible && (
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
-                  onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={event => {
+                    if(event.target.tagName !== "INPUT"){
+                      onRefreshSessionClick(actionButtonsState.formScreen)
+                    }
+                  }}
                   id={"refreshButton"}
                   className={"isHoverBlue"}
                   shortcutPredicate={isRefreshShortcut}

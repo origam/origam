@@ -4012,10 +4012,10 @@ identity-obj-proxy@^3.0.0:
   dependencies:
     harmony-reflect "^1.4.6"
 
-immer@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-10.0.2.tgz#11636c5b77acf529e059582d76faf338beb56141"
-  integrity sha512-Rx3CqeqQ19sxUtYV9CU911Vhy8/721wRFnJv3REVGWUmoAcIwzifTsdmJte/MV+0/XpM35LZdQMBGkRIoLPwQA==
+immer@^10.0.3:
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-10.0.3.tgz#a8de42065e964aa3edf6afc282dfc7f7f34ae3c9"
+  integrity sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==
 
 immutable@^4.0.0, immutable@^4.3.4:
   version "4.3.4"
@@ -5525,10 +5525,10 @@ object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
-oidc-client-ts@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/oidc-client-ts/-/oidc-client-ts-2.2.5.tgz#ca0a9f791d8d9d00a1720226d3e96b50065ce015"
-  integrity sha512-omAHoLdFcylnwZeHJahOnJBwd0r78JzhmVAmsQjLGrexAnQKiHW9Ilr9FlRD5qjMikmabvaucI4k49AbQLXhmQ==
+oidc-client-ts@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/oidc-client-ts/-/oidc-client-ts-2.3.0.tgz#43c90f1f0cc3be2e4ede38b8c68642ba00bfa8f6"
+  integrity sha512-7RUKU+TJFQo+4X9R50IGJAIDF18uRBaFXyZn4VVCfwmwbSUhKcdDnw4zgeut3uEXkiD3NqURq+d88sDPxjf1FA==
   dependencies:
     crypto-js "^4.1.1"
     jwt-decode "^3.1.2"
@@ -5976,9 +5976,9 @@ postcss-value-parser@^4.1.0, postcss-value-parser@^4.2.0:
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
 postcss@^8.3.11, postcss@^8.4.21, postcss@^8.4.27:
-  version "8.4.27"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.27.tgz#234d7e4b72e34ba5a92c29636734349e0d9c3057"
-  integrity sha512-gY/ACJtJPSmUFPDCHtX78+01fHa64FaU4zaaWfuh1MhGJISufJAH4cun6k/8fwsHYeK4UQmENQK+tRLCFJE8JQ==
+  version "8.4.31"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
+  integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -6200,10 +6200,10 @@ react-highlight-words@^0.20.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
-react-inlinesvg@*, react-inlinesvg@^4.0.3, react-inlinesvg@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.4.tgz#100e377ed13f71f24e08055882a4b8981038e638"
-  integrity sha512-OnXi+IHoY2zj6rt+kLmXQth9HZ3rS1TDtDwjFbELcCZngAJC32nXp2ZzLp4FpijzISDe7YfHI3SFs9qALWv+xw==
+react-inlinesvg@*, react-inlinesvg@^4.0.3, react-inlinesvg@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.0.5.tgz#cbabe18e790c47f5cadca9ce974e3e8256c1c84f"
+  integrity sha512-gur6KP4la70Xt9Ku6kIRAiwPOsMxYGTFIJ1roG1igS9oZLvES72VtUfBEdaiZZfkej3jugQsVyq/mJkYr4OObQ==
   dependencies:
     react-from-dom "^0.6.2"
 
@@ -7333,10 +7333,10 @@ vite-tsconfig-paths@^4.2.1:
     globrex "^0.1.2"
     tsconfck "^2.1.0"
 
-vite@^4.4.9:
-  version "4.4.9"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-4.4.9.tgz#1402423f1a2f8d66fd8d15e351127c7236d29d3d"
-  integrity sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==
+vite@^4.4.11:
+  version "4.4.11"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-4.4.11.tgz#babdb055b08c69cfc4c468072a2e6c9ca62102b0"
+  integrity sha512-ksNZJlkcU9b0lBwAGZGGaZHCMqHsc8OpgtoYhsQ4/I2v5cnpmmmqe5pM4nv/4Hn6G/2GhTdj0DhZh2e+Er1q5A==
   dependencies:
     esbuild "^0.18.10"
     postcss "^8.4.27"
