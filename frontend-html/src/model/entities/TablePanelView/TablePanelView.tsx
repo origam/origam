@@ -380,7 +380,7 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   setEditing(state: boolean): void {
-    if(state && !this.selectedColumnId){
+    if (state && !this.selectedColumnId) {
       const properties = getTableViewProperties(this);
       this.setSelectedColumnId(properties[0].id);
     }
