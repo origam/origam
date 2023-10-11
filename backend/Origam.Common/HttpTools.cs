@@ -348,6 +348,7 @@ namespace Origam
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
 		{
+			ignoreHTTPSErrors = true;
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
 			                                       SecurityProtocolType.Tls11 |
                                                    SecurityProtocolType.Tls;
