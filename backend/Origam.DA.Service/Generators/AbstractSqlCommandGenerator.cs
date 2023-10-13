@@ -1814,6 +1814,8 @@ namespace Origam.DA.Service
                 forceDatabaseCalculation: forceDatabaseCalculation);
         }
 
+        private record GroupByData(DataStructureColumn Column, string Expression);
+        
         internal bool RenderSelectColumns(SelectParameters selectParameters,
             StringBuilder sqlExpression,
             StringBuilder orderByBuilder, StringBuilder groupByBuilder, 
@@ -1833,7 +1835,7 @@ namespace Origam.DA.Service
             var dynamicParameters = selectParameters.Parameters;
             var customFilters = selectParameters.CustomFilters;
             
-            DataStructureColumn groupByColumn = null;
+            GroupByData groupByData = null;
             int i = 0;
             List<string> group = new List<string>();
             SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
@@ -1863,10 +1865,6 @@ namespace Origam.DA.Service
                 GetSortedColumns(entity, columnsInfo?.ColumnNames, aggregatedColumns);
             foreach (DataStructureColumn column in dataStructureColumns)
             {
-                if (customGrouping != null && column.Name == customGrouping.GroupBy)
-                {
-                    groupByColumn = column;
-                }
                 LookupOrderingInfo customOrderingInfo =
                     LookupOrderingInfo.TryCreate(customOrderings.Orderings, column.Name );
                 string groupByExpression = "";
@@ -1877,6 +1875,10 @@ namespace Origam.DA.Service
                         columnsInfo ?? ColumnsInfo.Empty, column,
                         customOrderingInfo, filterCommandParser, orderByCommandParser, 
                         selectParameters.RowOffset);
+                if (customGrouping != null && column.Name == customGrouping.GroupBy)
+                {
+                    groupByData = new GroupByData(column, groupByExpression);
+                }
                 string expression;
                 if (columnRenderData != null)
                 {
@@ -1978,20 +1980,25 @@ namespace Origam.DA.Service
                             new Key(customGrouping.LookupId)) as DataServiceDataLookup;
 
                     var resultExpression = 
-                        RenderLookupColumnExpression(ds, entity, groupByColumn,
+                        RenderLookupColumnExpression(ds, entity, groupByData.Column,
                         replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
                     sqlExpression.Append(" , ");
                     sqlExpression.Append(resultExpression);
                     sqlExpression.Append($" AS {ColumnData.GroupByCaptionColumn} ");
                 }
-
-                groupByNeeded = true;
-                if (!group.Any(groupByExpression => 
-                        groupByExpression.Contains(customGrouping.GroupBy) ||
-                        groupByExpression == orderByExpression))
+                else
                 {
-                    group.Add(customGrouping.GroupBy);
+                    if (!group.Any(groupByExpression => 
+                            groupByExpression.Contains(customGrouping.GroupBy) ||
+                            groupByExpression == orderByExpression))
+                    {
+                        if (groupByData.Column.Name == customGrouping.GroupBy)
+                        {
+                            group.Add(groupByData.Expression);
+                        }
+                    }
                 }
+                groupByNeeded = true;
             }
             if (order.Count > 0)
             {
