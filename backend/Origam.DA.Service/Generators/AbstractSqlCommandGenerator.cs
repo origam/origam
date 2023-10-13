@@ -999,12 +999,6 @@ namespace Origam.DA.Service
             var rowLimit = selectParameters.RowLimit;
             var rowOffset = selectParameters.RowOffset;
             bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
-            bool hasLookupField = selectParameters.Entity.EntityDefinition
-                .EntityColumns
-                .Cast<ISchemaItem>()
-                .OfType<LookupField>()
-                .Any(field =>
-                    selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
 
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1259,7 +1253,7 @@ namespace Origam.DA.Service
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
             }
 
-            if (hasLookupField && customGrouping != null)
+            if (customGrouping != null && GroupingUsesLookup(customGrouping, entity))
             {
                 var columnNames = selectParameters.ColumnsInfo.ColumnNames;
                 if (selectParameters.AggregatedColumns.Count > 0)
@@ -1277,6 +1271,27 @@ namespace Origam.DA.Service
             }
 
             return finalString;
+        }
+
+        private static bool GroupingUsesLookup(Grouping customGrouping,DataStructureEntity entity)
+        {
+            var allLookupColumnNames = entity
+                .ChildrenRecursive.OfType<DataStructureEntity>()
+                .Concat(new[] { entity })
+                .SelectMany(entity =>
+                {
+                    var dataStructureColumnNames = entity.ChildItems.ToGeneric()
+                        .OfType<DataStructureColumn>()
+                        .Where(x => x.UseLookupValue)
+                        .Select(x => x.Name);
+                    var entityColumnNames = entity.EntityDefinition.EntityColumns
+                        .OfType<LookupField>()
+                        .Select(lookupField => lookupField.Name);
+                    return dataStructureColumnNames.Concat(entityColumnNames);
+                });
+
+            return customGrouping != null &&
+                   allLookupColumnNames.Contains(customGrouping.GroupBy);
         }
 
         private void PostProcessCustomCommandParserWhereClause(
@@ -1992,7 +2007,8 @@ namespace Origam.DA.Service
                             groupByExpression.Contains(customGrouping.GroupBy) ||
                             groupByExpression == orderByExpression))
                     {
-                        if (groupByData.Column.Name == customGrouping.GroupBy)
+                        if (groupByData.Column.Name == customGrouping.GroupBy &&
+                            !group.Contains(groupByData.Expression))
                         {
                             group.Add(groupByData.Expression);
                         }
