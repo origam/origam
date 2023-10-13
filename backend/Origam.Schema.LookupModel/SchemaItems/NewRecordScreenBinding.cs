@@ -67,8 +67,11 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     [NotNullModelElementRule]
     [XmlAttribute("roles")]
     public string Roles { get; set; }
-
+    
+    [XmlAttribute("dialogWidth")]
     public int DialogWidth { get; set; }
+    
+    [XmlAttribute("dialogHeight")]
     public int DialogHeight { get; set; }
 		
     #endregion

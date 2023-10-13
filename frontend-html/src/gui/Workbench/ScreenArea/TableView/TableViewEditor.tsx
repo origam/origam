@@ -48,6 +48,13 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 import S from "./TableViewEditor.module.scss";
 import { NewRecordScreen } from "model/entities/Lookup";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { IMainMenuItemType } from "model/entities/types/IMainMenu";
+import { DialogInfo } from "model/entities/OpenedScreen";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -209,7 +216,45 @@ export class TableViewEditor extends React.Component<{
               gridFocusManager.editorBlur = undefined;
             }}
             newRecordScreen={this.props.property?.lookup?.newRecordScreen}
-            onAddNewRecordClick={() => {console.log("Add new click")}}
+            onAddNewRecordClick={() => {
+              if(!this.props.property?.lookup?.newRecordScreen){
+                throw new Error("newRecordScreen not found on property " + this.props.property?.id);
+              }
+              const newRecordScreen = this.props.property.lookup.newRecordScreen;
+              const menuItem = getMainMenuItemById(this.props.property, this.props.property.lookup.newRecordScreen.menuItemId);
+              // onMainMenuItemClick(this.props.property)({
+              //   event: undefined,
+              //   item: menuItem,
+              //   idParameter: "74ba6e7d-6d77-4268-9e73-601a71d8b385",
+              //   isSingleRecordEdit: true,
+              // });
+              const self = this;
+              const workbenchLifecycle = getWorkbenchLifecycle(this.props.property);
+              const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
+              runGeneratorInFlowWithHandler({
+                ctx: this.props.property,
+                generator: function*() {
+                  yield*workbenchLifecycle.openNewForm(
+                    self.props.property!.lookup!.newRecordScreen!.menuItemId,
+                    menuItem.attributes.type,//IMainMenuItemType.FormRefWithSelection,
+                    "New",
+                    menuItem.attributes.lazyLoading === "true",
+                    dialogInfo,
+                    {"id": "74ba6e7d-6d77-4268-9e73-601a71d8b385"},
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    true,
+                    true
+                  );
+                }()
+              })
+
+              console.log("Add new click");
+            }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>

@@ -408,7 +408,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
     refreshOnReturnType?: IRefreshOnReturnType,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    createNewRecord?: boolean
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingTabItem(id);
@@ -441,9 +442,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         newScreen,
         !isSessionRebirth,
         requestParameters,
-        isSingleRecordEdit
+        isSingleRecordEdit,
+        createNewRecord
       );
-      yield*newFormScreen.start({initUIResult: initUIResult});
+      yield*newFormScreen.start(
+        {
+          initUIResult: initUIResult,
+          createNewRecord: true
+        });
       const rowIdToSelect = parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
@@ -475,7 +481,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     screen: IOpenedScreen,
     isNewSession: boolean,
     requestParameters?: object | undefined,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    createNewRecord?: boolean
   ): any {
     const api = getApi(this);
     if (requestParameters) {
@@ -491,6 +498,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
       IsSingleRecordEdit: isSingleRecordEdit,
+      CreateNewRecord: createNewRecord,
       RequestCurrentRecordId: true
     });
   }

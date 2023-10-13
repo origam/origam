@@ -23,6 +23,8 @@
     adl:valueValueMember="Id">
     <nrsb:NewRecordScreenBinding
       asi:abstract="false"
+      nrsb:dialogHeight="200"
+      nrsb:dialogWidth="600"
       x:id="afdaea57-edf1-45ef-a71d-c76369b2652c"
       nrsb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/MasterData/TagInputSource/83efdf7d-fa37-4c5e-905f-ff9cff25bbf2"
       asi:name="NewRecordScreen"
