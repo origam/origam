@@ -2333,9 +2333,11 @@ namespace Origam.DA.Service
                 resultExpression = RenderLookupColumnExpression(ds, entity, column,
                     replaceParameterTexts, dynamicParameters,
                     selectParameterReferences);
-                // if we would group by lookuped column, we use original column in group-by clause
-                groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
-                    column.Entity == null ? entity : column.Entity,
+                var field = column.Field is LookupField lookupField 
+                    ? lookupField.Field 
+                    : column.Field;
+                groupExpression = RenderExpression(field,
+                    column.Entity ?? entity,
                     replaceParameterTexts,
                     dynamicParameters, selectParameterReferences);
             }
