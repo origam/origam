@@ -1273,7 +1273,7 @@ namespace Origam.DA.Service
             return finalString;
         }
 
-        private static bool GroupingUsesLookup(Grouping customGrouping,DataStructureEntity entity)
+        private static bool GroupingUsesLookup(Grouping customGrouping, DataStructureEntity entity)
         {
             var allLookupColumnNames = entity
                 .ChildrenRecursive.OfType<DataStructureEntity>()
