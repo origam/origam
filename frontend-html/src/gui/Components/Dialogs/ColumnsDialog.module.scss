@@ -29,8 +29,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .reordering {
   display: flex;
   justify-content: center;
-  align-items: baseline;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 
 .button {
@@ -60,6 +59,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background: var(--background3);
   border-color: var(--background5);
   color: var(--background7);
+  svg {
+    display: block;
+  }
   &:hover {
     background: var(--background5);
     color: var(--background8);

@@ -124,7 +124,6 @@ export class ConfigurationManager implements IConfigurationManager {
   }
 
   *onColumnOrderChanged(): Generator {
-    console.log('asd')
     if (!this.defaultTableConfiguration.isActive) {
       return;
     }

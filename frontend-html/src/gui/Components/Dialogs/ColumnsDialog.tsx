@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
-import { CloseButton } from "@origam/components";
+import { CloseButton, Icon } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, computed, flow, observable } from "mobx";
@@ -38,6 +38,7 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import cx from "classnames";
 import { IProperty } from "model/entities/types/IProperty";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class ColumnsDialog extends React.Component<{
@@ -61,6 +62,12 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound handleReorderClick() {
     this.resetReordering();
+    if(
+      this.temporaryPropertiesReordering.length > 0 && 
+      this.selectedColumnId === null
+    ) {
+      this.selectedColumnId = this.temporaryPropertiesReordering[0].id
+    }
     this.view = "reordering";
   }
 
@@ -115,7 +122,11 @@ export class ColumnsDialog extends React.Component<{
       this.temporaryPropertiesReordering.map((property) => property.id)
     );
     const manager = getConfigurationManager(this.props.model.tablePanelView);
-    flow(manager.onColumnOrderChanged.bind(manager))();
+    // TODO: Spinner while api request is running?
+    runGeneratorInFlowWithHandler({
+      ctx: this.props.model.tablePanelView,
+      generator: manager.onColumnOrderChanged.bind(manager)()
+    })
   }
 
   render() {
@@ -126,23 +137,51 @@ export class ColumnsDialog extends React.Component<{
           <CloseButton onClick={this.props.model.onColumnConfCancel} />
         }
         buttonsCenter={
-          <>
-            <button
-              id={"columnConfigOk"}
-              tabIndex={0}
-              onClick={(event: any) =>
-                this.props.model?.onColumnConfigurationSubmit()
-              }
-            >
-              {T("OK", "button_ok")}
-            </button>
-            <button onClick={() => this.props.model.onSaveAsClick()}>
-              {T("Save As...", "column_config_save_as")}
-            </button>
-            <button tabIndex={0} onClick={this.props.model.onColumnConfCancel}>
-              {T("Cancel", "button_cancel")}
-            </button>
-          </>
+          <Observer>{() => 
+            <>{this.view === 'settings' ? 
+              <>
+                <button
+                  id={"columnConfigOk"}
+                  tabIndex={0}
+                  onClick={(event: any) =>
+                    this.props.model?.onColumnConfigurationSubmit()
+                  }
+                >
+                  {T("OK", "button_ok")}
+                </button>
+                <button onClick={() => this.props.model.onSaveAsClick()}>
+                  {T("Save As...", "column_config_save_as")}
+                </button>
+                <button tabIndex={0} onClick={this.props.model.onColumnConfCancel}>
+                  {T("Cancel", "button_cancel")}
+                </button>
+              </> : null}
+              {this.view === "reordering" ? (
+                <>
+                  {this.selectedColumnId !== null ? <>
+                    <button onClick={this.handleReorderUp} className={S.button}>
+                      <Icon src={"./icons/noun-chevron-933254.svg"} />
+                    </button>
+                    <button onClick={this.handleReorderDown} className={S.button}>
+                      <Icon src={ "./icons/noun-chevron-933246.svg"} />
+                    </button>
+                  </> : null}
+                  <button
+                    onClick={this.handleFinishReorderClick}
+                    className={S.button}
+                  >
+                    {T('Finish reordering', 'column_reordering_finish')}
+                  </button>
+                  <button
+                    onClick={this.handleCancelReorderClick}
+                    className={S.button}
+                  >
+                    {T('Cancel reordering', 'column_reordering_cancel')}
+                  </button>
+                </>
+              ) : null}
+            </>
+          }</Observer>
         }
         buttonsLeft={null}
         buttonsRight={null}
@@ -177,7 +216,7 @@ export class ColumnsDialog extends React.Component<{
                         cellRenderer={this.renderReorderingCell}
                         columnCount={1}
                         rowCount={1 + this.temporaryPropertiesReordering.length}
-                        columnWidth={width}
+                        columnWidth={width - 20}
                         rowHeight={rowHeight}
                         width={width}
                         height={height}
@@ -204,31 +243,10 @@ export class ColumnsDialog extends React.Component<{
         <div className={S.reordering}>
           {this.view === "settings" ? (
             <button onClick={this.handleReorderClick} className={S.button}>
-              Reorder
+              {T('Reorder', 'column_reordering_reorder')}
             </button>
           ) : null}
-          {this.view === "reordering" ? (
-            <>
-              <button onClick={this.handleReorderUp} className={S.button}>
-                ⇧
-              </button>
-              <button onClick={this.handleReorderDown} className={S.button}>
-                ⇩
-              </button>
-              <button
-                onClick={this.handleFinishReorderClick}
-                className={S.button}
-              >
-                Finish reordering
-              </button>
-              <button
-                onClick={this.handleCancelReorderClick}
-                className={S.button}
-              >
-                Cancel reordering
-              </button>
-            </>
-          ) : null}
+          
         </div>
       </ModalDialog>
     );
