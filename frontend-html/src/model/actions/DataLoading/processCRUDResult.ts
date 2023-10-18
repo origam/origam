@@ -80,9 +80,9 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
           dataView.reselectOrSelectFirst();
         }
         dataView.formFocusManager.stopAutoFocus();
-        const focusManager = getFocusManager(dataView);
-        focusManager.setFocus();
       }
+      const screenFocusManager = getFocusManager(ctx);
+      screenFocusManager.setFocus();
       getFormScreen(ctx).setDirty(true);
       break;
     }
