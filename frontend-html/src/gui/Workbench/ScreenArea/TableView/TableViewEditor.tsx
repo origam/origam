@@ -66,7 +66,7 @@ import S from "./TableViewEditor.module.scss";
     onEditorBlur: async (event: any) => {
       await onFieldBlur(tablePanelView)();
       const gridFocusManager = getGridFocusManager(tablePanelView);
-      if(gridFocusManager.activeEditor === event.target || !event.target){
+      if(!event?.target || gridFocusManager.activeEditor === event.target){
         gridFocusManager.activeEditor = undefined;
         gridFocusManager.editorBlur = undefined;
       }
