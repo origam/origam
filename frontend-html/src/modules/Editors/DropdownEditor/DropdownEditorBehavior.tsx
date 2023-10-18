@@ -54,7 +54,7 @@ export interface IBehaviorData {
   isReadOnly: boolean,
   onDoubleClick?: (event: any) => void,
   onClick?: (event: any) => void,
-  onBlur?: () => void,
+  onBlur?: (target: any) => void,
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
@@ -71,7 +71,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   public isReadOnly: boolean;
   public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
-  public onBlur?: () => void;
+  public onBlur?: (target?: any) => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
   private onKeyDown?: (event: any) => void;
   private autoSort?: boolean;

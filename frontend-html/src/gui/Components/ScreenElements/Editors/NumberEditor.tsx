@@ -46,7 +46,7 @@ export class NumberEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): Promise<void>;
-  subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
+  subscribeToFocusManager?: (obj: IFocusable, onBlur: (event: any)=> Promise<void>) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   id?: string
 }, any> {
@@ -102,7 +102,7 @@ export class NumberEditor extends React.Component<{
   }
 
   componentWillUnmount() {
-    this.handleBlur(null);
+    this.handleBlur({target: this.inputRef.current});
     this.disposer?.();
   }
 
