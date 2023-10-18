@@ -102,6 +102,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
 
   public focus() {
     setTimeout(()=>{
+      if(this.elmScrollerDiv?.style["width"] === "0px"){
+        console.warn("Focus was requested on an invisible table. This should not happen.");
+        return;
+      }
       requestFocus(this.elmScrollerDiv);
     });
   }
