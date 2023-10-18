@@ -24,6 +24,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { IProperty } from "model/entities/types/IProperty";
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
+import {getGridFocusManager} from "model/entities/GridFocusManager";
 
 export function onFieldChange(ctx: any) {
   return flow(onFieldChangeG(ctx));
@@ -48,6 +49,9 @@ export function onFieldChangeG(ctx: any) {
         // Flush data to session when combo value changed.
         getDataTable(ctx).flushFormToTable(row);
         yield*getFormScreenLifecycle(ctx).onFlushData();
+        setTimeout(() => {
+          getGridFocusManager(ctx).focusEditor()
+        });
       }
     } catch (e) {
       yield*handleError(ctx)(e);

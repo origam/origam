@@ -63,11 +63,13 @@ import S from "./TableViewEditor.module.scss";
         property: actualProperty,
         value: value,
       }),
-    onEditorBlur: async () => {
+    onEditorBlur: async (event: any) => {
       await onFieldBlur(tablePanelView)();
       const gridFocusManager = getGridFocusManager(tablePanelView);
-      gridFocusManager.activeEditor = undefined;
-      gridFocusManager.editorBlur = undefined;
+      if(gridFocusManager.activeEditor === event.target || !event.target){
+        gridFocusManager.activeEditor = undefined;
+        gridFocusManager.editorBlur = undefined;
+      }
     },
     onEditorKeyDown: (event: any) => {
       event.persist();
@@ -80,7 +82,7 @@ export class TableViewEditor extends React.Component<{
   property?: IProperty;
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => Promise<void>;
-  onEditorBlur?: () => Promise<void>;
+  onEditorBlur?: (event: any) => Promise<void>;
   onEditorKeyDown?: (event: any) => void;
 }> {
 
@@ -202,10 +204,12 @@ export class TableViewEditor extends React.Component<{
             customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
-            onBlur={()=>{
+            onBlur={(target: any)=>{
               const gridFocusManager = getGridFocusManager(dataView);
-              gridFocusManager.activeEditor = undefined;
-              gridFocusManager.editorBlur = undefined;
+              if(gridFocusManager.activeEditor === target){
+                gridFocusManager.activeEditor = undefined;
+                gridFocusManager.editorBlur = undefined;
+              }
             }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
@@ -221,7 +225,7 @@ export class TableViewEditor extends React.Component<{
           <ColorEditor
             value={flashColor2htmlColor(this.props.getCellValue!()) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
-            onBlur={() => this.props.onEditorBlur?.()}
+            onBlur={(event: any) => this.props.onEditorBlur?.(event)}
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
             subscribeToFocusManager={(editor) =>
