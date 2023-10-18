@@ -22,7 +22,7 @@ import React from "react";
 import { CloseButton } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
-import { observable } from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
 import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
@@ -30,16 +30,19 @@ import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfig
 import {
   aggregationOptions,
   ColumnConfigurationModel,
-  IColumnOptions, timeunitOptions
+  IColumnOptions,
+  timeunitOptions,
 } from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { SimpleDropdown } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import cx from "classnames";
+import { IProperty } from "model/entities/types/IProperty";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 
 @observer
 export class ColumnsDialog extends React.Component<{
   model: ColumnConfigurationModel;
 }> {
-
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
 
@@ -47,17 +50,81 @@ export class ColumnsDialog extends React.Component<{
     super(props);
     this.configuration = this.props.model.columnsConfiguration;
     this.columnOptions = this.props.model.columnOptions;
+    this.resetReordering();
   }
 
   @observable columnWidths = [70, 220, 110, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
+  @observable view: "settings" | "reordering" = "settings";
+
+  @action.bound handleReorderClick() {
+    this.resetReordering();
+    this.view = "reordering";
+  }
+
+  @action.bound handleFinishReorderClick() {
+    this.applyReordering();
+    this.view = "settings";
+  }
+
+  @action.bound handleCancelReorderClick() {
+    this.resetReordering();
+    this.view = "settings";
+  }
+
+  @observable selectedColumnId: any = null;
+  @computed get selectedColumnIndex() {
+    return this.temporaryPropertiesReordering.findIndex(
+      (property) => property.id === this.selectedColumnId
+    );
+  }
+  @observable temporaryPropertiesReordering: IProperty[] = [];
+
+  @action.bound handleReorderingRowClick(id: any) {
+    this.selectedColumnId = id;
+  }
+
+  @action.bound handleReorderUp() {
+    const ord = this.temporaryPropertiesReordering;
+    const selIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selIndex > 0) {
+      [ord[selIndex], ord[selIndex - 1]] = [ord[selIndex - 1], ord[selIndex]];
+    }
+  }
+
+  @action.bound handleReorderDown() {
+    const ord = this.temporaryPropertiesReordering;
+    const selIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selIndex < ord.length - 1) {
+      [ord[selIndex], ord[selIndex + 1]] = [ord[selIndex + 1], ord[selIndex]];
+    }
+  }
+
+  @action.bound
+  resetReordering() {
+    this.temporaryPropertiesReordering = [
+      ...this.props.model.tableViewProperties,
+    ];
+  }
+
+  @action.bound
+  applyReordering() {
+    this.props.model.setReorderingIds(
+      this.temporaryPropertiesReordering.map((property) => property.id)
+    );
+    const manager = getConfigurationManager(this.props.model.tablePanelView);
+    flow(manager.onColumnOrderChanged.bind(manager))();
+  }
+
   render() {
     return (
       <ModalDialog
         title={T("Columns", "column_config_title")}
-        titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
+        titleButtons={
+          <CloseButton onClick={this.props.model.onColumnConfCancel} />
+        }
         buttonsCenter={
           <>
             <button
@@ -82,36 +149,86 @@ export class ColumnsDialog extends React.Component<{
       >
         <div className={S.columnTable}>
           <AutoSizer>
-            {({width, height}) => (
+            {({ width, height }) => (
               <Observer>
                 {() => (
-                  <MultiGrid
-                    ref={this.refGrid}
-                    fixedRowCount={1}
-                    cellRenderer={this.renderCell}
-                    columnCount={5}
-                    rowCount={1 + this.props.model.sortedColumnConfigs.length}
-                    columnWidth={({ index }: { index: number }) => {
-                      return this.columnWidths[index];
-                    }}
-                    rowHeight={rowHeight}
-                    width={width}
-                    height={height}
-                  />
+                  <>
+                    {this.view === "settings" ? (
+                      <MultiGrid
+                        ref={this.refGrid}
+                        fixedRowCount={1}
+                        cellRenderer={this.renderSettingsCell}
+                        columnCount={5}
+                        rowCount={
+                          1 + this.props.model.sortedColumnConfigs.length
+                        }
+                        columnWidth={({ index }: { index: number }) => {
+                          return this.columnWidths[index];
+                        }}
+                        rowHeight={rowHeight}
+                        width={width}
+                        height={height}
+                      />
+                    ) : null}
+                    {this.view === "reordering" ? (
+                      <MultiGrid
+                        ref={this.refGrid}
+                        fixedRowCount={1}
+                        cellRenderer={this.renderReorderingCell}
+                        columnCount={1}
+                        rowCount={1 + this.temporaryPropertiesReordering.length}
+                        columnWidth={width}
+                        rowHeight={rowHeight}
+                        width={width}
+                        height={height}
+                      />
+                    ) : null}
+                  </>
                 )}
               </Observer>
             )}
           </AutoSizer>
         </div>
-        <div className={S.lockedColumns}>
-          {T("Locked columns count", "column_config_locked_columns_count")}
-          <input
-            className={S.lockedColumnsInput}
-            type="number"
-            min={0}
-            value={"" + this.configuration.fixedColumnCount}
-            onChange={this.props.model.handleFixedColumnsCountChange}
-          />
+        {this.view === "settings" ? (
+          <div className={S.lockedColumns}>
+            {T("Locked columns count", "column_config_locked_columns_count")}
+            <input
+              className={S.lockedColumnsInput}
+              type="number"
+              min={0}
+              value={"" + this.configuration.fixedColumnCount}
+              onChange={this.props.model.handleFixedColumnsCountChange}
+            />
+          </div>
+        ) : null}
+        <div className={S.reordering}>
+          {this.view === "settings" ? (
+            <button onClick={this.handleReorderClick} className={S.button}>
+              Reorder
+            </button>
+          ) : null}
+          {this.view === "reordering" ? (
+            <>
+              <button onClick={this.handleReorderUp} className={S.button}>
+                ⇧
+              </button>
+              <button onClick={this.handleReorderDown} className={S.button}>
+                ⇩
+              </button>
+              <button
+                onClick={this.handleFinishReorderClick}
+                className={S.button}
+              >
+                Finish reordering
+              </button>
+              <button
+                onClick={this.handleCancelReorderClick}
+                className={S.button}
+              >
+                Cancel reordering
+              </button>
+            </>
+          ) : null}
         </div>
       </ModalDialog>
     );
@@ -126,11 +243,16 @@ export class ColumnsDialog extends React.Component<{
       timeGroupingUnit,
     } = this.props.model.sortedColumnConfigs[rowIndex];
 
-    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
+    const { name, entity, canGroup, canAggregate, modelInstanceId } =
+      this.columnOptions.get(propertyId)!;
 
-    const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
+    const selectedAggregationOption = aggregationOptions.find(
+      (option) => option.value === aggregationType
+    )!;
 
-    const selectedTimeUnitOption = timeunitOptions.find(option => option.value === timeGroupingUnit)!;
+    const selectedTimeUnitOption = timeunitOptions.find(
+      (option) => option.value === timeGroupingUnit
+    )!;
 
     switch (columnIndex) {
       case 0:
@@ -138,7 +260,9 @@ export class ColumnsDialog extends React.Component<{
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) => this.props.model.setVisible(rowIndex, event.target.checked)}
+            onChange={(event: any) =>
+              this.props.model.setVisible(rowIndex, event.target.checked)
+            }
             checked={isVisible}
           />
         );
@@ -152,23 +276,29 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onChange={(event: any) => this.props.model.setGrouping(rowIndex, event.target.checked, entity)}
+              onChange={(event: any) =>
+                this.props.model.setGrouping(
+                  rowIndex,
+                  event.target.checked,
+                  entity
+                )
+              }
               disabled={!canGroup}
             />
-            <div>
-              {groupingIndex > 0 ? groupingIndex : ""}
-            </div>
+            <div>{groupingIndex > 0 ? groupingIndex : ""}</div>
           </label>
         );
       case 3:
         if (groupingIndex > 0 && entity === "Date") {
           return (
-              <SimpleDropdown
-                options={timeunitOptions}
-                selectedOption={selectedTimeUnitOption}
-                onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
-                className={S.dropdown}
-              />
+            <SimpleDropdown
+              options={timeunitOptions}
+              selectedOption={selectedTimeUnitOption}
+              onOptionClick={(option) =>
+                this.props.model.setTimeGroupingUnit(rowIndex, option.value)
+              }
+              className={S.dropdown}
+            />
           );
         } else {
           return "";
@@ -185,7 +315,9 @@ export class ColumnsDialog extends React.Component<{
             <SimpleDropdown
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
-              onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
+              onOptionClick={(option) =>
+                this.props.model.setAggregation(rowIndex, option.value)
+              }
               className={S.dropdown}
             />
           );
@@ -197,15 +329,15 @@ export class ColumnsDialog extends React.Component<{
     }
   }
 
-  getCellClass(columnIndex: number){
-    let cellClass = S.columnTableCell
-    if(columnIndex === 0 || columnIndex === 2){
-      cellClass += " " + S.checkBoxCell
+  getCellClass(columnIndex: number) {
+    let cellClass = S.columnTableCell;
+    if (columnIndex === 0 || columnIndex === 2) {
+      cellClass += " " + S.checkBoxCell;
     }
     return cellClass;
   }
 
-  @bind renderCell(args: {
+  @bind renderSettingsCell(args: {
     columnIndex: number;
     rowIndex: number;
     style: any;
@@ -217,7 +349,12 @@ export class ColumnsDialog extends React.Component<{
       return (
         <Obsv style={args.style} key={args.key}>
           {() => (
-            <div style={args.style} className={this.getCellClass(args.columnIndex) + " " + rowClassName}>
+            <div
+              style={args.style}
+              className={
+                this.getCellClass(args.columnIndex) + " " + rowClassName
+              }
+            >
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
@@ -236,6 +373,48 @@ export class ColumnsDialog extends React.Component<{
         </Obsv>
       );
     }
+  }
+
+  @bind renderReorderingCell(args: {
+    columnIndex: number;
+    rowIndex: number;
+    style: any;
+    key: any;
+  }): React.ReactNode {
+    const Obsv = Observer as any;
+    return (
+      <Obsv style={args.style} key={args.key}>
+        {() => {
+          const rowClassName = args.rowIndex % 2 === 0 ? "even" : "odd";
+          if (args.rowIndex > 0) {
+            const property =
+              this.temporaryPropertiesReordering[args.rowIndex - 1];
+            return (
+              <div
+                style={args.style}
+                className={cx(S.columnTableCell, rowClassName, {
+                  selected: this.selectedColumnId === property.id,
+                })}
+                key={args.key}
+                onClick={() => this.handleReorderingRowClick(property.id)}
+              >
+                {property.name}
+              </div>
+            );
+          } else {
+            return (
+              <div
+                style={args.style}
+                className={cx(S.columnTableCell, "header")}
+                key={args.key}
+              >
+                {T("Name", "column_config_name")}
+              </div>
+            );
+          }
+        }}
+      </Obsv>
+    );
   }
 }
 
@@ -266,10 +445,10 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        {this.props.columnIndex !== 4 && <div className={S.columnWidthHandle}/>}
+        {this.props.columnIndex !== 4 && (
+          <div className={S.columnWidthHandle} />
+        )}
       </div>
     );
   }
 }
-
-
