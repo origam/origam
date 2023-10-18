@@ -236,7 +236,7 @@ class PgSqlRenderer : SqlRenderer
     
     internal override string Format(string date, string culture)
     {
-        return @$" FORMAT({date}, IIF (FORMAT({date}, 'HH:mm:ss tt', 'en-US' ) = '00:00:00 AM', 'd', ''), '{culture}') ";
+        throw new NotImplementedException();
     }
     
     internal override string CountAggregate()
