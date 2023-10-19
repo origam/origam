@@ -33,7 +33,7 @@
     "@types/leaflet-draw": "^1.0.8",
     "@types/lodash": "^4.14.200",
     "@types/mapbox__geojson-area": "^0.2.5",
-    "@types/numeral": "^2.0.3",
+    "@types/numeral": "^2.0.4",
     "@types/react-color": "^3.0.9",
     "@types/react-draft-wysiwyg": "^1.13.6",
     "@types/react-highlight-words": "^0.16.5",
