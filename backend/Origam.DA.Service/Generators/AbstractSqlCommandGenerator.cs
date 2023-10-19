@@ -3977,7 +3977,7 @@ namespace Origam.DA.Service
             return concatBuilder.ToString();
         } 
         
-        internal  string RenderConcat(SelectParameters selectParameters, bool isInRecursion, bool forceDatabaseCalculation,
+        internal string RenderConcat(SelectParameters selectParameters, bool isInRecursion, bool forceDatabaseCalculation,
             string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences,
             FilterCommandParser filterCommandParser,
             OrderByCommandParser orderByCommandParser)
@@ -3990,8 +3990,7 @@ namespace Origam.DA.Service
             {
                 concatBuilder.Append($"TRIM( {separator} FROM ");
             }
-            SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
-            
+            SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();            
             foreach (string columnName in selectParameters.ColumnsInfo.ColumnNames)
             {
                 DataStructureColumn column = selectParameters.Entity.Column(columnName);
@@ -4007,7 +4006,7 @@ namespace Origam.DA.Service
                 string groupByExpression = "";
                 bool groupByNeeded = false;
                 LookupOrderingInfo customOrderingInfo =
-                    LookupOrderingInfo.TryCreate(selectParameters.CustomOrderings.Orderings, column.Name );
+                    LookupOrderingInfo.TryCreate(selectParameters.CustomOrderings.Orderings, column.Name);
                 ColumnRenderData columnRenderData = RenderDataStructureColumn(
                     selectParameters.DataStructure,
                     selectParameters.Entity,
@@ -4019,7 +4018,6 @@ namespace Origam.DA.Service
                     selectParameters.RowOffset);
                 if (column.DataType == OrigamDataType.Date)
                 {
-                    // string nonNullExpression = $"{sqlRenderer.IsNull()} (FORMAT ('', {Thread.CurrentThread.CurrentCulture.Name}, {columnRenderData.Expression}), '')";
                     string nonNullExpression = $"{sqlRenderer.IsNull()} ({sqlRenderer.Format(columnRenderData.Expression, Thread.CurrentThread.CurrentCulture.Name)}, '')";
                     concatBuilder.Append(nonNullExpression);
                 }
