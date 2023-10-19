@@ -149,12 +149,16 @@ export function onFieldKeyDown(ctx: any) {
             yield*formScreenLifecycle.onRequestScreenReload();
           }
           else if (isAddRecordShortcut(event) && getIsAddButtonVisible(dataView)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
             yield onCreateRowClick(dataView)(event);
           }
           else if (isDeleteRecordShortcut(event) && getIsDelButtonVisible(dataView)) {
             yield onDeleteRowClick(dataView)(event);
           }
           else if (isDuplicateRecordShortcut(event) && getIsCopyButtonVisible(dataView)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
             yield onCopyRowClick(dataView)(event);
           }
           else if (isFilterRecordShortcut(event)) {
