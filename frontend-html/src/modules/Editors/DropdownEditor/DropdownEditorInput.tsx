@@ -42,7 +42,7 @@ export function DropdownEditorInput(props: {
       beh.subscribeToFocusManager(beh.elmInputElement);
     }
     beh.updateTextOverflowState();
-    return ()=> beh.onBlur?.();
+    return ()=> beh.onBlur?.(beh.elmInputElement);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

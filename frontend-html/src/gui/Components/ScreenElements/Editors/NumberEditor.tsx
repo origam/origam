@@ -102,7 +102,7 @@ export class NumberEditor extends React.Component<{
   }
 
   componentWillUnmount() {
-    this.handleBlur(null);
+    this.handleBlur({target: this.inputRef.current});
     this.disposer?.();
   }
 

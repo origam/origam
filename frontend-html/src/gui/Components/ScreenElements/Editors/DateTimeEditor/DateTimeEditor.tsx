@@ -121,7 +121,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   componentWillUnmount() {
-    this.props.onEditorBlur?.(null);
+    this.props.onEditorBlur?.({target: this.elmInput});
     this.disposers.forEach((d) => d());
   }
 
