@@ -59,6 +59,12 @@ public class MsSqlRenderer: SqlRenderer {
     {
         return "ISNULL";
     }
+    
+    internal override string Format(string date, string culture)
+    {
+        return @$" FORMAT({date}, IIF (FORMAT({date}, 'HH:mm:ss tt', 'en-US' ) = '00:00:00 AM', 'd', ''), '{culture}') ";
+    }
+
     internal override string CountAggregate()
     {
         return "COUNT_BIG";
