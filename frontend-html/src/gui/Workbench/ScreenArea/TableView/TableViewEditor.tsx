@@ -55,6 +55,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { DialogInfo } from "model/entities/OpenedScreen";
+import { getNewRecordScreenData } from "model/selectors/getNewRecordScreenData";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -216,7 +217,7 @@ export class TableViewEditor extends React.Component<{
               gridFocusManager.editorBlur = undefined;
             }}
             newRecordScreen={this.props.property?.lookup?.newRecordScreen}
-            onAddNewRecordClick={() => {
+            onAddNewRecordClick={async () => {
               if(!this.props.property?.lookup?.newRecordScreen){
                 throw new Error("newRecordScreen not found on property " + this.props.property?.id);
               }
@@ -225,7 +226,11 @@ export class TableViewEditor extends React.Component<{
               const self = this;
               const workbenchLifecycle = getWorkbenchLifecycle(this.props.property);
               const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
-              runGeneratorInFlowWithHandler({
+              const newRecordScreenData = getNewRecordScreenData(this.props.property);
+              const tablePanelView = getTablePanelView(this.props.property)!;
+              newRecordScreenData.parentTablePanelView = tablePanelView;
+              tablePanelView.isEditing = false;
+              await runGeneratorInFlowWithHandler({
                 ctx: this.props.property,
                 generator: function*() {
                   yield*workbenchLifecycle.openNewForm(
@@ -245,7 +250,7 @@ export class TableViewEditor extends React.Component<{
                     true
                   );
                 }()
-              })
+              });
             }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}

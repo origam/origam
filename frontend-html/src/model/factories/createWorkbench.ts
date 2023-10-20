@@ -37,6 +37,7 @@ import { Notifications } from "model/entities/Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "model/entities/SidebarState";
 import { About } from "model/entities/AboutInfo";
+import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 
 export function createWorkbench() {
   const clock = new Clock();
@@ -57,7 +58,8 @@ export function createWorkbench() {
     sidebarState: new SidebarState(),
     lookupListCache: workbenchLookupListCache,
     lookupMultiEngine,
-    about: new About()
+    about: new About(),
+    newRecordScreenData: new NewRecordScreenData()
   });
   workbenchLookupListCache.startup();
   lookupMultiEngine.startup();
