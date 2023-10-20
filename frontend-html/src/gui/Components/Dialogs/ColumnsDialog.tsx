@@ -100,13 +100,12 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound
   resetOrder() {
-    this.temporaryPropertiesOrder = [
-      ...this.props.model.tableViewProperties,
-    ];
-    this.selectedColumnId = this.temporaryPropertiesOrder[0].id;
+    this.temporaryPropertiesOrder = [...this.props.model.tableViewProperties];
+    this.selectedColumnId = this.temporaryPropertiesOrder[0]?.id || null;
   }
 
   *applyOrder() {
+    if (this.temporaryPropertiesOrder.length === 0) return;
     this.props.model.setOrderIds(
       this.temporaryPropertiesOrder.map((property) => property.id)
     );
@@ -149,16 +148,12 @@ export class ColumnsDialog extends React.Component<{
                   </button>
                 </>
 
-                {this.view === "order" &&
-                this.selectedColumnId !== null ? (
+                {this.view === "order" && this.selectedColumnId !== null ? (
                   <>
                     <button onClick={this.handleOrderUp} className={S.button}>
                       <Icon src={"./icons/noun-chevron-933254.svg"} />
                     </button>
-                    <button
-                      onClick={this.handleOrderDown}
-                      className={S.button}
-                    >
+                    <button onClick={this.handleOrderDown} className={S.button}>
                       <Icon src={"./icons/noun-chevron-933246.svg"} />
                     </button>
                   </>
@@ -249,6 +244,11 @@ export class ColumnsDialog extends React.Component<{
                   rowHeight={rowHeight}
                   width={width}
                   height={height}
+                  scrollToRow={
+                    this.temporaryPropertiesOrder.findIndex(
+                      (property) => property.id === this.selectedColumnId
+                    ) + 1
+                  }
                 />
               )}
             </Observer>
@@ -411,8 +411,7 @@ export class ColumnsDialog extends React.Component<{
         {() => {
           const rowClassName = args.rowIndex % 2 === 0 ? "even" : "odd";
           if (args.rowIndex > 0) {
-            const property =
-              this.temporaryPropertiesOrder[args.rowIndex - 1];
+            const property = this.temporaryPropertiesOrder[args.rowIndex - 1];
             return (
               <div
                 style={args.style}
