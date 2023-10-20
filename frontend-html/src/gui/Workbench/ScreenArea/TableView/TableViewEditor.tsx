@@ -222,12 +222,6 @@ export class TableViewEditor extends React.Component<{
               }
               const newRecordScreen = this.props.property.lookup.newRecordScreen;
               const menuItem = getMainMenuItemById(this.props.property, this.props.property.lookup.newRecordScreen.menuItemId);
-              // onMainMenuItemClick(this.props.property)({
-              //   event: undefined,
-              //   item: menuItem,
-              //   idParameter: "74ba6e7d-6d77-4268-9e73-601a71d8b385",
-              //   isSingleRecordEdit: true,
-              // });
               const self = this;
               const workbenchLifecycle = getWorkbenchLifecycle(this.props.property);
               const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
@@ -236,11 +230,11 @@ export class TableViewEditor extends React.Component<{
                 generator: function*() {
                   yield*workbenchLifecycle.openNewForm(
                     self.props.property!.lookup!.newRecordScreen!.menuItemId,
-                    menuItem.attributes.type,//IMainMenuItemType.FormRefWithSelection,
-                    "New",
+                    menuItem.attributes.type,
+                    menuItem.attributes.label,
                     menuItem.attributes.lazyLoading === "true",
                     dialogInfo,
-                    {"id": "74ba6e7d-6d77-4268-9e73-601a71d8b385"},
+                    {},
                     undefined,
                     undefined,
                     undefined,
@@ -252,8 +246,6 @@ export class TableViewEditor extends React.Component<{
                   );
                 }()
               })
-
-              console.log("Add new click");
             }}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}

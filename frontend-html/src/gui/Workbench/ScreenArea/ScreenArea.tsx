@@ -36,12 +36,35 @@ import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
 }> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
+
+  async function onSaveClick(){
+    await runGeneratorInFlowWithHandler({
+      ctx: props.openedScreen,
+      generator: function*() {
+        const formScreenLifecycle = getFormScreenLifecycle(props.openedScreen.content.formScreen);
+        yield*formScreenLifecycle.onSaveSession();
+        yield*formScreenLifecycle.closeForm();
+      }()
+    });
+  }
+
+  async function onCloseClick(){
+    await runGeneratorInFlowWithHandler({
+      ctx: props.openedScreen,
+      generator: function*() {
+        const formScreenLifecycle = getFormScreenLifecycle(props.openedScreen.content.formScreen);
+        yield*formScreenLifecycle.closeForm();
+      }()
+    });
+  }
 
   function renderActionButtons() {
     const content = props.openedScreen.content;
@@ -111,6 +134,22 @@ export const DialogScreen: React.FC<{
                             {action.caption}
                           </button>
                         ))}
+                        {props.openedScreen.isNewRecordScreen && (
+                          <button
+                            className={S.workflowActionBtn}
+                            onClick={onCloseClick}
+                          >
+                            {T("Close", "button_close")}
+                          </button>
+                        )}
+                        {props.openedScreen.isNewRecordScreen && (
+                          <button
+                            className={S.workflowActionBtn}
+                            onClick={onSaveClick}
+                          >
+                            {T("Save", "save_tool_tip")}
+                          </button>
+                        )}
                     </>
                   ) : (
                     <></>

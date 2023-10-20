@@ -21,7 +21,6 @@ import bind from "bind-decorator";
 import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
 import { handleError } from "model/actions/handleError";
 import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
-import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
 import { getSearcher } from "model/selectors/getSearcher";
@@ -31,7 +30,7 @@ import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemByI
 import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import { findMenu } from "xmlInterpreters/menuXml";
 import { MainMenuContent } from "../MainMenu";
-import { DialogInfo } from "../OpenedScreen";
+import { DialogInfo, OpenedScreen } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
@@ -414,19 +413,20 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingTabItem(id);
     const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
-    const newScreen = yield*createOpenedScreen(
-      this,
-      id,
-      type,
-      existingItem ? existingItem.order + 1 : 0,
-      label,
-      newFormScreen,
-      isLazyLoading,
-      dialogInfo,
-      parameters,
-      isSessionRebirth,
-      isSleepingDirty
-    );
+
+    const newScreen = new OpenedScreen({
+      menuItemId: id,
+      menuItemType: type,
+      order: existingItem ? existingItem.order + 1 : 0,
+      tabTitle: label,
+      content: newFormScreen,
+      dialogInfo: dialogInfo,
+      lazyLoading: isLazyLoading,
+      parameters: parameters,
+      isSleeping: isSessionRebirth,
+      isSleepingDirty: isSleepingDirty,
+      isNewRecordScreen: createNewRecord
+    });
     try {
       openedScreens.pushItem(newScreen);
       if (!isSessionRebirth) {
