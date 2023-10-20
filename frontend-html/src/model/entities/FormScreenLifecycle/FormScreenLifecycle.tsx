@@ -562,11 +562,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId,
       args.initUIResult.workflowTaskId,
-      openedScreen.lazyLoading
+      openedScreen.lazyLoading,
+      args.createNewRecord
     );
-    if (args.createNewRecord) {
-      screen.rootDataViews[0].isHeadless = true;
-    }
     screen.notifications = args.initUIResult.notifications;
     const api = getApi(openedScreen);
     const cacheDependencies = getWorkbench(openedScreen).lookupMultiEngine.cacheDependencies;

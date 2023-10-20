@@ -240,7 +240,8 @@ export function*interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string,
   workflowTaskId: string | null,
-  isLazyLoading: boolean
+  isLazyLoading: boolean,
+  createNewRecord?: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
   const workbenchLifeCycle = getWorkbenchLifecycle(formScreenLifecycle);
@@ -416,6 +417,13 @@ export function*interpretScreenXml(
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
         .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
 
+      function getDefaultPanelView(){
+        if(createNewRecord){
+          return IPanelViewType.Form;
+        }
+        return panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView));
+      }
+
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
@@ -427,10 +435,10 @@ export function*interpretScreenXml(
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
         newRecordView: dataView.attributes.NewRecordView,
-        defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
-        activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
+        defaultPanelView: getDefaultPanelView(),
+        activePanelView: getDefaultPanelView(),
         isMapSupported: dataView.attributes.IsMapSupported === "true",
-        isHeadless: dataView.attributes.IsHeadless === "true",
+        isHeadless: createNewRecord || dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
         hideCopyButton: dataView.attributes.HideCopyButton === "true",
@@ -498,7 +506,7 @@ export function*interpretScreenXml(
       );
       const configurationNode =
         gridConfigurationNodes.length === 1 ? gridConfigurationNodes[0] : undefined;
-      if (configurationNode) {
+      if (!createNewRecord && configurationNode) {
         const defaultView = findStopping(
           configurationNode,
           (n) => n.name === "view" && n.parent.name === "defaultView"
