@@ -555,7 +555,7 @@ export class TablePanelView implements ITablePanelView {
     this.tablePropertyIds.splice(idx2,0, idToMove);
   }
 
-  @action.bound setReorderingIds(ids: any[]) {
+  @action.bound setOrderIds(ids: any[]) {
     this.tablePropertyIds = ids;
   }
 

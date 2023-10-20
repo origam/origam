@@ -39,6 +39,8 @@ import cx from "classnames";
 import { IProperty } from "model/entities/types/IProperty";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
+import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
 
 @observer
 export class ColumnsDialog extends React.Component<{
@@ -51,58 +53,45 @@ export class ColumnsDialog extends React.Component<{
     super(props);
     this.configuration = this.props.model.columnsConfiguration;
     this.columnOptions = this.props.model.columnOptions;
-    this.resetReordering();
+    this.resetOrder();
   }
 
   @observable columnWidths = [70, 220, 110, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
-  @observable view: "settings" | "reordering" = "settings";
+  @observable view: "settings" | "order" = "settings";
 
-  @action.bound handleReorderClick() {
-    this.resetReordering();
-    if(
-      this.temporaryPropertiesReordering.length > 0 && 
-      this.selectedColumnId === null
-    ) {
-      this.selectedColumnId = this.temporaryPropertiesReordering[0].id
-    }
-    this.view = "reordering";
-  }
-
-  @action.bound handleFinishReorderClick() {
-    this.applyReordering();
+  @action.bound handleSettingsTabHandleClick() {
     this.view = "settings";
   }
 
-  @action.bound handleCancelReorderClick() {
-    this.resetReordering();
-    this.view = "settings";
+  @action.bound handleOrderTabHandleClick() {
+    this.view = "order";
   }
 
   @observable selectedColumnId: any = null;
   @computed get selectedColumnIndex() {
-    return this.temporaryPropertiesReordering.findIndex(
+    return this.temporaryPropertiesOrder.findIndex(
       (property) => property.id === this.selectedColumnId
     );
   }
-  @observable temporaryPropertiesReordering: IProperty[] = [];
+  @observable temporaryPropertiesOrder: IProperty[] = [];
 
-  @action.bound handleReorderingRowClick(id: any) {
+  @action.bound handleOrderRowClick(id: any) {
     this.selectedColumnId = id;
   }
 
-  @action.bound handleReorderUp() {
-    const ord = this.temporaryPropertiesReordering;
+  @action.bound handleOrderUp() {
+    const ord = this.temporaryPropertiesOrder;
     const selIndex = this.selectedColumnIndex;
     if (this.selectedColumnId && selIndex > 0) {
       [ord[selIndex], ord[selIndex - 1]] = [ord[selIndex - 1], ord[selIndex]];
     }
   }
 
-  @action.bound handleReorderDown() {
-    const ord = this.temporaryPropertiesReordering;
+  @action.bound handleOrderDown() {
+    const ord = this.temporaryPropertiesOrder;
     const selIndex = this.selectedColumnIndex;
     if (this.selectedColumnId && selIndex < ord.length - 1) {
       [ord[selIndex], ord[selIndex + 1]] = [ord[selIndex + 1], ord[selIndex]];
@@ -110,23 +99,24 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound
-  resetReordering() {
-    this.temporaryPropertiesReordering = [
+  resetOrder() {
+    this.temporaryPropertiesOrder = [
       ...this.props.model.tableViewProperties,
     ];
+    this.selectedColumnId = this.temporaryPropertiesOrder[0].id;
   }
 
-  @action.bound
-  applyReordering() {
-    this.props.model.setReorderingIds(
-      this.temporaryPropertiesReordering.map((property) => property.id)
+  *applyOrder() {
+    this.props.model.setOrderIds(
+      this.temporaryPropertiesOrder.map((property) => property.id)
     );
     const manager = getConfigurationManager(this.props.model.tablePanelView);
-    // TODO: Spinner while api request is running?
-    runGeneratorInFlowWithHandler({
-      ctx: this.props.model.tablePanelView,
-      generator: manager.onColumnOrderChanged.bind(manager)()
-    })
+    yield* manager.onColumnOrderChanged(true);
+  }
+
+  *handleOkClick() {
+    yield* this.applyOrder();
+    this.props.model?.onColumnConfigurationSubmit();
   }
 
   render() {
@@ -137,118 +127,134 @@ export class ColumnsDialog extends React.Component<{
           <CloseButton onClick={this.props.model.onColumnConfCancel} />
         }
         buttonsCenter={
-          <Observer>{() => 
-            <>{this.view === 'settings' ? 
+          <Observer>
+            {() => (
               <>
-                <button
-                  id={"columnConfigOk"}
-                  tabIndex={0}
-                  onClick={(event: any) =>
-                    this.props.model?.onColumnConfigurationSubmit()
-                  }
-                >
-                  {T("OK", "button_ok")}
-                </button>
-                <button onClick={() => this.props.model.onSaveAsClick()}>
-                  {T("Save As...", "column_config_save_as")}
-                </button>
-                <button tabIndex={0} onClick={this.props.model.onColumnConfCancel}>
-                  {T("Cancel", "button_cancel")}
-                </button>
-              </> : null}
-              {this.view === "reordering" ? (
                 <>
-                  {this.selectedColumnId !== null ? <>
-                    <button onClick={this.handleReorderUp} className={S.button}>
-                      <Icon src={"./icons/noun-chevron-933254.svg"} />
-                    </button>
-                    <button onClick={this.handleReorderDown} className={S.button}>
-                      <Icon src={ "./icons/noun-chevron-933246.svg"} />
-                    </button>
-                  </> : null}
                   <button
-                    onClick={this.handleFinishReorderClick}
-                    className={S.button}
+                    id={"columnConfigOk"}
+                    tabIndex={0}
+                    onClick={flow(this.handleOkClick.bind(this))}
                   >
-                    {T('Finish reordering', 'column_reordering_finish')}
+                    {T("OK", "button_ok")}
+                  </button>
+                  <button onClick={() => this.props.model.onSaveAsClick()}>
+                    {T("Save As...", "column_config_save_as")}
                   </button>
                   <button
-                    onClick={this.handleCancelReorderClick}
-                    className={S.button}
+                    tabIndex={0}
+                    onClick={this.props.model.onColumnConfCancel}
                   >
-                    {T('Cancel reordering', 'column_reordering_cancel')}
+                    {T("Cancel", "button_cancel")}
                   </button>
                 </>
-              ) : null}
-            </>
-          }</Observer>
+
+                {this.view === "order" &&
+                this.selectedColumnId !== null ? (
+                  <>
+                    <button onClick={this.handleOrderUp} className={S.button}>
+                      <Icon src={"./icons/noun-chevron-933254.svg"} />
+                    </button>
+                    <button
+                      onClick={this.handleOrderDown}
+                      className={S.button}
+                    >
+                      <Icon src={"./icons/noun-chevron-933246.svg"} />
+                    </button>
+                  </>
+                ) : null}
+              </>
+            )}
+          </Observer>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
+        <TabbedViewHandleRow className={S.tabHandleRow}>
+          <TabbedViewHandle
+            title={T("Settings", "column_config_settings")}
+            isActive={this.view === "settings"}
+            onClick={this.handleSettingsTabHandleClick}
+          >
+            {T("Settings", "column_config_settings")}
+          </TabbedViewHandle>
+          <TabbedViewHandle
+            title={T("Ordering", "column_config_ordering")}
+            isActive={this.view === "order"}
+            onClick={this.handleOrderTabHandleClick}
+          >
+            {T("Ordering", "column_config_ordering")}
+          </TabbedViewHandle>
+        </TabbedViewHandleRow>
+        {this.view === "settings" ? this.renderSettings() : null}
+        {this.view === "order" ? this.renderOrder() : null}
+      </ModalDialog>
+    );
+  }
+
+  renderSettings() {
+    return (
+      <>
         <div className={S.columnTable}>
           <AutoSizer>
             {({ width, height }) => (
               <Observer>
                 {() => (
-                  <>
-                    {this.view === "settings" ? (
-                      <MultiGrid
-                        ref={this.refGrid}
-                        fixedRowCount={1}
-                        cellRenderer={this.renderSettingsCell}
-                        columnCount={5}
-                        rowCount={
-                          1 + this.props.model.sortedColumnConfigs.length
-                        }
-                        columnWidth={({ index }: { index: number }) => {
-                          return this.columnWidths[index];
-                        }}
-                        rowHeight={rowHeight}
-                        width={width}
-                        height={height}
-                      />
-                    ) : null}
-                    {this.view === "reordering" ? (
-                      <MultiGrid
-                        ref={this.refGrid}
-                        fixedRowCount={1}
-                        cellRenderer={this.renderReorderingCell}
-                        columnCount={1}
-                        rowCount={1 + this.temporaryPropertiesReordering.length}
-                        columnWidth={width - 20}
-                        rowHeight={rowHeight}
-                        width={width}
-                        height={height}
-                      />
-                    ) : null}
-                  </>
+                  <MultiGrid
+                    ref={this.refGrid}
+                    fixedRowCount={1}
+                    cellRenderer={this.renderSettingsCell}
+                    columnCount={5}
+                    rowCount={1 + this.props.model.sortedColumnConfigs.length}
+                    columnWidth={({ index }: { index: number }) => {
+                      return this.columnWidths[index];
+                    }}
+                    rowHeight={rowHeight}
+                    width={width}
+                    height={height}
+                  />
                 )}
               </Observer>
             )}
           </AutoSizer>
         </div>
-        {this.view === "settings" ? (
-          <div className={S.lockedColumns}>
-            {T("Locked columns count", "column_config_locked_columns_count")}
-            <input
-              className={S.lockedColumnsInput}
-              type="number"
-              min={0}
-              value={"" + this.configuration.fixedColumnCount}
-              onChange={this.props.model.handleFixedColumnsCountChange}
-            />
-          </div>
-        ) : null}
-        <div className={S.reordering}>
-          {this.view === "settings" ? (
-            <button onClick={this.handleReorderClick} className={S.button}>
-              {T('Reorder', 'column_reordering_reorder')}
-            </button>
-          ) : null}
-          
+        <div className={S.lockedColumns}>
+          {T("Locked columns count", "column_config_locked_columns_count")}
+          <input
+            className={S.lockedColumnsInput}
+            type="number"
+            min={0}
+            value={"" + this.configuration.fixedColumnCount}
+            onChange={this.props.model.handleFixedColumnsCountChange}
+          />
         </div>
-      </ModalDialog>
+      </>
+    );
+  }
+
+  renderOrder() {
+    return (
+      <div className={S.columnTable}>
+        <AutoSizer>
+          {({ width, height }) => (
+            <Observer>
+              {() => (
+                <MultiGrid
+                  ref={this.refGrid}
+                  fixedRowCount={1}
+                  cellRenderer={this.renderOrderCell}
+                  columnCount={1}
+                  rowCount={1 + this.temporaryPropertiesOrder.length}
+                  columnWidth={width - 20}
+                  rowHeight={rowHeight}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </Observer>
+          )}
+        </AutoSizer>
+      </div>
     );
   }
 
@@ -393,7 +399,7 @@ export class ColumnsDialog extends React.Component<{
     }
   }
 
-  @bind renderReorderingCell(args: {
+  @bind renderOrderCell(args: {
     columnIndex: number;
     rowIndex: number;
     style: any;
@@ -406,7 +412,7 @@ export class ColumnsDialog extends React.Component<{
           const rowClassName = args.rowIndex % 2 === 0 ? "even" : "odd";
           if (args.rowIndex > 0) {
             const property =
-              this.temporaryPropertiesReordering[args.rowIndex - 1];
+              this.temporaryPropertiesOrder[args.rowIndex - 1];
             return (
               <div
                 style={args.style}
@@ -414,7 +420,7 @@ export class ColumnsDialog extends React.Component<{
                   selected: this.selectedColumnId === property.id,
                 })}
                 key={args.key}
-                onClick={() => this.handleReorderingRowClick(property.id)}
+                onClick={() => this.handleOrderRowClick(property.id)}
               >
                 {property.name}
               </div>

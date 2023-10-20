@@ -161,7 +161,7 @@ export class ColumnConfigurationModel {
     const aggregationsBefore =
       this.tablePanelView?.aggregations.aggregationList;
     const groupingWasOnBefore =
-      this.tablePanelView?.groupingConfiguration.isGrouping;
+      this.tablePanelView?.groupingConfiguration.isGrouping;      
     configuration.apply(this.tablePanelView);
     const groupingIsOnNow =
       this.tablePanelView?.groupingConfiguration.isGrouping;
@@ -235,8 +235,8 @@ export class ColumnConfigurationModel {
   }
 
   @action.bound
-  setReorderingIds(ids: any[]) {
-    this.tablePanelView.setReorderingIds(ids);
+  setOrderIds(ids: any[]) {
+    this.tablePanelView.setOrderIds(ids);
   }
 
   @computed get tableViewProperties() {
