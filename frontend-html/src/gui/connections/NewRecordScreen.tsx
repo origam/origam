@@ -24,6 +24,39 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import S from "gui/Workbench/ScreenArea/ScreenArea.module.scss";
 import { T } from "utils/translation";
 import React from "react";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { DialogInfo } from "model/entities/OpenedScreen";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { IProperty } from "model/entities/types/IProperty";
+
+export class NewRecordScreen {
+  private _width: number;
+  private _height: number;
+  private _menuItemId: string;
+
+  constructor(args: {
+    width: number,
+    height: number,
+    menuItemId: string}
+  ) {
+    this._width = args.width;
+    this._height = args.height;
+    this._menuItemId = args.menuItemId;
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
+  }
+
+  get menuItemId() {
+    return this._menuItemId;
+  }
+}
 
 export function getNewRecordScreenButtons(openedScreen: IOpenedScreen) {
 
@@ -74,4 +107,41 @@ export function getNewRecordScreenButtons(openedScreen: IOpenedScreen) {
       </button>
     </>
   );
+}
+
+export function makeOnAddNewRecordClick(property: IProperty){
+  return async function onAddNewRecordClick(){
+    if(!property.lookup?.newRecordScreen){
+      throw new Error("newRecordScreen not found on property " + property.id);
+    }
+    const newRecordScreen = property.lookup.newRecordScreen;
+    const menuItem = getMainMenuItemById(property, property.lookup.newRecordScreen.menuItemId);
+    const workbenchLifecycle = getWorkbenchLifecycle(property);
+    const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
+    const newRecordScreenData = getNewRecordScreenData(property);
+    const tablePanelView = getTablePanelView(property)!;
+    newRecordScreenData.parentTablePanelView = tablePanelView;
+    tablePanelView.isEditing = false;
+    await runGeneratorInFlowWithHandler({
+      ctx: property,
+      generator: function*() {
+        yield*workbenchLifecycle.openNewForm(
+          property!.lookup!.newRecordScreen!.menuItemId,
+          menuItem.attributes.type,
+          menuItem.attributes.label,
+          menuItem.attributes.lazyLoading === "true",
+          dialogInfo,
+          {},
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
+          true
+        );
+      }()
+    });
+  }
 }

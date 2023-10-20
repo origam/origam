@@ -19,38 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IDropDownParameter, IDropDownType, ILookup, ILookupData } from "./types/ILookup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export enum IIdState {
   LOADING = "LOADING",
   ERROR = "ERROR",
-}
-
-export class NewRecordScreen {
-  private _width: number;
-  private _height: number;
-  private _menuItemId: string;
-  
-  constructor(args: {
-    width: number,
-    height: number,
-    menuItemId: string}
-  ) {
-    this._width = args.width;
-    this._height = args.height;
-    this._menuItemId = args.menuItemId;
-  }
-
-  get width() {
-    return this._width;
-  }
-
-  get height() {
-    return this._height;
-  }
-  
-  get menuItemId() {
-    return this._menuItemId;
-  }
 }
 
 export class Lookup implements ILookup {

@@ -47,15 +47,7 @@ import { getGridFocusManager } from "model/entities/GridFocusManager";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 import S from "./TableViewEditor.module.scss";
-import { NewRecordScreen } from "model/entities/Lookup";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
-import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { DialogInfo } from "model/entities/OpenedScreen";
-import { getNewRecordScreenData } from "model/selectors/getNewRecordScreenData";
+import { makeOnAddNewRecordClick } from "gui/connections/NewRecordScreen";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -217,41 +209,7 @@ export class TableViewEditor extends React.Component<{
               gridFocusManager.editorBlur = undefined;
             }}
             newRecordScreen={this.props.property?.lookup?.newRecordScreen}
-            onAddNewRecordClick={async () => {
-              if(!this.props.property?.lookup?.newRecordScreen){
-                throw new Error("newRecordScreen not found on property " + this.props.property?.id);
-              }
-              const newRecordScreen = this.props.property.lookup.newRecordScreen;
-              const menuItem = getMainMenuItemById(this.props.property, this.props.property.lookup.newRecordScreen.menuItemId);
-              const self = this;
-              const workbenchLifecycle = getWorkbenchLifecycle(this.props.property);
-              const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
-              const newRecordScreenData = getNewRecordScreenData(this.props.property);
-              const tablePanelView = getTablePanelView(this.props.property)!;
-              newRecordScreenData.parentTablePanelView = tablePanelView;
-              tablePanelView.isEditing = false;
-              await runGeneratorInFlowWithHandler({
-                ctx: this.props.property,
-                generator: function*() {
-                  yield*workbenchLifecycle.openNewForm(
-                    self.props.property!.lookup!.newRecordScreen!.menuItemId,
-                    menuItem.attributes.type,
-                    menuItem.attributes.label,
-                    menuItem.attributes.lazyLoading === "true",
-                    dialogInfo,
-                    {},
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    true,
-                    true
-                  );
-                }()
-              });
-            }}
+            onAddNewRecordClick={makeOnAddNewRecordClick(this.props.property!)}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>

@@ -31,7 +31,7 @@ import { DropDownColumn } from "model/entities/DropDownColumn";
 import { FilterConfiguration } from "model/entities/FilterConfiguration";
 import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "model/entities/FormScreen";
-import { Lookup, NewRecordScreen } from "model/entities/Lookup";
+import { Lookup } from "model/entities/Lookup";
 import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
 import { Property } from "model/entities/Property";
 import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
@@ -97,6 +97,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import {getCommonTabIndex, TabIndex} from "../model/entities/TabIndexOwner";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 
 function getPropertyParameters(node: any) {
