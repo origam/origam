@@ -19,12 +19,4 @@
       asi:name="Attachment_GetId"
       dsfsf:passWhenParameterMatch="false" />
   </dsfs:DataStructureFilterSet>
-  <dsfsf:DataStructureFilterSetFilter
-    asi:abstract="false"
-    dsfsf:entity="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/500d0e9a-25eb-4ed8-aef5-fc220f40b00a"
-    dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
-    x:id="cf97e6cd-2b76-4eae-8286-a34e8ddbb261"
-    asi:name="Attachment_GetId"
-    x:parentId="646db93b-f8ed-4095-8c83-de49d75dc130"
-    dsfsf:passWhenParameterMatch="false" />
 </x:file>
