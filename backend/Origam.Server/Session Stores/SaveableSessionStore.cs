@@ -197,7 +197,7 @@ namespace Origam.Server
             return listOfChanges;
         }
 
-        public override ArrayList CreateObject(string entity, IDictionary<string, object> values, 
+        public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
             IDictionary<string, object> parameters, string requestingGrid)
         {
             if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
@@ -225,7 +225,7 @@ namespace Origam.Server
 
                 DataRow newRow = table.Rows.Find(key);
                 NewRowToDataList(newRow);
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, 
+                List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
                     newRow, Operation.Create, this.Data.HasErrors, 
                     this.Data.HasChanges(), true);
 
@@ -233,9 +233,18 @@ namespace Origam.Server
             }
         }
 
-        public override ArrayList UpdateObject(string entity, object id, string property, object newValue)
+        public override IEnumerable<ChangeInfo> UpdateObject(
+            string entity, object id, string property, object newValue)
         {
-            ArrayList result = new ArrayList();
+            return UpdateObjectWithDependenies(entity, id,
+				property, newValue, true);
+        }
+
+        public IEnumerable<ChangeInfo>
+            UpdateObjectWithDependenies(
+            string entity, object id, string property, object newValue,
+            bool isTopLevel)
+        {
             InitializeFieldDependencies();
             DataTable table = GetTable(entity, this.Data);
             Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
@@ -248,10 +257,10 @@ namespace Origam.Server
                     foreach(Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
                     {
                         string dependentColumnName = ColumnNameById(table, dependentColumnId);
-                        IList changes;
                         try
                         {
-                            changes = this.UpdateObject(entity, id, dependentColumnName, null);
+                            this.UpdateObjectWithDependenies(
+                                entity, id,	dependentColumnName, null, false);
                         }
                         catch (NullReferenceException e) 
                         {
@@ -259,22 +268,22 @@ namespace Origam.Server
                                 String.Format(Resources.ErrorDependentColumnNotFound,
                                 dependentColumnName, property, entity, e.Message));
                         }
-
-                        foreach (object o in changes)
-                        {
-                            result.Add(o);
-                        }
                     }
                 }
             }
 
-            IList baseChanges = base.UpdateObject(entity, id, property, newValue);
-            foreach (object o in baseChanges)
+            // call actual UpdateObject, do rowstates only for toplevel
+            // (last) update
+            if (isTopLevel)
             {
-                result.Add(o);
+                return base.UpdateObject(entity, id,
+                    property, newValue);
             }
-
-            return result;
+            else 
+            {
+                base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
+                return new List<ChangeInfo>();
+            }
         }
 
         private static string ColumnNameById(DataTable table, Guid columnId)

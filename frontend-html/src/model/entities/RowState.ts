@@ -23,12 +23,11 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
-import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
+import { IRowState, IRowStateColumnItem, IRowStateItem } from "./types/IRowState";
 import { FlowBusyMonitor } from "utils/flow";
 import { handleError } from "model/actions/handleError";
 import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
-import { CancellablePromise } from "mobx/lib/api/flow";
 
 const defaultRowStatesToFetch = 100;
 
@@ -40,19 +39,28 @@ export enum IIdState {
 export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
   suppressWorkingStatus: boolean = false;
-  visibleRowIds: string[] = [];
+  dataViewVisibleRows: Map<string,string[]> = new Map();
+  disposers: (()=> void)[] = [];
 
   constructor(debouncingDelayMilliseconds?: number) {
     this.triggerLoadDebounced = _.debounce(
       this.triggerLoadImm,
-      debouncingDelayMilliseconds == undefined ? 200 : debouncingDelayMilliseconds);
-    visibleRowsChanged.subscribe((visibleRows) => {
+      debouncingDelayMilliseconds == undefined ? 0 : debouncingDelayMilliseconds);
+    const disposer = visibleRowsChanged.subscribe((visibleRows) => {
       const dataSource = getDataSource(this);
       if (!visibleRows || dataSource.identifier !== visibleRows.dataSourceId) {
         return;
       }
-      this.visibleRowIds = visibleRows.rowIds;
+      // The event is sometimes raised with no ids, then some ids, then no ids...
+      // Ignoring the no ids makes sure that the triggerLoadDebounced will not run with no ids
+      // when some are actually visible. This problem was not really observed so may be the
+      // "if" statement could be removed if this results in more RowState calls then necessary.
+      if(visibleRows.rowIds.length > 0) {
+        this.dataViewVisibleRows.set(visibleRows.dataViewModelInstanceId, visibleRows.rowIds);
+        this.triggerLoadDebounced();
+      }
     });
+    this.disposers.push(disposer);
   }
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -78,11 +86,18 @@ export class RowState implements IRowState {
     if(loadAll){
       return this.requests.values()
     }
-    return this.visibleRowIds.length === 0
-      ? Array.from(this.requests.values()).slice(-defaultRowStatesToFetch)
-      : this.visibleRowIds
+    if (this.dataViewVisibleRows.size === 0) {
+      return Array.from(this.requests.values()).slice(-defaultRowStatesToFetch);
+    } else {
+      let requestForVisibleRows: RowStateRequest[] = [];
+      for (let visibleRowIds of this.dataViewVisibleRows.values()) {
+        const requestsForDataView = visibleRowIds
             .map(rowId => this.requests.get(rowId))
-            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>;
+            .filter(x => x !== undefined) as unknown as IterableIterator<RowStateRequest>
+        requestForVisibleRows = [...requestForVisibleRows, ...requestsForDataView];
+      }
+      return requestForVisibleRows;
+    }
   }
 
   *triggerLoad(loadAll: boolean): any {
@@ -242,6 +257,10 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = false;
     this.temporaryRequestsValues = undefined;
     // TODO: Wait when something is currently loading.
+  }
+
+  dispose(){
+    this.disposers.forEach(x => x());
   }
 
   parent?: any;

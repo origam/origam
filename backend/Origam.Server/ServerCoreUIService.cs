@@ -382,7 +382,7 @@ namespace Origam.Server
         public IList DeleteObjectInOrderedList(DeleteObjectInOrderedListInput input)
         {
             SessionStore ss = sessionManager.GetSession(new Guid(input.SessionFormIdentifier));
-            ArrayList changes = ss.UpdateObjectBatch(input.Entity, input.OrderProperty, input.UpdatedOrderValues);
+            List<ChangeInfo> changes = ss.UpdateObjectBatch(input.Entity, input.OrderProperty, input.UpdatedOrderValues);
             changes.AddRange(ss.DeleteObject(input.Entity, input.Id));
             Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
                 SecurityManager.CurrentPrincipal.Identity.Name,
@@ -927,7 +927,7 @@ namespace Origam.Server
             sessionStore.PendingChanges = null;
             return changes ?? new ArrayList();
         }
-        public ArrayList GetChanges(ChangesInput input)
+        public List<ChangeInfo> GetChanges(ChangesInput input)
         {
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);

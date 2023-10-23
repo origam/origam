@@ -45,7 +45,7 @@ import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBg
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -102,7 +102,7 @@ export class TableViewEditor extends React.Component<{
       ? shadeHexColor(customBackgroundColor, -0.1)
       : customBackgroundColor;
 
-    const isFirsColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
+    const isFirstColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
     const gridFocusManager = getGridFocusManager(this.props.property);
     switch (this.props.property!.column) {
       case "Number":
@@ -121,7 +121,7 @@ export class TableViewEditor extends React.Component<{
             onClick={undefined}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirsColumn, "Number")}
+            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Number")}
             subscribeToFocusManager={(editor, onBlur) =>{
                 gridFocusManager.activeEditor = editor
                 gridFocusManager.editorBlur = onBlur;
@@ -144,7 +144,7 @@ export class TableViewEditor extends React.Component<{
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             wrapText={false}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirsColumn, "Text")}
+            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
@@ -198,6 +198,7 @@ export class TableViewEditor extends React.Component<{
             xmlNode={this.props.property!.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
+            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
@@ -285,15 +286,4 @@ export class TableViewEditor extends React.Component<{
   render() {
     return <Provider property={this.props.property}>{this.getEditor()}</Provider>;
   }
-}
-
-// Makes sure the editor alignment will be the same as the table cell alignment.
-// Needed on columns where the alignment can be set in the model.
-function resolveCellAlignment(customStyle: { [p: string]: string } | undefined, isFirsColumn: boolean, type: string){
-  let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);
-  const style = customStyle ?Object.assign({},customStyle) :{};
-  style["paddingRight"] = cellAlignment.paddingRight - 1 + "px";
-  style["paddingLeft"] = cellAlignment.paddingLeft + "px";
-  style["textAlign"] = cellAlignment.alignment;
-  return style;
 }

@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2023 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,30 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-.hBox {
-  flex-shrink: 0;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 
-  width: 100%;
-  display: flex;
-  flex-direction: row;
+namespace Origam.Server.Middleware;
 
-  &.noWidth,
-  &.noHeight {
-    flex-grow: 1;
-  }
-}
 
-.vBox {
-  flex-shrink: 0;
+// Request will continue if not authenticated
+class OptionalTokenAuthenticationMiddleware : UserApiTokenAuthenticationMiddleware
+{
+    public OptionalTokenAuthenticationMiddleware(RequestDelegate next, IAuthenticationSchemeProvider schemes) : base(next, schemes)
+    {
+    }
 
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  &.noHeight,
-  &.noWidth {
-    flex-grow: 1;
-  }
+    protected override async Task HandleUnauthorizedRequest(HttpContext context)
+    {
+        await _next(context);
+    }
 }

@@ -52,12 +52,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     return this.monitor.isWorkingDelayed;
   }
 
-  disposers: any[] = [];
-
   @action.bound
   start(): void {
     if (isLazyLoading(this)) {
-      this.disposers.push(this.startSelectedRowReaction());
+      this.startSelectedRowReaction(true);
     }
   }
 
@@ -91,6 +89,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     if (fireImmediately) {
       await this.onSelectedRowIdChangeImm();
     }
+
+    if (this._selectedRowReactionDisposer){
+      return;
+    }
+
+    this.stopSelectedRowReaction();
 
     const self = this;
     return (this._selectedRowReactionDisposer = reaction(
@@ -223,9 +227,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       } else {
         const parentRowId = getParentRowId(this);
         const masterRowId = getMasterRowId(this);
+        let entity = getEntity(this);
         data = !parentRowId || !masterRowId
           ? []
-          : yield getFormScreen(this).getData(getEntity(this), dataView.modelInstanceId, parentRowId, masterRowId);
+          : yield getFormScreen(this).getData(entity, dataView.modelInstanceId, parentRowId, masterRowId);
       }
       yield dataView.setRecords(data);
       dataView.selectFirstRow();
