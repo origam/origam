@@ -29,7 +29,7 @@ import { compareStrings } from "../../../utils/string";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { requestFocus } from "utils/focus";
-import { NewRecordScreen } from "model/entities/Lookup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export const  dropdownPageSize = 100;
 

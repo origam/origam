@@ -158,20 +158,16 @@ export function makeOnAddNewRecordClick(property: IProperty){
       ctx: property,
       generator: function*() {
         yield*workbenchLifecycle.openNewForm(
-          property!.lookup!.newRecordScreen!.menuItemId,
-          menuItem.attributes.type,
-          menuItem.attributes.label,
-          menuItem.attributes.lazyLoading === "true",
-          dialogInfo,
-          {},
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          true,
-          true
+          {
+            id: property!.lookup!.newRecordScreen!.menuItemId,
+            type: menuItem.attributes.type,
+            label: menuItem.attributes.label,
+            isLazyLoading: menuItem.attributes.lazyLoading === "true",
+            dialogInfo: dialogInfo,
+            parameters: { },
+            isSingleRecordEdit: true,
+            createNewRecord: true
+          }
         );
       }()
     });

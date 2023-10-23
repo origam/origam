@@ -33,7 +33,7 @@ import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
-import { NewRecordScreen } from "model/entities/Lookup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;

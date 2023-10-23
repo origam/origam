@@ -624,7 +624,7 @@ namespace Origam.Workbench.Services
 			bool isAvailable = authorizationProvider.Authorize(principal, newRecordScreenBinding.AuthorizationContext)
 			                    && authorizationProvider.Authorize(principal, newRecordScreenBinding.MenuItem.AuthorizationContext)
 			                    && param.IsFeatureOn(newRecordScreenBinding.MenuItem.Features);
-			if(!isAvailable)
+			if (!isAvailable)
 			{
 				return null;
 			}

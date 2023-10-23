@@ -37,18 +37,20 @@ import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemByI
 
 export interface IOpenNewForm {
   (
-    id: string,
-    type: IMainMenuItemType,
-    label: string,
-    isLazyLoading: boolean,
-    dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any },
-    parentContext: any,
-    requestParameters: object,
-    formSessionId?: string,
-    isSessionRebirth?: boolean,
-    registerSession?: true,
-    refreshOnReturnType?: IRefreshOnReturnType
+    args: {
+      id: string,
+      type: IMainMenuItemType,
+      label: string,
+      isLazyLoading: boolean,
+      dialogInfo: IDialogInfo | undefined,
+      parameters: { [key: string]: any },
+      parentContext?: any,
+      requestParameters?: object | undefined,
+      formSessionId?: string,
+      isSessionRebirth?: boolean,
+      isSleepingDirty?: boolean,
+      refreshOnReturnType?: IRefreshOnReturnType,
+    }
   ): Generator; //boolean
 }
 
@@ -123,18 +125,17 @@ export function processActionResult2(dep: {
           } = request;
           const dialogInfo = isModalDialog ? new DialogInfo(dialogWidth, dialogHeight) : undefined;
           yield*dep.openNewForm(
-            objectId,
-            typeString,
-            caption || dep.getActionCaption(),
-            lazyLoading,
-            dialogInfo,
-            parameters,
-            dep.parentContext,
-            actionResultItem.request,
-            undefined,
-            undefined,
-            undefined,
-            refreshOnReturnType,
+            {
+              id: objectId,
+              type: typeString,
+              label: caption || dep.getActionCaption(),
+              isLazyLoading: lazyLoading,
+              dialogInfo: dialogInfo,
+              parameters: parameters,
+              parentContext: dep.parentContext,
+              requestParameters: actionResultItem.request,
+              refreshOnReturnType: refreshOnReturnType,
+            }
           );
           break;
         }

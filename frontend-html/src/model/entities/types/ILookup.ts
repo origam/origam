@@ -18,7 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IDropDownColumn } from "./IDropDownColumn";
-import { NewRecordScreen } from "model/entities/Lookup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
+
 
 export enum IDropDownType {
   EagerlyLoadedGrid = "EagerlyLoadedGrid",

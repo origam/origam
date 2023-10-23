@@ -58,8 +58,7 @@ export function createWorkbench() {
     sidebarState: new SidebarState(),
     lookupListCache: workbenchLookupListCache,
     lookupMultiEngine,
-    about: new About(),
-    newRecordScreenData: new NewRecordScreenData()
+    about: new About()
   });
   workbenchLookupListCache.startup();
   lookupMultiEngine.startup();

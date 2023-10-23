@@ -54,21 +54,22 @@ export interface IWorkbenchLifecycle {
 
   mainMenuItemClickHandler: EventHandler;
 
-  openNewForm(
-    id: string,
-    type: IMainMenuItemType,
-    label: string,
-    isLazyLoading: boolean,
-    dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any },
-    parentContext?: any,
-    requestParameters?: object | undefined,
-    formSessionId?: string,
-    isSessionRebirth?: boolean,
-    isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType,
-    isSingleRecordEdit?: boolean,
-    createNewRecord?: boolean
+  openNewForm(args: {
+      id: string,
+      type: IMainMenuItemType,
+      label: string,
+      isLazyLoading: boolean,
+      dialogInfo: IDialogInfo | undefined,
+      parameters: { [key: string]: any },
+      parentContext?: any,
+      requestParameters?: object | undefined,
+      formSessionId?: string,
+      isSessionRebirth?: boolean,
+      isSleepingDirty?: boolean,
+      refreshOnReturnType?: IRefreshOnReturnType,
+      isSingleRecordEdit?: boolean,
+      createNewRecord?: boolean
+    }
   ): Generator;
 
   openNewUrl(url: string, title: string): Generator;
