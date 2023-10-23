@@ -88,7 +88,7 @@ const OpCombo: React.FC<{
               });
             }}
           >
-            {op.caption} 👹
+            {op.caption}
           </FilterSettingsComboBoxItem>
         ))}
     </FilterSettingsComboBox>
