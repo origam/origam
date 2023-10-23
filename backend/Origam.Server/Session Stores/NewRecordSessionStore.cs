@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Globalization;
 using Origam.DA;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -32,55 +33,44 @@ namespace Origam.Server;
 
 public class NewRecordSessionStore : FormSessionStore
 {
-    public NewRecordSessionStore(IBasicUIService service, UIRequest request, string name, FormReferenceMenuItem menuItem, Analytics analytics) : base(service, request, name, menuItem, analytics)
+    public NewRecordSessionStore(IBasicUIService service, UIRequest request,
+        string name, FormReferenceMenuItem menuItem, Analytics analytics) 
+        : base(service, request, name, menuItem, analytics)
     {
     }
 
-    public NewRecordSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics) : base(service, request, name, analytics)
+    public NewRecordSessionStore(IBasicUIService service, UIRequest request,
+        string name, Analytics analytics)
+        : base(service, request, name, analytics)
     {
     }
 
     public override void Init()
     {
         IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        var menuItem = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(Request.ObjectId))) as AbstractMenuItem;
-        FormReferenceMenuItem formMenuItem = menuItem as FormReferenceMenuItem;
-        var screen = persistence.SchemaProvider.RetrieveInstance<FormControlSet>(formMenuItem.ScreenId);
-        var dataStructure = persistence.SchemaProvider.RetrieveInstance<DataStructure>(screen.DataSourceId);
-        var entity = dataStructure.Entities[0] as DataStructureEntity;//?.Entity as IDataEntity;
-            
+        IPersistenceProvider schemaProvider = persistence.SchemaProvider;
+        var formMenuItem = schemaProvider.RetrieveInstance<FormReferenceMenuItem>(new Guid(Request.ObjectId));
+        var screen = schemaProvider.RetrieveInstance<FormControlSet>(formMenuItem.ScreenId);
+        var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(screen.DataSourceId);
+        var rootEntity = ((DataStructureEntity)dataStructure.Entities[0])!.RootEntity;
+           
         var dataService  = Workbench.Services.CoreServices.DataServiceFactory.GetDataService();
         var dataSet = dataService.GetEmptyDataSet(
-            entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
-        var table = dataSet.Tables[entity.Name];
+            rootEntity.ParentItemId, CultureInfo.InvariantCulture);
+        var table = dataSet.Tables[rootEntity.Name];
         var row = table.NewRow();
             
         DatasetTools.ApplyPrimaryKey(row);
         DatasetTools.UpdateOrigamSystemColumns(
             row, true, SecurityManager.CurrentUserProfile().Id);
         row.Table.NewRow();
-            
-        // try
-        // {
+        
         Workbench.Services.CoreServices.DataService.Instance.StoreData(
-            dataStructureId: entity.RootEntity.ParentItemId,
+            dataStructureId: rootEntity.ParentItemId,
             data: row.Table.DataSet,
             loadActualValuesAfterUpdate: false,
             transactionId: null);
-        // }
-        // catch(DBConcurrencyException ex)
-        // {
-        //     if(string.IsNullOrEmpty(ex.Message) 
-        //        && (ex.InnerException != null))
-        //     {
-        //         return Conflict(ex.InnerException.Message);
-        //     }
-        //     return Conflict(ex.Message);
-        // }
-            
-        dataSet.Tables[entity.Name].Rows.Add(row);
-            
+        dataSet.Tables[rootEntity.Name].Rows.Add(row);
         SetDataSource(dataSet);
-        // base.Init();
     }
 }
