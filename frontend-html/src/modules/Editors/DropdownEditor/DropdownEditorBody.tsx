@@ -243,19 +243,25 @@ export class DropdownEditorTable extends  React.Component<{
     return {windowWidth, visibleColumnWidthSum};
   }
 
+  private getCellWidth(cellText: string, cellWidth: number) {
+    const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
+    const currentCellWidth =
+      Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
+    if (currentCellWidth > cellWidth) {
+      cellWidth = currentCellWidth;
+    }
+    return cellWidth;
+  }
+
   private calculateColumnWidths() {
     let widths: number[] = [];
     for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
-      let cellWidth = 100;
+      let cellWidth = this.showAddNewRecord
+        ? this.getCellWidth(T("Add New Record", "add_new_record"), 100)
+        : 100;
       for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
         const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
-        const currentCellWidth =
-          Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
-        const customFieldStyle = this.props.drivers.customFieldStyle;
-        if (currentCellWidth > cellWidth) {
-          cellWidth = currentCellWidth;
-        }
+        cellWidth = this.getCellWidth(cellText, cellWidth);
       }
       widths.push(cellWidth);
     }
