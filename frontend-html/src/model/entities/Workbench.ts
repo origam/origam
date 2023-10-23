@@ -66,7 +66,7 @@ export class Workbench implements IWorkbench {
   favorites: Favorites = null as any;
   sidebarState: SidebarState = null as any;
   about: About = null as any;
-  newRecordScreenData: NewRecordScreenData = null as any;
+  newRecordScreenData?: NewRecordScreenData;
 
   @observable isFullScreen: boolean = false;
 

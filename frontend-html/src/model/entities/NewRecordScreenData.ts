@@ -17,8 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { IProperty } from "model/entities/types/IProperty";
 
 export class NewRecordScreenData {
-  parentTablePanelView: ITablePanelView | undefined;
+  constructor(
+      public comboBoxProperty: IProperty,
+      public comboBoxRow: any[]
+    ) {
+    }
 }

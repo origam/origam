@@ -47,14 +47,13 @@ export interface IWorkbenchData {
   about: About;
   lookupListCache: LookupListCacheMulti;
   lookupMultiEngine: IMultiLookupEngine;
-  newRecordScreenData: NewRecordScreenData
+  newRecordScreenData?: NewRecordScreenData
 }
 
 export interface IWorkbench extends IWorkbenchData {
   $type_IWorkbench: 1;
   isFullScreen: boolean;
 
-  // loggedUserName: any
   mainMenuEnvelope: IMainMenuEnvelope;
 
   run(): Generator;

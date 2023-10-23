@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
-import { getNewRecordScreenData } from "model/selectors/getNewRecordScreenData";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import S from "gui/Workbench/ScreenArea/ScreenArea.module.scss";
@@ -29,6 +28,10 @@ import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { DialogInfo } from "model/entities/OpenedScreen";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { IProperty } from "model/entities/types/IProperty";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getWorkbench } from "model/selectors/getWorkbench";
+import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export class NewRecordScreen {
   private _width: number;
@@ -61,20 +64,47 @@ export class NewRecordScreen {
 export function getNewRecordScreenButtons(openedScreen: IOpenedScreen) {
 
   function afterClose() {
-    const newRecordScreenData = getNewRecordScreenData(openedScreen);
-    if (newRecordScreenData.parentTablePanelView) {
-      newRecordScreenData.parentTablePanelView.isEditing = true;
-      newRecordScreenData.parentTablePanelView = undefined;
+    const workbench = getWorkbench(openedScreen);
+    const newRecordScreenData = workbench.newRecordScreenData;
+    if (!newRecordScreenData) {
+      throw new Error("newRecordScreenData was not found");
     }
+    const comboBoxTablePanelView = getTablePanelView(newRecordScreenData.comboBoxProperty);
+    comboBoxTablePanelView.isEditing = true;
+    workbench.newRecordScreenData = undefined;
+  }
+
+  function*updateComboBoxValue(insertedRowId: string) {
+    const workbench = getWorkbench(openedScreen);
+    const newRecordScreenData = workbench.newRecordScreenData;
+    if (!newRecordScreenData) {
+      throw new Error("newRecordScreenData was not found");
+    }
+    yield onFieldChange(newRecordScreenData.comboBoxProperty)({
+      event: undefined,
+      row: newRecordScreenData.comboBoxRow,
+      property: newRecordScreenData.comboBoxProperty,
+      value: insertedRowId,
+    });
   }
 
   async function onSaveClick() {
     await runGeneratorInFlowWithHandler({
       ctx: openedScreen,
       generator: function*() {
+        const rootDataView = openedScreen.content.formScreen?.rootDataViews[0];
+        if (!rootDataView) {
+          throw new Error("rootDataView not found")
+        }
+        if (rootDataView.dataTable.rows.length !== 1) {
+          throw new Error("first row not found")
+        }
+        const firstRow = rootDataView.dataTable.rows[0];
+        const insertedRowId = rootDataView.dataTable.getRowId(firstRow);
         const formScreenLifecycle = getFormScreenLifecycle(openedScreen.content.formScreen);
         yield*formScreenLifecycle.onSaveSession();
         yield*formScreenLifecycle.closeForm();
+        yield*updateComboBoxValue(insertedRowId);
         afterClose();
       }()
     });
@@ -111,16 +141,18 @@ export function getNewRecordScreenButtons(openedScreen: IOpenedScreen) {
 
 export function makeOnAddNewRecordClick(property: IProperty){
   return async function onAddNewRecordClick(){
-    if(!property.lookup?.newRecordScreen){
+    if (!property.lookup?.newRecordScreen) {
       throw new Error("newRecordScreen not found on property " + property.id);
     }
     const newRecordScreen = property.lookup.newRecordScreen;
     const menuItem = getMainMenuItemById(property, property.lookup.newRecordScreen.menuItemId);
     const workbenchLifecycle = getWorkbenchLifecycle(property);
     const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
-    const newRecordScreenData = getNewRecordScreenData(property);
+
+    const selectedRow = getDataView(property).selectedRow!;
+    getWorkbench(property).newRecordScreenData = new NewRecordScreenData(property, selectedRow);
+
     const tablePanelView = getTablePanelView(property)!;
-    newRecordScreenData.parentTablePanelView = tablePanelView;
     tablePanelView.isEditing = false;
     await runGeneratorInFlowWithHandler({
       ctx: property,
