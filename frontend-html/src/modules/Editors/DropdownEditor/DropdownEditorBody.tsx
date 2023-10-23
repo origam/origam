@@ -58,16 +58,37 @@ export function DropdownEditorBody() {
     <Observer>
       {() => (
         <div ref={ref} className={S.body} onMouseDown={beh.handleBodyMouseDown}>
-          <DropdownEditorTable
-            drivers={drivers}
-            dataTable={dataTable}
-            rectCtrl={rectCtrl}
-            beh={beh}
-            rowHeight={rowHeight}
-          />
+          { beh.addNewDropDownVisible
+            ? <AddNewDropDown
+                rowHeight={rowHeight}/>
+            : <DropdownEditorTable
+                drivers={drivers}
+                dataTable={dataTable}
+                rectCtrl={rectCtrl}
+                beh={beh}
+                rowHeight={rowHeight}
+            />
+          }
         </div>
       )}
     </Observer>
+  );
+}
+
+function AddNewDropDown(props: {rowHeight: number}) {
+  const beh = useContext(CtxDropdownEditor).behavior;
+
+  return (
+    <div
+      style={{height: props.rowHeight}}
+      className={S.table}>
+      <div
+        className={"cell withCursor"}
+        onClick={beh.onAddNewRecordClick}
+      >
+        {T("Add New Record", "add_new_record")}
+      </div>
+    </div>
   );
 }
 
@@ -93,23 +114,15 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   get rowCount(){
-    return this.showAddNewRecord
-      ? 1 // will show single row: "Add New Record"
-      : this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
+    return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
   }
 
   get columnCount(){
-    return this.showAddNewRecord
-      ? 1
-      : this.props.drivers.driverCount;
+      return this.props.drivers.driverCount;
   }
 
   get hasHeader(){
     return this.columnCount > 1
-  }
-
-  get showAddNewRecord(){
-    return this.props.beh.hasNewScreenButton && this.props.dataTable.rowCount === 0;
   }
 
   get height(){
@@ -141,16 +154,6 @@ export class DropdownEditorTable extends  React.Component<{
 
   renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
-    if (this.showAddNewRecord) {
-      return(
-        <div
-          style={style}
-          className={"cell"}
-          onClick={this.props.beh.onAddNewRecordClick}
-        >
-          {T("Add New Record", "add_new_record")}
-        </div>);
-    }
     return (
       <Prov
         key={key}
@@ -243,25 +246,18 @@ export class DropdownEditorTable extends  React.Component<{
     return {windowWidth, visibleColumnWidthSum};
   }
 
-  private getCellWidth(cellText: string, cellWidth: number) {
-    const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
-    const currentCellWidth =
-      Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
-    if (currentCellWidth > cellWidth) {
-      cellWidth = currentCellWidth;
-    }
-    return cellWidth;
-  }
-
   private calculateColumnWidths() {
     let widths: number[] = [];
     for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
-      let cellWidth = this.showAddNewRecord
-        ? this.getCellWidth(T("Add New Record", "add_new_record"), 100)
-        : 100;
+      let cellWidth = 100;
       for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
         const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        cellWidth = this.getCellWidth(cellText, cellWidth);
+        const customPadding = parsePaddingValue(this.props.drivers.customFieldStyle?.paddingLeft);
+        const currentCellWidth =
+          Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding + customPadding;
+        if (currentCellWidth > cellWidth) {
+          cellWidth = currentCellWidth;
+        }
       }
       widths.push(cellWidth);
     }

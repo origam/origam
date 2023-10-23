@@ -84,8 +84,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private newRecordScreen?: NewRecordScreen;
   public onAddNewRecordClick?: () => void;
 
-  get hasNewScreenButton(){
+  get hasNewScreenButton() {
     return !!this.newRecordScreen;
+  }
+
+  get addNewDropDownVisible() {
+    return this.hasNewScreenButton && this.dataTable.rowCount === 0
   }
 
   constructor(args: IBehaviorData) {
@@ -234,6 +238,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Enter":
+        if (this.addNewDropDownVisible) {
+          this.onAddNewRecordClick?.();
+        }
         if (this.isDropped && !this.isWorking) {
           this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           this.dropUp();
@@ -501,6 +508,3 @@ decorate(DropdownEditorBehavior, {
   isReadOnly: observable,
 });
 
-// export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
-//   "IDropdownEditorBehavior"
-// );

@@ -57,6 +57,7 @@ export function DropdownEditor(props: {
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
   const workbench = useContext(MobXProviderContext).workbench as IWorkbench;
+  const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   return (
     <Observer>
       {() => (
