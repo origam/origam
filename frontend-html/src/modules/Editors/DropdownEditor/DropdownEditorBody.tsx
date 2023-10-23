@@ -31,6 +31,7 @@ import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/Dropdo
 import { BoundingRect } from "react-measure";
 import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { observable } from "mobx";
+import { T } from "utils/translation";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);
@@ -147,7 +148,7 @@ export class DropdownEditorTable extends  React.Component<{
           className={"cell"}
           onClick={this.props.beh.onAddNewRecordClick}
         >
-          Add New Record
+          {T("Add New Record", "add_new_record")}
         </div>);
     }
     return (
