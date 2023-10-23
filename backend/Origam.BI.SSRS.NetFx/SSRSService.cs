@@ -126,5 +126,12 @@ namespace Origam.BI.SSRS
         {
             this.traceTaskInfo = traceTaskInfo;
         }
+
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format,
+            Hashtable parameters, string dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

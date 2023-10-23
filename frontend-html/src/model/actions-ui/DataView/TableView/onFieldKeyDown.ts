@@ -41,6 +41,10 @@ import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
+import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
+import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -53,6 +57,7 @@ export function onFieldKeyDown(ctx: any) {
     try {
       const dataView = getDataView(ctx);
       const tablePanelView = getTablePanelView(ctx);
+      const gridFocusManager = getGridFocusManager(tablePanelView);
       tablePanelView.handleEditorKeyDown(event);
       switch (event.key) {
         case "Tab": {
@@ -87,7 +92,7 @@ export function onFieldKeyDown(ctx: any) {
             tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
             yield*flushCurrentRowData(ctx)();
-            getGridFocusManager(ctx).focusEditor();
+            gridFocusManager.focusEditor();
           }
           break;
         }
@@ -116,6 +121,7 @@ export function onFieldKeyDown(ctx: any) {
         }
         case "F2": {
           tablePanelView.setEditing(false);
+          gridFocusManager.activeEditor = undefined;
           tablePanelView.triggerOnFocusTable();
           break;
         }
@@ -123,31 +129,36 @@ export function onFieldKeyDown(ctx: any) {
           if(!event.closedADropdown){
             yield onEscapePressed(dataView, event);
             tablePanelView.setEditing(false);
+            gridFocusManager.activeEditor = undefined;
             tablePanelView.clearCurrentCellEditData();
             tablePanelView.triggerOnFocusTable();
           }
           break;
         }
         default: {
-          if (isSaveShortcut(event)) {
+          if (isSaveShortcut(event) && geScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
             tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
             const formScreenLifecycle = getFormScreenLifecycle(ctx);
             yield*formScreenLifecycle.onSaveSession();
           }
-          else if (isRefreshShortcut(event)) {
+          else if (isRefreshShortcut(event) && geScreenActionButtonsState(ctx)?.isRefreshButtonVisible) {
             tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
             const formScreenLifecycle = getFormScreenLifecycle(ctx);
             yield*formScreenLifecycle.onRequestScreenReload();
           }
-          else if (isAddRecordShortcut(event)) {
+          else if (isAddRecordShortcut(event) && getIsAddButtonVisible(dataView)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
             yield onCreateRowClick(dataView)(event);
           }
-          else if (isDeleteRecordShortcut(event)) {
+          else if (isDeleteRecordShortcut(event) && getIsDelButtonVisible(dataView)) {
             yield onDeleteRowClick(dataView)(event);
           }
-          else if (isDuplicateRecordShortcut(event)) {
+          else if (isDuplicateRecordShortcut(event) && getIsCopyButtonVisible(dataView)) {
+            tablePanelView.setEditing(false);
+            yield*flushCurrentRowData(ctx)();
             yield onCopyRowClick(dataView)(event);
           }
           else if (isFilterRecordShortcut(event)) {

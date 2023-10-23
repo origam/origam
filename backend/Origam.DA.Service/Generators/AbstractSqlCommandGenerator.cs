@@ -27,6 +27,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Extensions;
@@ -999,12 +1000,6 @@ namespace Origam.DA.Service
             var rowLimit = selectParameters.RowLimit;
             var rowOffset = selectParameters.RowOffset;
             bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
-            bool hasLookupField = selectParameters.Entity.EntityDefinition
-                .EntityColumns
-                .Cast<ISchemaItem>()
-                .OfType<LookupField>()
-                .Any(field =>
-                    selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
 
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1259,7 +1254,7 @@ namespace Origam.DA.Service
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
             }
 
-            if (hasLookupField && customGrouping != null)
+            if (customGrouping != null && GroupingUsesLookup(customGrouping, entity))
             {
                 var columnNames = selectParameters.ColumnsInfo.ColumnNames;
                 if (selectParameters.AggregatedColumns.Count > 0)
@@ -1277,6 +1272,27 @@ namespace Origam.DA.Service
             }
 
             return finalString;
+        }
+
+        private static bool GroupingUsesLookup(Grouping customGrouping, DataStructureEntity entity)
+        {
+            var allLookupColumnNames = entity
+                .ChildrenRecursive.OfType<DataStructureEntity>()
+                .Concat(new[] { entity })
+                .SelectMany(entity =>
+                {
+                    var dataStructureColumnNames = entity.ChildItems.ToGeneric()
+                        .OfType<DataStructureColumn>()
+                        .Where(x => x.UseLookupValue)
+                        .Select(x => x.Name);
+                    var entityColumnNames = entity.EntityDefinition.EntityColumns
+                        .OfType<LookupField>()
+                        .Select(lookupField => lookupField.Name);
+                    return dataStructureColumnNames.Concat(entityColumnNames);
+                });
+
+            return customGrouping != null &&
+                   allLookupColumnNames.Contains(customGrouping.GroupBy);
         }
 
         private void PostProcessCustomCommandParserWhereClause(
@@ -1814,6 +1830,8 @@ namespace Origam.DA.Service
                 forceDatabaseCalculation: forceDatabaseCalculation);
         }
 
+        private record GroupByData(DataStructureColumn Column, string Expression);
+        
         internal bool RenderSelectColumns(SelectParameters selectParameters,
             StringBuilder sqlExpression,
             StringBuilder orderByBuilder, StringBuilder groupByBuilder, 
@@ -1833,7 +1851,7 @@ namespace Origam.DA.Service
             var dynamicParameters = selectParameters.Parameters;
             var customFilters = selectParameters.CustomFilters;
             
-            DataStructureColumn groupByColumn = null;
+            GroupByData groupByData = null;
             int i = 0;
             List<string> group = new List<string>();
             SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
@@ -1841,21 +1859,9 @@ namespace Origam.DA.Service
             string orderByExpression="";
             if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
             {
-                List<ColumnRenderItem> columnRenderData = new List<ColumnRenderItem>();
-                foreach (string columnName in columnsInfo.ColumnNames)
-                {
-                    DataStructureColumn column = entity.Column(columnName);
-                    columnRenderData.Add(
-                        new ColumnRenderItem
-                        {
-                            SchemaItem = column.Field,
-                            Entity = column.Entity ?? entity,
-                            RenderSqlForDetachedFields = columnsInfo.RenderSqlForDetachedFields
-                        });
-                }
                 sqlExpression.Append(" ");
-                sqlExpression.Append(RenderConcat(columnRenderData, sqlValueFormatter.RenderString(", "),
-                    replaceParameterTexts, dynamicParameters, selectParameterReferences));
+                sqlExpression.Append(RenderConcat(selectParameters, isInRecursion, forceDatabaseCalculation, sqlValueFormatter.RenderString(", "),
+                    replaceParameterTexts, dynamicParameters, selectParameterReferences, filterCommandParser, orderByCommandParser));
                 return false;
             }
             i = 0;
@@ -1863,10 +1869,6 @@ namespace Origam.DA.Service
                 GetSortedColumns(entity, columnsInfo?.ColumnNames, aggregatedColumns);
             foreach (DataStructureColumn column in dataStructureColumns)
             {
-                if (customGrouping != null && column.Name == customGrouping.GroupBy)
-                {
-                    groupByColumn = column;
-                }
                 LookupOrderingInfo customOrderingInfo =
                     LookupOrderingInfo.TryCreate(customOrderings.Orderings, column.Name );
                 string groupByExpression = "";
@@ -1877,6 +1879,10 @@ namespace Origam.DA.Service
                         columnsInfo ?? ColumnsInfo.Empty, column,
                         customOrderingInfo, filterCommandParser, orderByCommandParser, 
                         selectParameters.RowOffset);
+                if (customGrouping != null && column.Name == customGrouping.GroupBy)
+                {
+                    groupByData = new GroupByData(column, groupByExpression);
+                }
                 string expression;
                 if (columnRenderData != null)
                 {
@@ -1978,20 +1984,26 @@ namespace Origam.DA.Service
                             new Key(customGrouping.LookupId)) as DataServiceDataLookup;
 
                     var resultExpression = 
-                        RenderLookupColumnExpression(ds, entity, groupByColumn,
+                        RenderLookupColumnExpression(ds, entity, groupByData.Column,
                         replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
                     sqlExpression.Append(" , ");
                     sqlExpression.Append(resultExpression);
                     sqlExpression.Append($" AS {ColumnData.GroupByCaptionColumn} ");
                 }
-
-                groupByNeeded = true;
-                if (!group.Any(groupByExpression => 
-                        groupByExpression.Contains(customGrouping.GroupBy) ||
-                        groupByExpression == orderByExpression))
+                else
                 {
-                    group.Add(customGrouping.GroupBy);
+                    if (!group.Any(groupByExpression => 
+                            groupByExpression.Contains(customGrouping.GroupBy) ||
+                            groupByExpression == orderByExpression))
+                    {
+                        if (groupByData.Column.Name == customGrouping.GroupBy &&
+                            !group.Contains(groupByData.Expression))
+                        {
+                            group.Add(groupByData.Expression);
+                        }
+                    }
                 }
+                groupByNeeded = true;
             }
             if (order.Count > 0)
             {
@@ -2326,9 +2338,11 @@ namespace Origam.DA.Service
                 resultExpression = RenderLookupColumnExpression(ds, entity, column,
                     replaceParameterTexts, dynamicParameters,
                     selectParameterReferences);
-                // if we would group by lookuped column, we use original column in group-by clause
-                groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
-                    column.Entity == null ? entity : column.Entity,
+                var field = column.Field is LookupField lookupField 
+                    ? lookupField.Field 
+                    : column.Field;
+                groupExpression = RenderExpression(field,
+                    column.Entity ?? entity,
                     replaceParameterTexts,
                     dynamicParameters, selectParameterReferences);
             }
@@ -3961,8 +3975,65 @@ namespace Origam.DA.Service
                 concatBuilder.Append(")");
             }
             return concatBuilder.ToString();
+        } 
+        
+        internal string RenderConcat(SelectParameters selectParameters, bool isInRecursion, bool forceDatabaseCalculation,
+            string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences,
+            FilterCommandParser filterCommandParser,
+            OrderByCommandParser orderByCommandParser)
+        {
+            int i = 0;
+            StringBuilder concatBuilder = new StringBuilder();
+            bool shouldTrimSeparator = !string.IsNullOrEmpty(separator) &&
+                                       selectParameters.ColumnsInfo.ColumnNames.Count > 1;
+            if (shouldTrimSeparator)
+            {
+                concatBuilder.Append($"TRIM( {separator} FROM ");
+            }
+            SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
+            foreach (string columnName in selectParameters.ColumnsInfo.ColumnNames)
+            {
+                DataStructureColumn column = selectParameters.Entity.Column(columnName);
+                if (i > 0)
+                {
+                    concatBuilder.Append(" " + sqlRenderer.StringConcatenationChar + " ");
+                    if (separator != null)
+                    {
+                        concatBuilder.Append(separator);
+                        concatBuilder.Append(" " + sqlRenderer.StringConcatenationChar + " ");
+                    }
+                }
+                string groupByExpression = "";
+                bool groupByNeeded = false;
+                LookupOrderingInfo customOrderingInfo =
+                    LookupOrderingInfo.TryCreate(selectParameters.CustomOrderings.Orderings, column.Name);
+                ColumnRenderData columnRenderData = RenderDataStructureColumn(
+                    selectParameters.DataStructure,
+                    selectParameters.Entity,
+                    replaceParameterTexts, dynamicParameters,
+                    selectParameters.SortSet, parameterReferences, isInRecursion,
+                    forceDatabaseCalculation, ref groupByExpression, order, ref groupByNeeded,
+                    selectParameters.ColumnsInfo ?? ColumnsInfo.Empty, column,
+                    customOrderingInfo, filterCommandParser, orderByCommandParser, 
+                    selectParameters.RowOffset);
+                if (column.DataType == OrigamDataType.Date)
+                {
+                    string nonNullExpression = $"{sqlRenderer.IsNull()} ({sqlRenderer.Format(columnRenderData.Expression, Thread.CurrentThread.CurrentCulture.Name)}, '')";
+                    concatBuilder.Append(nonNullExpression);
+                }
+                else
+                {
+                    string nonNullExpression = $"{sqlRenderer.IsNull()} ({columnRenderData.Expression}, '')";
+                    concatBuilder.Append(nonNullExpression);
+                }
+                i++;
+            }
+            if (shouldTrimSeparator)
+            {
+                concatBuilder.Append(")");
+            }
+            return concatBuilder.ToString();
         }
-
 
         internal string PostProcessCustomCommandParserWhereClauseSegment(
             string input, DataStructureEntity entity,
@@ -4120,6 +4191,7 @@ namespace Origam.DA.Service
     {
         public bool RenderSqlForDetachedFields { get; set; }
         public ISchemaItem SchemaItem { get; set; }
+        public DataStructureColumn Column { get; set; }
         public DataStructureEntity Entity { get; set; }
     }
     

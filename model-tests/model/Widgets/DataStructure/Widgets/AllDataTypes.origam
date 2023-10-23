@@ -4,6 +4,7 @@
   xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
@@ -29,6 +30,19 @@
       asi:name="AllDataTypes"
       dse:relationType="Normal"
       dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refTagInputSourceId/7142586a-1798-4f99-af0a-9166319d11e0"
+        dsc:hideInOutput="false"
+        x:id="064a4ffa-4576-4e9d-b52f-7e161cb5e84c"
+        dsc:lookup="Widgets/DataLookup/Widgets/TagInputSource_Label_GetId.origam#TagInputSource_Label_GetId/991a8bec-5169-4506-9457-7f91c27bb5fd"
+        asi:name="TagInputSourceLabel_DataStructure"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="true"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
       <dse:DataStructureEntity
         asi:abstract="false"
         dse:allFields="true"

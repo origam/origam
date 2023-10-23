@@ -8,23 +8,15 @@
   <dsfs:DataStructureFilterSet
     asi:abstract="false"
     dsfs:dynamic="false"
-    x:id="5e3f2d11-7558-45db-8fbf-aad3064311f0"
+    x:id="058b705d-9722-4645-9d2d-b6271d3da197"
     asi:name="GetById"
     x:parentId="04a07967-4b59-4c14-8320-e6d073f6f77f">
     <dsfsf:DataStructureFilterSetFilter
       asi:abstract="false"
       dsfsf:entity="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/500d0e9a-25eb-4ed8-aef5-fc220f40b00a"
       dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
-      x:id="4e136bbb-a9f1-4405-b6c5-c6e23b8a46ec"
+      x:id="0c2fc182-3331-40b1-bfe9-8f8c7a1ffa67"
       asi:name="Attachment_GetId"
       dsfsf:passWhenParameterMatch="false" />
   </dsfs:DataStructureFilterSet>
-  <dsfsf:DataStructureFilterSetFilter
-    asi:abstract="false"
-    dsfsf:entity="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/500d0e9a-25eb-4ed8-aef5-fc220f40b00a"
-    dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
-    x:id="cf97e6cd-2b76-4eae-8286-a34e8ddbb261"
-    asi:name="Attachment_GetId"
-    x:parentId="646db93b-f8ed-4095-8c83-de49d75dc130"
-    dsfsf:passWhenParameterMatch="false" />
 </x:file>

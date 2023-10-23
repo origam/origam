@@ -98,7 +98,7 @@ export function XmlBuildDropdownEditor(props: {
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
-  onBlur?: () => void;
+  onBlur?: (target: any) => void;
   newRecordScreen? : NewRecordScreen;
   onAddNewRecordClick?: () => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;

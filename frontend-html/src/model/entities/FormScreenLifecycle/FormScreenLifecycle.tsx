@@ -1033,7 +1033,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const childEntities = getAllBindingChildren(targetDataView)
-        .filter(dataView => getIsAddButtonVisible(dataView))
+        .filter(dataView => dataView.showAddButton)
         .map((dataView) => getEntity(dataView)
         );
 

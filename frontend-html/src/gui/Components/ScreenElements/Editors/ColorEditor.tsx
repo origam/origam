@@ -34,7 +34,7 @@ export default class ColorEditor extends React.Component<{
   isReadOnly?: boolean;
   onChange?: (value: string | null) => void;
   onFocus?: () => void;
-  onBlur?: () => void;
+  onBlur?: (event: any) => void;
   onKeyDown?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
@@ -68,7 +68,7 @@ export default class ColorEditor extends React.Component<{
   }
 
   componentWillUnmount() {
-    this.props.onBlur?.();
+    this.props.onBlur?.({target: this.elmInput});
   }
 
   machine = interpret(
@@ -175,7 +175,7 @@ export default class ColorEditor extends React.Component<{
             this.elmInput?.select();
           },
           signalComponentBlur: (ctx, event) => {
-            this.props.onBlur?.();
+            this.props.onBlur?.({target: this.elmInput});
           },
         },
         guards: {

@@ -89,6 +89,13 @@ namespace Origam.BI.FastReport
             }
         }
 
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
+
         public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
         {
             throw new NotImplementedException();

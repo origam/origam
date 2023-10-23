@@ -61,6 +61,10 @@ import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
+import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
+import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 
 
 @inject(({property, formPanelView}) => {
@@ -347,11 +351,7 @@ export class FormViewEditor extends React.Component<{
             }
             return;
           }
-          if (isAddRecordShortcut(event)) {
-            await onCreateRowClick(dataView)(event);
-            return;
-          }
-          if (isSaveShortcut(event)){
+          if (isSaveShortcut(event) && geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {
@@ -362,7 +362,7 @@ export class FormViewEditor extends React.Component<{
             });
             return;
           }
-          if (isRefreshShortcut(event)){
+          if (isRefreshShortcut(event) && geScreenActionButtonsState(dataView)?.isRefreshButtonVisible) {
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {
@@ -373,19 +373,19 @@ export class FormViewEditor extends React.Component<{
             });
             return;
           }
-          if (isAddRecordShortcut(event)) {
+          if (isAddRecordShortcut(event) && getIsAddButtonVisible(dataView)) {
             await onCreateRowClick(dataView)(event);
             return;
           }
-          if (isDeleteRecordShortcut(event)) {
+          if (isDeleteRecordShortcut(event) && getIsDelButtonVisible(dataView)) {
             await onDeleteRowClick(dataView)(event);
             return;
           }
-          if (isDuplicateRecordShortcut(event)) {
+          if (isDuplicateRecordShortcut(event) && getIsCopyButtonVisible(dataView)) {
             await onCopyRowClick(dataView)(event);
             return;
           }
-          if (isFilterRecordShortcut(event)) {
+          if (isFilterRecordShortcut(event) && !dataView.isHeadless) {
             await onFilterButtonClick(dataView)(event);
             return;
           }
