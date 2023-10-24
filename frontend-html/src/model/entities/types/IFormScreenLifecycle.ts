@@ -93,7 +93,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   updateTotalRowCount(dataView: IDataView): Promise<any>;
 
-  onRequestScreenClose(isDueToError?: boolean): Generator;
+  onRequestScreenClose(closeWithoutSaving?: boolean): Generator;
 
   clearAutoRefreshInterval(): void;
 

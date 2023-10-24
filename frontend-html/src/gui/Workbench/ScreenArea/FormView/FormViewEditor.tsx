@@ -67,6 +67,7 @@ import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButton
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { onSaveClick } from "gui/connections/NewRecordScreen";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 
 @inject(({property, formPanelView}) => {
@@ -344,6 +345,7 @@ export class FormViewEditor extends React.Component<{
         ctx: this.props.property,
         action: async () => {
           dataView.formFocusManager.stopAutoFocus();
+          const openedScreen = getOpenedScreen(this.props.property);
           if (event.key === "Tab") {
             DomEvent.preventDefault(event);
             if (event.shiftKey) {
@@ -392,6 +394,10 @@ export class FormViewEditor extends React.Component<{
             return;
           }
           if (event.key === "Escape") {
+            if(openedScreen.isNewRecordScreen){
+              onScreenTabCloseClick(openedScreen)(event, true);
+              return;
+            }
             await onEscapePressed(dataView, event);
             return;
           }
@@ -400,7 +406,6 @@ export class FormViewEditor extends React.Component<{
           }
           if (event.key === "Enter") {
             await this.props.onEditorBlur?.();
-            const openedScreen = getOpenedScreen(this.props.property);
             if(openedScreen.isNewRecordScreen){
               await onSaveClick(openedScreen);
               return;

@@ -180,7 +180,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield*this.executeAction(gridId, entity, action, selectedItems);
   }
 
-  *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
+  *onRequestScreenClose(closeWithoutSaving?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
     for (let dataView of formScreen.dataViews) {
       yield onFieldBlur(dataView)();
@@ -188,7 +188,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     // Just wait if there is some data manipulation in progress.
     yield formScreen.dataUpdateCRS.runAsync(() => Promise.resolve());
-    if (isDueToError || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
+    if (closeWithoutSaving || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield*this.closeForm();
       return;
     }
