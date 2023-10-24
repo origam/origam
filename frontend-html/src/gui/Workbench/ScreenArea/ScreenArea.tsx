@@ -40,6 +40,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
   bottomButtons: JSX.Element | null;
+  showCloseButton: boolean
 }> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
@@ -83,7 +84,9 @@ export const DialogScreen: React.FC<{
               !!window.localStorage.getItem("debugKeepProgressIndicatorsOn")
             }
             titleButtons={
-              <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
+            props.showCloseButton
+              ? <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
+              : null
             }
             buttonsCenter={null}
             buttonsLeft={null}

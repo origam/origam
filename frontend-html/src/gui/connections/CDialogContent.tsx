@@ -39,6 +39,7 @@ export class CDialogContent extends React.Component {
           <DialogScreen
             openedScreen={item}
             bottomButtons={item.isNewRecordScreen ? getNewRecordScreenButtons(item) : null}
+            showCloseButton={!item.isNewRecordScreen}
             key={`${item.menuItemId}@${item.order}`}
           />
         )}
