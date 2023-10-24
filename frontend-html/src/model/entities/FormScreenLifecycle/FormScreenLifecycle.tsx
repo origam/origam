@@ -404,7 +404,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           const filtersDisplayed = getTablePanelView(rootDataView)!.filterConfiguration
             .isFilterControlsDisplayed
           if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
-              rootDataView.formFocusManager.refocusLast();
+              rootDataView.gridFocusManager.refocusLastFilter();
           }
         }
       ),
