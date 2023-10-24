@@ -21,9 +21,9 @@ Front end custom httml.
 
 Front end custom mobile app backed by Origam.
 
-![image (3) - kopie](https://github.com/origam/origam/assets/147499074/40ba5bdc-2624-4416-b25d-5d3283ac9858)
-
+![PIE-Backend](https://github.com/origam/origam/assets/147499074/40ba5bdc-2624-4416-b25d-5d3283ac9858)
 
 ![PIE-HTTML frontend](https://github.com/origam/origam/assets/147499074/4ee3ba61-8a5f-466b-8e25-7c6429b98ba8)
 
-![PIE-mobile](https://github.com/origam/origam/assets/147499074/cc1e7e12-e138-4225-b6a0-9825031d4532)
+
+![PIE-mobile](https://github.com/origam/origam/assets/147499074/da30a889-5836-4131-a4ce-17459feaa6c5)
