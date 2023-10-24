@@ -179,7 +179,7 @@
   "column_config_config_name": "Název:",
   "column_config_name_empty": "Jméno nemůže být prázdné",
   "column_config_settings": "Nastavení",
-  "column_config_ordering": "Pořadí",
+  "column_config_order": "Pořadí",
   "calendar_week": "{0}. týden",
   "calendar_monday": "Pondělí",
   "calendar_tuesday": "Úterý",
