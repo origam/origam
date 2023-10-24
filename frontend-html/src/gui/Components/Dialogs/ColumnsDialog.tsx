@@ -42,6 +42,9 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
 
+// It would be more neat to solve by onScrollbarPresenceChange handler of react-virtualized Grid (TODO)
+const SCROLLBAR_SIZE = 20;
+
 @observer
 export class ColumnsDialog extends React.Component<{
   model: ColumnConfigurationModel;
@@ -56,7 +59,7 @@ export class ColumnsDialog extends React.Component<{
     this.resetOrder();
   }
 
-  @observable columnWidths = [70, 220, 110, 150, 90];
+  @observable columnWidths = [70, 220, 110, 150, 90 - SCROLLBAR_SIZE];
 
   refGrid = React.createRef<MultiGrid>();
 
@@ -98,6 +101,45 @@ export class ColumnsDialog extends React.Component<{
     }
   }
 
+  @action.bound handleSelectUp() {
+    const ord = this.temporaryPropertiesOrder;
+    const selIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selIndex > 0) {
+      this.selectedColumnId = ord[selIndex - 1].id;
+    }
+  }
+
+  @action.bound handleSelectDown() {
+    const ord = this.temporaryPropertiesOrder;
+    const selIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selIndex < ord.length - 1) {
+      this.selectedColumnId = ord[selIndex + 1].id;
+    }
+  }
+
+  @action.bound handleOrderKeyDown(event: any) {
+    switch (event.key) {
+      case "ArrowUp":
+        if (event.ctrlKey) {
+          event.preventDefault();
+          this.handleOrderUp();
+        } else {
+          event.preventDefault();
+          this.handleSelectUp();
+        }
+        break;
+      case "ArrowDown":
+        if (event.ctrlKey) {
+          event.preventDefault();
+          this.handleOrderDown();
+        } else {
+          event.preventDefault();
+          this.handleSelectDown();
+        }
+        break;
+    }
+  }
+
   @action.bound
   resetOrder() {
     this.temporaryPropertiesOrder = [...this.props.model.tableViewProperties];
@@ -129,35 +171,22 @@ export class ColumnsDialog extends React.Component<{
           <Observer>
             {() => (
               <>
-                <>
-                  <button
-                    id={"columnConfigOk"}
-                    tabIndex={0}
-                    onClick={flow(this.handleOkClick.bind(this))}
-                  >
-                    {T("OK", "button_ok")}
-                  </button>
-                  <button onClick={() => this.props.model.onSaveAsClick()}>
-                    {T("Save As...", "column_config_save_as")}
-                  </button>
-                  <button
-                    tabIndex={0}
-                    onClick={this.props.model.onColumnConfCancel}
-                  >
-                    {T("Cancel", "button_cancel")}
-                  </button>
-                </>
-
-                {this.view === "order" && this.selectedColumnId !== null ? (
-                  <>
-                    <button onClick={this.handleOrderUp} className={S.button}>
-                      <Icon src={"./icons/noun-chevron-933254.svg"} />
-                    </button>
-                    <button onClick={this.handleOrderDown} className={S.button}>
-                      <Icon src={"./icons/noun-chevron-933246.svg"} />
-                    </button>
-                  </>
-                ) : null}
+                <button
+                  id={"columnConfigOk"}
+                  tabIndex={0}
+                  onClick={flow(this.handleOkClick.bind(this))}
+                >
+                  {T("OK", "button_ok")}
+                </button>
+                <button onClick={() => this.props.model.onSaveAsClick()}>
+                  {T("Save As...", "column_config_save_as")}
+                </button>
+                <button
+                  tabIndex={0}
+                  onClick={this.props.model.onColumnConfCancel}
+                >
+                  {T("Cancel", "button_cancel")}
+                </button>
               </>
             )}
           </Observer>
@@ -229,31 +258,45 @@ export class ColumnsDialog extends React.Component<{
 
   renderOrder() {
     return (
-      <div className={S.columnTable}>
-        <AutoSizer>
-          {({ width, height }) => (
-            <Observer>
-              {() => (
-                <MultiGrid
-                  ref={this.refGrid}
-                  fixedRowCount={1}
-                  cellRenderer={this.renderOrderCell}
-                  columnCount={1}
-                  rowCount={1 + this.temporaryPropertiesOrder.length}
-                  columnWidth={width - 20}
-                  rowHeight={rowHeight}
-                  width={width}
-                  height={height}
-                  scrollToRow={
-                    this.temporaryPropertiesOrder.findIndex(
-                      (property) => property.id === this.selectedColumnId
-                    ) + 1
-                  }
-                />
-              )}
-            </Observer>
-          )}
-        </AutoSizer>
+      <div
+        className={S.tableAndControlRow}
+        tabIndex={0}
+        onKeyDown={this.handleOrderKeyDown}
+      >
+        <div className={S.orderTable}>
+          <AutoSizer>
+            {({ width, height }) => (
+              <Observer>
+                {() => (
+                  <MultiGrid
+                    ref={this.refGrid}
+                    fixedRowCount={1}
+                    cellRenderer={this.renderOrderCell}
+                    columnCount={1}
+                    rowCount={1 + this.temporaryPropertiesOrder.length}
+                    columnWidth={width - 20}
+                    rowHeight={rowHeight}
+                    width={width}
+                    height={height}
+                    scrollToRow={
+                      this.temporaryPropertiesOrder.findIndex(
+                        (property) => property.id === this.selectedColumnId
+                      ) + 1
+                    }
+                  />
+                )}
+              </Observer>
+            )}
+          </AutoSizer>
+        </div>
+        <div className={S.orderControls}>
+          <button onClick={this.handleOrderUp} className={S.button}>
+            <Icon src={"./icons/noun-chevron-933254.svg"} />
+          </button>
+          <button onClick={this.handleOrderDown} className={S.button}>
+            <Icon src={"./icons/noun-chevron-933246.svg"} />
+          </button>
+        </div>
       </div>
     );
   }
