@@ -57,7 +57,8 @@ const LOOKUP_TYPE_OPERATORS = [
 function operatorGroupChanges(oldOperator: string, newOperator: string) {
   let lookupOperatorTypes = LOOKUP_TYPE_OPERATORS.map(operator => operator.type);
   return newOperator === "null" || newOperator === "nnull" ||
-    lookupOperatorTypes.includes(newOperator) && !lookupOperatorTypes.includes(oldOperator);
+    lookupOperatorTypes.includes(newOperator) && !lookupOperatorTypes.includes(oldOperator) || 
+    !lookupOperatorTypes.includes(newOperator) && lookupOperatorTypes.includes(oldOperator)
 }
 
 const OpCombo: React.FC<{
