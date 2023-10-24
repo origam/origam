@@ -13,8 +13,17 @@ See [the contributing guide](CONTRIBUTING.md) for detailed instructions on how t
 ## License ##
 Origam is licensed under a [GPL-3.0 license](LICENSE).
 ## What can you do with Origam? ##
-![custom mobile app backed by ORIGAM](https://github.com/origam/origam/assets/147499074/8f76b8d2-79ce-49b0-ba61-9eea2e478ddd)
+Three views of the same project made with Origam:
 
-![Real estate view](https://github.com/origam/origam/assets/147499074/de828a74-86ab-4af7-b3df-e0780cfdd5de)
+Back end
 
-![news](https://github.com/origam/origam/assets/147499074/3a1e4897-a356-48f1-9dee-a1b62023f554)
+Front end custom httml.
+
+Front end custom mobile app backed by Origam.
+
+![image (3) - kopie](https://github.com/origam/origam/assets/147499074/40ba5bdc-2624-4416-b25d-5d3283ac9858)
+
+
+![PIE-HTTML frontend](https://github.com/origam/origam/assets/147499074/4ee3ba61-8a5f-466b-8e25-7c6429b98ba8)
+
+![PIE-mobile](https://github.com/origam/origam/assets/147499074/cc1e7e12-e138-4225-b6a0-9825031d4532)
