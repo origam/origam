@@ -203,11 +203,11 @@ export class ColumnsDialog extends React.Component<{
             {T("Settings", "column_config_settings")}
           </TabbedViewHandle>
           <TabbedViewHandle
-            title={T("Ordering", "column_config_ordering")}
+            title={T("Order", "column_config_order")}
             isActive={this.view === "order"}
             onClick={this.handleOrderTabHandleClick}
           >
-            {T("Ordering", "column_config_ordering")}
+            {T("Order", "column_config_order")}
           </TabbedViewHandle>
         </TabbedViewHandleRow>
         {this.view === "settings" ? this.renderSettings() : null}
