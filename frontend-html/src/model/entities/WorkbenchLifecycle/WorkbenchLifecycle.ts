@@ -207,7 +207,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       delete menuItem.parent;
       delete menuItem.elements;
       menuItem = produce(menuItem, (draft: any) => {
-        draft.attributes.isLazyLoading = "false";
+        draft.attributes.lazyLoading = "false";
       });
     }
     if (menuItem) {
