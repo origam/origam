@@ -50,6 +50,7 @@ namespace Origam.Server.Middleware
                 await next(context);
                 using (var responseStream = await FixAssemblyReferencesInResponse(context.Response))
                 {
+                    context.Response.Headers.ContentLength = null;
                     await responseStream.CopyToAsync(originalBodyStream);
                 }
             }
