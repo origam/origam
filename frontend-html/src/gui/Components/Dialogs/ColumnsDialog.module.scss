@@ -19,10 +19,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 @import "~@origam/styles/dist/styles/definitions";
 
+.tableAndControlRow {
+  width: 640px;
+  height: 400px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
 .columnTable {
   width: 640px;
   height: 400px;
   margin-bottom: 20px;
+}
+
+.orderTable {
+  flex: 1 0 auto;
+}
+
+.orderControls {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 10px;
+  padding: 5px;
 }
 
 .lockedColumns,
