@@ -20,9 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { compareTabIndexOwners, ITabIndexOwner, TabIndex } from "model/entities/TabIndexOwner";
 import { requestFocus } from "utils/focus";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export class FormFocusManager {
   autoFocusDisabled = false;
+
+  private isFormPerspectiveActive(){
+    const dataView = getDataView(this.parent);
+    return dataView.isFormViewActive();
+  }
 
   stopAutoFocus() {
     this.autoFocusDisabled = true;
@@ -65,11 +71,15 @@ export class FormFocusManager {
       return;
     }
     this.lastFocused = focusable;
-    requestFocus(focusable as any);
+    if (this.isFormPerspectiveActive()) {
+      requestFocus(focusable as any);
+    }
   }
 
   refocusLast() {
-    requestFocus(this.lastFocused as any);
+    if (this.isFormPerspectiveActive()) {
+      requestFocus(this.lastFocused as any);
+    }
   }
 
   forceAutoFocus() {
