@@ -50,7 +50,9 @@ export class GridFocusManager {
     }
   }
   focusEditor() {
-    requestFocus(this._activeEditor as any);
+    if (this.isTablePerspectiveActive()) {
+      requestFocus(this._activeEditor as any);
+    }
   }
 
   setLastFocusedFilter(focusable: IFocusable) {
@@ -58,7 +60,14 @@ export class GridFocusManager {
   }
 
   refocusLastFilter() {
-    requestFocus(this._lastFocusedFilter as any);
+    if (this.isTablePerspectiveActive()) {
+      requestFocus(this._lastFocusedFilter as any);
+    }
+  }
+
+  private isTablePerspectiveActive(){
+    const dataView = getDataView(this.parent);
+    return dataView.isTableViewActive();
   }
 }
 

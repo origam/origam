@@ -403,7 +403,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           const rootDataView = rootDataViews[0];
           const filtersDisplayed = getTablePanelView(rootDataView)!.filterConfiguration
             .isFilterControlsDisplayed
-          if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
+          if(workFinished && !filtersDisplayed){
               rootDataView.gridFocusManager.refocusLastFilter();
           }
         }
@@ -799,9 +799,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this._processedUpdateObjectResults.add(updateObjectResult);
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
-    if(dataView.isFormViewActive()){
-      dataView.formFocusManager.refocusLast();
-    }
+    dataView.formFocusManager.refocusLast();
+
     return true;
   }
 
