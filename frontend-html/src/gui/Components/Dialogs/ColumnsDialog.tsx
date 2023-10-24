@@ -63,6 +63,14 @@ export class ColumnsDialog extends React.Component<{
 
   refGrid = React.createRef<MultiGrid>();
 
+  refOrderFocusableContent = (elm: HTMLDivElement | null) => {
+    if (elm) {
+      setTimeout(() => {
+        elm.focus();
+      });
+    }
+  };
+
   @observable view: "settings" | "order" = "settings";
 
   @action.bound handleSettingsTabHandleClick() {
@@ -262,6 +270,7 @@ export class ColumnsDialog extends React.Component<{
         className={S.tableAndControlRow}
         tabIndex={0}
         onKeyDown={this.handleOrderKeyDown}
+        ref={this.refOrderFocusableContent}
       >
         <div className={S.orderTable}>
           <AutoSizer>
