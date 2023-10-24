@@ -65,6 +65,8 @@ import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVi
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { onSaveClick } from "gui/connections/NewRecordScreen";
 
 
 @inject(({property, formPanelView}) => {
@@ -398,6 +400,11 @@ export class FormViewEditor extends React.Component<{
           }
           if (event.key === "Enter") {
             await this.props.onEditorBlur?.();
+            const openedScreen = getOpenedScreen(this.props.property);
+            if(openedScreen.isNewRecordScreen){
+              await onSaveClick(openedScreen);
+              return;
+            }
             if (dataView.firstEnabledDefaultAction) {
               uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
                 event,
