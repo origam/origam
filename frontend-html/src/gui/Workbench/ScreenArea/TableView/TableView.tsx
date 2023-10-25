@@ -387,6 +387,8 @@ class HeaderRenderer implements IHeaderRendererData {
   }
 
   renderSelectionCheckBoxHeader(columnWidth: number) {
+    const filterControlsDisplayed = this.tablePanelView.filterConfiguration
+    .isFilterControlsDisplayed;
     return (
       <SelectionCheckBoxHeader key="checkboxHeader" width={columnWidth} dataView={this.dataView}/>
     );
