@@ -84,7 +84,7 @@
     "vite-tsconfig-paths": "^4.2.1",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
-    "xstate": "^4.38.2"
+    "xstate": "^4.38.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.2",
