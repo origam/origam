@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 
 namespace Origam.Schema.LookupModel;
@@ -54,6 +57,7 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     [TypeConverter(typeof(MenuItemConverter))]
     [NotNullModelElementRule]
     [NotNullMenuRecordEditMethod]
+    [NoRecursiveNewRecordScreenBindings]
     [XmlReference("menuItem", "MenuItemId")]
     public AbstractMenuItem MenuItem
     {
@@ -82,4 +86,68 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     public string AuthorizationContext => Roles;
 
     #endregion
+}
+
+
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+class NoRecursiveNewRecordScreenBindings : AbstractModelElementRuleAttribute 
+{
+    public override Exception CheckRule(object instance)
+    {
+        if (!(instance is NewRecordScreenBinding newRecordScreenBinding))
+        {
+            return new Exception(
+                $"{nameof(NoRecursiveNewRecordScreenBindings)} can be only applied to type {nameof(NewRecordScreenBinding)}");  
+        }
+
+        if (newRecordScreenBinding.MenuItem == null)
+        {
+            return null;
+        }
+
+        if (newRecordScreenBinding.MenuItem is not FormReferenceMenuItem menuItem)
+        {
+            return new Exception(
+                $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"); 
+        }
+
+        var allEntities = menuItem.Screen.DataStructure.Entities
+            .Cast<DataStructureEntity>()
+            .SelectMany(entity => entity.ChildrenRecursive.OfType<DataStructureEntity>().Concat(new []{entity}));
+
+        IEnumerable<IDataLookup> allLookups = allEntities
+            .SelectMany(entity =>
+            {
+                var dataStructureColumnLookups = entity.ChildItems.ToGeneric()
+                    .OfType<DataStructureColumn>()
+                    .Where(x => x.UseLookupValue)
+                    .Select(x => x.FinalLookup);
+                var entityLookups = entity.EntityDefinition.EntityColumns
+                    .OfType<LookupField>()
+                    .Select(lookupField => lookupField.DefaultLookup);
+                return dataStructureColumnLookups.Concat(entityLookups);
+            })
+            .Distinct();
+
+        var conflictingNewRecordBindingIds = allLookups
+            .Select(lookup => lookup.ChildItems.ToGeneric().OfType<NewRecordScreenBinding>().FirstOrDefault())
+            .Where(binding => binding != null)
+            .Select(binding => binding.Id.ToString())
+            .ToList();
+
+        if (conflictingNewRecordBindingIds.Count != 0)
+        {
+            return new Exception("The selected menu item references a screen with NewRecordScreenBindings. " +
+                                 "This would lead to nested NewRecordScreenBindings and is therefore not allowed. " +
+                                 $"The conflicting NewRecordScreenBinding ids are: [{string.Join(", ",conflictingNewRecordBindingIds)}]");
+        }
+
+        return null;
+    }
+
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        return CheckRule(instance);
+    }
 }
