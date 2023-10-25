@@ -66,7 +66,7 @@ import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVi
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { onSaveClick } from "gui/connections/NewRecordScreen";
+import { makeOnAddNewRecordClick, onSaveClick } from "gui/connections/NewRecordScreen";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 
@@ -237,6 +237,8 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={property.style}
+            newRecordScreen={this.props.property?.lookup?.newRecordScreen}
+            onAddNewRecordClick={makeOnAddNewRecordClick(this.props.property!)}
             isLink={property.isLink}
             onClick={(event) => {
               onDropdownEditorClick(property)(event, property, row);

@@ -34,6 +34,7 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import cx from "classnames";
+import { getFormFocusManager } from "model/selectors/DataView/getFormFocusManager";
 
 export class NewRecordScreen {
   private _width: number;
@@ -111,8 +112,15 @@ function afterClose(openedScreen: IOpenedScreen) {
   if (!newRecordScreenData) {
     throw new Error("newRecordScreenData was not found");
   }
-  const comboBoxTablePanelView = getTablePanelView(newRecordScreenData.comboBoxProperty);
-  comboBoxTablePanelView.isEditing = true;
+  const dataView = getDataView(newRecordScreenData.comboBoxProperty);
+  if (dataView.isTableViewActive()) {
+    const comboBoxTablePanelView = getTablePanelView(newRecordScreenData.comboBoxProperty);
+    comboBoxTablePanelView.isEditing = true;
+  }
+  else if (dataView.isFormViewActive()) {
+    const formFocusManager = getFormFocusManager(dataView);
+    formFocusManager.refocusLast();
+  }
   workbench.newRecordScreenData = undefined;
 }
 
