@@ -37,7 +37,6 @@ import { Notifications } from "model/entities/Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "model/entities/SidebarState";
 import { About } from "model/entities/AboutInfo";
-import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 
 export function createWorkbench() {
   const clock = new Clock();
