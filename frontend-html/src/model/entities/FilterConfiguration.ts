@@ -124,6 +124,11 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
+    const dataView = getDataView(dataTable);
+    const selectionMember = dataView.selectionMember;
+    if(term.propertyId === selectionMember) {
+      return dataView.isSelected(term.propertyId) === term.setting.filterValue1;
+    }
     const prop = dataTable.getPropertyById(term.propertyId)!;
     const cellValue = prepareAnyForFilter(this, dataTable.getOriginalCellValue(row, prop));
     switch (prop.column) {

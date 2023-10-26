@@ -22,6 +22,10 @@ import React from "react";
 import { setAllSelectionStates } from "model/actions-tree/setAllSelectionStates";
 import S from "./SelectionCheckboxHeader.module.scss";
 import { action } from "mobx";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getProperty } from "model/selectors/DataView/getProperty";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 
 @observer
 export class SelectionCheckBoxHeader extends React.Component<{
@@ -30,21 +34,65 @@ export class SelectionCheckBoxHeader extends React.Component<{
 }> {
   @action.bound
   onClick(event: any) {
-    this.props.dataView.selectAllCheckboxChecked = !this.props.dataView.selectAllCheckboxChecked;
-    setAllSelectionStates(this.props.dataView, this.props.dataView.selectAllCheckboxChecked);
+    this.props.dataView.selectAllCheckboxChecked =
+      !this.props.dataView.selectAllCheckboxChecked;
+    setAllSelectionStates(
+      this.props.dataView,
+      this.props.dataView.selectAllCheckboxChecked
+    );
   }
 
   render() {
+    const tablePanelView = getTablePanelView(this.props.dataView);
+    const filterControlsDisplayed =
+      tablePanelView.filterConfiguration.isFilterControlsDisplayed;
+
+    const selectionMember: string | null | undefined =
+      this.props.dataView.selectionMember;
+    if (selectionMember) {
+      console.log(this.props.dataView)
+      const filterConfiguration = 
+        getFilterConfiguration(tablePanelView)
+        //.getSettingByPropertyId(selectionMember);
+      console.log({filterConfiguration});
+      filterConfiguration.setFilter({
+        propertyId: selectionMember, 
+        dataType: 'boolean', 
+        setting: {
+          type: 'eq',
+          filterValue1: true,
+          filterValue2: undefined,
+          val1ServerForm: undefined,
+          val2ServerForm: undefined,
+          val1: undefined,
+          val2: undefined,
+          isComplete: true,
+          lookupId: undefined
+        }
+      })
+    }
+
+    console.log({ selectionMember });
+
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
-      <div style={{minWidth: this.props.width + "px"}} className={S.root} onClick={this.onClick}>
+      <div
+        style={{ minWidth: this.props.width + "px" }}
+        className={S.root}
+        onClick={this.onClick}
+      >
         <div className={S.allChecker}>
-          {isChecked ? <i className="far fa-check-square"/> : <i className="far fa-square"/>}
+          {isChecked ? (
+            <i className="far fa-check-square" />
+          ) : (
+            <i className="far fa-square" />
+          )}
         </div>
-        <div className={S.filter}>
-          <i className="far fa-minus-square" />
-        </div>
-        
+        {filterControlsDisplayed ? (
+          <div className={S.filter}>
+            <i className="far fa-check-square" />
+          </div>
+        ) : null}
       </div>
     );
   }
