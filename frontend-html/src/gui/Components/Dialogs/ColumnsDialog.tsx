@@ -38,7 +38,6 @@ import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import cx from "classnames";
 import { IProperty } from "model/entities/types/IProperty";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
 
@@ -49,6 +48,7 @@ const SCROLLBAR_SIZE = 20;
 export class ColumnsDialog extends React.Component<{
   model: ColumnConfigurationModel;
 }> {
+
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
 
@@ -172,9 +172,7 @@ export class ColumnsDialog extends React.Component<{
     return (
       <ModalDialog
         title={T("Columns", "column_config_title")}
-        titleButtons={
-          <CloseButton onClick={this.props.model.onColumnConfCancel} />
-        }
+        titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
         buttonsCenter={
           <Observer>
             {() => (
@@ -229,7 +227,7 @@ export class ColumnsDialog extends React.Component<{
       <>
         <div className={S.columnTable}>
           <AutoSizer>
-            {({ width, height }) => (
+            {({width, height}) => (
               <Observer>
                 {() => (
                   <MultiGrid
@@ -319,16 +317,11 @@ export class ColumnsDialog extends React.Component<{
       timeGroupingUnit,
     } = this.props.model.sortedColumnConfigs[rowIndex];
 
-    const { name, entity, canGroup, canAggregate, modelInstanceId } =
-      this.columnOptions.get(propertyId)!;
+    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
-    const selectedAggregationOption = aggregationOptions.find(
-      (option) => option.value === aggregationType
-    )!;
+    const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
 
-    const selectedTimeUnitOption = timeunitOptions.find(
-      (option) => option.value === timeGroupingUnit
-    )!;
+    const selectedTimeUnitOption = timeunitOptions.find(option => option.value === timeGroupingUnit)!;
 
     switch (columnIndex) {
       case 0:
@@ -336,9 +329,7 @@ export class ColumnsDialog extends React.Component<{
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) =>
-              this.props.model.setVisible(rowIndex, event.target.checked)
-            }
+            onChange={(event: any) => this.props.model.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -352,16 +343,12 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onChange={(event: any) =>
-                this.props.model.setGrouping(
-                  rowIndex,
-                  event.target.checked,
-                  entity
-                )
-              }
+              onChange={(event: any) => this.props.model.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />
-            <div>{groupingIndex > 0 ? groupingIndex : ""}</div>
+            <div>
+              {groupingIndex > 0 ? groupingIndex : ""}
+            </div>
           </label>
         );
       case 3:
@@ -370,9 +357,7 @@ export class ColumnsDialog extends React.Component<{
             <SimpleDropdown
               options={timeunitOptions}
               selectedOption={selectedTimeUnitOption}
-              onOptionClick={(option) =>
-                this.props.model.setTimeGroupingUnit(rowIndex, option.value)
-              }
+              onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
@@ -391,9 +376,7 @@ export class ColumnsDialog extends React.Component<{
             <SimpleDropdown
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
-              onOptionClick={(option) =>
-                this.props.model.setAggregation(rowIndex, option.value)
-              }
+              onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
               className={S.dropdown}
             />
           );
@@ -405,10 +388,10 @@ export class ColumnsDialog extends React.Component<{
     }
   }
 
-  getCellClass(columnIndex: number) {
-    let cellClass = S.columnTableCell;
-    if (columnIndex === 0 || columnIndex === 2) {
-      cellClass += " " + S.checkBoxCell;
+  getCellClass(columnIndex: number){
+    let cellClass = S.columnTableCell
+    if(columnIndex === 0 || columnIndex === 2){
+      cellClass += " " + S.checkBoxCell
     }
     return cellClass;
   }
@@ -425,12 +408,7 @@ export class ColumnsDialog extends React.Component<{
       return (
         <Obsv style={args.style} key={args.key}>
           {() => (
-            <div
-              style={args.style}
-              className={
-                this.getCellClass(args.columnIndex) + " " + rowClassName
-              }
-            >
+            <div style={args.style} className={this.getCellClass(args.columnIndex) + " " + rowClassName}>
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
@@ -520,10 +498,10 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        {this.props.columnIndex !== 4 && (
-          <div className={S.columnWidthHandle} />
-        )}
+        {this.props.columnIndex !== 4 && <div className={S.columnWidthHandle}/>}
       </div>
     );
   }
 }
+
+

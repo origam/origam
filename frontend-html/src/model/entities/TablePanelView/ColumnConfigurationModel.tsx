@@ -44,7 +44,6 @@ import { T } from "utils/translation";
 import { IOption } from "@origam/components";
 import _ from "lodash";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { IProperty } from "../types/IProperty";
 
 export interface IColumnOptions {
   canGroup: boolean;
@@ -56,34 +55,30 @@ export interface IColumnOptions {
 
 export const dialogKey = "ColumnConfigurationDialog";
 
-export class ColumnConfigurationModel {
+export class ColumnConfigurationModel{
+
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 
   @computed
   get columnOptions() {
     const groupingOnClient = !isLazyLoading(this);
-    const activeTableConfiguration =
-      this.configManager.activeTableConfiguration;
-    const optionsMap = new Map<string, IColumnOptions>();
+    const activeTableConfiguration = this.configManager.activeTableConfiguration;
+    const optionsMap = new Map<string, IColumnOptions>()
 
     for (let columnConfiguration of activeTableConfiguration.columnConfigurations) {
-      const property = this.tablePanelView.allTableProperties.find(
-        (prop) => prop.id === columnConfiguration.propertyId
-      )!;
-      optionsMap.set(property.id, {
-        canGroup:
-          groupingOnClient ||
-          (!property.isAggregatedColumn &&
-            property.fieldType !== "DetachedField"),
-        canAggregate:
-          groupingOnClient ||
-          (!property.isAggregatedColumn &&
-            !property.isLookupColumn &&
-            property.column !== "TagInput"),
-        entity: property.entity,
-        name: property.name,
-        modelInstanceId: property.modelInstanceId,
-      });
+      const property = this.tablePanelView.allTableProperties
+        .find(prop => prop.id === columnConfiguration.propertyId)!;
+      optionsMap.set(
+        property.id,
+        {
+          canGroup: groupingOnClient ||
+            (!property.isAggregatedColumn && property.fieldType !== "DetachedField"),
+          canAggregate: groupingOnClient ||
+            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+          entity: property.entity,
+          name: property.name,
+          modelInstanceId: property.modelInstanceId
+        })
     }
     return optionsMap;
   }
@@ -93,16 +88,17 @@ export class ColumnConfigurationModel {
   }
 
   reset() {
-    this.tableConfigBeforeChanges =
-      this.configManager.activeTableConfiguration.deepClone();
+    this.tableConfigBeforeChanges = this.configManager.activeTableConfiguration.deepClone();
   }
 
-  get sortedColumnConfigs() {
-    return [...this.columnsConfiguration.columnConfigurations].sort((a, b) => {
-      const optionA = this.columnOptions.get(a.propertyId)!;
-      const optionB = this.columnOptions.get(b.propertyId)!;
-      return compareStrings(optionA.name, optionB.name);
-    });
+  get sortedColumnConfigs(){
+    return [...this.columnsConfiguration.columnConfigurations].sort(
+      (a, b) => {
+        const optionA = this.columnOptions.get(a.propertyId)!;
+        const optionB = this.columnOptions.get(b.propertyId)!;
+        return compareStrings(optionA.name, optionB.name)
+      }
+    );
   }
 
   @action.bound
@@ -110,12 +106,12 @@ export class ColumnConfigurationModel {
     const self = this;
     runGeneratorInFlowWithHandler({
       ctx: this,
-      generator: (function* () {
+      generator: function*() {
         self.onColumnConfSubmit(self.columnsConfiguration);
         self.reset();
-        yield* saveColumnConfigurations(self)();
-      })(),
-    });
+        yield*saveColumnConfigurations(self)();
+      }()
+    })
   }
 
   @action.bound
@@ -126,7 +122,7 @@ export class ColumnConfigurationModel {
 
   private revertChanges() {
     if (!this.tableConfigBeforeChanges) {
-      throw new Error("TableConfiguration was not backed up");
+      throw new Error("TableConfiguration was not backed up")
     }
     this.configManager.activeTableConfiguration = this.tableConfigBeforeChanges;
   }
@@ -144,7 +140,7 @@ export class ColumnConfigurationModel {
               this.revertChanges();
               this.configManager.cloneAndActivate(newConfiguration, name);
               this.onColumnConfigurationSubmit();
-            },
+            }
           });
           closeDialog();
         }}
@@ -158,18 +154,14 @@ export class ColumnConfigurationModel {
 
   @action.bound
   onColumnConfSubmit(configuration: ITableConfiguration): void {
-    const aggregationsBefore =
-      this.tablePanelView?.aggregations.aggregationList;
-    const groupingWasOnBefore =
-      this.tablePanelView?.groupingConfiguration.isGrouping;      
+    const aggregationsBefore = this.tablePanelView?.aggregations.aggregationList;
+    const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;      
     configuration.apply(this.tablePanelView);
-    const groupingIsOnNow =
-      this.tablePanelView?.groupingConfiguration.isGrouping;
+    const groupingIsOnNow = this.tablePanelView?.groupingConfiguration.isGrouping;
     const aggregationsNow = this.tablePanelView?.aggregations.aggregationList;
-    if (
-      (groupingWasOnBefore && !groupingIsOnNow) ||
-      (groupingIsOnNow && !_.isEqual(aggregationsBefore, aggregationsNow))
-    ) {
+    if (groupingWasOnBefore && !groupingIsOnNow ||
+      groupingIsOnNow && !_.isEqual(aggregationsBefore, aggregationsNow))
+    {
       getFormScreenLifecycle(this).loadInitialData();
     }
     getDialogStack(this).closeDialog(dialogKey);
@@ -208,17 +200,15 @@ export class ColumnConfigurationModel {
   }
 
   @action.bound
-  setTimeGroupingUnit(
-    rowIndex: number,
-    groupingUnit: GroupingUnit | undefined
-  ) {
+  setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
     this.sortedColumnConfigs[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
   @action.bound
   setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.sortedColumnConfigs[rowIndex].aggregationType =
-      tryParseAggregationType(selectedAggregation);
+    this.sortedColumnConfigs[rowIndex].aggregationType = tryParseAggregationType(
+      selectedAggregation
+    );
   }
 
   @action.bound
@@ -228,10 +218,7 @@ export class ColumnConfigurationModel {
 
   @action.bound
   handleFixedColumnsCountChange(event: any) {
-    this.columnsConfiguration.fixedColumnCount = parseInt(
-      event.target.value,
-      10
-    );
+    this.columnsConfiguration.fixedColumnCount = parseInt(event.target.value, 10);
   }
 
   @action.bound
@@ -254,18 +241,24 @@ export class ColumnConfigurationModel {
   parent?: any;
 }
 
-export class AggregationOption implements IOption<AggregationType | undefined> {
-  constructor(
+export class AggregationOption implements IOption<AggregationType | undefined>{
+  constructor (
     public label: string,
-    public value: AggregationType | undefined
-  ) {}
+    public value: AggregationType | undefined,
+  ){
+  }
 }
 
-export class TimeUnitOption implements IOption<GroupingUnit> {
-  constructor(public label: string, public value: GroupingUnit) {}
-}
+export class TimeUnitOption implements IOption<GroupingUnit>{
+  constructor (
+    public label: string,
+    public value: GroupingUnit,
+  ){
+  }
+} 
 
-export const aggregationOptions = [
+
+export const aggregationOptions =  [
   new AggregationOption("", undefined),
   new AggregationOption(T("SUM", "aggregation_sum"), AggregationType.SUM),
   new AggregationOption(T("AVG", "aggregation_avg"), AggregationType.AVG),
@@ -273,16 +266,10 @@ export const aggregationOptions = [
   new AggregationOption(T("MAX", "aggregation_max"), AggregationType.MAX),
 ];
 
-export const timeunitOptions = [
+export const timeunitOptions =  [
   new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Year), GroupingUnit.Year),
-  new TimeUnitOption(
-    groupingUnitToLabel(GroupingUnit.Month),
-    GroupingUnit.Month
-  ),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Month), GroupingUnit.Month),
   new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Day), GroupingUnit.Day),
   new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Hour), GroupingUnit.Hour),
-  new TimeUnitOption(
-    groupingUnitToLabel(GroupingUnit.Minute),
-    GroupingUnit.Minute
-  ),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Minute), GroupingUnit.Minute),
 ];
