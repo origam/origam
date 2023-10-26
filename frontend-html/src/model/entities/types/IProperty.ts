@@ -33,6 +33,7 @@ export interface IPropertyData extends ITabIndexOwner{
   tabIndex: TabIndex;
   modelInstanceId: string;
   name: string;
+  caption: string;
   readOnly: boolean;
   x: number;
   y: number;
