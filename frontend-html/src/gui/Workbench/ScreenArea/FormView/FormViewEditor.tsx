@@ -396,7 +396,7 @@ export class FormViewEditor extends React.Component<{
             return;
           }
           if (event.key === "Escape") {
-            if(openedScreen.isNewRecordScreen){
+            if (openedScreen.isNewRecordScreen){
               onScreenTabCloseClick(openedScreen)(event, true);
               return;
             }
@@ -408,7 +408,7 @@ export class FormViewEditor extends React.Component<{
           }
           if (event.key === "Enter") {
             await this.props.onEditorBlur?.();
-            if(openedScreen.isNewRecordScreen){
+            if (openedScreen.isNewRecordScreen){
               await onSaveClick(openedScreen);
               return;
             }
