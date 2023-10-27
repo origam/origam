@@ -20,13 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 
 namespace Origam.Schema.LookupModel;
@@ -78,7 +81,7 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     [TypeConverter(typeof(MenuItemConverter))]
     [NotNullModelElementRule]
     [NotNullMenuRecordEditMethod]
-    [NoRecursiveNewRecordScreenBindings]
+    [NoRecursiveNewRecordScreenBindingsRule]
     [XmlReference("menuItem", "MenuItemId")]
     public AbstractMenuItem MenuItem
     {
@@ -112,14 +115,14 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
 
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-class NoRecursiveNewRecordScreenBindings : AbstractModelElementRuleAttribute 
+class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute 
 {
     public override Exception CheckRule(object instance)
     {
         if (!(instance is NewRecordScreenBinding newRecordScreenBinding))
         {
             return new Exception(
-                $"{nameof(NoRecursiveNewRecordScreenBindings)} can be only applied to type {nameof(NewRecordScreenBinding)}");  
+                $"{nameof(NoRecursiveNewRecordScreenBindingsRule)} can be only applied to type {nameof(NewRecordScreenBinding)}");  
         }
 
         if (newRecordScreenBinding.MenuItem == null)
@@ -133,21 +136,14 @@ class NoRecursiveNewRecordScreenBindings : AbstractModelElementRuleAttribute
                 $"The MenuItem in {nameof(NewRecordScreenBinding)} must be a {nameof(FormReferenceMenuItem)}"); 
         }
 
-        var allEntities = menuItem.Screen.DataStructure.Entities
-            .Cast<DataStructureEntity>()
-            .SelectMany(entity => entity.ChildrenRecursive.OfType<DataStructureEntity>().Concat(new []{entity}));
-
-        IEnumerable<IDataLookup> allLookups = allEntities
-            .SelectMany(entity =>
+        IEnumerable<IDataLookup> allLookups = menuItem.Screen.ChildrenRecursive
+            .OfType<ControlSetItem>()
+            .SelectMany(controlSetItem =>
             {
-                var dataStructureColumnLookups = entity.ChildItems.ToGeneric()
-                    .OfType<DataStructureColumn>()
-                    .Where(x => x.UseLookupValue)
-                    .Select(x => x.FinalLookup);
-                var entityLookups = entity.EntityDefinition.EntityColumns
-                    .OfType<LookupField>()
-                    .Select(lookupField => lookupField.DefaultLookup);
-                return dataStructureColumnLookups.Concat(entityLookups);
+                IEnumerable<PanelControlSet> panelControlSets = FindScreenSections(controlSetItem);
+                IEnumerable<ControlSetItem> comboBoxes = panelControlSets.SelectMany(FindComboBoxes);
+                IEnumerable<IDataLookup> lookups = comboBoxes.SelectMany(GetLookups);
+                return lookups;
             })
             .Distinct();
 
@@ -165,6 +161,31 @@ class NoRecursiveNewRecordScreenBindings : AbstractModelElementRuleAttribute
         }
 
         return null;
+    }
+
+    private IEnumerable<PanelControlSet> FindScreenSections(ControlSetItem controlSetItem)
+    {
+        var dependencies = new ArrayList();
+        controlSetItem.GetExtraDependencies(dependencies);
+        return dependencies.OfType<PanelControlSet>();
+    }
+
+    private IEnumerable<ControlSetItem> FindComboBoxes(PanelControlSet panelControlSet)
+    {
+        if (panelControlSet == null)
+        {
+            return Enumerable.Empty<ControlSetItem>();
+        }
+        return panelControlSet.ChildrenRecursive
+            .OfType<ControlSetItem>()
+            .Where(item => item.Name == "AsCombo");
+    }
+
+    private IEnumerable<IDataLookup> GetLookups(ControlSetItem comboBox)
+    {
+        var dependencies = new ArrayList();
+        comboBox.GetExtraDependencies(dependencies);
+        return dependencies.OfType<IDataLookup>();
     }
 
     public override Exception CheckRule(object instance, string memberName)
