@@ -67,11 +67,6 @@ public class NewRecordSessionStore : FormSessionStore
             row, true, SecurityManager.CurrentUserProfile().Id);
         row.Table.NewRow();
         
-        Workbench.Services.CoreServices.DataService.Instance.StoreData(
-            dataStructureId: rootEntity.ParentItemId,
-            data: row.Table.DataSet,
-            loadActualValuesAfterUpdate: false,
-            transactionId: null);
         dataSet.Tables[rootEntity.Name].Rows.Add(row);
         SetDataSource(dataSet);
     }
