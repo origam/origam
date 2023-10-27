@@ -52,7 +52,7 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     #region Overriden AbstractSchemaItem Members
     public override string ItemType => CategoryConst;
 
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(ArrayList dependencies)
     {
         dependencies.Add(MenuItem);
 		

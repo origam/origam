@@ -146,8 +146,7 @@ namespace Origam.Server
                         var sessionStore = mainSessionStore.ActiveSession 
                             ?? mainSessionStore;
                         if(sessionStore is SelectionDialogSessionStore
-                            || sessionStore.IsModalDialog
-                            || sessionStore is NewRecordSessionStore)
+                            || sessionStore.IsModalDialog)
                         {
                             sessionsToDestroy.Add(sessionStore.Id);
                         }

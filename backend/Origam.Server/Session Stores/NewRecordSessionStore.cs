@@ -37,12 +37,14 @@ public class NewRecordSessionStore : FormSessionStore
         string name, FormReferenceMenuItem menuItem, Analytics analytics) 
         : base(service, request, name, menuItem, analytics)
     {
+        IsModalDialog = true;
     }
 
     public NewRecordSessionStore(IBasicUIService service, UIRequest request,
         string name, Analytics analytics)
         : base(service, request, name, analytics)
     {
+        IsModalDialog = true;
     }
 
     public override void Init()
