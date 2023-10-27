@@ -605,30 +605,18 @@ namespace Origam.Workbench.Services
 
 		public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
 		{
-			IParameterService param =
-				ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+			IParameterService parameterService = ServiceManager.Services.GetService<IParameterService>();
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
-			
-			var newRecordScreenBinding = lookup.ChildItems
+
+			return lookup.ChildItems
 				.ToGeneric()
 				.OfType<NewRecordScreenBinding>()
-				.FirstOrDefault();
-
-			if (newRecordScreenBinding == null)
-			{
-				return null;
-			}
-
-			bool isAvailable = authorizationProvider.Authorize(principal, newRecordScreenBinding.AuthorizationContext)
-			                    && authorizationProvider.Authorize(principal, newRecordScreenBinding.MenuItem.AuthorizationContext)
-			                    && param.IsFeatureOn(newRecordScreenBinding.MenuItem.Features);
-			if (!isAvailable)
-			{
-				return null;
-			}
-
-			return newRecordScreenBinding;
+				.FirstOrDefault(binding => 
+					authorizationProvider.Authorize(principal, binding.AuthorizationContext)
+					&& authorizationProvider.Authorize(principal, binding.MenuItem.AuthorizationContext)
+					&& parameterService.IsFeatureOn(binding.MenuItem.Features)
+				);
 		}
 
 		public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
