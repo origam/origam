@@ -609,8 +609,7 @@ namespace Origam.Workbench.Services
 				ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
-
-
+			
 			var newRecordScreenBinding = lookup.ChildItems
 				.ToGeneric()
 				.OfType<NewRecordScreenBinding>()
