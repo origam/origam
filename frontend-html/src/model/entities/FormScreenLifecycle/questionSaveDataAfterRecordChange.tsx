@@ -69,8 +69,12 @@ export enum IQuestionDeleteDataAnswer {
 export async function handleUserInputOnChangingRow(dataView: IDataView) {
   const openedScreen = getOpenedScreen(dataView);
   const sessionId = getSessionId(openedScreen.content.formScreen);
+  const formScreen = getFormScreen(dataView);
 
   if (isInfiniteScrollingActive(dataView)) {
+    if (formScreen.autoSaveOnListRecordChange) {
+      return await saveChanges(dataView, sessionId);
+    }
     switch (await questionSaveDataAfterRecordChange(dataView)) {
       case IQuestionChangeRecordAnswer.Cancel: // eslint-disable-line @typescript-eslint/no-use-before-define
         return false;
