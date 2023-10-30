@@ -605,18 +605,10 @@ namespace Origam.Workbench.Services
 
 		public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
 		{
-			IParameterService parameterService = ServiceManager.Services.GetService<IParameterService>();
-			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
-			IPrincipal principal = SecurityManager.CurrentPrincipal;
-
 			return lookup.ChildItems
 				.ToGeneric()
 				.OfType<NewRecordScreenBinding>()
-				.FirstOrDefault(binding => 
-					authorizationProvider.Authorize(principal, binding.AuthorizationContext)
-					&& authorizationProvider.Authorize(principal, binding.MenuItem.AuthorizationContext)
-					&& parameterService.IsFeatureOn(binding.MenuItem.Features)
-				);
+				.FirstOrDefault(x => x.IsAvailable);
 		}
 
 		public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)

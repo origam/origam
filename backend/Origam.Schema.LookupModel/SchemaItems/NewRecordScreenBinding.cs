@@ -24,13 +24,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
+using System.Security.Principal;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.Workbench.Services;
 
 namespace Origam.Schema.LookupModel;
 
@@ -48,7 +49,43 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     public NewRecordScreenBinding(Guid schemaExtensionId) : base(schemaExtensionId) { }
     
     public NewRecordScreenBinding(Key primaryKey) : base(primaryKey)	{}
-    
+
+
+    public bool IsAvailable
+    {
+        get
+        {
+            if (MenuItem is not FormReferenceMenuItem referenceMenuItem ||
+                referenceMenuItem.ReadOnlyAccess)
+            {
+                return false;
+            }
+
+            IParameterService parameterService = ServiceManager.Services
+                .GetService<IParameterService>();
+            IOrigamAuthorizationProvider authorizationProvider =
+                SecurityManager.GetAuthorizationProvider();
+            IPrincipal principal = SecurityManager.CurrentPrincipal;
+
+            string authContext = SecurityManager
+                .GetReadOnlyRoles(referenceMenuItem.AuthorizationContext);
+            bool hasReadOnlyRole = SecurityManager
+                .GetAuthorizationProvider()
+                .Authorize(SecurityManager.CurrentPrincipal, authContext);
+            if (hasReadOnlyRole)
+            {
+                return false;
+            }
+
+            return
+                authorizationProvider.Authorize(principal, AuthorizationContext)
+                && authorizationProvider.Authorize(principal,
+                    MenuItem.AuthorizationContext)
+                && parameterService.IsFeatureOn(MenuItem.Features);
+        }
+    }
+
+
     #region Overriden AbstractSchemaItem Members
     public override string ItemType => CategoryConst;
 
