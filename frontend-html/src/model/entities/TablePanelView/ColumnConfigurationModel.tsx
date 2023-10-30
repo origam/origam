@@ -223,7 +223,15 @@ export class ColumnConfigurationModel{
 
   @action.bound
   setOrderIds(ids: any[]) {
-    this.tablePanelView.setOrderIds(ids);
+    const idsSet = new Set(ids);
+    const restOfIds = this.columnsConfiguration.columnConfigurations
+      .map(item => item.propertyId)
+      .filter(id => !idsSet.has(id))
+
+    this.columnsConfiguration.columnConfigurations = [
+      ...ids.map(id => this.columnsConfiguration.columnConfigurations.find(item => item.propertyId === id)!), 
+      ...restOfIds.map(id => this.columnsConfiguration.columnConfigurations.find(item => item.propertyId === id)!)
+    ]
   }
 
   @computed get tableViewProperties() {

@@ -395,10 +395,6 @@ export class TablePanelView implements ITablePanelView {
     this.tablePropertyIds.splice(idx2,0, idToMove);
   }
 
-  @action.bound setOrderIds(ids: any[]) {
-    this.tablePropertyIds = ids;
-  }
-
   @action.bound
   setColumnOrderChangeAttendants(idSource: string | undefined, idTarget: string | undefined): void {
     this.columnOrderChangingTargetId = idTarget;
