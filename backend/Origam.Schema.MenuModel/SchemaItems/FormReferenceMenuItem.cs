@@ -586,8 +586,10 @@ namespace Origam.Schema.MenuModel
 		}
 	}
 	
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-	public class RequireListEntityIfListDataStructureDefinedRule : AbstractModelElementRuleAttribute 
+	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false,
+		Inherited=true)]
+	public class RequireListEntityIfListDataStructureDefinedRule 
+		: AbstractModelElementRuleAttribute 
 	{
 		public RequireListEntityIfListDataStructureDefinedRule()
 		{
@@ -595,7 +597,8 @@ namespace Origam.Schema.MenuModel
 
 		public override Exception CheckRule(object instance)
 		{
-			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+			return new NotSupportedException(
+				ResourceUtils.GetString("MemberNameRequired"));
 		}
 
 		public override Exception CheckRule(object instance, string memberName)
@@ -606,7 +609,9 @@ namespace Origam.Schema.MenuModel
 			}
 			if (memberName != "ListEntity")
 			{
-				throw new Exception($"{nameof(RequireListEntityIfListDataStructureDefinedRule)} can be only applied to ListEntity property");
+				throw new Exception(
+						$"{nameof(RequireListEntityIfListDataStructureDefinedRule)}" +
+						$" can be only applied to ListEntity property");
 			}
 			if (instance is not FormReferenceMenuItem menuItem)
 			{
@@ -614,7 +619,9 @@ namespace Origam.Schema.MenuModel
 			}
 			if (menuItem.ListDataStructure != null && menuItem.ListEntity == null)
 			{
-				return new Exception($"{nameof(FormReferenceMenuItem.ListEntity)} must be set if {nameof(FormReferenceMenuItem.ListDataStructure)} is set");
+				return new Exception(
+					$"{nameof(FormReferenceMenuItem.ListEntity)} must be " +
+					$"set if {nameof(FormReferenceMenuItem.ListDataStructure)} is set");
 			}
 			return null;
 		}
