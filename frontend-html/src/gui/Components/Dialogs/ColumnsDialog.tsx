@@ -165,7 +165,12 @@ export class ColumnsDialog extends React.Component<{
 
   *handleOkClick() {
     yield* this.applyOrder();
-    this.props.model?.onColumnConfigurationSubmit();
+    this.props.model.onColumnConfigurationSubmit();
+  }
+
+  *handleSaveAsClick() {
+    yield* this.applyOrder();
+    this.props.model.onSaveAsClick()
   }
 
   render() {
@@ -184,7 +189,7 @@ export class ColumnsDialog extends React.Component<{
                 >
                   {T("OK", "button_ok")}
                 </button>
-                <button onClick={() => this.props.model.onSaveAsClick()}>
+                <button onClick={flow(this.handleSaveAsClick.bind(this))}>
                   {T("Save As...", "column_config_save_as")}
                 </button>
                 <button
