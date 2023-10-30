@@ -38,8 +38,8 @@ export class Property implements IProperty {
     if (this.lookup) {
       this.lookup.parent = this;
     }
-    if (!this.caption) {
-      this.caption = this.name;
+    if (!this.gridCaption) {
+      this.gridCaption = this.name;
     }
   }
 
@@ -48,7 +48,7 @@ export class Property implements IProperty {
   tabIndex: TabIndex = null as any;
   modelInstanceId: string = "";
   name: string = "";
-  caption: string = "";
+  gridCaption: string = "";
   nameOverride: string | null | undefined = null;
   readOnly: boolean = false;
   x: number = 0;

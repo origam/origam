@@ -128,7 +128,7 @@ function parseProperty(node: any, idx: number): IProperty {
     controlPropertyValue: node.attributes.ControlPropertyValue,
     modelInstanceId: node.attributes.ModelInstanceId || "",
     name: node.attributes.Name,
-    caption: node.attributes.GridColumnCaption,
+    gridCaption: node.attributes.GridColumnCaption,
     readOnly: node.attributes.ReadOnly === "true",
     x: parseInt(node.attributes.X, 10),
     y: parseInt(node.attributes.Y, 10),

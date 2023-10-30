@@ -206,7 +206,7 @@ export class FormBuilder extends React.Component<{
                     <Provider property={property} key={property.id}>
                       <FormField
                         isHidden={isHidden}
-                        caption={property.caption}
+                        caption={property.name}
                         hideCaption={property.column === "Image"}
                         captionLength={property.captionLength}
                         captionPosition={property.captionPosition}
