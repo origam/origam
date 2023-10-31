@@ -180,6 +180,7 @@
   "column_config_name_empty": "Jméno nemůže být prázdné",
   "column_config_settings": "Nastavení",
   "column_config_order": "Pořadí",
+  "column_config_order_explanation": "Obsluha klávesnicí: ↑,↓ hýbe kurzorem. Ctrl + ↑,↓ přesouvá položku.",
   "calendar_week": "{0}. týden",
   "calendar_monday": "Pondělí",
   "calendar_tuesday": "Úterý",
