@@ -27,6 +27,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
 }
 
+.columnOrderScreen {
+  .explanation {
+    text-align: center;
+  }
+}
+
 .columnTable {
   width: 640px;
   height: 400px;
@@ -53,6 +59,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   padding-bottom: 10px;
 }
+
+
 
 .button {
   height: 30px;

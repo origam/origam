@@ -269,45 +269,50 @@ export class ColumnsDialog extends React.Component<{
 
   renderOrder() {
     return (
-      <div
-        className={S.tableAndControlRow}
-        tabIndex={0}
-        onKeyDown={this.handleOrderKeyDown}
-        ref={this.refOrderFocusableContent}
-      >
-        <div className={S.orderTable}>
-          <AutoSizer>
-            {({ width, height }) => (
-              <Observer>
-                {() => (
-                  <MultiGrid
-                    ref={this.refGrid}
-                    fixedRowCount={1}
-                    cellRenderer={this.renderOrderCell}
-                    columnCount={1}
-                    rowCount={1 + this.temporaryPropertiesOrder.length}
-                    columnWidth={width - 20}
-                    rowHeight={rowHeight}
-                    width={width}
-                    height={height}
-                    scrollToRow={
-                      this.temporaryPropertiesOrder.findIndex(
-                        (property) => property.id === this.selectedColumnId
-                      ) + 1
-                    }
-                  />
-                )}
-              </Observer>
-            )}
-          </AutoSizer>
+      <div className={S.columnOrderScreen}>
+        <div
+          className={S.tableAndControlRow}
+          tabIndex={0}
+          onKeyDown={this.handleOrderKeyDown}
+          ref={this.refOrderFocusableContent}
+        >
+          <div className={S.orderTable}>
+            <AutoSizer>
+              {({ width, height }) => (
+                <Observer>
+                  {() => (
+                    <MultiGrid
+                      ref={this.refGrid}
+                      fixedRowCount={1}
+                      cellRenderer={this.renderOrderCell}
+                      columnCount={1}
+                      rowCount={1 + this.temporaryPropertiesOrder.length}
+                      columnWidth={width - 20}
+                      rowHeight={rowHeight}
+                      width={width}
+                      height={height}
+                      scrollToRow={
+                        this.temporaryPropertiesOrder.findIndex(
+                          (property) => property.id === this.selectedColumnId
+                        ) + 1
+                      }
+                    />
+                  )}
+                </Observer>
+              )}
+            </AutoSizer>
+          </div>
+          <div className={S.orderControls}>
+            <button onClick={this.handleOrderUp} className={S.button}>
+              <Icon src={"./icons/noun-chevron-933254.svg"} />
+            </button>
+            <button onClick={this.handleOrderDown} className={S.button}>
+              <Icon src={"./icons/noun-chevron-933246.svg"} />
+            </button>
+          </div>
         </div>
-        <div className={S.orderControls}>
-          <button onClick={this.handleOrderUp} className={S.button}>
-            <Icon src={"./icons/noun-chevron-933254.svg"} />
-          </button>
-          <button onClick={this.handleOrderDown} className={S.button}>
-            <Icon src={"./icons/noun-chevron-933246.svg"} />
-          </button>
+        <div className={S.explanation}>
+          {T("Keyboard control: ↑,↓ moves the cursor. Ctrl + ↑,↓ moves the item.", "column_config_order_explanation")}
         </div>
       </div>
     );
