@@ -47,6 +47,8 @@ namespace Origam.Workflow.Tasks
 		{
 			if (Step == null)
 			{
+				// if e.Exception is not null, it was handled in ServiceMethodCallEngineTask
+				// in the Execute method. So it is safe to do nothing here.
 				return;
 			}
 			if (this.Finished != null)
