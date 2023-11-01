@@ -34,12 +34,8 @@ export class SelectionCheckBoxHeader extends React.Component<{
 }> {
   @action.bound
   handleCheckAllClick(event: any) {
-    this.props.dataView.selectAllCheckboxChecked =
-      !this.props.dataView.selectAllCheckboxChecked;
-    setAllSelectionStates(
-      this.props.dataView,
-      this.props.dataView.selectAllCheckboxChecked
-    );
+    this.props.dataView.selectAllCheckboxChecked = !this.props.dataView.selectAllCheckboxChecked;
+    setAllSelectionStates(this.props.dataView, this.props.dataView.selectAllCheckboxChecked);
   }
 
   @action.bound 
@@ -58,14 +54,6 @@ export class SelectionCheckBoxHeader extends React.Component<{
 
     const selectionMember: string | null | undefined =
       this.props.dataView.selectionMember;
-    if (selectionMember) {
-      console.log(this.props.dataView);
-      const filterConfiguration = getFilterConfiguration(tablePanelView);
-      //.getSettingByPropertyId(selectionMember);
-      console.log({ filterConfiguration });
-    }
-
-    console.log({ selectionMember });
 
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
