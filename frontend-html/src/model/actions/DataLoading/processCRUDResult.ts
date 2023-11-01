@@ -29,10 +29,6 @@ import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewCache } from "../../selectors/FormScreen/getDataViewCache";
 import { getFocusManager } from "model/selectors/getFocusManager";
-import {flow, runInAction} from "mobx";
-import {onFieldChangeG} from "../../actions-ui/DataView/TableView/onFieldChange";
-import {runGeneratorInFlowWithHandler} from "../../../utils/runInFlowWithHandler";
-import {saveColumnConfigurations} from "../DataView/TableView/saveColumnConfigurations";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -54,63 +50,46 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function*processCRUDResult(ctx: any, result: ICRUDResult,
+export function*processCRUDResult(ctx: any, results: ICRUDResult[],
                                   resortTables?: boolean | undefined,
-                                  sourceDataView?: IDataView): Generator {
-  if (_.isArray(result)) {
-    const updates = [];
-    for (let resultItem of result) {
-      if (resultItem.operation === IResponseOperation.Update) {
-        updates.push(resultItem);
-      }
-      else {
-        yield*processCRUDResult(ctx, resultItem, resortTables, sourceDataView);
-      }
+                                  sourceDataView?: IDataView): Generator
+{
+  const updates: ICRUDResult[] = [];
+
+  function*processUpdates() {
+    if (updates.length > 0) {
+      yield*batchProcessUpdates(ctx, updates, resortTables);
+      updates.length = 0;
     }
-    const updatesByEntity = updates.groupBy(resultItem => resultItem.entity);
-    for(const updates of updatesByEntity.values()){
-      yield runGeneratorInFlowWithHandler({
-        ctx: ctx,
-        generator: function*() {
-          yield*batchProcessUpdates(ctx, updates, resortTables);
-        }()
-      });
-      // yield*batchProcessUpdates(ctx, updates, resortTables);
-    }
-    return;
   }
-  // console.log(result)
-  const resultItem = result;
+
+  for (let result of results) {
+    if (result.operation === IResponseOperation.Update){
+      updates.push(result);
+    }
+    else {
+      yield*processUpdates();
+      yield*processSingleResult(ctx, result, resortTables, sourceDataView);
+    }
+  }
+  yield*processUpdates();
+}
+
+function*processSingleResult(ctx: any, resultItem: ICRUDResult,
+                           resortTables?: boolean | undefined,
+                           sourceDataView?: IDataView): Generator {
+
   if (resultItem.state) {
     // TODO: Context for all CRUD ops?
     // TODO: Actions are pre data view vs state is related to entity?
     putRowStateValue(ctx)(resultItem.entity, resultItem.state);
   }
   switch (resultItem.operation) {
-    // case IResponseOperation.Update: {
-    //   const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
-    //   for (let dataView of dataViews) {
-    //     dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
-    //     dataView.substituteRecord(resultItem.wrappedObject);
-    //     getDataViewCache(dataView).UpdateData(dataView);
-    //     if (resortTables) {
-    //       yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
-    //     }
-    //     if (!dataView.selectedRow) {
-    //       dataView.reselectOrSelectFirst();
-    //     }
-    //     dataView.formFocusManager.stopAutoFocus();
-    //   }
-    //   const screenFocusManager = getFocusManager(ctx);
-    //   screenFocusManager.setFocus();
-    //   getFormScreen(ctx).setDirty(true);
-    //   break;
-    // }
     case IResponseOperation.Create: {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
         const tablePanelView = dataView.tablePanelView;
-        const dataSourceRow = result.wrappedObject;
+        const dataSourceRow = resultItem.wrappedObject;
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
 
         if (dataView.isLazyLoading) {
@@ -187,13 +166,12 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
     default:
       throw new Error("Unknown operation " + resultItem.operation);
   }
-  //}
 }
 
-function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined,){
+function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined){
   const dataViews = getDataViewsByEntity(ctx, updates[0].entity);
   for (let dataView of dataViews) {
-    dataView.substituteRecords(updates.map(x=>x.wrappedObject));
+    dataView.substituteRecords(updates.map(x=> x.wrappedObject));
     getDataViewCache(dataView).UpdateData(dataView);
     if (resortTables) {
       yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
