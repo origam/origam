@@ -801,10 +801,50 @@ namespace Origam.Workbench.Commands
 
 	}
 
-	/// <summary>
-	/// Displays list of items on which currently selected item is dependent
-	/// </summary>
-	public class ShowUsage : AbstractMenuCommand
+    /// <summary>
+    /// Add item to bookmarks pad
+    /// </summary>
+    public class AddToBookmarks : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(
+			typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveSchemaItem != null;
+            }
+            set
+            {
+                throw new ArgumentException(
+					ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            Pads.BookmarkPad pad = WorkbenchSingleton.Workbench.
+				GetPad(typeof(Pads.BookmarkPad)) as Pads.BookmarkPad;
+            pad.AddResult(_schema.ActiveSchemaItem);
+			pad.DisplayResults();
+            ViewBookmarkPad cmd = new ViewBookmarkPad();
+            cmd.Run();
+            cmd.Dispose();
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Displays list of items on which currently selected item is dependent
+    /// </summary>
+    public class ShowUsage : AbstractMenuCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 

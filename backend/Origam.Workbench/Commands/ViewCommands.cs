@@ -275,6 +275,31 @@ namespace Origam.Workbench.Commands
 	}
 
     /// <summary>
+    /// Shows the Schema Result pad
+    /// </summary>
+    public class ViewBookmarkPad : AbstractMenuCommand
+    {
+        public override bool IsEnabled
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+                base.IsEnabled = value;
+            }
+        }
+
+        public override void Run()
+        {
+            BookmarkPad pad = WorkbenchSingleton.Workbench.
+				GetPad(typeof(BookmarkPad)) as BookmarkPad;
+            if (pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
+    }
+
+    /// <summary>
 	/// Shows the Schema Result pad
 	/// </summary>
 	public class ViewFindRuleResultsPad : AbstractMenuCommand
