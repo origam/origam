@@ -33,7 +33,7 @@ export class SelectionCheckBoxHeader extends React.Component<{
   dataView: any;
 }> {
   @action.bound
-  onClick(event: any) {
+  handleCheckAllClick(event: any) {
     this.props.dataView.selectAllCheckboxChecked =
       !this.props.dataView.selectAllCheckboxChecked;
     setAllSelectionStates(
@@ -42,46 +42,35 @@ export class SelectionCheckBoxHeader extends React.Component<{
     );
   }
 
+  @action.bound 
+  handleSelectionCheckboxFilterClick(event: any) {
+    const tablePanelView = getTablePanelView(this.props.dataView);
+    tablePanelView.filterConfiguration.toggleSelectionCheckboxFilter();
+  }
+
+
   render() {
     const tablePanelView = getTablePanelView(this.props.dataView);
     const filterControlsDisplayed =
       tablePanelView.filterConfiguration.isFilterControlsDisplayed;
 
+    const {selectionCheckboxFilter} = tablePanelView.filterConfiguration;
+
     const selectionMember: string | null | undefined =
       this.props.dataView.selectionMember;
     if (selectionMember) {
-      console.log(this.props.dataView)
-      const filterConfiguration = 
-        getFilterConfiguration(tablePanelView)
-        //.getSettingByPropertyId(selectionMember);
-      console.log({filterConfiguration});
-      filterConfiguration.setFilter({
-        propertyId: selectionMember, 
-        dataType: 'boolean', 
-        setting: {
-          type: 'eq',
-          filterValue1: true,
-          filterValue2: undefined,
-          val1ServerForm: undefined,
-          val2ServerForm: undefined,
-          val1: undefined,
-          val2: undefined,
-          isComplete: true,
-          lookupId: undefined
-        }
-      })
+      console.log(this.props.dataView);
+      const filterConfiguration = getFilterConfiguration(tablePanelView);
+      //.getSettingByPropertyId(selectionMember);
+      console.log({ filterConfiguration });
     }
 
     console.log({ selectionMember });
 
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
-      <div
-        style={{ minWidth: this.props.width + "px" }}
-        className={S.root}
-        onClick={this.onClick}
-      >
-        <div className={S.allChecker}>
+      <div style={{ minWidth: this.props.width + "px" }} className={S.root}>
+        <div className={S.allChecker} onClick={this.handleCheckAllClick}>
           {isChecked ? (
             <i className="far fa-check-square" />
           ) : (
@@ -89,8 +78,12 @@ export class SelectionCheckBoxHeader extends React.Component<{
           )}
         </div>
         {filterControlsDisplayed ? (
-          <div className={S.filter}>
-            <i className="far fa-check-square" />
+          <div className={S.filter} onClick={this.handleSelectionCheckboxFilterClick}>
+            {selectionCheckboxFilter === null 
+              ? <i className="far fa-minus-square" />
+            : selectionCheckboxFilter === true
+              ? <i className="far fa-check-square" />
+            : <i className="far fa-square" />}
           </div>
         ) : null}
       </div>

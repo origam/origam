@@ -39,6 +39,10 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   setFilter(term: IFilter): void;
 
+  toggleSelectionCheckboxFilter(): void;
+
+  selectionCheckboxFilter: boolean | null;
+
   setFilters(filters: IFilter[]): void;
 
   clearFilters(): void;

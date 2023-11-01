@@ -462,7 +462,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                     }
                   });
                 return {
-                  filters,
+                  filters
                 } as any;
               },
               () =>
