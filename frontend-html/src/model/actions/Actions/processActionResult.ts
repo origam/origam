@@ -69,7 +69,7 @@ export interface IRefreshForm {
 }
 
 export interface IProcessCRUDResult {
-  (data: { crudResult: ICRUDResult, resortTables?: boolean }): Generator;
+  (data: { crudResult: ICRUDResult[], resortTables?: boolean }): Generator;
 }
 
 export function new_ProcessActionResult(ctx: any) {
@@ -82,7 +82,7 @@ export function new_ProcessActionResult(ctx: any) {
     closeForm: closeForm(ctx),
     refreshForm: actions.formScreen.refresh(ctx),
     getActionCaption: () => getActionCaption(ctx),
-    processCRUDResult: (data: { crudResult: ICRUDResult, resortTables?: boolean }) => processCRUDResult(ctx, data.crudResult, data.resortTables),
+    processCRUDResult: (data: { crudResult: ICRUDResult[], resortTables?: boolean }) => processCRUDResult(ctx, data.crudResult, data.resortTables),
     parentContext: ctx
   });
 }

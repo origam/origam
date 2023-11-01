@@ -948,7 +948,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ? IResponseOperation.Update
         : IResponseOperation.Create;
 
-      yield*processCRUDResult(rootDataView, dirtyRowResult) as any;
+      yield*processCRUDResult(rootDataView, [dirtyRowResult]) as any;
     }
   }
 
