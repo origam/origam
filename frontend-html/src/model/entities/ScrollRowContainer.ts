@@ -52,6 +52,11 @@ export class ScrollRowContainer implements IRowsContainer {
   async updateSortAndFilter(data?: { retainPreviousSelection?: true }) {
   }
 
+  getRowById(id: string): any[] | undefined {
+    return this.rows.find((row) => this.rowIdGetter
+    (row) === id);
+  }
+
   start() {
   }
 
@@ -147,6 +152,12 @@ export class ScrollRowContainer implements IRowsContainer {
       if (foundAndSubstituted) {
         return;
       }
+    }
+  }
+
+  substituteRows(rows: any[][]){
+    for (let row of rows) {
+      this.substitute(row);
     }
   }
 

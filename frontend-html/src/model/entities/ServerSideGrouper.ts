@@ -97,8 +97,8 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  substituteRecord(row: any[]): void {
-    this.allGroups.map(group => group.substituteRecord(row))
+  substituteRecords(rows: any[][]): void {
+    this.allGroups.map(group => group.substituteRecords(rows))
   }
 
   refresh() {

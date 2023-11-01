@@ -60,6 +60,10 @@ export class ListRowContainer implements IRowsContainer {
     return new Map<any, any[]>(entries);
   }
 
+  getRowById(id: string): any[] | undefined {
+    return this.idToRow.get(id);
+  }
+
   async start() {
     this.reactionDisposer = reaction(
       () => [
@@ -219,12 +223,14 @@ export class ListRowContainer implements IRowsContainer {
     throw new Error("Not implemented");
   }
 
-  substitute(row: any[]): void {
-    const dataTable = getDataTable(this);
-    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
-    const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 1, row);
+  substituteRows(rows: any[][]): void {
+    const entries = this.allRows.map((row, i) => [this.rowIdGetter(row), i] as [any, number]);
+    let rowToIndex = new Map<any, number>(entries);
+    for (let row of rows) {
+      const dataTable = getDataTable(this);
+      const newRow = fixRowIdentifier(row, dataTable.identifierDataIndex);
+      const rowId = this.rowIdGetter(row);
+      this.allRows[rowToIndex.get(rowId)!] = newRow;
     }
   }
 

@@ -193,10 +193,7 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
 function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined,){
   const dataViews = getDataViewsByEntity(ctx, updates[0].entity);
   for (let dataView of dataViews) {
-    for (let resultItem of updates){
-      dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
-      dataView.substituteRecord(resultItem.wrappedObject);
-    }
+    dataView.substituteRecords(updates.map(x=>x.wrappedObject));
     getDataViewCache(dataView).UpdateData(dataView);
     if (resortTables) {
       yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});

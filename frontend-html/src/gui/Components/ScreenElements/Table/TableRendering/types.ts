@@ -32,7 +32,7 @@ export interface IGroupRow {
 export interface IGroupTreeNode {
   dispose(): void;
 
-  substituteRecord(row: any[]): any;
+  substituteRecords(rows: any[][]): any;
 
   level: number;
 
