@@ -69,6 +69,7 @@ export class ListRowContainer implements IRowsContainer {
           Array.isArray(filter.setting.val2) ? [...filter.setting.val2] : filter.setting.val2,
           filter.setting.type,
         ]),
+        this.filterConfiguration.selectionCheckboxFilter,
         this.orderingConfiguration.orderings.map((x) => [x.columnId, x.direction])],
       () => this.updateSortAndFilterDebounced(),
       {
