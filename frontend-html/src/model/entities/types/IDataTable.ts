@@ -111,7 +111,9 @@ export interface IDataTable {
 
   clear(): void;
 
-  clearRecordDirtyValues(id: string, newRow: any[]): void;
+  clearRecordDirtyValues(rows: any[]): void;
+
+  substituteRecords(rows: any[][]): void;
 
   substituteRecord(row: any[]): void;
 
