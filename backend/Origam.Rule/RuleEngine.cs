@@ -2078,7 +2078,8 @@ namespace Origam.Rule
 #region Rule Evaluators
 		private object EvaluateRule(XPathRule rule, IXmlContainer context, XPathNodeIterator contextPosition)
 		{
-			if(context?.Xml == null)
+			XmlDocument xmlDocument = context?.Xml;
+			if(xmlDocument == null)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
 			}
@@ -2090,10 +2091,10 @@ namespace Origam.Rule
 				{
 					log.Debug("Current Position: " + contextPosition?.Current?.Name);
 				}
-				log.Debug("  Input data: " + context.Xml?.OuterXml);
+				log.Debug("  Input data: " + xmlDocument.OuterXml);
 			}
 
-			XPathNavigator nav = context.Xml.CreateNavigator();
+			XPathNavigator nav = xmlDocument.CreateNavigator();
 
 			return XpathEvaluator.Instance.Evaluate(
 				rule.XPath, rule.IsPathRelative, rule.DataType, nav, 
