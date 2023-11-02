@@ -313,6 +313,7 @@ namespace Origam.Schema.MenuModel
 		[TypeConverter(typeof(MenuFormReferenceListEntityConverter))]
 		[XmlReference("listEntity", "ListEntityId")]
 		[MergeIgnoreEntityActionsOnlyRule]
+		[RequireListEntityIfListDataStructureDefinedRule]
 		public DataStructureEntity ListEntity
 		{
 			get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
@@ -582,6 +583,47 @@ namespace Origam.Schema.MenuModel
 			}
 			return
 				$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
+		}
+	}
+	
+	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false,
+		Inherited=true)]
+	public class RequireListEntityIfListDataStructureDefinedRule 
+		: AbstractModelElementRuleAttribute 
+	{
+		public RequireListEntityIfListDataStructureDefinedRule()
+		{
+		}
+
+		public override Exception CheckRule(object instance)
+		{
+			return new NotSupportedException(
+				ResourceUtils.GetString("MemberNameRequired"));
+		}
+
+		public override Exception CheckRule(object instance, string memberName)
+		{
+			if (string.IsNullOrEmpty(memberName))
+			{
+				CheckRule(instance);
+			}
+			if (memberName != "ListEntity")
+			{
+				throw new Exception(
+						$"{nameof(RequireListEntityIfListDataStructureDefinedRule)}" +
+						$" can be only applied to ListEntity property");
+			}
+			if (instance is not FormReferenceMenuItem menuItem)
+			{
+				return null;
+			}
+			if (menuItem.ListDataStructure != null && menuItem.ListEntity == null)
+			{
+				return new Exception(
+					$"{nameof(FormReferenceMenuItem.ListEntity)} must be " +
+					$"set if {nameof(FormReferenceMenuItem.ListDataStructure)} is set");
+			}
+			return null;
 		}
 	}
 }

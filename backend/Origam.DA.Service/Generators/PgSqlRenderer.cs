@@ -233,6 +233,12 @@ class PgSqlRenderer : SqlRenderer
     {
         return "COALESCE";
     }
+    
+    internal override string Format(string date, string culture)
+    {
+        throw new NotImplementedException();
+    }
+    
     internal override string CountAggregate()
     {
         return "COUNT";

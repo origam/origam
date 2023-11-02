@@ -27,6 +27,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Extensions;
@@ -1858,21 +1859,9 @@ namespace Origam.DA.Service
             string orderByExpression="";
             if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
             {
-                List<ColumnRenderItem> columnRenderData = new List<ColumnRenderItem>();
-                foreach (string columnName in columnsInfo.ColumnNames)
-                {
-                    DataStructureColumn column = entity.Column(columnName);
-                    columnRenderData.Add(
-                        new ColumnRenderItem
-                        {
-                            SchemaItem = column.Field,
-                            Entity = column.Entity ?? entity,
-                            RenderSqlForDetachedFields = columnsInfo.RenderSqlForDetachedFields
-                        });
-                }
                 sqlExpression.Append(" ");
-                sqlExpression.Append(RenderConcat(columnRenderData, sqlValueFormatter.RenderString(", "),
-                    replaceParameterTexts, dynamicParameters, selectParameterReferences));
+                sqlExpression.Append(RenderConcat(selectParameters, isInRecursion, forceDatabaseCalculation, sqlValueFormatter.RenderString(", "),
+                    replaceParameterTexts, dynamicParameters, selectParameterReferences, filterCommandParser, orderByCommandParser));
                 return false;
             }
             i = 0;
@@ -3986,8 +3975,65 @@ namespace Origam.DA.Service
                 concatBuilder.Append(")");
             }
             return concatBuilder.ToString();
+        } 
+        
+        internal string RenderConcat(SelectParameters selectParameters, bool isInRecursion, bool forceDatabaseCalculation,
+            string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences,
+            FilterCommandParser filterCommandParser,
+            OrderByCommandParser orderByCommandParser)
+        {
+            int i = 0;
+            StringBuilder concatBuilder = new StringBuilder();
+            bool shouldTrimSeparator = !string.IsNullOrEmpty(separator) &&
+                                       selectParameters.ColumnsInfo.ColumnNames.Count > 1;
+            if (shouldTrimSeparator)
+            {
+                concatBuilder.Append($"TRIM( {separator} FROM ");
+            }
+            SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
+            foreach (string columnName in selectParameters.ColumnsInfo.ColumnNames)
+            {
+                DataStructureColumn column = selectParameters.Entity.Column(columnName);
+                if (i > 0)
+                {
+                    concatBuilder.Append(" " + sqlRenderer.StringConcatenationChar + " ");
+                    if (separator != null)
+                    {
+                        concatBuilder.Append(separator);
+                        concatBuilder.Append(" " + sqlRenderer.StringConcatenationChar + " ");
+                    }
+                }
+                string groupByExpression = "";
+                bool groupByNeeded = false;
+                LookupOrderingInfo customOrderingInfo =
+                    LookupOrderingInfo.TryCreate(selectParameters.CustomOrderings.Orderings, column.Name);
+                ColumnRenderData columnRenderData = RenderDataStructureColumn(
+                    selectParameters.DataStructure,
+                    selectParameters.Entity,
+                    replaceParameterTexts, dynamicParameters,
+                    selectParameters.SortSet, parameterReferences, isInRecursion,
+                    forceDatabaseCalculation, ref groupByExpression, order, ref groupByNeeded,
+                    selectParameters.ColumnsInfo ?? ColumnsInfo.Empty, column,
+                    customOrderingInfo, filterCommandParser, orderByCommandParser, 
+                    selectParameters.RowOffset);
+                if (column.DataType == OrigamDataType.Date)
+                {
+                    string nonNullExpression = $"{sqlRenderer.IsNull()} ({sqlRenderer.Format(columnRenderData.Expression, Thread.CurrentThread.CurrentCulture.Name)}, '')";
+                    concatBuilder.Append(nonNullExpression);
+                }
+                else
+                {
+                    string nonNullExpression = $"{sqlRenderer.IsNull()} ({columnRenderData.Expression}, '')";
+                    concatBuilder.Append(nonNullExpression);
+                }
+                i++;
+            }
+            if (shouldTrimSeparator)
+            {
+                concatBuilder.Append(")");
+            }
+            return concatBuilder.ToString();
         }
-
 
         internal string PostProcessCustomCommandParserWhereClauseSegment(
             string input, DataStructureEntity entity,
@@ -4145,6 +4191,7 @@ namespace Origam.DA.Service
     {
         public bool RenderSqlForDetachedFields { get; set; }
         public ISchemaItem SchemaItem { get; set; }
+        public DataStructureColumn Column { get; set; }
         public DataStructureEntity Entity { get; set; }
     }
     

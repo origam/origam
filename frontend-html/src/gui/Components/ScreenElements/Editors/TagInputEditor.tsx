@@ -123,7 +123,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
 
       useEffect(() => {
         return () => {
-         props.onEditorBlur?.(null);
+         props.onEditorBlur?.({target: beh.elmInputElement});
         }
       }, []);
 

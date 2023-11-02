@@ -405,7 +405,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   onFocus(event: any){
     if(event.target){
       let dataView = getDataView(this.context.tablePanelView);
-      dataView.formFocusManager.setLastFocused(event.target! as IFocusable);
+      dataView.gridFocusManager.setLastFocusedFilter(event.target! as IFocusable);
     }
   }
 

@@ -403,8 +403,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           const rootDataView = rootDataViews[0];
           const filtersDisplayed = getTablePanelView(rootDataView)!.filterConfiguration
             .isFilterControlsDisplayed
-          if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
-              rootDataView.formFocusManager.refocusLast();
+          if(workFinished && !filtersDisplayed){
+              rootDataView.gridFocusManager.refocusLastFilter();
           }
         }
       ),
@@ -1032,7 +1032,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const childEntities = getAllBindingChildren(targetDataView)
-        .filter(dataView => getIsAddButtonVisible(dataView))
+        .filter(dataView => dataView.showAddButton)
         .map((dataView) => getEntity(dataView)
         );
 
