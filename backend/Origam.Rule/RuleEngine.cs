@@ -773,23 +773,17 @@ namespace Origam.Rule
 			return ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, true);
 		}
 
-		private Queue _ruleQueue = new Queue();
+		private Dictionary<DataRow, object[]> _queueHashSet = new ();
+		private Queue<object[]> _ruleQueue = new ();
 		private Hashtable _ruleColumnChanges = new Hashtable();
 
 		private bool IsEntryInQueue(DataRow rowChanged, DataStructureRuleSet ruleSet)
 		{
-			foreach(object[] entry in _ruleQueue)
+			if(_queueHashSet.ContainsKey(rowChanged) && 
+			   Equals(_queueHashSet[rowChanged][1], ruleSet))
 			{
-				if(entry[0].Equals(rowChanged) && (
-										(entry[1] != null && entry[1].Equals(ruleSet) )
-										|| entry[1] == null && ruleSet == null
-													)
-				   )
-				{
-					return true;
-				}
+				return true;
 			}
-
 			return false;
 		}
 
@@ -828,6 +822,7 @@ namespace Origam.Rule
 
 			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data};
 			_ruleQueue.Enqueue(queueEntry);
+			_queueHashSet.Add(rowChanged, queueEntry);
 		}
 
 		private static string ColumnKey(DataColumn col)
@@ -996,12 +991,14 @@ namespace Origam.Rule
 					{
 						row.CancelEdit();
 						_ruleQueue.Clear();
+						_queueHashSet.Clear();
 						throw;
 					}
 
 					row.CancelEdit();
 
-					_ruleQueue.Dequeue();
+					var dequeuedObject = _ruleQueue.Dequeue();
+					_queueHashSet.Remove((DataRow)dequeuedObject[0]);
 				}
 			}
 		}
