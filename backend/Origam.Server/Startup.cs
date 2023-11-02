@@ -310,7 +310,7 @@ namespace Origam.Server
             {
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
                 });
             }
             var localizationOptions = app.ApplicationServices
