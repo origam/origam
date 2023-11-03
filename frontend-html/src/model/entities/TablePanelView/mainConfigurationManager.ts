@@ -94,9 +94,9 @@ export class MainConfigurationManager implements IConfigurationManager {
     yield*saveColumnConfigurations(this)();
   }
 
-  *onColumnOrderChanged(): Generator {
-    yield*this.activeManager.onColumnOrderChanged();
-    yield*saveColumnConfigurations(this)();
+  *onColumnOrderChanged(suppressSave?: boolean): Generator {
+    yield*this.activeManager.onColumnOrderChanged(suppressSave);
+    if(!suppressSave)yield*saveColumnConfigurations(this)();
   }
 
   parent: any;

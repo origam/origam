@@ -96,7 +96,7 @@ export class Header extends React.Component<{
         draggableId={this.props.id}
         index={this.props.columnIndex}
         key={this.props.id}
-        isDragDisabled={this.props.isDragDisabled}
+        isDragDisabled={true}
       >
         {(provided) => this.renderHeader(provided)}
       </Draggable>
