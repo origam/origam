@@ -89,39 +89,41 @@ export class ColumnsDialog extends React.Component<{
   }
   @observable temporaryPropertiesOrder: IProperty[] = [];
 
-  @action.bound handleOrderRowClick(id: any) {
-    this.selectedColumnId = id;
+  @action.bound handleOrderRowClick(columnId: any) {
+    this.selectedColumnId = columnId;
   }
 
   @action.bound handleOrderUp() {
-    const ord = this.temporaryPropertiesOrder;
-    const selIndex = this.selectedColumnIndex;
-    if (this.selectedColumnId && selIndex > 0) {
-      [ord[selIndex], ord[selIndex - 1]] = [ord[selIndex - 1], ord[selIndex]];
+    const order = this.temporaryPropertiesOrder;
+    const selectedIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selectedIndex > 0) {
+      [order[selectedIndex], order[selectedIndex - 1]] = 
+        [order[selectedIndex - 1], order[selectedIndex]];
     }
   }
 
   @action.bound handleOrderDown() {
-    const ord = this.temporaryPropertiesOrder;
-    const selIndex = this.selectedColumnIndex;
-    if (this.selectedColumnId && selIndex < ord.length - 1) {
-      [ord[selIndex], ord[selIndex + 1]] = [ord[selIndex + 1], ord[selIndex]];
+    const order = this.temporaryPropertiesOrder;
+    const selectedIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selectedIndex < order.length - 1) {
+      [order[selectedIndex], order[selectedIndex + 1]] = 
+        [order[selectedIndex + 1], order[selectedIndex]];
     }
   }
 
   @action.bound handleSelectUp() {
-    const ord = this.temporaryPropertiesOrder;
-    const selIndex = this.selectedColumnIndex;
-    if (this.selectedColumnId && selIndex > 0) {
-      this.selectedColumnId = ord[selIndex - 1].id;
+    const order = this.temporaryPropertiesOrder;
+    const selectedIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selectedIndex > 0) {
+      this.selectedColumnId = order[selectedIndex - 1].id;
     }
   }
 
   @action.bound handleSelectDown() {
-    const ord = this.temporaryPropertiesOrder;
-    const selIndex = this.selectedColumnIndex;
-    if (this.selectedColumnId && selIndex < ord.length - 1) {
-      this.selectedColumnId = ord[selIndex + 1].id;
+    const order = this.temporaryPropertiesOrder;
+    const selectedIndex = this.selectedColumnIndex;
+    if (this.selectedColumnId && selectedIndex < order.length - 1) {
+      this.selectedColumnId = order[selectedIndex + 1].id;
     }
   }
 
