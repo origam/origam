@@ -92,6 +92,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { IFormScreen } from "model/entities/types/IFormScreen";
+import {clearRowStates} from "../../actions/RowStates/clearRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -797,6 +798,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
+      yield*clearRowStates(dataView)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
     dataView.formFocusManager.refocusLast();
