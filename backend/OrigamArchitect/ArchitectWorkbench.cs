@@ -103,6 +103,7 @@ namespace OrigamArchitect
 		AuditLogPad _auditLogPad;
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
+		BookmarkPad _bookmarkPad;
         FindRulesPad _findRulesPad;
 		LogPad _logPad;
 #endif
@@ -736,8 +737,10 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.WorkflowWatch_MenuItem, new Commands.ViewWorkflowWatchPad(), _workflowWatchPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.Documentation_MenuItem, new ViewDocumentationPad(), _documentationPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.FindSchemaItemResults_MenuItem, new ViewFindSchemaItemResultsPad(), _findSchemaItemResultsPad.Icon.ToBitmap(), Keys.None, _viewMenu);
+            CreateMenuItem(strings.Bookmarks_MenuItem, new ViewBookmarkPad(),
+				_extensionPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #endif
-		}
+        }
 
 		private void CreateModelMenu()
 		{
@@ -766,6 +769,8 @@ namespace OrigamArchitect
                 ImageRes.icon_find_dependencies, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), 
                 ImageRes.icon_find_references, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.AddToBookmarks_MenuItem, new AddToBookmarks(),
+                ImageRes.icon_find_dependencies, Keys.None, _schemaMenu);
             _schemaMenu.SubItems.Add(CreateSeparator());
             CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), 
                 ImageRes.icon_show_in_explorer, Keys.None, _schemaMenu);
@@ -1924,6 +1929,7 @@ namespace OrigamArchitect
             _documentationPad = CreatePad<DocumentationPad>();
             _findSchemaItemResultsPad = CreatePad<FindSchemaItemResultsPad>();
             _findRulesPad = CreatePad<FindRulesPad>();
+			_bookmarkPad = CreatePad<BookmarkPad>();
 #endif
 
             _workflowPad = CreatePad<WorkflowPlayerPad>();

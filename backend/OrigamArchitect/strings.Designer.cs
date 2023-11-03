@@ -19,7 +19,7 @@ namespace OrigamArchitect {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class strings {
@@ -75,6 +75,15 @@ namespace OrigamArchitect {
         internal static string Actions_MenuItem {
             get {
                 return ResourceManager.GetString("Actions_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to bookmarks.
+        /// </summary>
+        internal static string AddToBookmarks_MenuItem {
+            get {
+                return ResourceManager.GetString("AddToBookmarks_MenuItem", resourceCulture);
             }
         }
         
@@ -147,6 +156,15 @@ namespace OrigamArchitect {
         internal static string AutoUpdate_NewerVersionNotice {
             get {
                 return ResourceManager.GetString("AutoUpdate_NewerVersionNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bookmarks.
+        /// </summary>
+        internal static string Bookmarks_MenuItem {
+            get {
+                return ResourceManager.GetString("Bookmarks_MenuItem", resourceCulture);
             }
         }
         

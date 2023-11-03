@@ -620,7 +620,7 @@
   </data>
   <data name="ShowTrace_MenuItem" xml:space="preserve">
     <value>Show Trace</value>
-  </data>  
+  </data>
   <data name="ShowRuleTrace_MenuItem" xml:space="preserve">
     <value>Show Rule Trace</value>
   </data>
@@ -743,5 +743,11 @@
   </data>
   <data name="DeploySinglePackageQuestion" xml:space="preserve">
     <value>It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are any deployment conflicts with the other packages.</value>
+  </data>
+  <data name="AddToBookmarks_MenuItem" xml:space="preserve">
+    <value>Add to bookmarks</value>
+  </data>
+  <data name="Bookmarks_MenuItem" xml:space="preserve">
+    <value>Bookmarks</value>
   </data>
 </root>
