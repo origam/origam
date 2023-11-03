@@ -265,8 +265,10 @@ namespace Origam.Rule
 
 		private void table_RowChanged(object sender, DataRowChangeEventArgs e)
 		{
-			OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
-
+			if (e.Action != DataRowAction.Change && e.Action != DataRowAction.Nothing)
+			{
+				OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
+			}
 		}
 
 		private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
