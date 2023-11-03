@@ -55,24 +55,26 @@ export function*processCRUDResult(ctx: any, results: ICRUDResult[],
                                   sourceDataView?: IDataView): Generator
 {
   const updates: ICRUDResult[] = [];
-
-  function*processUpdates() {
-    if (updates.length > 0) {
-      yield*batchProcessUpdates(ctx, updates, resortTables);
-      updates.length = 0;
-    }
-  }
-
   for (let result of results) {
     if (result.operation === IResponseOperation.Update){
       updates.push(result);
     }
     else {
-      yield*processUpdates();
+      yield*processUpdates(ctx, updates, resortTables);
       yield*processSingleResult(ctx, result, resortTables, sourceDataView);
     }
   }
-  yield*processUpdates();
+  yield*processUpdates(ctx, updates, resortTables);
+}
+
+function*processUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined) {
+  if (updates.length > 0) {
+    const updatesByEntity = updates.groupBy(x => x.entity);
+    for (let updatesForEntity of updatesByEntity.values()) {
+      yield*batchProcessUpdates(ctx, updatesForEntity, resortTables);
+    }
+    updates.length = 0;
+  }
 }
 
 function*processSingleResult(ctx: any, resultItem: ICRUDResult,
