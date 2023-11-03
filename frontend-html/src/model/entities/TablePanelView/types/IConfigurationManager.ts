@@ -23,7 +23,7 @@ import { GroupingUnit } from "model/entities/types/GroupingUnit";
 import { Layout } from "model/entities/TablePanelView/layout";
 
 export interface IConfigurationManager {
-  onColumnOrderChanged(): Generator;
+  onColumnOrderChanged(suppressSave?: boolean): Generator;
 
   onColumnWidthChanged(id: string, width: number): Generator;
 
