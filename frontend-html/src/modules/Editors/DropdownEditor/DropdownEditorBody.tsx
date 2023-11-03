@@ -63,7 +63,7 @@ export function DropdownEditorBody() {
             rectCtrl={rectCtrl}
             beh={beh}
             rowHeight={rowHeight}
-            height={200}
+            height={8 * rowHeight}
           />
         </div>
       )}
