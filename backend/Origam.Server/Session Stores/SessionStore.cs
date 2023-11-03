@@ -1767,27 +1767,17 @@ namespace Origam.Server
             || (row.Table.Columns[property].DataType == typeof(Guid) & string.Empty.Equals(newValue))
                 )
             {
-                if (!Equals(row[property], DBNull.Value))
-                {
-                    row[property] = DBNull.Value;
-                }
+                row[property] = DBNull.Value;
             }
             else if ((row.Table.Columns[property].DataType == typeof(decimal))
             && (newValue is string stringValue))
             {
-                decimal decimalValue = decimal.Parse(
+                row[property] = decimal.Parse(
                     stringValue, CultureInfo.InvariantCulture);
-                if (!Equals(row[property], decimalValue))
-                {
-                    row[property] = decimalValue;
-                }
             }
             else
             {
-                if (!Equals(row[property], newValue))
-                {
-                    row[property] = newValue;
-                }
+                row[property] = newValue;
             }
         }
 
