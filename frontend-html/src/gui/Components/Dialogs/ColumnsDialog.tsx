@@ -41,7 +41,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
 
-// It would be more neat to solve by onScrollbarPresenceChange handler of react-virtualized Grid (TODO)
+// It would be neater to solve by onScrollbarPresenceChange handler of react-virtualized Grid (TODO)
 const SCROLLBAR_SIZE = 20;
 
 @observer
