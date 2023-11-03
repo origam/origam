@@ -39,7 +39,35 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
-  @observable selectionCheckboxFilter: boolean | null = null;
+
+  @computed get selectionCheckboxFilter(): boolean | null {
+    const dataView = getDataView(this);
+    const selectionMember = dataView.selectionMember;
+    const filter = this.activeFilters.find(item => item.propertyId === selectionMember);
+    if(filter) 
+      return filter.setting.val1;
+    else 
+      return null;
+  }
+
+  set selectionCheckboxFilter(state: boolean | null) {
+    const dataView = getDataView(this);
+    const selectionMember = dataView.selectionMember;
+    const filter = this.activeFilters.find(item => item.propertyId === selectionMember);
+    this.setFilter({
+      propertyId: selectionMember,
+      dataType: '',
+      setting: {
+        type: 'eq',
+        val1ServerForm: state,
+        filterValue1: undefined,
+        filterValue2: undefined,
+        val2ServerForm:  undefined,
+        isComplete: true,
+        lookupId: undefined
+      }
+    })
+  }
 
   @computed
   get activeCompleteFilters(){

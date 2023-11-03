@@ -28,6 +28,7 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSessionId } from "model/selectors/getSessionId";
 import { cloneFilterGroup } from "xmlInterpreters/filterXml";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 export class FilterGroupManager {
   ctx: any;
@@ -93,8 +94,25 @@ export class FilterGroupManager {
   }
 
   getFilterGroupServerVersion(name: string, isGlobal: boolean) {
+    const filters = [...this.activeFilters];
+    const {selectionCheckboxFilter} = this.filterConfiguration;
+    if(selectionCheckboxFilter !== null) {
+      filters.push({
+        propertyId: getSelectionMember(this),
+        dataType: '',
+        setting: {
+          type: 'eq',
+          val1ServerForm: selectionCheckboxFilter,
+          filterValue1: undefined,
+          filterValue2: undefined,
+          val2ServerForm:  undefined,
+          isComplete: true,
+          lookupId: undefined
+        }
+      })
+    }
     return {
-      details: this.activeFilters
+      details: filters
         .filter(filter => filter.setting.isComplete)
         .map((filter) => this.filterToServerVersion(filter)),
       id: undefined,
