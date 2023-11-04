@@ -85,7 +85,7 @@ public class IndexedRuleQueue: IEnumerable<object[]>
         {
             hash.Add(key);
         }
-        hash.Add(ruleSet.Id);
+        hash.Add(ruleSet?.Id);
         return hash.ToHashCode();
     }
 
