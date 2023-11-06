@@ -91,8 +91,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { IFormScreen } from "model/entities/types/IFormScreen";
-import {clearRowStates} from "../../actions/RowStates/clearRowStates";
+import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
