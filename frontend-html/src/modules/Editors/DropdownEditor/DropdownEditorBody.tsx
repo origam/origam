@@ -63,7 +63,6 @@ export function DropdownEditorBody() {
             rectCtrl={rectCtrl}
             beh={beh}
             rowHeight={rowHeight}
-            height={8 * rowHeight}
           />
         </div>
       )}
@@ -78,7 +77,7 @@ export class DropdownEditorTable extends  React.Component<{
   rectCtrl: BoundingRect,
   beh: IDropdownEditorBehavior,
   rowHeight: number,
-  height: number
+  height?: number
 }> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
@@ -87,6 +86,7 @@ export class DropdownEditorTable extends  React.Component<{
   hoveredRowIndex= - 1;
   columnCount = 0;
   readonly cellPadding = 20;
+  readonly maxHeight = 150;
   disposer: any;
 
   componentDidMount() {
@@ -95,6 +95,17 @@ export class DropdownEditorTable extends  React.Component<{
 
   get rowCount(){
     return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
+  }
+
+  get height(){
+    if(this.props.height){
+      return this.props.height;
+    }
+    let height = 0;
+    for (let i = 0; i < this.rowCount; i++) {
+      height = height + this.props.rowHeight;
+    }
+    return Math.min(height, this.maxHeight) + this.scrollbarSize.horiz;
   }
 
   constructor(props: any) {
@@ -177,7 +188,7 @@ export class DropdownEditorTable extends  React.Component<{
         columnWidth={({ index }) => widths[index]}
         rowHeight={this.props.rowHeight}
         fixedRowCount={this.hasHeader ? 1 : 0}
-        height={this.props.height}
+        height={this.height}
         width={windowWidth}
         cellRenderer={args => this.renderTableCell(args)}
         onScroll={this.props.beh.handleScroll}
