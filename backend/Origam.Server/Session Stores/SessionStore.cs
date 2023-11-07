@@ -1380,7 +1380,18 @@ namespace Origam.Server
             }
 
             // data not requested (data less session)
-            return RowStatesForDataLessSessions(entity, ids, profileId);
+            try
+            {
+                lock (_lock)    // no update should be done in the meantime when rules are not handled
+                {
+                    this.UnregisterEvents();
+                    return RowStatesForDataLessSessions(entity, ids, profileId);
+                }
+            }
+            finally
+            {
+                this.RegisterEvents();
+            }
         }
 
         private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
