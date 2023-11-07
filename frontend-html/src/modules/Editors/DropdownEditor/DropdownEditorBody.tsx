@@ -86,7 +86,7 @@ export class DropdownEditorTable extends  React.Component<{
   hoveredRowIndex= - 1;
   columnCount = 0;
   readonly cellPadding = 20;
-  readonly maxHeight = 150;
+  readonly maxHeight = 8 * this.props.rowHeight;
   disposer: any;
 
   componentDidMount() {
