@@ -285,8 +285,10 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   handleInputChange(event: any) {
+    if (this.userEnteredValue || event.target.value){
+      this.isDropped = true;
+    }
     this.userEnteredValue = event.target.value;
-    this.isDropped = true;
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
