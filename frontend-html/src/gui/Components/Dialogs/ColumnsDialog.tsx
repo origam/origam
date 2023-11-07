@@ -59,7 +59,7 @@ export class ColumnsDialog extends React.Component<{
     this.resetOrder();
   }
 
-  @observable columnWidths = [70, 220, 110, 150, 90 - SCROLLBAR_SIZE];
+  @observable columnWidths = [70, 220, 110 - SCROLLBAR_SIZE, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
@@ -156,13 +156,11 @@ export class ColumnsDialog extends React.Component<{
     this.selectedColumnId = this.temporaryPropertiesOrder[0]?.id || null;
   }
 
-  *applyOrder() {
+  *applyOrder() {    
     if (this.temporaryPropertiesOrder.length === 0) return;
     this.props.model.setOrderIds(
       this.temporaryPropertiesOrder.map((property) => property.id)
     );
-    const manager = getConfigurationManager(this.props.model.tablePanelView);
-    yield* manager.onColumnOrderChanged(true);
   }
 
   *handleOkClick() {
