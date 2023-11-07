@@ -7,6 +7,7 @@ import { IDataView } from "model/entities/types/IDataView";
 
 export class GridFocusManager {
   private _activeEditor: IFocusable | undefined;
+  private _lastFocusedFilter: IFocusable | undefined;
   public focusTableOnReload: boolean = true;
   private readonly _dataViewModelInstanceId: string;
   get canFocusTable(){
@@ -49,7 +50,24 @@ export class GridFocusManager {
     }
   }
   focusEditor() {
-    requestFocus(this._activeEditor as any);
+    if (this.isTablePerspectiveActive()) {
+      requestFocus(this._activeEditor as any);
+    }
+  }
+
+  setLastFocusedFilter(focusable: IFocusable) {
+    this._lastFocusedFilter = focusable;
+  }
+
+  refocusLastFilter() {
+    if (this.isTablePerspectiveActive()) {
+      requestFocus(this._lastFocusedFilter as any);
+    }
+  }
+
+  private isTablePerspectiveActive(){
+    const dataView = getDataView(this.parent);
+    return dataView.isTableViewActive();
   }
 }
 

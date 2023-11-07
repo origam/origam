@@ -265,8 +265,14 @@ namespace Origam.Rule
 
 		private void table_RowChanged(object sender, DataRowChangeEventArgs e)
 		{
-			OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
-
+			// The RowChanged event fires after every call to DataRow.EndEdit().
+			// Every field change calls the DataRow.EndEdit(). This led to 
+			// execution of the OnRowChanged handler after changing just a single
+			// field which added undesired overhead.
+			if (e.Action != DataRowAction.Change && e.Action != DataRowAction.Nothing)
+			{
+				OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
+			}
 		}
 
 		private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)

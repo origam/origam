@@ -137,7 +137,6 @@ export function onFieldKeyDown(ctx: any) {
         }
         default: {
           if (isSaveShortcut(event) && geScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
-            tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
             const formScreenLifecycle = getFormScreenLifecycle(ctx);
             yield*formScreenLifecycle.onSaveSession();

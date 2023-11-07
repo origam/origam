@@ -258,11 +258,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           }
         }
+        else if (!this.isDropped && this.userEnteredValue === ""){
+          this.data.chooseNewValue(null);
+        }
         break;
       case "Delete":
-        this.userEnteredValue = undefined;
-        this.cursorRowId = "";
-        this.data.chooseNewValue(null);
+        this.clearSelection();
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -297,16 +298,32 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
           this.trySelectFirstRow();
         }
         break;
+      case "Backspace":
+        if (document.getSelection()?.toString() === event.target.value ||
+          this.userEnteredValue?.length === 1)
+        {
+          this.clearSelection();
+        }
+        break;
     }
     this.onKeyDown && this.onKeyDown(event);
+  }
+
+  private clearSelection() {
+    this.userEnteredValue = undefined;
+    this.cursorRowId = "";
+    this.data.chooseNewValue(null);
+    this.dataTable.setFilterPhrase("");
   }
 
   handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
 
   @action.bound
   handleInputChange(event: any) {
+    if (this.userEnteredValue || event.target.value){
+      this.isDropped = true;
+    }
     this.userEnteredValue = event.target.value;
-    this.isDropped = true;
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");

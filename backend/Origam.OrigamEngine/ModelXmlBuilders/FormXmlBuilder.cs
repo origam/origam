@@ -157,7 +157,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			{
 				windowElement.SetAttribute("RefreshOnFocus", "true");
 			}
-            windowElement.SetAttribute("autoSaveOnListRecordChange", XmlConvert.ToString(autoSaveOnListRecordChange));
+            windowElement.SetAttribute("AutoSaveOnListRecordChange", XmlConvert.ToString(autoSaveOnListRecordChange));
             windowElement.SetAttribute("RequestSaveAfterUpdate", XmlConvert.ToString(requestSaveAfterUpdate));
 			IPersistenceService persistenceService = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
