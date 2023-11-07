@@ -29,7 +29,6 @@ interface IClearableInputData{
   value?: string;
   onChange?: (event: any) => void;
   onBlur?: (event: any) => void;
-  autofocus?: boolean;
 }
 
 export const ClearableInput = React.forwardRef<HTMLInputElement, IClearableInputData>((props, ref) => {

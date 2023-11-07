@@ -41,6 +41,7 @@ import { IAggregation } from "./IAggregation";
 import { GridFocusManager } from "../GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import {ITabIndexOwner} from "../TabIndexOwner";
+import { IResponseOperation } from "model/actions/DataLoading/processCRUDResult";
 
 export interface IDataViewData extends ITabIndexOwner {
   id: string;
@@ -159,9 +160,11 @@ export interface IDataView extends IDataViewData {
 
   appendRecords(rows: any[][]): void;
 
-  substituteRecord(row: any[]): void;
+  substituteRecords(rows: any[]): void;
 
   deleteRowAndSelectNext(row: any[]): void;
+
+  getRowIndexById(rowId: any): number | undefined;
 
   clear(): void;
 

@@ -91,7 +91,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { IFormScreen } from "model/entities/types/IFormScreen";
+import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -403,8 +403,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           const rootDataView = rootDataViews[0];
           const filtersDisplayed = getTablePanelView(rootDataView)!.filterConfiguration
             .isFilterControlsDisplayed
-          if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
-              rootDataView.formFocusManager.refocusLast();
+          if(workFinished && !filtersDisplayed){
+              rootDataView.gridFocusManager.refocusLastFilter();
           }
         }
       ),
@@ -797,6 +797,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
+      yield*clearRowStates(dataView)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
     dataView.formFocusManager.refocusLast();
@@ -948,7 +949,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ? IResponseOperation.Update
         : IResponseOperation.Create;
 
-      yield*processCRUDResult(rootDataView, dirtyRowResult) as any;
+      yield*processCRUDResult(rootDataView, [dirtyRowResult]) as any;
     }
   }
 
@@ -1032,7 +1033,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const childEntities = getAllBindingChildren(targetDataView)
-        .filter(dataView => getIsAddButtonVisible(dataView))
+        .filter(dataView => dataView.showAddButton)
         .map((dataView) => getEntity(dataView)
         );
 

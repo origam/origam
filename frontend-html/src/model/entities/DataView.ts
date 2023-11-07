@@ -334,10 +334,11 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  substituteRecord(row: any[]) {
-    this.dataTable.substituteRecord(row);
+  substituteRecords(rows: any[][]) {
+    this.dataTable.clearRecordDirtyValues(rows);
+    this.dataTable.substituteRecords(rows);
     if (getGroupingConfiguration(this).isGrouping) {
-      getGrouper(this).substituteRecord(row);
+      getGrouper(this).substituteRecords(rows);
     }
   }
 
@@ -349,16 +350,20 @@ export class DataView implements IDataView {
     }
   }
 
-  @computed get selectedRowIndex(): number | undefined {
+  getRowIndexById(rowId: any) {
     if (getGroupingConfiguration(this).isGrouping) {
       return getGrouper(this).allGroups.some((group) => group.isExpanded)
-        ? getGrouper(this).getRowIndex(this.selectedRowId!)
+        ? getGrouper(this).getRowIndex(rowId)
         : undefined;
     } else {
-      return this.selectedRowId
-        ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+      return (rowId !== null && rowId !== undefined)
+        ? this.dataTable.getExistingRowIdxById(rowId)
         : undefined;
     }
+  }
+
+  @computed get selectedRowIndex(): number | undefined {
+    return this.getRowIndexById(this.selectedRowId)
   }
 
   @computed get trueSelectedRowIndex(): number | undefined {

@@ -128,7 +128,7 @@ namespace Origam.Server.Pages
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
                     // pure dataset > json serialization
-                    response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
+                    response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, xsltPage.OmitJsonRootElement));
                     xmlData = null;
                     isProcessed = true;
                 }
