@@ -243,9 +243,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Delete":
-        this.userEnteredValue = undefined;
-        this.cursorRowId = "";
-        this.data.chooseNewValue(null);
+        this.clearSelection();
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -284,13 +282,18 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         if (document.getSelection()?.toString() === event.target.value ||
           this.userEnteredValue?.length === 1)
         {
-          this.userEnteredValue = undefined;
-          this.cursorRowId = "";
-          this.data.chooseNewValue(null);
+          this.clearSelection();
         }
         break;
     }
     this.onKeyDown && this.onKeyDown(event);
+  }
+
+  private clearSelection() {
+    this.userEnteredValue = undefined;
+    this.cursorRowId = "";
+    this.data.chooseNewValue(null);
+    this.dataTable.setFilterPhrase("");
   }
 
   handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
