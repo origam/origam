@@ -156,13 +156,11 @@ export class ColumnsDialog extends React.Component<{
     this.selectedColumnId = this.temporaryPropertiesOrder[0]?.id || null;
   }
 
-  *applyOrder() {
+  *applyOrder() {    
     if (this.temporaryPropertiesOrder.length === 0) return;
     this.props.model.setOrderIds(
       this.temporaryPropertiesOrder.map((property) => property.id)
     );
-    const manager = getConfigurationManager(this.props.model.tablePanelView);
-    yield* manager.onColumnOrderChanged(true);
   }
 
   *handleOkClick() {
