@@ -269,7 +269,7 @@ namespace Origam.Rule
 			// Every field change calls the DataRow.EndEdit(). This led to 
 			// execution of the OnRowChanged handler after changing just a single
 			// field which added undesired overhead.
-			if (e.Action != DataRowAction.Change && e.Action != DataRowAction.Nothing)
+			if (e.Action != DataRowAction.Change && e.Action != DataRowAction.Nothing && e.Action != DataRowAction.Commit)
 			{
 				OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
 			}
