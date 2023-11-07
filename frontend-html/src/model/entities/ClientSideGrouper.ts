@@ -52,6 +52,8 @@ export class ClientSideGrouper implements IGrouper {
   get allGroups() {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
+  substituteRecords(rows: any[][]) {
+  }
 
   substituteRecord(row: any[]): void {
   }
