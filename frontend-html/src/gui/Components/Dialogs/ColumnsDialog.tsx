@@ -59,7 +59,7 @@ export class ColumnsDialog extends React.Component<{
     this.resetOrder();
   }
 
-  @observable columnWidths = [70, 220, 110, 150, 90 - SCROLLBAR_SIZE];
+  @observable columnWidths = [70, 220, 110 - SCROLLBAR_SIZE, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
