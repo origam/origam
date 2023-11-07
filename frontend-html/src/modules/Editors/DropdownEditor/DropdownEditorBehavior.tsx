@@ -501,7 +501,3 @@ export function compareLookUpItems(item1: any, item2: any) {
 decorate(DropdownEditorBehavior, {
   isReadOnly: observable,
 });
-
-// export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
-//   "IDropdownEditorBehavior"
-// );
