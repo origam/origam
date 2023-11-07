@@ -248,7 +248,7 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "Number": {
         if (cellValue === undefined) return true;
-        const t1 = prop.column === "Number" ? parseFloat(cellValue) : cellValue;
+        const t1 = parseFloat(cellValue);
 
         switch (term.setting.type) {
           case "between": {
@@ -303,9 +303,9 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
             return t1 !== parseFloat(term.setting.val1);
           case "nnull":
-            return t1 !== null;
+            return cellValue !== null;
           case "null":
-            return t1 === null;
+            return cellValue === null;
         }
         break;
       }
