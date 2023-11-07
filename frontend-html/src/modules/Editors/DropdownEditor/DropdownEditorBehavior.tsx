@@ -277,6 +277,15 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
           this.trySelectFirstRow();
         }
         break;
+      case "Backspace":
+        if (document.getSelection()?.toString() === event.target.value ||
+          this.userEnteredValue?.length === 1)
+        {
+          this.userEnteredValue = undefined;
+          this.cursorRowId = "";
+          this.data.chooseNewValue(null);
+        }
+        break;
     }
     this.onKeyDown && this.onKeyDown(event);
   }
