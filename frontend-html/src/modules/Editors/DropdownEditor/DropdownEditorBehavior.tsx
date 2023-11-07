@@ -238,6 +238,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           }
         }
+        else if (!this.isDropped && this.userEnteredValue === ""){
+          this.data.chooseNewValue(null);
+        }
         break;
       case "Delete":
         this.userEnteredValue = undefined;
