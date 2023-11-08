@@ -36,13 +36,6 @@ resources:
      endpoint: https://github.com/origam/
      name: origam/origam
      ref: $(BRANCH)
-   - repository: dockerwindows
-     type: github
-     endpoint: https://github.com/origam/
-     name: origam/origam
-     ref: dockerwindows
-
-
 
 jobs:
   - job: build_desktop_applications
@@ -595,7 +588,7 @@ jobs:
     pool:
       vmImage: ubuntu-20.04
     steps:
-     - checkout: dockerwindows
+     - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'
@@ -628,7 +621,7 @@ jobs:
     pool:
       vmImage: windows-2022
     steps:
-     - checkout: dockerwindows
+     - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'
