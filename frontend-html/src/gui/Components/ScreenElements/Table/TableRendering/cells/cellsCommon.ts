@@ -92,10 +92,8 @@ export function drawSelectedRowBorder(frontStripeWidth: number) {
 }
 
 export const numberCellPaddingRight = 15;
-export const cellPaddingLeft = parseInt(getComputedStyle(document.documentElement)
-  .getPropertyValue('--cellLeftPadding'));;
-export const cellPaddingRight = parseInt(getComputedStyle(document.documentElement)
-  .getPropertyValue('--cellRightPadding'));;
+export const cellPaddingLeft = 6;
+export const cellPaddingRight = 6;
 export const cellPaddingLeftFirstCell = 25;
 export const cellPaddingRightFirstCell = 25;
 export const topTextOffset = 17;
