@@ -21,7 +21,7 @@
     "@origam/plugin-chart": "^2.0.3",
     "@origam/plugin-filter": "^2.0.2",
     "@origam/plugins": "^1.1.0",
-    "@origam/styles": "^2.0.3",
+    "@origam/styles": "^2.1.0",
     "@origam/utils": "^1.3.5",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
