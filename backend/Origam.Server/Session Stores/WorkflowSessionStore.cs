@@ -555,6 +555,7 @@ namespace Origam.Server
             WorkflowCallbackHandler handler = new WorkflowCallbackHandler(this.Host, this.WorkflowInstanceId);
             handler.Subscribe();
             this.Host.FinishWorkflowForm(this.TaskId, this.XmlData);
+            UnregisterEvents();
             handler.Event.WaitOne();
             HandleWorkflow(handler);
             UIRequest request = GetRequest(cachedWorkflowTaskIds);

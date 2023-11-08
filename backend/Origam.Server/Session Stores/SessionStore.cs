@@ -76,7 +76,7 @@ namespace Origam.Server
         private bool _refreshOnInitUI;
         private SaveRefreshType _refreshAfterSaveType;
         internal object _lock = new object();
-        private int _registerEventsCounter = 0;
+        private bool _eventsRegistered;
         private object _currentRecordId = null;
         private bool _isPagedLoading = false;
         private Dictionary<string, bool> _entityHasRuleDependencies = new Dictionary<string, bool>();
@@ -690,21 +690,24 @@ namespace Origam.Server
 
         public void RegisterEvents()
         {
-            _registerEventsCounter--;
-
+            if (_eventsRegistered)
+            {
+                return;
+            }
+            _eventsRegistered = true;
             if (XmlData != null)
             {
-                if (_registerEventsCounter == 0)
-                {
-                    RuleHandler.RegisterDatasetEvents(XmlData, RuleSet, RuleEngine);
-                }
+                RuleHandler.RegisterDatasetEvents(XmlData, RuleSet, RuleEngine);
             }
         }
 
         public void UnregisterEvents()
         {
-            _registerEventsCounter++;
-
+            if (! _eventsRegistered)
+            {
+                return;
+            }
+            _eventsRegistered = false;
             if (XmlData != null)
             {
                 RuleHandler.UnregisterDatasetEvents(XmlData);
