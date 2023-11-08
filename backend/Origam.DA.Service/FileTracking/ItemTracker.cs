@@ -278,7 +278,7 @@ namespace Origam.DA.Service
                     {
                         if (file is OrigamFile origamFile)
                         {
-                            return origamFile.ExternalFiles.Concat(new FileInfo(origamFile.Path.Absolute));
+                            return origamFile.ExternalFiles.Append(new FileInfo(origamFile.Path.Absolute));
                         }
 
                         return new[] {new FileInfo(file.Path.Absolute)};

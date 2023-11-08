@@ -772,25 +772,13 @@ namespace Origam.Rule
 		{
 			return ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, true);
 		}
-
-		private Queue _ruleQueue = new Queue();
+		
+		private IndexedRuleQueue _ruleQueue = new ();
 		private Hashtable _ruleColumnChanges = new Hashtable();
 
 		private bool IsEntryInQueue(DataRow rowChanged, DataStructureRuleSet ruleSet)
 		{
-			foreach(object[] entry in _ruleQueue)
-			{
-				if(entry[0].Equals(rowChanged) && (
-										(entry[1] != null && entry[1].Equals(ruleSet) )
-										|| entry[1] == null && ruleSet == null
-													)
-				   )
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return _ruleQueue.Contains(rowChanged, ruleSet);
 		}
 
 		private void UpdateQueueEntries(DataRow rowChanged, DataStructureRuleSet ruleSet, DataColumn column)
@@ -827,6 +815,7 @@ namespace Origam.Rule
 			}
 
 			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data};
+
 			_ruleQueue.Enqueue(queueEntry);
 		}
 
@@ -1000,7 +989,6 @@ namespace Origam.Rule
 					}
 
 					row.CancelEdit();
-
 					_ruleQueue.Dequeue();
 				}
 			}
@@ -2081,7 +2069,8 @@ namespace Origam.Rule
 #region Rule Evaluators
 		private object EvaluateRule(XPathRule rule, IXmlContainer context, XPathNodeIterator contextPosition)
 		{
-			if(context?.Xml == null)
+			XmlDocument xmlDocument = context?.Xml;
+			if(xmlDocument == null)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
 			}
@@ -2093,10 +2082,10 @@ namespace Origam.Rule
 				{
 					log.Debug("Current Position: " + contextPosition?.Current?.Name);
 				}
-				log.Debug("  Input data: " + context.Xml?.OuterXml);
+				log.Debug("  Input data: " + xmlDocument.OuterXml);
 			}
 
-			XPathNavigator nav = context.Xml.CreateNavigator();
+			XPathNavigator nav = xmlDocument.CreateNavigator();
 
 			return XpathEvaluator.Instance.Evaluate(
 				rule.XPath, rule.IsPathRelative, rule.DataType, nav, 

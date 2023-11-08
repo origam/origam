@@ -28,7 +28,7 @@ export interface IRowsContainer {
 
   appendRecords(rowsIn: any[][]): void;
 
-  substitute(row: any[]): void;
+  substituteRows(rows: any[][]): void;
 
   registerResetListener(listener: () => void): void;
 
@@ -43,6 +43,8 @@ export interface IRowsContainer {
   getFilteredRows(args: { propertyFilterIdToExclude: string }): any[];
 
   updateSortAndFilter(data?: { retainPreviousSelection?: true }): Promise<any>;
+
+  getRowById(id: string): any[] | undefined;
 
   start(): void;
 
