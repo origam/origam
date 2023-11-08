@@ -645,5 +645,5 @@ jobs:
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.windows'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           windows.$(TAG).$(Build.BuildId)
-           windows.$(TAG_LATEST)
+           $(TAG).$(Build.BuildId).win
+           $(TAG_LATEST).win
