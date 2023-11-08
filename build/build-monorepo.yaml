@@ -624,8 +624,7 @@ jobs:
       vmImage: windows-2022
     steps:
      - checkout: origam
-       with:
-        ref: dockerwindows
+       ref: dockerwindows
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'
