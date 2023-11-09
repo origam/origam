@@ -39,7 +39,7 @@
     "@types/react-highlight-words": "^0.16.7",
     "@types/react-inlinesvg": "^1.0.0",
     "@types/react-measure": "^2.0.11",
-    "@types/react-virtualized": "^9.21.26",
+    "@types/react-virtualized": "^9.21.27",
     "@types/string-strip-html": "^5.0.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "@xstate/inspect": "^0.8.0",
