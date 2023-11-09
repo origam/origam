@@ -588,7 +588,7 @@ jobs:
   # DOCKER Linux
   # ------------------------------------
   - job: build_docker
-    displayName: Build Docker
+    displayName: Build Linux Docker
     dependsOn: build_release
     pool:
       vmImage: ubuntu-20.04

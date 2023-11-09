@@ -29,8 +29,8 @@ RUN apt-get update \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
 WORKDIR /root
-COPY linux\updateTimezone.sh \
-linux\reverse-proxy.conf \
+COPY linux/updateTimezone.sh \
+linux/reverse-proxy.conf \
 /root/
 RUN mv reverse-proxy.conf /etc/nginx/sites-available \
 && unlink /etc/nginx/sites-enabled/default \
@@ -47,10 +47,10 @@ COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
-linux\startServer.sh \
+linux/startServer.sh \
 log4net.config \
-linux\updateEnvironment.sh \
-linux\updateEnvironmentRoot.sh \
+linux/updateEnvironment.sh \
+linux/updateEnvironmentRoot.sh \
 /home/origam/HTML5/
 WORKDIR /home/origam/HTML5
 RUN mkdir data \
