@@ -80,7 +80,6 @@ export class FilterGroupManager {
 
   @action.bound
   setFilterGroup(filterGroup: IFilterGroup | undefined) {
-    console.log({filterGroup});    
     this.selectedFilterGroup = cloneFilterGroup(filterGroup);
     this.filterConfiguration.clearFilters();
     if (this.selectedFilterGroup?.filters) {
