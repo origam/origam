@@ -93,7 +93,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   updateTotalRowCount(dataView: IDataView): Promise<any>;
 
-  onRequestScreenClose(isDueToError?: boolean): Generator;
+  onRequestScreenClose(closeWithoutSaving?: boolean): Generator;
 
   clearAutoRefreshInterval(): void;
 
@@ -107,7 +107,9 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   killForm(): void;
 
-  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
+  closeForm(): Generator;
+
+  start(args:{initUIResult: any, preloadIsDirty?: boolean, createNewRecord?: boolean}): Generator;
 
   loadGroups(rootDataView: IDataView, columnSettings: IGroupingSettings, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined): Promise<any[]>;
 

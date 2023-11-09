@@ -149,6 +149,7 @@ export class MobileFormBuilder extends React.Component<{
         return (
           <FormRoot
             key={formItem.xfo.$iid}
+            dataView={self.props.dataView!}
             style={{backgroundColor}}
             className={"formRootMobile"}
           >

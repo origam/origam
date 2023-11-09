@@ -148,6 +148,7 @@ export class OrigamAPI implements IApi {
     Caption: string;
     Parameters: { [key: string]: any };
     IsSingleRecordEdit?: boolean;
+    CreateNewRecord?: boolean;
     RequestCurrentRecordId: boolean;
   }) {
     const result = (await this.axiosInstance.post("/UIService/InitUI", data)).data;
