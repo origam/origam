@@ -2001,10 +2001,10 @@
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet-draw@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.8.tgz#d8c24fe5f42a760786683a056fb2b23a8e1f1bc5"
-  integrity sha512-Xtws1fwT58Gst6l4FnOoX4dUSuiBK34yIYI1nnhI2vgyXaTwbBHbzaZgHOm7lpbJmEicoyu1g2AntVjvo9ztKg==
+"@types/leaflet-draw@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.10.tgz#38210af22fe05a31ef2ab22a6bac437616220e8b"
+  integrity sha512-1tV0QW5qAcTCmuZZwH19qngHayLxTE9vyDGicfMoASnrFf0oo3+lFOnn/ZRKSskyHKB7T8s6DTk7Henaq4ueyg==
   dependencies:
     "@types/leaflet" "*"
 
