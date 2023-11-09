@@ -396,7 +396,9 @@ export function*interpretScreenXml(
       const filterGroupManager = new FilterGroupManager(filterConfiguration);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
+        .forEach((conf: any) => addFilterGroups(
+          filterGroupManager, properties, conf, dataView.attributes.SelectionMember
+        ));
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
