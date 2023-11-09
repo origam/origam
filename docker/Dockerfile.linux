@@ -10,12 +10,14 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
 #INSTALL YARN & NODEJS 16
 RUN apt-get update \
-&& apt-get -y install curl gnupg \
+&& apt-get -y install ca-certificates curl sudo gnupg \
+&& sudo mkdir -p /etc/apt/keyrings \
+&& curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list \
 && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-&& curl -sL https://deb.nodesource.com/setup_16.x | bash - \
 && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
 && apt-get update \
-&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh yarn nodejs \
+&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git nginx ssh yarn nodejs \
 && git clone https://github.com/mono/libgdiplus.git /tmp/libgdiplus \
 && cd libgdiplus \
 && ./autogen.sh --with-pango --prefix=/usr \
