@@ -36,6 +36,11 @@ resources:
      endpoint: https://github.com/origam/
      name: origam/origam
      ref: $(BRANCH)
+   - repository: origamtest
+     type: github
+     endpoint: https://github.com/origam/
+     name: origam/origam
+     ref: dockerwindows
 
 jobs:
   - job: build_desktop_applications
@@ -580,7 +585,7 @@ jobs:
          changeLogType: 'commitBased'
        displayName: Create new GitHub origam-html-chat/$(TAG_LATEST) release
   # ------------------------------------
-  # DOCKER
+  # DOCKER Linux
   # ------------------------------------
   - job: build_docker
     displayName: Build Docker
@@ -588,7 +593,7 @@ jobs:
     pool:
       vmImage: ubuntu-20.04
     steps:
-     - checkout: origam
+     - checkout: origamtest
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'
@@ -610,8 +615,8 @@ jobs:
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.linux'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           $(TAG).$(Build.BuildId)
-           $(TAG_LATEST)
+           $(TAG).$(Build.BuildId).linux
+           $(TAG_LATEST).linux
   # ------------------------------------
   # DOCKER WINDOWS
   # ------------------------------------
@@ -621,7 +626,7 @@ jobs:
     pool:
       vmImage: windows-2022
     steps:
-     - checkout: origam
+     - checkout: origamtest
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'

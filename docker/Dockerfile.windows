@@ -18,10 +18,10 @@ COPY _appsettings.template .
 COPY _OrigamSettings.mssql.template .
 COPY _OrigamSettings.postgres.template .
 COPY log4net.config .
-COPY script.ps1 .
-COPY yarninstall.ps1 .
+COPY windows/script.ps1 .
+COPY windows/yarninstall.ps1 .
 RUN Powershell.exe -executionpolicy remotesigned -File yarninstall.ps1
 WORKDIR /home/origam/HTML5-SOURCE
-COPY buildfrontend.ps1 .
+COPY windows/buildfrontend.ps1 .
 WORKDIR /home/origam/HTML5
 CMD Powershell.exe -executionpolicy remotesigned -File script.ps1
