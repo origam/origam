@@ -12,56 +12,56 @@
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
-    x:id="466e48e5-a792-4067-8ca3-2e2188c1b567"
-    asi:name="WF_1stepfail"
+    x:id="b65e07b0-0d95-4fec-88c0-df5983519436"
+    asi:name="CreateNewRecord"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="52f59dfd-3c21-4a36-a9e1-86594f915a19"
-      cs:isReturnValue="false"
+      x:id="39adaa5d-721c-43ba-afec-577556f61e10"
+      cs:isReturnValue="true"
       asi:name="AllDataTypes"
       cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
     <smct:WorkflowTask
       asi:abstract="false"
-      x:id="99b51b54-4adc-4115-bf98-f59cf7210c14"
-      asi:name="0100_StepFail"
+      x:id="a6ec0587-c549-4641-a4c0-e71d30197ae1"
+      asi:name="Transform_AllDataTypes"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_1stepfail.origam#WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CreateNewRecord.origam#CreateNewRecord/AllDataTypes/39adaa5d-721c-43ba-afec-577556f61e10"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
       smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="2f8bfe8c-62f9-436e-b294-5da6debb4195"
+        x:id="187b0706-7662-478e-bc82-3184a5cdb3e7"
         asi:name="XslScript"
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
         <tr:TransformationReference
           asi:abstract="false"
-          x:id="b598ab30-3474-46d4-841f-d8b2c40c6d62"
-          asi:name="AllDataTypes_New_record_fail"
-          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_New_record_fail.origam#AllDataTypes_New_record_fail/4e7a349d-6e6c-4307-b0e6-828acba1e7c2" />
+          x:id="265da5fe-bc8c-4153-b6aa-31fecdc0db1b"
+          asi:name="AllDataTypes_New_record"
+          tr:transformation="Widgets/Transformation/Widgets/AllDataTypes_New_record.origam#AllDataTypes_New_record/ee4763fd-7a25-4b4d-9c9d-8995aa93dbec" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="4b8f242f-8710-4ac3-b424-a6e28231b582"
+        x:id="2ae1f1d3-e0ad-40c7-aab5-60a1385fe898"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="f59b0bf4-925a-4457-a04d-d1cd6d67414b"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_1stepfail.origam#WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
-          x:id="d6f8d1ac-fb0f-40cb-a2bd-f26cab632355"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/CreateNewRecord.origam#CreateNewRecord/AllDataTypes/39adaa5d-721c-43ba-afec-577556f61e10"
+          x:id="3e69c6ef-9201-4413-b92b-7c6e0ebda8c2"
           asi:name="AllDataTypes"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="f6ee450c-21c8-45dd-ac92-4e2b084de907"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
     </smct:WorkflowTask>
   </w:Workflow>
 </x:file>
