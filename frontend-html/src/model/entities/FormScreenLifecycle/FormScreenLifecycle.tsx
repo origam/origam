@@ -180,7 +180,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield*this.executeAction(gridId, entity, action, selectedItems);
   }
 
-  *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
+  *onRequestScreenClose(closeWithoutSaving?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
     for (let dataView of formScreen.dataViews) {
       yield onFieldBlur(dataView)();
@@ -188,7 +188,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     // Just wait if there is some data manipulation in progress.
     yield formScreen.dataUpdateCRS.runAsync(() => Promise.resolve());
-    if (isDueToError || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
+    if (closeWithoutSaving || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield*this.closeForm();
       return;
     }
@@ -260,7 +260,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
       this.killForm();
-      yield*this.start(uiResult);
+      yield*this.start({initUIResult: uiResult});
     } finally {
       this.monitor.inFlow--;
     }
@@ -279,7 +279,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
       this.killForm();
-      yield*this.start(uiResult);
+      yield*this.start({initUIResult: uiResult});
     } finally {
       this.monitor.inFlow--;
     }
@@ -299,7 +299,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
       this.killForm();
-      yield*this.start(uiResult);
+      yield*this.start({initUIResult: uiResult});
     } finally {
       this.monitor.inFlow--;
     }
@@ -367,7 +367,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
+  *start(args:{initUIResult: any, preloadIsDirty?: boolean, createNewRecord?: boolean}): Generator {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
@@ -414,14 +414,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if(!openedScreen){
         return;
       }
-      this.initialSelectedRowId = initUIResult.currentRecordId;
-      yield*this.applyInitUIResult({initUIResult});
+      this.initialSelectedRowId = args.initUIResult.currentRecordId;
+      yield*this.applyInitUIResult({initUIResult: args.initUIResult, createNewRecord: args.createNewRecord});
       const formScreen = getFormScreen(this);
-      formScreen.setDirty(!!preloadIsDirty)
-      this.initializePlugins(initUIResult);
+      formScreen.setDirty(!!args.preloadIsDirty)
+      this.initializePlugins(args.initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData(preloadIsDirty);
+        yield*this.loadData(args.preloadIsDirty);
         yield*this.updateTotalRowCounts();
         for (let rootDataView of formScreen.rootDataViews) {
           const orderingConfiguration = getOrderingConfiguration(rootDataView);
@@ -550,7 +550,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *applyInitUIResult(args: { initUIResult: any }): any {
+  *applyInitUIResult(args: { initUIResult: any, createNewRecord?: boolean}): any {
     const openedScreen = getOpenedScreen(this);
 
     assignIIds(args.initUIResult.formDefinition);
@@ -562,7 +562,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId,
       args.initUIResult.workflowTaskId,
-      openedScreen.lazyLoading
+      openedScreen.lazyLoading,
+      args.createNewRecord
     );
     screen.notifications = args.initUIResult.notifications;
     const api = getApi(openedScreen);

@@ -18,6 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IDropDownColumn } from "./IDropDownColumn";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
+
 
 export enum IDropDownType {
   EagerlyLoadedGrid = "EagerlyLoadedGrid",
@@ -40,6 +42,7 @@ export interface ILookupData {
   searchByFirstColumnOnly: boolean;
   dropDownColumns: IDropDownColumn[];
   dropDownParameters: IDropDownParameter[];
+  newRecordScreen?: NewRecordScreen;
 }
 
 export interface ILookup extends ILookupData {

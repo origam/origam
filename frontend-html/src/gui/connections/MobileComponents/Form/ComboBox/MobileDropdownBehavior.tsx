@@ -74,6 +74,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
+  hasNewScreenButton = false;
 
   @observable cursorRowId = "";
 
