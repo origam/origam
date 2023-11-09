@@ -71,17 +71,23 @@ export class FilterGroupManager {
   }
 
   get noFilterActive() {
-    return this.activeFilters.length === 0 ||
-      this.activeFilters.every(filter => !filter.setting.isComplete)
+    return this.selectedFilterGroup?.selectionCheckboxFilter === null && 
+      (
+        this.activeFilters.length === 0 ||
+        this.activeFilters.every(filter => !filter.setting.isComplete)
+      )
   }
 
   @action.bound
   setFilterGroup(filterGroup: IFilterGroup | undefined) {
+    console.log({filterGroup});    
     this.selectedFilterGroup = cloneFilterGroup(filterGroup);
     this.filterConfiguration.clearFilters();
     if (this.selectedFilterGroup?.filters) {
       this.filterConfiguration.setFilters(this.selectedFilterGroup.filters);
     }
+    this.filterConfiguration.selectionCheckboxFilter = 
+      this.selectedFilterGroup?.selectionCheckboxFilter ?? null;
   }
 
   filterToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
@@ -139,7 +145,9 @@ export class FilterGroupManager {
       filters: this.activeFilters,
       id: filterGroupId,
       isGlobal: isGlobal,
-      name: name
+      name: name,
+      selectionCheckboxFilter: 
+        this.filterConfiguration.selectionCheckboxFilter
     }
     this.filterGroups.push(filterGroup);
   }

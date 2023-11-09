@@ -65,7 +65,7 @@ export class SelectionCheckBoxHeader extends React.Component<{
             <i className="far fa-square" />
           )}
         </div>
-        {filterControlsDisplayed ? (
+        {!!selectionMember && filterControlsDisplayed ? (
           <div className={S.filter} onClick={this.handleSelectionCheckboxFilterClick}>
             {selectionCheckboxFilter === null 
               ? <i className="far fa-minus-square" />
