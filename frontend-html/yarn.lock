@@ -2086,10 +2086,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-draft-wysiwyg@^1.13.6":
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/@types/react-draft-wysiwyg/-/react-draft-wysiwyg-1.13.6.tgz#83cbfda00e6c36332db2e6f60cba70fd53c71406"
-  integrity sha512-fo1K3FQBa3NZLCc4dPS6oaQXx6ixF7RloAkRuyF92YsYLygrBN7+E5udGPzgE4WPDA/k0xv4Az/phVA0ceclUA==
+"@types/react-draft-wysiwyg@^1.13.7":
+  version "1.13.7"
+  resolved "https://registry.yarnpkg.com/@types/react-draft-wysiwyg/-/react-draft-wysiwyg-1.13.7.tgz#b63a32c4481c40be97dbee04043f34915993fac4"
+  integrity sha512-jG2YmbaesrCv7GakLb0fVxaQMAg+bjGvaMwaImrXaYMVEoZzzaoFbTFXTBJmogkxEDrfvtmdUVn5e4koB/gn8A==
   dependencies:
     "@types/draft-js" "*"
     "@types/react" "*"
