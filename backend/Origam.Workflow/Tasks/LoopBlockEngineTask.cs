@@ -72,7 +72,7 @@ namespace Origam.Workflow.Tasks
 			LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
 
 			_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
-
+			object loopConditionContextStore;
 			do
 			{
 				i++;
@@ -93,7 +93,9 @@ namespace Origam.Workflow.Tasks
 					_call.ParentContexts.Add(key, this.Engine.RuleEngine.GetContext(key));
 				}
 				Engine.Host.ExecuteWorkflow(_call);
-			} while ((bool)this.Engine.RuleEngine.EvaluateContext(block.LoopConditionXPath, block.LoopConditionContextStore, OrigamDataType.Boolean, null));
+				loopConditionContextStore = _call.RuleEngine.GetContext(
+					block.LoopConditionContextStore.PrimaryKey);
+			} while ((bool)this.Engine.RuleEngine.EvaluateContext(block.LoopConditionXPath, loopConditionContextStore, OrigamDataType.Boolean, null));
 
 			// there is no other iteration, we finish
 			if(this.Engine != null)	// only if we have not finished already e.g. with an exception
