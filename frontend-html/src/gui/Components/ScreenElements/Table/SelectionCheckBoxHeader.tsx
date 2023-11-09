@@ -26,6 +26,7 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getProperty } from "model/selectors/DataView/getProperty";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 @observer
 export class SelectionCheckBoxHeader extends React.Component<{
@@ -55,6 +56,7 @@ export class SelectionCheckBoxHeader extends React.Component<{
     const selectionMember: string | null | undefined =
       this.props.dataView.selectionMember;
 
+
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
       <div style={{ minWidth: this.props.width + "px" }} className={S.root}>
@@ -65,7 +67,9 @@ export class SelectionCheckBoxHeader extends React.Component<{
             <i className="far fa-square" />
           )}
         </div>
-        {!!selectionMember && filterControlsDisplayed ? (
+        { !!selectionMember && 
+          !isLazyLoading(tablePanelView) &&
+          filterControlsDisplayed ? (
           <div className={S.filter} onClick={this.handleSelectionCheckboxFilterClick}>
             {selectionCheckboxFilter === null 
               ? <i className="far fa-minus-square" />
