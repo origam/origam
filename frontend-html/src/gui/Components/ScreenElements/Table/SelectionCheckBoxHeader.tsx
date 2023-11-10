@@ -23,9 +23,6 @@ import { setAllSelectionStates } from "model/actions-tree/setAllSelectionStates"
 import S from "./SelectionCheckboxHeader.module.scss";
 import { action } from "mobx";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { getProperty } from "model/selectors/DataView/getProperty";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
-import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 @observer
@@ -35,8 +32,12 @@ export class SelectionCheckBoxHeader extends React.Component<{
 }> {
   @action.bound
   handleCheckAllClick(event: any) {
-    this.props.dataView.selectAllCheckboxChecked = !this.props.dataView.selectAllCheckboxChecked;
-    setAllSelectionStates(this.props.dataView, this.props.dataView.selectAllCheckboxChecked);
+    this.props.dataView.selectAllCheckboxChecked = 
+      !this.props.dataView.selectAllCheckboxChecked;
+    setAllSelectionStates(
+      this.props.dataView, 
+      this.props.dataView.selectAllCheckboxChecked
+    );
   }
 
   @action.bound 
@@ -44,7 +45,6 @@ export class SelectionCheckBoxHeader extends React.Component<{
     const tablePanelView = getTablePanelView(this.props.dataView);
     tablePanelView.filterConfiguration.toggleSelectionCheckboxFilter();
   }
-
 
   render() {
     const tablePanelView = getTablePanelView(this.props.dataView);
@@ -56,26 +56,25 @@ export class SelectionCheckBoxHeader extends React.Component<{
     const selectionMember: string | null | undefined =
       this.props.dataView.selectionMember;
 
-
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
-      <div style={{ minWidth: this.props.width + "px" }} className={S.root}>
+      <div style={{minWidth: this.props.width + "px"}} className={S.root}>
         <div className={S.allChecker} onClick={this.handleCheckAllClick}>
           {isChecked ? (
-            <i className="far fa-check-square" />
+            <i className="far fa-check-square"/>
           ) : (
-            <i className="far fa-square" />
+            <i className="far fa-square"/>
           )}
         </div>
-        { !!selectionMember && 
-          !isLazyLoading(tablePanelView) &&
-          filterControlsDisplayed ? (
+        {!!selectionMember && 
+        !isLazyLoading(tablePanelView) && 
+        filterControlsDisplayed ? (
           <div className={S.filter} onClick={this.handleSelectionCheckboxFilterClick}>
             {selectionCheckboxFilter === null 
-              ? <i className="far fa-minus-square" />
+              ? <i className="far fa-minus-square"/>
             : selectionCheckboxFilter === true
-              ? <i className="far fa-check-square" />
-            : <i className="far fa-square" />}
+              ? <i className="far fa-check-square"/>
+            : <i className="far fa-square"/>}
           </div>
         ) : null}
       </div>
