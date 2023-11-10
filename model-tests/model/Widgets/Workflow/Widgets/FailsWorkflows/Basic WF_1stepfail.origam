@@ -13,7 +13,7 @@
   <w:Workflow
     asi:abstract="false"
     x:id="466e48e5-a792-4067-8ca3-2e2188c1b567"
-    asi:name="WF_1stepfail"
+    asi:name="Basic WF_1stepfail"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -28,7 +28,7 @@
       x:id="99b51b54-4adc-4115-bf98-f59cf7210c14"
       asi:name="0100_StepFail"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_1stepfail.origam#WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_1stepfail.origam#Basic WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
@@ -52,7 +52,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_1stepfail.origam#WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_1stepfail.origam#Basic WF_1stepfail/AllDataTypes/52f59dfd-3c21-4a36-a9e1-86594f915a19"
           x:id="d6f8d1ac-fb0f-40cb-a2bd-f26cab632355"
           asi:name="AllDataTypes"
           cr:xPath="/" />

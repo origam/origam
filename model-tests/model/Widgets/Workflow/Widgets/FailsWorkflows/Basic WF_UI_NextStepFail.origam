@@ -15,7 +15,7 @@
   <w:Workflow
     asi:abstract="false"
     x:id="594e3ada-e253-41e0-9b13-159381a0cf8b"
-    asi:name="WF_UI_NextStepFail"
+    asi:name="Basic WF_UI_NextStepFail"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -30,7 +30,7 @@
       x:id="3e04ef58-2a72-4015-9cb3-192025bbaa7b"
       asi:name="0100_CreateRow"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
@@ -54,7 +54,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
           x:id="10a0334d-56aa-4150-b0c1-8cc012bccac5"
           asi:name="AllDataTypes"
           cr:xPath="/" />
@@ -70,7 +70,7 @@
       x:id="bcd12ba1-6261-4952-a8fd-a69d4b9d3746"
       asi:name="0300_StepFail"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
@@ -99,7 +99,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
           x:id="3f8f91af-f99e-4f43-8719-d1205f76ad5f"
           asi:name="AllDataTypes"
           cr:xPath="/" />
@@ -120,7 +120,7 @@
       uift:isRefreshSuppressedBeforeFirstSave="true"
       asi:name="0200_UIStep"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/AllDataTypes/9f3380f4-466b-4e65-a346-4bc6f6f58cec"
       wt:outputMethod="FullMerge"
       uift:refreshPortalAfterSave="False"
       aws:roles="*"
@@ -130,7 +130,7 @@
         x:id="52f79fd2-0893-4883-8b0b-459ec840d3c6"
         asi:name="After_0100_CreateRow"
         wtd:startEvent="Success"
-        wtd:task="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextStepFail.origam#WF_UI_NextStepFail/0100_CreateRow/3e04ef58-2a72-4015-9cb3-192025bbaa7b" />
+        wtd:task="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/0100_CreateRow/3e04ef58-2a72-4015-9cb3-192025bbaa7b" />
     </uift:WorkflowTask>
   </w:Workflow>
 </x:file>

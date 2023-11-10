@@ -12,48 +12,48 @@
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
-    x:id="e5171af3-0235-48b3-8a33-4fdb0b7a97a2"
-    asi:name="CallServiceWorkflow"
+    x:id="d6f2f528-54d0-47e2-8dd2-5e5d02b55da2"
+    asi:name="CallServiceWorkflow2steps"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="bdaa8f73-2ed6-46da-972f-f73ed32752ad"
+      x:id="333d3cef-6a9a-49b7-b99b-aaafdb90612c"
       cs:isReturnValue="false"
       asi:name="AllDataTypes"
       cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
     <smct:WorkflowTask
       asi:abstract="false"
-      x:id="ebb96224-cebd-4ef7-b361-75e085da28d2"
+      x:id="c6b04836-a95c-40e3-b09e-de524fdc2517"
       asi:name="CallServiceTaskWorkflow"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow.origam#CallServiceWorkflow/AllDataTypes/bdaa8f73-2ed6-46da-972f-f73ed32752ad"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/AllDataTypes/333d3cef-6a9a-49b7-b99b-aaafdb90612c"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/WorkflowService.origam#WorkflowService/a6838699-113c-4126-803c-39f05b33a7c3"
       smct:serviceMethod="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/92bafb78-2b5c-479a-902b-8c65162a659d">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="46fd4e4b-de7f-4ccc-aaf8-a234de590330"
+        x:id="337039bc-8990-43ec-bed2-2a6f9c7d7c1d"
         asi:name="Workflow"
         smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2">
         <wr:WorkflowReference
           asi:abstract="false"
-          x:id="d9eda238-6664-488e-90d2-ff51d0b1eec8"
-          asi:name="Basic WF_1stepfail"
-          wr:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_1stepfail.origam#Basic WF_1stepfail/466e48e5-a792-4067-8ca3-2e2188c1b567" />
+          x:id="f9afb767-8cf6-43be-aee8-4c0332ee334d"
+          asi:name="Basic WF_2StepFail"
+          wr:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/faa85d8f-85f3-433f-8d85-e962e4d1a92e" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="ba992b4d-1773-482e-b6f1-68f036dc4288"
+        x:id="480f5217-adb7-4378-a7d5-bb13b9926ffd"
         asi:name="Parameters"
         smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Parameters/3aca11ea-3cb9-4e2f-96fa-ec7182605371">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow.origam#CallServiceWorkflow/AllDataTypes/bdaa8f73-2ed6-46da-972f-f73ed32752ad"
-          x:id="f3042e52-28f7-4dc9-b52b-987cfb331421"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/AllDataTypes/333d3cef-6a9a-49b7-b99b-aaafdb90612c"
+          x:id="ca6fc7c6-1211-4dcc-b597-8cd5d9d60bd8"
           asi:name="AllDataTypes"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
