@@ -90,7 +90,7 @@ namespace Origam.Workflow.Tasks
 				// Fill input context stores
 				foreach(Key key in this.Engine.RuleEngine.ContextStoreKeys)
 				{
-					_call.ParentContexts.Add(key, i > 1 ? _call.RuleEngine.GetContext(key) : Engine.RuleEngine.GetContext(key));
+					_call.ParentContexts.Add(key, this.Engine.RuleEngine.GetContext(key));
 				}
 				Engine.Host.ExecuteWorkflow(_call);
 				loopConditionContextStore = _call.RuleEngine.GetContext(
