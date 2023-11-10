@@ -544,7 +544,7 @@ jobs:
        inputs:
          containerRegistry: dockerhub
          repository: origam/server
-         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile'
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile.linux'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId).linux
