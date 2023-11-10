@@ -147,7 +147,6 @@ namespace Origam.Server
                 }
             }
             // store the data
-            this.UnregisterEvents();
             try
             {
                 core.DataService.Instance.StoreData(
@@ -159,10 +158,6 @@ namespace Origam.Server
             catch (DBConcurrencyException ex)
             {
                 throw new RuleException(ex.Message);
-            }
-            finally
-            {
-                RegisterEvents();
             }
             if (RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords)
             {

@@ -482,10 +482,8 @@ namespace Origam.Server
         {
             lock (_lock)
             {
-                UnregisterEvents();
                 XmlData = null;
                 _data = null;
-                RegisterEvents();
             }
         }
 
@@ -546,53 +544,40 @@ namespace Origam.Server
 
         public void SetDataSource(object dataSource)
         {
-            // finish with the old data
-            UnregisterEvents();
-
-            try
+            // set the new data
+            if (dataSource is DataSet)
             {
-                // set the new data
-                if (dataSource is DataSet)
+                _data = dataSource as DataSet;
+
+                bool selfJoinExists = false;
+                foreach (DataRelation r in Data.Relations)
                 {
-                    _data = dataSource as DataSet;
-
-                    bool selfJoinExists = false;
-                    foreach (DataRelation r in Data.Relations)
+                    if (r.ParentTable.Equals(r.ChildTable))
                     {
-                        if (r.ParentTable.Equals(r.ChildTable))
-                        {
-                            selfJoinExists = true;
-                            break;
-                        }
-                    }
-
-                    // no XML for self joins (incompatible with XmlDataDocument)
-                    if (!selfJoinExists)
-                    {
-                        XmlData = DataDocumentFactory.New(Data);
+                        selfJoinExists = true;
+                        break;
                     }
                 }
-                else if (dataSource is IDataDocument)
+                // no XML for self joins (incompatible with XmlDataDocument)
+                if (!selfJoinExists)
                 {
-                    XmlData = dataSource as IDataDocument;
-                    _data = XmlData.DataSet;
-                }
-                else if (dataSource == null)
-                {
-                    XmlData = null;
-                    _data = null;
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException("dataSource", dataSource, "Invalid session data format.");
+                    XmlData = DataDocumentFactory.New(Data);
                 }
             }
-            finally
+            else if (dataSource is IDataDocument)
             {
-                // wire the new data's events
-                RegisterEvents();
+                XmlData = dataSource as IDataDocument;
+                _data = XmlData.DataSet;
             }
-
+            else if (dataSource == null)
+            {
+                XmlData = null;
+                _data = null;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("dataSource", dataSource, "Invalid session data format.");
+            }
             if (this.Data != null)
             {
                 RemoveNullConstraints(this.Data);
@@ -875,42 +860,32 @@ namespace Origam.Server
                 listOfChanges.Add(ci);
             }
 
-            try
+            if (this.SuppressSave && hasChanges)
             {
-                this.UnregisterEvents();
-                if (this.SuppressSave && hasChanges)
+                // set "saved" flag also if the form is read only (it might actually change data
+                // e.g. for virtual fields, these are not read only even in read only screens)
+                // but we still don't want a dirty flag because the user would be asked to save
+                // data when closing the screen
+                this.Data.AcceptChanges();
+            }
+            else
+            {
+                // If the updates did not cause any changes, e.g. because only non-dirty-enabled
+                // entity data were changed, we send an info to reset the dirty flag.
+                // Non-dirty enabled entities are those that get not saved, e.g. entities in a workflow
+                // session store that are not in the save-data structure for the workflow form.
+                foreach (DataTable table in this.Data.Tables)
                 {
-                    // set "saved" flag also if the form is read only (it might actually change data
-                    // e.g. for virtual fields, these are not read only even in read only screens)
-                    // but we still don't want a dirty flag because the user would be asked to save
-                    // data when closing the screen
-                    this.Data.AcceptChanges();
-                }
-                else
-                {
-                    // If the updates did not cause any changes, e.g. because only non-dirty-enabled
-                    // entity data were changed, we send an info to reset the dirty flag.
-                    // Non-dirty enabled entities are those that get not saved, e.g. entities in a workflow
-                    // session store that are not in the save-data structure for the workflow form.
-                    foreach (DataTable table in this.Data.Tables)
+                    if (!this.DirtyEnabledEntities.Contains(table.TableName))
                     {
-                        if (!this.DirtyEnabledEntities.Contains(table.TableName))
-                        {
-                            table.AcceptChanges();
-                        }
+                        table.AcceptChanges();
                     }
                 }
             }
-            finally
-            {
-                this.RegisterEvents();
-            }
-
             if (!hasChanges)
             {
                 listOfChanges.Add(ChangeInfo.SavedChangeInfo());
             }
-
             return listOfChanges;
         }
 
@@ -1351,29 +1326,20 @@ namespace Origam.Server
                                     // before calling for row-states
                                     LazyLoadListRowData(id, row);
                                 }
-                                // we have to unregister dataset event handling, because row level security state will try to add a new row/delete it to check parent/child state
-                                this.UnregisterEvents();
-                                try
+                                if (row == null)
                                 {
-                                    if (row == null)
-                                    {
-                                        result.Add(
-                                                new RowSecurityState
-                                                {
-                                                    Id = id, 
-                                                    NotFound = true
-                                                }
-                                            );
-                                    }
-                                    else
-                                    {
-                                        result.Add(RowSecurityStateBuilder.BuildFull(
-                                            RuleEngine, row, profileId, FormId));
-                                    }
+                                    result.Add(
+                                            new RowSecurityState
+                                            {
+                                                Id = id, 
+                                                NotFound = true
+                                            }
+                                        );
                                 }
-                                finally
+                                else
                                 {
-                                    this.RegisterEvents();
+                                    result.Add(RowSecurityStateBuilder.BuildFull(
+                                        RuleEngine, row, profileId, FormId));
                                 }
                             }
                         }
@@ -1383,17 +1349,9 @@ namespace Origam.Server
             }
 
             // data not requested (data less session)
-            try
+            lock (_lock)    // no update should be done in the meantime when rules are not handled
             {
-                lock (_lock)    // no update should be done in the meantime when rules are not handled
-                {
-                    this.UnregisterEvents();
-                    return RowStatesForDataLessSessions(entity, ids, profileId);
-                }
-            }
-            finally
-            {
-                this.RegisterEvents();
+                return RowStatesForDataLessSessions(entity, ids, profileId);
             }
         }
 
@@ -1517,103 +1475,110 @@ namespace Origam.Server
             {
                 DataTable table = GetTable(entity, this.Data);
                 UserProfile profile = SecurityTools.CurrentUserProfile();
-
                 DataRow newRow;
 
-                if (parameters.Count == 0)
+                try
                 {
-                    newRow = DatasetTools.CreateRow(null, table, null, profile.Id);
-                }
-                else
-                {
-                    object[] keys = new object[parameters.Count];
-                    parameters.Values.CopyTo(keys, 0);
-
-                    DataRelation relation = table.ParentRelations[0];
-                    DataColumn parentKeyColumn = relation.ParentColumns[0];
-                    DataRow parentRow = null;
-
-                    if (parameters.Count == 1 && parentKeyColumn.Equals(relation.ParentTable.PrimaryKey[0]))
+                    RegisterEvents();
+                    if (parameters.Count == 0)
                     {
-                        // if parent column is the primary key, then we just simply lookup the row by its primary key
-                        parentRow = relation.ParentTable.Rows.Find(keys);
+                        newRow = DatasetTools.CreateRow(null, table, null, profile.Id);
                     }
                     else
                     {
-                        // if not, we have to construct a search
-                        StringBuilder searchBuilder = new StringBuilder();
-
-                        foreach (KeyValuePair<string, object> entry in parameters)
-                        {
-                            for (int i = 0; i < relation.ChildColumns.Length; i++)
-                            {
-                                if (relation.ChildColumns[i].ColumnName == entry.Key)
-                                {
-                                    parentKeyColumn = relation.ParentColumns[i];
-                                }
-                            }
-
-                            if (parentKeyColumn == null)
-                            {
-                                throw new ArgumentOutOfRangeException("key", entry.Key, "Key not found in the parent table by the provided child key.");
-                            }
-
-                            string value = entry.Value.ToString();
-                            if (parentKeyColumn.DataType == typeof(Guid) || parentKeyColumn.DataType == typeof(string))
-                            {
-                                value = DatasetTools.TextExpression(value);
-                            }
-                            else if (parentKeyColumn.DataType == typeof(DateTime))
-                            {
-                                value = DatasetTools.DateExpression(entry.Value);
-                            }
-
-                            if (searchBuilder.Length > 0)
-                            {
-                                searchBuilder.Append(" AND ");
-                            }
-
-                            searchBuilder.Append(parentKeyColumn.ColumnName);
-                            searchBuilder.Append(" = ");
-                            searchBuilder.Append(value);
-                        }
-
-                        DataRow[] rows = relation.ParentTable.Select(searchBuilder.ToString());
-                        if (rows.Length == 1)
-                        {
-                            parentRow = rows[0];
-                        }
+                        object[] keys = new object[parameters.Count];
+                        parameters.Values.CopyTo(keys, 0);
+                        DataRelation relation = table.ParentRelations[0];
+                        DataRow parentRow = GetParentRow(parameters, keys, relation);
+                        newRow = DatasetTools.CreateRow(parentRow, table, relation, profile.Id);
                     }
-
-                    newRow = DatasetTools.CreateRow(parentRow, table, relation, profile.Id);
-                }
-
-                // set any values passed by the client (e.g. when adding an entry into a calendar,
-                // resource and date are known so they are handed over directly when adding a record
-                if (values != null)
-                {
-                    foreach (KeyValuePair<string, object> entry in values)
+                    // set any values passed by the client (e.g. when adding an entry into a calendar,
+                    // resource and date are known so they are handed over directly when adding a record
+                    if (values != null)
                     {
-                        newRow[entry.Key] = entry.Value;
+                        foreach (KeyValuePair<string, object> entry in values)
+                        {
+                            newRow[entry.Key] = entry.Value;
+                        }
+                    }
+                    table.Rows.Add(newRow);
+                    if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
+                        RuleEngine, newRow).AllowCreate)
+                    {
+                        table.Rows.Remove(newRow);
+                        throw new Exception(Resources.ErrorCreateRecordNotAllowed);
                     }
                 }
-
-                table.Rows.Add(newRow);
-                if (!RowSecurityStateBuilder.BuildJustMainEntityRowLevelEvenWithoutFields(
-                    RuleEngine, newRow).AllowCreate)
+                finally
                 {
-                    table.Rows.Remove(newRow);
-                    throw new Exception(Resources.ErrorCreateRecordNotAllowed);
+                    UnregisterEvents();
                 }
-
                 NewRowToDataList(newRow);
-
                 List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
                     newRow, Operation.Create, this.Data.HasErrors, 
                     this.Data.HasChanges(), false);
-
                 return listOfChanges;
             }
+        }
+
+        private static DataRow GetParentRow(IDictionary<string, object> parameters, object[] keys, DataRelation relation)
+        {
+            DataColumn parentKeyColumn = relation.ParentColumns[0];
+            DataRow parentRow = null;
+
+            if (parameters.Count == 1 && parentKeyColumn.Equals(relation.ParentTable.PrimaryKey[0]))
+            {
+                // if parent column is the primary key, then we just simply lookup the row by its primary key
+                parentRow = relation.ParentTable.Rows.Find(keys);
+            }
+            else
+            {
+                // if not, we have to construct a search
+                StringBuilder searchBuilder = new StringBuilder();
+
+                foreach (KeyValuePair<string, object> entry in parameters)
+                {
+                    for (int i = 0; i < relation.ChildColumns.Length; i++)
+                    {
+                        if (relation.ChildColumns[i].ColumnName == entry.Key)
+                        {
+                            parentKeyColumn = relation.ParentColumns[i];
+                        }
+                    }
+
+                    if (parentKeyColumn == null)
+                    {
+                        throw new ArgumentOutOfRangeException("key", entry.Key, "Key not found in the parent table by the provided child key.");
+                    }
+
+                    string value = entry.Value.ToString();
+                    if (parentKeyColumn.DataType == typeof(Guid) || parentKeyColumn.DataType == typeof(string))
+                    {
+                        value = DatasetTools.TextExpression(value);
+                    }
+                    else if (parentKeyColumn.DataType == typeof(DateTime))
+                    {
+                        value = DatasetTools.DateExpression(entry.Value);
+                    }
+
+                    if (searchBuilder.Length > 0)
+                    {
+                        searchBuilder.Append(" AND ");
+                    }
+
+                    searchBuilder.Append(parentKeyColumn.ColumnName);
+                    searchBuilder.Append(" = ");
+                    searchBuilder.Append(value);
+                }
+
+                DataRow[] rows = relation.ParentTable.Select(searchBuilder.ToString());
+                if (rows.Length == 1)
+                {
+                    parentRow = rows[0];
+                }
+            }
+
+            return parentRow;
         }
 
         public virtual IEnumerable<ChangeInfo> UpdateObject(
@@ -1650,29 +1615,35 @@ namespace Origam.Server
         private DataRow UpdateObjectInternal(string entity, object id,
             string property, object newValue)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
             DataRow row = GetSessionRow(entity, id);
-            if (row == null)
+            try
             {
-                throw new ArgumentOutOfRangeException("id", id,
-                    Resources.ErrorRecordNotFound);
+                RegisterEvents();
+                UserProfile profile = SecurityTools.CurrentUserProfile();
+                if (row == null)
+                {
+                    throw new ArgumentOutOfRangeException("id", id,
+                        Resources.ErrorRecordNotFound);
+                }
+                DataColumn dataColumn = row.Table.Columns[property];
+                if (dataColumn == null)
+                {
+                    throw new NullReferenceException(
+                        String.Format(Resources.ErrorColumnNotFound, property));
+                }
+                if (IsColumnArray(dataColumn))
+                {
+                    UpdateRowColumnArray(newValue, profile, row, dataColumn);
+                }
+                else
+                {
+                    UpdateRowColumn(property, newValue, profile, row);
+                }
             }
-
-            DataColumn dataColumn = row.Table.Columns[property];
-            if (dataColumn == null)
+            finally
             {
-                throw new NullReferenceException(
-                    String.Format(Resources.ErrorColumnNotFound, property));
+                UnregisterEvents();
             }
-            if (IsColumnArray(dataColumn))
-            {
-                UpdateRowColumnArray(newValue, profile, row, dataColumn);
-            }
-            else
-            {
-                UpdateRowColumn(property, newValue, profile, row);
-            }
-
             return row;
         }
 
@@ -1747,14 +1718,11 @@ namespace Origam.Server
         private void UpdateRowColumn(string property, object newValue, UserProfile profile, DataRow row)
         {
             UpdateRowValue(property, newValue, row);
-
             DatasetTools.UpdateOrigamSystemColumns(row, row.RowState == DataRowState.Added, profile.Id);
-
             // update the data list
             if (this.DataList != null)
             {
                 DataRow dataRow = row;
-
                 while (dataRow != null && dataRow.Table.TableName != this.DataListEntity)
                 {
                     if (dataRow.Table.ParentRelations.Count > 0)
@@ -1766,10 +1734,8 @@ namespace Origam.Server
                         dataRow = null;
                     }
                 }
-
                 object[] pk = DatasetTools.PrimaryKey(dataRow);
                 DataRow listRow = this.DataList.Tables[this.DataListEntity].Rows.Find(pk);
-
                 MergeRow(dataRow, listRow);
             }
         }
@@ -1843,12 +1809,17 @@ namespace Origam.Server
                 {
                     // DELETE THE ROW
                     row.Delete();
-
-                    // handle rules for the data changes after the row has been deleted
-                    this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
-
+                    try
+                    {
+                        RegisterEvents();
+                        // handle rules for the data changes after the row has been deleted
+                        this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
+                    }
+                    finally
+                    {
+                        UnregisterEvents();
+                    }
                     var listOfChanges = new List<ChangeInfo>();
-
 
                     // get the changes - from root - e.g. recalculated totals after deletion
                     if (isRowAggregated 
@@ -1860,11 +1831,8 @@ namespace Origam.Server
                             this.Data.HasErrors, this.Data.HasChanges(),
                             false));
                     }
-
                     // include the deletions
                     listOfChanges.AddRange(deletedItems);
-
-
                     if (IsLazyLoadedEntity(entity))
                     {
                         // delete the row from the list
@@ -1891,39 +1859,29 @@ namespace Origam.Server
                             entity, id, ex.ToString());
                     }
 
-                    this.UnregisterEvents();
-
-                    try
+                    // delete the root row because we have a backup from the root row
+                    if (rootRow.RowState != DataRowState.Deleted)
                     {
-                        // delete the root row because we have a backup from the root row
-                        if (rootRow.RowState != DataRowState.Deleted)
-                        {
-                            rootRow.Delete();
-                        }
-
-                        // we reset the changes
-                        dataset.AcceptChanges();
-
-                        // and then we import all the rows from the root row down
-                        foreach (KeyValuePair<string, List<DeletedRowInfo>> tablePair in backup)
-                        {
-                            foreach (DeletedRowInfo info in tablePair.Value)
-                            {
-                                info.ImportData(dataset.Tables[tablePair.Key]);
-                            }
-                        }
-
-                        // we also return the list row if it has been deleted
-                        if (listRowBackup != null)
-                        {
-                            this.DataList.Tables[this.DataListEntity].Rows.Add(listRowBackup).AcceptChanges();
-                        }
-                    }
-                    finally
-                    {
-                        this.RegisterEvents();
+                        rootRow.Delete();
                     }
 
+                    // we reset the changes
+                    dataset.AcceptChanges();
+
+                    // and then we import all the rows from the root row down
+                    foreach (KeyValuePair<string, List<DeletedRowInfo>> tablePair in backup)
+                    {
+                        foreach (DeletedRowInfo info in tablePair.Value)
+                        {
+                            info.ImportData(dataset.Tables[tablePair.Key]);
+                        }
+                    }
+
+                    // we also return the list row if it has been deleted
+                    if (listRowBackup != null)
+                    {
+                        this.DataList.Tables[this.DataListEntity].Rows.Add(listRowBackup).AcceptChanges();
+                    }
                     throw;
                 }
             }
@@ -2041,7 +1999,6 @@ namespace Origam.Server
                             newTmpRow[entry.Key] = entry.Value;
                         }
                     }
-                    this.UnregisterEvents();
                     this.Data.EnforceConstraints = false;
                     if (IsLazyLoadedEntity(entity))
                     {
@@ -2051,18 +2008,22 @@ namespace Origam.Server
                     }
                     MergeParams mergeParams = new MergeParams(profile.Id);
                     DatasetTools.MergeDataSet(this.Data, tmpDS, null, mergeParams);
-                    this.RegisterEvents();
-
                     object[] pk = DatasetTools.PrimaryKey(newTmpRow);
                     if (IsLazyLoadedEntity(entity))
                     {
                         this.CurrentRecordId = pk[0];
                     }
                     DataRow newRow = table.Rows.Find(pk);
-                    this.RuleHandler.OnRowCopied(newRow, this.XmlData, this.RuleSet, this.RuleEngine);
-
+                    try
+                    {
+                        RegisterEvents();
+                        RuleHandler.OnRowCopied(newRow, this.XmlData, this.RuleSet, this.RuleEngine);
+                    }
+                    finally
+                    {
+                        UnregisterEvents();
+                    }
                     NewRowToDataList(newRow);
-
                     return GetChangesByRow(requestingGrid, newRow, 
                         Operation.CurrentRecordNeedsUpdate, 
                         this.Data.HasErrors, this.Data.HasChanges(),
@@ -2070,8 +2031,6 @@ namespace Origam.Server
                 }
                 finally
                 {
-                    this.UnregisterEvents();
-                    this.RegisterEvents();
                     this.Data.EnforceConstraints = true;
                 }
             }
