@@ -1789,16 +1789,24 @@ namespace Origam.Server
                     // .NET BUGFIX: Dataset does not refresh aggregated calculated columns on delete, we have to raise change event
                     if(isRowAggregated)
                     {
-                        row.BeginEdit();
-                        foreach(DataColumn col in row.Table.Columns)
+                        try
                         {
-                            if(col.ReadOnly == false & (col.DataType == typeof(int) | col.DataType == typeof(float) | col.DataType == typeof(decimal) | col.DataType == typeof(long)))
+                            RegisterEvents();
+                            row.BeginEdit();
+                            foreach (DataColumn col in row.Table.Columns)
                             {
-                                object zero = Convert.ChangeType(0, col.DataType);
-                                if(!row[col].Equals(zero)) row[col] = 0;
+                                if (col.ReadOnly == false & (col.DataType == typeof(int) | col.DataType == typeof(float) | col.DataType == typeof(decimal) | col.DataType == typeof(long)))
+                                {
+                                    object zero = Convert.ChangeType(0, col.DataType);
+                                    if (!row[col].Equals(zero)) row[col] = 0;
+                                }
                             }
+                            row.EndEdit();
                         }
-                        row.EndEdit();
+                        finally
+                        {
+                            UnregisterEvents();
+                        }
                     }
                 }
                 catch
@@ -1808,10 +1816,10 @@ namespace Origam.Server
                 try
                 {
                     // DELETE THE ROW
-                    row.Delete();
                     try
                     {
                         RegisterEvents();
+                        row.Delete();
                         // handle rules for the data changes after the row has been deleted
                         this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
                     }
