@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:awb="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowBlock/6.0.2"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:lwb="http://schemas.origam.com/Origam.Schema.WorkflowModel.LoopWorkflowBlock/6.0.0"
+  xmlns:uct="http://schemas.origam.com/Origam.Schema.WorkflowModel.UpdateContextTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="541f17de-efdf-43e8-99eb-afd477870606"
+    asi:name="LoopTest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Integer"
+      cs:disableConstraints="false"
+      x:id="efcf0032-a077-4d6b-a8c4-f4ae749350f3"
+      cs:isReturnValue="false"
+      asi:name="i" />
+    <lwb:WorkflowTask
+      asi:abstract="false"
+      x:id="8ae3b246-95d6-49f7-9cb7-61a1874d27af"
+      lwb:loopConditionContextStore="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/i/efcf0032-a077-4d6b-a8c4-f4ae749350f3"
+      lwb:loopConditionXPath="/ROOT/value &lt; 3"
+      asi:name="Loop"
+      aws:onFailure="WorkflowFails"
+      aws:roles="*">
+      <uct:WorkflowTask
+        asi:abstract="false"
+        x:id="132954a2-841f-4f3e-bf70-5344449fc72d"
+        asi:name="i++"
+        aws:onFailure="WorkflowFails"
+        uct:outputContextStore="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/i/efcf0032-a077-4d6b-a8c4-f4ae749350f3"
+        aws:roles="*"
+        uct:valueXPath="AS:Plus(AS:isnull(/ROOT/value,0),1)"
+        uct:xPathContextStore="Widgets/Workflow/Widgets/LoopTest.origam#LoopTest/i/efcf0032-a077-4d6b-a8c4-f4ae749350f3" />
+    </lwb:WorkflowTask>
+  </w:Workflow>
+</x:file>
