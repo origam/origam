@@ -41,6 +41,9 @@ export class TextCellDriver implements IBodyCellDriver {
 
   render(rowIndex: number) {
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
+    if(rowId === null || rowId === ""){
+      console.error("There are rows with missing identifier in the drop down. This causes confusing coloring in the drop down. Fix your model!")
+    }
     return (
       <div
         className={bodyCellClass(
