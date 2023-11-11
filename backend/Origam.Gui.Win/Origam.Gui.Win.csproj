@@ -252,9 +252,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AsTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="AsTextBox.cs" />
     <Compile Include="BaseCaptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -534,9 +532,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Workflow\WorkflowHelper.cs" />
-    <Compile Include="Workflow\WorkflowWatchPad.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Workflow\WorkflowWatchPad.cs" />
     <EmbeddedResource Include="AsCheckBox.bmp">
     </EmbeddedResource>
     <EmbeddedResource Include="AsCheckBox.resx">

@@ -73,9 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editor\FileSelectionUITypeEditor.cs" />
-    <Compile Include="Editor\ServiceScriptCommandEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Editor\ServiceScriptCommandEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
