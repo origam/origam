@@ -159,31 +159,21 @@ namespace Origam.Server
                     new Dictionary<string, IList<KeyValuePair<object, DataMergeChange>>>();
                 Dictionary<DataRow, List<DataRow>> deletedRowsParents = null;
 
-                try
+                if (entityWorkflowAction.CleanDataBeforeMerge)
                 {
-                    sessionStore.UnregisterEvents();
+                    targetData.AcceptChanges();
 
-                    if (entityWorkflowAction.CleanDataBeforeMerge)
-                    {
-                        targetData.AcceptChanges();
-
-                        DatasetTools.Clear(targetData);
-                        changes.Add(ChangeInfo.CleanDataChangeInfo());
-                    }
-
-                    deletedRowsParents = DatasetTools.GetDeletedRows(
-                        sourceData, targetData);
-                    MergeParams mergeParams = new MergeParams(profile.Id);
-                    mergeParams.TrueDelete 
-                        = entityWorkflowAction.MergeType == ServiceOutputMethod.FullMerge;
-                    DatasetTools.MergeDataSet(
-                        targetData, sourceData, changeList, mergeParams);
-
+                    DatasetTools.Clear(targetData);
+                    changes.Add(ChangeInfo.CleanDataChangeInfo());
                 }
-                finally
-                {
-                    sessionStore.RegisterEvents();
-                }
+
+                deletedRowsParents = DatasetTools.GetDeletedRows(
+                    sourceData, targetData);
+                MergeParams mergeParams = new MergeParams(profile.Id);
+                mergeParams.TrueDelete 
+                    = entityWorkflowAction.MergeType == ServiceOutputMethod.FullMerge;
+                DatasetTools.MergeDataSet(
+                    targetData, sourceData, changeList, mergeParams);
                 // process rules (but not after clean merge, there we expect processed data
                 // we process the rules after merge so all data were merged before we start firing any
                 // events... If we would process rules WHILE merging, there would be a race condition - e.g.
@@ -192,57 +182,56 @@ namespace Origam.Server
                 // value when being merged, thus, resulting in a not-rule-processed data.
                 if (!entityWorkflowAction.CleanDataBeforeMerge && sessionStore.HasRules)
                 {
-                    foreach (var entry in changeList)
+                    try
                     {
-                        string tableName = entry.Key;
-
-                        foreach (var rowEntry in entry.Value)
+                        sessionStore.RegisterEvents();
+                        foreach (var entry in changeList)
                         {
-                            DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
-
-                            DataRowState changeType = rowEntry.Value.State;
-
-                            if (changeType == DataRowState.Added)
+                            string tableName = entry.Key;
+                            foreach (var rowEntry in entry.Value)
                             {
-                                sessionStore.RuleHandler.OnRowChanged(new DataRowChangeEventArgs(row, DataRowAction.Add), sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
-                            }
-
-                            switch (changeType)
-                            {
-                                case DataRowState.Added:
-                                    sessionStore.RuleHandler.OnRowCopied(row, sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
-                                    break;
-
-                                case DataRowState.Modified:
-                                    row.BeginEdit();
-                                    Hashtable changedColumns = rowEntry.Value.Columns;
-                                    if (changedColumns != null)
-                                    {
-                                        foreach (DictionaryEntry changedColumnEntry in changedColumns)
+                                DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+                                DataRowState changeType = rowEntry.Value.State;
+                                if (changeType == DataRowState.Added)
+                                {
+                                    sessionStore.RuleHandler.OnRowChanged(new DataRowChangeEventArgs(row, DataRowAction.Add), sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                                }
+                                switch (changeType)
+                                {
+                                    case DataRowState.Added:
+                                        sessionStore.RuleHandler.OnRowCopied(row, sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                                        break;
+                                    case DataRowState.Modified:
+                                        row.BeginEdit();
+                                        Hashtable changedColumns = rowEntry.Value.Columns;
+                                        if (changedColumns != null)
                                         {
-                                            DataColumn changedColumn = (DataColumn)changedColumnEntry.Value;
-                                            object newValue = row[changedColumn];
-                                            sessionStore.RuleHandler.OnColumnChanged(new DataColumnChangeEventArgs(row, changedColumn, newValue), sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                                            foreach (DictionaryEntry changedColumnEntry in changedColumns)
+                                            {
+                                                DataColumn changedColumn = (DataColumn)changedColumnEntry.Value;
+                                                object newValue = row[changedColumn];
+                                                sessionStore.RuleHandler.OnColumnChanged(new DataColumnChangeEventArgs(row, changedColumn, newValue), sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                                            }
                                         }
-                                    }
-                                    row.EndEdit();
-                                    break;
-
-                                case DataRowState.Deleted:
-                                    // deletions later
-                                    break;
-
-                                default:
-                                    throw new Exception(Resources.ErrorUnknownRowChangeState);
+                                        row.EndEdit();
+                                        break;
+                                    case DataRowState.Deleted:
+                                        // deletions later
+                                        break;
+                                    default:
+                                        throw new Exception(Resources.ErrorUnknownRowChangeState);
+                                }
                             }
                         }
+                        foreach (var deletedItem in deletedRowsParents)
+                        {
+                            sessionStore.RuleHandler.OnRowDeleted(deletedItem.Value.ToArray(), deletedItem.Key, sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                        }
                     }
-
-                    foreach (var deletedItem in deletedRowsParents)
+                    finally
                     {
-                        sessionStore.RuleHandler.OnRowDeleted(deletedItem.Value.ToArray(), deletedItem.Key, sessionStore.XmlData, sessionStore.RuleSet, sessionStore.RuleEngine);
+                        sessionStore.UnregisterEvents();
                     }
-
                 }
 
                 // in any case update the list row - we do not know if it was changed directly (will be in changelist)
@@ -345,9 +334,7 @@ namespace Origam.Server
             }
             if (entityWorkflowAction.CommitChangesAfterMerge)
             {
-                sessionStore.UnregisterEvents();
                 data.AcceptChanges();
-                sessionStore.RegisterEvents();
                 AddSavedInfo(changes);
             }
             switch (entityWorkflowAction.RefreshAfterWorkflow)
