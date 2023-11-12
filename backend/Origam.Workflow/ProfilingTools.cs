@@ -177,6 +177,7 @@ namespace Origam.Workflow
 
         public Stopwatch Stop(int hash)
         {
+            if (!runningOperations.ContainsKey(hash)) return new Stopwatch();
             Stopwatch stopwatch = runningOperations[hash].Stopwatch;
             stopwatch.Stop();
             runningOperations.Remove(hash);
