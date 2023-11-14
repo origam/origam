@@ -69,7 +69,7 @@
       asi:abstract="false"
       euia:default="false"
       x:id="25f8fd46-276e-422b-99e2-28e69d93d5a1"
-      euia:label="Testovani WF typu"
+      euia:label="Run Test Workflow"
       euia:modal="false"
       euia:mode="ActiveRecord"
       asi:name="WFTest"
@@ -86,7 +86,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="0a3c4d1e-ad81-49bb-9c13-6acdc0f20cef"
-        euia:label="1 krok chyba"
+        euia:label="First step fail"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -100,7 +100,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_1stepfail.origam#Basic WF_1stepfail/466e48e5-a792-4067-8ca3-2e2188c1b567" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_1stepfail.origam#Basic WF_1stepfail/466e48e5-a792-4067-8ca3-2e2188c1b567" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -109,7 +109,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="25c47ce9-b8ed-4da1-a9a2-c9e498d2f0f2"
-        euia:label="UI WFCall krok 1"
+        euia:label="UI WFCall step 1"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -123,7 +123,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflow.origam#WF_UI_NextCallSubWorkflow/0420ad3c-ed2d-4705-87f7-f8fa14f3f1c0" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflow.origam#WF_UI_NextCallSubWorkflow/0420ad3c-ed2d-4705-87f7-f8fa14f3f1c0" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -132,7 +132,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="529bc5f5-7144-4e39-8203-4f15c3ad1a51"
-        euia:label="UI 3 krok chyba"
+        euia:label="UI third step fail"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -146,7 +146,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -155,7 +155,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="5bfc1d43-ec2d-4f54-8f17-9b332a4e39cc"
-        euia:label="UI WFCall krok UI fail"
+        euia:label="UI WFCall step UI fail"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -169,7 +169,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/555e8446-f18e-4ad2-a282-7bd453761869" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/555e8446-f18e-4ad2-a282-7bd453761869" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="Workflow"
@@ -192,7 +192,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/d6f2f528-54d0-47e2-8dd2-5e5d02b55da2" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/d6f2f528-54d0-47e2-8dd2-5e5d02b55da2" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -215,7 +215,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/d6f2f528-54d0-47e2-8dd2-5e5d02b55da2" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/d6f2f528-54d0-47e2-8dd2-5e5d02b55da2" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -238,7 +238,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallSubWorkflowUIstep.origam#CallSubWorkflowUIstep/ce868031-8e6b-474e-ac98-7de595dc51f0" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflowUIstep.origam#CallSubWorkflowUIstep/ce868031-8e6b-474e-ac98-7de595dc51f0" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -261,7 +261,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallServiceWorkflow.origam#WF_UI_NextCallServiceWorkflow/6bf04315-baae-4bda-a5a3-353885462f01" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflow.origam#WF_UI_NextCallServiceWorkflow/6bf04315-baae-4bda-a5a3-353885462f01" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="Workflow"
@@ -284,7 +284,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflow.origam#CallServiceWorkflow/e5171af3-0235-48b3-8a33-4fdb0b7a97a2" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflow.origam#CallServiceWorkflow/e5171af3-0235-48b3-8a33-4fdb0b7a97a2" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -307,7 +307,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallServiceWorkflow2steps.origam#WF_UI_NextCallServiceWorkflow2steps/e15026fc-4972-4206-828d-4a22756c7ff9" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflow2steps.origam#WF_UI_NextCallServiceWorkflow2steps/e15026fc-4972-4206-828d-4a22756c7ff9" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="Workflow"
@@ -316,7 +316,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="c42b0924-c5f7-4fec-a326-60f1a42d954f"
-        euia:label="2 krok chyba"
+        euia:label="Second step fail"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -330,7 +330,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_2StepFail.origam#Basic WF_2StepFail/faa85d8f-85f3-433f-8d85-e962e4d1a92e" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_2StepFail.origam#Basic WF_2StepFail/faa85d8f-85f3-433f-8d85-e962e4d1a92e" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -353,7 +353,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallServiceWorkflowUIstep.origam#WF_UI_NextCallServiceWorkflowUIstep/2972e79f-05a0-4281-9984-79b21ed55600" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflowUIstep.origam#WF_UI_NextCallServiceWorkflowUIstep/2972e79f-05a0-4281-9984-79b21ed55600" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="OpenForm"
@@ -362,7 +362,7 @@
         ewa:commitChangesAfterMerge="false"
         euia:default="false"
         x:id="e3866221-f974-44b5-8792-b7fd4e9dea53"
-        euia:label="UI WFCall krok 2"
+        euia:label="UI WFCall step 2"
         ewa:mergeType="AppendMergeExisting"
         euia:modal="false"
         euia:mode="ActiveRecord"
@@ -376,7 +376,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/WF_UI_NextCallSubWorkflow2steps.origam#WF_UI_NextCallSubWorkflow2steps/77afa1a9-24e1-4bae-8d5d-4341db4f805f" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflow2steps.origam#WF_UI_NextCallSubWorkflow2steps/77afa1a9-24e1-4bae-8d5d-4341db4f805f" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="Workflow"
@@ -399,7 +399,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallSubWorkflow2steps.origam#CallSubWorkflow2steps/8a1536ec-4a2e-4611-9d94-d2a132082507" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflow2steps.origam#CallSubWorkflow2steps/8a1536ec-4a2e-4611-9d94-d2a132082507" />
       <ewa:EntityUIAction
         asi:abstract="false"
         euia:actionType="Workflow"
@@ -422,7 +422,7 @@
         euia:roles="*"
         ewa:saveAfterWorkflow="false"
         euia:valueType="SavedValue"
-        ewa:workflow="Widgets/Workflow/Widgets/FailsWorkflows/CallSubWorkflow.origam#CallSubWorkflow/4372d34a-1af2-4616-b43b-c837abd81bbf" />
+        ewa:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflow.origam#CallSubWorkflow/4372d34a-1af2-4616-b43b-c837abd81bbf" />
     </eda:EntityUIAction>
     <ef:EntityFilter
       asi:abstract="false"

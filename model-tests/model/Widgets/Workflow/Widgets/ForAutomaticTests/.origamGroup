@@ -5,6 +5,6 @@
   <g:group
     x:id="b228c45a-01ce-49aa-9236-77ac345a6bb4"
     x:isFolder="true"
-    g:name="FailsWorkflows"
+    g:name="ForAutomaticTests"
     g:rootItemType="Workflow" />
 </x:file>
