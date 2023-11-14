@@ -425,5 +425,6 @@
   "row_not_found": "Tento řádek nebyl nalezen na serveru. Obnovte prosím data.",
   "column_width": "Šířka",
   "order_columns_button": "Seřadit",
-  "order_columns_title": "Pořadí sloupců"
+  "order_columns_title": "Pořadí sloupců",
+  "add_new_record": "Přidat nový záznam"
 }

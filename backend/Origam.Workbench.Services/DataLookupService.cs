@@ -31,6 +31,7 @@ using Origam.Schema;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using System.Collections.Generic;
+using System.Linq;
 using Origam.DA.Service;
 using log4net;
 using Origam.Workbench.Services.CoreServices;
@@ -602,7 +603,15 @@ namespace Origam.Workbench.Services
             }
 		}
 
-	    public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
+		public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
+		{
+			return lookup.ChildItems
+				.ToGeneric()
+				.OfType<NewRecordScreenBinding>()
+				.FirstOrDefault(x => x.IsAvailable);
+		}
+
+		public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
 		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;

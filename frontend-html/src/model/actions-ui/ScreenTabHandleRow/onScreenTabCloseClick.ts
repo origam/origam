@@ -37,7 +37,7 @@ export function onScreenTabCloseMouseDown(ctx: any) {
 
 
 export function onScreenTabCloseClick(ctx: any) {
-  return flow(function*onFormTabCloseClick(event: any, isDueToError?: boolean) {
+  return flow(function*onFormTabCloseClick(event: any, closeWithoutSaving?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
     let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
     for (const dataView of dataViews) {
@@ -51,7 +51,7 @@ export function onScreenTabCloseClick(ctx: any) {
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
         const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
-        yield*lifecycle.onRequestScreenClose(isDueToError);
+        yield*lifecycle.onRequestScreenClose(closeWithoutSaving);
       } else {
         yield*closeForm(ctx)();
       }

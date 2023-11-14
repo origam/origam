@@ -173,6 +173,7 @@ export interface IApi {
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
     IsSingleRecordEdit?: boolean;
+    CreateNewRecord?: boolean
     RequestCurrentRecordId: boolean;
   }): Promise<any>;
 
