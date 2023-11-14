@@ -237,9 +237,12 @@ namespace Origam
 			}
 			else
 			{
-                OrderedDictionary result = new OrderedDictionary();
-                _transactionStore[transactionId] = result;
-				return result;
+				lock (_obj) 
+				{
+					OrderedDictionary result = new OrderedDictionary();
+					_transactionStore[transactionId] = result;
+					return result;
+				}
 			}
 		}
 
