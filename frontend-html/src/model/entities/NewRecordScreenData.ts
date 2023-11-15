@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2023 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IFilter } from "model/entities/types/IFilter";
+import { IProperty } from "model/entities/types/IProperty";
 
-export interface IFilterGroup {
-  filters: IFilter[];
-  id: string;
-  isGlobal: boolean;
-  name: string;
-  selectionCheckboxFilter: boolean | null;
+export class NewRecordScreenData {
+  constructor(
+      public comboBoxProperty: IProperty,
+      public comboBoxRow: any[]
+    ) {
+    }
 }

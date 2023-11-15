@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Origam.DA;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Rule;
@@ -80,11 +79,7 @@ public class IndexedRuleQueue: IEnumerable<object[]>
     private int GetHash(DataRow row, DataStructureRuleSet ruleSet)
     {
         HashCode hash = new();
-        object[] keys = DatasetTools.PrimaryKey(row);
-        foreach (object key in keys)
-        {
-            hash.Add(key);
-        }
+        hash.Add(row.GetHashCode());
         hash.Add(ruleSet?.Id);
         return hash.ToHashCode();
     }

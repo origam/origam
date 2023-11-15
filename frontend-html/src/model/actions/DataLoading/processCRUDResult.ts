@@ -76,16 +76,18 @@ function*processUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean
     updates.length = 0;
   }
 }
-
-function*processSingleResult(ctx: any, resultItem: ICRUDResult,
-                           resortTables?: boolean | undefined,
-                           sourceDataView?: IDataView): Generator {
-
+function updateRowState(ctx: any, resultItem: ICRUDResult) {
   if (resultItem.state) {
     // TODO: Context for all CRUD ops?
     // TODO: Actions are pre data view vs state is related to entity?
     putRowStateValue(ctx)(resultItem.entity, resultItem.state);
   }
+}
+
+function*processSingleResult(ctx: any, resultItem: ICRUDResult,
+                           resortTables?: boolean | undefined,
+                           sourceDataView?: IDataView): Generator {
+  updateRowState(ctx, resultItem);
   switch (resultItem.operation) {
     case IResponseOperation.Create: {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
@@ -171,6 +173,9 @@ function*processSingleResult(ctx: any, resultItem: ICRUDResult,
 }
 
 function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: boolean | undefined){
+  for (const resultItem of updates) {
+    updateRowState(ctx, resultItem);
+  }
   const dataViews = getDataViewsByEntity(ctx, updates[0].entity);
   for (let dataView of dataViews) {
     dataView.substituteRecords(updates.map(x=> x.wrappedObject));

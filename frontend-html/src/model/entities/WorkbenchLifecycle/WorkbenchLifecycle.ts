@@ -21,7 +21,6 @@ import bind from "bind-decorator";
 import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
 import { handleError } from "model/actions/handleError";
 import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
-import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
 import { getSearcher } from "model/selectors/getSearcher";
@@ -31,7 +30,7 @@ import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemByI
 import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import { findMenu } from "xmlInterpreters/menuXml";
 import { MainMenuContent } from "../MainMenu";
-import { DialogInfo } from "../OpenedScreen";
+import { DialogInfo, OpenedScreen } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
@@ -150,21 +149,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           yield*this.openNewUrl(url, args.item.attributes["label"]);
           return;
         } else {
-          yield*this.openNewForm(
-            id,
-            type,
-            label,
-            lazyLoading === "true",
-            dialogInfo,
-            args.idParameter ? {id: args.idParameter} : {},
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            args.isSingleRecordEdit
-          );
+          yield*this.openNewForm({
+            id: id,
+            type: type,
+            label: label,
+            isLazyLoading: lazyLoading === "true",
+            dialogInfo: dialogInfo,
+            parameters: args.idParameter ? {id: args.idParameter} : {},
+            createNewRecord: args.isSingleRecordEdit
+          });
         }
       }
     }
@@ -173,21 +166,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield*this.openNewUrl(url, args.item.attributes["label"]);
       return;
     } else {
-      yield*this.openNewForm(
-        id,
-        type,
-        label,
-        lazyLoading === "true",
-        dialogInfo,
-        args.idParameter ? {id: args.idParameter} : {},
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        args.isSingleRecordEdit
-      );
+      yield*this.openNewForm({
+        id: id,
+        type: type,
+        label: label,
+        isLazyLoading: lazyLoading === "true",
+        dialogInfo: dialogInfo,
+        parameters: args.idParameter ? {id: args.idParameter} : {},
+        createNewRecord: args.isSingleRecordEdit
+      });
     }
   }
 
@@ -258,10 +245,24 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield*this.openNewForm(id, type, label, true, dialogInfo, {});
+        yield*this.openNewForm({
+          id: id,
+          type: type,
+          label: label,
+          isLazyLoading: true,
+          dialogInfo: dialogInfo,
+          parameters: { }
+      });
       }
     } else {
-      yield*this.openNewForm(id, type, label, true, dialogInfo, {});
+      yield*this.openNewForm({
+        id: id,
+        type: type,
+        label: label,
+        isLazyLoading: true,
+        dialogInfo: dialogInfo,
+        parameters: { }
+      });
     }
   }
 
@@ -395,7 +396,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   @bind
-  *openNewForm(
+  *openNewForm(args: {
     id: string,
     type: IMainMenuItemType,
     label: string,
@@ -408,43 +409,51 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
     refreshOnReturnType?: IRefreshOnReturnType,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    createNewRecord?: boolean
+  }
   ) {
     const openedScreens = getOpenedScreens(this);
-    const existingItem = openedScreens.findLastExistingTabItem(id);
-    const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
-    const newScreen = yield*createOpenedScreen(
-      this,
-      id,
-      type,
-      existingItem ? existingItem.order + 1 : 0,
-      label,
-      newFormScreen,
-      isLazyLoading,
-      dialogInfo,
-      parameters,
-      isSessionRebirth,
-      isSleepingDirty
-    );
+    const existingItem = openedScreens.findLastExistingTabItem(args.id);
+    const newFormScreen = createFormScreenEnvelope(args.formSessionId, args.refreshOnReturnType);
+
+    const newScreen = new OpenedScreen({
+      menuItemId: args.id,
+      menuItemType: args.type,
+      order: existingItem ? existingItem.order + 1 : 0,
+      tabTitle: args.label,
+      content: newFormScreen,
+      dialogInfo: args.dialogInfo,
+      lazyLoading: args.isLazyLoading,
+      parameters: args.parameters,
+      isSleeping: args.isSessionRebirth,
+      isSleepingDirty: args.isSleepingDirty,
+      isNewRecordScreen: args.createNewRecord
+    });
     try {
       openedScreens.pushItem(newScreen);
-      if (!isSessionRebirth) {
-        newScreen.parentContext = parentContext;
+      if (!args.isSessionRebirth) {
+        newScreen.parentContext = args.parentContext;
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
       }
 
-      if (isSessionRebirth) {
+      if (args.isSessionRebirth) {
         return;
       }
 
       const initUIResult = yield*this.initUIForScreen(
         newScreen,
-        !isSessionRebirth,
-        requestParameters,
-        isSingleRecordEdit
+        !args.isSessionRebirth,
+        args.requestParameters,
+        args.isSingleRecordEdit,
+        args.createNewRecord
       );
-      yield*newFormScreen.start({initUIResult: initUIResult});
-      const rowIdToSelect = parameters["id"];
+      yield*newFormScreen.start(
+        {
+          initUIResult: initUIResult,
+          createNewRecord: args.createNewRecord
+        });
+      const rowIdToSelect = args.parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
       if (formScreen?.autoWorkflowNext) {
@@ -475,7 +484,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     screen: IOpenedScreen,
     isNewSession: boolean,
     requestParameters?: object | undefined,
-    isSingleRecordEdit?: boolean
+    isSingleRecordEdit?: boolean,
+    createNewRecord?: boolean
   ): any {
     const api = getApi(this);
     if (requestParameters) {
@@ -491,6 +501,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
       IsSingleRecordEdit: isSingleRecordEdit,
+      CreateNewRecord: createNewRecord,
       RequestCurrentRecordId: true
     });
   }
@@ -578,19 +589,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const lazyLoading = menuItem
           ? menuItem?.attributes?.lazyLoading === "true"
           : session.type === IMainMenuItemType.WorkQueue;
-        yield*this.openNewForm(
-          session.objectId,
-          session.type,
-          session.caption, // TODO: Find in menu
-          lazyLoading,
-          undefined, // TODO: Find in... menu?
-          {},
-          undefined,
-          undefined,
-          session.formSessionId,
-          true,
-          session.isDirty
-        );
+        yield*this.openNewForm( {
+          id: session.objectId,
+          type: session.type,
+          label: session.caption,
+          isLazyLoading: lazyLoading,
+          dialogInfo: undefined,
+          parameters: {},
+          formSessionId: session.formSessionId,
+          isSessionRebirth: true,
+          isSleepingDirty: session.isDirty
+        });
       }
     } else {
       for (let session of portalInfo.sessions) {

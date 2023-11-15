@@ -1,0 +1,27 @@
+# escape=`
+# Learn about building .NET container images:
+
+ARG TAG=ltsc2022
+
+FROM mcr.microsoft.com/windows/servercore:$TAG
+WORKDIR /home/origam
+
+RUN mkdir HTML5
+RUN mkdir HTML5-SOURCE
+
+COPY HTML5 HTML5/
+COPY HTML5-SOURCE HTML5-SOURCE/
+
+WORKDIR /home/origam/HTML5
+
+COPY _appsettings.template .
+COPY _OrigamSettings.mssql.template .
+COPY _OrigamSettings.postgres.template .
+COPY log4net.config .
+COPY windows/script.ps1 .
+COPY windows/yarninstall.ps1 .
+RUN Powershell.exe -executionpolicy remotesigned -File yarninstall.ps1
+WORKDIR /home/origam/HTML5-SOURCE
+COPY windows/buildfrontend.ps1 .
+WORKDIR /home/origam/HTML5
+CMD Powershell.exe -executionpolicy remotesigned -File script.ps1
