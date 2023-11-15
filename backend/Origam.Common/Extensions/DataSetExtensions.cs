@@ -25,6 +25,21 @@ namespace Origam.Extensions
             }
         }
         
+        public static void ReEnableNullConstraints(this DataSet data)
+        {
+            foreach (DataTable table in data.Tables)
+            {
+                foreach (DataColumn col in table.Columns)
+                {
+                    if (col.ExtendedProperties.Contains("AllowNulls") && 
+                        (bool)col.ExtendedProperties["AllowNulls"] == false)
+                    {
+                        col.AllowDBNull = false;
+                    }
+                }
+            }
+        }      
+        
         public static void RemoveNullConstraints(this DataSet data)
         {
             foreach (DataTable table in data.Tables)
