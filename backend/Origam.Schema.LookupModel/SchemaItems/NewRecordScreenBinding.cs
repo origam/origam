@@ -49,8 +49,8 @@ public class NewRecordScreenBinding : AbstractSchemaItem, IAuthorizationContextC
     public NewRecordScreenBinding(Guid schemaExtensionId) : base(schemaExtensionId) { }
     
     public NewRecordScreenBinding(Key primaryKey) : base(primaryKey)	{}
-
-
+    
+    [Browsable(false)]
     public bool IsAvailable
     {
         get
