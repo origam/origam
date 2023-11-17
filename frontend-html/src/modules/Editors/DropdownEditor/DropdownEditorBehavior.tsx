@@ -226,7 +226,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   @action.bound
-  handleInputKeyDown(event: any) {
+  async handleInputKeyDown(event: any) {
     const wasDropped = this.isDropped;
     switch (event.key) {
       case "Escape":
@@ -256,6 +256,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         if (this.isDropped) {
           if (this.cursorRowId) {
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          }
+          else {
+            this.handleTabPressedBeforeDropdownReady();
           }
         }
         else if (!this.isDropped && this.userEnteredValue === ""){
@@ -307,6 +310,19 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         break;
     }
     this.onKeyDown && this.onKeyDown(event);
+  }
+
+  private handleTabPressedBeforeDropdownReady() {
+    if (this.dataTable.allRows.length !== 0) {
+      return;
+    }
+    setTimeout(async () => {
+      if (!this.runningPromise) {
+        this.ensureRequestRunning();
+      }
+      await this.runningPromise;
+      this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
+    });
   }
 
   private clearSelection() {
