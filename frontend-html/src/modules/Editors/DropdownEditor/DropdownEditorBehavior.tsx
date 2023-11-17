@@ -289,6 +289,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
       return;
     }
     setTimeout(async () => {
+      this.handleInputChangeDeb.cancel();
       if (!this.runningPromise) {
         this.ensureRequestRunning();
       }
