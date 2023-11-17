@@ -1,5 +1,5 @@
 ﻿const { sleep, openMenuItem, login, afterEachTest,
-  beforeEachTest
+  beforeEachTest, catchRequests, waitForRowCount
 } = require('./testTools');
 const {widgetsMenuItemId, topMenuHeader, allDataTypesMenuId
 } = require("./modelIds");
@@ -12,7 +12,7 @@ let page;
 beforeAll(async() => {
   await restoreWidgetSectionTestMaster();
   await clearScreenConfiguration();
-  [browser, page] = await beforeEachTest()
+  [browser, page] = await beforeEachTest(); // all tests run in the same browser instance unlike the others. That is why the beforeEachTest is called here.
   await login(page);
   await openMenuItem(
     page,
@@ -24,6 +24,7 @@ beforeAll(async() => {
 });
 
 afterAll(async() => {
+  await sleep(1000); // let the last workflow screen close
   await afterEachTest(browser);
   browser = undefined;
 });
@@ -40,11 +41,22 @@ async function clickElement(elementText, elementType){
   await element.click();
 }
 
-async function waitForErrorWindow() {
+async function waitForErrorWindowWithMessageAndClose(messageBegging) {
   await page.waitForXPath(
     `//div[contains(text(),'Error')]`,
     {visible: true}
   );
+
+  const messageElement = await page.waitForXPath(
+    `//div[contains(@class,'dialogMessage')]`,
+    {visible: true}
+  );
+
+  const errorMessage = await page.evaluate(name => name.innerText, messageElement);
+  if(!errorMessage || !errorMessage.startsWith(messageBegging)){
+    throw new Error(`Error message does not start with: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
+  }
+
   const okButton = await page.waitForXPath(
     `//button[contains(text(),'OK')]`,
     {visible: true}
@@ -64,63 +76,117 @@ async function clickWorkflowActionButton(buttonText) {
   await buttonElement.click();
 }
 
-async function waitTillAllDataTypesScreenIsActive() {
-  await page.waitForXPath(
-    "//div[contains(@class, 'screenHeader')]/h1[contains(text(), 'All Data Types')]",
-    {visible: true}
-  );
-}
-
-
-// async function waitForWorkflowMessage(message) {
-//   await page.waitForXPath(
-//     `//div[contains(@class, 'workflowMessage')]/font/p[contains(text(), '${message}')]`,
-//     {visible: true}
-//   );
-// }
-
 async function waitForWorkflowMessage(messageBegging) {
   const messageElement = await page.waitForXPath(
     `//div[contains(@class, 'workflowMessage')]/font/p`,
     {visible: true}
   );
-  // await sleep(3000);
   const errorMessage = await page.evaluate(name => name.innerText, messageElement);
-  if(!errorMessage || errorMessage.startsWith(messageBegging)){
+  if(!errorMessage || !errorMessage.startsWith(messageBegging)){
     throw new Error(`Error message does not start with: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
   }
 }
+
+const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
 
 describe("Html client", () => {
   it("Should run 'First step fail' workflow", async () => {
     await clickElement("Run Test Workflow")
     await clickElement("First step fail")
-    await waitForErrorWindow();
+    await waitForErrorWindowWithMessageAndClose(
+      "Server error occurred. Please check server log for more details:\n" +
+      "Merge context 'AllDataTypes', Step 'Basic WF_1stepfail/0100_StepFail' failed.");
   });
   it("Should run 'Second step fail' workflow", async () => {
     await clickElement("Run Test Workflow")
     await clickElement("Second step fail")
-    await waitForErrorWindow();
+    await waitForErrorWindowWithMessageAndClose("Fail Step");
   });
   it("Should run 'UI third step fail' workflow", async () => {
     await clickElement("Run Test Workflow");
     await clickElement("UI third step fail");
     await clickElement("Next");
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_UI_NextStepFail/0300_StepFail\' failed.');
     await clickElement("Close","button");
   });
   it("Should run 'UI WFCall step 1' workflow", async () => {
     await clickElement("Run Test Workflow");
     await clickElement("UI WFCall step 1");
     await clickElement("Next");
-    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_UI_NextStepFail/0300_StepFail\' failed.');
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_1stepfail/0100_StepFail\' failed.');
     await clickElement("Close","button");
-    await waitTillAllDataTypesScreenIsActive();
   });
   it("Should run 'UI WFCall step 2' workflow", async () => {
     await clickWorkflowActionButton("UI WFCall step 2");
     await clickElement("Next");
     await waitForWorkflowMessage('Fail Step');
     await clickElement("Close","button");
-    await waitTillAllDataTypesScreenIsActive();
+  });
+  it("Should run 'UI WFCall step UI fail' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("UI WFCall step UI fail");
+    await clickElement("Next");
+    await waitForWorkflowMessage('Item has already been added. Key in dictionary:');
+    await clickElement("Close","button");
+  });
+  it("Should run 'UI WFService Sub 1 step' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("UI WFService Sub 1 step");
+    await clickElement("Next");
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_1stepfail/0100_StepFail\' failed.');
+    await clickElement("Close","button");
+  });
+  it("Should run 'UI WFService Sub 2 steps' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("UI WFService Sub 2 steps");
+    await clickElement("Next");
+    await waitForWorkflowMessage('Fail Step');
+    await clickElement("Close","button");
+  });
+  it("Should run 'UI WFService Sub UI' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("UI WFService Sub UI");
+    await clickElement("Next");
+    await waitForRowCount(page, dataViewId, 2);
+    await clickElement("Next");
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_UI_NextStepFail/0300_StepFail\' failed. ');
+    await clickElement("Close","button");
+  });
+  it("Should run 'CallServiceWorkflow Sub 1 step' workflow", async () => {
+    await clickElement("Run Test Workflow")
+    await clickElement("CallServiceWorkflow Sub 1 step")
+    await waitForErrorWindowWithMessageAndClose(
+      "Server error occurred. Please check server log for more details:\n" +
+      "Merge context 'AllDataTypes', Step 'Basic WF_1stepfail/0100_StepFail' failed.");
+  });
+  it("Should run 'CallServiceWorkflow Sub 2 step' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("CallServiceWorkflow Sub 2 step");
+    await waitForErrorWindowWithMessageAndClose("Fail Step");
+  });
+  it("Should run 'CallServiceWorkflow Sub UI step' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("CallServiceWorkflow Sub UI step");
+    await waitForWorkflowMessage('Fail Step');
+    await clickElement("Close","button");
+  });
+  it("Should run 'CallSubWorkflow 1 step' workflow", async () => {
+    await clickElement("Run Test Workflow")
+    await clickElement("CallSubWorkflow 1 step")
+    await waitForErrorWindowWithMessageAndClose(
+      "Server error occurred. Please check server log for more details:\n" +
+      "Merge context 'AllDataTypes', Step 'Basic WF_1stepfail/0100_StepFail' failed.");
+  });
+  it("Should run 'CallSubWorkflow 2 step' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("CallSubWorkflow 2 step");
+    await waitForErrorWindowWithMessageAndClose("Fail Step");
+  });
+  it("Should run 'CallSubWorkflow UI step' workflow", async () => {
+    await clickElement("Run Test Workflow");
+    await clickElement("CallSubWorkflow UI step");
+    await clickElement("Next");
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_UI_NextStepFail/0300_StepFail\' failed.');
+    await clickElement("Close","button");
   });
 });
