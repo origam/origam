@@ -56,7 +56,7 @@ export class NotificationContainer extends React.Component<{}> {
     return (
       <div className={S.root}>
         {formScreen.notifications.map(x =>
-          <div className={S.row}>
+          <div key={x.text + x.icon} className={S.row}>
             <div className={S.iconContainer}>
               {this.getIcon(x.icon)}
             </div>
