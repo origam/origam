@@ -203,6 +203,14 @@ namespace Origam.Workflow.WorkQueue
 				{
 					xpath += "/" + secondChild.Name;
 				}
+				else
+				{
+					if (firstChild.Name.Equals("ROOT"))
+					{
+						// empty <ROOT/> from the loader workflow, nothing came
+						return false;
+					}
+				}
 			}
 			else
 			{
