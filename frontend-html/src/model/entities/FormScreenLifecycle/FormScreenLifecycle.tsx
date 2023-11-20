@@ -755,8 +755,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  // Flushing data (updating objects) must not run concurrently with deleting a row.
+  // However multiple updates may run concurrently so there cannot be a simple lock here.
+  @observable flushDataEntered = 0;
+  @observable deleteRowEntered = 0;
+
   *flushData() {
     try {
+      while(this.deleteRowEntered > 0) yield when(() => !this.deleteRowEntered);
+      this.flushDataEntered++;
       this.monitor.inFlow++;
       let updateObjectDidRun = false;
       const formScreen = getFormScreen(this);
@@ -768,6 +775,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield*this.saveSession();
       }
     } finally {
+      this.flushDataEntered--
       this.monitor.inFlow--;
     }
   }
@@ -1068,6 +1076,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *deleteRow(entity: string, rowId: string, targetDataView: IDataView): any {
     try {
+      while(this.flushDataEntered > 0) yield when(() => !this.flushDataEntered);
+      this.deleteRowEntered++;
       this.monitor.inFlow++;
       const api = getApi(this);
       const formScreen = getFormScreen(this);
@@ -1089,6 +1099,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield*processCRUDResult(this, deleteObjectResult);
     } finally {
+      this.deleteRowEntered--;
       this.monitor.inFlow--;
     }
   }

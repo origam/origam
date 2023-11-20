@@ -41,6 +41,7 @@ using Origam.Extensions;
 using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench;
+using System.Data.Common;
 
 namespace Origam.Rule
 {
@@ -983,9 +984,13 @@ namespace Origam.Rule
 							}
 						}
 					}
-					catch
+					catch (Exception e)
 					{
 						row.CancelEdit();
+						if (log.IsErrorEnabled)
+						{
+							log.Error("Exception ocurred during evaluation of rule queue", e);
+						}
 						_ruleQueue.Clear();
 						throw;
 					}

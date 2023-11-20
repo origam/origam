@@ -71,9 +71,13 @@ namespace Origam.Rule.Xslt
         public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc)
         {
             XslCompiledTransform xslt = engine as XslCompiledTransform;
-            Mvp.Xml.Common.Xsl.XslReader xslReader = new Mvp.Xml.Common.Xsl.XslReader(xslt);
-            xslReader.StartTransform(new Mvp.Xml.Common.Xsl.XmlInput(sourceXpathDoc), xslArg);
-            resultDoc.Load(xslReader);
+            MemoryStream stream = new MemoryStream();
+            xslt.Transform(sourceXpathDoc, xslArg, stream);
+            stream.Position = 0;
+            using (XmlReader reader = XmlReader.Create(stream))
+            {
+                resultDoc.Load(reader);
+            }
         }
 
         public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)

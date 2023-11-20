@@ -642,6 +642,7 @@ namespace Origam.Schema
 				return GetRootItem(parentItem.ParentItem);
 		}
 
+		[Browsable(false)]
 		public IEnumerable<AbstractSchemaItem> Parents
 		{
 			get

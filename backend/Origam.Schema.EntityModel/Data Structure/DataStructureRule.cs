@@ -60,6 +60,20 @@ namespace Origam.Schema.EntityModel
 		
 		public Guid DataStructureEntityId;
 
+		private string entityName;
+
+		public String EntityName
+		{
+			get
+			{
+				if (entityName == null)
+				{
+					entityName = Entity.Name;
+				}
+				return entityName;
+			}
+		}
+
 		[TypeConverter(typeof(DataQueryEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
         [XmlReference("entity", "DataStructureEntityId")]

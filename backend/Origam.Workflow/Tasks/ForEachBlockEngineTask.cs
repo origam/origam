@@ -31,6 +31,8 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
+using System.Xml.Linq;
+using System.Windows.Input;
 
 namespace Origam.Workflow.Tasks
 {
@@ -42,6 +44,7 @@ namespace Origam.Workflow.Tasks
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		XPathNodeIterator _iter;
 		WorkflowEngine _call;
+		bool sourceContextChanged;
 
 		public ForEachBlockEngineTask() : base()
 		{
@@ -64,30 +67,22 @@ namespace Origam.Workflow.Tasks
 			CleanUp();		
 		}
 
-        protected override void OnExecute()
-        {
-            if(log.IsInfoEnabled)
-            {
-                log.Info("ForEach Block started.");
-            }
-            this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
-            ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-            IXmlContainer xmlContainer = this.Engine.RuleEngine.GetContext(
-                block.SourceContextStore) as IXmlContainer;
-            if(xmlContainer == null)
-            {
-                throw new ArgumentOutOfRangeException(
-                    "SourceContextStore",
-                    block.SourceContextStore,
-                    ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
-            }
+		protected override void OnExecute()
+		{
+			if (log.IsInfoEnabled)
+			{
+				log.Info("ForEach Block started.");
+			}
+			this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
+			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+			IXmlContainer xmlContainer = GetSourceContextXmlContainer(block);
 			XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
 			OrigamXsltContext ctx = OrigamXsltContext.Create(
 				new NameTable(), Engine.TransactionId);
 			XPathExpression expr = navigator.Compile(block.IteratorXPath);
 			expr.SetContext(ctx);
-            // code might fail and this handler doesn't get cleared
-            // and will interfer with other workflow invocations
+			// code might fail and this handler doesn't get cleared
+			// and will interfer with other workflow invocations
 			this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
 			_iter = navigator.Select(expr);
 			ResumeIteration();
@@ -99,9 +94,33 @@ namespace Origam.Workflow.Tasks
 			_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
 			_call.IterationTotal = _iter.Count;
 
-			while (_iter.MoveNext())
+			for (int currentPosition = 1; currentPosition <= _call.IterationTotal;
+				currentPosition++)
 			{
-				if(_iter.CurrentPosition > _iter.Count) break;
+				if (!block.IgnoreSourceContextChanges && this.sourceContextChanged)
+                {
+                    // reinitialize _iter to updated context store and wind up
+                    // to current position                    
+                    IXmlContainer updatedSourceContextStore = GetSourceContextXmlContainer(block);
+                    XPathNavigator navigator = updatedSourceContextStore.Xml.CreateNavigator();
+                    OrigamXsltContext ctx = OrigamXsltContext.Create(
+                        new NameTable(), Engine.TransactionId);
+                    XPathExpression expr = navigator.Compile(block.IteratorXPath);
+                    expr.SetContext(ctx);
+                    _iter = navigator.Select(expr);
+                    if (!WindUpTo(currentPosition))
+					{
+						break;
+					}
+                }
+                else
+				{
+					bool moved = _iter.MoveNext();
+					if (!moved || _iter.CurrentPosition > _iter.Count)
+					{
+						break;
+					}
+				}
 
 				// if workflow finished with an exception, we don't proceed
 				if(this.Engine == null) return;
@@ -149,6 +168,33 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
+        private bool WindUpTo(int currentPosition)
+        {
+            for (int i = currentPosition; i > 0; i--)
+            {
+                bool moved = _iter.MoveNext();
+                if (!moved || _iter.CurrentPosition > _iter.Count)
+                {
+					return false;
+                }
+            }
+			return true;
+        }
+
+        private IXmlContainer GetSourceContextXmlContainer(ForeachWorkflowBlock block)
+		{
+			IXmlContainer xmlContainer = this.Engine.RuleEngine.GetContext(
+							block.SourceContextStore) as IXmlContainer;
+			if (xmlContainer == null)
+			{
+				throw new ArgumentOutOfRangeException(
+					"SourceContextStore",
+					block.SourceContextStore,
+					ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
+			}
+			return xmlContainer;
+		}
+
 		private void CleanUp()
 		{
 			// there is no other iteration, we finish
@@ -183,7 +229,7 @@ namespace Origam.Workflow.Tasks
 						if(entry.Key.Equals(block.SourceContextStore.PrimaryKey))
 						{
 							bool fullMerge = (! entry.Key.Equals(block.SourceContextStore.PrimaryKey));
-							this.Engine.MergeContext(
+							sourceContextChanged = Engine.MergeContext(
 								(Key)entry.Key,
 								_call.RuleEngine.GetContext(entry.Key as Key), 
 								block, 
