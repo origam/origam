@@ -116,7 +116,7 @@ export function onFieldKeyDown(ctx: any) {
           });
 
           tablePanelView.scrollToCurrentCell();
-          setTimeout(()=> tablePanelView.setEditing(true));
+          tablePanelView.setEditing(true);
           break;
         }
         case "F2": {

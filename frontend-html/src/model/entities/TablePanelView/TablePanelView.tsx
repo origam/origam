@@ -573,8 +573,9 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound scrollToCurrentRow() {
     const rowIdx = getSelectedRowIndex(this);
+    const columnIndex = getSelectedColumnIndex(this);
     if (rowIdx !== undefined) {
-      this.triggerOnScrollToCellShortest(rowIdx, 0);
+      this.triggerOnScrollToCellShortest(rowIdx, columnIndex ?  columnIndex : 0);
     }
   }
 
