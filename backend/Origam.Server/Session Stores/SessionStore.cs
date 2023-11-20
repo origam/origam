@@ -756,7 +756,7 @@ namespace Origam.Server
         #endregion
 
         #region Private Methods
-        private static void RemoveNullConstraints(DataSet dataset)
+        protected static void RemoveNullConstraints(DataSet dataset)
         {
             foreach (DataTable table in dataset.Tables)
             {

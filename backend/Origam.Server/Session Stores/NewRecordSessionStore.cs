@@ -67,6 +67,7 @@ public class NewRecordSessionStore : FormSessionStore
             row, true, SecurityManager.CurrentUserProfile().Id);
         row.Table.NewRow();
         
+        RemoveNullConstraints(dataSet);
         dataSet.Tables[rootEntity.Name].Rows.Add(row);
         SetDataSource(dataSet);
     }
