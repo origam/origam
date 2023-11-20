@@ -48,8 +48,6 @@ export interface ITableProps {
 
   renderEditor?: IRenderEditor;
 
-  listenForScrollToCell?: IListenForScrollToCell;
-
   onOutsideTableClick?(event: any): void;
 
   onNoCellClick?(event: any): void;
@@ -88,8 +86,6 @@ export interface IGridDimensions {
   columnWidths: Map<string, number>;
   displayedColumnDimensionsCom: { left: number, width: number, right: number }[]
 }
-
-export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
 
 export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
