@@ -29,12 +29,15 @@ import { compareStrings } from "../../../utils/string";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { requestFocus } from "utils/focus";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export const  dropdownPageSize = 100;
 
 export interface IDropdownEditorBehavior extends IDriverState{
+  onAddNewRecordClick?: () => void;
   scrollToRowIndex: number | undefined;
   willLoadPage: number;
+  hasNewScreenButton: boolean;
   handleScroll(args: {
     clientHeight: number;
     clientWidth: number;
@@ -59,6 +62,8 @@ export interface IBehaviorData {
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  newRecordScreen?: NewRecordScreen,
+  onAddNewRecordClick?: () => void;
 }
 
 export class DropdownEditorBehavior implements IDropdownEditorBehavior {
@@ -76,6 +81,16 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onKeyDown?: (event: any) => void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private newRecordScreen?: NewRecordScreen;
+  public onAddNewRecordClick?: () => void;
+
+  get hasNewScreenButton() {
+    return !!this.newRecordScreen;
+  }
+
+  get addNewDropDownVisible() {
+    return this.hasNewScreenButton && this.dataTable.rowCount === 0
+  }
 
   constructor(args: IBehaviorData) {
     this.api = args.api;
@@ -91,6 +106,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
+    this.newRecordScreen = args.newRecordScreen
+    this.onAddNewRecordClick = args.onAddNewRecordClick
   }
 
   @observable isDropped = false;
@@ -105,7 +122,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   willLoadNextPage = true;
 
   @computed get isBodyDisplayed() {
-    return this.isDropped && this.dataTable.rowCount > 0;
+    return this.isDropped && (this.dataTable.rowCount > 0 || this.hasNewScreenButton);
   }
 
   @computed get chosenRowId() {
@@ -221,6 +238,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Enter":
+        if (this.addNewDropDownVisible) {
+          this.onAddNewRecordClick?.();
+        }
         if (this.isDropped && !this.isWorking) {
           this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           this.dropUp();
@@ -238,11 +258,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           }
         }
+        else if (!this.isDropped && this.userEnteredValue === ""){
+          this.data.chooseNewValue(null);
+        }
         break;
       case "Delete":
-        this.userEnteredValue = undefined;
-        this.cursorRowId = "";
-        this.data.chooseNewValue(null);
+        this.clearSelection();
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -277,16 +298,32 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
           this.trySelectFirstRow();
         }
         break;
+      case "Backspace":
+        if (document.getSelection()?.toString() === event.target.value ||
+          this.userEnteredValue?.length === 1)
+        {
+          this.clearSelection();
+        }
+        break;
     }
     this.onKeyDown && this.onKeyDown(event);
+  }
+
+  private clearSelection() {
+    this.userEnteredValue = undefined;
+    this.cursorRowId = "";
+    this.data.chooseNewValue(null);
+    this.dataTable.setFilterPhrase("");
   }
 
   handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
 
   @action.bound
   handleInputChange(event: any) {
+    if (this.userEnteredValue || event.target.value){
+      this.isDropped = true;
+    }
     this.userEnteredValue = event.target.value;
-    this.isDropped = true;
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
@@ -488,6 +525,3 @@ decorate(DropdownEditorBehavior, {
   isReadOnly: observable,
 });
 
-// export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
-//   "IDropdownEditorBehavior"
-// );

@@ -97,6 +97,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import {getCommonTabIndex, TabIndex} from "../model/entities/TabIndexOwner";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 
 function getPropertyParameters(node: any) {
@@ -117,6 +118,23 @@ export function fixColumnWidth(width: number) {
   } else {
     return Math.abs(width);
   }
+}
+
+function getNewRecordScreen(node: any){
+  const childNodes = findStopping(node, (n) => n.name === "NewRecordScreen");
+  if (childNodes.length === 0) {
+    return undefined;
+  }
+  if(childNodes.length > 1) {
+    throw new Error("More than one NewRecordScreenBinding node found in xml");
+  }
+  const newRecordScreenNode = childNodes[0];
+  return new NewRecordScreen(
+    {
+      width: parseInt(newRecordScreenNode.attributes.Width),
+      height: parseInt(newRecordScreenNode.attributes.Height),
+      menuItemId: newRecordScreenNode.attributes.MenuItemId
+    });
 }
 
 function parseProperty(node: any, idx: number): IProperty {
@@ -164,6 +182,7 @@ function parseProperty(node: any, idx: number): IProperty {
     lookup: !node.attributes.LookupId
       ? undefined
       : new Lookup({
+        newRecordScreen: getNewRecordScreen(node),
         dropDownShowUniqueValues: node.attributes.DropDownShowUniqueValues === "true",
         lookupId: node.attributes.LookupId,
         identifier: node.attributes.Identifier,
@@ -223,7 +242,8 @@ export function*interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string,
   workflowTaskId: string | null,
-  isLazyLoading: boolean
+  isLazyLoading: boolean,
+  createNewRecord?: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
   const workbenchLifeCycle = getWorkbenchLifecycle(formScreenLifecycle);
@@ -397,7 +417,16 @@ export function*interpretScreenXml(
       const filterGroupManager = new FilterGroupManager(filterConfiguration);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
+        .forEach((conf: any) => addFilterGroups(
+          filterGroupManager, properties, conf, dataView.attributes.SelectionMember
+        ));
+
+      function getDefaultPanelView(){
+        if(createNewRecord){
+          return IPanelViewType.Form;
+        }
+        return panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView));
+      }
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
@@ -410,10 +439,10 @@ export function*interpretScreenXml(
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
         newRecordView: dataView.attributes.NewRecordView,
-        defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
-        activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
+        defaultPanelView: getDefaultPanelView(),
+        activePanelView: getDefaultPanelView(),
         isMapSupported: dataView.attributes.IsMapSupported === "true",
-        isHeadless: dataView.attributes.IsHeadless === "true",
+        isHeadless: createNewRecord || dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
         hideCopyButton: dataView.attributes.HideCopyButton === "true",
@@ -481,7 +510,7 @@ export function*interpretScreenXml(
       );
       const configurationNode =
         gridConfigurationNodes.length === 1 ? gridConfigurationNodes[0] : undefined;
-      if (configurationNode) {
+      if (!createNewRecord && configurationNode) {
         const defaultView = findStopping(
           configurationNode,
           (n) => n.name === "view" && n.parent.name === "defaultView"

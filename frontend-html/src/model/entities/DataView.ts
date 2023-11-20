@@ -334,10 +334,11 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  substituteRecord(row: any[]) {
-    this.dataTable.substituteRecord(row);
+  substituteRecords(rows: any[][]) {
+    this.dataTable.clearRecordDirtyValues(rows);
+    this.dataTable.substituteRecords(rows);
     if (getGroupingConfiguration(this).isGrouping) {
-      getGrouper(this).substituteRecord(row);
+      getGrouper(this).substituteRecords(rows);
     }
   }
 

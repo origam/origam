@@ -117,6 +117,9 @@ export function DropdownEditorControl(props: {
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}
           />
+          {beh.hasNewScreenButton
+             && <div className={"inputBtn"} onClick={beh.onAddNewRecordClick}>+</div>
+          }
           <div
             className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
             tabIndex={-1}

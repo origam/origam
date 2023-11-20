@@ -25,7 +25,11 @@ import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 import { IFilterGroup } from "model/entities/types/IFilterGroup";
 
-function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
+function filterJsonToFilterGroup(
+    filterJson: any, 
+    properties: IProperty[], 
+    selectionMember: string | null | undefined
+) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
     const property = properties.find((prop) => prop.id === detail.property);
     if (!property) {
@@ -48,12 +52,15 @@ function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
       dataType: property.column,
       setting: setting,
     };
-  });
+  }).filter((detail:any) => !!detail);
+  const selectionCheckboxFilterGroup = 
+    filterJson.details.find((detail: any) => detail.property === selectionMember);
   return {
     filters: filters,
     id: filterJson.id,
     isGlobal: filterJson.isGlobal,
     name: filterJson.name,
+    selectionCheckboxFilter: selectionCheckboxFilterGroup?.value1
   };
 }
 
@@ -84,23 +91,28 @@ export function cloneFilterGroup(group: IFilterGroup | undefined) {
     id: group.id,
     isGlobal: group.isGlobal,
     name: group.name,
+    selectionCheckboxFilter: group.selectionCheckboxFilter
   };
 }
 
 export function addFilterGroups(
   filterGroupManager: FilterGroupManager,
   properties: IProperty[],
-  panelConfigurationJson: any
+  panelConfigurationJson: any,
+  selectionMember: string | null | undefined 
 ) {
 
   filterGroupManager.filterGroups = panelConfigurationJson.filters
-    .map((filterJson: any) => filterJsonToFilterGroup(filterJson, properties))
+    .map((filterJson: any) => filterJsonToFilterGroup(
+      filterJson, properties, selectionMember
+    ))
     .filter((group: any) => group);
 
   if (panelConfigurationJson.initialFilter) {
     filterGroupManager.defaultFilter = filterJsonToFilterGroup(
       panelConfigurationJson.initialFilter,
-      properties
+      properties,
+      selectionMember
     );
   }
 }

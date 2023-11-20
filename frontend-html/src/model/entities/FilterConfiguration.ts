@@ -26,6 +26,7 @@ import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
 import { prepareAnyForFilter, prepareForFilter } from "../selectors/PortalSettings/getStringFilterConfig";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -38,6 +39,8 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
+
+  @observable selectionCheckboxFilter: boolean | null  = null;
 
   @computed
   get activeCompleteFilters(){
@@ -60,6 +63,21 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   @action.bound
+  setSelectionCheckboxFilter(state: boolean | null) {
+    this.selectionCheckboxFilter = state;
+    this.applyNewFiltering();
+  }
+
+  @action.bound
+  toggleSelectionCheckboxFilter() {
+    switch(this.selectionCheckboxFilter) {
+      case null: this.setSelectionCheckboxFilter(true); break;
+      case true: this.setSelectionCheckboxFilter(false); break;
+      case false: this.setSelectionCheckboxFilter(null); break;
+    }
+  }
+
+  @action.bound
   setFilter(term: IFilter): void {
     const existingIndex = this.activeFilters.findIndex(
       (filter) => filter.propertyId === term.propertyId
@@ -73,6 +91,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   clearFilters(): void {
+    this.selectionCheckboxFilter = null;
     if (this.activeFilters.length !== 0) {
       this.activeFilters = [];
     }
@@ -96,6 +115,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   filteringFunction(ignorePropertyId?: string): (row: any[], forceRowId?: string) => boolean {
     return (row: any[], forceRowId?: string) => {
       const dataTable = getDataTable(this);
+      const dataView = getDataView(this);
       const dirtyValues = dataTable.getDirtyValues(row);
       if (dirtyValues.size > 0){
         return true;
@@ -117,6 +137,16 @@ export class FilterConfiguration implements IFilterConfiguration {
           !this.userFilterPredicate(row, term)) {
           return false;
         }
+      }
+      if(dataView.selectionMember 
+        && this.selectionCheckboxFilter !== null
+      ) {
+        const dataSourceField = 
+          getDataSourceFieldByName(this, dataView.selectionMember)!;
+        return dataTable.getCellValueByDataSourceField(
+          row,
+          dataSourceField
+        ) === this.selectionCheckboxFilter;
       }
       return true;
     };
@@ -248,7 +278,7 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "Number": {
         if (cellValue === undefined) return true;
-        const t1 = prop.column === "Number" ? parseFloat(cellValue) : cellValue;
+        const t1 = parseFloat(cellValue);
 
         switch (term.setting.type) {
           case "between": {
@@ -303,9 +333,9 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
             return t1 !== parseFloat(term.setting.val1);
           case "nnull":
-            return t1 !== null;
+            return cellValue !== null;
           case "null":
-            return t1 === null;
+            return cellValue === null;
         }
         break;
       }

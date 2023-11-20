@@ -95,7 +95,7 @@ namespace Origam.Schema.EntityModel
 			var result = new ArrayList();
 			foreach(DataStructureRule rule in Rules())
 			{
-				if(rule.Entity.Name == entityName 
+				if(rule.EntityName == entityName 
 				&& rule.RuleDependencies.Count == 0)
 				{
 					result.Add(rule);

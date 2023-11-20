@@ -23,10 +23,10 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
 // Needed on columns where the alignment can be set in the model.
 export function resolveCellAlignment(
   customStyle: { [p: string]: string } | undefined,
-  isFirsColumn: boolean,
+  isFirstColumn: boolean,
   type: string)
   : { [key: string]: string } {
-  let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);
+  let cellAlignment = new CellAlignment(isFirstColumn, type, customStyle);
   const style = customStyle ? Object.assign({}, customStyle) : {};
   style["paddingRight"] = cellAlignment.paddingRight - 1 + "px";
   style["paddingLeft"] = cellAlignment.paddingLeft + "px";

@@ -37,18 +37,20 @@ import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemByI
 
 export interface IOpenNewForm {
   (
-    id: string,
-    type: IMainMenuItemType,
-    label: string,
-    isLazyLoading: boolean,
-    dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any },
-    parentContext: any,
-    requestParameters: object,
-    formSessionId?: string,
-    isSessionRebirth?: boolean,
-    registerSession?: true,
-    refreshOnReturnType?: IRefreshOnReturnType
+    args: {
+      id: string,
+      type: IMainMenuItemType,
+      label: string,
+      isLazyLoading: boolean,
+      dialogInfo: IDialogInfo | undefined,
+      parameters: { [key: string]: any },
+      parentContext?: any,
+      requestParameters?: object | undefined,
+      formSessionId?: string,
+      isSessionRebirth?: boolean,
+      isSleepingDirty?: boolean,
+      refreshOnReturnType?: IRefreshOnReturnType,
+    }
   ): Generator; //boolean
 }
 
@@ -69,7 +71,7 @@ export interface IRefreshForm {
 }
 
 export interface IProcessCRUDResult {
-  (data: { crudResult: ICRUDResult, resortTables?: boolean }): Generator;
+  (data: { crudResults: ICRUDResult[], resortTables?: boolean }): Generator;
 }
 
 export function new_ProcessActionResult(ctx: any) {
@@ -82,7 +84,7 @@ export function new_ProcessActionResult(ctx: any) {
     closeForm: closeForm(ctx),
     refreshForm: actions.formScreen.refresh(ctx),
     getActionCaption: () => getActionCaption(ctx),
-    processCRUDResult: (data: { crudResult: ICRUDResult, resortTables?: boolean }) => processCRUDResult(ctx, data.crudResult, data.resortTables),
+    processCRUDResult: (data: { crudResults: ICRUDResult[], resortTables?: boolean }) => processCRUDResult(ctx, data.crudResults, data.resortTables),
     parentContext: ctx
   });
 }
@@ -123,18 +125,17 @@ export function processActionResult2(dep: {
           } = request;
           const dialogInfo = isModalDialog ? new DialogInfo(dialogWidth, dialogHeight) : undefined;
           yield*dep.openNewForm(
-            objectId,
-            typeString,
-            caption || dep.getActionCaption(),
-            lazyLoading,
-            dialogInfo,
-            parameters,
-            dep.parentContext,
-            actionResultItem.request,
-            undefined,
-            undefined,
-            undefined,
-            refreshOnReturnType,
+            {
+              id: objectId,
+              type: typeString,
+              label: caption || dep.getActionCaption(),
+              isLazyLoading: lazyLoading,
+              dialogInfo: dialogInfo,
+              parameters: parameters,
+              parentContext: dep.parentContext,
+              requestParameters: actionResultItem.request,
+              refreshOnReturnType: refreshOnReturnType,
+            }
           );
           break;
         }
@@ -148,7 +149,7 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.UpdateData: {
           yield*dep.processCRUDResult(
-            {crudResult: actionResultItem.changes, resortTables: true}
+            {crudResults: actionResultItem.changes, resortTables: true}
           );
           break;
         }

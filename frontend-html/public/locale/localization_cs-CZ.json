@@ -178,6 +178,9 @@
   "column_config_new_config_name": "Název konfigurace",
   "column_config_config_name": "Název:",
   "column_config_name_empty": "Jméno nemůže být prázdné",
+  "column_config_settings": "Nastavení",
+  "column_config_order": "Pořadí",
+  "column_config_order_explanation": "Obsluha klávesnicí: ↑,↓ hýbe kurzorem. Ctrl + ↑,↓ přesouvá položku.",
   "calendar_week": "{0}. týden",
   "calendar_monday": "Pondělí",
   "calendar_tuesday": "Úterý",
@@ -422,5 +425,6 @@
   "row_not_found": "Tento řádek nebyl nalezen na serveru. Obnovte prosím data.",
   "column_width": "Šířka",
   "order_columns_button": "Seřadit",
-  "order_columns_title": "Pořadí sloupců"
+  "order_columns_title": "Pořadí sloupců",
+  "add_new_record": "Přidat nový záznam"
 }

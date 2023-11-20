@@ -202,8 +202,14 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
-  clearRecordDirtyValues(id: string): void {
+  clearRecordDirtyValues(rows: any[][]): void {
 
+  }
+
+  substituteRecords(rows: any[][]) {
+    for (let row of rows) {
+      this.substituteRecord(row);
+    }
   }
 
   substituteRecord(row: any[]): void {

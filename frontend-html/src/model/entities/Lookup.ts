@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IDropDownParameter, IDropDownType, ILookup, ILookupData } from "./types/ILookup";
+import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -34,6 +35,7 @@ export class Lookup implements ILookup {
   $type_ILookup: 1 = 1;
 
   lookupId: string = "";
+  newRecordScreen?: NewRecordScreen = null as any;
   dropDownShowUniqueValues: boolean = false;
   identifier: string = "";
   identifierIndex: number = 0;

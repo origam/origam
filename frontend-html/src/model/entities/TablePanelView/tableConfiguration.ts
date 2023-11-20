@@ -117,16 +117,17 @@ export class TableConfiguration implements ITableConfiguration {
       if (property && columnConfiguration.width > 0) {
         property.setColumnWidth(columnConfiguration.width);
       }
-      tablePanelView.tablePropertyIds = tablePanelView.tablePropertyIds
-        .slice()
-        .sort((columnIdA, columnIdB) => {
-          const columnIdxA = this.columnConfigurations.findIndex(config => config.propertyId === columnIdA);
-          if (columnIdxA === -1) return 0;
-          const columnIdxB = this.columnConfigurations.findIndex(config => config.propertyId === columnIdB);
-          if (columnIdxB === -1) return 0;
-          return columnIdxA - columnIdxB;
-        });
     }
+
+    tablePanelView.tablePropertyIds = tablePanelView.tablePropertyIds
+    .slice()
+    .sort((columnIdA, columnIdB) => {
+      const columnIdxA = this.columnConfigurations.findIndex(config => config.propertyId === columnIdA);
+      if (columnIdxA === -1) return 0;
+      const columnIdxB = this.columnConfigurations.findIndex(config => config.propertyId === columnIdB);
+      if (columnIdxB === -1) return 0;
+      return columnIdxA - columnIdxB;
+    });
   }
 
   sortColumnConfigurations(propertyIds: string[]) {

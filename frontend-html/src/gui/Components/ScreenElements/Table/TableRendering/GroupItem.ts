@@ -98,7 +98,7 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
     return getAllParents(this);
   }
 
-  substituteRecord(row: any[]): void {
+  substituteRecords(rows: any[][]): void {
   }
 
   getRowIndex(rowId: string): number | undefined {
@@ -182,8 +182,8 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     return getAllParents(this);
   }
 
-  substituteRecord(row: any[]): any {
-    this._childRows.substitute(row);
+  substituteRecords(rows: any[][]): any {
+    this._childRows.substituteRows(rows);
   }
 
   getRowIndex(rowId: string): number | undefined {

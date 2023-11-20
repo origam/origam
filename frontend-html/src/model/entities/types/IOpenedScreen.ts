@@ -38,6 +38,7 @@ export interface IOpenedScreenData {
   parameters: { [key: string]: any };
   isSleeping?: boolean;
   isSleepingDirty?: boolean;
+  isNewRecordScreen?: boolean;
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {
