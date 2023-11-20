@@ -205,11 +205,9 @@ namespace Origam.Workflow.WorkQueue
 				}
 				else
 				{
-					if (firstChild.Name.Equals("ROOT"))
-					{
-						// empty <ROOT/> from the loader workflow, nothing came
-						return false;
-					}
+					// one empty node from the loader workflow,
+					// e.g. <ROOT/> - nothing came
+					return false;
 				}
 			}
 			else
