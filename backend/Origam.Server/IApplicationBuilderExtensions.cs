@@ -76,23 +76,20 @@ namespace Origam.Server
             StartUpConfiguration startUpConfiguration,
             IdentityServerConfig identityServerConfig)
         {
-            app.MapWhen(
-                context => IsPublicUserApiRoute(startUpConfiguration, context),
-                apiBranch => {
-                    apiBranch.UseMiddleware<UserApiMiddleware>();
-                });
+            if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+            {
+                app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+            }
+            else
+            {
+                app.UseAuthentication();
+               
+            }
             app.MapWhen(
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
-                apiBranch =>
-            {
-                if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+                privateBranch =>
                 {
-                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
-                }
-                else
-                {
-                    apiBranch.UseAuthentication();
-                    apiBranch.Use(async (context, next) =>
+                    privateBranch.Use(async (context, next) =>
                     {
                         // Authentication middleware doesn't short-circuit the request itself
                         // we must do that here.
@@ -103,9 +100,13 @@ namespace Origam.Server
                         }
                         await next.Invoke();
                     }); 
-                }
-                apiBranch.UseMiddleware<UserApiMiddleware>();
-            });
+                    privateBranch.UseMiddleware<UserApiMiddleware>();
+                });
+            app.MapWhen(
+                context => IsPublicUserApiRoute(startUpConfiguration, context),
+                publicBranch => {
+                    publicBranch.UseMiddleware<UserApiMiddleware>();
+                });
         } 
         
         public static void UseWorkQueueApi(this IApplicationBuilder app)
@@ -114,7 +115,7 @@ namespace Origam.Server
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
                 apiBranch =>
                 {
-                    apiBranch.UseMiddleware<OptionalTokenAuthenticationMiddleware>();
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
                     apiBranch.UseMvc(routes =>
                     {
                         routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
