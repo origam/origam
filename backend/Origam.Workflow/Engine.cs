@@ -1064,9 +1064,9 @@ namespace Origam.Workflow
 			return cs.DataType;
 		}
 
-		internal void MergeContext(Key resultContextKey, object inputContext, IWorkflowStep step, string contextName, ServiceOutputMethod method)
+		internal bool MergeContext(Key resultContextKey, object inputContext, IWorkflowStep step, string contextName, ServiceOutputMethod method)
 		{
-			if(method == ServiceOutputMethod.Ignore) return;
+			if(method == ServiceOutputMethod.Ignore) return false;
 
 			object resultContext = this.RuleEngine.GetContext(resultContextKey);
 			bool changed = false;
@@ -1104,7 +1104,7 @@ namespace Origam.Workflow
 
                 if (inputContext == null || inputContext == DBNull.Value)
 				{
-					return;
+					return changed;
 				}
 				else if(inputDataDoc != null 
                     && resultDataDoc != null)
@@ -1336,6 +1336,7 @@ namespace Origam.Workflow
 				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
 				log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
 			}
+			return changed;
 		}
 
         private void ProcessRulesTimed(Key resultContextKey,
