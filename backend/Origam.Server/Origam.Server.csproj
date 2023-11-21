@@ -75,7 +75,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
-    <PackageReference Include="Origam.Service.Core" Version="2.1.3" />
+    <PackageReference Include="Origam.Service.Core" Version="2.1.4" />
     <PackageReference Include="SoapCore" Version="1.1.0.39" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
