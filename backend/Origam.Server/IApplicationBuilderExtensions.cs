@@ -76,39 +76,46 @@ namespace Origam.Server
             StartUpConfiguration startUpConfiguration,
             IdentityServerConfig identityServerConfig)
         {
-            if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+            app.MapWhen(
+                context => IsPublicUserApiRoute(startUpConfiguration, context),
+                publicBranch => {
+                    publicBranch.UseUserApiAuthentication(identityServerConfig);
+                    publicBranch.UseMiddleware<UserApiMiddleware>();
+                });
+            app.MapWhen(
+                context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
+                privateBranch =>
+                {
+                    privateBranch.UseUserApiAuthentication(identityServerConfig);
+                    privateBranch.Use(async (context, next) =>
+                        {
+                            // Authentication middleware doesn't short-circuit the request itself
+                            // we must do that here.
+                            if (!context.User.Identity.IsAuthenticated)
+                            {
+                                context.Response.StatusCode = 401;
+                                return;
+                            }
+                            await next.Invoke();
+                        }); 
+                    privateBranch.UseMiddleware<UserApiMiddleware>();
+                });
+        }
+
+        private static void UseUserApiAuthentication(this IApplicationBuilder app,
+            IdentityServerConfig identityServerConfig)
+        {
+            if (identityServerConfig.PrivateApiAuthentication ==
+                AuthenticationMethod.Token)
             {
                 app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
             }
             else
             {
                 app.UseAuthentication();
-               
             }
-            app.MapWhen(
-                context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
-                privateBranch =>
-                {
-                    privateBranch.Use(async (context, next) =>
-                    {
-                        // Authentication middleware doesn't short-circuit the request itself
-                        // we must do that here.
-                        if (!context.User.Identity.IsAuthenticated)
-                        {
-                            context.Response.StatusCode = 401;
-                            return;
-                        }
-                        await next.Invoke();
-                    }); 
-                    privateBranch.UseMiddleware<UserApiMiddleware>();
-                });
-            app.MapWhen(
-                context => IsPublicUserApiRoute(startUpConfiguration, context),
-                publicBranch => {
-                    publicBranch.UseMiddleware<UserApiMiddleware>();
-                });
-        } 
-        
+        }
+
         public static void UseWorkQueueApi(this IApplicationBuilder app)
         {
             app.MapWhen(
