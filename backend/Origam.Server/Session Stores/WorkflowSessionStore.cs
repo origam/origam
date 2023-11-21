@@ -132,31 +132,34 @@ namespace Origam.Server
 
             try
             {
-                switch (actionId)
+                lock (_lock)
                 {
-                    case ACTION_QUERYNEXT:
-                        result = EvaluateEndRule();
-                        break;
+                    switch (actionId)
+                    {
+                        case ACTION_QUERYNEXT:
+                            result = EvaluateEndRule();
+                            break;
 
-                    case ACTION_NEXT:
-                        result = HandleWorkflowNextAsync(cachedFormIds).Result;
-                        break;
+                        case ACTION_NEXT:
+                            result = HandleWorkflowNextAsync(cachedFormIds).Result;
+                            break;
 
-                    case ACTION_ABORT:
-                        result = HandleAbortAsync().Result;
-                        break;
+                        case ACTION_ABORT:
+                            result = HandleAbortAsync().Result;
+                            break;
 
-                    case ACTION_SAVE:
-                        result = this.Save();
-                        this.IsFirstSaveDone = true;
-                        break;
+                        case ACTION_SAVE:
+                            result = this.Save();
+                            this.IsFirstSaveDone = true;
+                            break;
 
-                    case ACTION_REFRESH:
-                        result = this.HandleRefresh();
-                        break;
+                        case ACTION_REFRESH:
+                            result = this.HandleRefresh();
+                            break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                        default:
+                            throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
+                    }
                 }
             }
             finally
