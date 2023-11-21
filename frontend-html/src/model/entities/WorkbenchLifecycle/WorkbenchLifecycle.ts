@@ -173,7 +173,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         isLazyLoading: lazyLoading === "true",
         dialogInfo: dialogInfo,
         parameters: args.idParameter ? {id: args.idParameter} : {},
-        createNewRecord: args.isSingleRecordEdit
+        isSingleRecordEdit: args.isSingleRecordEdit
       });
     }
   }
