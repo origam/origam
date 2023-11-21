@@ -109,7 +109,7 @@ export const currentCellText = Memoized(() => {
   if (text !== undefined && text !== null && text.length > 500){
     text = text.substring(0, 500) + "...(TRUNCATED)";
   }
-  if (text && currentProperty().multiline) {
+  if (text && currentProperty().isRichText) {
     text = stripHtml(text).result;
   }
   if (Array.isArray(text)) {
