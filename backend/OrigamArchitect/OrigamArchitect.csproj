@@ -102,6 +102,10 @@
       <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
       <Name>Origam.BI.SSRS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
+      <Project>{54bff654-2a00-4a8a-86b0-06f124d769a1}</Project>
+      <Name>Origam.BI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
