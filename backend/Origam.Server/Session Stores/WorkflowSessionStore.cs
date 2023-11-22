@@ -79,7 +79,6 @@ namespace Origam.Server
         private DataStructureMethod _refreshMethod;
         private Hashtable _parameters = new Hashtable();
         private bool _allowSave;
-        private bool _isProcessing;
         private bool _isFinalForm;
         private bool _isAutoNext;
         private bool _isFirstSaveDone = false;
@@ -114,57 +113,34 @@ namespace Origam.Server
             HandleWorkflow(handler);
         }
 
-        public override object ExecuteAction(string actionId)
-        {
-            return ExecuteAction(actionId, null);
-        }
-
-        public object ExecuteAction(string actionId, IList<string> cachedFormIds)
+        public override object ExecuteActionInternal(string actionId)
         {
             object result;
-
-            if (this.IsProcessing)
+            switch (actionId)
             {
-                throw new Exception(Resources.ErrorCommandInProgress);
-            }
+                case ACTION_QUERYNEXT:
+                    result = EvaluateEndRule();
+                    break;
 
-            this.IsProcessing = true;
+                case ACTION_NEXT:
+                    result = HandleWorkflowNextAsync().Result;
+                    break;
 
-            try
-            {
-                lock (_lock)
-                {
-                    switch (actionId)
-                    {
-                        case ACTION_QUERYNEXT:
-                            result = EvaluateEndRule();
-                            break;
+                case ACTION_ABORT:
+                    result = HandleAbortAsync().Result;
+                    break;
 
-                        case ACTION_NEXT:
-                            result = HandleWorkflowNextAsync(cachedFormIds).Result;
-                            break;
+                case ACTION_SAVE:
+                    result = this.Save();
+                    this.IsFirstSaveDone = true;
+                    break;
 
-                        case ACTION_ABORT:
-                            result = HandleAbortAsync().Result;
-                            break;
+                case ACTION_REFRESH:
+                    result = this.HandleRefresh();
+                    break;
 
-                        case ACTION_SAVE:
-                            result = this.Save();
-                            this.IsFirstSaveDone = true;
-                            break;
-
-                        case ACTION_REFRESH:
-                            result = this.HandleRefresh();
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
-                    }
-                }
-            }
-            finally
-            {
-                this.IsProcessing = false;
+                default:
+                    throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
             }
 
             if (_disposeAfterAction)
@@ -333,12 +309,6 @@ namespace Origam.Server
         {
             get { return _finishMessage; }
             set { _finishMessage = value; }
-        }
-
-        public bool IsProcessing
-        {
-            get { return _isProcessing; }
-            set { _isProcessing = value; }
         }
 
         public bool IsFirstSaveDone
@@ -536,7 +506,7 @@ namespace Origam.Server
             return new RuleExceptionDataCollection() ;
         }
 
-        private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync(IList<string> cachedWorkflowTaskIds)
+        private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync()
         {
             RuleExceptionDataCollection results = EvaluateEndRule();
             if (results != null)
@@ -560,7 +530,7 @@ namespace Origam.Server
             this.Host.FinishWorkflowForm(this.TaskId, this.XmlData);
             handler.Event.WaitOne();
             HandleWorkflow(handler);
-            UIRequest request = GetRequest(cachedWorkflowTaskIds);
+            UIRequest request = GetRequest();
             UIResult result = this.Service.InitUI(request);
             result.WorkflowTaskId = this.TaskId.ToString();
             await System.Threading.Tasks.Task.CompletedTask; //CS1998
@@ -594,11 +564,11 @@ namespace Origam.Server
             HandleWorkflow(handler);
             await System.Threading.Tasks.Task.CompletedTask; //CS1998
             // call InitUI
-            UIRequest request = GetRequest(null);
+            UIRequest request = GetRequest();
             return Service.InitUI(request);
         }
 
-        private UIRequest GetRequest(IList<string> cachedWorkflowTaskIds)
+        private UIRequest GetRequest()
         {
             bool die = (this.FormId == new Guid(Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.WORKFLOW_FINISHED_FORMID));
             SessionStore ss;
@@ -618,10 +588,7 @@ namespace Origam.Server
             request.IsStandalone = ss.Request.IsStandalone;
             request.ObjectId = ss.Request.ObjectId;
             request.IsNewSession = false;
-            if (cachedWorkflowTaskIds != null)
-            {
-                request.IsDataOnly = cachedWorkflowTaskIds.Contains(this.TaskId.ToString());
-            }
+            request.IsDataOnly = false;
             return request;
         }
         #endregion
