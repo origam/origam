@@ -27,7 +27,5 @@ namespace Origam.Server.Model.UIService
     public class WorkflowNextInput
     {
         public Guid SessionFormIdentifier { get; set; }
-        [Obsolete("Not used anymore. Will be removed in the next version.")]
-        public List<string> CachedFormIds { get; set; }
     } 
 }
