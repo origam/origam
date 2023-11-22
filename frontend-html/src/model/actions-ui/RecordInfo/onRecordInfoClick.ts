@@ -22,18 +22,21 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function onRecordInfoClick(ctx: any) {
   return flow(function*onRecordInfoClick(event: any) {
     const menuId = getMenuItemId(ctx);
     const dataStructureEntityId = getDataStructureEntityId(ctx);
     const rowId = getSelectedRowId(ctx);
+    const sessionId = getSessionId(ctx);
     if (rowId) {
       yield*getRecordInfo(ctx).onOpenRecordInfoClick(
         event,
         menuId,
         dataStructureEntityId,
-        rowId
+        rowId,
+        sessionId,
       );
     }
   });
