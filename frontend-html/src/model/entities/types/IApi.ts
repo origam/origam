@@ -350,6 +350,7 @@ export interface IApi {
     MenuId: string;
     DataStructureEntityId: string;
     RowId: string;
+    SessionFormIdentifier: string;
   }): Promise<any>;
 
   getRecordAudit(data: {
