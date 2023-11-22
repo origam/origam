@@ -34,6 +34,7 @@ export class RecordInfo implements IRecordInfo {
     menuId?: string;
     dataStructureEntityId?: string;
     rowId?: string;
+    sessionId?: string;
   } = {};
 
   idgen = 0;
@@ -67,12 +68,14 @@ export class RecordInfo implements IRecordInfo {
   willLoadNewInfo(
     menuId: string | undefined,
     dataStructureEntityId: string | undefined,
-    rowId: string | undefined
+    rowId: string | undefined,
+    sessionId: string | undefined
   ) {
     return (
       menuId !== this.displayedFor.menuId ||
       dataStructureEntityId !== this.displayedFor.dataStructureEntityId ||
-      rowId !== this.displayedFor.rowId
+      rowId !== this.displayedFor.rowId ||
+      sessionId !== this.displayedFor.sessionId
     );
   }
 
@@ -80,7 +83,8 @@ export class RecordInfo implements IRecordInfo {
     return (
       this.displayedFor.menuId &&
       this.displayedFor.dataStructureEntityId &&
-      this.displayedFor.rowId
+      this.displayedFor.rowId &&
+      this.displayedFor.sessionId
     );
   }
 
@@ -95,7 +99,8 @@ export class RecordInfo implements IRecordInfo {
     event: any,
     menuId: string,
     dataStructureEntityId: string,
-    rowId: string
+    rowId: string,
+    sessionId: string,
   ) {
     if(this.recordInfoExpanded){
       return;
@@ -103,23 +108,25 @@ export class RecordInfo implements IRecordInfo {
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     this.triggerInfoSectionExpand();
-    yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
+    yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId, sessionId);
   }
 
   *onSelectedRowMaybeChanged(
     menuId: string,
     dataStructureEntityId: string,
-    rowId: string
+    rowId: string,
+    sessionId: string
   ) {
-    if (this.willLoadNewInfo(menuId, dataStructureEntityId, rowId)) {
+    if (this.willLoadNewInfo(menuId, dataStructureEntityId, rowId, sessionId)) {
       if (this.recordInfoExpanded) {
-        yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
+        yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId, sessionId);
       }
     }
     this.displayedFor = {
       menuId,
       dataStructureEntityId,
-      rowId
+      rowId,
+      sessionId
     };
   }
 
@@ -144,7 +151,8 @@ export class RecordInfo implements IRecordInfo {
       yield*this.loadRecordInfo(
         this.displayedFor.menuId!,
         this.displayedFor.dataStructureEntityId!,
-        this.displayedFor.rowId!
+        this.displayedFor.rowId!,
+        this.displayedFor.sessionId!
       );
     }
   }
@@ -159,14 +167,16 @@ export class RecordInfo implements IRecordInfo {
   *loadRecordInfo(
     menuId: string,
     dataStructureEntityId: string,
-    rowId: string
+    rowId: string,
+    sessionId: string
   ): any {
     const api = getApi(this);
     this.info = [];
     const rawInfo = yield api.getRecordInfo({
       MenuId: menuId,
       DataStructureEntityId: dataStructureEntityId,
-      RowId: rowId
+      RowId: rowId,
+      SessionFormIdentifier: sessionId,
     });
     if(rawInfo.cell.map){
       this.info = rawInfo.cell.map(
