@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -102,6 +102,10 @@
       <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
       <Name>Origam.BI.SSRS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
+      <Project>{54bff654-2a00-4a8a-86b0-06f124d769a1}</Project>
+      <Name>Origam.BI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
@@ -125,11 +129,6 @@
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Name>Origam.OrigamEngine</Name>
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
-      <Name>Origam.BI</Name>
-      <Project>{54BFF654-2A00-4A8A-86B0-06F124D769A1}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
@@ -490,7 +489,7 @@
       <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="Origam.Service.Core">
-      <Version>2.1.3</Version>
+      <Version>2.1.4</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

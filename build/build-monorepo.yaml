@@ -288,9 +288,9 @@ jobs:
      - checkout: origam-html-chat
        fetchDepth: 1
      - task: NodeTool@0
-       displayName: 'Use Node 14.x'
+       displayName: 'Use Node 18.x'
        inputs:
-         versionSpec: 14.x
+         versionSpec: 18.x
      - task: geeklearningio.gl-vsts-tasks-yarn.yarn-installer-task.YarnInstaller@3
        displayName: 'Use Yarn 1.x'
      - task: Cache@2
