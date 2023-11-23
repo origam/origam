@@ -583,7 +583,7 @@ namespace Origam.Server
                 is WorkflowSessionStore workflowSessionStore)
             {
                 return (UIResult) workflowSessionStore.ExecuteAction(
-                    SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+                    SessionStore.ACTION_NEXT);
             }
             return null;
         }
