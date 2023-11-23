@@ -51,8 +51,8 @@
 		<DebugType>full</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="NPOI" Version="2.6.1" />
-	  <PackageReference Include="Origam.Service.Core" Version="2.1.3" />
+	  <PackageReference Include="NPOI" Version="2.6.2" />
+	  <PackageReference Include="Origam.Service.Core" Version="2.1.4" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
