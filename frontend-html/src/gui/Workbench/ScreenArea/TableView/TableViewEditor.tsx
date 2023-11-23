@@ -152,10 +152,10 @@ export class TableViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
             isMultiline={this.props.property!.multiline}
-            subscribeToFocusManager={(editor) =>
+            subscribeToFocusManager={(editor, onBlur) =>
             {
               gridFocusManager.activeEditor = editor
-              gridFocusManager.editorBlur = this.props.onEditorBlur;
+              gridFocusManager.editorBlur = onBlur;
             }}
           />
         );

@@ -63,14 +63,10 @@ export class DateTimeEditor extends React.Component<{
   className?: string;
 }> {
   @observable isDroppedDown = false;
-
   @observable isShowFormatHintTooltip = false;
-
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
-
   editorState = new DesktopEditorState(this.props.value);
-
   editorModel = new DateEditorModel(
     this.editorState,
     this.props.outputFormat,
@@ -79,6 +75,7 @@ export class DateTimeEditor extends React.Component<{
     this.props.onKeyDown,
     this.props.onEditorBlur,
     this.props.onChangeByCalendar);
+  blurHandled = false;
 
   @action.bound handleDropperClick(event: any) {
     event.stopPropagation();
@@ -115,7 +112,7 @@ export class DateTimeEditor extends React.Component<{
         async ()=> {
           const event = {} as any;
           event.type = "click";
-          await this.handleInputBlur(event)();
+          await this.handleInputBlur(event);
         });
     }
   }
@@ -166,12 +163,16 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound
-  handleInputBlur(event: any) {
+  async handleInputBlur(event: any) {
+    if(this.blurHandled){
+      return;
+    }
+    this.blurHandled = true;
     const self = this;
-    return flow(function*() {
+    await flow(function*() {
       self.setShowFormatHint(false);
       yield self.editorModel.handleInputBlur(event);
-    });
+    })();
   }
 
   @action.bound handleKeyDown(event: any) {
@@ -274,7 +275,7 @@ export class DateTimeEditor extends React.Component<{
                     }}
                     className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
                     type="text"
-                    onBlur={event => this.handleInputBlur(event)()}
+                    onBlur={event => this.handleInputBlur(event)}
                     onFocus={this.handleFocus}
                     ref={(elm) => {
                       this.refInput(elm);
@@ -332,7 +333,7 @@ export class DateTimeEditor extends React.Component<{
           title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
           type="text"
-          onBlur={event => this.handleInputBlur(event)()}
+          onBlur={event => this.handleInputBlur(event)}
           onFocus={this.handleFocus}
           ref={this.refInput}
           value={this.editorModel.textFieldValue}

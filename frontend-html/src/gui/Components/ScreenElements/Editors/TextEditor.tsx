@@ -34,6 +34,7 @@ import { IDockType } from "model/entities/types/IProperty";
 import { AutoSizer, List, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -49,7 +50,7 @@ export class TextEditor extends React.Component<{
   isRichText: boolean;
   customStyle?: any;
   wrapText: boolean;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
@@ -64,6 +65,7 @@ export class TextEditor extends React.Component<{
   refGrid = React.createRef<MultiGrid>();
   @observable.ref
   longTextRowList: string[] = [];
+  blurHandled = false;
 
   componentDidMount() {
     this.updateTextOverflowState();
@@ -102,7 +104,7 @@ export class TextEditor extends React.Component<{
   }
 
   componentWillUnmount() {
-    this.props.onEditorBlur?.({target: this.elmInput});
+    this.handleBlur({target: this.elmInput});
     this.disposers.forEach((d) => d());
   }
 
@@ -141,9 +143,21 @@ export class TextEditor extends React.Component<{
   refInput = (elm: any) => {
     this.elmInput = elm;
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(
+          this.elmInput,
+          async()=> await this.handleBlur(null)
+      );
     }
   };
+
+  @action.bound
+  async handleBlur(event: any) {
+    if(this.blurHandled){
+      return;
+    }
+    await this.props.onEditorBlur?.(event);
+  }
+
 
   getStyle() {
     if (this.props.customStyle) {
@@ -204,7 +218,7 @@ export class TextEditor extends React.Component<{
               onKeyDown={this.props.onKeyDown}
               onClick={this.props.onClick}
               onDoubleClick={this.props.onDoubleClick}
-              onBlur={this.props.onEditorBlur}
+              onBlur={this.handleBlur}
               onFocus={this.handleFocus}
             />
           </div>
@@ -216,7 +230,7 @@ export class TextEditor extends React.Component<{
                 value={this.props.value ?? ""}
                 onChange={(event: any) => this.onChange(event)}
                 refInput={this.refInput}
-                onBlur={this.props.onEditorBlur}
+                onBlur={this.handleBlur}
                 onFocus={this.handleFocus}
               />
           </div>
@@ -239,7 +253,7 @@ export class TextEditor extends React.Component<{
           onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
-          onBlur={this.props.onEditorBlur}
+          onBlur={this.handleBlur}
           onFocus={this.handleFocus}
         />
       );
@@ -272,7 +286,7 @@ export class TextEditor extends React.Component<{
             className={this.getMultilineDivClass()}
             onClick={this.props.onClick}
             onDoubleClick={this.props.onDoubleClick}
-            onBlur={this.props.onEditorBlur}
+            onBlur={this.handleBlur}
             onFocus={this.handleFocus}
           >
             <span style={this.getStyle()} className={S.multiLine}>
@@ -295,7 +309,7 @@ export class TextEditor extends React.Component<{
           onKeyDown={this.handleKeyDown}
           onDoubleClick={this.props.onDoubleClick}
           onClick={this.props.onClick}
-          onBlur={this.props.onEditorBlur}
+          onBlur={this.handleBlur}
           onFocus={this.handleFocus}
         />
       );

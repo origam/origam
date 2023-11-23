@@ -53,6 +53,7 @@ export class NumberEditor extends React.Component<{
   state = { value: this.formatForDisplay(this.props.value), cursorPosition: 0};
   disposer: undefined | (()=> void);
   inputRef = React.createRef<HTMLInputElement>();
+  blurHandled = false;
 
   formatForDisplay(value: string | number | null){
     if(value === null || value === ""){
@@ -124,6 +125,10 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   async handleBlur(event: any) {
+    if(this.blurHandled){
+      return;
+    }
+    this.blurHandled = true;
     await runInFlowWithHandler({
       ctx: this.props.property,
       action: async () => {
