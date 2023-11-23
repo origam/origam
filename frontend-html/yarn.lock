@@ -2051,10 +2051,10 @@
   dependencies:
     react-inlinesvg "*"
 
-"@types/react-measure@^2.0.11":
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/@types/react-measure/-/react-measure-2.0.11.tgz#747735aa0aa8a03ec7b05cf26445b82718f4c25b"
-  integrity sha512-PIM+K41T1N7+Fi8hbWxbQ9LlO8N9q9SDjfxdh3AD2aFZiuOc9GIozmuyHfdzgg2KScQZGYqE0LQKffkZKLNe0g==
+"@types/react-measure@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/@types/react-measure/-/react-measure-2.0.12.tgz#e8ba05057357b9529aa4115064fe7ea77549f54c"
+  integrity sha512-Y6V11CH6bU7RhqrIdENPwEUZlPXhfXNGylMNnGwq5TAEs2wDoBA3kSVVM/EQ8u72sz5r9ja+7W8M8PIVcS841Q==
   dependencies:
     "@types/react" "*"
 
