@@ -78,43 +78,51 @@ namespace Origam.Server
         {
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
-                apiBranch => {
-                    apiBranch.UseMiddleware<UserApiMiddleware>();
+                publicBranch => {
+                    publicBranch.UseUserApiAuthentication(identityServerConfig);
+                    publicBranch.UseMiddleware<UserApiMiddleware>();
                 });
             app.MapWhen(
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
-                apiBranch =>
-            {
-                if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
+                privateBranch =>
                 {
-                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
-                }
-                else
-                {
-                    apiBranch.UseAuthentication();
-                    apiBranch.Use(async (context, next) =>
-                    {
-                        // Authentication middleware doesn't short-circuit the request itself
-                        // we must do that here.
-                        if (!context.User.Identity.IsAuthenticated)
+                    privateBranch.UseUserApiAuthentication(identityServerConfig);
+                    privateBranch.Use(async (context, next) =>
                         {
-                            context.Response.StatusCode = 401;
-                            return;
-                        }
-                        await next.Invoke();
-                    }); 
-                }
-                apiBranch.UseMiddleware<UserApiMiddleware>();
-            });
-        } 
-        
+                            // Authentication middleware doesn't short-circuit the request itself
+                            // we must do that here.
+                            if (!context.User.Identity.IsAuthenticated)
+                            {
+                                context.Response.StatusCode = 401;
+                                return;
+                            }
+                            await next.Invoke();
+                        }); 
+                    privateBranch.UseMiddleware<UserApiMiddleware>();
+                });
+        }
+
+        private static void UseUserApiAuthentication(this IApplicationBuilder app,
+            IdentityServerConfig identityServerConfig)
+        {
+            if (identityServerConfig.PrivateApiAuthentication ==
+                AuthenticationMethod.Token)
+            {
+                app.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+            }
+            else
+            {
+                app.UseAuthentication();
+            }
+        }
+
         public static void UseWorkQueueApi(this IApplicationBuilder app)
         {
             app.MapWhen(
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
                 apiBranch =>
                 {
-                    apiBranch.UseMiddleware<OptionalTokenAuthenticationMiddleware>();
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
                     apiBranch.UseMvc(routes =>
                     {
                         routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
