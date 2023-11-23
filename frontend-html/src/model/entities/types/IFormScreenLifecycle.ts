@@ -63,6 +63,9 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   isWorkingDelayed: boolean;
   isWorking: boolean;
 
+  workflowNextActive: number;
+  workflowAbortActive: number;
+
   updateRequestAggregator: UpdateRequestAggregator;
   rowSelectedReactionsDisabled(dataView: IDataView): boolean;
 
