@@ -64,12 +64,12 @@ import S from "./TableViewEditor.module.scss";
         value: value,
       }),
     onEditorBlur: async (event: any) => {
-      await onFieldBlur(tablePanelView)();
       const gridFocusManager = getGridFocusManager(tablePanelView);
       if(!event?.target || gridFocusManager.activeEditor === event.target){
         gridFocusManager.activeEditor = undefined;
         gridFocusManager.editorBlur = undefined;
       }
+      await onFieldBlur(tablePanelView)();
     },
     onEditorKeyDown: (event: any) => {
       event.persist();

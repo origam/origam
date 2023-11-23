@@ -41,6 +41,7 @@ using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
 using Origam.Service.Core;
+using System.Linq.Expressions;
 
 namespace Origam.Server
 {
@@ -92,6 +93,13 @@ namespace Origam.Server
         private readonly Analytics analytics;
         private bool _isDisposed;
         private IDataDocument _xmlData;
+        private bool _isProcessing;
+
+        public bool IsProcessing
+        {
+            get { return _isProcessing; }
+            set { _isProcessing = value; }
+        }
 
         public const string LIST_LOADED_COLUMN_NAME = "___ORIGAM_IsLoaded";
         public const string ACTION_SAVE = "SAVE";
@@ -710,7 +718,28 @@ namespace Origam.Server
         }
 
         public abstract void Init();
-        public abstract object ExecuteAction(string actionId);
+        public object ExecuteAction(string actionId)
+        {
+            if (this.IsProcessing)
+            {
+                throw new Exception(Resources.ErrorCommandInProgress);
+            }
+            this.IsProcessing = true;
+            try
+            {
+                lock (this._lock)
+                {
+                    return ExecuteActionInternal(actionId);
+                }
+            }
+            finally
+            {
+                this.IsProcessing = false;
+            }
+        }
+
+        public abstract object ExecuteActionInternal(string actionId);
+
         public abstract XmlDocument GetFormXml();
 
         public virtual void PrepareFormXml()

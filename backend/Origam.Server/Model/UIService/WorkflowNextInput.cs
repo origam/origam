@@ -27,6 +27,5 @@ namespace Origam.Server.Model.UIService
     public class WorkflowNextInput
     {
         public Guid SessionFormIdentifier { get; set; }
-        public List<string> CachedFormIds { get; set; }
-    }
+    } 
 }
