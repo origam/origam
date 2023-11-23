@@ -163,7 +163,8 @@ namespace Origam.Server
                 .AddSigningCredential(new X509Certificate2(
                     identityServerConfig.PathToJwtCertificate,
                     identityServerConfig.PasswordForJwtCertificate))
-                .AddInMemoryApiScopes(Settings.GetApiScopes());
+                .AddInMemoryApiScopes(Settings.GetApiScopes())
+                .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
             
             if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
             {
