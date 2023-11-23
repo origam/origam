@@ -96,32 +96,18 @@ namespace Origam.Server
             SetDataSource(data);
         }
 
-        public override object ExecuteAction(string actionId)
+        public override object ExecuteActionInternal(string actionId)
         {
-            if (this.IsProcessing)
+            switch (actionId)
             {
-                throw new Exception(Resources.ErrorCommandInProgress);
-            }
+                case ACTION_REFRESH:
+                    return Refresh();
 
-            this.IsProcessing = true;
+                case ACTION_NEXT:
+                    return Next();
 
-            try
-            {
-                switch (actionId)
-                {
-                    case ACTION_REFRESH:
-                        return Refresh();
-
-                    case ACTION_NEXT:
-                        return Next();
-
-                    default:
-                        throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
-                }
-            }
-            finally
-            {
-                this.IsProcessing = false;
+                default:
+                    throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
             }
         }
 
@@ -267,33 +253,14 @@ namespace Origam.Server
 
         private object Refresh()
         {
-            try
-            {
-                this.IsProcessing = true;
-
-                this.Clear();
-            }
-            finally
-            {
-                this.IsProcessing = false;
-            }
-
+            this.Clear();
             LoadData();
-
             return this.Data;
         }
 
         #endregion
 
         #region Properties
-        private bool _isProcessing;
-
-        public bool IsProcessing
-        {
-            get { return _isProcessing; }
-            set { _isProcessing = value; }
-        }
-	
         public Guid DataStructureId
         {
             get { return _dataStructureId; }

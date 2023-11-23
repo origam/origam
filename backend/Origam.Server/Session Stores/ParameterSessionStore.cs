@@ -168,7 +168,7 @@ namespace Origam.Server
             this.DirtyEnabledEntities.Add("SD");
         }
 
-        public override object ExecuteAction(string actionId)
+        public override object ExecuteActionInternal(string actionId)
         {
             switch (actionId)
             {
