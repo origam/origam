@@ -93,7 +93,23 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Cancel and Hide Filter", "filter_menu_filter_off")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={this.filterManager.noFilterActive}
+              isDisabled={
+                this.filterManager.filtersHidden ||
+                this.filterManager.isSelectedFilterGroupDefault}
+              onClick={(event: any) => {
+                setDropped(false);
+                runInFlowWithHandler({
+                  ctx: this.filterManager,
+                  action: () => this.filterManager.cancelSelectedFilter()
+                });
+              }}
+            >
+              {T("Cancel Filter", "filter_menu_cancel")}
+            </DropdownItem>
+            <DropdownItem
+              isDisabled={
+                this.filterManager.filtersHidden ||
+                this.filterManager.noFilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 runInFlowWithHandler({
@@ -117,7 +133,9 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={this.filterManager.noFilterActive}
+              isDisabled={
+                this.filterManager.filtersHidden ||
+                this.filterManager.noFilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 this.onSaveFilterClick();
@@ -138,20 +156,6 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               }}
             >
               {T("Delete", "filter_menu_delete")}
-            </DropdownItem>
-            <DropdownItem
-              isDisabled={
-                !this.filterManager.selectedFilterGroup ||
-                this.filterManager.isSelectedFilterGroupDefault}
-              onClick={(event: any) => {
-                setDropped(false);
-                runInFlowWithHandler({
-                  ctx: this.filterManager,
-                  action: () => this.filterManager.cancelSelectedFilter()
-                });
-              }}
-            >
-              {T("Cancel Filter", "filter_menu_cancel")}
             </DropdownItem>
             {filterGroups.map((filterGroup) => (
               <DropdownItem
