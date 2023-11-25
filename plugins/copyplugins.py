@@ -5,6 +5,13 @@ from pathlib import Path
 from ui import select_option, run_and_wait_for_key
 import _winapi
 
+path_to_config = Path("copyplugins_config.json")
+origam_repo_path = ""
+frontend_path = ""
+origam_plugin_src = ""
+origam_plugin_root = ""
+config = None
+
 
 def link(source, destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -54,61 +61,182 @@ def copy_dependencies(source_package_json_path, target_package_json_path):
 
 
 def read_config(path_to_config):
+    if not os.path.exists(path_to_config):
+        raise Exception(f"Config {path_to_config} not found")
     with open(path_to_config) as f:
-        return json.load(f)
+        config_content = json.load(f)
+
+    if "pathToOrigamRepo" not in config_content or not config_content["pathToOrigamRepo"]:
+        raise Exception(f"Config must contain \"pathToOrigamRepo\"")
+    if "plugins" not in config_content:
+        raise Exception(f"Config must contain \"plugins\" node")
+    return config_content
 
 
-def main():
-    path_to_config = Path("copyplugins_config.json")
-    config = read_config(path_to_config)
-    origam_repo_path = Path(config['pathToOrigamRepo'])
-    frontend_path = origam_repo_path / "frontend-html"
-    origam_plugin_src = origam_repo_path / "frontend-html/src/plugins/implementations/plugins/src"
-    origam_plugin_root = origam_repo_path / "frontend-html/src/plugins/implementations/plugins"
+def save_config(config_dict, path_to_config):
+    with open(path_to_config, "w") as config_file:
+        config_file.write(json.dumps(config_dict, indent=4))
 
-    print("This script copies plugin sources between a plugin repository and origam client.")
+
+def copy_from_plugin(plugin_config):
+    source_package_json_path = Path(plugin_config["packageJsonPath"])
+    copy_dependencies(source_package_json_path, frontend_path / "package.json")
+    shutil.copy(
+        plugin_config["registrationFilePath"],
+        origam_repo_path / "frontend-html/src/plugins/tools/PluginRegistration.ts"
+    )
+    print("Copied PluginRegistration.ts")
+    delete(origam_repo_path / "frontend-html/src/plugins/implementations")
+    shutil.copytree(plugin_config["pluginSourcePath"],
+                    origam_plugin_src)
+    print(f"Copied plugin sources to: {origam_plugin_src}")
+    shutil.copy(plugin_config["packageJsonPath"],
+                origam_plugin_root)
+    print(f"Copied plugin's package.json to: {origam_plugin_root}")
+    if os.path.exists(plugin_config["yarnLockPath"]):
+        shutil.copy(plugin_config["yarnLockPath"], frontend_path / "yarn.lock")
+        print(f"Copied plugin's yarn.lock to: {frontend_path}")
+    else:
+        print(f"{plugin_config['yarnLockPath']} was not copied because it does not exist")
+
+
+def copy_to_plugin(plugin_config):
+    delete(plugin_config["pluginSourcePath"])
+    shutil.copytree(origam_plugin_src,
+                    plugin_config["pluginSourcePath"])
+    print(f"Copied plugin sources back to: {plugin_config['pluginSourcePath']}")
+    shutil.copy(frontend_path / "yarn.lock", plugin_config["yarnLockPath"])
+    print(f"Copied plugin's yarn.lock back to: {plugin_config['yarnLockPath']}")
+
+
+def init_new_plugin():
+    plugin_base_name = input('Plugin name in PascalCase (for example: "Chart", "CustomerView"...):')
+    if not plugin_base_name:
+        print("Need a plugin name")
+        return
+    plugin_name = plugin_base_name + "Plugin"
+
+    parent_folder = Path(input("Where should we create the plugin folder:"))
+    if not parent_folder.is_dir():
+        print("That is not a path to a folder")
+        return
+    plugin_folder = parent_folder / plugin_name
+    os.mkdir(plugin_folder)
+
+    package_json_contents = {
+        "name": f"@origam/{plugin_name}",
+        "version": "1.0.0",
+        "dependencies": {},
+    }
+
+    with open(plugin_folder / "package.json", "w") as package_json_file:
+        package_json_file.write(json.dumps(package_json_contents, indent=4))
+
+    registration_contents = f'''import {{ {plugin_name} }} from "plugins/implementations/plugins/src/{plugin_name}";
+import {{ registerPlugin }} from "plugins/tools/PluginLibrary";
+
+
+export function registerPlugins() {{
+  registerPlugin("{plugin_name}", () => new {plugin_name}());
+}}
+'''
+    with open(plugin_folder / "PluginRegistration.ts", "w") as registration_file:
+        registration_file.write(registration_contents)
+
+    src_folder = plugin_folder / "src"
+    os.mkdir(src_folder)
+
+    plugin_contents = f'''import React from "react";
+import {{ observer }} from "mobx-react";
+import {{ observable }} from "mobx";
+import S from "./{plugin_name}.module.scss";
+import {{ ILocalization, ILocalizer, ISectionPlugin, ISectionPluginData }} from "@origam/plugins";
+
+export class {plugin_name} implements ISectionPlugin {{
+  $type_ISectionPlugin: 1 = 1;
+  id: string = "{plugin_name}";
+
+  getScreenParameters: (() => {{ [p: string]: string }}) | undefined;
+
+  getComponent(data: ISectionPluginData, createLocalizer: (localizations: ILocalization[]) => ILocalizer): React.ReactElement {{
+    return <{plugin_base_name}Component
+      pluginData={{data}}
+    />;
+  }}
+
+  onSessionRefreshed() {{
+  }}
+
+  initialize(xmlAttributes: {{ [key: string]: string }}): void {{
+  }}
+}}
+
+
+@observer
+export class {plugin_base_name}Component extends React.Component<{{
+  pluginData: ISectionPluginData,
+}}> {{
+
+  render(){{
+    return <div className={{S.root}}>
+      This is {plugin_name}
+    </div>
+  }}
+}}
+'''
+
+    with open(src_folder / f"{plugin_name}.tsx", "w") as plugin_file:
+        plugin_file.write(plugin_contents)
+
+    with open(src_folder / f"{plugin_name}.module.scss", "w") as plugin_file:
+        plugin_file.write(".root {}")
+
+    plugin_config = {
+        "pluginSourcePath": str(plugin_folder / "src"),
+        "packageJsonPath": str(plugin_folder / "package.json"),
+        "registrationFilePath": str(plugin_folder / "PluginRegistration.ts"),
+        "yarnLockPath": str(plugin_folder / "yarn.lock")
+    }
+    config["plugins"][plugin_name] = plugin_config
+    save_config(config, path_to_config)
+
+
+def ask_for_plugin_config(config):
     print("Choose a plugin:")
     plugin_list = list(config["plugins"].keys())
     plugin_name = select_option(plugin_list, default=0)
-    plugin_config = config["plugins"][plugin_name]
+    return config["plugins"][plugin_name]
 
+
+def main():
+    global config
+    config = read_config(path_to_config)
+    global origam_repo_path
+    origam_repo_path = Path(config['pathToOrigamRepo'])
+    global frontend_path
+    frontend_path = origam_repo_path / "frontend-html"
+    global origam_plugin_src
+    origam_plugin_src = origam_repo_path / "frontend-html/src/plugins/implementations/plugins/src"
+    global origam_plugin_root
+    origam_plugin_root = origam_repo_path / "frontend-html/src/plugins/implementations/plugins"
+
+    print("This script copies plugin sources between a plugin repository and origam client.")
     print("Dou you want to copy to or from the plugin repository?")
+    crete_new_plugin = "Create new plugin"
     copy_from_plugin_repo = "Copy from plugin repository"
     copy_to_plugin_repo = "Copy back to plugin repository"
-    mode = select_option(list([copy_from_plugin_repo, copy_to_plugin_repo]), default=0)
+    task = select_option(list([crete_new_plugin, copy_from_plugin_repo, copy_to_plugin_repo]), default=0)
 
-    if mode == copy_from_plugin_repo:
-        source_package_json_path = Path(plugin_config["packageJsonPath"])
-        copy_dependencies(source_package_json_path, frontend_path / "package.json")
-
-        shutil.copy(
-            plugin_config["registrationFilePath"],
-            origam_repo_path / "frontend-html/src/plugins/tools/PluginRegistration.ts"
-        )
-        print("Copied PluginRegistration.ts")
-
-        delete(origam_repo_path / "frontend-html/src/plugins/implementations")
-        shutil.copytree(plugin_config["pluginSourcePath"],
-                        origam_plugin_src)
-        print(f"Copied plugin sources to: {origam_plugin_src}")
-
-        shutil.copy(plugin_config["packageJsonPath"],
-                    origam_plugin_root)
-        print(f"Copied plugin's package.json to: {origam_plugin_root}")
-
-        if os.path.exists(plugin_config["yarnLockPath"]):
-            shutil.copy(plugin_config["yarnLockPath"], frontend_path / "yarn.lock")
-            print(f"Copied plugin's yarn.lock to: {frontend_path}")
-        else:
-            print(f"{plugin_config['yarnLockPath']} was not copied because it does not exist")
+    if task == copy_from_plugin_repo:
+        plugin_config = ask_for_plugin_config(config)
+        copy_from_plugin(plugin_config)
+    elif task == copy_to_plugin_repo:
+        plugin_config = ask_for_plugin_config(config)
+        copy_to_plugin(plugin_config)
+    elif task == crete_new_plugin:
+        init_new_plugin()
     else:
-        delete(plugin_config["pluginSourcePath"])
-        shutil.copytree(origam_plugin_src,
-                        plugin_config["pluginSourcePath"])
-        print(f"Copied plugin sources back to: {plugin_config['pluginSourcePath']}")
-
-        shutil.copy(frontend_path / "yarn.lock", plugin_config["yarnLockPath"])
-        print(f"Copied plugin's yarn.lock back to: {plugin_config['yarnLockPath']}")
+        raise Exception(f"{task} not implemented")
 
 
 if __name__ == "__main__":
