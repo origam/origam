@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 from ui import select_option, run_and_wait_for_key
 
-path_to_config = Path("copyplugins_config.json")
+path_to_config = Path("pluginmanager_config.json")
 origam_repo_path = Path()
 frontend_path = Path()
 origam_plugin_src = Path()
