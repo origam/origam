@@ -4,7 +4,6 @@ import re
 import shutil
 from pathlib import Path
 from ui import select_option, run_and_wait_for_key
-import _winapi
 
 path_to_config = Path("copyplugins_config.json")
 origam_repo_path = Path()
@@ -12,11 +11,6 @@ frontend_path = Path()
 origam_plugin_src = Path()
 origam_plugin_root = Path()
 config = None
-
-
-def link(source, destination):
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    _winapi.CreateJunction(str(source), str(destination))
 
 
 def add_dependencies(package_json_path, dependencies):
@@ -27,27 +21,6 @@ def add_dependencies(package_json_path, dependencies):
                 content = re.sub(r'[^\S\r\n]*"dependencies"\s*:\s*{', f'  "dependencies": {{\n    {dependency},', content)
         f.seek(0)
         f.write(content)
-
-
-def move_to_trash(path):
-    try:
-        send2trash(path)
-    except PermissionError as ex:
-        print(f"Cannot move ${ex.filename} to trash. Is Webstorm or something else running there?\n")
-        raise Exception(f"Cannot move ${ex.filename} to trash. Is Webstorm or something else running there?", ex)
-
-
-def delete(path):
-    if not os.path.exists(path):
-        return
-
-    try:
-        from send2trash import send2trash
-        move_to_trash(path)
-    except ModuleNotFoundError:
-        print(f'Module "send2trash" was not found. So the path "{path}" will be deleted. '
-              'If you prefer sending it to the trash install the module.')
-        shutil.rmtree(path)
 
 
 def copy_dependencies(source_package_json_path, target_package_json_path):
@@ -87,7 +60,7 @@ def copy_from_plugin(plugin_config):
         origam_repo_path / "frontend-html/src/plugins/tools/PluginRegistration.ts"
     )
     print("Copied PluginRegistration.ts")
-    delete(origam_repo_path / "frontend-html/src/plugins/implementations")
+    shutil.rmtree(origam_repo_path / "frontend-html/src/plugins/implementations")
     shutil.copytree(plugin_config["pluginSourcePath"],
                     origam_plugin_src)
     print(f"Copied plugin sources to: {origam_plugin_src}")
@@ -102,7 +75,7 @@ def copy_from_plugin(plugin_config):
 
 
 def copy_to_plugin(plugin_config):
-    delete(plugin_config["pluginSourcePath"])
+    shutil.rmtree(plugin_config["pluginSourcePath"])
     shutil.copytree(origam_plugin_src,
                     plugin_config["pluginSourcePath"])
     print(f"Copied plugin sources back to: {plugin_config['pluginSourcePath']}")
