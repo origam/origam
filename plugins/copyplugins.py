@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 from ui import select_option, run_and_wait_for_key
@@ -23,7 +24,7 @@ def add_dependencies(package_json_path, dependencies):
         content = f.read()
         for dependency in dependencies:
             if dependency not in content:
-                content = content.replace('"dependencies": {', '"dependencies": {\n    ' + dependency + ",")
+                content = re.sub(r'[^\S\r\n]*"dependencies"\s*:\s*{', f'  "dependencies": {{\n    {dependency},', content)
         f.seek(0)
         f.write(content)
 
