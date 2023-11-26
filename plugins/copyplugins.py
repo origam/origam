@@ -6,10 +6,10 @@ from ui import select_option, run_and_wait_for_key
 import _winapi
 
 path_to_config = Path("copyplugins_config.json")
-origam_repo_path = ""
-frontend_path = ""
-origam_plugin_src = ""
-origam_plugin_root = ""
+origam_repo_path = Path()
+frontend_path = Path()
+origam_plugin_src = Path()
+origam_plugin_root = Path()
 config = None
 
 
