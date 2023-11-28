@@ -202,6 +202,8 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 
   isLazyLoading: Boolean;
+
+  updateSelectedIds(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;
