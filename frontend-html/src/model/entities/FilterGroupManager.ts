@@ -71,7 +71,7 @@ export class FilterGroupManager {
   }
 
   get noFilterActive() {
-    return this.selectedFilterGroup?.selectionCheckboxFilter === null && 
+    return !this.selectedFilterGroup?.selectionCheckboxFilter &&
       (
         this.activeFilters.length === 0 ||
         this.activeFilters.every(filter => !filter.setting.isComplete)
