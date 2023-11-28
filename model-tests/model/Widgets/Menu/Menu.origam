@@ -7,23 +7,6 @@
   xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
   xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
   xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
-  <frmi:MenuItem
-    asi:abstract="false"
-    ami:alwaysOpenNew="false"
-    frmi:autoSaveOnListRecordChange="false"
-    ami:displayName="TEstPlugin"
-    x:id="ca93aa93-fd19-4b5a-be2a-979e37dcb44d"
-    asi:name="TestPlugin"
-    ami:openExclusively="false"
-    ami:order="100"
-    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    frmi:readOnlyAccess="false"
-    frmi:refreshAfterSaveType="RefreshChangedRecords"
-    frmi:refreshOnFocus="false"
-    frmi:refreshPortalAfterSave="false"
-    frmi:requestSaveAfterUpdate="false"
-    ami:roles="*"
-    frmi:screen="Widgets/FormControlSet/Widgets/TestPlugin.origam#TestPlugin/eb476715-66c0-4cd8-ba16-e55dedff3a3d" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
