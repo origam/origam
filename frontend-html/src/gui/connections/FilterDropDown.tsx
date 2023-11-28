@@ -95,7 +95,8 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             <DropdownItem
               isDisabled={
                 this.filterManager.filtersHidden ||
-                this.filterManager.isSelectedFilterGroupDefault}
+                this.filterManager.isSelectedFilterGroupDefault ||
+                this.filterManager.noFilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 runInFlowWithHandler({
