@@ -313,6 +313,16 @@ export class DataView implements IDataView {
     this.selectAllCheckboxChecked = false;
   }
 
+  updateSelectedIds() {
+    const currentRowIds = this.dataTable.rows
+      .map(row => this.dataTable.getRowId(row));
+    for (let rowId of Array.from(this.selectedRowIds)) {
+      if (!currentRowIds.includes(rowId)) {
+        this.selectedRowIds.delete(rowId);
+      }
+    }
+  }
+
   @action.bound
   clear() {
     this.selectedRowIds.clear();
