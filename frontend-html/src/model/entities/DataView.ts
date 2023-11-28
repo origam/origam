@@ -305,6 +305,8 @@ export class DataView implements IDataView {
         this.selectedRowIds.delete(rowId);
       }
     }
+    this.selectAllCheckboxChecked = currentRowIds.length > 0
+      && currentRowIds.every(rowId => this.selectedRowIds.has(rowId));
   }
 
   @action.bound
