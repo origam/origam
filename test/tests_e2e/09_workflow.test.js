@@ -231,7 +231,7 @@ describe("Html client", () => {
         callSubWorkflowUiStepItemId
       ]);
     await clickElement("Next");
-    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_1stepfail/0100_StepFail\' failed.');
+    await waitForWorkflowMessage('Merge context \'AllDataTypes\', Step \'Basic WF_UI_NextStepFail/0300_StepFail\' failed.');
     await clickElement("Close","button");
   });
   it("Should run 'UI WFCallService step 1' workflow", async () => {
