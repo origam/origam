@@ -137,6 +137,7 @@ export class ListRowContainer implements IRowsContainer {
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
         const dataView = getDataView(self);
+        dataView.updateSelectedIds();
         if (!data?.retainPreviousSelection) {
           dataView.reselectOrSelectFirst();
         }

@@ -51,6 +51,7 @@ export class DataViewHeaderButtonGroup extends React.Component<{
             <Observer key={action.id}>
               {() => (
                 <DataViewHeaderButton
+                  id={action.id}
                   title={action.caption}
                   disabled={!getIsEnabledAction(action)}
                   onClick={() => setDropped(true)}
@@ -85,6 +86,7 @@ export class DataViewHeaderButtonGroup extends React.Component<{
       <Observer key={action.id}>
         {() => (
           <DataViewHeaderButton
+            id={action.id}
             title={action.caption}
             onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
             disabled={!getIsEnabledAction(action)}
