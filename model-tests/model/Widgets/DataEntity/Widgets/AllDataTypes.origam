@@ -76,7 +76,7 @@
       euia:order="10"
       euia:placement="Toolbar"
       euia:refreshAfterReturn="None"
-      euia:roles="*"
+      euia:roles="HIDDEN"
       euia:valueType="SavedValue">
       <ewa:EntityUIAction
         asi:abstract="false"
