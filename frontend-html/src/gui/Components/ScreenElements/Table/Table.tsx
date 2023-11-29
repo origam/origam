@@ -243,12 +243,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         }
       )
     );
-    this.props.listenForScrollToCell &&
-    this.disposers.push(
-      this.props.listenForScrollToCell((rowIdx, colIdx) => {
-        this.scrollToCellShortest(rowIdx, colIdx);
-      })
-    );
   }
 
   componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {

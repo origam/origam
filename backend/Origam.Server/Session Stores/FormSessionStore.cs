@@ -40,7 +40,6 @@ namespace Origam.Server
     public class FormSessionStore : SaveableSessionStore
     {
         private string _delayedLoadingParameterName;
-        private bool _isProcessing;
         private FormReferenceMenuItem _menuItem;
         private object _getRowDataLock = new object();
         private XmlDocument _preparedFormXml = null;
@@ -290,37 +289,23 @@ namespace Origam.Server
             return base.Save();
         }
 
-        public override object ExecuteAction(string actionId)
+        public override object ExecuteActionInternal(string actionId)
         {
-            if (this.IsProcessing)
+            switch (actionId)
             {
-                throw new Exception(Resources.ErrorCommandInProgress);
-            }
+                case ACTION_SAVE:
+                    object result = Save();
+                    //if (this.IsDelayedLoading)
+                    //{
+                    //    this.CurrentRecordId = null;
+                    //}
+                    return result;
 
-            this.IsProcessing = true;
+                case ACTION_REFRESH:
+                    return Refresh();
 
-            try
-            {
-                switch (actionId)
-                {
-                    case ACTION_SAVE:
-                        object result = Save();
-                        //if (this.IsDelayedLoading)
-                        //{
-                        //    this.CurrentRecordId = null;
-                        //}
-                        return result;
-
-                    case ACTION_REFRESH:
-                        return Refresh();
-
-                    default:
-                        throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
-                }
-            }
-            finally
-            {
-                this.IsProcessing = false;
+                default:
+                    throw new ArgumentOutOfRangeException("actionId", actionId, Resources.ErrorContextUnknownAction);
             }
         }
 
@@ -541,20 +526,9 @@ namespace Origam.Server
         private object Refresh()
         {
             object currentRecordId = this.CurrentRecordId;
-
-            try
-            {
-                this.IsProcessing = true;
-                this.CurrentRecordId = null;
-                this.Clear();
-            }
-            finally
-            {
-                this.IsProcessing = false;
-            }
-
+            this.CurrentRecordId = null;
+            this.Clear();
             LoadData();
-
             // load current record again so CurrentRecordId remains set
             // this is important e.g. for paged data loading so we know
             // for which record initialPage should be returned
@@ -589,12 +563,6 @@ namespace Origam.Server
         {
             get { return _delayedLoadingParameterName; }
             set { _delayedLoadingParameterName = value; }
-        }
-
-        public bool IsProcessing
-        {
-            get { return _isProcessing; }
-            set { _isProcessing = value; }
         }
         #endregion
 

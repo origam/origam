@@ -206,6 +206,8 @@ export interface IDataView extends IDataViewData {
 
   isLazyLoading: Boolean;
 
+  updateSelectedIds(): void;
+
   insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 }
 
