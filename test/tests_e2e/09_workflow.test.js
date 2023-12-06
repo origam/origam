@@ -1,11 +1,9 @@
 ﻿const { sleep, openMenuItem, login, afterEachTest,
-  beforeEachTest, catchRequests, waitForRowCount
+  beforeEachTest, waitForRowCount
 } = require('./testTools');
-const {widgetsMenuItemId, topMenuHeader, allDataTypesMenuId, sectionsMenuItemId, masterDetailMenuItemId,
-  workflowTestItemId
+const {widgetsMenuItemId, topMenuHeader, workflowTestItemId
 } = require("./modelIds");
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration, restoreAllDataTypesTable} = require("./dbTools");
-const {installMouseHelper} = require("./instalMouseHelper_");
+const { clearScreenConfiguration, restoreAllDataTypesTable} = require("./dbTools");
 
 let browser;
 let page;
@@ -35,41 +33,6 @@ async function clickElement(elementText, elementType){
   await sleep(200);
   console.log("Clicking: " + elementText)
   await element.click();
-}
-
-async function waitForErrorWindowWithMessageAndClose(messageBegging) {
-  await page.waitForXPath(
-    `//div[contains(text(),'Error')]`,
-    {visible: true}
-  );
-
-  const messageElement = await page.waitForXPath(
-    `//div[contains(@class,'dialogMessage')]`,
-    {visible: true}
-  );
-
-  const errorMessage = await page.evaluate(name => name.innerText, messageElement);
-  if(!errorMessage || !errorMessage.startsWith(messageBegging)){
-    throw new Error(`Error message does not start with: \"${messageBegging}\" The actual message is: \"${errorMessage}\".`);
-  }
-
-  const okButton = await page.waitForXPath(
-    `//button[contains(text(),'OK')]`,
-    {visible: true}
-  );
-  await sleep(200);
-  await okButton.click();
-}
-
-async function clickWorkflowActionButton(buttonText) {
-  await clickElement("Run Test Workflow");
-
-  const buttonElement = await page.waitForXPath(
-    `//div[contains(@class,'dropdownItem')]/div/div[contains(text(),'${buttonText}')]`,
-    {visible: true}
-  );
-  await sleep(200);
-  await buttonElement.click();
 }
 
 async function waitForWorkflowMessage(messageBegging) {
