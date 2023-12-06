@@ -10,28 +10,6 @@ const {installMouseHelper} = require("./instalMouseHelper_");
 let browser;
 let page;
 
-// beforeAll(async() => {
-//   await restoreWidgetSectionTestMaster();
-//   await clearScreenConfiguration();
-//   [browser, page] = await beforeEachTest(); // all tests run in the same browser instance unlike the others. That is why the beforeEachTest is called here.
-//   await login(page);
-//   // await openMenuItem(
-//   //   page,
-//   //   [
-//   //     topMenuHeader,
-//   //     widgetsMenuItemId,
-//   //     allDataTypesMenuId
-//   //   ]);
-// });
-//
-// afterAll(async() => {
-//   await sleep(1000); // let the last workflow screen close
-//   await afterEachTest(browser);
-//   browser = undefined;
-// });
-
-
-
 beforeAll(async() => {
   await restoreAllDataTypesTable();
   await clearScreenConfiguration();
