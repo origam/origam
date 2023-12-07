@@ -426,34 +426,29 @@ namespace Origam.Server
                 this.IsFirstSaveDone = !formArgs.IsRefreshSuppressedBeforeFirstSave;
                 this.ConfirmationRule = formArgs.SaveConfirmationRule;
                 this.RefreshPortalAfterSave = formArgs.RefreshPortalAfterSave;
-                if (formArgs.Notification == "")
+                this.Notifications.Clear();
+
+                foreach (string notification in formArgs.Notification.Split("\n".ToCharArray()))
                 {
-                    this.Notifications.Clear();
-                }
-                else
-                {
-                    foreach (string notification in formArgs.Notification.Split("\n".ToCharArray()))
+                    FormNotification fn = new FormNotification();
+
+                    if (notification.StartsWith("! "))
                     {
-                        FormNotification fn = new FormNotification();
-
-                        if (notification.StartsWith("! "))
-                        {
-                            fn.Icon = "warning";
-                            fn.Text = notification.Substring(2);
-                        }
-                        else if (notification.StartsWith("!! "))
-                        {
-                            fn.Icon = "error";
-                            fn.Text = notification.Substring(3);
-                        }
-                        else
-                        {
-                            fn.Icon = "info";
-                            fn.Text = notification;
-                        }
-
-                        this.Notifications.Add(fn);
+                        fn.Icon = "warning";
+                        fn.Text = notification.Substring(2);
                     }
+                    else if (notification.StartsWith("!! "))
+                    {
+                        fn.Icon = "error";
+                        fn.Text = notification.Substring(3);
+                    }
+                    else
+                    {
+                        fn.Icon = "info";
+                        fn.Text = notification;
+                    }
+
+                    this.Notifications.Add(fn);
                 }
             }
             else
