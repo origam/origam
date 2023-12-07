@@ -56,6 +56,7 @@ using Origam;
 using Origam.Rule;
 using Origam.Schema.MenuModel;
 using Origam.DA;
+using Origam.Extensions;
 using Origam.Gui;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema.RuleModel;
@@ -508,6 +509,7 @@ namespace Origam.Server
 
         private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync()
         {
+            XmlData.DataSet.ReEnableNullConstraints();
             RuleExceptionDataCollection results = EvaluateEndRule();
             if (results != null)
             {

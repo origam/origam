@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel.module.scss";
 import { T } from "utils/translation";
+import cx from "classnames";
 
 export const WorkflowFinishedPanel: React.FC<{
   isCloseButton: boolean;
@@ -32,6 +33,6 @@ export const WorkflowFinishedPanel: React.FC<{
     {props.isRepeatButton && <button onClick={props.onRepeatClick}>{T("Repeat", "button_repeat")}</button>}
     {props.isCloseButton && <button onClick={props.onCloseClick}>{T("Close", "button_close")}</button>}
     {/*<iframe className={S.message} srcDoc={} />*/}
-    <div className={S.message} dangerouslySetInnerHTML={{__html: `${props.message}`}}/>
+    <div className={cx(S.message, "workflowMessage")} dangerouslySetInnerHTML={{__html: `${props.message}`}}/>
   </div>
 );
