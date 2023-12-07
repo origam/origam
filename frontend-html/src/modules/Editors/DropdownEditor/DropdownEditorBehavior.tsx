@@ -521,6 +521,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
+    if (!elm) {
+      return;
+    }
     this.elmInputElement = elm;
   };
 

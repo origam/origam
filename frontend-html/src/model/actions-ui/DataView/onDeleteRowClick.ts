@@ -29,6 +29,7 @@ export function onDeleteRowClick(ctx: any) {
   return flow(function*onDeleteRowClick(event: any, doNotAskForConfirmation? : boolean) {
     try {
       const dataView = getDataView(ctx);
+      getTablePanelView(dataView)?.setEditing(false);
       const selectedRow = getSelectedRow(ctx);
       if (selectedRow) {
         const dataTable = getDataTable(ctx);
