@@ -592,5 +592,12 @@ namespace Origam.Server
             return request;
         }
         #endregion
+        protected override bool GetMoreChanges(List<ChangeInfo> changes)
+        {
+            // Limit imposed in the SessionStore for optimization reasons is
+            // removed here to avoid collisions between RowStates and WorkflowNextQuery
+            // requests
+            return true; 
+        }
     }
 }
