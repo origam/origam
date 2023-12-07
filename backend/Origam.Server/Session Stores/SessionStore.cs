@@ -887,14 +887,20 @@ namespace Origam.Server
                 false);
         }
 
+        protected virtual bool GetMoreChanges(List<ChangeInfo> changes)
+        {
+            // Optimization. There are cases when calling UpdateObject can result
+            // in a lot of changes and a lot of row states. This should reduce size
+            // of the returned data and improve the UpdateObject's time.
+            // The missing row states should be loaded by the client.
+            return changes.Count < 20;
+        }
+
         private void GetChangesRecursive(List<ChangeInfo> changes, string requestingGrid, DataRow row, Operation operation, DataRow changedRow, bool allDetails, Hashtable ignoreKeys, bool includeRowStates)
         {
             if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached)
             {
-                // Optimization. There are cases when calling UpdateObject can result in a lot of changes and a lot of
-                // row states. This should reduce size of the returned data and improve the UpdateObject's time.
-                // The missing row states should be loaded by the client.
-                includeRowStates = includeRowStates && changes.Count < 20;
+                includeRowStates = includeRowStates && GetMoreChanges(changes);
                 
                 object rowKey = DatasetTools.PrimaryKey(row)[0];
                 string ignoreRowIndex = row.Table.TableName + rowKey.ToString();
