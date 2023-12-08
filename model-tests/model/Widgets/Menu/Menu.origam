@@ -582,6 +582,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="NotificationTest"
+    x:id="647f3206-ab57-46ac-90f8-fe930e15bdb0"
+    asi:name="NotificationTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/NotificationTest.origam#NotificationTest/eb1bd8d9-e24e-4af0-baad-4109517209ac" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="RuleTest"
     x:id="fec8466e-ced8-4f60-b683-2de37bde96a4"
     asi:name="RuleTest"
