@@ -22,11 +22,19 @@ import { stopWorkQueues } from "./WorkQueues/stopWorkQueues";
 import { performLogout } from "./User/performLogout";
 import { T } from "utils/translation";
 import { flow } from "mobx";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function*handleError(error: any) {
+    const openedScreen = getOpenedScreen(ctx);
+    const openedScreens = getOpenedScreens(openedScreen);
+    if (!openedScreens.items.includes(openedScreen)) {
+      // error on an already closed screen
+      return;
+    }
     if (error.response && error.response.status === 474) {
       // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
       // finished (RowStates for example)
