@@ -55,19 +55,20 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
+  onMount?(onChange?: (value: any) => void): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
   disposers: any[] = [];
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;
-  refGrid = React.createRef<MultiGrid>();
   @observable.ref
   longTextRowList: string[] = [];
 
   componentDidMount() {
     this.updateTextOverflowState();
     this.updateBigTextRowList();
+    this.props.onMount?.(value => this.props.onChange?.(null, value));
   }
 
   componentDidUpdate(prevProps: any) {
