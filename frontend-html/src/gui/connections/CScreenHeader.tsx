@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ScreenHeader } from "gui/Components/ScreenHeader/ScreenHeader";
 import { ScreenHeaderAction } from "gui/Components/ScreenHeader/ScreenHeaderAction";
 import { ScreenHeaderPusher } from "gui/Components/ScreenHeader/ScreenHeaderPusher";

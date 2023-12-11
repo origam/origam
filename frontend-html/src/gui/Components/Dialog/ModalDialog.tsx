@@ -18,9 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext } from "react";
-import { ModalWindow } from "@origam/components";
 import { MobXProviderContext } from "mobx-react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ModalWindow } from "gui/Components/Dialogs/Dialog";
 
 export const ModalDialog: React.FC<{
   title: React.ReactNode;

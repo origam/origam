@@ -41,9 +41,9 @@ import {
   tryParseAggregationType,
 } from "model/entities/types/AggregationType";
 import { T } from "utils/translation";
-import { IOption } from "@origam/components";
 import _ from "lodash";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { IOption } from "gui/Components/Dialogs/SimpleDropdown";
 
 export interface IColumnOptions {
   canGroup: boolean;

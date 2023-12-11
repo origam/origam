@@ -45,7 +45,6 @@ import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreen
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
@@ -68,6 +67,7 @@ import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveB
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { makeOnAddNewRecordClick, onSaveClick } from "gui/connections/NewRecordScreen";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 
 
 @inject(({property, formPanelView}) => {

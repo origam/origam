@@ -27,8 +27,8 @@ import { inject, observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
-import { CtxDropdownRefCtrl } from "@origam/components";
 import { requestFocus } from "utils/focus";
+import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);

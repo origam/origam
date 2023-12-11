@@ -28,13 +28,13 @@ import {
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
-import { csToMomentFormat } from "@origam/utils";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IProperty } from "model/entities/types/IProperty";
 import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { IEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
 import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsCommon.module.scss";
+import { csToMomentFormat } from "utils/dateConversion";
 
 const OPERATORS = [
   Operator.equals,

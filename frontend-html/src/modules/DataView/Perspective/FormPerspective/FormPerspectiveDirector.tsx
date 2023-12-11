@@ -24,7 +24,7 @@ import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { getIdent, IIId } from "utils/common";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 
 import { MobXProviderContext, observer, Observer } from "mobx-react";
 import { IFormPerspective } from "./FormPerspective";

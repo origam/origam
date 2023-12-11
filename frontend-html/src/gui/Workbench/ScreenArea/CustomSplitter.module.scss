@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @import "../../Components/Splitter/Splitter.module";
-@import "~@origam/styles/dist/styles/definitions";
+@import "src/gui/definitions";
 
 .divider {
   background: var(--background1);

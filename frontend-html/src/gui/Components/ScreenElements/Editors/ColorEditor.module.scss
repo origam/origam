@@ -18,8 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @import "~@origam/styles/dist/styles/EditorsCommon.module";
-@import "~@origam/styles/dist/styles/commonStyles";
-@import "~@origam/styles/dist/styles/definitions";
+@import "src/gui/commonStyles";
+@import "src/gui/definitions";
 
 .droppedPanelContainer {
   z-index: 1000;

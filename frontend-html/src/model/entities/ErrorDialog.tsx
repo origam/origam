@@ -27,7 +27,7 @@ import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { requestFocus } from "utils/focus";
 

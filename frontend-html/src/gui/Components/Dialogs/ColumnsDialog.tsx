@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
-import { CloseButton, Icon } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, computed, flow, observable } from "mobx";
@@ -33,13 +32,15 @@ import {
   IColumnOptions,
   timeunitOptions,
 } from "model/entities/TablePanelView/ColumnConfigurationModel";
-import { SimpleDropdown } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import cx from "classnames";
 import { IProperty } from "model/entities/types/IProperty";
-import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
+import { CloseButton } from "gui/Components/Dialogs/Dialog";
+import { Icon } from "gui/Components/Icon/Icon";
+import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
+
 
 // It would be neater to solve by onScrollbarPresenceChange handler of react-virtualized Grid (TODO)
 const SCROLLBAR_SIZE = 20;

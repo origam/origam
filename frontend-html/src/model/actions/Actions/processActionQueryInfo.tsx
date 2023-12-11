@@ -22,7 +22,7 @@ import { action } from "mobx";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 import { T } from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 export interface IQueryInfo {

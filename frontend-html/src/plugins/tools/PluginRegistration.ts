@@ -18,13 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { registerPlugin } from "plugins/tools/PluginLibrary";
-import { AuditPlugin } from "@origam/plugin-audit";
-import { FilterPlugin  } from "@origam/plugin-filter";
-import { RadarChartPlugin  } from "@origam/plugin-chart";
-
 export function registerPlugins() {
-  registerPlugin("FilterPlugin", () => new FilterPlugin());
-  registerPlugin("AuditPlugin", () => new AuditPlugin());
-  registerPlugin("RadarChartPlugin", () => new RadarChartPlugin());
+
 }

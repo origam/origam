@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior} from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
@@ -34,6 +33,8 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { NewRecordScreen } from "gui/connections/NewRecordScreen";
+import { DropdownLayout } from "gui/Components/Dropdown/DropdownLayout";
+import { DropdownLayoutBody } from "gui/Components/Dropdown/DropdownLayoutBody";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
