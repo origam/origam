@@ -235,7 +235,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield api.revertChanges({sessionFormIdentifier: getSessionId(this)});
   }
 
+  // Flushing data (updating objects) must not run concurrently with deleting a row.
+  // However multiple updates may run concurrently so there cannot be a simple lock here.
+  @observable flushDataEntered = 0;
+  @observable deleteRowEntered = 0;
+
+  @observable workflowNextEntered = 0;
+  @observable workflowNextActive = 0;
+  @observable workflowAbortEntered = 0;
+  @observable workflowAbortActive = 0;
+  
+
   *onWorkflowNextClick(event: any): Generator {
+    if(this.workflowNextActive > 0) return;
+    this.workflowNextActive++;
+    while(this.flushDataEntered > 0) yield when(() => !this.flushDataEntered);
+    this.workflowNextEntered++;
     this.monitor.inFlow++;
     try {
       const api = getApi(this);
@@ -262,11 +277,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield*this.start({initUIResult: uiResult});
     } finally {
+      this.workflowNextEntered--;
+      this.workflowNextActive--;
       this.monitor.inFlow--;
     }
   }
 
   *onWorkflowAbortClick(event: any): Generator {
+    if(this.workflowAbortActive > 0) return;
+    this.workflowAbortActive++;
+    while(this.flushDataEntered > 0) yield when(() => !this.flushDataEntered);
+    this.workflowAbortEntered++;
     this.monitor.inFlow++;
     try {
       const api = getApi(this);
@@ -281,6 +302,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield*this.start({initUIResult: uiResult});
     } finally {
+      this.workflowAbortEntered--;
+      this.workflowAbortActive--;
       this.monitor.inFlow--;
     }
   }
@@ -416,6 +439,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.initialSelectedRowId = args.initUIResult.currentRecordId;
       yield*this.applyInitUIResult({initUIResult: args.initUIResult, createNewRecord: args.createNewRecord});
+      if (openedScreen.isClosed) {
+        // The user closed the screen before initUI finished
+        yield*this.closeForm();
+        return;
+      }
       const formScreen = getFormScreen(this);
       formScreen.setDirty(!!args.preloadIsDirty)
       this.initializePlugins(args.initUIResult);
@@ -755,14 +783,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  // Flushing data (updating objects) must not run concurrently with deleting a row.
-  // However multiple updates may run concurrently so there cannot be a simple lock here.
-  @observable flushDataEntered = 0;
-  @observable deleteRowEntered = 0;
-
   *flushData() {
+    while(
+      this.workflowAbortEntered > 0 || 
+      this.workflowNextEntered > 0 || 
+      this.deleteRowEntered > 0
+    ) 
+      yield when(() => 
+        !this.workflowAbortEntered && 
+        !this.workflowNextEntered && 
+        !this.deleteRowEntered
+      )
     try {
-      while(this.deleteRowEntered > 0) yield when(() => !this.deleteRowEntered);
       this.flushDataEntered++;
       this.monitor.inFlow++;
       let updateObjectDidRun = false;
@@ -775,7 +807,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield*this.saveSession();
       }
     } finally {
-      this.flushDataEntered--
+      this.flushDataEntered--;
       this.monitor.inFlow--;
     }
   }

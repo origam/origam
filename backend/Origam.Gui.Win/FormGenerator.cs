@@ -40,6 +40,7 @@ using Origam.Rule;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Extensions;
 using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Service.Core;
@@ -1998,7 +1999,7 @@ namespace Origam.Gui.Win
 		}
 	    private void RemoveNullConstraints()
 	    {
-	        FormTools.RemoveNullConstraints(_mainFormData);
+	        _mainFormData.RemoveNullConstraints();
 	    }
        
 	

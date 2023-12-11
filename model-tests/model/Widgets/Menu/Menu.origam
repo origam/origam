@@ -227,6 +227,165 @@
     <s2:MenuItem
       asi:abstract="false"
       ami:alwaysOpenNew="false"
+      ami:displayName="WorkFlow tests"
+      x:id="40148463-634a-46cd-9ff2-5acb70f38d28"
+      s2:isHidden="false"
+      asi:name="WfTests"
+      ami:order="100">
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="First step fail"
+        x:id="1119a229-eafa-4afa-8986-39487eb78cca"
+        asi:name="Basic WF_1stepfail"
+        ami:openExclusively="false"
+        ami:order="100"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_1stepfail.origam#Basic WF_1stepfail/466e48e5-a792-4067-8ca3-2e2188c1b567" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFService Sub UI"
+        x:id="22ca65ba-a587-4cfc-a1cc-aeda9d3e588e"
+        asi:name="WF_UI_NextCallSubWorkflowUIStep"
+        ami:openExclusively="false"
+        ami:order="1500"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflowUIStep.origam#WF_UI_NextCallSubWorkflowUIStep/555e8446-f18e-4ad2-a282-7bd453761869" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFCallService step 1"
+        x:id="3c857341-72f3-4835-83ea-43b320579bec"
+        asi:name="WF_UI_NextCallServiceWorkflow"
+        ami:openExclusively="false"
+        ami:order="1000"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflow.origam#WF_UI_NextCallServiceWorkflow/6bf04315-baae-4bda-a5a3-353885462f01" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="Second step fail"
+        x:id="3e5a6435-b4cb-4338-ad16-04ad24d1402c"
+        asi:name="Basic WF_2StepFail"
+        ami:openExclusively="false"
+        ami:order="200"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_2StepFail.origam#Basic WF_2StepFail/faa85d8f-85f3-433f-8d85-e962e4d1a92e" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallSubWorkflow 1 step"
+        x:id="44e1b7cc-0e83-4379-8227-c78982eaf71d"
+        asi:name="CallSubWorkflow"
+        ami:openExclusively="false"
+        ami:order="700"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflow.origam#CallSubWorkflow/4372d34a-1af2-4616-b43b-c837abd81bbf" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFCallService step 2"
+        x:id="486315ce-e6d0-4a92-b6bd-451d3eff5fa7"
+        asi:name="WF_UI_NextCallServiceWorkflow2steps"
+        ami:openExclusively="false"
+        ami:order="1100"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflow2steps.origam#WF_UI_NextCallServiceWorkflow2steps/e15026fc-4972-4206-828d-4a22756c7ff9" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI third step fail"
+        x:id="6d3f26b6-1dbc-44f3-851b-5a119f22b925"
+        asi:name="Basic WF_UI_NextStepFail"
+        ami:openExclusively="false"
+        ami:order="300"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallServiceWorkflow Sub UI step"
+        x:id="88fed471-a2ed-4fd0-9ae7-d57ffbbe5f91"
+        asi:name="CallServiceWorkflowUIstep"
+        ami:openExclusively="false"
+        ami:order="600"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflowUIstep.origam#CallServiceWorkflowUIstep/dcafb966-18cc-4f54-91e0-eb7933b59632" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFService Sub 2 step"
+        x:id="931a64cd-b3d2-412b-a888-be4203c62292"
+        asi:name="WF_UI_NextCallSubWorkflow2steps"
+        ami:openExclusively="false"
+        ami:order="1400"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflow2steps.origam#WF_UI_NextCallSubWorkflow2steps/77afa1a9-24e1-4bae-8d5d-4341db4f805f" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallServiceWorkflow Sub 2 step"
+        x:id="d948a606-9ff4-46eb-b259-7fcb420eb59c"
+        asi:name="CallServiceWorkflow2steps"
+        ami:openExclusively="false"
+        ami:order="500"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflow2steps.origam#CallServiceWorkflow2steps/d6f2f528-54d0-47e2-8dd2-5e5d02b55da2" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFCallService Sub UI step"
+        x:id="e01a1eff-43e0-4dee-97db-d616e6926a10"
+        asi:name="WF_UI_NextCallServiceWorkflowUIstep"
+        ami:openExclusively="false"
+        ami:order="1200"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallServiceWorkflowUIstep.origam#WF_UI_NextCallServiceWorkflowUIstep/2972e79f-05a0-4281-9984-79b21ed55600" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallServiceWorkflow Sub 1 step"
+        x:id="e70afa1f-c511-4e5c-bcdf-a8041717d2c3"
+        asi:name="CallServiceWorkflow"
+        ami:openExclusively="false"
+        ami:order="400"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallServiceWorkflow.origam#CallServiceWorkflow/e5171af3-0235-48b3-8a33-4fdb0b7a97a2" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallSubWorkflow UI step"
+        x:id="f066f5e3-320a-42b4-b2ec-39f8670921e9"
+        asi:name="CallSubWorkflowUIstep"
+        ami:openExclusively="false"
+        ami:order="900"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflowUIstep.origam#CallSubWorkflowUIstep/ce868031-8e6b-474e-ac98-7de595dc51f0" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="UI WFService Sub 1 step"
+        x:id="f68209ca-75c4-499d-859a-1ff8c3ac22cf"
+        asi:name="WF_UI_NextCallSubWorkflow"
+        ami:openExclusively="false"
+        ami:order="1300"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/WF_UI_NextCallSubWorkflow.origam#WF_UI_NextCallSubWorkflow/0420ad3c-ed2d-4705-87f7-f8fa14f3f1c0" />
+      <wrmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        ami:displayName="CallSubWorkflow 2 step"
+        x:id="f907f6c6-13f3-4c58-913c-a0e8dfc52f0a"
+        asi:name="CallSubWorkflow2steps"
+        ami:openExclusively="false"
+        ami:order="800"
+        ami:roles="*"
+        wrmi:workflow="Widgets/Workflow/Widgets/ForAutomaticTests/CallSubWorkflow2steps.origam#CallSubWorkflow2steps/8a1536ec-4a2e-4611-9d94-d2a132082507" />
+    </s2:MenuItem>
+    <s2:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
       ami:displayName="Sections"
       x:id="691f8dfa-606f-46f3-9078-6891642af76e"
       s2:isHidden="false"

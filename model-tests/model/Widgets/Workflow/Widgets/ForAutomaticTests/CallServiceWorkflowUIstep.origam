@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wr="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowReference/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="dcafb966-18cc-4f54-91e0-eb7933b59632"
+    asi:name="CallServiceWorkflowUIstep"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="5f716ecb-4747-4dbc-8429-0af4013da252"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="f06c416a-4073-4ca7-9b20-891d3d8d1f13"
+      asi:name="CallServiceTaskWorkflow"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflowUIstep.origam#CallServiceWorkflowUIstep/AllDataTypes/5f716ecb-4747-4dbc-8429-0af4013da252"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/WorkflowService.origam#WorkflowService/a6838699-113c-4126-803c-39f05b33a7c3"
+      smct:serviceMethod="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/92bafb78-2b5c-479a-902b-8c65162a659d">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="131121f0-12e5-4b4d-818b-700dc4b9956d"
+        asi:name="Workflow"
+        smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2">
+        <wr:WorkflowReference
+          asi:abstract="false"
+          x:id="dd70f165-fbfc-4367-b2ef-4b69527a5adb"
+          asi:name="Basic WF_UI_NextStepFail"
+          wr:workflow="Widgets/Workflow/Widgets/FailsWorkflows/Basic WF_UI_NextStepFail.origam#Basic WF_UI_NextStepFail/594e3ada-e253-41e0-9b13-159381a0cf8b" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="5e810e59-ac57-40ac-9c77-64fc1b3c8730"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Parameters/3aca11ea-3cb9-4e2f-96fa-ec7182605371">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailsWorkflows/CallServiceWorkflowUIstep.origam#CallServiceWorkflowUIstep/AllDataTypes/5f716ecb-4747-4dbc-8429-0af4013da252"
+          x:id="1f099461-d924-4bc7-9c64-74204f506bd1"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

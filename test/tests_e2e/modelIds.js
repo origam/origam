@@ -10,8 +10,9 @@ const masterDataViewId = "dataView_775fa5ea-fa75-40a7-8c39-7828f7cdf508";
 const detailDataViewId = "dataView_b11ffa85-7507-475c-af50-ef08fd56072c";
 const detailEditorId = "editor_89be97a4-86e8-4036-b57a-36155e3f2322";
 const detailTabHandelId = "tabHandle_823ea459-bca5-476f-ab6f-9cb07769923e";
+const workflowTestItemId = "menu_40148463-634a-46cd-9ff2-5acb70f38d28";
 
 module.exports = {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader, masterDataViewId,
   detailDataViewId, detailEditorId, detailTabHandelId, masterDetailLazyLoadedMenuItemId,
-  allDataTypesLazyDataViewId};
+  allDataTypesLazyDataViewId, workflowTestItemId};
