@@ -1573,6 +1573,10 @@ namespace Origam.Server
 
         private IEnumerable<ChangeInfo> GetChanges(DataRow row)
         {
+            if (Data == null)
+            {
+                throw new Exception("GetChanges cannot run because the session store property Data is null");
+            }
             List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
                 Operation.Update, this.Data.HasErrors,
                 this.Data.HasChanges(), false);
