@@ -439,6 +439,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.initialSelectedRowId = args.initUIResult.currentRecordId;
       yield*this.applyInitUIResult({initUIResult: args.initUIResult, createNewRecord: args.createNewRecord});
+      if (openedScreen.isClosed) {
+        // The user closed the screen before initUI finished
+        yield*this.closeForm();
+        return;
+      }
       const formScreen = getFormScreen(this);
       formScreen.setDirty(!!args.preloadIsDirty)
       this.initializePlugins(args.initUIResult);
