@@ -84,13 +84,13 @@ def copy_to_plugin(plugin_config):
 
 
 def init_new_plugin():
-    plugin_base_name = input('Plugin name in PascalCase (for example: "Chart", "CustomerView"...):')
+    plugin_base_name = input('Plugin name in PascalCase (for example: "Chart", "CustomerView"...):').strip()
     if not plugin_base_name:
         print("Need a plugin name")
         return
     plugin_name = plugin_base_name + "Plugin"
 
-    parent_folder = Path(input("Where should we create the plugin folder:"))
+    parent_folder = Path(input("Where should we create the plugin folder:").strip())
     if not parent_folder.is_dir():
         print("That is not a path to a folder")
         return
@@ -194,12 +194,16 @@ def main():
     global origam_plugin_root
     origam_plugin_root = origam_repo_path / "frontend-html/src/plugins/implementations/plugins"
 
-    print("This script copies plugin sources between a plugin repository and origam client.")
-    print("Dou you want to copy to or from the plugin repository?")
+    print("This script will help you manage Origam front end plugins.")
+    print("What do you want to do? Type an option number and hit Enter.")
     crete_new_plugin = "Create new plugin"
-    copy_from_plugin_repo = "Copy from plugin repository"
-    copy_to_plugin_repo = "Copy back to plugin repository"
-    task = select_option(list([crete_new_plugin, copy_from_plugin_repo, copy_to_plugin_repo]), default=0)
+    copy_from_plugin_repo = "Copy from plugin repository to Origam repository"
+    copy_to_plugin_repo = "Copy back to plugin repository from Origam repository"
+    options = [crete_new_plugin]
+    if config["plugins"] and len(config["plugins"].keys()) > 0:
+        options.append(copy_from_plugin_repo)
+        options.append(copy_to_plugin_repo)
+    task = select_option(options, default=0)
 
     if task == copy_from_plugin_repo:
         plugin_config = ask_for_plugin_config(config)
