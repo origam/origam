@@ -757,22 +757,19 @@ export class DataView implements IDataView {
       );
     }
     const self = this;
-    if (!this.selectedRowId) {
-      return;
-    }
-
-    if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {
-      runInFlowWithHandler({
-        ctx: self,
-        action: async () => {
+    runInFlowWithHandler({
+      ctx: self,
+      action: async () => {
+        await this.lifecycle.onRowChanged();
+        if (getFormScreenLifecycle(this).focusedDataViewId === this.id && this.selectedRowId) {
           await onSelectedRowChange(self)(
             getMenuItemId(self),
             getDataStructureEntityId(self),
             self.selectedRowId
           );
-        },
-      });
-    }
+        }
+      },
+    });
   }
 
   viewStateStack: SavedViewState[] = [];

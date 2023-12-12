@@ -32,6 +32,8 @@ export interface IDataViewLifecycle extends IDataViewLifecycleData {
 
   start(): void;
 
+  onRowChanged(): Promise<void>;
+
   startSelectedRowReaction(fireImmediatelly?: boolean): void;
 
   stopSelectedRowReaction(): void;

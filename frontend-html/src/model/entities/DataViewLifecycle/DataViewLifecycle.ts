@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Axios from "axios";
-import { action, comparer, flow, reaction } from "mobx";
+import { action, flow } from "mobx";
 import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
 import { handleError } from "model/actions/handleError";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
@@ -59,76 +59,55 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }
   }
 
-  onSelectedRowIdChangeImm = flow(
-    function*(this: DataViewLifecycle) {
-      if(!isLazyLoading(this)){
-        return;
-      }
-      try {
-        this.monitor.inFlow++;
-        if (getIsBindingRoot(this)) {
-          yield*this.changeMasterRow();
-          yield*this.navigateChildren();
-        } else if (getIsBindingParent(this)) {
-          yield*this.navigateChildren();
-        }
-      } catch (e) {
-        // TODO: Move this method to action handler file?
-        yield*handleError(this)(e);
-        throw e;
-      } finally {
-        this.monitor.inFlow--;
-      }
-    }.bind(this)
-  );
+  reactToRowChanges = true;
 
-  _selectedRowReactionDisposer: any;
+  async onRowChanged(){
+    if (!this.reactToRowChanges) {
+      return;
+    }
+    await flow(
+      function*(this: DataViewLifecycle) {
+        if(!isLazyLoading(this)){
+          return;
+        }
+        try {
+          this.monitor.inFlow++;
+          if (getIsBindingRoot(this)) {
+            yield*this.changeMasterRow();
+            yield*this.navigateChildren();
+          } else if (getIsBindingParent(this)) {
+            yield*this.navigateChildren();
+          }
+        } catch (e) {
+          // TODO: Move this method to action handler file?
+          yield*handleError(this)(e);
+          throw e;
+        } finally {
+          this.monitor.inFlow--;
+        }
+      }.bind(this)
+    )();
+  }
 
   @action.bound
   async startSelectedRowReaction(fireImmediately?: boolean) {
+    this.reactToRowChanges = true;
     if (fireImmediately) {
-      await this.onSelectedRowIdChangeImm();
+      await this.onRowChanged();
     }
-
-    if (this._selectedRowReactionDisposer){
-      return;
-    }
-
-    this.stopSelectedRowReaction();
-
-    const self = this;
-    return (this._selectedRowReactionDisposer = reaction(
-      () => {
-        return getSelectedRowId(this);
-      },
-      () => self.onSelectedRowIdChangeImm(),
-      {equals: comparer.structural}
-    ));
   }
 
   async runRecordChangedReaction(action?: () => Generator) {
-    let wasRunning = false;
-    try {
-      wasRunning = this.stopSelectedRowReaction();
-      if (action) {
-        await flow(action)();
-      }
-    } finally {
-      if (wasRunning) {
-        await this.startSelectedRowReaction(true);
-      } else {
-        await this.onSelectedRowIdChangeImm();
-      }
+    if (action) {
+      await flow(action)();
     }
+    await this.onRowChanged();
   }
 
   @action.bound stopSelectedRowReaction() {
-    if (this._selectedRowReactionDisposer) {
-      this._selectedRowReactionDisposer();
-      this._selectedRowReactionDisposer = undefined;
-      return true;
-    }
-    return false;
+    const wasRunning = this.reactToRowChanges;
+    this.reactToRowChanges = false;
+    return wasRunning;
   }
 
   *navigateAsChild(rows?: any[]) {

@@ -148,7 +148,7 @@ function unselectRowIfInClosedGroup(ctx: any, row: IGroupRow) {
   if (!row.sourceGroup.isExpanded && dataView.selectedRowId) {
     const containsSelectedRow = !!row.sourceGroup.getRowById(dataView.selectedRowId);
     if (containsSelectedRow) {
-      dataView.selectedRowId = undefined;
+      dataView.setSelectedRowId(undefined);
     }
   }
 }
