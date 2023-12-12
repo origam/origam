@@ -82,7 +82,6 @@ export class DateEditorModel {
     const formatData = getDefaultCsDateFormatDataFromCookie();
     return new DateCompleter(
       formatData.defaultDateSequence,
-      this.outputFormat,
       formatData.defaultDateSeparator,
       formatData.defaultTimeSeparator,
       formatData.defaultDateTimeSeparator,

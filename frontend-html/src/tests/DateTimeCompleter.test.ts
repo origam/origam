@@ -29,7 +29,7 @@ function format(dateTime: moment.Moment, expectedFormat: string): string {
   return dateTime.format(expectedFormat)
 }
 
-const dateCompleterUs = new DateCompleter(DateSequence.MonthDayYear, "M/D/YYYY h:mm:ss A", "/",
+const dateCompleterUs = new DateCompleter(DateSequence.MonthDayYear, "/",
   ":", " ", () => moment("3/15/2020", "M/D/YYYY"))
 
 test.each([
@@ -52,7 +52,7 @@ test.each([
 });
 
 
-const dateCompleterCz = new DateCompleter(DateSequence.DayMonthYear, "DD.MM.YYYY h:mm:ss", ".",
+const dateCompleterCz = new DateCompleter(DateSequence.DayMonthYear, ".",
   ":", " ", () => moment("12/15/2017", "M/D/YYYY"))
 
 test.each([

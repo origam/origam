@@ -18,30 +18,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import moment from "moment";
-import { DateSequence } from "../../../../utils/cookies";
+import { DateSequence } from "utils/cookies";
 
 export default class DateCompleter {
   dateSequence: DateSequence;
-  expectedFormat: string;
   dateSeparator: string;
   timeSeparator: string;
   dateTimeSeparator: string;
-  expectedDateFormat: string;
   timeNowFunc: () => moment.Moment;
 
   constructor(
     dateSequence: DateSequence,
-    expectedFormat: string,
     dateSeparator: string,
     timeSeparator: string,
     dateTimeSeparator: string,
     timeNowFunc: () => moment.Moment
   ) {
-    this.expectedFormat = expectedFormat;
     this.dateSeparator = dateSeparator;
     this.timeSeparator = timeSeparator;
     this.dateTimeSeparator = dateTimeSeparator;
-    this.expectedDateFormat = this.expectedFormat.split(this.dateTimeSeparator)[0];
     this.timeNowFunc = timeNowFunc;
     this.dateSequence = dateSequence;
   }
@@ -97,14 +92,6 @@ export default class DateCompleter {
       parsingFormat = this.parsingDateTimeFormat();
     }
     return moment(completeDate, parsingFormat);
-  }
-
-  reformat(completeDateTime: string) {
-    const dateTime = moment(completeDateTime, this.expectedFormat);
-    if (dateTime.hour() === 0 && dateTime.minute() === 0 && dateTime.second() === 0) {
-      return dateTime.format(this.expectedDateFormat);
-    }
-    return dateTime.format(this.expectedFormat);
   }
 
   autoCompleteTime(incompleteTime: string): string {
@@ -181,8 +168,7 @@ export default class DateCompleter {
       case 6: {
         // assuming input is day and month in order specified by
         // current culture followed by incomplete year (yy)
-        const incompleteWithSeparators = this.addSeparators(incompleteDate);
-        return incompleteWithSeparators;
+        return this.addSeparators(incompleteDate);
       }
       default:
         return this.addSeparators(incompleteDate);
@@ -195,7 +181,7 @@ export default class DateCompleter {
 
     const date = moment(usDateString, "M/D/YYYY");
 
-    return date ? date.format(this.expectedDateFormat) : day;
+    return date ? date.format(this.parsingDateFormat()) : day;
   }
 
   addYear(dayAndMonth: string): string {
