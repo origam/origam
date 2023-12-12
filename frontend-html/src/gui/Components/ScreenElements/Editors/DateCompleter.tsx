@@ -89,13 +89,14 @@ export default class DateCompleter {
     const dateAndTime = trimmedText.split(this.dateTimeSeparator);
     const dateText = dateAndTime[0];
     let completeDate = this.autoCompleteDate(dateText);
-
+    let parsingFormat = this.parsingDateFormat();
     if (dateAndTime.length === 2) {
       const timeText = dateAndTime[1];
       const completeTime = this.autoCompleteTime(timeText);
       completeDate += this.dateTimeSeparator + completeTime;
+      parsingFormat = this.parsingDateTimeFormat();
     }
-    return moment(completeDate, this.expectedFormat);
+    return moment(completeDate, parsingFormat);
   }
 
   reformat(completeDateTime: string) {
@@ -141,10 +142,10 @@ export default class DateCompleter {
   completeTimeWithSeparators(incompleteTime: string): string {
     const splitTime = incompleteTime.split(this.timeSeparator);
     if (splitTime.length === 2) {
-      return moment([2010, 1, 1, splitTime[0], splitTime[1], 0, 0]).format("hh:mm:ss A");
+      return moment([2010, 1, 1, splitTime[0], splitTime[1], 0, 0]).format(this.parsingTimeFormat());
     }
     if (splitTime.length === 3) {
-      return moment([2010, 1, 1, splitTime[0], splitTime[1], splitTime[2], 0]).format("hh:mm:ss A");
+      return moment([2010, 1, 1, splitTime[0], splitTime[1], splitTime[2], 0]).format(this.parsingTimeFormat());
     }
     return incompleteTime;
   }
@@ -208,7 +209,7 @@ export default class DateCompleter {
   }
 
   addSeparators(incompleteDate: string): string {
-    const format = this.getDoubleDayAndMonthFormat();
+    const format = this.parsingDateTimeFormat();
 
     const firstIndex = format.indexOf(this.dateSeparator);
     const secondIndex = format.lastIndexOf(this.dateSeparator);
@@ -233,16 +234,22 @@ export default class DateCompleter {
     return incompleteDate;
   }
 
-  getDoubleDayAndMonthFormat(): string {
-    // dateFormat might be d/m/yyyy, this,
-    // method makes sure we get dd/mm/yyyy
-    const formatHasSingleDigitDayAndMonth = this.expectedDateFormat.length === 8;
-    let format;
-    if (formatHasSingleDigitDayAndMonth) {
-      format = this.expectedFormat.toLowerCase().replace("d", "dd").replace("m", "mm");
-    } else {
-      format = this.expectedFormat;
+  parsingDateTimeFormat(): string {
+    return `${this.parsingDateFormat()} ${this.parsingTimeFormat()}`;
+  }
+
+  parsingTimeFormat(){
+    return `HH${this.timeSeparator}mm${this.timeSeparator}ss`;
+  }
+
+  private parsingDateFormat() {
+    switch (this.dateSequence) {
+      case DateSequence.DayMonthYear:
+        return `DD${this.dateSeparator}MM${this.dateSeparator}YYYY`;
+      case DateSequence.MonthDayYear:
+        return `MM${this.dateSeparator}DD${this.dateSeparator}YYYY`;
+      default:
+        throw new Error(`${this.dateSequence} not implemented`);
     }
-    return format;
   }
 }
