@@ -40,7 +40,7 @@ export async function handleTableClick(
       break;
     }
   }
-  return {handled};
+  return handled;
 }
 
 export function onMouseMove(item: IMouseMoveSubsItem) {

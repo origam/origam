@@ -57,10 +57,6 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { hasSelectedRowId, setSelectedStateRowId } from "model/actions-tree/selectionCheckboxes";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
