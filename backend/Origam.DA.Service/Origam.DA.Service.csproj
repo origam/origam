@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-16"?><Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
         <LangVersion>10</LangVersion>
@@ -61,8 +62,8 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-      <PackageReference Include="morelinq" Version="4.1.0" />
-      <PackageReference Include="Npgsql" Version="7.0.6" />
+      <PackageReference Include="morelinq" Version="4.0.0" />
+      <PackageReference Include="Npgsql" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
