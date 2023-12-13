@@ -41,12 +41,12 @@ test.each([
   ["129 12", "12/9/2020 12:00:00 PM"],
   ["1209 12", "12/9/2020 12:00:00 PM"],
   ["12092020 123020", "12/9/2020 12:30:20 PM"],
-  ["5/5", "5/5/2020"],
-  ["5/5 14", "5/5/2020 2:00:00 PM"],
-  ["5/5 1430", "5/5/2020 2:30:00 PM"],
-  ["5/5 14:30", "5/5/2020 2:30:00 PM"],
-  ["5/5/16", "5/5/2016"],
-])('Should auto complete %s to: %s', (incompleteDate, expected) => {
+  ["6/5", "6/5/2020"],
+  ["6/5 14", "6/5/2020 2:00:00 PM"],
+  ["6/5 1430", "6/5/2020 2:30:00 PM"],
+  ["6/5 14:30", "6/5/2020 2:30:00 PM"],
+  ["6/5/16", "6/5/2016"],
+])('Should auto complete %s to: %s using dateCompleterUs', (incompleteDate, expected) => {
   const momentValue = dateCompleterUs.autoComplete(incompleteDate)
   expect(format(momentValue!, "M/D/YYYY h:mm:ss A")).toBe(expected);
 });
@@ -65,7 +65,12 @@ test.each([
   ["09122020 123020", "09.12.2020 12:30:20"],
   ["5 ", "05.12.2017"],
   ["05 ", "05.12.2017"],
-])('Should auto complete %s to: %s', (incompleteDate, expected) => {
+  ["5.6", "05.06.2017"],
+  ["5.6 14", "05.06.2017 14:00:00"],
+  ["5.6 1430", "05.06.2017 14:30:00"],
+  ["5.6 14:30", "05.06.2017 14:30:00"],
+  ["5.6.16", "05.06.2016"],
+])('Should auto complete %s to: %s using dateCompleterCz', (incompleteDate, expected) => {
   const momentValue = dateCompleterCz.autoComplete(incompleteDate)
-  expect(format(momentValue!, "DD.MM.YYYY h:mm:ss")).toBe(expected);
+  expect(format(momentValue!, "DD.MM.YYYY HH:mm:ss")).toBe(expected);
 });
