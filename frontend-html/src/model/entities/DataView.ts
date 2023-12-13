@@ -332,7 +332,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  deleteRowAndSelectNext(row: any[]) {
+  *deleteRowAndSelectNext(row: any[]) {
     const id = this.dataTable.getRowId(row);
     let idToSelectNext = this.dataTable.getNextExistingRowId(id);
     if (!idToSelectNext) {
@@ -342,7 +342,7 @@ export class DataView implements IDataView {
     this.selectedRowIds.delete(id);
     this.dataTable.deleteRow(row);
 
-    this.setSelectedRowId(idToSelectNext);
+    yield*this.setSelectedRowId(idToSelectNext);
   }
 
   @action.bound
@@ -621,7 +621,7 @@ export class DataView implements IDataView {
     );
   }
 
-  @action.bound selectNextRow() {
+ *selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
 
     let newId = undefined;
@@ -631,11 +631,11 @@ export class DataView implements IDataView {
         : getDataTable(this).getNextExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.setSelectedRowId(newId);
+      yield*this.setSelectedRowId(newId);
     }
   }
 
-  @action.bound selectPrevRow() {
+  *selectPrevRow() {
     const selectedRowId = getSelectedRowId(this);
 
     let newId = undefined;
@@ -645,7 +645,7 @@ export class DataView implements IDataView {
         : getDataTable(this).getPrevExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.setSelectedRowId(newId);
+      yield*this.setSelectedRowId(newId);
     }
   }
 
@@ -704,46 +704,46 @@ export class DataView implements IDataView {
     if (this.infiniteScrollLoader) yield*this.infiniteScrollLoader!.loadLastPage();
   }
 
-  @action.bound selectFirstRow() {
+  *selectFirstRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.setSelectedRowId(dataTable.getRowId(firstRow));
+      yield*this.setSelectedRowId(dataTable.getRowId(firstRow));
     } else {
-      this.setSelectedRowId(undefined);
+      yield*this.setSelectedRowId(undefined);
     }
   }
 
-  @action.bound selectLastRow() {
+  *selectLastRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
-      this.setSelectedRowId(dataTable.getRowId(lastRow));
+      yield*this.setSelectedRowId(dataTable.getRowId(lastRow));
     } else {
-      this.setSelectedRowId(undefined);
+      yield*this.setSelectedRowId(undefined);
     }
   }
 
-  reselectOrSelectFirst() {
+  *reselectOrSelectFirst() {
     const previouslySelectedRowExists =
       this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
     if (!this.isRootGrid || !previouslySelectedRowExists || !this.selectedRow) {
-      this.selectFirstRow();
+      yield*this.selectFirstRow();
     }
   }
 
-  @action.bound selectRow(row: any[]) {
-    this.setSelectedRowId(this.dataTable.getRowId(row));
+  *selectRow(row: any[]) {
+    yield*this.setSelectedRowId(this.dataTable.getRowId(row));
   }
 
-  @action.bound
-  setSelectedRowId(id: string | undefined): void {
+
+  *setSelectedRowId(id: string | undefined): Generator {
     if (this.selectedRowId === id) {
       return;
     }
@@ -756,20 +756,7 @@ export class DataView implements IDataView {
         binding.childDataView.dataTable.updateSortAndFilter()
       );
     }
-    const self = this;
-    runGeneratorInFlowWithHandler({
-      ctx: self,
-      generator: function*() {
-        yield*self.lifecycle.runRecordChangedReaction();
-        if (getFormScreenLifecycle(self).focusedDataViewId === self.id && self.selectedRowId) {
-          yield onSelectedRowChange(self)(
-            getMenuItemId(self),
-            getDataStructureEntityId(self),
-            self.selectedRowId
-          );
-        }
-      }(),
-    });
+    yield*this.lifecycle.runRecordChangedReaction();
   }
 
   viewStateStack: SavedViewState[] = [];
@@ -780,10 +767,10 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  restoreViewState(): void {
+  *restoreViewState() {
     const state = this.viewStateStack.pop();
     if (state && state.selectedRowId) {
-      this.setSelectedRowId(state.selectedRowId);
+      yield*this.setSelectedRowId(state.selectedRowId);
       if (!getSelectedRow(this)) {
         this.selectFirstRow();
       }
@@ -817,7 +804,13 @@ export class DataView implements IDataView {
             return;
           }
           if (reData.selectedRowId === undefined && reData.rowsCount > 0) {
-            this.reselectOrSelectFirst();
+            const self = this;
+            runGeneratorInFlowWithHandler({
+              ctx: this,
+              generator: function*(){
+                yield*self.reselectOrSelectFirst();
+              }()
+            })
           }
         },
         {

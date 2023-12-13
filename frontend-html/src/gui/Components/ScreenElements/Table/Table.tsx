@@ -43,6 +43,11 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IFocusable } from "model/entities/FormFocusManager";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -100,9 +105,9 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function handleClick(event: any) {
+  async function handleClick(event: any) {
     const domRect = event.target.getBoundingClientRect();
-    const handlingResult = handleTableClick(
+    const handlingResult = await handleTableClick(
       event,
       event.clientX - domRect.x,
       event.clientY - domRect.y,
@@ -363,13 +368,26 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScrollerClick(event: any) {
-    const {handled} = this.tableRenderer.handleClick(event);
-    if (!this.tablePanelView.isEditing || !handled) {
-      this.focusTable();
-    }
-    if (!handled) {
-      this.props.onOutsideTableClick?.(event);
-    }
+    runInFlowWithHandler({
+      ctx: this.context.tablePanelView,
+      action: async ()=>{
+        const {handled} = await this.tableRenderer.handleClick(event);
+        if (!this.tablePanelView.isEditing || !handled) {
+        this.focusTable();
+        let dataView = getDataView(this.context.tablePanelView);
+          if (getFormScreenLifecycle(dataView).focusedDataViewId === dataView.id && dataView.selectedRowId) {
+            await onSelectedRowChange(dataView)(
+              getMenuItemId(dataView),
+              getDataStructureEntityId(dataView),
+              dataView.selectedRowId
+            );
+          }
+        }
+        if (!handled) {
+          this.props.onOutsideTableClick?.(event);
+        }
+      }
+    });
   }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {

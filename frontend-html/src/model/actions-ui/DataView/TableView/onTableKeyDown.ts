@@ -58,7 +58,7 @@ export function onTableKeyDown(ctx: any) {
           if (event.shiftKey) {
             selectPrevColumn(ctx)(true);
           } else {
-            selectNextColumn(ctx)(true);
+            yield*selectNextColumn(ctx)(true);
           }
           event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();

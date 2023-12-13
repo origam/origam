@@ -139,7 +139,7 @@ export class ListRowContainer implements IRowsContainer {
         const dataView = getDataView(self);
         dataView.updateSelectedIds();
         if (!data?.retainPreviousSelection) {
-          dataView.reselectOrSelectFirst();
+          yield*dataView.reselectOrSelectFirst();
         }
       }
     )();

@@ -924,7 +924,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
-    rootDataView.setSelectedRowId(undefined);
+    yield*rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
@@ -956,11 +956,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
 
       if (this.initialSelectedRowId) {
-        rootDataView.setSelectedRowId(this.initialSelectedRowId);
+        yield*rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
-        rootDataView.reselectOrSelectFirst();
+        yield*rootDataView.reselectOrSelectFirst();
       }
-      rootDataView.restoreViewState();
+      yield*rootDataView.restoreViewState();
     } finally {
       yield*rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
       this.monitor.inFlow--;
@@ -1231,7 +1231,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         }
         yield*this.applyData(result);
         getFormScreen(this).setDirty(false);
-        getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
+        for (let dataView of getFormScreen(this).dataViews) {
+          yield*dataView.restoreViewState();
+        }
       } else {
         yield*this.loadData();
       }

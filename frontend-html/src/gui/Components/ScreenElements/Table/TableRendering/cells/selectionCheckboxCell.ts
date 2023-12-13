@@ -108,8 +108,8 @@ function registerClickHandler() {
     y: currentRowTop(),
     w: currentColumnWidthVisible(),
     h: currentRowHeight(),
-    handler(event: any) {
-      flow(function*() {
+    async handler(event: any) {
+      await flow(function*() {
         const tablePanelView = getTablePanelView(ctx);
         const dataTable = getDataTable(ctx);
         const rowId = dataTable.getRowId(row);

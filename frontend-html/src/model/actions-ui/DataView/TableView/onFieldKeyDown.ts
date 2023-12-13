@@ -72,7 +72,7 @@ export function onFieldKeyDown(ctx: any) {
             if (event.shiftKey) {
               selectPrevColumn(ctx)(true);
             } else {
-              selectNextColumn(ctx)(true);
+              yield*selectNextColumn(ctx)(true);
             }
             yield*dataView.lifecycle.runRecordChangedReaction();
 
@@ -85,7 +85,7 @@ export function onFieldKeyDown(ctx: any) {
             if (event.shiftKey) {
               selectPrevColumn(ctx)(true);
             } else {
-              selectNextColumn(ctx)(true);
+              yield*selectNextColumn(ctx)(true);
             }
             event.preventDefault();
 

@@ -57,6 +57,10 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { hasSelectedRowId, setSelectedStateRowId } from "model/actions-tree/selectionCheckboxes";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -196,7 +200,7 @@ export class TablePanelView implements ITablePanelView {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
       this.setEditing(false);
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+      yield*this.selectCell(this.dataTable.getRowId(row) as string, property.id);
     } else {
       const rowId = this.dataTable.getRowId(row);
       yield*this.selectCellAsync(rowId, columnId);
@@ -213,7 +217,7 @@ export class TablePanelView implements ITablePanelView {
         yield*getDataView(this).navigateLookupLink(property, row);
       } else {
         if (this.dataTable.getRowId(row) === this.selectedRowId) {
-          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+          yield*this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
           const {isEditing} = this;
@@ -250,7 +254,7 @@ export class TablePanelView implements ITablePanelView {
     if (dataView.selectedRowId === rowId) {
       return;
     }
-    dataView.setSelectedRowId(rowId);
+    yield*dataView.setSelectedRowId(rowId);
   }
 
   *onNoCellClick() {
@@ -456,9 +460,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound selectCell(rowId: string | undefined, columnId: string | undefined) {
+  *selectCell(rowId: string | undefined, columnId: string | undefined): Generator {
     this.selectedColumnId = columnId;
-    getDataView(this).setSelectedRowId(rowId);
+    yield*getDataView(this).setSelectedRowId(rowId);
   }
 
   isFirstColumnSelected(): boolean {
@@ -482,7 +486,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  selectNextColumn(nextRowWhenEnd?: boolean): void {
+  *selectNextColumn(nextRowWhenEnd?: boolean) {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -492,7 +496,7 @@ export class TablePanelView implements ITablePanelView {
         this.setSelectedColumnId(newProp.id);
       } else if (nextRowWhenEnd && properties.length > 1) {
         const rowId = getSelectedRowId(this);
-        getDataView(this).selectNextRow();
+        yield*getDataView(this).selectNextRow();
         if (rowId !== getSelectedRowId(this)) {
           this.selectFirstColumn();
         }
@@ -500,8 +504,7 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound
-  selectPrevColumn(prevRowWhenStart?: boolean): void {
+  *selectPrevColumn(prevRowWhenStart?: boolean) {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -511,7 +514,7 @@ export class TablePanelView implements ITablePanelView {
         this.setSelectedColumnId(newProp.id);
       } else if (prevRowWhenStart && properties.length > 1) {
         const rowId = getSelectedRowId(this);
-        getDataView(this).selectPrevRow();
+        yield*getDataView(this).selectPrevRow();
         if (rowId !== getSelectedRowId(this)) {
           this.selectLastColumn();
         }
