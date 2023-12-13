@@ -103,7 +103,7 @@ function*processSingleResult(ctx: any, resultItem: ICRUDResult,
             dataView.selectRow(dataSourceRow);
             yield*dataView.lifecycle.changeMasterRow();
           } finally {
-            dataView.lifecycle.startSelectedRowReaction();
+            yield*dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
           yield dataView.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);

@@ -43,10 +43,12 @@ import { joinWithAND, toFilterItem } from "../OrigamApiHelpers";
 import { FlowBusyMonitor } from "utils/flow";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
+  reactToRowChanges = true;
 
   get isWorking() {
     return this.monitor.isWorkingDelayed;
@@ -55,53 +57,42 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   @action.bound
   start(): void {
     if (isLazyLoading(this)) {
-      this.startSelectedRowReaction(true);
+      const self = this;
+      runGeneratorInFlowWithHandler({
+        ctx: this,
+        generator: function*() {
+            yield*self.startSelectedRowReaction(true);
+        }()
+      });
     }
   }
 
-  reactToRowChanges = true;
-
-  async onRowChanged(){
-    if (!this.reactToRowChanges) {
+  *runRecordChangedReaction(this: DataViewLifecycle){
+    if (!this.reactToRowChanges || !isLazyLoading(this)) {
       return;
     }
-    await flow(
-      function*(this: DataViewLifecycle) {
-        if(!isLazyLoading(this)){
-          return;
-        }
-        try {
-          this.monitor.inFlow++;
-          if (getIsBindingRoot(this)) {
-            yield*this.changeMasterRow();
-            yield*this.navigateChildren();
-          } else if (getIsBindingParent(this)) {
-            yield*this.navigateChildren();
-          }
-        } catch (e) {
-          // TODO: Move this method to action handler file?
-          yield*handleError(this)(e);
-          throw e;
-        } finally {
-          this.monitor.inFlow--;
-        }
-      }.bind(this)
-    )();
+    try {
+      this.monitor.inFlow++;
+      if (getIsBindingRoot(this)) {
+        yield*this.changeMasterRow();
+        yield*this.navigateChildren();
+      } else if (getIsBindingParent(this)) {
+        yield*this.navigateChildren();
+      }
+    } catch (e) {
+      // TODO: Move this method to action handler file?
+      yield*handleError(this)(e);
+      throw e;
+    } finally {
+      this.monitor.inFlow--;
+    }
   }
 
-  @action.bound
-  async startSelectedRowReaction(fireImmediately?: boolean) {
+  *startSelectedRowReaction(fireImmediately?: boolean): Generator {
     this.reactToRowChanges = true;
     if (fireImmediately) {
-      await this.onRowChanged();
+      yield*this.runRecordChangedReaction();
     }
-  }
-
-  async runRecordChangedReaction(action?: () => Generator) {
-    if (action) {
-      await flow(action)();
-    }
-    await this.onRowChanged();
   }
 
   @action.bound stopSelectedRowReaction() {

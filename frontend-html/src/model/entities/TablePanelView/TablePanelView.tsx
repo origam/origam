@@ -250,9 +250,7 @@ export class TablePanelView implements ITablePanelView {
     if (dataView.selectedRowId === rowId) {
       return;
     }
-    yield dataView.lifecycle.runRecordChangedReaction(function*() {
-      yield dataView.setSelectedRowId(rowId);
-    });
+    dataView.setSelectedRowId(rowId);
   }
 
   *onNoCellClick() {

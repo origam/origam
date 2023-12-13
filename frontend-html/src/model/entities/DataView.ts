@@ -84,7 +84,7 @@ import { produce } from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import { runInFlowWithHandler, } from "utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
@@ -757,18 +757,18 @@ export class DataView implements IDataView {
       );
     }
     const self = this;
-    runInFlowWithHandler({
+    runGeneratorInFlowWithHandler({
       ctx: self,
-      action: async () => {
-        await this.lifecycle.onRowChanged();
-        if (getFormScreenLifecycle(this).focusedDataViewId === this.id && this.selectedRowId) {
-          await onSelectedRowChange(self)(
+      generator: function*() {
+        yield*self.lifecycle.runRecordChangedReaction();
+        if (getFormScreenLifecycle(self).focusedDataViewId === self.id && self.selectedRowId) {
+          yield onSelectedRowChange(self)(
             getMenuItemId(self),
             getDataStructureEntityId(self),
             self.selectedRowId
           );
         }
-      },
+      }(),
     });
   }
 
