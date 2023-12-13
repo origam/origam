@@ -46,9 +46,11 @@ namespace Origam.Workflow.Tasks
 		protected virtual void OnFinished(WorkflowEngineTaskEventArgs e)
 		{
 			if (Step == null)
-            {
-                throw e.Exception;
-            }
+			{
+				// if e.Exception is not null, it was handled in ServiceMethodCallEngineTask
+				// in the Execute method. So it is safe to do nothing here.
+				return;
+			}
 			if (this.Finished != null)
 			{
 				if (e.Exception != null &&

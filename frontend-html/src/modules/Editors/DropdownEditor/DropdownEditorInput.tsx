@@ -42,6 +42,7 @@ export function DropdownEditorInput(props: {
       beh.subscribeToFocusManager(beh.elmInputElement);
     }
     beh.updateTextOverflowState();
+    beh.mount();
     return ()=> beh.onBlur?.(beh.elmInputElement);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -70,7 +71,7 @@ export function DropdownEditorInput(props: {
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}
           onKeyDown={beh.handleInputKeyDown}
-          onFocus={!beh.isReadOnly ? beh.handleInputFocus : undefined}
+          onFocus={beh.handleInputFocus}
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
           onDoubleClick={beh.onDoubleClick}
           onClick={beh.onClick}

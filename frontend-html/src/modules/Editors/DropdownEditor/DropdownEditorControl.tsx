@@ -117,25 +117,26 @@ export function DropdownEditorControl(props: {
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}
           />
-          {beh.hasNewScreenButton
+          {!beh.isReadOnly && beh.hasNewScreenButton
              && <div className={"inputBtn"} onClick={beh.onAddNewRecordClick}>+</div>
           }
-          <div
-            className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
-            tabIndex={-1}
-            onClick={!beh.isReadOnly ? beh.handleInputBtnClick : undefined}
-            onContextMenu={(event) => {
-              beh.handleTriggerContextMenu(event);
-              triggerContextMenu.handleTriggerContextMenu(event);
-            }}
-            onMouseDown={!beh.isReadOnly ? beh.handleControlMouseDown : undefined}
-          >
-            {!beh.isWorking ? (
-              <i className="fas fa-caret-down"/>
-            ) : (
-              <i className="fas fa-spinner fa-spin"/>
-            )}
-          </div>
+          {!beh.isReadOnly
+            && <div
+              className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
+              tabIndex={-1}
+              onClick={!beh.isReadOnly ? beh.handleInputBtnClick : undefined}
+              onContextMenu={(event) => {
+                beh.handleTriggerContextMenu(event);
+                triggerContextMenu.handleTriggerContextMenu(event);
+              }}
+              onMouseDown={!beh.isReadOnly ? beh.handleControlMouseDown : undefined}
+            >
+              {!beh.isWorking ? (
+                <i className="fas fa-caret-down"/>
+              ) : (
+                <i className="fas fa-spinner fa-spin"/>
+              )}
+            </div>}
 
           <TriggerContextMenu state={triggerContextMenu}/>
         </div>

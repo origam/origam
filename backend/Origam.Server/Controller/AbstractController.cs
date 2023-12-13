@@ -243,7 +243,7 @@ namespace Origam.Server.Controller
                     FindEntity(input.DataStructureEntityId)
                         .Bind(dataStructureEntity =>
                             sessionObjects.UIService.GetRow(
-                                input.SessionFormIdentifier, input.Entity,
+                                input.SessionFormIdentifier, dataStructureEntity.Entity.Name,
                                 dataStructureEntity, input.RowId));
             }
         }

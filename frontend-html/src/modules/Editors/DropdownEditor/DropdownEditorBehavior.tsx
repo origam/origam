@@ -58,6 +58,7 @@ export interface IBehaviorData {
   onDoubleClick?: (event: any) => void,
   onClick?: (event: any) => void,
   onBlur?: (target: any) => void,
+  onMount?(onChange?: (value: any) => void): void,
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
@@ -79,6 +80,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   public onBlur?: (target?: any) => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
   private onKeyDown?: (event: any) => void;
+  private onMount?(onChange?: (value: any) => void): void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   private newRecordScreen?: NewRecordScreen;
@@ -102,6 +104,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
     this.onBlur = args.onBlur;
+    this.onMount = args.onMount,
     this.subscribeToFocusManager = args.subscribeToFocusManager;
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
@@ -177,6 +180,16 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     }
   }
 
+  mount(){
+    this.onMount?.((value) => {
+      if (this.elmInputElement) {
+        this.elmInputElement.value = value;
+        const event = {target: this.elmInputElement};
+        this.handleInputChange(event);
+      }
+    });
+  }
+
   @action.bound
   private scrollToChosenRowIfPossible() {
     if (this.chosenRowId && !_.isArray(this.chosenRowId)) {
@@ -226,7 +239,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   @action.bound
-  handleInputKeyDown(event: any) {
+  async handleInputKeyDown(event: any) {
     const wasDropped = this.isDropped;
     switch (event.key) {
       case "Escape":
@@ -256,6 +269,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         if (this.isDropped) {
           if (this.cursorRowId) {
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          }
+          else {
+            this.handleTabPressedBeforeDropdownReady();
           }
         }
         else if (!this.isDropped && this.userEnteredValue === ""){
@@ -307,6 +323,20 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         break;
     }
     this.onKeyDown && this.onKeyDown(event);
+  }
+
+  private handleTabPressedBeforeDropdownReady() {
+    if (this.dataTable.allRows.length !== 0) {
+      return;
+    }
+    setTimeout(async () => {
+      this.handleInputChangeDeb.cancel();
+      if (!this.runningPromise) {
+        this.ensureRequestRunning();
+      }
+      await this.runningPromise;
+      this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
+    });
   }
 
   private clearSelection() {
@@ -504,6 +534,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
+    if (!elm) {
+      return;
+    }
     this.elmInputElement = elm;
   };
 

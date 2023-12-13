@@ -419,6 +419,7 @@ namespace Origam.Rule
 		public bool Merge(DataSet inout_dsTarget, DataSet in_dsSource, bool in_bTrueDelete, bool in_bPreserveChanges, bool in_bSourceIsFragment, bool preserveNewRowState)
 		{
 			bool result;
+			bool constraintsWereEnforced = inout_dsTarget.EnforceConstraints; 
 			DatasetTools.BeginLoadData(inout_dsTarget);
 			try
 			{
@@ -433,6 +434,7 @@ namespace Origam.Rule
 			finally
 			{
 				DatasetTools.EndLoadData(inout_dsTarget);
+				inout_dsTarget.EnforceConstraints = constraintsWereEnforced;
 			}
 
 			return result;

@@ -122,16 +122,17 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       ]);
 
       useEffect(() => {
+        beh.mount();
         return () => {
          props.onEditorBlur?.({target: beh.elmInputElement});
         }
       }, []);
 
-      function handleInputKeyDown(event: any) {
+      async function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
           removeItem(event, value[value.length - 1]);
         }
-        beh.handleInputKeyDown(event);
+        await beh.handleInputKeyDown(event);
         props.onKeyDown?.(event);
       }
 

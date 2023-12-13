@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { flow } from "mobx";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function onSelectedRowChange(ctx: any) {
   return flow(function*onPossibleSelectedRowChange(
@@ -26,10 +27,12 @@ export function onSelectedRowChange(ctx: any) {
     dataStructureEntityId: string,
     rowId: string | undefined
   ) {
+    const sessionId = getSessionId(ctx);
     yield*getRecordInfo(ctx).onSelectedRowMaybeChanged(
       menuId,
       dataStructureEntityId,
-      rowId
+      rowId,
+      sessionId
     );
   });
 }

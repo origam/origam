@@ -231,8 +231,11 @@ namespace Origam.Server
         public override IEnumerable<ChangeInfo> UpdateObject(
             string entity, object id, string property, object newValue)
         {
-            return UpdateObjectWithDependenies(entity, id,
-				property, newValue, true);
+            lock (_lock)
+            {
+                return UpdateObjectWithDependenies(entity, id,
+                    property, newValue, true);
+            }
         }
 
         public IEnumerable<ChangeInfo>

@@ -1,4 +1,3 @@
-﻿#region license
 /*
 Copyright 2005 - 2023 Advantage Solutions, s. r. o.
 
@@ -17,24 +16,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
-namespace Origam.Server.Middleware;
-
-
-// Request will continue if not authenticated
-class OptionalTokenAuthenticationMiddleware : UserApiTokenAuthenticationMiddleware
-{
-    public OptionalTokenAuthenticationMiddleware(RequestDelegate next, IAuthenticationSchemeProvider schemes) : base(next, schemes)
-    {
-    }
-
-    protected override async Task HandleUnauthorizedRequest(HttpContext context)
-    {
-        await _next(context);
-    }
+export function getKeyBuffer(ctx: any) {
+  return getWorkbenchLifecycle(ctx).keyBuffer;
 }

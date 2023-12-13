@@ -41,6 +41,7 @@ using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
 using Origam.Service.Core;
+using System.Linq.Expressions;
 
 namespace Origam.Server
 {
@@ -92,6 +93,13 @@ namespace Origam.Server
         private readonly Analytics analytics;
         private bool _isDisposed;
         private IDataDocument _xmlData;
+        private bool _isProcessing;
+
+        public bool IsProcessing
+        {
+            get { return _isProcessing; }
+            set { _isProcessing = value; }
+        }
 
         public const string LIST_LOADED_COLUMN_NAME = "___ORIGAM_IsLoaded";
         public const string ACTION_SAVE = "SAVE";
@@ -515,7 +523,7 @@ namespace Origam.Server
                         break;
                     }
                 }
-                RemoveNullConstraints(this.DataList);
+                DataList.RemoveNullConstraints();
             }
         }
 
@@ -580,7 +588,7 @@ namespace Origam.Server
             }
             if (this.Data != null)
             {
-                RemoveNullConstraints(this.Data);
+                Data.RemoveNullConstraints();
                 DatasetGenerator.ApplyDynamicDefaults(this.Data, this.Request.Parameters);
 
                 InitEntityDependencies();
@@ -710,7 +718,28 @@ namespace Origam.Server
         }
 
         public abstract void Init();
-        public abstract object ExecuteAction(string actionId);
+        public object ExecuteAction(string actionId)
+        {
+            if (this.IsProcessing)
+            {
+                throw new Exception(Resources.ErrorCommandInProgress);
+            }
+            this.IsProcessing = true;
+            try
+            {
+                lock (this._lock)
+                {
+                    return ExecuteActionInternal(actionId);
+                }
+            }
+            finally
+            {
+                this.IsProcessing = false;
+            }
+        }
+
+        public abstract object ExecuteActionInternal(string actionId);
+
         public abstract XmlDocument GetFormXml();
 
         public virtual void PrepareFormXml()
@@ -756,64 +785,6 @@ namespace Origam.Server
         #endregion
 
         #region Private Methods
-        protected static void RemoveNullConstraints(DataSet dataset)
-        {
-            foreach (DataTable table in dataset.Tables)
-            {
-                foreach (DataColumn col in table.Columns)
-                {
-                    if (col.AllowDBNull == false & IsKey(col) == false)
-                    {
-                        col.AllowDBNull = true;
-                    }
-                }
-            }
-        }
-
-        private static bool IsKey(DataColumn column)
-        {
-            // primary key
-            bool found = IsInColumns(column, column.Table.PrimaryKey);
-            if (found) return true;
-
-            // parent relations
-            found = IsInRelations(column, column.Table.ParentRelations);
-            if (found) return true;
-
-            // child relations
-            return IsInRelations(column, column.Table.ChildRelations);
-        }
-
-        private static bool IsInRelations(DataColumn column, DataRelationCollection relations)
-        {
-            foreach (DataRelation relation in relations)
-            {
-                if (IsRelationKey(column, relation)) return true;
-            }
-
-            return false;
-        }
-
-        private static bool IsRelationKey(DataColumn column, DataRelation relation)
-        {
-            // parent columns
-            bool found = IsInColumns(column, relation.ParentColumns);
-
-            if (found) return true;
-
-            // child columns
-            return IsInColumns(column, relation.ChildColumns);
-        }
-
-        private static bool IsInColumns(DataColumn searchedColumn, DataColumn[] columns)
-        {
-            foreach (DataColumn col in columns)
-            {
-                if (col.Equals(searchedColumn)) return true;
-            }
-
-            return false;
-        }
 
         public List<ChangeInfo> GetChangesByRow(
             string requestingGrid, DataRow row, Operation operation, 
@@ -1602,6 +1573,10 @@ namespace Origam.Server
 
         private IEnumerable<ChangeInfo> GetChanges(DataRow row)
         {
+            if (Data == null)
+            {
+                throw new Exception("GetChanges cannot run because the session store property Data is null");
+            }
             List<ChangeInfo> listOfChanges = GetChangesByRow(null, row,
                 Operation.Update, this.Data.HasErrors,
                 this.Data.HasChanges(), false);

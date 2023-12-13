@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi1="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="1282c430-f10b-4b89-aa55-00f6d46c30df"
+    ci:isComplex="false"
+    asi:name="TestPlugin"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Gui.Win.SectionLevelPlugin">
+    <cpi1:ControlPropertyItem
+      asi:abstract="false"
+      cpi1:bindOnly="false"
+      x:id="9fff0e74-5645-4392-ac03-76fbbfdaa9dc"
+      cpi1:localizable="false"
+      asi:name="test1"
+      cpi1:propertyType="String" />
+    <cpi1:ControlPropertyItem
+      asi:abstract="false"
+      cpi1:bindOnly="false"
+      x:id="c3c66a34-201d-48d9-aeb6-6b86ee015a98"
+      cpi1:localizable="false"
+      asi:name="test2"
+      cpi1:propertyType="Integer" />
+    <cpi1:ControlPropertyItem
+      asi:abstract="false"
+      cpi1:bindOnly="false"
+      x:id="ebc8174d-2755-4ea9-ad69-7fa0c0eec7b4"
+      cpi1:localizable="false"
+      asi:name="test3"
+      cpi1:propertyType="String" />
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/SectionLevelPlugin.origam#SectionLevelPlugin/6382f412-b961-46a7-9a34-29aed844b8b9"
+      x:id="3b06d1e6-0eed-41d0-adac-e5a0d7a0130b" />
+  </ci:Control>
+</x:file>

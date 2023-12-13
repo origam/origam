@@ -23,6 +23,7 @@ using System;
 using System.Globalization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -67,7 +68,7 @@ public class NewRecordSessionStore : FormSessionStore
             row, true, SecurityManager.CurrentUserProfile().Id);
         row.Table.NewRow();
         
-        RemoveNullConstraints(dataSet);
+        dataSet.RemoveNullConstraints();
         dataSet.Tables[rootEntity.Name].Rows.Add(row);
         SetDataSource(dataSet);
     }
