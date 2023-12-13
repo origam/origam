@@ -412,7 +412,7 @@
     "@babel/helper-create-class-features-plugin" "^7.18.6"
     "@babel/helper-plugin-utils" "^7.18.6"
 
-"@babel/plugin-proposal-decorators@^7.23.5":
+"@babel/plugin-proposal-decorators@^7.23.6":
   version "7.23.6"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.23.6.tgz#b34e9837c4fb0277c6d571581c76595521cf2db4"
   integrity sha512-D7Ccq9LfkBFnow3azZGJvZYgcfeqAw3I1e5LoTpj6UKIFQilh8yqXsIGcRIqbBdsPWIz+Ze7ZZfggSj62Qp+Fg==
@@ -1046,7 +1046,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.22.15"
     "@babel/helper-plugin-utils" "^7.22.5"
 
-"@babel/preset-env@^7.23.5":
+"@babel/preset-env@^7.23.6":
   version "7.23.6"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.23.6.tgz#ad0ea799d5a3c07db5b9a172819bbd444092187a"
   integrity sha512-2XPn/BqKkZCpzYhUUNZ1ssXw7DcXfKQEjv/uXZUXgaebCMYmkEsfZ2yY+vv+xtXv50WmL5SGhyB6/xsWxIvvOQ==
@@ -2079,10 +2079,10 @@
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet-draw@^1.0.8":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.10.tgz#38210af22fe05a31ef2ab22a6bac437616220e8b"
-  integrity sha512-1tV0QW5qAcTCmuZZwH19qngHayLxTE9vyDGicfMoASnrFf0oo3+lFOnn/ZRKSskyHKB7T8s6DTk7Henaq4ueyg==
+"@types/leaflet-draw@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.11.tgz#277bf4426025f59d6fc55db0eb9c13cef0f49e13"
+  integrity sha512-dyedtNm3aSmnpi6FM6VSl28cQuvP+MD7pgpXyO3Q1ZOCvrJKmzaDq0P3YZTnnBs61fQCKSnNYmbvCkDgFT9FHQ==
   dependencies:
     "@types/leaflet" "*"
 
@@ -7019,19 +7019,19 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vite-tsconfig-paths@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/vite-tsconfig-paths/-/vite-tsconfig-paths-4.2.1.tgz#e53b89096b91d31a6d1e26f75999ea8c336a89ed"
-  integrity sha512-GNUI6ZgPqT3oervkvzU+qtys83+75N/OuDaQl7HmOqFTb0pjZsuARrRipsyJhJ3enqV8beI1xhGbToR4o78nSQ==
+vite-tsconfig-paths@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/vite-tsconfig-paths/-/vite-tsconfig-paths-4.2.2.tgz#fee5a59c885687ae046e1d5a394bdcfdb12d9361"
+  integrity sha512-dq0FjyxHHDnp0uS3P12WEOX2W7NeuLzX9AWP38D7Zw2CTbFErapwQVlCiT5DMJcVWKQ1MMdTe92PZl/rBQ7qcw==
   dependencies:
     debug "^4.1.1"
     globrex "^0.1.2"
     tsconfck "^2.1.0"
 
-vite@^5.0.6:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-5.0.7.tgz#ad081d735f6769f76b556818500bdafb72c3fe93"
-  integrity sha512-B4T4rJCDPihrQo2B+h1MbeGL/k/GMAHzhQ8S0LjQ142s6/+l3hHTT095ORvsshj4QCkoWu3Xtmob5mazvakaOw==
+vite@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.0.8.tgz#070383dcb4d4f12adde9c119b8cca0f40bf906e9"
+  integrity sha512-jYMALd8aeqR3yS9xlHd0OzQJndS9fH5ylVgWdB+pxTwxLKdO1pgC5Dlb398BUxpfaBxa4M9oT7j1g503Gaj5IQ==
   dependencies:
     esbuild "^0.19.3"
     postcss "^8.4.32"
