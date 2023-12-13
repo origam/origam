@@ -67,7 +67,12 @@ export default class DateCompleter {
       t.match(/^\d\d\d\d\s+\d\d\d\d$/) ||
       t.match(/^\d\d\d\d\s+\d\d$/) ||
       t.match(/^\d\d\d\d\d\d\d\d \d\d\d\d\d\d$/) ||
-      t.match(/^\d\d?$/)
+      t.match(/^\d\d?$/) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d?$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d\\d\\d$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d:\\d\\d$")) ||
+      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\" + this.dateSeparator + "\\d\\d?$"))
     );
   }
 
