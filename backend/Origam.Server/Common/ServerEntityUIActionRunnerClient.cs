@@ -106,10 +106,28 @@ namespace Origam.Server
                 {
                     throw new RuleException(Resources.ErrorFormNotSavedBeforeAction);
                 }
-                if (ewa.CloseType == ModalDialogCloseType.CloseAndCommit
-                    && sessionManager.GetSession(processData).Data.HasErrors)
+                if (sessionManager.GetSession(processData).Data.HasErrors)
                 {
-                    throw new RuleException(Resources.ErrorInForm);
+                    switch (ewa.CloseType)
+                    {
+                        case ModalDialogCloseType.CloseAndCommitWithErrors:
+                        {
+                            // errors are ignored in order to enable merge of
+                            // incomplete data
+                            break;
+                        }
+                        case ModalDialogCloseType.CloseAndCommit:
+                        {
+                            throw new RuleException(Resources.ErrorInForm);
+                        }
+                        default:
+                        {
+                            throw new ArgumentOutOfRangeException(
+                                "CloseType",
+                                ewa.CloseType,
+                                $@"Invalid CloseType value {ewa.CloseType}");
+                        }
+                    }
                 }
             }
         }
