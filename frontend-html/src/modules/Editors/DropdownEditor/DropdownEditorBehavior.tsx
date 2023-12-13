@@ -58,6 +58,7 @@ export interface IBehaviorData {
   onDoubleClick?: (event: any) => void,
   onClick?: (event: any) => void,
   onBlur?: (target: any) => void,
+  onMount?(onChange?: (value: any) => void): void,
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
@@ -79,6 +80,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   public onBlur?: (target?: any) => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
   private onKeyDown?: (event: any) => void;
+  private onMount?(onChange?: (value: any) => void): void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   private newRecordScreen?: NewRecordScreen;
@@ -102,6 +104,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
     this.onBlur = args.onBlur;
+    this.onMount = args.onMount,
     this.subscribeToFocusManager = args.subscribeToFocusManager;
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
@@ -175,6 +178,16 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     if (this.elmInputElement) {
       requestFocus(this.elmInputElement);
     }
+  }
+
+  mount(){
+    this.onMount?.((value) => {
+      if (this.elmInputElement) {
+        this.elmInputElement.value = value;
+        const event = {target: this.elmInputElement};
+        this.handleInputChange(event);
+      }
+    });
   }
 
   @action.bound

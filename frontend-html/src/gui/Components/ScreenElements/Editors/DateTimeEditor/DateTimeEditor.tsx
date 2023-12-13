@@ -57,6 +57,7 @@ export class DateTimeEditor extends React.Component<{
   onClick?: (event: any) => void;
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
+  onMount?(onChange?: (value: any) => void): void;
   onEditorBlur?: (event: any) => Promise<void>;
   refocuser?: (cb: () => void) => () => void;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
@@ -118,6 +119,13 @@ export class DateTimeEditor extends React.Component<{
           await this.handleInputBlur(event)();
         });
     }
+    this.props.onMount?.(value => {
+      if (this.elmInput) {
+        this.elmInput.value = value;
+        const event = {target: this.elmInput};
+        this.handleTextFieldChange(event);
+      }
+    });
   }
 
   componentWillUnmount() {

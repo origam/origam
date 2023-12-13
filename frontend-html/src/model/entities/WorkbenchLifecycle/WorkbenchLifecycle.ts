@@ -56,6 +56,7 @@ import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
 import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
+import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -76,6 +77,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+  keyBuffer =  new KeyBuffer(this);
   mainMenuItemClickHandler = new EventHandler();
 
   *onMainMenuItemClick(args: {
