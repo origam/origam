@@ -28,6 +28,7 @@ namespace Origam.Schema.MenuModel
 	{
 		None,
 		CloseAndCommit,
-		CloseAndCancel
+		CloseAndCancel,
+		CloseAndCommitWithErrors
 	}
 }
