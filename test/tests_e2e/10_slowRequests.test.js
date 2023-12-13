@@ -82,7 +82,6 @@ describe("Html client", () => {
     await page.keyboard.press("c");
 
     await page.waitForFunction(`document.activeElement == document.getElementById("${text1InputId}")`);
-    // await sleep(300);
 
     await page.keyboard.press("d");
     await page.keyboard.press("e");
