@@ -45,6 +45,7 @@ export class NumberEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
+  onMount?(onChange?: (value: any) => void): void;
   onEditorBlur?(event: any): Promise<void>;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
@@ -90,6 +91,13 @@ export class NumberEditor extends React.Component<{
         async()=> await this.handleBlur(null));
     }
     this.updateTextOverflowState();
+    this.props.onMount?.(value => {
+      if (this.inputRef.current) {
+        this.inputRef.current.value = value;
+        const event = {target: this.inputRef.current};
+        this.handleChange(event);
+      }
+    });
   }
 
   componentDidUpdate(prevProps: { value: any }) {
