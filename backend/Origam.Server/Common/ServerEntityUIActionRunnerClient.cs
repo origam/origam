@@ -358,17 +358,18 @@ namespace Origam.Server
             switch(entityWorkflowAction.CloseType)
             {
                 case ModalDialogCloseType.CloseAndCommit:
-                    {
-                        sessionManager.GetSession(processData)
-                                .IsModalDialogCommited = true;
-                        break;
-                    }
+                case ModalDialogCloseType.CloseAndCommitWithErrors:
+                {
+                    sessionManager.GetSession(processData)
+                                  .IsModalDialogCommited = true;
+                    break;
+                }
                 case ModalDialogCloseType.CloseAndCancel:
-                    {
-                        sessionManager.GetSession(processData)
-                                .IsModalDialogCommited = false;
-                        break;
-                    }
+                {
+                    sessionManager.GetSession(processData)
+                                  .IsModalDialogCommited = false;
+                    break;
+                }
             }
         }
     }
