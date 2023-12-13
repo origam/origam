@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.23.5",
+    "@babel/plugin-proposal-decorators": "^7.23.6",
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
     "@messageformat/core": "^3.3.0",
@@ -26,7 +26,7 @@
     "@types/jest": "^29.5.11",
     "@types/js-cookie": "^3.0.6",
     "@types/leaflet": "1.7.11",
-    "@types/leaflet-draw": "^1.0.8",
+    "@types/leaflet-draw": "^1.0.11",
     "@types/lodash": "^4.14.202",
     "@types/mapbox__geojson-area": "^0.2.6",
     "@types/numeral": "^2.0.5",
@@ -77,13 +77,13 @@
     "string-strip-html": "^13.4.3",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1",
-    "vite-tsconfig-paths": "^4.2.1",
+    "vite-tsconfig-paths": "^4.2.2",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
     "xstate": "^4.38.3"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.5",
+    "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
@@ -93,7 +93,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "browserslist-useragent-regexp": "^3.0.2",
     "identity-obj-proxy": "^3.0.0",
-    "vite": "^5.0.6"
+    "vite": "^5.0.8"
   },
   "resolutions": {
     "@types/react": "17.0.2",
