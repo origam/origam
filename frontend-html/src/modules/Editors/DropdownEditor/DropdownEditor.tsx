@@ -105,6 +105,7 @@ export function XmlBuildDropdownEditor(props: {
   onAddNewRecordClick?: () => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
+  typingDelayMillis?: number;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const {dataViewRowCursor, dataViewApi, dataViewData} = mobxContext.dataView;
@@ -147,7 +148,8 @@ export function XmlBuildDropdownEditor(props: {
       autoSort: props.autoSort,
       onTextOverflowChanged: props.onTextOverflowChanged,
       newRecordScreen: props.newRecordScreen,
-      onAddNewRecordClick: props.onAddNewRecordClick
+      onAddNewRecordClick: props.onAddNewRecordClick,
+      typingDelayMillis: props.typingDelayMillis
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(

@@ -145,5 +145,6 @@ namespace Origam.Server
 
         public string InitialScreenId { get; set; }
         public int RowStatesDebouncingDelayMilliseconds { get; set; }
+        public int DropDownTypingDebouncingDelayMilliseconds { get; set; }
     }
 }

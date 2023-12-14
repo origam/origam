@@ -565,6 +565,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       helpUrl: portalInfo.helpUrl,
       showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
       rowStatesDebouncingDelayMilliseconds: portalInfo.rowStatesDebouncingDelayMilliseconds,
+      dropDownTypingDebouncingDelayMilliseconds: portalInfo.dropDownTypingDebouncingDelayMilliseconds,
       filterConfig: {
         caseSensitive: portalInfo.filteringConfig.caseSensitive,
         accentSensitive: portalInfo.filteringConfig.accentSensitive
