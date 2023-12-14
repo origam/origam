@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { ScreenToolbar } from "gui/Components/ScreenToolbar/ScreenToolbar";
 import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
 import { ScreenToolbarPusher } from "gui/Components/ScreenToolbar/ScreenToolbarPusher";

@@ -28,7 +28,7 @@ export function selectLastRow(ctx: any) {
     if (dataView.infiniteScrollLoader){
       yield*dataView.infiniteScrollLoader.loadLastPage();
     }
-    dataView.selectLastRow();
+    yield*dataView.selectLastRow();
     getTablePanelView(ctx).scrollToCurrentRow();
     if (!isLazyLoading(ctx)) {
       setTimeout(() => {

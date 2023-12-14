@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Observer } from "mobx-react";
 import React, { useContext, useEffect, useState } from "react";
-import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import CS from "gui/Components/Dropdown/Dropdown.module.scss";
 import cx from "classnames";
-import { CtxDropdownRefCtrl } from "@origam/components";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
 
 export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
   return (

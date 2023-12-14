@@ -69,13 +69,13 @@ export function onFieldKeyDown(ctx: any) {
               return;
             }
 
-            yield dataView.lifecycle.runRecordChangedReaction(function*() {
-              if (event.shiftKey) {
-                yield selectPrevColumn(ctx)(true);
-              } else {
-                yield selectNextColumn(ctx)(true);
-              }
-            });
+            if (event.shiftKey) {
+              selectPrevColumn(ctx)(true);
+            } else {
+              yield*selectNextColumn(ctx)(true);
+            }
+            yield*dataView.lifecycle.runRecordChangedReaction();
+
             event.preventDefault();
             tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
@@ -85,7 +85,7 @@ export function onFieldKeyDown(ctx: any) {
             if (event.shiftKey) {
               selectPrevColumn(ctx)(true);
             } else {
-              selectNextColumn(ctx)(true);
+              yield*selectNextColumn(ctx)(true);
             }
             event.preventDefault();
 
@@ -107,13 +107,12 @@ export function onFieldKeyDown(ctx: any) {
             return;
           }
 
-          yield dataView.lifecycle.runRecordChangedReaction(function*() {
-            if (event.shiftKey) {
-              yield*selectPrevRow(ctx)();
-            } else {
-              yield*selectNextRow(ctx)();
-            }
-          });
+          if (event.shiftKey) {
+            yield*selectPrevRow(ctx)();
+          } else {
+            yield*selectNextRow(ctx)();
+          }
+          yield*dataView.lifecycle.runRecordChangedReaction();
 
           tablePanelView.scrollToCurrentCell();
           tablePanelView.setEditing(true);

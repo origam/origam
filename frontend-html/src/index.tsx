@@ -42,8 +42,6 @@ import 'moment/dist/locale/fr-ca.js';
 import 'moment/dist/locale/cs';
 import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ArrayPrototypes } from "@origam/utils"
 import {
   isAddRecordShortcut, 
   isCycleSectionsShortcut,

@@ -102,9 +102,9 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setEditing(state: boolean): void;
 
-  selectNextColumn(nextRowWhenEnd?: boolean): void;
+  selectNextColumn(nextRowWhenEnd?: boolean): Generator;
 
-  selectPrevColumn(prevRowWhenStart?: boolean): void;
+  selectPrevColumn(prevRowWhenStart?: boolean): Generator;
 
   setSelectedColumnId(id: string | undefined): void;
 

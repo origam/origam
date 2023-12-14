@@ -43,6 +43,12 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IFocusable } from "model/entities/FormFocusManager";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -100,9 +106,9 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function handleClick(event: any) {
+  async function handleClick(event: any) {
     const domRect = event.target.getBoundingClientRect();
-    const handlingResult = handleTableClick(
+    const handlingResult = await handleTableClick(
       event,
       event.clientX - domRect.x,
       event.clientY - domRect.y,
@@ -363,13 +369,28 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScrollerClick(event: any) {
-    const {handled} = this.tableRenderer.handleClick(event);
-    if (!this.tablePanelView.isEditing || !handled) {
-      this.focusTable();
-    }
-    if (!handled) {
-      this.props.onOutsideTableClick?.(event);
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this.context.tablePanelView,
+      generator: function* (){
+        const handled = yield self.tableRenderer.handleClick(event);
+        if (!self.tablePanelView.isEditing || !handled) {
+          self.focusTable();
+          let dataView = getDataView(self.context.tablePanelView);
+          if (getFormScreenLifecycle(dataView).focusedDataViewId === dataView.id && dataView.selectedRowId) {
+            yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+              getMenuItemId(dataView),
+              getDataStructureEntityId(dataView),
+              dataView.selectedRowId,
+              getSessionId(dataView)
+            );
+          }
+        }
+        if (!handled) {
+          self.props.onOutsideTableClick?.(event);
+        }
+      }()
+    });
   }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {

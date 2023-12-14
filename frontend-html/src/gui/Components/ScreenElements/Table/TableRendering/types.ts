@@ -81,6 +81,15 @@ export interface IToolTipData {
 }
 
 export interface IClickSubsItem {
+  handler(event: any, worldX: number, worldY: number, canvasX: number, canvasY: number): Promise<void>;
+
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface IMouseMoveSubsItem {
   handler(event: any, worldX: number, worldY: number, canvasX: number, canvasY: number): void;
 
   x: number;

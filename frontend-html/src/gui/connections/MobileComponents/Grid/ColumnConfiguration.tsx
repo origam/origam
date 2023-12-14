@@ -28,7 +28,6 @@ import {
   ColumnConfigurationModel,
   timeunitOptions
 } from "model/entities/TablePanelView/ColumnConfigurationModel";
-import { Button, SimpleDropdown } from "@origam/components";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
@@ -36,6 +35,8 @@ import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/Mobile
 import { ColumnOrderEditor } from "gui/connections/MobileComponents/Grid/ColumnOrderEditor";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
+import { Button } from "gui/Components/Button/Button";
+import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
 
 export const ColumnConfiguration: React.FC<{
   dataView: IDataView

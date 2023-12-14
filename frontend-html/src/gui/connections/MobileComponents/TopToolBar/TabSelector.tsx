@@ -28,7 +28,7 @@ import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import S from "gui/connections/MobileComponents/TopToolBar/TabSelector.module.scss"
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { getLabel } from "gui/connections/CScreenTabbedViewHandleRow";
 
 @observer

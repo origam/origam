@@ -134,9 +134,9 @@ export interface IDataView extends IDataViewData {
 
   setSelectedState(rowId: string, newState: boolean): void;
 
-  selectNextRow(): void;
+  selectNextRow(): Generator;
 
-  selectPrevRow(): void;
+  selectPrevRow(): Generator;
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
 
@@ -144,15 +144,15 @@ export interface IDataView extends IDataViewData {
 
   loadLastPage(): Generator;
 
-  selectFirstRow(): void;
+  selectFirstRow(): Generator;
 
-  selectLastRow(): void;
+  selectLastRow(): Generator;
 
-  reselectOrSelectFirst(): void;
+  reselectOrSelectFirst(): Generator;
 
-  selectRow(row: any[]): void;
+  selectRow(row: any[]): Generator;
 
-  setSelectedRowId(id: string | undefined): void;
+  setSelectedRowId(id: string | undefined): Generator<any>;
 
   focusFormViewControl(fieldId: string): void;
 
@@ -162,7 +162,7 @@ export interface IDataView extends IDataViewData {
 
   substituteRecords(rows: any[]): void;
 
-  deleteRowAndSelectNext(row: any[]): void;
+  deleteRowAndSelectNext(row: any[]): Generator<any>;
 
   getRowIndexById(rowId: any): number | undefined;
 
@@ -172,7 +172,7 @@ export interface IDataView extends IDataViewData {
 
   saveViewState(): void;
 
-  restoreViewState(): void;
+  restoreViewState():  Generator;
 
   start(): void;
 

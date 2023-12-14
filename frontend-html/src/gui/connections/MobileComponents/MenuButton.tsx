@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
 import S from "gui/connections/MobileComponents/MenuButton.module.scss";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
 import { MobXProviderContext, observer } from "mobx-react";

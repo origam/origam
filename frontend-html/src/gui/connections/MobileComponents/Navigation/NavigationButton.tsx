@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 
 export const NavigationButton: React.FC<{

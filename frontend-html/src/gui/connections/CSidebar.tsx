@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { LogoSection } from "gui/Components/Sidebar/LogoSection";
 import { Sidebar } from "gui/Components/Sidebar/Sidebar";

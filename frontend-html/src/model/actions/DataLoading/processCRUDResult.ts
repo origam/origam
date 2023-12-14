@@ -100,14 +100,14 @@ function*processSingleResult(ctx: any, resultItem: ICRUDResult,
           yield dataView.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
           try {
             dataView.lifecycle.stopSelectedRowReaction();
-            dataView.selectRow(dataSourceRow);
+            yield*dataView.selectRow(dataSourceRow);
             yield*dataView.lifecycle.changeMasterRow();
           } finally {
-            dataView.lifecycle.startSelectedRowReaction();
+            yield*dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
           yield dataView.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
-          dataView.selectRow(dataSourceRow);
+          yield*dataView.selectRow(dataSourceRow);
         }
         getDataViewCache(dataView).UpdateData(dataView);
       }
@@ -119,7 +119,7 @@ function*processSingleResult(ctx: any, resultItem: ICRUDResult,
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          dataView.deleteRowAndSelectNext(row);
+          yield*dataView.deleteRowAndSelectNext(row);
           getDataViewCache(dataView).UpdateData(dataView);
         }
       }
@@ -149,7 +149,7 @@ function*processSingleResult(ctx: any, resultItem: ICRUDResult,
           yield*dataView.lifecycle.navigateChildren();
         }
         if (!dataView.selectedRow) {
-          dataView.reselectOrSelectFirst();
+          yield*dataView.reselectOrSelectFirst();
         }
       }
       break;
@@ -184,7 +184,7 @@ function*batchProcessUpdates(ctx: any, updates: ICRUDResult[], resortTables?: bo
       yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
     }
     if (!dataView.selectedRow) {
-      dataView.reselectOrSelectFirst();
+      yield*dataView.reselectOrSelectFirst();
     }
     dataView.formFocusManager.stopAutoFocus();
   }

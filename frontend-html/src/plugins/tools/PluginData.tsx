@@ -19,14 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDataView } from "model/entities/types/IDataView";
 import { getProperties } from "model/selectors/DataView/getProperties";
-import {
-  IGuiHelper,
-  IOption,
-  IScreenPluginData,
-  IPluginDataView,
-  IPluginProperty,
-  IPluginTableRow, ISectionPluginData,
-} from "@origam/plugins";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
@@ -34,11 +26,17 @@ import { getActivePanelView } from "model/selectors/DataView/getActivePanelView"
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler, wrapInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { SimpleDropdown } from "@origam/components";
 import React from "react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { MobileSimpleDropdown } from "gui/connections/MobileComponents/Form/MobileSimpleDropdown";
 import { IFormScreen } from "model/entities/types/IFormScreen";
+import { ISectionPluginData } from "plugins/interfaces/ISectionPluginData";
+import { IScreenPluginData } from "plugins/interfaces/IScreenPluginData";
+import { IOption, SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
+import { IPluginProperty } from "plugins/interfaces/IPluginProperty";
+import { IPluginTableRow } from "plugins/interfaces/IPluginTableRow";
+import { IPluginDataView } from "plugins/interfaces/IPluginDataView";
+import { IGuiHelper } from "plugins/interfaces/IGuiHelper";
 
 
 export function createSectionPluginData(dataView: IDataView): ISectionPluginData | undefined {

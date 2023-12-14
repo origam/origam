@@ -137,8 +137,8 @@ function registerClickHandler(columnId: string) {
       y: checkboxClickableArea.y,
       w: checkboxClickableArea.width,
       h: checkboxClickableArea.height,
-      handler(event: any) {
-        flow(function*() {
+      async handler(event: any) {
+        await flow(function*() {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
             const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
@@ -157,8 +157,8 @@ function registerClickHandler(columnId: string) {
     y: cellClickableArea.y,
     w: cellClickableArea.width,
     h: cellClickableArea.height,
-    handler(event: any) {
-      flow(function*() {
+    async handler(event: any) {
+      await flow(function*() {
         if (event.isDouble) {
           getTablePanelView(ctx).setEditing(false);
           const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
