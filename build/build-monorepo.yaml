@@ -7,8 +7,6 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: morelinq-4-1-0
-- name: BRANCHCHAT # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2024.1.0.$(Build.BuildId)
@@ -32,7 +30,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: $(BRANCHCHAT)
+     ref: $(BRANCH)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
@@ -54,9 +52,9 @@ jobs:
      - task: Cache@2
        displayName: 'NuGet Cache'
        inputs:
-         key: 'nuget-2023-12-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
+         key: 'nuget-2021-04-11-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
          path: '$(NUGET_PACKAGES)'
-         restoreKeys: 'nuget-2023-12-13-01 | "$(Agent.OS)"'
+         restoreKeys: 'nuget-2021-04-11-01 | "$(Agent.OS)"'
      - task: NuGetCommand@2
        displayName: 'NuGet restore'
        inputs:
@@ -232,9 +230,9 @@ jobs:
      - task: Cache@2
        displayName: 'NuGet Cache'
        inputs:
-         key: 'nuget-2023-12-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
+         key: 'nuget-2021-04-11-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/backend/**/*.sln,!$(Agent.BuildDirectory)/s/backend/**/bin/**'
          path: '$(NUGET_PACKAGES)'
-         restoreKeys: 'nuget-2023-12-13-01 | "$(Agent.OS)"'
+         restoreKeys: 'nuget-2021-04-11-01 | "$(Agent.OS)"'
      - task: NuGetCommand@2
        displayName: 'NuGet restore'
        inputs:
