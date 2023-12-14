@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 // THIS FILE MIGHT POTENTIALLY GET UNUSED AFTER MIGRATING THE OLD EDITORS
 
-@import "~@origam/styles/dist/styles/commonStyles";
+@import "src/gui/commonStyles";
 
 @mixin input {
   width: 100%;

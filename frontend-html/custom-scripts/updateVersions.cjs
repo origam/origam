@@ -25,6 +25,19 @@ function findUsedPackageNames(registrationFile) {
   return [...registrationFile.matchAll(pluginRegEx)].map(x => x[1]);
 }
 
+function findPackageJsonPath(importPath){
+
+  let packageJsonPath = `src/${path.dirname(importPath)}/package.json`
+  if(fs.existsSync(packageJsonPath)){
+    return packageJsonPath;
+  }
+  packageJsonPath = `src/${path.dirname(path.dirname(importPath))}/package.json`
+  if(fs.existsSync(packageJsonPath)){
+    return packageJsonPath;
+  }
+  throw new Error(`Could not find package.json on path \"${importPath}\"`);
+}
+
 function setVariableValue(variableName, value, envFile) {
   if (envFile.includes(variableName)) {
     const regEx = new RegExp("(" + variableName + "\\s*=\\s*)(.*)", 'g');
@@ -44,14 +57,15 @@ const registrationFile = fs.readFileSync(pluginRegistrationFilePath).toString();
 const usedPluginNames = findUsedPackageNames(registrationFile)
 const packageNamesAndVersions = usedPluginNames
   .map(pluginName => {
-    const packagePath = getPackagePath(pluginName, registrationFile);
+    const importPath = getPackagePath(pluginName, registrationFile);
     let packageVersion;
     let packageName;
-    if(packagePath.startsWith("plugins/implementations/")){
-      [packageName, packageVersion] = getPackageNameAndVersionFromPackageJson(`src/${path.dirname(packagePath)}/package.json`)
+    if(importPath.startsWith("plugins/implementations/")){
+      const packageJsonPath = findPackageJsonPath(importPath);
+      [packageName, packageVersion] = getPackageNameAndVersionFromPackageJson(packageJsonPath)
     }else{
-      packageName = packagePath;
-      packageVersion = require(`../node_modules/${packagePath}/package.json`).version;
+      packageName = importPath;
+      packageVersion = require(`../node_modules/${importPath}/package.json`).version;
     }
     return `${pluginName} - ${packageName}: ${packageVersion}`;
   })

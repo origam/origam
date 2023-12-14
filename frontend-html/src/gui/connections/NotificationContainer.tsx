@@ -22,8 +22,8 @@ import S from "./NotificationContainer.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { Icon } from "@origam/components";
 import cx from "classnames";
+import { Icon } from "gui/Components/Icon/Icon";
 
 @observer
 export class NotificationContainer extends React.Component<{}> {

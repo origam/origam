@@ -44,11 +44,11 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 import { resolveCellAlignment } from "gui/Workbench/ScreenArea/TableView/ResolveCellAlignment";
 import S from "./TableViewEditor.module.scss";
 import { makeOnAddNewRecordClick } from "gui/connections/NewRecordScreen";
 import { getKeyBuffer } from "model/selectors/getKeyBuffer";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;

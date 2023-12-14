@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext, useState } from "react";
 import S from "gui/connections/MobileComponents/Form/ComboBox/ComboBox.module.scss";
 import cx from "classnames";
-import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
+import CS from "gui/Components/Dropdown/Dropdown.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";

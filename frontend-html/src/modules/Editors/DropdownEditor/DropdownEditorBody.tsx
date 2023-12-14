@@ -21,8 +21,7 @@ import { observer, Observer } from "mobx-react";
 import React, { createRef, useContext, useEffect, useMemo } from "react";
 import { GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
-import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
-import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "@origam/components";
+import S from "gui/Components/Dropdown/Dropdown.module.scss";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import cx from "classnames";
@@ -32,6 +31,7 @@ import { BoundingRect } from "react-measure";
 import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { observable } from "mobx";
 import { T } from "utils/translation";
+import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "gui/Components/Dropdown/DropdownCommon";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);

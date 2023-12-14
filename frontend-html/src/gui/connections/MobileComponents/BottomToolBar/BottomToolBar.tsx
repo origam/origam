@@ -29,8 +29,8 @@ import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshS
 import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { Button } from "@origam/components";
 import { T } from "utils/translation";
+import { Button } from "gui/Components/Button/Button";
 
 @observer
 export class BottomToolBar extends React.Component<{

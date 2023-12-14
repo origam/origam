@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CloseButton } from "@origam/components";
 import { observer, Observer } from "mobx-react";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
@@ -36,6 +35,7 @@ import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { CloseButton } from "gui/Components/Dialogs/Dialog";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;

@@ -21,7 +21,7 @@ import React, { RefObject } from "react";
 import { MainMenuUL } from "gui/Components/MainMenu/MainMenuUL";
 import { MainMenuLI } from "gui/Components/MainMenu/MainMenuLI";
 import { MainMenuItem } from "gui/Components/MainMenu/MainMenuItem";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { inject, MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";

@@ -32,7 +32,7 @@ import { showDialog } from "model/selectors/getDialogStack";
 import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
-import { Icon } from "@origam/components";
+import { Icon } from "gui/Components/Icon/Icon";
 import { SidebarSection } from "gui/Components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";

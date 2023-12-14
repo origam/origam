@@ -21,7 +21,7 @@ import { Observer } from "mobx-react";
 import React, { useContext, useEffect, useMemo } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
-import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import S from "gui/Components/Dropdown/Dropdown.module.scss";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
