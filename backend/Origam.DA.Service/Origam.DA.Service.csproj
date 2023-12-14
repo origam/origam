@@ -62,8 +62,8 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-      <PackageReference Include="morelinq" Version="4.0.0" />
-      <PackageReference Include="Npgsql" Version="8.0.0" />
+      <PackageReference Include="morelinq" Version="4.1.0" />
+      <PackageReference Include="Npgsql" Version="7.0.6" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
