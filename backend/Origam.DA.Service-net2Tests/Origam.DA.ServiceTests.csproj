@@ -174,9 +174,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="App.config" />
     <None Include="FilePersistenceProviderTests\TestFiles\.origamGroupReference">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
