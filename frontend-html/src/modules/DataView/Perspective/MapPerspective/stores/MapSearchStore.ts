@@ -22,6 +22,7 @@ import { IMapObject } from "./MapObjectsStore";
 import { MapRootStore } from "./MapRootStore";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class SearchStore {
   constructor(private root: MapRootStore) {
@@ -154,12 +155,18 @@ export class SearchStore {
 
   @action.bound
   handleSearchResultClick(event: any, resultId: string) {
-    getDataView(this.dataView).setSelectedRowId(resultId);
-    getTablePanelView(this.dataView).scrollToCurrentRow();
-    this.selectSearchResultById(resultId);
-    this.navigationStore.fitToSelectedSearchResult();
-    this.navigationStore.highlightSelectedSearchResult();
-    this.dropUp();
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this.dataView,
+      generator: function* (){
+        yield*getDataView(self.dataView).setSelectedRowId(resultId);
+        getTablePanelView(self.dataView).scrollToCurrentRow();
+        self.selectSearchResultById(resultId);
+        self.navigationStore.fitToSelectedSearchResult();
+        self.navigationStore.highlightSelectedSearchResult();
+        self.dropUp();
+      }()
+    })
   }
 
   @action.bound

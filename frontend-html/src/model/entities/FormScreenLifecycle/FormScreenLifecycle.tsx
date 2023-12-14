@@ -565,16 +565,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (!(yield shouldProceedToChangeRow(args.dataView))) {
         return;
       }
-      yield args.dataView.lifecycle.runRecordChangedReaction(function*() {
-        const groupingConfig = getGroupingConfiguration(args.dataView);
-        if (groupingConfig.isGrouping) {
-          args.dataView.serverSideGrouper.refresh();
-        } else {
-          args.dataView.setRowCount(undefined);
-          yield self.readFirstChunkOfRowsWithGateDebounced(args.dataView);
-          yield self.updateTotalRowCount(args.dataView);
-        }
-      });
+      const groupingConfig = getGroupingConfiguration(args.dataView);
+      if (groupingConfig.isGrouping) {
+        args.dataView.serverSideGrouper.refresh();
+      } else {
+        args.dataView.setRowCount(undefined);
+        yield self.readFirstChunkOfRowsWithGateDebounced(args.dataView);
+        yield self.updateTotalRowCount(args.dataView);
+      }
+      yield*args.dataView.lifecycle.runRecordChangedReaction();
     })();
   }
 
@@ -759,7 +758,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     } finally {
       for (let dataView of formScreen.nonRootDataViews) {
-        dataView.lifecycle.startSelectedRowReaction();
+        yield*dataView.lifecycle.startSelectedRowReaction();
       }
       this.monitor.inFlow--;
     }
@@ -925,7 +924,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
-    rootDataView.setSelectedRowId(undefined);
+    yield*rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
@@ -957,13 +956,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
 
       if (this.initialSelectedRowId) {
-        rootDataView.setSelectedRowId(this.initialSelectedRowId);
+        yield*rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
-        rootDataView.reselectOrSelectFirst();
+        yield*rootDataView.reselectOrSelectFirst();
       }
-      rootDataView.restoreViewState();
+      yield*rootDataView.restoreViewState();
     } finally {
-      rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
+      yield*rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
       this.monitor.inFlow--;
     }
   }
@@ -1232,7 +1231,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         }
         yield*this.applyData(result);
         getFormScreen(this).setDirty(false);
-        getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
+        for (let dataView of getFormScreen(this).dataViews) {
+          yield*dataView.restoreViewState();
+        }
       } else {
         yield*this.loadData();
       }

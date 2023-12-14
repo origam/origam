@@ -45,7 +45,7 @@ export function closeForm(ctx: any) {
           }
           for (let dataView of parentFormScreen.dataViews) {
             const dataViewLifecycle = getDataViewLifecycle(dataView);
-            yield dataViewLifecycle.runRecordChangedReaction();
+            yield*dataViewLifecycle.runRecordChangedReaction();
           }
           break;
         case IRefreshOnReturnType.RefreshCompleteForm:
