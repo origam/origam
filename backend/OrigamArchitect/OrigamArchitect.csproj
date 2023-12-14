@@ -461,7 +461,9 @@
     <EmbeddedResource Include="WorkQueueWindow.resx">
       <DependentUpon>WorkQueueWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="origam.vstheme.gz" />
     <None Include="Properties\DataSources\Origam.ProjectAutomation.Project.datasource" />
   </ItemGroup>
