@@ -1289,8 +1289,17 @@ namespace Origam.Server
                                 // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
                                 return new ArrayList();
                             }
+
+                            var formIdBeforeLock = FormId;
                             lock (_lock)    // no update should be done in the meantime when rules are not handled
                             {
+                                // The user may have pressed the Next button on a workflow screen causing a different
+                                // screen to load while this thread was waiting for the lock.
+                                if (formIdBeforeLock != FormId)
+                                {
+                                    return new ArrayList();
+                                }
+
                                 if (IsLazyLoadedRow(row))
                                 {
                                     // load lazily loaded rows in case they have not been loaded
