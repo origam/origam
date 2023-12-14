@@ -8,6 +8,8 @@ variables:
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
   value: morelinq-4-1-0
+- name: BRANCHCHAT # branch to be used
+  value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2024.1.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
@@ -30,7 +32,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: $(BRANCH)
+     ref: $(BRANCHCHAT)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
