@@ -57,6 +57,7 @@ import { FormScreenEnvelope } from "model/entities/FormScreen";
 import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
 import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -571,6 +572,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         accentSensitive: portalInfo.filteringConfig.accentSensitive
       }
     };
+    getWorkbench(this).lookupMultiEngine.lookupLoaderMulti.getLookupLabelExDebouncingDelayMillis =
+      portalInfo.getLookupLabelExDebouncingDelayMilliseconds
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
