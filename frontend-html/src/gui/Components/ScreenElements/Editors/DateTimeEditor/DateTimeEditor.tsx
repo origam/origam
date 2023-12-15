@@ -35,11 +35,11 @@ import { requestFocus } from "utils/focus";
 
 class DesktopEditorState implements IEditorState{
   constructor(value: string | null) {
-    this.value = value;
+    this.initialValue = value;
   }
 
   @observable
-  value : string | null;
+  initialValue : string | null;
 }
 
 @observer
@@ -139,7 +139,7 @@ export class DateTimeEditor extends React.Component<{
         this.editorModel.dirtyTextualValue = "";
       }
     });
-    this.editorState.value = this.props.value;
+    this.editorState.initialValue = this.props.value;
   }
 
   @action.bound

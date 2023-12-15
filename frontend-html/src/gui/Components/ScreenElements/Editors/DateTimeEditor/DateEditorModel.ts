@@ -26,7 +26,7 @@ import moment, { Moment } from "moment";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 export interface IEditorState{
-  value: string | null;
+  initialValue: string | null;
 }
 
 export class DateEditorModel {
@@ -109,7 +109,10 @@ export class DateEditorModel {
       if (completedMoment) {
         this.onChange?.(event, toOrigamServerString(completedMoment));
       } else if (this.momentValue?.isValid()) {
-        this.onChange?.(event, toOrigamServerString(this.momentValue));
+        const currentIsoString = toOrigamServerString(this.momentValue);
+        if(currentIsoString !== this.editorState.initialValue) {
+          this.onChange?.(event, currentIsoString);
+        }
       }
       this.dirtyTextualValue = undefined;
     }
@@ -135,7 +138,7 @@ export class DateEditorModel {
     if (this.dirtyTextualValue) {
       return moment(this.dirtyTextualValue, this.outputFormat);
     }
-    return !!this.editorState.value ? moment(this.editorState.value) : null;
+    return !!this.editorState.initialValue ? moment(this.editorState.initialValue) : null;
   }
 
   formatMomentValue(value: Moment | null | undefined) {
