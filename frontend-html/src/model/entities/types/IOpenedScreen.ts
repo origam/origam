@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFormScreenEnvelope } from "./IFormScreen";
 import { IMainMenuItemType } from "./IMainMenu";
-import { EventHandler } from "@origam/utils";
+import { EventHandler } from "utils/EventHandler";
 
 export interface IDialogInfo {
   width: number;

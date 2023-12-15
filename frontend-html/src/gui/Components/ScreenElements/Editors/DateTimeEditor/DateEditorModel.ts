@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import { action, computed, flow, observable } from "mobx";
-import { toOrigamServerString } from "@origam/utils";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { toOrigamServerString } from "utils/moment";
 
 export interface IEditorState{
   value: string | null;

@@ -22,7 +22,7 @@ import { IOpenedScreen } from "./types/IOpenedScreen";
 import { action, observable } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
-import { EventHandler } from "@origam/utils";
+import { EventHandler } from "utils/EventHandler";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
