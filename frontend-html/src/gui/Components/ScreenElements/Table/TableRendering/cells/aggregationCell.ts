@@ -22,10 +22,11 @@ import { applyScrollTranslation, clipCell, fontSize, numberCellPaddingRight, top
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { currentColumnId, currentColumnLeft, currentColumnWidth, currentProperty, currentRowTop } from "../currentCell";
 import { CPR } from "utils/canvas";
-import { isGroupRow } from "../rowCells/groupRowCells";
+import { getGroupLevelCount, isGroupRow } from "../rowCells/groupRowCells";
 import { IGroupRow } from "../types";
 import { dataColumnsWidths } from "./dataCell";
 import { aggregationToString } from "model/entities/Aggregatioins";
+import { v4 as uuidv4 } from "uuid";
 
 
 export function aggregationColumnsWidths() {
@@ -35,7 +36,10 @@ export function aggregationColumnsWidths() {
 export function aggregationCellDraws() {
   const row = currentRow();
   if (isGroupRow(row)) {
-    return tableColumnIds().map((id) => () => drawAggregationCell());
+    const groupLevelCount = getGroupLevelCount(row);
+    const dummyIds = [...Array(groupLevelCount + 1).keys()]
+      .map(x => "dummy_" + uuidv4().toString());
+    return [...dummyIds, ...tableColumnIds()].map((id) => () => drawAggregationCell());
   } else return [];
 }
 
@@ -58,6 +62,7 @@ function drawAggregationText() {
   if (!groupRow.sourceGroup.aggregations) {
     return;
   }
+  console.log("currentProperty().id: "+currentProperty().id);
   const aggregation = groupRow.sourceGroup.aggregations
     .find(aggregation => aggregation.columnId === currentProperty().id)
   if (!aggregation) {
