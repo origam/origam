@@ -49,6 +49,7 @@ import S from "./TableViewEditor.module.scss";
 import { makeOnAddNewRecordClick } from "gui/connections/NewRecordScreen";
 import { getKeyBuffer } from "model/selectors/getKeyBuffer";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -109,6 +110,7 @@ export class TableViewEditor extends React.Component<{
 
     const isFirstColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
     const gridFocusManager = getGridFocusManager(this.props.property);
+    const portalSettings = getWorkbenchLifecycle(this.props.property).portalSettings;
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -224,6 +226,7 @@ export class TableViewEditor extends React.Component<{
             subscribeToFocusManager={(editor) =>
               gridFocusManager.activeEditor = editor
             }
+            typingDelayMillis={portalSettings?.dropDownTypingDebouncingDelayMilliseconds}
           />
         );
       case "Checklist":

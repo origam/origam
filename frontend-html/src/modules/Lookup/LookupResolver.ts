@@ -41,13 +41,13 @@ export class LookupResolver {
   handleAtomObserved(key: any, atom: IAtom) {
     this.atoms.set(key, atom);
     if (!this.resolved.has(key)) {
-      this.loader.setInterrest(key);
+      this.loader.setInterest(key);
     }
   }
 
   handleAtomUnobserved(key: any, atom: IAtom) {
     this.atoms.delete(key);
-    this.loader.resetInterrest(key);
+    this.loader.resetInterest(key);
   }
 
   @action.bound
@@ -57,7 +57,7 @@ export class LookupResolver {
       if (!this.atoms.has(k)) {
         keysToDelete.push(k);
       } else {
-        this.loader.setInterrest(k);
+        this.loader.setInterest(k);
       }
     }
     for (let k of keysToDelete) {
