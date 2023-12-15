@@ -83,6 +83,7 @@ namespace Origam.Schema.MenuModel
 		[Category("Report Reference")]
 		[TypeConverter(typeof(ReportConverter))]
         [XmlReference("report", "ReportId")]
+		[NotNullModelElementRule]
 		public AbstractReport Report
 		{
 			get => (AbstractReport)PersistenceProvider.RetrieveInstance(
