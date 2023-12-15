@@ -1219,6 +1219,7 @@ namespace Origam.Server.Controller
             result.ShowToolTipsForMemoFieldsOnly = htmlClientConfig.ShowToolTipsForMemoFieldsOnly;
             result.RowStatesDebouncingDelayMilliseconds = htmlClientConfig.RowStatesDebouncingDelayMilliseconds;
             result.DropDownTypingDebouncingDelayMilliseconds = htmlClientConfig.DropDownTypingDebouncingDelayMilliseconds;
+            result.GetLookupLabelExDebouncingDelayMilliseconds = htmlClientConfig.GetLookupLabelExDebouncingDelayMilliseconds;
             result.FilteringConfig = clientFilteringConfig;
         }
     }

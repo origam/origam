@@ -32,6 +32,10 @@ export class LookupLoaderMulti {
     this.triggerLoadDeb = clock.debounce(this.triggerLoadImm, 667);
   }
 
+  set getLookupLabelExDebouncingDelayMillis(value: number) {
+    this.triggerLoadDeb = this.clock.debounce(this.triggerLoadImm, value);
+  }
+
   // lookupId -> lookupKey -> something 🦄
   interrests = new Map<string, Map<any, any>>();
   loading = new Map<string, Map<any, any>>();
