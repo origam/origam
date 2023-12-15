@@ -49,8 +49,10 @@ export class DateEditorModel {
       const completedMoment = dateCompleter.autoComplete(self.dirtyTextualValue);
       if (completedMoment) {
         yield self.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (self.momentValue?.isValid()) {
-        yield self.onChange?.(event, toOrigamServerString(self.momentValue));
+      }
+      else if (self.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(self.momentValue!);
+        yield self.onChange?.(event, currentIsoString);
       }
 
       self.dirtyTextualValue = undefined;
@@ -98,6 +100,15 @@ export class DateEditorModel {
     }
   }
 
+  hasValueChanged(){
+    if(!this.momentValue?.isValid()){
+      return false;
+    }
+    const currentIsoString = toOrigamServerString(this.momentValue);
+    const initValueIsoString = toOrigamServerString(moment(this.editorState.initialValue));
+    return currentIsoString !== initValueIsoString;
+  }
+
   @action.bound handleKeyDown(event: any) {
     if (
       event.key === "Enter" ||
@@ -108,11 +119,10 @@ export class DateEditorModel {
       const completedMoment = this.autoCompletedMoment;
       if (completedMoment) {
         this.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (this.momentValue?.isValid()) {
-        const currentIsoString = toOrigamServerString(this.momentValue);
-        if(currentIsoString !== this.editorState.initialValue) {
-          this.onChange?.(event, currentIsoString);
-        }
+      }
+      else if (this.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(this.momentValue!);
+        this.onChange?.(event, currentIsoString);
       }
       this.dirtyTextualValue = undefined;
     }
