@@ -172,7 +172,7 @@ export class MobileEditorState implements IEditorState {
   constructor(private property: IProperty) {
   }
 
-  get value(){
+  get initialValue(){
     const dataTable = getDataTable(this.property);
     let row = getSelectedRow(this.property);
     if(!row){
