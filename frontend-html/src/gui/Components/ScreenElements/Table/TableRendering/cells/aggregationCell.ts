@@ -53,7 +53,6 @@ function drawAggregationText() {
   const ctx2d = context2d();
   if (!currentColumnId()) return;
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id)
-
   const row = currentRow();
   if (isHidden || !isGroupRow(row)) {
     return;
@@ -62,7 +61,6 @@ function drawAggregationText() {
   if (!groupRow.sourceGroup.aggregations) {
     return;
   }
-  console.log("currentProperty().id: "+currentProperty().id);
   const aggregation = groupRow.sourceGroup.aggregations
     .find(aggregation => aggregation.columnId === currentProperty().id)
   if (!aggregation) {
