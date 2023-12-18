@@ -65,6 +65,7 @@ export interface IBehaviorData {
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
   newRecordScreen?: NewRecordScreen,
   onAddNewRecordClick?: () => void;
+  typingDelayMillis?: number;
 }
 
 export class DropdownEditorBehavior implements IDropdownEditorBehavior {
@@ -85,6 +86,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   private newRecordScreen?: NewRecordScreen;
   public onAddNewRecordClick?: () => void;
+  private readonly handleInputChangeDeb: _.DebouncedFunc<() => void>;
 
   get hasNewScreenButton() {
     return !!this.newRecordScreen;
@@ -104,13 +106,14 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
     this.onBlur = args.onBlur;
-    this.onMount = args.onMount,
+    this.onMount = args.onMount;
     this.subscribeToFocusManager = args.subscribeToFocusManager;
     this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
-    this.newRecordScreen = args.newRecordScreen
-    this.onAddNewRecordClick = args.onAddNewRecordClick
+    this.newRecordScreen = args.newRecordScreen;
+    this.onAddNewRecordClick = args.onAddNewRecordClick;
+    this.handleInputChangeDeb = _.debounce(this.handleInputChangeImm, args.typingDelayMillis ?? 300);
   }
 
   @observable isDropped = false;
@@ -345,8 +348,6 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.data.chooseNewValue(null);
     this.dataTable.setFilterPhrase("");
   }
-
-  handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
 
   @action.bound
   handleInputChange(event: any) {
