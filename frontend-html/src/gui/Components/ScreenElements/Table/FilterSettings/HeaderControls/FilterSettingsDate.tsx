@@ -290,7 +290,7 @@ class MobileFilterEditorStateVal1 implements IEditorState {
   constructor(private setting: IFilterSetting) {
   }
 
-  get value() {
+  get initialValue() {
     return this.setting.val1;
   }
 }
@@ -300,7 +300,7 @@ class MobileFilterEditorStateVal2 implements IEditorState {
   constructor(private setting: IFilterSetting) {
   }
 
-  get value() {
+  get initialValue() {
     return this.setting.val2;
   }
 }

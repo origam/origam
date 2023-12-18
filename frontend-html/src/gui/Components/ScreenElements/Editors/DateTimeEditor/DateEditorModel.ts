@@ -25,7 +25,7 @@ import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 import { toOrigamServerString } from "utils/moment";
 
 export interface IEditorState{
-  value: string | null;
+  initialValue: string | null;
 }
 
 export class DateEditorModel {
@@ -48,8 +48,10 @@ export class DateEditorModel {
       const completedMoment = dateCompleter.autoComplete(self.dirtyTextualValue);
       if (completedMoment) {
         yield self.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (self.momentValue?.isValid()) {
-        yield self.onChange?.(event, toOrigamServerString(self.momentValue));
+      }
+      else if (self.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(self.momentValue!);
+        yield self.onChange?.(event, currentIsoString);
       }
 
       self.dirtyTextualValue = undefined;
@@ -97,6 +99,19 @@ export class DateEditorModel {
     }
   }
 
+  hasValueChanged(){
+    if(!this.momentValue?.isValid()){
+      return false;
+    }
+    const initialMoment = moment(this.editorState.initialValue);
+    if(!initialMoment?.isValid()){
+      return true;
+    }
+    const currentIsoString = toOrigamServerString(this.momentValue);
+    const initValueIsoString = toOrigamServerString(initialMoment);
+    return currentIsoString !== initValueIsoString;
+  }
+
   @action.bound handleKeyDown(event: any) {
     if (
       event.key === "Enter" ||
@@ -107,8 +122,10 @@ export class DateEditorModel {
       const completedMoment = this.autoCompletedMoment;
       if (completedMoment) {
         this.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (this.momentValue?.isValid()) {
-        this.onChange?.(event, toOrigamServerString(this.momentValue));
+      }
+      else if (this.hasValueChanged()) {
+        const currentIsoString = toOrigamServerString(this.momentValue!);
+        this.onChange?.(event, currentIsoString);
       }
       this.dirtyTextualValue = undefined;
     }
@@ -134,7 +151,7 @@ export class DateEditorModel {
     if (this.dirtyTextualValue) {
       return moment(this.dirtyTextualValue, this.outputFormat);
     }
-    return !!this.editorState.value ? moment(this.editorState.value) : null;
+    return !!this.editorState.initialValue ? moment(this.editorState.initialValue) : null;
   }
 
   formatMomentValue(value: Moment | null | undefined) {
