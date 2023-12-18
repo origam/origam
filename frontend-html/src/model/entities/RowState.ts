@@ -25,9 +25,9 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { IRowState, IRowStateColumnItem, IRowStateItem } from "./types/IRowState";
 import { FlowBusyMonitor } from "utils/flow";
 import { handleError } from "model/actions/handleError";
-import { flashColor2htmlColor } from "@origam/utils";
 import { visibleRowsChanged } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
 
 const defaultRowStatesToFetch = 100;
 

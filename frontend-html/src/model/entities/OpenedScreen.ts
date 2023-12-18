@@ -22,7 +22,7 @@ import { action, computed, observable } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { EventHandler } from "@origam/utils";
+import { EventHandler } from "utils/EventHandler";
 
 export class DialogInfo implements IDialogInfo {
   constructor(public width: number, public height: number) {
