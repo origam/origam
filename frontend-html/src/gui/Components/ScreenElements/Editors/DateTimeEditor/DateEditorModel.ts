@@ -104,8 +104,12 @@ export class DateEditorModel {
     if(!this.momentValue?.isValid()){
       return false;
     }
+    const initialMoment = moment(this.editorState.initialValue);
+    if(!initialMoment?.isValid()){
+      return true;
+    }
     const currentIsoString = toOrigamServerString(this.momentValue);
-    const initValueIsoString = toOrigamServerString(moment(this.editorState.initialValue));
+    const initValueIsoString = toOrigamServerString(initialMoment);
     return currentIsoString !== initValueIsoString;
   }
 
