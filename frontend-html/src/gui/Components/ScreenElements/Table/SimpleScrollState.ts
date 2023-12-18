@@ -34,6 +34,13 @@ export class SimpleScrollState implements IScrollState {
     }
   }
 
+  scrollBy(coords: {deltaLeft?: number; deltaTop?: number}) {
+    this.scrollTo({
+      scrollLeft: coords.deltaLeft !== undefined ? this.scrollLeft + coords.deltaLeft : undefined,
+      scrollTop: coords.deltaTop !== undefined ? this.scrollTop + coords.deltaTop : undefined
+    })
+  }
+
   @observable scrollTop = 0;
   @observable scrollLeft = 0;
 

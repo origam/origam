@@ -434,7 +434,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         : undefined;
 
     return (
-      <div className={S.table}>
+      <div className={`${S.table} tableContainer`}>
         {this.props.isLoading && (
           <div className={S.loadingOverlay}>
             <div className={S.loadingIcon}>
@@ -468,6 +468,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         fixedVert={true}
                         zIndex={100}
                         width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                        controlScrollStateByFocus={true}
+                        controlScrollStateSelector=".tableContainer"
+                        controlScrollStatePadding={{ left: 40, right: 40 }}
                       >
                         <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>
                           <Droppable droppableId="headers" direction="horizontal" >
