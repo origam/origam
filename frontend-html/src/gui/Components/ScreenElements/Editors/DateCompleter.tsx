@@ -50,11 +50,7 @@ export default class DateCompleter {
       t.match(/^\d\d\d\s+\d\d\d\d$/) ||
       t.match(/^\d\d\d\d?\s+\d\d$/) ||
       t.match(/^\d\d\d\d\d\d\d\d\s+\d\d\d\d\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d?$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?\s+\d\d:\d\d$/) ||
-      t.match(/^\d\d?\/\d\d?\/\d\d?$/)
+      t.match(new RegExp("^\\d\\d?" + this.dateSeparator + "\\d?\\d?" + this.dateSeparator + "?\\d?\\d?\\d?\\d? *\\d?\\d?:?\\d?\\d?:?\\d?\\d?$"))
     );
   }
 
@@ -68,11 +64,7 @@ export default class DateCompleter {
       t.match(/^\d\d\d\d\s+\d\d$/) ||
       t.match(/^\d\d\d\d\d\d\d\d \d\d\d\d\d\d$/) ||
       t.match(/^\d\d?$/) ||
-      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?$")) ||
-      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d?$")) ||
-      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d\\d\\d$")) ||
-      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\s+\\d\\d:\\d\\d$")) ||
-      t.match(new RegExp("^\\d\\d?\\" + this.dateSeparator + "\\d\\d?\\" + this.dateSeparator + "\\d\\d?$"))
+      t.match(new RegExp("^\\d\\d?" + this.dateSeparator + "\\d?\\d?" + this.dateSeparator + "?\\d?\\d?\\d?\\d? *\\d?\\d?:?\\d?\\d?:?\\d?\\d?$"))
     );
   }
 
@@ -149,7 +141,9 @@ export default class DateCompleter {
   }
 
   completeDateWithSeparators(incompleteDate: string): string {
-    const splitDate = incompleteDate.split(this.dateSeparator);
+    const splitDate = incompleteDate
+      .split(this.dateSeparator)
+      .filter(x => x !== "");
     if (splitDate.length === 2) {
       return incompleteDate + this.dateSeparator + this.timeNowFunc().year();
     } else {
