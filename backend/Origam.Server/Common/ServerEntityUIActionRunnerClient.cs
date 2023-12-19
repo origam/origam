@@ -110,13 +110,16 @@ namespace Origam.Server
                 {
                     switch (ewa.CloseType)
                     {
+                        case ModalDialogCloseType.None:
+                        // closing is not happening, no need for any action
                         case ModalDialogCloseType.CloseAndCommitWithErrors:
+                        // errors are ignored in order to enable merge of
+                        // incomplete data
                         {
-                            // errors are ignored in order to enable merge of
-                            // incomplete data
                             break;
                         }
                         case ModalDialogCloseType.CloseAndCommit:
+                        // errors are reported
                         {
                             throw new RuleException(Resources.ErrorInForm);
                         }
