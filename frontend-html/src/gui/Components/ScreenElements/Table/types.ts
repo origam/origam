@@ -91,6 +91,8 @@ export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
 
   scrollTo(coords: { scrollLeft?: number; scrollTop?: number }): void;
+
+  scrollBy(coords: {deltaLeft?: number; deltaTop?: number}): void;
 }
 
 export interface IScrollOffsetSource {
@@ -184,9 +186,15 @@ export interface IScrolleeProps {
   fixedHoriz?: boolean;
   fixedVert?: boolean;
   zIndex?: number | undefined;
-  scrollOffsetSource: IScrollOffsetSource;
+  scrollOffsetSource: IScrollState;
   offsetLeft?: number;
   offsetTop?: number;
+  controlScrollStateByFocus?: boolean;
+  controlScrollStateSelector?: string;
+  controlScrollStatePadding?: {
+    left: number, 
+    right: number, 
+  }
 }
 
 export interface IHeaderRowProps {
