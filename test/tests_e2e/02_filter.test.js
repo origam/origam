@@ -366,7 +366,7 @@ describe("Html client", () => {
 
     await waitForRowCountData(page, dataViewId,30);
 
-    await sleep(300);
+    await sleep(900);
 
     await openFilters({
       page: page,
