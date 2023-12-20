@@ -4,16 +4,25 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
 RUN apt-get update \
-&& apt-get -y install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget
+&& apt-get -y install ca-certificates curl sudo gnupg wget unixodbc-dev \
+&& sudo mkdir -p /etc/apt/keyrings \
+&& curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+&& echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list \
+&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
+&& apt-get update \
+&& apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git nginx ssh yarn nodejs
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
 #INSTALL YARN 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
-&& apt-get update \
-&& apt-get -y install yarn dotnet-sdk-7.0 \
-&& useradd -ms /bin/bash origam \
+#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
+#RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
+#&& apt-get update \
+RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
+&& chmod +x ./dotnet-install.sh \
+&& sudo ./dotnet-install.sh --channel 7.0
+RUN useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
 #INSTALL NODE
