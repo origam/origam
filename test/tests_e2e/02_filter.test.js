@@ -381,6 +381,11 @@ describe("Html client", () => {
       value: "Label1"
     })
 
+    const activeElement = await page.evaluateHandle(() => document.activeElement);
+    console.log("activeElement: ");
+    console.log(activeElement);
+
+    await waitForRowCount(page, dataViewId,2);
     await waitForRowCountData(page, dataViewId,2);
 
     await setComboFilter({
