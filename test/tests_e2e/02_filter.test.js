@@ -363,6 +363,7 @@ describe("Html client", () => {
     await waitForRowCountData(page, dataViewId,30);
   });
   it("Should perform basic combo input filter tests", async () => {
+    console.log("Running Should perform basic combo input filter tests");
     await login(page);
     await openMenuItem(
       page,
@@ -376,19 +377,21 @@ describe("Html client", () => {
 
     await sleep(300);
 
+    console.log("openFilters...")
+
     await openFilters({
       page: page,
       dataViewId: dataViewId,
       aPropertyId: date1PropertyId
     });
-
+    console.log("setComboFilter...")
     await setComboFilter({
       page: page,
       propertyId: comboPropertyId ,
       comboOptionText: "=",
       value: "Label1"
     })
-
+    console.log("Waiting for 2 rows.")
     await waitForRowCountData(page, dataViewId,2);
 
     await setComboFilter({
@@ -452,6 +455,7 @@ describe("Html client", () => {
     await waitForRowCountData(page, dataViewId,6);
   });
   it("Should perform basic tag input filter tests", async () => {
+    console.log("Runing Should perform basic tag input filter tests")
     await login(page);
     await openMenuItem(
       page,
