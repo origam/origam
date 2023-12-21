@@ -141,6 +141,7 @@ export class ListRowContainer implements IRowsContainer {
         if (!data?.retainPreviousSelection) {
           yield*dataView.reselectOrSelectFirst();
         }
+        console.log("updateSortAndFilter, rows: " + rows.length)
       }
     )();
   }

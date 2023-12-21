@@ -137,7 +137,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       }
 
       return (
-        <div className={CS.editorContainer} ref={ref}>
+        <div className={CS.editorContainer} ref={ref} id={props.id ? "tag_" + props.id : undefined}>
           <TagInput className={"tagInput"}>
             {value
               ? value.map((valueItem, idx) => (

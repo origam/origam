@@ -13,6 +13,14 @@ beforeAll(async() => {
 
 beforeEach(async () => {
   [browser, page] = await beforeEachTest()
+  page
+    .on('console', message =>
+      console.log(`${message.type().substr(0, 3).toUpperCase()} ${message.text()}`))
+    .on('pageerror', ({ message }) => console.log(message))
+    .on('response', response =>
+      console.log(`${response.status()} ${response.url()}`))
+    .on('requestfailed', request =>
+      console.log(`${request.failure().errorText} ${request.url()}`))
 });
 
 afterEach(async () => {
@@ -381,11 +389,6 @@ describe("Html client", () => {
       value: "Label1"
     })
 
-    const activeElement = await page.evaluateHandle(() => document.activeElement);
-    console.log("activeElement: ");
-    console.log(activeElement);
-
-    await waitForRowCount(page, dataViewId,2);
     await waitForRowCountData(page, dataViewId,2);
 
     await setComboFilter({

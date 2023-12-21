@@ -188,6 +188,7 @@ async function setTwoFieldFilter(args){
 
 async function setComboFilter(args){
   const inputId = "input_" + args.propertyId;
+  const tagInputId = "tag_input_" + args.propertyId;
   const comboId = "combo_" +  args.propertyId;
   const dropdownId = "dropdown_combo_" + args.propertyId;
 
@@ -205,11 +206,14 @@ async function setComboFilter(args){
 
   await optionDiv.click();
 
+  const comboText = await args.page.evaluate(x => x.textContent, text1FilterCombo);
+  console.log("Filter type selected: \"" + comboText + "\"");
+
   if(args.value === undefined){
     return;
   }
 
-  await args.page.waitForSelector(
+  const input = await args.page.waitForSelector(
     `#${inputId}`,
     {visible: true});
 
@@ -221,6 +225,13 @@ async function setComboFilter(args){
   });
 
   await tagOptionDiv.click();
+
+  await sleep(200);
+
+  const tagInput = await args.page.waitForSelector(
+    `#${tagInputId}`);
+  const inputValue = await args.page.evaluate(x => x.textContent, tagInput);
+  console.log("Filter value: \"" + inputValue + "\"");
 }
 
 async function openFilters(args){
