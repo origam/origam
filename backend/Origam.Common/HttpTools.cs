@@ -255,13 +255,6 @@ namespace Origam
 			string userName, string password, bool returnAsStream,
             int? timeout)
 		{
-			var providerFactory = serviceProvider.GetService<ClientAuthorizationProviderFactory>();
-			var clientAuthenticationProvider = providerFactory.Get(url);
-			if (clientAuthenticationProvider != null)
-			{
-				clientAuthenticationProvider.Authenticate(headers);
-			}
-
 			try
 			{
 				using WebResponse response = GetResponse(url, method, content, 
@@ -363,6 +356,10 @@ namespace Origam
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
 		{
+			var providerContainer = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
+			headers ??= new Hashtable();
+			providerContainer.TryAuthenticate(url, headers);
+
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
 			                                       SecurityProtocolType.Tls11 |
                                                    SecurityProtocolType.Tls;

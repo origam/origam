@@ -213,10 +213,10 @@ namespace Origam.Server
             services.AddSingleton(providerFactory);
         }
 
-        private static ClientAuthorizationProviderFactory LoadClientAuthenticationProviders( 
+        private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders( 
             IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
         {
-            var providerFactory = new ClientAuthorizationProviderFactory();
+            var providerFactory = new ClientAuthenticationProviderContainer();
             foreach (var providerDllName in startUpConfiguration.ExtensionDlls)
             {
                 var providerAssembly = Assembly.LoadFrom(providerDllName);

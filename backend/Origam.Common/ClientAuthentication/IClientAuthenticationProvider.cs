@@ -26,7 +26,6 @@ namespace Origam;
 
 public interface IClientAuthenticationProvider
 {
-    bool CanHandle(string url);
-    void Authenticate(Hashtable headers);
+    bool TryAuthenticate(string url, Hashtable headers);
     void Configure(IConfiguration configuration);
 }

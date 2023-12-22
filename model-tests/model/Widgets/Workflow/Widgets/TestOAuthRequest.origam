@@ -43,7 +43,7 @@
           cr:contextStore="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/Response/e60d2744-b65f-4808-be6c-5624b12ca924"
           x:id="219543db-1d34-478c-8665-ff62dbebbad2"
           asi:name="Response"
-          cr:xPath="'https://'" />
+          cr:xPath="'http://localhost:8080/api/private/link-report'" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"

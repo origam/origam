@@ -19,21 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Origam;
 
-public class ClientAuthorizationProviderFactory
+public class ClientAuthenticationProviderContainer
 {
-    private readonly List<IClientAuthenticationProvider> provides = new();
+    private readonly List<IClientAuthenticationProvider> providers = new();
     public void Register(IClientAuthenticationProvider provider)
     {
-        provides.Add(provider);
+        providers.Add(provider);
     }
 
-    public IClientAuthenticationProvider Get(string url)
+    public void TryAuthenticate(string url, Hashtable headers)
     {
-        return provides.FirstOrDefault(provider => provider.CanHandle(url));
+        foreach (var provider in providers)
+        {
+            if (provider.TryAuthenticate(url, headers))
+            {
+                return;
+            }
+        }
     }
 }
