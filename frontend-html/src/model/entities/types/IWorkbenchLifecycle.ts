@@ -21,7 +21,7 @@ import { IDialogInfo, IOpenedScreen } from "./IOpenedScreen";
 import { IMainMenuItemType } from "./IMainMenu";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { IPortalSettings } from "model/entities/types/IPortalSettings";
-import { EventHandler } from "@origam/utils";
+import { EventHandler } from "utils/EventHandler";
 import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
 

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { csToMomentFormat } from "@origam/utils";
-import { T } from "../utils/translation";
-import { getDefaultCsDateFormatDataFromCookie } from "../utils/cookies";
+import { T } from "utils/translation";
+import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
+import { csToMomentFormat } from "utils/dateConversion";
 
 export function replaceDefaultDateFormats(formatFromServer: string) {
   if (formatFromServer === "long") {
