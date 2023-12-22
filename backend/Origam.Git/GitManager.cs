@@ -58,7 +58,7 @@ namespace Origam.Git
             CloneOptions co = new CloneOptions();
             Credentials ca = new UsernamePasswordCredentials()
             { Username = repositoryUsername, Password = repositoryPassword };
-            co.CredentialsProvider = (_url, _user, _cred) => ca;
+            co.FetchOptions.CredentialsProvider = (_url, _user, _cred) => ca;
             Repository.Clone(gitRepositoryLink, modelFolder, co);
         }
         public bool IsValidUrl(string url, string gitUsername, string gitPassword)
