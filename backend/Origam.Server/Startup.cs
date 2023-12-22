@@ -48,6 +48,7 @@ using MoreLinq;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
+using Origam.Server.ClientAuthentication;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using Origam.Service.Core;
@@ -206,7 +207,33 @@ namespace Origam.Server
                 services.AddControllers()
                     .AddApplicationPart(customControllerAssembly);
             }
+
+            var providerFactory = 
+                LoadClientAuthenticationProviders(Configuration, startUpConfiguration);
+            services.AddSingleton(providerFactory);
         }
+
+        private static ClientAuthorizationProviderFactory LoadClientAuthenticationProviders( 
+            IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        {
+            var providerFactory = new ClientAuthorizationProviderFactory();
+            foreach (var providerDllName in startUpConfiguration.ExtensionDlls)
+            {
+                var providerAssembly = Assembly.LoadFrom(providerDllName);
+                providerAssembly
+                    .GetTypes()
+                    .Where(type => typeof(IClientAuthenticationProvider).IsAssignableFrom(type))
+                    .Select(type => (IClientAuthenticationProvider)Activator.CreateInstance(type))
+                    .Append(new ResourceOwnerPasswordAuthenticationProvider())
+                    .ForEach(provider =>
+                    {
+                        provider.Configure(configuration);
+                        providerFactory.Register(provider);
+                    });
+            }
+
+            return providerFactory;
+        }  
 
         private void ConfigureAuthentication(IServiceCollection services)
         {
@@ -359,6 +386,7 @@ namespace Origam.Server
             // https://davidpine.net/blog/principal-architecture-changes/
             // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
+            HttpTools.SetDIServiceProvider(app.ApplicationServices);
             OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
         }
     }
