@@ -42,6 +42,12 @@ export function isGroupRow(row: ITableRow): row is IGroupRow {
   return (row as any).groupLevel !== undefined;
 }
 
+export function getGroupLevelCount(row: ITableRow){
+  return isGroupRow(row)
+    ? (row as IGroupRow).sourceGroup.allChildGroups.length + 1
+    : 0;
+}
+
 export function isCurrentGroupRow() {
   return isGroupRow(currentRow());
 }

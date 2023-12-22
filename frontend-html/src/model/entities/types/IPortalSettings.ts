@@ -25,5 +25,6 @@ export interface IPortalSettings {
   helpUrl: string;
   showToolTipsForMemoFieldsOnly: boolean;
   rowStatesDebouncingDelayMilliseconds: number;
+  dropDownTypingDebouncingDelayMilliseconds: number;
   filterConfig: IFilterConfig;
 }

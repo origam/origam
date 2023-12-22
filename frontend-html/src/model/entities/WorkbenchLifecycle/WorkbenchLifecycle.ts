@@ -54,9 +54,10 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { produce } from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
-import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
 import { KeyBuffer } from "model/entities/WorkbenchLifecycle/KeyBuffer";
+import { EventHandler } from "utils/EventHandler";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -565,11 +566,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       helpUrl: portalInfo.helpUrl,
       showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
       rowStatesDebouncingDelayMilliseconds: portalInfo.rowStatesDebouncingDelayMilliseconds,
+      dropDownTypingDebouncingDelayMilliseconds: portalInfo.dropDownTypingDebouncingDelayMilliseconds,
       filterConfig: {
         caseSensitive: portalInfo.filteringConfig.caseSensitive,
         accentSensitive: portalInfo.filteringConfig.accentSensitive
       }
     };
+    getWorkbench(this).lookupMultiEngine.lookupLoaderMulti.getLookupLabelExDebouncingDelayMillis =
+      portalInfo.getLookupLabelExDebouncingDelayMilliseconds
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
