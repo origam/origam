@@ -74,7 +74,7 @@
     "react-virtualized": "^9.22.5",
     "sass": "^1.69.5",
     "stream-browserify": "^3.0.0",
-    "string-strip-html": "^13.4.3",
+    "string-strip-html": "^13.4.4",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "vite-tsconfig-paths": "^4.2.2",
