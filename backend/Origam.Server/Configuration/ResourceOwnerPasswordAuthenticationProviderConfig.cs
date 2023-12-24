@@ -28,7 +28,7 @@ namespace Origam.Server.Configuration;
 
 public class ResourceOwnerPasswordAuthenticationProviderConfig
 {
-    public List<string> Urls { get; private set; } = new();
+    public List<string> UrlsToBeAuthenticated { get; private set; } = new();
     public string AuthServerUrl { get; set; }
     public string ClientId { get; set; }
     public string ClientSecret { get; set; }
@@ -43,7 +43,7 @@ public class ResourceOwnerPasswordAuthenticationProviderConfig
         {
             return;
         }
-        Urls = section
+        UrlsToBeAuthenticated = section
             .GetSectionOrThrow("Urls")
             .GetChildren()
             .Select(x => x.Value)

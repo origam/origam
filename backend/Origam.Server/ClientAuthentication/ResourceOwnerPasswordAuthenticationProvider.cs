@@ -39,7 +39,7 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
 
     public bool TryAuthenticate(string url, Hashtable headers)
     {
-        bool canHandle = providerConfig.Urls.Any(url.StartsWith);
+        bool canHandle = providerConfig.UrlsToBeAuthenticated.Any(url.StartsWith);
         if (!canHandle)
         {
             return false;
