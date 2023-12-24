@@ -36,7 +36,7 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
 {
     private ResourceOwnerPasswordAuthenticationProviderConfig providerConfig;
     private AccessToken accessToken;
-
+    private readonly object lockObj = new();
     public bool TryAuthenticate(string url, Hashtable headers)
     {
         bool canHandle = providerConfig.UrlsToBeAuthenticated.Any(url.StartsWith);
@@ -45,11 +45,14 @@ public class ResourceOwnerPasswordAuthenticationProvider: IClientAuthenticationP
             return false;
         }
 
-        if (accessToken == null || accessToken.IsExpired)
+        lock (lockObj)
         {
-            Task<AccessToken> tokenTask = GetAccessToken();
-            tokenTask.Wait();
-            accessToken = tokenTask.Result;
+            if (accessToken == null || accessToken.IsExpired)
+            {
+                Task<AccessToken> tokenTask = GetAccessToken();
+                tokenTask.Wait();
+                accessToken = tokenTask.Result;
+            }
         }
 
         headers.Add("Authorization", $"Bearer {accessToken.Value}");
