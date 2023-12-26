@@ -91,6 +91,25 @@ export class BreadCrumbsState {
     });
   }
 
+  @computed
+  get visibleNodes(){
+    return (this.activeBreadCrumbList ?? [])
+      .filter(x => x.isVisible());
+  }
+
+  get canGoBack() {
+    return this.visibleNodes.length >= 2;
+  }
+
+  @action
+  goBack(){
+    if(!this.canGoBack){
+      return;
+    }
+    const previousElement = this.visibleNodes[this.visibleNodes!.length - 2];
+    previousElement.onClick();
+  }
+
   onFormClose(formScreen: IFormScreen) {
     this.openScreenBreadCrumbs.delete(formScreen);
   }
