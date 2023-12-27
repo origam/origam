@@ -31,13 +31,14 @@ import { IProperty } from "model/entities/types/IProperty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 import { observer } from "mobx-react";
+import { createNumberEditorModel } from "gui/Components/ScreenElements/Editors/NumberEditorModel";
 
-@observer
-export class NumberEditor extends React.Component<{
+export interface NumberEditorProps
+{
   value: string | number | null;
   isReadOnly: boolean;
   isPassword?: boolean;
-  property?: IProperty;
+  property: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
@@ -52,11 +53,12 @@ export class NumberEditor extends React.Component<{
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   id?: string
-}, any> {
-  @observable
-  value = this.formatForDisplay(this.props.value);
+}
+
+@observer
+export class NumberEditor extends React.Component<NumberEditorProps, any> {
+  model =  createNumberEditorModel({props: this.props, initValue: this.formatForDisplay(this.props.value)});
   disposer: undefined | (()=> void);
-  inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
     if(value === null || value === ""){
@@ -86,51 +88,40 @@ export class NumberEditor extends React.Component<{
       .replaceAll(getCurrentGroupSeparator(), "")
       .replaceAll(getCurrentDecimalSeparator(), ".");
   }
-
   componentDidMount() {
-    if (this.inputRef.current && this.props.subscribeToFocusManager) {
+    if (this.model.inputRef.current && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(
-        this.inputRef.current,
+        this.model.inputRef.current,
         async()=> await this.handleBlur(null));
     }
-    this.updateTextOverflowState();
+    this.model.updateTextOverflowState();
     this.props.onMount?.(value => {
-      if (this.inputRef.current) {
-        this.inputRef.current.value = value;
-        const event = {target: this.inputRef.current};
-        this.handleChange(event);
+      if (this.model.inputRef.current) {
+        this.model.inputRef.current.value = value;
+        const event = {target: this.model.inputRef.current};
+        this.model.handleChange(event);
       }
     });
   }
 
   componentDidUpdate(prevProps: { value: any }) {
     if (this.props.value !== prevProps.value) {
-      this.setState(
-        { value: this.formatForDisplay(this.props.value)}
-      );
+      this.model.value = this.formatForDisplay(this.props.value)
     }
-    this.updateTextOverflowState();
+    this.model.updateTextOverflowState();
   }
 
   componentWillUnmount() {
-    this.handleBlur({target: this.inputRef.current});
+    this.handleBlur({target: this.model.inputRef.current});
     this.disposer?.();
   }
 
   @action.bound
   handleFocus(event: any) {
-    if (this.inputRef.current) {
-      this.inputRef.current.select();
-      this.inputRef.current.scrollLeft = 0;
+    if (this.model.inputRef.current) {
+      this.model.inputRef.current.select();
+      this.model.inputRef.current.scrollLeft = 0;
     }
-  }
-
-  updateTextOverflowState() {
-    if (!this.inputRef.current) {
-      return;
-    }
-    const textOverflow = this.inputRef.current.offsetWidth < this.inputRef.current.scrollWidth
-    this.props.onTextOverflowChanged?.(textOverflow ? this.value : undefined);
   }
 
   @action.bound
@@ -141,26 +132,6 @@ export class NumberEditor extends React.Component<{
         await this.onChange();
         await this.props.onEditorBlur?.(event);
       }})
-  }
-
-  @action.bound handleChange(event: any) {
-    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
-
-    let cursorPosition = 0;
-    if(isValidNumber(cleanValue)){
-      this.value = cleanValue;
-      cursorPosition = event.target.selectionStart - invalidCharactersBeforeCursor
-    }
-    else
-    {
-      cursorPosition = event.target.selectionStart - 1;
-    }
-    if(this.inputRef.current){
-      this.inputRef.current.selectionStart = cursorPosition;
-      this.inputRef.current.selectionEnd =  cursorPosition;
-    }
-
-    this.updateTextOverflowState();
   }
 
   @action.bound
@@ -181,7 +152,7 @@ export class NumberEditor extends React.Component<{
   }
 
   private async onChange() {
-    let value = this.formatForOnChange(this.value);
+    let value = this.formatForOnChange(this.model.value);
     if (this.formatForOnChange(this.props.value) !== value) {
       this.props.onChange && await this.props.onChange(null, value);
     }
@@ -207,13 +178,14 @@ export class NumberEditor extends React.Component<{
           style={this.getStyle()}
           title={this.props.customNumberFormat || undefined}
           className={cx(S.input)}
-          type={this.props.isPassword ? "password" : "text"}
+          type={this.model.getInputType()}
+          inputMode={this.model.getInputMode()}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
-          value={this.value}
+          value={this.model.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}
-          ref={this.inputRef}
-          onChange={this.handleChange}
+          ref={this.model.inputRef}
+          onChange={this.model.handleChange}
           onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
@@ -223,44 +195,4 @@ export class NumberEditor extends React.Component<{
       </div>
     );
   }
-}
-
-function getValidCharacters(event: any){
-  const cleanChars = [];
-  let invalidCharactersBeforeCursor = 0;
-  for (let i = 0; i < event.target.value.length; i++) {
-    const char = event.target.value[i];
-    if(isValidCharacter(char)){
-      cleanChars.push(char)
-    }else{
-      if(i < event.target.selectionStart){
-        invalidCharactersBeforeCursor++;
-      }
-    }
-  }
-  return {
-    cleanValue:cleanChars.join(""),
-    invalidCharactersBeforeCursor: invalidCharactersBeforeCursor
-  };
-}
-
-function isValidNumber(value: string){
-  let formattedValue = value
-    .replaceAll(getCurrentGroupSeparator(), "")
-    .replaceAll(getCurrentDecimalSeparator(), ".");
-  if(value.trim() === "-"){
-    return true;
-  }
-  return !isNaN(Number(formattedValue))
-}
-
-function isValidCharacter(char: string){
-  if(
-    char === getCurrentDecimalSeparator() ||
-    char === getCurrentGroupSeparator() ||
-    char === "-"
-  ) {
-    return true;
-  }
-  return !isNaN(parseInt(char, 10))
 }
