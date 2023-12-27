@@ -59,11 +59,6 @@ export interface NumberEditorProps
 export class NumberEditor extends React.Component<NumberEditorProps, any> {
   model =  createNumberEditorModel({props: this.props, initValue: this.formatForDisplay(this.props.value)});
 
-  constructor(props: any) {
-    super(props);
-    console.log(props.property.name +", customNumberFormat: " + props.customNumberFormat)
-  }
-
   formatForDisplay(value: string | number | null){
     if(value === null || value === ""){
       return ""
