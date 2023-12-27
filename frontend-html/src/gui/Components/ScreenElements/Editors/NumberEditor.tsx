@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
@@ -30,7 +30,9 @@ import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
+import { observer } from "mobx-react";
 
+@observer
 export class NumberEditor extends React.Component<{
   value: string | number | null;
   isReadOnly: boolean;
@@ -51,7 +53,8 @@ export class NumberEditor extends React.Component<{
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   id?: string
 }, any> {
-  state = { value: this.formatForDisplay(this.props.value), cursorPosition: 0};
+  @observable
+  value = this.formatForDisplay(this.props.value);
   disposer: undefined | (()=> void);
   inputRef = React.createRef<HTMLInputElement>();
 
@@ -127,7 +130,7 @@ export class NumberEditor extends React.Component<{
       return;
     }
     const textOverflow = this.inputRef.current.offsetWidth < this.inputRef.current.scrollWidth
-    this.props.onTextOverflowChanged?.(textOverflow ? this.state.value : undefined);
+    this.props.onTextOverflowChanged?.(textOverflow ? this.value : undefined);
   }
 
   @action.bound
@@ -143,18 +146,19 @@ export class NumberEditor extends React.Component<{
   @action.bound handleChange(event: any) {
     const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
 
-    const newState = isValidNumber(cleanValue)
-      ? { value: cleanValue, cursorPosition: event.target.selectionStart - invalidCharactersBeforeCursor }
-      : { value: this.state.value, cursorPosition: event.target.selectionStart - 1 };
-
-    this.setState(
-      newState,
-      () => {
-        if(this.inputRef.current){
-          this.inputRef.current.selectionStart = this.state.cursorPosition;
-          this.inputRef.current.selectionEnd =  this.state.cursorPosition;
-        }
-      });
+    let cursorPosition = 0;
+    if(isValidNumber(cleanValue)){
+      this.value = cleanValue;
+      cursorPosition = event.target.selectionStart - invalidCharactersBeforeCursor
+    }
+    else
+    {
+      cursorPosition = event.target.selectionStart - 1;
+    }
+    if(this.inputRef.current){
+      this.inputRef.current.selectionStart = cursorPosition;
+      this.inputRef.current.selectionEnd =  cursorPosition;
+    }
 
     this.updateTextOverflowState();
   }
@@ -177,7 +181,7 @@ export class NumberEditor extends React.Component<{
   }
 
   private async onChange() {
-    let value = this.formatForOnChange(this.state.value);
+    let value = this.formatForOnChange(this.value);
     if (this.formatForOnChange(this.props.value) !== value) {
       this.props.onChange && await this.props.onChange(null, value);
     }
@@ -205,7 +209,7 @@ export class NumberEditor extends React.Component<{
           className={cx(S.input)}
           type={this.props.isPassword ? "password" : "text"}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
-          value={this.state.value}
+          value={this.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}
           ref={this.inputRef}
