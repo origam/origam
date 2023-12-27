@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IRecordInfo } from "./types/IRecordInfo";
 import { getApi } from "model/selectors/getApi";
 import { action, observable } from "mobx";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export class RecordInfo implements IRecordInfo {
   $type_IRecordInfo: 1 = 1;
@@ -84,7 +85,7 @@ export class RecordInfo implements IRecordInfo {
       this.displayedFor.menuId &&
       this.displayedFor.dataStructureEntityId &&
       this.displayedFor.rowId &&
-      this.displayedFor.sessionId
+      this.displayedFor.sessionId === getSessionId(this)
     );
   }
 
