@@ -426,5 +426,6 @@
   "column_width": "Width",
   "order_columns_button": "Order",
   "order_columns_title": "Order Columns",
-  "add_new_record": "Add New Record"
+  "add_new_record": "Add New Record",
+  "cancel_workflow_confirmation": "Are you sure you want to cancel the workflow?"
 }

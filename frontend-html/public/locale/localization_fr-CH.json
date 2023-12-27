@@ -410,5 +410,6 @@
   "column_width": "largeur",
   "order_columns_button": "organiser",
   "order_columns_title": "organiser les colonnes",
-  "add_new_record": "Ajouter nouveau dossier"
+  "add_new_record": "Ajouter nouveau dossier",
+  "cancel_workflow_confirmation": "Êtes-vous certain de vouloir annuler le flux de travail?"
 }

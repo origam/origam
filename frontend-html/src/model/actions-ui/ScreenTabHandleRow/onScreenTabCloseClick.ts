@@ -24,6 +24,10 @@ import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { handleError } from "model/actions/handleError";
 import { closingScreens } from "model/entities/FormScreenLifecycle/FormScreenLifecycle";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { IQuestionDeleteDataAnswer } from "model/entities/FormScreenLifecycle/questionSaveDataAfterRecordChange";
+import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
+import { T } from "utils/translation";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 export function onScreenTabCloseMouseDown(ctx: any) {
   return function (event: any) {
@@ -39,6 +43,10 @@ export function onScreenTabCloseMouseDown(ctx: any) {
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function*onFormTabCloseClick(event: any, closeWithoutSaving?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
+    const formScreen = openedScreen.content.formScreen;
+    if(formScreen?.showWorkflowNextButton && !(yield questionCancelWorkflow(ctx))) {
+      return false;
+    }
     let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
     for (const dataView of dataViews) {
       getTablePanelView(dataView)?.setEditing(false);
@@ -54,6 +62,7 @@ export function onScreenTabCloseClick(ctx: any) {
         yield*lifecycle.onRequestScreenClose(closeWithoutSaving);
       } else {
         yield*closeForm(ctx)();
+        return true;
       }
     } catch (e) {
       yield*handleError(ctx)(e);
@@ -62,4 +71,13 @@ export function onScreenTabCloseClick(ctx: any) {
       closingScreens.delete(openedScreen);
     }
   });
+}
+
+
+function questionCancelWorkflow(ctx: any) {
+  return askYesNoQuestion(
+    ctx,
+    getOpenedScreen(ctx).tabTitle,
+    T("Are you sure you want to cancel the workflow?", "cancel_workflow_confirmation")
+  );
 }
