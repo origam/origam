@@ -56,7 +56,7 @@ class DesktopNumberEditorModel implements INumberEditorModel {
   }
 
   @action.bound handleChange(event: any) {
-    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
+    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event, this.props.property.isInteger);
 
     let cursorPosition = 0;
     if (isValidNumber(cleanValue)) {
@@ -93,7 +93,7 @@ class MobileNumberEditorModel extends DesktopNumberEditorModel {
   }
 
   @action.bound handleChange(event: any) {
-    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
+    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event, this.props.property.isInteger);
     if (isValidNumber(cleanValue)) {
       this.value = cleanValue;
     }
@@ -101,12 +101,12 @@ class MobileNumberEditorModel extends DesktopNumberEditorModel {
   }
 }
 
-function getValidCharacters(event: any){
+function getValidCharacters(event: any, isInteger: boolean){
   const cleanChars = [];
   let invalidCharactersBeforeCursor = 0;
   for (let i = 0; i < event.target.value.length; i++) {
     const char = event.target.value[i];
-    if(isValidCharacter(char)){
+    if(isValidCharacter(char, isInteger)){
       cleanChars.push(char)
     }else{
       if(i < event.target.selectionStart){
@@ -130,9 +130,9 @@ function isValidNumber(value: string){
   return !isNaN(Number(formattedValue))
 }
 
-function isValidCharacter(char: string){
+function isValidCharacter(char: string, isInteger: boolean){
   if(
-    char === getCurrentDecimalSeparator() ||
+    (char === getCurrentDecimalSeparator() && !isInteger) ||
     char === getCurrentGroupSeparator() ||
     char === "-"
   ) {

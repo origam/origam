@@ -166,6 +166,7 @@ function parseProperty(node: any, idx: number): IProperty {
     autoSort: node.attributes.AutoSort === "true",
     maxLength: parseInt(node.attributes.MaxLength, 10),
     modelFormatterPattern: replaceDefaultDateFormats(node.attributes.FormatterPattern),
+    isInteger: node.attributes.IsInteger === "true",
     formatterPattern: node.attributes.FormatterPattern
       ? getMomentFormat(node)
       : "",

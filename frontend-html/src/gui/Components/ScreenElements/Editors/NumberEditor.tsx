@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
@@ -25,8 +25,8 @@ import {
   formatNumber,
   getCurrentDecimalSeparator,
   getCurrentGroupSeparator,
-} from "../../../../model/entities/NumberFormating";
-import { IFocusable } from "../../../../model/entities/FormFocusManager";
+} from "model/entities/NumberFormating";
+import { IFocusable } from "model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
@@ -58,7 +58,11 @@ export interface NumberEditorProps
 @observer
 export class NumberEditor extends React.Component<NumberEditorProps, any> {
   model =  createNumberEditorModel({props: this.props, initValue: this.formatForDisplay(this.props.value)});
-  disposer: undefined | (()=> void);
+
+  constructor(props: any) {
+    super(props);
+    console.log(props.property.name +", customNumberFormat: " + props.customNumberFormat)
+  }
 
   formatForDisplay(value: string | number | null){
     if(value === null || value === ""){
@@ -113,7 +117,6 @@ export class NumberEditor extends React.Component<NumberEditorProps, any> {
 
   componentWillUnmount() {
     this.handleBlur({target: this.model.inputRef.current});
-    this.disposer?.();
   }
 
   @action.bound
