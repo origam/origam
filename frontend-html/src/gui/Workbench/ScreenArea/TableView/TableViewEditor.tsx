@@ -95,41 +95,42 @@ export class TableViewEditor extends React.Component<{
   }
 
   getEditor() {
-    const rowId = getSelectedRowId(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const dataView = getDataView(this.props.property);
+    const property = this.props.property!;
+    const rowId = getSelectedRowId(property);
+    const foregroundColor = getRowStateForegroundColor(property, rowId || "");
+    const dataView = getDataView(property);
     const readOnly =
-      isReadOnly(this.props.property!, rowId) ||
+      isReadOnly(property!, rowId) ||
       (dataView.orderProperty !== undefined &&
-        this.props.property?.name === dataView.orderProperty.name);
+        property.name === dataView.orderProperty.name);
 
     const customBackgroundColor = getRowStateRowBgColor(dataView, rowId);
     const backgroundColor = readOnly
       ? shadeHexColor(customBackgroundColor, -0.1)
       : customBackgroundColor;
 
-    const isFirstColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
-    const gridFocusManager = getGridFocusManager(this.props.property);
-    const portalSettings = getWorkbenchLifecycle(this.props.property).portalSettings;
-    switch (this.props.property!.column) {
+    const isFirstColumn = getTablePanelView(dataView)?.firstColumn === property;
+    const gridFocusManager = getGridFocusManager(property);
+    const portalSettings = getWorkbenchLifecycle(property).portalSettings;
+    switch (property.column) {
       case "Number":
         return (
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            property={this.props.property!}
-            isPassword={this.props.property!.isPassword}
-            maxLength={this.props.property?.maxLength}
+            property={property}
+            isPassword={property.isPassword}
+            maxLength={property.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customNumberFormat={this.props.property!.customNumericFormat}
+            customNumberFormat={property.customNumericFormat}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             onMount={(onChange) => this.onEditorMount(onChange)}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Number")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Number")}
             subscribeToFocusManager={(editor, onBlur) =>{
                 gridFocusManager.activeEditor = editor
                 gridFocusManager.editorBlur = onBlur;
@@ -140,24 +141,24 @@ export class TableViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            id={"editor_" + this.props.property?.modelInstanceId}
+            id={"editor_" + property.modelInstanceId}
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            isPassword={this.props.property!.isPassword}
+            isPassword={property.isPassword}
             isAllowTab={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            maxLength={this.props.property?.maxLength}
+            maxLength={property.maxLength}
             onChange={this.props.onChange}
             onMount={(onChange) => this.onEditorMount(onChange)}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             wrapText={false}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Text")}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
-            isMultiline={this.props.property!.multiline}
+            isMultiline={property.multiline}
             subscribeToFocusManager={(editor) =>
             {
               gridFocusManager.activeEditor = editor
@@ -169,8 +170,8 @@ export class TableViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.getCellValue!()}
-            outputFormat={this.props.property!.formatterPattern}
-            outputFormatToShow={this.props.property!.modelFormatterPattern}
+            outputFormat={property.formatterPattern}
+            outputFormatToShow={property.modelFormatterPattern}
             isReadOnly={readOnly}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
@@ -204,11 +205,11 @@ export class TableViewEditor extends React.Component<{
       case "ComboBox":
         return (
           <XmlBuildDropdownEditor
-            key={this.props.property!.xmlNode.$iid}
-            xmlNode={this.props.property!.xmlNode}
+            key={property.xmlNode.$iid}
+            xmlNode={property.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
-            customStyle={resolveCellAlignment(this.props.property?.style, isFirstColumn, "Text")}
+            customStyle={resolveCellAlignment(property.style, isFirstColumn, "Text")}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
             onMount={(onChange) => this.onEditorMount(onChange)}
@@ -219,9 +220,9 @@ export class TableViewEditor extends React.Component<{
                 gridFocusManager.editorBlur = undefined;
               }
             }}
-            newRecordScreen={this.props.property?.lookup?.newRecordScreen}
-            onAddNewRecordClick={makeOnAddNewRecordClick(this.props.property!)}
-            autoSort={this.props.property!.autoSort}
+            newRecordScreen={property.lookup?.newRecordScreen}
+            onAddNewRecordClick={makeOnAddNewRecordClick(property)}
+            autoSort={property.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
               gridFocusManager.activeEditor = editor
@@ -248,10 +249,10 @@ export class TableViewEditor extends React.Component<{
         return (
           <div style={{height: rowHeight * 5 + "px", backgroundColor: "white"}}>
             <XmlBuildDropdownEditor
-              key={this.props.property!.xmlNode.$iid}
-              xmlNode={this.props.property!.xmlNode}
+              key={property.xmlNode.$iid}
+              xmlNode={property.xmlNode}
               isReadOnly={readOnly}
-              autoSort={this.props.property!.autoSort}
+              autoSort={property.autoSort}
               onMount={(onChange) => this.onEditorMount(onChange)}
               subscribeToFocusManager={(editor) =>
                 gridFocusManager.activeEditor = editor
@@ -288,7 +289,7 @@ export class TableViewEditor extends React.Component<{
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`); // eslint-disable-line no-console
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`) // eslint-disable-line no-console
+        console.warn(`Unknown column type "${property.column}", no editor was rendered`) // eslint-disable-line no-console
         return "";
     }
   }
