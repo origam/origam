@@ -33,10 +33,17 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		public static void Build(
 			XmlElement propertyElement, TextBoxBuildDefinition buildDefinition)
 		{
+
+			if ((buildDefinition.Type == OrigamDataType.Integer)
+			    || (buildDefinition.Type == OrigamDataType.Long))
+			{
+				propertyElement.SetAttribute("IsInteger", XmlConvert.ToString(true));
+			}
+
 			if((buildDefinition.Type == OrigamDataType.Integer) 
-			|| (buildDefinition.Type == OrigamDataType.Long) 
-			|| (buildDefinition.Type == OrigamDataType.Float) 
-			|| (buildDefinition.Type == OrigamDataType.Currency))
+			   || (buildDefinition.Type == OrigamDataType.Long) 
+			   || (buildDefinition.Type == OrigamDataType.Float) 
+			   || (buildDefinition.Type == OrigamDataType.Currency))
 			{
 				propertyElement.SetAttribute("Entity", 
 					buildDefinition.Type.ToString());
