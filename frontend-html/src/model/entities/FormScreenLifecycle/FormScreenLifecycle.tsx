@@ -840,8 +840,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield*clearRowStates(dataView)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
-    dataView.formFocusManager.refocusLast();
-
     return true;
   }
 
