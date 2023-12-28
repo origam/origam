@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
 using Origam.Server.Configuration;
+using Origam.Service.Core;
 
 namespace Origam.Server.ClientAuthentication;
 
