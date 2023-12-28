@@ -61,7 +61,7 @@ export interface IPropertyData extends ITabIndexOwner{
   toolTip: string;
   suppressEmptyColumns: boolean;
   supportsServerSideSorting: boolean;
-
+  isInteger: boolean;
   controlPropertyValue?: string;
   controlPropertyId?: string;
   parameters?: any;

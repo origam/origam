@@ -84,7 +84,7 @@ export class Property implements IProperty {
   toolTip: string = null as any;
   suppressEmptyColumns: boolean = false;
   supportsServerSideSorting: boolean = false;
-
+  isInteger = false;
   linkToMenuId?: string = undefined;
   linkDependsOnValue: boolean = false;
   fieldType: string = null as any;
