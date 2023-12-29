@@ -41,7 +41,7 @@
     "@xstate/inspect": "^0.8.0",
     "axios": "^1.6.3",
     "bind-decorator": "^1.0.11",
-    "classnames": "^2.4.0",
+    "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "flexsearch": "^0.7.31",
