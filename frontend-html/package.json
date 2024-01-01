@@ -88,7 +88,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@types/react-beautiful-dnd": "^13.1.7",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/uuid": "^9.0.7",
     "@vitejs/plugin-react": "^4.2.1",
     "browserslist-useragent-regexp": "^3.0.2",
