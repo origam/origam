@@ -17,22 +17,43 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@media (orientation: landscape) {
-  :root {
-    --mobileBottomToolbarHeight: 33px;
-    --mobileBottomToolbarIconSize: 20px;
-    --mobileBottomToolbarButtonIconSize: 15px;
-  }
+.root {
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
 }
 
-@media (orientation: portrait) {
-  :root {
-    --mobileBottomToolbarHeight: 50px;
-    --mobileBottomToolbarIconSize: 30px;
-    --mobileBottomToolbarButtonIconSize: 20px;
-  }
+.icon {
+  display: flex;
+  width: var(--mobileBottomToolbarButtonIconSize);
 }
 
-:root {
-  --viewSideMargin: 20px;
+.hidden {
+  display: none;
+}
+
+.captionAndIcon {
+  display: flex;
+  align-items: center;
+}
+
+.button {
+  background: var(--background3);
+  border-color: var(--background5);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 18px;
+  height: 36px;
+  padding-left: 12px;
+  padding-right: 12px;
+  color: var(--background8);
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  padding-top: 1px;
+  padding-left: 5px;
 }
