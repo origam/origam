@@ -30,10 +30,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   width: var(--mobileBottomToolbarButtonIconSize);
 }
 
-.hidden {
-  display: none;
-}
-
 .captionAndIcon {
   display: flex;
   align-items: center;
@@ -57,3 +53,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding-top: 1px;
   padding-left: 5px;
 }
+
+
+.disabledButton {
+  &:disabled {
+    background-color: var(--background2);
+    color: var(--background5);
+  }
+}
+
+.disabledIcon {
+  fill: var(--background5) !important;
+  stroke: var(--background5) !important;
+}
+
+.enabledIcon {
+  fill: var(--background8);
+  stroke: var(--background8);
+}
+
+

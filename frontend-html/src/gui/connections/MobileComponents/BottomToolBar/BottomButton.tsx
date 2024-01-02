@@ -26,21 +26,22 @@ import cx from "classnames";
 export const BottomButton: React.FC<{
   iconPath: string;
   caption: string;
+  disabled?: boolean;
   onClick: () => void;
-  hidden?: boolean;
   className?: string;
 }> = (props) => {
   return (
     <div className={cx(S.root, "bottomBarItem")}>
       <button
-        className={S.button}
+        className={S.button + " " + (props.disabled ? S.disabledButton : "")}
         onClick={props.onClick}
+        disabled={props.disabled}
       >
         <div className={S.captionAndIcon}>
           <div className={S.icon}>
             <Icon
               src={props.iconPath}
-              className={props.className + " " + (props.hidden ? S.hidden : "")}
+              className={props.className + " " + (props.disabled ? S.disabledIcon : S.enabledIcon)}
             />
           </div>
           <div className={S.caption}>

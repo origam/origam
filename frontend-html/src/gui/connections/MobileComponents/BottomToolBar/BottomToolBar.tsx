@@ -59,16 +59,15 @@ export class BottomToolBar extends React.Component<{
     const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
     const buttons = [];
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
-      if(this.activeScreen && this.props.mobileState.breadCrumbsState.canGoBack){
-        buttons.push(
-          <BottomButton
-            key={"back"}
-            caption={T("Back", "back_tool_tip")}
-            iconPath={"./icons/back-mobile.svg"}
-            onClick={() => this.props.mobileState.breadCrumbsState.goBack()}
-          />
-        );
-      }
+      buttons.push(
+        <BottomButton
+          key={"back"}
+          disabled={!this.activeScreen || !this.props.mobileState.breadCrumbsState.canGoBack}
+          caption={T("Back", "back_tool_tip")}
+          iconPath={"./icons/back-mobile.svg"}
+          onClick={() => this.props.mobileState.breadCrumbsState.goBack()}
+        />
+      );
       buttons.push(
         <BottomButton
           key={"close"}
