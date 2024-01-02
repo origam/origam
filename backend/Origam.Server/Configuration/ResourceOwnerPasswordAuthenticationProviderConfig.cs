@@ -44,7 +44,7 @@ public class ResourceOwnerPasswordAuthenticationProviderConfig
             return;
         }
         UrlsToBeAuthenticated = section
-            .GetSectionOrThrow("Urls")
+            .GetSectionOrThrow("UrlsToBeAuthenticated")
             .GetChildren()
             .Select(x => x.Value)
             .ToList();
