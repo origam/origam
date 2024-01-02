@@ -63,7 +63,7 @@ export class BottomToolBar extends React.Component<{
         buttons.push(
           <BottomButton
             key={"back"}
-            caption={"Back"}
+            caption={T("Back", "back_tool_tip")}
             iconPath={"./icons/back-mobile.svg"}
             onClick={() => this.props.mobileState.breadCrumbsState.goBack()}
           />
@@ -72,7 +72,7 @@ export class BottomToolBar extends React.Component<{
       buttons.push(
         <BottomButton
           key={"close"}
-          caption={"Close"}
+          caption={T("Close", "close")}
           iconPath={"./icons/close-mobile.svg"}
           onClick={async () => {
             await this.props.mobileState.close()
