@@ -31,6 +31,7 @@ import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNex
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { T } from "utils/translation";
 import { Button } from "gui/Components/Button/Button";
+import { BottomButton } from "gui/connections/MobileComponents/BottomToolBar/BottomButton";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -59,9 +60,19 @@ export class BottomToolBar extends React.Component<{
     const buttons = [];
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
       buttons.push(
-        <BottomIcon
+        <BottomButton
+          key={"back"}
+          disabled={!this.activeScreen || !this.props.mobileState.breadCrumbsState.canGoBack}
+          caption={T("Back", "back_tool_tip")}
+          iconPath={"./icons/back-mobile.svg"}
+          onClick={() => this.props.mobileState.breadCrumbsState.goBack()}
+        />
+      );
+      buttons.push(
+        <BottomButton
           key={"close"}
-          iconPath={"./icons/noun-close-25798.svg"}
+          caption={T("Close", "close")}
+          iconPath={"./icons/close-mobile.svg"}
           onClick={async () => {
             await this.props.mobileState.close()
           }}

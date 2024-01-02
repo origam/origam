@@ -141,9 +141,9 @@ export class ScreenLayoutState implements IMobileLayoutState {
   async close(ctx: any): Promise<IMobileLayoutState> {
     const activeScreen = getActiveScreen(ctx);
     if (activeScreen) {
-      await onScreenTabCloseClick(activeScreen)(null);
+      const isClosing = await onScreenTabCloseClick(activeScreen)(null);
       const stillOpenScreens = getOpenedNonDialogScreenItems(ctx);
-      if (stillOpenScreens.length === 0) {
+      if (stillOpenScreens.length === 0 && isClosing) {
         return new MenuLayoutState();
       }
     }

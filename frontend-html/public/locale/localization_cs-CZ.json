@@ -426,5 +426,6 @@
   "column_width": "Šířka",
   "order_columns_button": "Seřadit",
   "order_columns_title": "Pořadí sloupců",
-  "add_new_record": "Přidat nový záznam"
+  "add_new_record": "Přidat nový záznam",
+  "cancel_workflow_confirmation": "Opravdu chcete zrušit workflow?"
 }

@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { observer } from "mobx-react";
-import React from "react";
+import { MobXProviderContext, observer } from "mobx-react";
+import React, { useContext } from "react";
 import { ModalWindow } from "./Dialog";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class YesNoQuestion extends React.Component<{
@@ -33,6 +34,7 @@ export class YesNoQuestion extends React.Component<{
 }> {
   refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
   elmPrimaryBtn: any;
+  static contextType = MobXProviderContext;
 
   componentDidMount() {
     setTimeout(() => {
@@ -47,6 +49,7 @@ export class YesNoQuestion extends React.Component<{
       <ModalWindow
         title={this.props.screenTitle}
         titleButtons={null}
+        fullScreen={isMobileLayoutActive(this.context.application)}
         buttonsCenter={
           <>
             <button
