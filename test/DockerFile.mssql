@@ -4,4 +4,4 @@ WORKDIR /tmp/mssql
 RUN touch /tmp/mssql/first
 COPY --chown=mssql:root mssqlscript.sh /tmp/mssql
 RUN chmod +x mssqlscript.sh
-CMD /usr/bin/bash /tmp/mssql/mssqlscript.sh & /opt/mssql/bin/sqlservr
+CMD /usr/bin/bash /tmp/mssql/mssqlscript.sh & /opt/mssql/bin/sqlservr > /tmp/output.txt

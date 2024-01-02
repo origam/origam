@@ -10,7 +10,7 @@ echo "Database connection failed";
 exit 1;
 fi 
 export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.Server.dll &
+dotnet Origam.Server.dll 2>&1 origamoutput.txt &
 echo "TEST DB Connection"
 DATAOUT=$(dotnet origam-utils.dll test-db -a 5 -d 5000 -c "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$DATAOUT" != True ]]; then
@@ -18,7 +18,7 @@ echo "Database connection failed";
 exit 1;
 fi
 cd tests_e2e
-yarn install --ignore-engines
+yarn install --ignore-engines 2>&1 /dev/null
 yarn test:e2e
 if [ $? -eq 0 ]
 then

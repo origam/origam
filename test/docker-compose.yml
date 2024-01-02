@@ -8,13 +8,14 @@ services:
       - USER_PASSWORD=${OrigamSettings_DbPassword}
       - SA_PASSWORD=${SA_PASSWORD}
       - ACCEPT_EULA=Y
+      - BUILDKIT_PROGRESS=plain
     ports:
       - "5433:5432"
       - "5434:1433"
     profiles:
       - test
-    tty: true
-    stdin_open: true
+    tty: false
+    stdin_open: false
 
   server:
     build:
@@ -36,6 +37,7 @@ services:
         - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
         - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}
         - EnableChat=${EnableChat}
+        - BUILDKIT_PROGRESS=plain
     ports:
       - "8080:8080"
     depends_on:
