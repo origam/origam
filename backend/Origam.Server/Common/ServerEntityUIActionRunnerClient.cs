@@ -113,7 +113,7 @@ namespace Origam.Server
                         case ModalDialogCloseType.None:
                         // closing is not happening, no need for any action
                         case ModalDialogCloseType.CloseAndCancel:
-                        // closing is happening, but that wont' be merged,
+                        // closing is happening, but data won't be merged,
                         // no need for any action
                         case ModalDialogCloseType.CloseAndCommitWithErrors:
                         // errors are ignored in order to enable merge of
