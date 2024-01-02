@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="4af5f7a5-3fbe-459b-aa6c-6ac2e7613b4f"
+    asi:name="TestOAuthRequest"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="e60d2744-b65f-4808-be6c-5624b12ca924"
+      cs:isReturnValue="false"
+      asi:name="Response"
+      cs:structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="c2cf4f2f-0e59-40c7-a745-7c560c45ec25"
+      asi:name="SendRequest"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/Response/e60d2744-b65f-4808-be6c-5624b12ca924"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/HttpService.origam#HttpService/3bcee140-d809-41ed-80c7-f2e8efde8ed9"
+      smct:serviceMethod="Root/Service/HttpService.origam#HttpService/SendRequest/a5ce96de-5114-4bb3-9525-5df9808037d2">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="3259e85e-ce5a-45d0-9d4a-02ec9e5545a9"
+        asi:name="Url"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Url/46c6a677-7b82-4426-8fa3-79d1eb500d82">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/Response/e60d2744-b65f-4808-be6c-5624b12ca924"
+          x:id="219543db-1d34-478c-8665-ff62dbebbad2"
+          asi:name="Response"
+          cr:xPath="'http://localhost:8080/api/private/link-report'" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="34393090-0568-4264-8853-ca81b958d8bd"
+        asi:name="Headers"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Headers/4811426c-e48d-4783-953b-993b88c2d842" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="38977ed0-4804-4eac-84fa-da6a5f7c0fac"
+        asi:name="ContentType"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/ContentType/91c88cd2-6567-4be4-8396-36d2c80d3b97" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="605b96ce-ac4f-4393-91ea-b4d4baa96601"
+        asi:name="Method"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Method/ba4bd51e-4bac-4812-ac3f-0ffd8f878f31">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/Response/e60d2744-b65f-4808-be6c-5624b12ca924"
+          x:id="cce617d3-a01b-422f-a95c-2e5cdf33fa98"
+          asi:name="GET"
+          cr:xPath="'GET'" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="d1be4c2e-78e0-4f75-925c-bdeba8a1161c"
+        asi:name="Content"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Content/3a4571ec-4d1c-46ae-83cc-56ecc99d61c5" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="dbfd41fc-c55f-42d1-a3a1-13be6de38c3d"
+        asi:name="Timeout"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Timeout/ded687bd-6818-4c6a-9604-5d94f5e42c8e">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Integer"
+          cr:contextStore="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/Response/e60d2744-b65f-4808-be6c-5624b12ca924"
+          x:id="935043f0-da22-4876-acf8-27d1dbecf004"
+          asi:name="60_000"
+          cr:xPath="60000" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

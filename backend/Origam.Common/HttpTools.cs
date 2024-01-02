@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Xml;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
 using Origam.Service.Core;
 
 namespace Origam
@@ -38,6 +39,13 @@ namespace Origam
 	public class HttpTools : IHttpTools
 	{
 		public static HttpTools Instance { get; set; } = new();
+		
+		public static void SetDIServiceProvider(IServiceProvider serviceProvider)
+		{
+			Instance.serviceProvider = serviceProvider;
+		}
+
+		private IServiceProvider serviceProvider;
 
 		private HttpTools()
 		{
@@ -348,6 +356,10 @@ namespace Origam
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
 		{
+			var providerContainer = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
+			headers ??= new Hashtable();
+			providerContainer.TryAuthenticate(url, headers);
+
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
 			                                       SecurityProtocolType.Tls11 |
                                                    SecurityProtocolType.Tls;

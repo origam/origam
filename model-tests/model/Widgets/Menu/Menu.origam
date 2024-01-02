@@ -582,6 +582,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Test OAuth Request"
+    x:id="6eacb389-2bf8-4948-828b-7972dfe8a1d1"
+    asi:name="TestOAuthRequest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/TestOAuthRequest.origam#TestOAuthRequest/4af5f7a5-3fbe-459b-aa6c-6ac2e7613b4f" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="RuleTest"
     x:id="fec8466e-ced8-4f60-b683-2de37bde96a4"
     asi:name="RuleTest"
