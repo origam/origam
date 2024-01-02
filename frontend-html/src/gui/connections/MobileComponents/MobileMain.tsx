@@ -42,6 +42,8 @@ import {
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { CDialogContent } from "gui/connections/CDialogContent";
 import "gui/connections/MobileComponents/mobile.module.scss"
+import { observable } from "mobx";
+import { viewportHeight } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 
 @observer
 export class MobileMain extends React.Component<{}> {
@@ -60,11 +62,25 @@ export class MobileMain extends React.Component<{}> {
     return getAbout(this.context.application);
   }
 
+  @observable.ref
+  rootStyle: {[key: string] : string} | undefined;
+
   componentDidMount() {
     if (!getActiveScreen(this.workbench)) {
       this.mobileState.layoutState = new MenuLayoutState();
     }
     this.about.update();
+    window.visualViewport?.addEventListener("resize", (event) => this.onResize());
+  }
+  componentWillUnmount() {
+    window.visualViewport?.removeEventListener("resize", (event) => this.onResize());
+  }
+
+  private onResize() {
+    const keyboardHeight = viewportHeight.get() - (VisualViewport as any).height;
+    if (keyboardHeight > 0) {
+      this.rootStyle = {"padding-bottom": keyboardHeight + "px"};
+    }
   }
 
   renderMainPageContents() {
@@ -101,7 +117,8 @@ export class MobileMain extends React.Component<{}> {
 
   render() {
     return (
-      <div className={S.root}>
+      <div className={S.root} style={this.rootStyle}>
+        {this.rootStyle ? this.rootStyle["padding-bottom"] : null}
         <TopToolBar mobileState={this.mobileState}/>
         {this.renderMainPageContents()}
         <CDialogContent/>

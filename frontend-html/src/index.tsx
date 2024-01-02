@@ -55,6 +55,9 @@ if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
 }
+if ("virtualKeyboard" in navigator) {
+  (navigator.virtualKeyboard as any).overlaysContent = true;
+}
 
 (window as any).ORIGAM_CUSTOM_CLIENT_BUILD = import.meta.env.VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
 (window as any).ORIGAM_UI_PLUGINS = import.meta.env.VITE_REACT_APP_ORIGAM_UI_PLUGINS;
