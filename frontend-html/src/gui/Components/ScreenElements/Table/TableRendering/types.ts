@@ -47,7 +47,7 @@ export interface IGroupTreeNode {
   isExpanded: boolean;
   rowCount: number;
   columnValue: string;
-  columnDisplayValue: string;
+  getColumnDisplayValue: () => string;
   aggregations: IAggregation[] | undefined;
   allParents: IGroupTreeNode[];
 
