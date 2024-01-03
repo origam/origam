@@ -39,7 +39,7 @@ export interface IGroupItemData {
   childRows: any[][];
   columnId: string;
   columnValue: string;
-  columnDisplayValue: string;
+  getColumnDisplayValue: () => string;
   groupLabel: string;
   parent: IGroupTreeNode | undefined;
   rowCount: number;
@@ -69,7 +69,7 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
   groupLabel: string = null as any;
   parent: IGroupTreeNode | undefined = null as any;
   rowCount: number = null as any;
-  columnDisplayValue: string = null as any;
+  getColumnDisplayValue: () => string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
   groupFilters: string[] = [];
@@ -158,7 +158,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   groupLabel: string = null as any;
   parent: IGroupTreeNode | undefined = null as any;
   rowCount: number = null as any;
-  columnDisplayValue: string = null as any;
+  getColumnDisplayValue: () => string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
   scrollLoader: InfiniteScrollLoader;
