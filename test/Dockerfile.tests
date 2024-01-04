@@ -64,7 +64,6 @@ _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
 startTests.sh \
 startServer.sh \
-startServerTest.sh \
 log4net.config \
 updateEnvironment.sh \
 updateEnvironmentRoot.sh \
