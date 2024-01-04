@@ -135,7 +135,7 @@ jobs:
     - name: Run Tests
       run: |
         cd test
-        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit --no-attach database --no-attach test-server
+        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit --no-attach database-server --no-attach test-server
 
     - name: Clean up
       if: always()
