@@ -2,13 +2,13 @@ services:
   databasesql:
     build:
       context: .
-      dockerfile: DockerFile.mssql
+      dockerfile: Dockerfile.mssql
     environment:
       - POSTGRES_PASSWORD=${SA_PASSWORD}
       - USER_PASSWORD=${OrigamSettings_DbPassword}
       - SA_PASSWORD=${SA_PASSWORD}
       - ACCEPT_EULA=Y
-      - BUILDKIT_PROGRESS=plain
+      - BUILDKIT_PROGRESS=tty
     ports:
       - "5433:5432"
       - "5434:1433"
@@ -20,7 +20,7 @@ services:
   server:
     build:
       context: .
-      dockerfile: Dockerfile_for_test
+      dockerfile: Dockerfile.tests
       args:
         - DOCKER_TAG_SERVER=${DOCKER_TAG_SERVER}
     environment:
@@ -37,7 +37,7 @@ services:
         - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
         - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}
         - EnableChat=${EnableChat}
-        - BUILDKIT_PROGRESS=plain
+        - BUILDKIT_PROGRESS=tty
     ports:
       - "8080:8080"
     depends_on:
