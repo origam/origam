@@ -1,5 +1,5 @@
 services:
-  databasesql:
+  database:
     build:
       context: .
       dockerfile: Dockerfile.mssql
@@ -17,7 +17,7 @@ services:
     tty: false
     stdin_open: false
 
-  server:
+  test-server:
     build:
       context: .
       dockerfile: Dockerfile.tests
@@ -41,9 +41,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - databasesql
+      - database
     profiles:
       - test
     tty: true
     links:
-     - databasesql
+     - database
