@@ -11,8 +11,8 @@ on:
 
 jobs:
 
-  frontend:
-    name: frontend
+  build-frontend:
+    name: build-frontend
     runs-on: windows-2019
     permissions:
       actions: read
@@ -52,8 +52,8 @@ jobs:
         path: "frontend-html/dist"   
 
     
-  server:
-    name: server
+  build-server:
+    name: build-server
     runs-on: windows-2022
     permissions:
       actions: read
@@ -91,9 +91,9 @@ jobs:
         name: workflowbuild
         path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
-  tests:
+  integration-tests:
     needs: [frontend,server]
-    name: tests
+    name: integration-tests
     runs-on: ubuntu-latest
     permissions:
       actions: read
