@@ -1,5 +1,5 @@
 services:
-  database:
+  database-server:
     build:
       context: .
       dockerfile: Dockerfile.mssql
@@ -41,9 +41,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - database
+      - database-server
     profiles:
       - test
     tty: true
     links:
-     - database
+     - database-server
