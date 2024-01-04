@@ -1,10 +1,9 @@
 #!/bin/bash
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
-./startServerTest.sh 
+./startServer.sh 
 echo "TEST DB Connection"
 DATAOUT=$(dotnet origam-utils.dll test-db -a 10 -d 5000 -c "select 1")
-#echo "Result IS $DATAOUT !!!!!!!!!!!!!!!!!!" ;
 if [[ "$DATAOUT" != True ]]; then
 echo "Database connection failed";
 exit 1;
@@ -17,6 +16,7 @@ if [[ "$DATAOUT" != True ]]; then
 echo "Database connection failed";
 exit 1;
 fi
+echo "Running frontend integration tests"
 cd tests_e2e
 yarn install --ignore-engines > /dev/null 2>&1
 yarn test:e2e
@@ -27,7 +27,7 @@ else
   echo "Scripts failed" >&2
   exit 1
 fi
-echo "Start workflow integration tests";
+echo "Running workflow integration tests";
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config

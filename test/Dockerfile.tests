@@ -78,7 +78,6 @@ COPY --chown=origam:origam model /home/origam/HTML5/data/origam/
 WORKDIR /home/origam/HTML5
 RUN mkdir logs \
 && chmod +x startServer.sh \
-&& chmod +x startServerTest.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh \
 && chmod +x startTests.sh
