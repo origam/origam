@@ -92,7 +92,7 @@ jobs:
         path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
   integration-tests:
-    needs: [frontend,server]
+    needs: [build-frontend,build-server]
     name: integration-tests
     runs-on: ubuntu-latest
     permissions:
