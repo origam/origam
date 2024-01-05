@@ -30,10 +30,12 @@ const HANDLED = Symbol("_$ErrorHandled");
 export function handleError(ctx: any) {
   return function*handleError(error: any) {
     const openedScreen = getOpenedScreen(ctx);
-    const openedScreens = getOpenedScreens(openedScreen);
-    if (!openedScreens.items.includes(openedScreen)) {
-      // error on an already closed screen
-      return;
+    if(openedScreen){
+      const openedScreens = getOpenedScreens(openedScreen);
+      if (!openedScreens.items.includes(openedScreen)) {
+        // error on an already closed screen
+        return;
+      }
     }
     if (error.response && error.response.status === 474) {
       // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
@@ -72,14 +74,14 @@ export function handleError(ctx: any) {
       );
       yield*performLogout(ctx)();
       return;
-    } else {
-      if (error[HANDLED]) {
-        yield error[HANDLED];
-        return;
-      }
-      const promise = flow(() => selectors.error.getDialogController(ctx).pushError(error))()
-      error[HANDLED] = promise;
-      yield promise;
     }
+    if (error[HANDLED]) {
+      yield error[HANDLED];
+      return;
+    }
+    const promise = flow(() => selectors.error.getDialogController(ctx).pushError(error))()
+    error[HANDLED] = promise;
+    yield promise;
+
   };
 }
