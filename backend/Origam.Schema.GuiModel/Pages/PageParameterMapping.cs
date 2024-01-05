@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "file-mapping.png")]
     [HelpTopic("Parameter+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
 	public class PageParameterMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "PageParameterMapping";
@@ -50,10 +50,21 @@ namespace Origam.Schema.GuiModel
 		[Description("Name of url query string parameter, e.g. in case http://my-api/my-page?searchstring=value the mapped parametr should be 'searchstring'")]
 		[XmlAttribute ("mappedParameter")]
 		public string MappedParameter { get; set; } = "";
- 
-		public Guid DataConstantId;
 
 		[Category("Mapping")]
+		[Description("Name of a datastructure entity in a mapped context "
+			+ "store's datastructure. If defined, the incoming json body is "
+			+ "wrapped by a new object with the given name. So that way, the"
+			+ " original input json object is expected as just datastructure "
+			+ "entity object itself or a list of datastructure entity objects"
+			+ " on json top level.")]
+		[DefaultValue("")]
+		[XmlAttribute("entityName")]
+		public string DatastructureEntityName { get; set; } = "";
+
+        public Guid DataConstantId;
+
+        [Category("Mapping")]
 		[TypeConverter(typeof(DataConstantConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[XmlReference("defaultValue", "DataConstantId")]

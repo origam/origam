@@ -42,6 +42,7 @@ using System.Web;
 using Origam.Extensions;
 using Origam.Service.Core;
 using ImageMagick;
+using IdentityServer4.Extensions;
 
 namespace Origam.Server.Pages
 {
@@ -508,7 +509,19 @@ namespace Origam.Server.Pages
                             // DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
                             XmlDocument xd = new XmlDocument();
                             // deserialize from JSON to XML
-                            xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
+                            if (ppm.DatastructureEntityName.IsNullOrEmpty())
+                            {
+                                xd = (XmlDocument)JsonConvert
+									.DeserializeXmlNode(body, "ROOT");
+                            }
+                            else
+                            {
+                                xd = (XmlDocument)JsonConvert
+                                    .DeserializeXmlNode(
+                                    	"{\"" + ppm.DatastructureEntityName
+                                     	+ "\" :" + body + "}"
+                                    , "ROOT");
+                            }
                             if (log.IsDebugEnabled)
                             {
                                 log.Debug("Intermediate JSON deserialized XML:");
