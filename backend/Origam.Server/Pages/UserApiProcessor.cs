@@ -512,7 +512,7 @@ namespace Origam.Server.Pages
                             if (ppm.DatastructureEntityName.IsNullOrEmpty())
                             {
                                 xd = (XmlDocument)JsonConvert
-									.DeserializeXmlNode(body, "ROOT");
+                                    .DeserializeXmlNode(body, "ROOT");
                             }
                             else
                             {
