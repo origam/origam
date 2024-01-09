@@ -216,14 +216,9 @@ export class TablePanelView implements ITablePanelView {
           yield*this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
-          const {isEditing} = this;
-          if (isEditing) {
-            this.setEditing(false);
-          }
+          this.setEditing(false);
           yield*this.selectCellAsync(this.dataTable.getRowId(row) as string, property.id);
-          if (isEditing) {
-            this.setEditing(true);
-          }
+          this.setEditing(true);
         }
       }
     } else {
