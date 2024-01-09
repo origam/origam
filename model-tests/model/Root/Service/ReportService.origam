@@ -2,19 +2,20 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:s1="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
-  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:sm1="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
   xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
-  <s:Service
+  <s1:Service
     asi:abstract="false"
+    s1:classPath="Origam.Workflow.ReportServiceAgent,Origam.Workflow"
     x:id="372f3db0-41a1-4739-81aa-e1f7f7741791"
     asi:name="ReportService">
-    <sm:ServiceMethod
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="418e69c3-6c86-4955-9f3d-567667f0bc16"
       asi:name="PrintReport"
-      sm:returnValueDataType="Boolean">
+      sm1:returnValueDataType="Boolean">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -85,12 +86,12 @@
         sip:dataType="String"
         x:id="b00d4c7f-c91e-4672-83b6-e24707e40d9a"
         asi:name="PrinterName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="7d3c9582-e748-41cb-9ae6-b842d2aeea75"
       asi:name="GetReport"
-      sm:returnValueDataType="Blob">
+      sm1:returnValueDataType="Blob">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -147,6 +148,6 @@
         sip:dataType="Xml"
         x:id="e077b6eb-eae1-48f9-b74f-b7521bddee1b"
         asi:name="Data" />
-    </sm:ServiceMethod>
-  </s:Service>
+    </sm1:ServiceMethod>
+  </s1:Service>
 </x:file>

@@ -2,19 +2,20 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:s1="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
-  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:sm1="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
   xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
-  <s:Service
+  <s1:Service
     asi:abstract="false"
+    s1:classPath="Origam.Workflow.MailServiceAgent,Origam.Workflow"
     x:id="3240b59e-08ec-4dc2-bbf5-a2c6cb1bfd7c"
     asi:name="MailService">
-    <sm:ServiceMethod
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="b5b0f1e1-3a75-4815-b65a-aef501604df7"
       asi:name="SendMail"
-      sm:returnValueDataType="Integer">
+      sm1:returnValueDataType="Integer">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -57,12 +58,12 @@
         sip:dataType="String"
         x:id="e0677965-ba0f-4e84-80d5-ce0ce20e40bd"
         asi:name="Server" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="bb17f67e-e0ad-485f-b402-d76406a02476"
       asi:name="RetrieveMails"
-      sm:returnValueDataType="Xml">
+      sm1:returnValueDataType="Xml">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -119,12 +120,12 @@
         sip:dataType="String"
         x:id="a1eea278-c27a-45d1-9fc7-139ae582a0de"
         asi:name="UserName" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="fe9365d7-b60f-4c9b-9433-4f439d964828"
       asi:name="QueueMail"
-      sm:returnValueDataType="String">
+      sm1:returnValueDataType="String">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -153,6 +154,6 @@
         sip:dataType="String"
         x:id="4205b302-b50d-46ef-b5c3-4b229b8d89d3"
         asi:name="QueueName" />
-    </sm:ServiceMethod>
-  </s:Service>
+    </sm1:ServiceMethod>
+  </s1:Service>
 </x:file>
