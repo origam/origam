@@ -1457,8 +1457,9 @@ namespace OrigamArchitect
 				InitPersistenceService();
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
-				// Init services
-				InitializeConnectedServices();
+                OrigamEngine.InitializeSchemaItemProviders(_schema);
+                // Init services
+                InitializeConnectedServices();
 
                 // Initialize model-connected user interface
                 InitializeConnectedPads();
