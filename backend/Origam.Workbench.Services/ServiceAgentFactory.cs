@@ -101,6 +101,11 @@ namespace Origam.Workbench.Services
                 case "PrintService":
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.PrintServiceAgent", "Origam.Workflow");
                     break;
+
+                case "XmlJsonConvertService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.XmlJsonConvertServiceAgent", "Origam.Workflow");
+                    break;
+
                 case "EDIFACT2XMLService":
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.EDIFACT2XMLServiceAgent", "Origam.Workflow");
                     break;
