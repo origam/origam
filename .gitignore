@@ -1,3 +1,5 @@
 ﻿/backend/Origam.Server/serverCore.pfx
 .idea
 .DS_Store
+/plugins/__pycache__
+/plugins/pluginmanager_config.json
