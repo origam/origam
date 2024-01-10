@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adr="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractDataReport/6.0.0"
+  xmlns:ar="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractReport/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:fr1="http://schemas.origam.com/Origam.Schema.GuiModel.FastReport/6.0.0">
+  <fr1:Report
+    asi:abstract="false"
+    adr:dataStructure="Reports/DataStructure/Reports/ReportEntity.origam#ReportEntity/4cca6434-2087-4027-850d-327ee2fb93fb"
+    x:id="4e1e19d6-4b6a-49b5-850e-ff618b4b9548"
+    asi:name="FastReports_ReportEntity"
+    adr:reportFileName="testreport.frx" />
+</x:file>

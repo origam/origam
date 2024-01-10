@@ -1,0 +1,1 @@
+Origam.Server.runtimeconfig.json allows to generate Fast Reports PDF on Linux in net6

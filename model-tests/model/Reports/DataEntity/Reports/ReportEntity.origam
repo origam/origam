@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:era="http://schemas.origam.com/Origam.Schema.MenuModel.EntityReportAction/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="528a4201-7bfa-4eed-ae58-e9647ab0c6c4"
+    tmi:mappedObjectName="ReportEntity"
+    asi:name="ReportEntity"
+    ade:readOnly="false">
+    <era:EntityUIAction
+      asi:abstract="false"
+      euia:default="false"
+      era:exportFormatType="PDF"
+      x:id="8e7aa60f-9e00-481e-9b4e-3791a21dbc85"
+      euia:label="Náhled PDF"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="PrintPDF"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      era:report="Reports/Report/FastReports_ReportEntity.origam#FastReports_ReportEntity/4e1e19d6-4b6a-49b5-850e-ff618b4b9548"
+      euia:roles="*"
+      euia:valueType="SavedValue" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="150"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="0ac8b25c-1e36-494a-bbbf-ef53cd3d82fa"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="TxtColumn"
+      asi:name="TxtColumn"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="af1e0574-bd45-4a96-ae54-a21762a339b3" />
+  </tmi:DataEntity>
+</x:file>

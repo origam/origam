@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
   <p:package
     x:id="80812c67-2d83-477c-98fe-b44cb8027f21"
     x:isFolder="true"
     p:name="Reports"
-    p:version="1.0.0">
+    p:version="1.0.1">
     <pr:packageReference
       x:id="253d5ccf-d50b-4919-b168-4a7f4379e994"
       pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />

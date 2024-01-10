@@ -1,3 +1,4 @@
 ﻿/backend/Origam.Server/serverCore.pfx
 .idea
 .DS_Store
+/model-tests/NewProject/mydemo.env
