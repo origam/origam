@@ -18,27 +18,29 @@
       sm1:returnValueDataType="String">
       <smp:Parameter
         asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
         smp:allowDataStructureReference="false"
         sip:allowNulls="true"
         smp:allowReportReference="false"
         smp:allowSystemFunctionCall="false"
         smp:allowTransformationReference="false"
         smp:allowWorkflowReference="false"
+        smp:callElements="3"
         sip:dataType="Boolean"
         x:id="5ae45f7c-1fe4-41d0-9b5b-941efcb53419"
         asi:name="OmitRootElement" />
       <smp:Parameter
         asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
         smp:allowDataStructureReference="false"
         sip:allowNulls="true"
         smp:allowReportReference="false"
         smp:allowSystemFunctionCall="false"
         smp:allowTransformationReference="false"
         smp:allowWorkflowReference="false"
+        smp:callElements="3"
         sip:dataType="Boolean"
         x:id="dfc4fbb1-a7b3-4be0-92f8-6393d0bf9d9e"
         asi:name="OmitMainElement" />

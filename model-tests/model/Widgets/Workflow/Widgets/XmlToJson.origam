@@ -58,12 +58,28 @@
         asi:abstract="false"
         x:id="279756e3-ffc1-4632-8bde-ed6cc23864c5"
         asi:name="OmitRootElement"
-        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitRootObject/5ae45f7c-1fe4-41d0-9b5b-941efcb53419" />
+        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitRootObject/5ae45f7c-1fe4-41d0-9b5b-941efcb53419">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+          x:id="24311abe-265b-425d-a07e-464ffc53f545"
+          asi:name="AllDataTypes"
+          cr:xPath="1" />
+      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="50515f7d-ad90-4aa2-9fa4-19130f1cac74"
         asi:name="OmitMainElement"
-        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitSecondRootObject/dfc4fbb1-a7b3-4be0-92f8-6393d0bf9d9e" />
+        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitSecondRootObject/dfc4fbb1-a7b3-4be0-92f8-6393d0bf9d9e">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+          x:id="1df0ea09-26c4-484f-999b-f7b591a7aad8"
+          asi:name="AllDataTypes"
+          cr:xPath="1" />
+      </smcp:ServiceMethodCallParameter>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
         x:id="7e1ece05-f966-471b-8a5f-c77e3341e979"
