@@ -50,22 +50,84 @@ namespace Origam.Workbench.Services
 
         public IServiceAgent GetAgent(string serviceName, object ruleEngine, object workflowEngine)
         {
-		    var schema = ServiceManager.Services.GetService<SchemaService>();
-		    var services = schema.GetProvider<ServiceSchemaItemProvider>();
+            IServiceAgent result;
 
-            Schema.WorkflowModel.Service service = 
-                services.GetChildByName(serviceName, Schema.WorkflowModel.Service.CategoryConst) as Schema.WorkflowModel.Service;
+            switch (serviceName)
+            {
+                case "DataService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.DataServiceAgent", "Origam.Workflow");
+                    break;
 
-            object agent = InstantiateObject(serviceName, service);
-            if (agent == null)
-		    {
-			    throw new ArgumentOutOfRangeException("serviceName", serviceName, ResourceUtils.GetString("ErrorUnknownService"));
-		    }
+                case "DataTransformationService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.TransformationAgent", "Origam.Workflow");
+                    break;
 
-            IServiceAgent result = agent is IExternalServiceAgent externalAgent
-                ? fromExternalAgent(externalAgent)
-                : agent as IServiceAgent;
-	
+                case "Simplicor.WarehouseService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.SimplicorService.WarehouseServiceAgent", "Origam.Workflow.SimplicorService");
+                    break;
+
+                case "MailService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.MailServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "ReportService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.ReportServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "FileSystemService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.FileSystemServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "WorkflowService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.WorkflowServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "OperatingSystemService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.OperatingSystemServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "ExcelService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.FileService.ExcelAgent", "Origam.Workflow.FileService");
+                    break;
+
+                case "FileService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.FileService.FileServiceAgent", "Origam.Workflow.FileService");
+                    break;
+
+                case "HttpService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.HttpServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "PrintService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.PrintServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "XmlJsonConvertService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.XmlJsonConvertServiceAgent", "Origam.Workflow");
+                    break;
+
+                case "EDIFACT2XMLService":
+                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.EDIFACT2XMLServiceAgent", "Origam.Workflow");
+                    break;
+                default:
+					SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+					ServiceSchemaItemProvider services = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
+
+                    Origam.Schema.WorkflowModel.Service service = services.GetChildByName(serviceName, Origam.Schema.WorkflowModel.Service.CategoryConst) as Origam.Schema.WorkflowModel.Service;
+
+                    object agent = InstantiateObject(serviceName, service);
+                    if(agent == null)
+					{
+						throw new ArgumentOutOfRangeException("serviceName", serviceName, ResourceUtils.GetString("ErrorUnknownService"));
+					}
+
+                    result = agent is IExternalServiceAgent externalAgent
+                        ? fromExternalAgent(externalAgent)
+                        : agent as IServiceAgent;
+					break;
+
+			}
+
             result.RuleEngine = ruleEngine;
             result.WorkflowEngine = workflowEngine;
             result.PersistenceProvider = _persistence.SchemaProvider;

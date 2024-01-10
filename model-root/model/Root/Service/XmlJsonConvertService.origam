@@ -8,7 +8,6 @@
   xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s1:Service
     asi:abstract="false"
-    s1:classPath="Origam.Workflow.XmlJsonConvertServiceAgent,Origam.Workflow"
     x:id="e59cb1ea-8ef0-47fa-a8a1-4512857a0333"
     asi:name="XmlJsonConvertService">
     <sm1:ServiceMethod
