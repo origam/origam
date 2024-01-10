@@ -44,7 +44,7 @@
     "classnames": "^2.5.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
-    "flexsearch": "^0.7.41",
+    "flexsearch": "^0.7.43",
     "html-to-draftjs": "^1.5.0",
     "immer": "^10.0.3",
     "immutable": "^4.3.4",

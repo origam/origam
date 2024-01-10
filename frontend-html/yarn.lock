@@ -3484,10 +3484,10 @@ find-yarn-workspace-root@^2.0.0:
   dependencies:
     micromatch "^4.0.2"
 
-flexsearch@^0.7.41:
-  version "0.7.41"
-  resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.7.41.tgz#952e662f692b41c9f38068a783e8f5f440bfc72e"
-  integrity sha512-nlSsN+cLeoOMEPivjjMuYdMN7WdCKaogCirVZNxQ8a34reoKZvxDxbAtIoAK1ewmkXd5dz8Pb2kwwYJ6b/07PQ==
+flexsearch@^0.7.43:
+  version "0.7.43"
+  resolved "https://registry.yarnpkg.com/flexsearch/-/flexsearch-0.7.43.tgz#34f89b36278a466ce379c5bf6fb341965ed3f16c"
+  integrity sha512-c5o/+Um8aqCSOXGcZoqZOm+NqtVwNsvVpWv6lfmSclU954O3wvQKxxK8zj74fPaSJbXpSLTs4PRhh+wnoCXnKg==
 
 follow-redirects@^1.15.4:
   version "1.15.4"
