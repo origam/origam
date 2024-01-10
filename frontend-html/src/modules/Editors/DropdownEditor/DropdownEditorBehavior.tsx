@@ -177,6 +177,13 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.makeFocused();
   }
 
+  public onEditorMounted(){
+    if(this.isReadOnly){
+      return;
+    }
+    this.dropDown();
+  }
+
   makeFocused() {
     if (this.elmInputElement) {
       requestFocus(this.elmInputElement);

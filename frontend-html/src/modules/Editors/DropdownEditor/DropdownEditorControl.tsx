@@ -108,6 +108,8 @@ export function DropdownEditorControl(props: {
   const beh = useContext(CtxDropdownEditor).behavior;
   const [triggerContextMenu] = useState(() => new TriggerContextMenuState(beh));
 
+  useEffect(()=> beh.onEditorMounted(), []);
+
   return (
     <Observer>
       {() => (
