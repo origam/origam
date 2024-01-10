@@ -23,7 +23,7 @@
       euia:default="false"
       era:exportFormatType="PDF"
       x:id="8e7aa60f-9e00-481e-9b4e-3791a21dbc85"
-      euia:label="Náhled PDF"
+      euia:label="Preview PDF"
       euia:modal="false"
       euia:mode="ActiveRecord"
       asi:name="PrintPDF"
