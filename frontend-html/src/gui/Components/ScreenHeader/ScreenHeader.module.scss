@@ -49,10 +49,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .workflowActionBtn {
   @include dialogButton();
-  background: var(--background3);
-  border: 1px solid var(--background5);
   box-sizing: border-box;
-  color: var(--background8);
   font-size: $font-size;
   height: 2em;
     margin: 0 0.5em;
@@ -63,10 +60,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
   &:last-of-type {
     margin-right: 0;
-  }
-  &:hover {
-    background: var(--background5);
-      color: var(--background8);
   }
   flex-grow: 0;
 }

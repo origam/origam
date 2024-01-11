@@ -40,6 +40,7 @@ import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
 import { CloseButton } from "gui/Components/Dialogs/Dialog";
 import { Icon } from "gui/Components/Icon/Icon";
 import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
+import { requestFocus } from "utils/focus";
 
 
 // It would be neater to solve by onScrollbarPresenceChange handler of react-virtualized Grid (TODO)
@@ -67,7 +68,7 @@ export class ColumnsDialog extends React.Component<{
   refOrderFocusableContent = (elm: HTMLDivElement | null) => {
     if (elm) {
       setTimeout(() => {
-        elm.focus();
+        requestFocus(elm);
       });
     }
   };

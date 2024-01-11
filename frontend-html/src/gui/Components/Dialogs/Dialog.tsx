@@ -24,6 +24,7 @@ import { observer, Observer } from "mobx-react";
 import { action, observable } from "mobx";
 import Measure, { BoundingRect } from "react-measure";
 import { Icon } from "../Icon/Icon";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class ModalWindow extends React.Component<{
@@ -127,15 +128,15 @@ export class ModalWindow extends React.Component<{
             evt.preventDefault();
             if (evt.shiftKey) {
               if (evt.target.previousSibling) {
-                evt.target.previousSibling.focus();
+                requestFocus(evt.target.previousSibling);
               } else {
-                this.elmFooter?.lastChild?.focus();
+                requestFocus(this.elmFooter?.lastChild);
               }
             } else {
               if (evt.target.nextSibling) {
-                evt.target.nextSibling.focus();
+                requestFocus(evt.target.nextSibling);
               } else {
-                this.elmFooter?.firstChild?.focus();
+                requestFocus(this.elmFooter?.firstChild);
               }
             }
           }

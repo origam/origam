@@ -106,4 +106,14 @@ $textColorHover: var(--background8);
     background: var(--background5);
     color: var(--background8);
   }
+  &:focus,&:global(.isPrimary) {
+    background: var(--foreground1);
+    border-color: var(--foreground1);
+    color: var(--background1);
+
+    &:hover {
+      background: var(--background1);
+      color: var(--foreground1);
+    }
+  }
 }
