@@ -4,13 +4,14 @@
   "private": true,
   "dependencies": {
     "jest": "^27.3.1",
-    "msnodesqlv8": "^2.4.0",
+    "jest-silent-reporter": "^0.5.0",
+    "msnodesqlv8": "^2.2.0",
     "mssql": "^7.2.1",
     "puppeteer": "^10.1.0"
   },
   "homepage": "./",
   "scripts": {
-    "test:e2e": "xvfb-run --auto-servernum jest --runInBand --config jest.config.js",
+    "test:e2e": "xvfb-run --auto-servernum jest --runInBand --reporters=jest-silent-reporter --config jest.config.js",
     "test:debug": "node --inspect node_modules/jest-cli/bin/jest.js --runInBand  --config jest.config.js"
   },
   "eslintConfig": {

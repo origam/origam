@@ -46,14 +46,6 @@ services:
       - test
     tty: true
     volumes:
-      - server-data:/home/origam/output
+      - ./output/:/home/origam/output/
     links:
      - database-server
-     
-  volumes:
-    server-data:
-      driver: local
-      driver_opts:
-       o: bind
-       type: none
-       device: /home/runner/work/origam/origam/server-data

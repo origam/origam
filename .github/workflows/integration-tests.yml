@@ -135,8 +135,9 @@ jobs:
     - name: Run Tests
       run: |
         cd test
+        mkdir output
         docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
-        dir server-data/
+        dir output/
 
     - name: Clean up
       if: always()
