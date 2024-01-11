@@ -1,4 +1,5 @@
 #!/bin/bash
+touch /home/origam/output/testik.txt
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 ./startServer.sh 
