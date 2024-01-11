@@ -29,14 +29,13 @@ namespace Origam.JSON
     class DataSetConverter : newton.DataSetConverter
     {
         private readonly bool omitRootElement;
+        private readonly bool omitMainElement;
 
         public DataSetConverter(bool omitRootElement, bool omitMainElement)
         {
             this.omitRootElement = omitRootElement;
             this.omitMainElement = omitMainElement;
         }
-
-        private readonly bool omitMainElement;
 
         public override bool CanConvert(Type valueType)
         {
