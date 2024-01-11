@@ -43,7 +43,7 @@ export function onScreenTabCloseMouseDown(ctx: any) {
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function*onFormTabCloseClick(event: any, closeWithoutSaving?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
-    const formScreen = openedScreen.content.formScreen;
+    const formScreen = openedScreen.content?.formScreen;
     if(formScreen?.showWorkflowNextButton && !(yield questionCancelWorkflow(ctx))) {
       return false;
     }
