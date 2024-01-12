@@ -56,8 +56,9 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
 && source ~/.bashrc
 WORKDIR /home/origam
 RUN mkdir HTML5  \
-&& mkdir data \
-&& mkdir data/origam \
+&& mkdir HTML5/data \
+&& mkdir HTML5/data/origam \
+&& mkdir output \
 && mkdir HTML5_TESTS
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
