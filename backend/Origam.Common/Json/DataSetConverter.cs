@@ -28,18 +28,15 @@ namespace Origam.JSON
 {
     class DataSetConverter : newton.DataSetConverter
     {
-        private bool _omitRootObject = false;
-        public bool OmitRootObject
+        private readonly bool omitRootElement;
+        private readonly bool omitMainElement;
+
+        public DataSetConverter(bool omitRootElement, bool omitMainElement)
         {
-            get
-            {
-                return _omitRootObject;
-            }
-            set
-            {
-                _omitRootObject = value;
-            }
+            this.omitRootElement = omitRootElement;
+            this.omitMainElement = omitMainElement;
         }
+
         public override bool CanConvert(Type valueType)
         {
             return typeof(DataSet).IsAssignableFrom(valueType);
@@ -52,7 +49,7 @@ namespace Origam.JSON
 
             DataTableConverter converter = new DataTableConverter();
 
-            if (!OmitRootObject)
+            if (!omitRootElement)
             {
                 string name = dataSet.DataSetName;
                 writer.WriteStartObject();
@@ -61,23 +58,32 @@ namespace Origam.JSON
                     : name);
             }
 
-            writer.WriteStartObject();
+            if (!omitMainElement)
+            {
+                writer.WriteStartObject();
+            }
 
             foreach (DataTable table in dataSet.Tables)
             {
                 if (IsRoot(table))
                 {
-                    writer.WritePropertyName((resolver != null) 
-                        ? resolver.GetResolvedPropertyName(table.TableName) 
-                        : table.TableName);
+                    if (!omitMainElement)
+                    {
+                        writer.WritePropertyName((resolver != null)
+                            ? resolver.GetResolvedPropertyName(table.TableName)
+                            : table.TableName);
+                    }
 
                     converter.WriteJson(writer, table, serializer);
                 }
             }
 
-            writer.WriteEndObject();
+            if (!omitMainElement)
+            {
+                writer.WriteEndObject();
+            }
 
-            if (!OmitRootObject)
+            if (!omitRootElement)
             {
                 writer.WriteEndObject();
             }

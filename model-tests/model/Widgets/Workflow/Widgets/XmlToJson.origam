@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="a4d34a63-e264-4aec-87d4-2e1a904729c0"
+    asi:name="XmlToJson"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="26c199fb-ec97-469a-9602-6d32ab4cae06"
+      cs:isReturnValue="false"
+      asi:name="json" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="f343f5d6-95ef-4492-acc7-bd53168d918d"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="92363dec-71ae-4a41-acd3-b1f92a50cdc7"
+      asi:name="XmlToJson"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/json/26c199fb-ec97-469a-9602-6d32ab4cae06"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/e59cb1ea-8ef0-47fa-a8a1-4512857a0333"
+      smct:serviceMethod="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/b72a6114-1ac6-449f-8d66-4c54c9546b89">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="1826558f-b0fe-4dbb-8f6f-1907b0b9dc16"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/Data/fda7e532-6ae5-44bd-ad9e-933cc4607ff0">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+          x:id="cffeb079-9360-45a2-b8b5-fac2973c6c58"
+          asi:name="AllDataTypes"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="279756e3-ffc1-4632-8bde-ed6cc23864c5"
+        asi:name="OmitRootElement"
+        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitRootObject/5ae45f7c-1fe4-41d0-9b5b-941efcb53419">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+          x:id="24311abe-265b-425d-a07e-464ffc53f545"
+          asi:name="AllDataTypes"
+          cr:xPath="1" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="50515f7d-ad90-4aa2-9fa4-19130f1cac74"
+        asi:name="OmitMainElement"
+        smcp:serviceMethodParameter="Root/Service/XmlJsonConvertService.origam#XmlJsonConvertService/TypedXml2Json/OmitSecondRootObject/dfc4fbb1-a7b3-4be0-92f8-6393d0bf9d9e">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+          x:id="1df0ea09-26c4-484f-999b-f7b591a7aad8"
+          asi:name="AllDataTypes"
+          cr:xPath="1" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="7e1ece05-f966-471b-8a5f-c77e3341e979"
+        asi:name="After_LoadAllDataTypes"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/LoadAllDataTypes/9ddb5a85-30cb-46e8-896b-2b7e1b991606" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="9ddb5a85-30cb-46e8-896b-2b7e1b991606"
+      asi:name="LoadAllDataTypes"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/XmlToJson.origam#XmlToJson/AllDataTypes/f343f5d6-95ef-4492-acc7-bd53168d918d"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c38cf600-0c67-4f19-8c73-d55a36f64ad0"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="fa75e7ed-dee8-443d-ab87-ec6bd6b9333a"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="e5230361-4723-44fb-b6eb-7aafb009a56c"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

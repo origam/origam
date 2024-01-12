@@ -29,35 +29,42 @@ namespace Origam.JSON
 {
     public class JsonUtils
 	{
-		public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootObject)
+		public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
 		{
-			JsonSerializer serializer = new JsonSerializer();
-			// remove standard DataSet and XML converters
-			RemoveJsonConverter(serializer, typeof(DataSetConverter));
-			RemoveJsonConverter(serializer, typeof(XmlNodeConverter));
-			// add our custom converters
+            SerializeToJson(textWriter, value, omitRootElement, false);
+        }
+
+        public static void SerializeToJson(TextWriter textWriter, object value,
+           bool omitRootElement, bool omitMainElement)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            // remove standard DataSet and XML converters
+            RemoveJsonConverter(serializer, typeof(DataSetConverter));
+            RemoveJsonConverter(serializer, typeof(XmlNodeConverter));
+            // add our custom converters
 
 
-			if (value is DataSet)
-			{
-				DataSetConverter datasetConverter = new DataSetConverter();
-				datasetConverter.OmitRootObject = omitRootObject;
-				serializer.Converters.Add(datasetConverter);
-				serializer.Converters.Add(new DataRowConverter());
-			}
-			else
-			{
-				XmlNodeConverter xmlConverter = new XmlNodeConverter();
-				xmlConverter.OmitRootObject = omitRootObject;
-				serializer.Converters.Add(xmlConverter);
-			}
-			JsonWriter writer = new JsonTextWriter(textWriter);
-			//JsonWriter writer = new JsonTextWriter(textWriter);
-			serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-			serializer.Serialize(writer, value);
-		}
+            if (value is DataSet)
+            {
+                DataSetConverter datasetConverter = new DataSetConverter(
+                    omitRootElement: omitRootElement, 
+                    omitMainElement: omitMainElement);
+                serializer.Converters.Add(datasetConverter);
+                serializer.Converters.Add(new DataRowConverter());
+            }
+            else
+            {
+                XmlNodeConverter xmlConverter = new XmlNodeConverter();
+                xmlConverter.OmitRootObject = omitRootElement;
+                serializer.Converters.Add(xmlConverter);
+            }
+            JsonWriter writer = new JsonTextWriter(textWriter);
+            //JsonWriter writer = new JsonTextWriter(textWriter);
+            serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+            serializer.Serialize(writer, value);
+        }
 
-		public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
+        public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
 		{
 			JsonConverter converter = GetJsonConverter(serializer, type);
 			if (converter != null)
