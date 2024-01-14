@@ -24,11 +24,9 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Origam.Gui.UI;
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.Workbench.Editors;
 using Origam.Git;
 
 namespace Origam.Workbench.Commands
@@ -382,7 +380,90 @@ namespace Origam.Workbench.Commands
 		}
 	}
 
-	public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
+    public class EditItemMenuBuilder : ISubmenuBuilder
+    {
+        private WorkbenchSchemaService _schema;
+        public EditItemMenuBuilder(WorkbenchSchemaService schema) 
+        {
+            _schema = schema;
+        }
+
+        object _owner = null;
+
+        #region ISubmenuBuilder Members
+        public bool LateBound
+        {
+            get
+            {
+                return true;
+            }
+        }
+        public bool HasItems()
+        {
+            if (_schema.IsSchemaLoaded)
+            {
+                return _schema.CanEditItem(_schema.ActiveNode);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public AsMenuCommand[] BuildSubmenu(object owner)
+        {
+            _owner = owner ?? _schema.ActiveNode;
+            var list = new List<AsMenuCommand>();
+            CreateMenuItem(list, "Item", new EditActiveSchemaItem(_schema), null);
+            CreateMenuItem(list, "By GridEditor", new EditActiveSchemaItemDocked(_schema), null);
+            return list.ToArray();
+        }
+
+        #endregion
+
+        private void EditItem(object sender, EventArgs e)
+        {
+            try
+            {
+                (sender as AsMenuCommand).Command.Run();
+            }
+            catch (Exception ex)
+            {
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message,
+                                       ResourceUtils.GetString("ErrorTitle"), ex);
+            }
+        }
+
+        private void CreateMenuItem(List<AsMenuCommand> list, string text, ICommand command, Image image)
+        {
+            AsMenuCommand menuItem = new AsMenuCommand(text, command);
+            command.Owner = _owner;
+            bool policy = true;
+
+            if (_owner != null)
+            {
+                policy = LicensePolicy.ModelElementPolicy(_owner.GetType().Name, 
+                         ModelElementPolicyCommand.CustomAction, command.GetType().FullName);
+            }
+
+            if (menuItem.IsEnabled & policy)
+            {
+                menuItem.Click += new EventHandler(EditItem);
+
+                if (image != null)
+                {
+                    menuItem.Image = image;
+                }
+
+                list.Add(menuItem);
+            }
+            else
+            {
+                ((IDisposable)menuItem).Dispose();
+            }
+        }
+    }
+    public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
 	{
         private ArrayList _types;
 		private string _name;
@@ -459,7 +540,8 @@ namespace Origam.Workbench.Commands
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, 
+                                       ResourceUtils.GetString("ErrorTitle"), ex);
             }
         }
 

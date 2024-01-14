@@ -408,15 +408,19 @@ namespace Origam.Workbench.Commands
 	/// </summary>
 	public class EditActiveSchemaItem : AbstractMenuCommand
 	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+		private WorkbenchSchemaService _schema;
 
+        public EditActiveSchemaItem(WorkbenchSchemaService schema)
+		{
+			_schema = schema;
+		}
 		public override bool IsEnabled
 		{
 			get
 			{
 				if(_schema.IsSchemaLoaded)
 				{
-					return _schema.CanEditItem(_schema.ActiveNode);
+                    return _schema.CanEditItem(_schema.ActiveNode);
 				}
 				else
 				{
@@ -425,15 +429,18 @@ namespace Origam.Workbench.Commands
 			}
 			set
 			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), 
+																	"IsEnabled");
 			}
 		}
 
 		public override void Run()
 		{
-			EditSchemaItem cmd = new EditSchemaItem();
-			cmd.Owner = _schema.ActiveNode;
-			cmd.Run();
+            EditSchemaItem cmd = new()
+            {
+                Owner = _schema.ActiveNode
+            };
+            cmd.Run();
 		}
 
 		public override void Dispose()
@@ -445,6 +452,53 @@ namespace Origam.Workbench.Commands
 
 	}
 
+    public class EditActiveSchemaItemDocked : AbstractMenuCommand
+    {
+		private WorkbenchSchemaService _schema;
+
+        public EditActiveSchemaItemDocked(WorkbenchSchemaService schema)
+		{
+			_schema= schema;
+		}
+        public override bool IsEnabled
+        {
+            get
+            {
+                if (_schema.IsSchemaLoaded)
+                {
+					return Owner is Schema.WorkflowModel.Workflow &&
+						_schema.CanEditItem(_schema.ActiveNode);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), 
+																	"IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            EditSchemaItem cmd = new()
+            {
+                Owner = _schema.ActiveNode,
+                ShowDocked = true
+            };
+            cmd.Run();
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+
+    }
 
     public class ExpandAllActiveSchemaItem : AbstractMenuCommand
     {
@@ -495,6 +549,7 @@ namespace Origam.Workbench.Commands
         }
 
         public bool ShowDialog { get; set; }
+        public bool ShowDocked { get; set; }
         public bool ShowDiagramEditorAfterSave { get; set; }
         IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
@@ -565,7 +620,7 @@ namespace Origam.Workbench.Commands
             {
                editor = new UiActionEditor(ShowDialog);
             }
-            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
+            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && !ShowDialog && !ShowDocked)
             {
                 if (item.IsPersisted)
                 {

@@ -589,7 +589,7 @@
     <value>&amp;Move To Package</value>
   </data>
   <data name="EditItem_MenuItem" xml:space="preserve">
-    <value>&amp;Edit item</value>
+    <value>&amp;Edit</value>
   </data>
   <data name="Delete_MenuItem" xml:space="preserve">
     <value>&amp;Delete</value>
