@@ -163,3 +163,12 @@ jobs:
         path: test/output/wf-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
+     
+    - name: Delete artifacts
+      uses: geekyeggo/delete-artifact@v2
+      with:
+          name: |
+              htmlserverbuild
+              htmlfrontendbuild
+              workflowbuild
+              
