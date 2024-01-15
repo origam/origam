@@ -47,7 +47,7 @@ export class DateEditorModel {
     await flow(function*() {
       const dateCompleter = self.getDateCompleter();
       const completedMoment = dateCompleter.autoComplete(self.dirtyTextualValue);
-      if (completedMoment) {
+      if (completedMoment && completedMoment.isValid())  {
         yield self.onChange?.(event, toOrigamServerString(completedMoment));
       }
       else if (self.hasValueChanged()) {
@@ -121,7 +121,7 @@ export class DateEditorModel {
       isRefreshShortcut(event)
     ) {
       const completedMoment = this.autoCompletedMoment;
-      if (completedMoment) {
+      if (completedMoment && completedMoment.isValid())  {
         this.onChange?.(event, toOrigamServerString(completedMoment));
       }
       else if (this.hasValueChanged()) {
