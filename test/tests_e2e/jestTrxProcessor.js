@@ -2,7 +2,6 @@
 var builder = require("jest-trx-results-processor/dist/testResultsProcessor"); // only this has changed since v 0.x
 
 var processor = builder({
-  outputFile: 'resulting.trx' // this defaults to "test-results.trx"
 });
 
 module.exports = processor;
