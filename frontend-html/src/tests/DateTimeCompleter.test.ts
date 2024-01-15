@@ -77,3 +77,21 @@ test.each([
   const momentValue = dateCompleterCz.autoComplete(incompleteDate)
   expect(format(momentValue!, "DD.MM.YYYY HH:mm:ss")).toBe(expected);
 });
+
+test.each([
+  ["12:30"],
+  ["12:30:14"],
+  ["12:30:14.16"],
+])('Should not try to complete time alone using dateCompleterCz', (incompleteDate) => {
+  const momentValue = dateCompleterCz.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
+
+test.each([
+  ["12:30"],
+  ["12:30:14"],
+  ["12:30:14.16"],
+])('Should not try to complete time alone using dateCompleterUs', (incompleteDate) => {
+  const momentValue = dateCompleterUs.autoComplete(incompleteDate)
+  expect(momentValue).toBe(undefined);
+});
