@@ -96,8 +96,10 @@ jobs:
     name: integration-tests
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       actions: read
       contents: read
+      checks: write
       security-events: write
 
     strategy:
@@ -151,7 +153,6 @@ jobs:
         ls -all output
         cd output
         pwd
-        ls -all output
         
     - name: Produce Frontend test report
       uses: dorny/test-reporter@v1
