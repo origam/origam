@@ -8,7 +8,7 @@ module.exports = {
     [
       "jest-trx-results-processor",
       {
-        outputFile: "/home/origam/output/resulting.trx"
+        outputFile: "resulting.trx"
       }
     ]
   ]

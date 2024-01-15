@@ -59,7 +59,8 @@ RUN mkdir HTML5  \
 && mkdir HTML5/data \
 && mkdir HTML5/data/origam \
 && mkdir output \
-&& mkdir HTML5_TESTS
+&& mkdir HTML5_TESTS \
+&& ls -all
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \

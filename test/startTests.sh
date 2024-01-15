@@ -28,6 +28,7 @@ else
   echo "Scripts failed" >&2
   exit 1
 fi
+cp resulting.trx /home/origam/output/
 echo "Running workflow integration tests";
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
