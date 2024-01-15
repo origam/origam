@@ -138,7 +138,6 @@ jobs:
       run: |
         cd test
         mkdir output
-        ls -all output
         docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
       
     - name: Clean up
@@ -147,13 +146,6 @@ jobs:
         cd test
         docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
     
-    - name: Checking output
-      run: |
-        cd test
-        ls -all output
-        cd output
-        pwd
-        
     - name: Produce Frontend test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
@@ -163,3 +155,11 @@ jobs:
         reporter: dotnet-trx
         max-annotations: '0'
 
+    - name: Produce workflow integration tests report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: NUnit Results
+        path: test/output/wf-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'

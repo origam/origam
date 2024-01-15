@@ -45,7 +45,7 @@ sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSetting
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 #cat OrigamSettings.config
-dotnet test Origam.WorkflowTests.dll
+dotnet test --logger "trx;logfilename=wf-results.trx" Origam.WorkflowTests.dll
 if [ $? -eq 0 ]
 then
   echo "Success."
@@ -53,3 +53,4 @@ else
   echo "Scripts failed" >&2
   exit 1
 fi
+sudo cp wf-results.trx /home/origam/output/
