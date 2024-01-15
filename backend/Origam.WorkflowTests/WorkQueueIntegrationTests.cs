@@ -228,7 +228,7 @@ public class WorkQueueIntegrationTests
                                 $"expected number of times ({maxRetries}). " +
                                 $"Number of attempts is {attempts}");
                 }
-                //return;
+                return;
             }
         }
         Assert.Fail($"The failing queue entry was not retried expected" +
