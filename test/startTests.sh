@@ -23,12 +23,13 @@ yarn install --ignore-engines > /dev/null 2>&1
 yarn test:e2e
 if [ $? -eq 0 ]
 then
+  sudo cp resulting.trx /home/origam/output/
   echo "Success."
 else
+  sudo cp resulting.trx /home/origam/output/
   echo "Scripts failed" >&2
   exit 1
 fi
-sudo cp resulting.trx /home/origam/output/
 echo "Running workflow integration tests";
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
@@ -48,9 +49,10 @@ sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 dotnet test --logger "trx;logfilename=wf-results.trx" Origam.WorkflowTests.dll
 if [ $? -eq 0 ]
 then
+  sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/
   echo "Success."
 else
+  sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/
   echo "Scripts failed" >&2
   exit 1
 fi
-sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/
