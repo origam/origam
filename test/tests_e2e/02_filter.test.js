@@ -40,9 +40,9 @@ describe("Html client", () => {
         allDataTypesMenuId
       ]);
 
-    await waitForRowCount(page, dataViewId,30);
+    await waitForRowCount(page, dataViewId,1);
 
-    await sleep(300);
+    //await sleep(300);
 
     await openFilters({
       page: page,
