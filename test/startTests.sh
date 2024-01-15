@@ -53,4 +53,4 @@ else
   echo "Scripts failed" >&2
   exit 1
 fi
-sudo cp wf-results.trx /home/origam/output/
+sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/

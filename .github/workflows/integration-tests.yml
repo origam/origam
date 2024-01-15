@@ -150,16 +150,16 @@ jobs:
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: NUnit Results
+        name: Frontend test report
         path: test/output/resulting.trx
         reporter: dotnet-trx
         max-annotations: '0'
 
-    - name: Produce workflow integration tests report
+    - name: Produce Workflow integration tests report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: NUnit Results
+        name: Workflow integration tests
         path: test/output/wf-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
