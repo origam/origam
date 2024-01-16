@@ -74,7 +74,8 @@ export class RowState implements IRowState {
   @computed get mayCauseFlicker() {
     return !this.firstLoadingPerformed;
   }
-
+ 
+  @observable
   requests: Map<string, RowStateRequest> = new Map<string, RowStateRequest>();
 
   @observable
