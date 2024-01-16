@@ -198,6 +198,14 @@ namespace Origam.ProjectAutomation.Builders
             {
                 return "localhost";
             }
+            if (project.Deployment == DeploymentType.Docker)
+            {
+                if (project.DatabaseServerName.Equals("localhost") ||
+                    project.DatabaseServerName.Equals("127.0.0.1"))
+                {
+                    return "host.docker.internal";
+                }
+            }
             return project.DatabaseServerName;
         }
 
