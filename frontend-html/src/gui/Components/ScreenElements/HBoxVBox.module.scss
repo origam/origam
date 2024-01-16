@@ -24,8 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
 
-  &.noWidth,
-  &.noHeight {
+  &.noWidth.noHeight {
     flex-grow: 1;
   }
 }
@@ -38,8 +37,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
 
-  &.noHeight,
-  &.noWidth {
+  &.noHeight.noWidth {
     flex-grow: 1;
   }
 }
