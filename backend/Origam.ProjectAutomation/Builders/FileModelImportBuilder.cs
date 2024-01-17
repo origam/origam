@@ -93,7 +93,7 @@ namespace Origam.ProjectAutomation
         private StringBuilder CreateCmdTemplate()
         {
             StringBuilder template = new StringBuilder();
-            template.AppendLine("docker run --name {projectName} --env-file {envFilePath} -it -v {parentPathProject}:/home/origam/HTML5/data/origam -p {dockerPort}:8080 origam/server:master-latest");
+            template.AppendLine("docker run --name {projectName} --env-file \"{envFilePath}\" -it -v \"{parentPathProject}\":/home/origam/HTML5/data/origam -p {dockerPort}:8080 origam/server:master-latest.linux");
             return template;
         }
 
