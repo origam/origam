@@ -11,8 +11,8 @@ on:
 
 jobs:
 
-  frontend:
-    name: frontend
+  build-frontend:
+    name: build-frontend
     runs-on: windows-2019
     permissions:
       actions: read
@@ -52,8 +52,8 @@ jobs:
         path: "frontend-html/dist"   
 
     
-  server:
-    name: server
+  build-server:
+    name: build-server
     runs-on: windows-2022
     permissions:
       actions: read
@@ -91,13 +91,15 @@ jobs:
         name: workflowbuild
         path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
-  tests:
-    needs: [frontend,server]
-    name: tests
+  integration-tests:
+    needs: [build-frontend,build-server]
+    name: integration-tests
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       actions: read
       contents: read
+      checks: write
       security-events: write
 
     strategy:
@@ -135,11 +137,38 @@ jobs:
     - name: Run Tests
       run: |
         cd test
-        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit 
-
+        mkdir output
+        docker compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit
+      
     - name: Clean up
       if: always()
       run: |
         cd test
-        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+        docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+    
+    - name: Produce frontend integration test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Frontend Integration Test Results
+        path: test/output/frontend-integration-test-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'
 
+    - name: Produce workflow integration test report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Workflow Integration Test Results
+        path: test/output/workflow-integration-test-results.trx
+        reporter: dotnet-trx
+        max-annotations: '0'
+     
+    - name: Delete artifacts
+      uses: geekyeggo/delete-artifact@v2
+      with:
+          name: |
+              htmlserverbuild
+              htmlfrontendbuild
+              workflowbuild
+              

@@ -4,13 +4,17 @@
   "private": true,
   "dependencies": {
     "jest": "^27.3.1",
-    "msnodesqlv8": "^2.4.0",
+    "jest-trx-results-processor": "^3.0.2",
+    "msnodesqlv8": "^2.2.0",
     "mssql": "^7.2.1",
     "puppeteer": "^10.1.0"
   },
   "homepage": "./",
+  "jest": {
+    "testResultsProcessor": "./jestTrxProcessor.js"
+  },
   "scripts": {
-    "test:e2e": "xvfb-run --auto-servernum jest --runInBand --config jest.config.js",
+    "test:e2e": "xvfb-run --auto-servernum jest --runInBand  --config jest.config.js",
     "test:debug": "node --inspect node_modules/jest-cli/bin/jest.js --runInBand  --config jest.config.js"
   },
   "eslintConfig": {

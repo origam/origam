@@ -3,16 +3,16 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
-RUN apt-get update \
-&& apt-get -y install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget
+RUN apt-get -qq update > /dev/null 2>&1 \
+&& apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget > /dev/null 2>&1
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
 #INSTALL YARN 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
-&& apt-get update \
-&& apt-get -y install yarn dotnet-sdk-7.0 \
+&& apt-get -qq update > /dev/null 2>&1 \
+&& apt-get -qq -y install yarn dotnet-sdk-7.0 > /dev/null 2>&1 \
 && useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
@@ -28,13 +28,12 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 #RUN sed -i "s/\[.*\]/\[SQL Server Native Client 11.0\]/" /etc/odbcinst.ini
 #End install ODBC
 #Install Chrome
-RUN apt-get update \
-    && apt-get install -y xvfb \
+RUN apt-get -qq update > /dev/null 2>&1 \
+    && apt-get -qq install -y xvfb > /dev/null 2>&1 \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
+    && apt-get -qq update > /dev/null 2>&1 \
+    && apt-get -qq install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
 #HTTPS PROXY
 COPY https-proxy /root/https-proxy
@@ -57,15 +56,16 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
 && source ~/.bashrc
 WORKDIR /home/origam
 RUN mkdir HTML5  \
-&& mkdir data \
-&& mkdir data/origam \
-&& mkdir HTML5_TESTS
+&& mkdir HTML5/data \
+&& mkdir HTML5/data/origam \
+&& mkdir output \
+&& mkdir HTML5_TESTS \
+&& ls -all
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
 startTests.sh \
 startServer.sh \
-startServerTest.sh \
 log4net.config \
 updateEnvironment.sh \
 updateEnvironmentRoot.sh \
@@ -79,7 +79,6 @@ COPY --chown=origam:origam model /home/origam/HTML5/data/origam/
 WORKDIR /home/origam/HTML5
 RUN mkdir logs \
 && chmod +x startServer.sh \
-&& chmod +x startServerTest.sh \
 && chmod +x updateEnvironment.sh \
 && chmod +x updateEnvironmentRoot.sh \
 && chmod +x startTests.sh
