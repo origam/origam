@@ -146,21 +146,21 @@ jobs:
         cd test
         docker compose --env-file envFile.env -f "docker-compose.yml" --profile test down
     
-    - name: Produce Frontend test report
+    - name: Produce frontend integration test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: Frontend test report
-        path: test/output/resulting.trx
+        name: Frontend Integration Test Results
+        path: test/output/frontend-integration-test-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
 
-    - name: Produce Workflow integration tests report
+    - name: Produce workflow integration test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
-        name: Workflow integration tests
-        path: test/output/wf-results.trx
+        name: Workflow Integration Test Results
+        path: test/output/workflow-integration-test-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
      

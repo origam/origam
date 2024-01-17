@@ -23,10 +23,10 @@ yarn install --ignore-engines > /dev/null 2>&1
 yarn test:e2e
 if [ $? -eq 0 ]
 then
-  sudo cp resulting.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
-  sudo cp resulting.trx /home/origam/output/
+  sudo cp frontend-integration-test-results.trx /home/origam/output/
   echo "Scripts failed" >&2
   exit 1
 fi
@@ -47,13 +47,13 @@ sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSetting
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 #cat OrigamSettings.config
-dotnet test --logger "trx;logfilename=wf-results.trx" Origam.WorkflowTests.dll
+dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll
 if [ $? -eq 0 ]
 then
-  sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/
+  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
 else
-  sudo cp /home/origam/HTML5_TESTS/TestResults/wf-results.trx /home/origam/output/
+  sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Scripts failed" >&2
   exit 1
 fi

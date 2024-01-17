@@ -8,7 +8,7 @@ module.exports = {
     [
       "jest-trx-results-processor",
       {
-        outputFile: "resulting.trx"
+        outputFile: "frontend-integration-test-results.trx"
       }
     ]
   ]
