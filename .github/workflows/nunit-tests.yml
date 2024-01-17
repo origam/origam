@@ -79,14 +79,7 @@ jobs:
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
        dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
       
-    - name: Produce NUnit test report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: NUnit Results
-        path: TestResults/test-results.trx
-        reporter: dotnet-trx
-        max-annotations: '0'
+
     
     - name: Delete artifact
       uses: geekyeggo/delete-artifact@v2
