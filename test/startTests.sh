@@ -1,5 +1,4 @@
 #!/bin/bash
-touch /home/origam/output/testik.txt
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 ./startServer.sh 
@@ -10,7 +9,7 @@ echo "Database connection failed";
 exit 1;
 fi 
 export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.Server.dll > origamoutput.txt 2>&1 &
+dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "TEST DB Connection"
 DATAOUT=$(dotnet origam-utils.dll test-db -a 5 -d 5000 -c "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$DATAOUT" != True ]]; then
