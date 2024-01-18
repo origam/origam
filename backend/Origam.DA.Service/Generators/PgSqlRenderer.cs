@@ -236,7 +236,7 @@ class PgSqlRenderer : SqlRenderer
     
     internal override string Format(string date, string culture)
     {
-        throw new NotImplementedException();
+        return @$" CASE when TO_CHAR({date} ,'HH24:MI:SS AM') = '00:00:00 AM' then CAST({date}::TIMESTAMP::DATE as TEXT) else CAST({date}::TIMESTAMP as TEXT) END ";
     }
     
     internal override string CountAggregate()
