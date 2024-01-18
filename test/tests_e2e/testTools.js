@@ -46,7 +46,7 @@ async function beforeEachTest(){
     // slowMo: 50,
     headless: false,
     defaultViewport: {
-      width: 1024,
+      width: 1800,
       height: 2000, // to make all 30 lines visible and avoid the need for scrolling
     },
     args: [
