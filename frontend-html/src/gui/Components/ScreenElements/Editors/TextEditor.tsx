@@ -313,7 +313,7 @@ function isMultiLine(text: string | null) {
 
 function RichTextEditor(props: {
   value: any;
-  onChange?: (newValue: any) => void;
+  onChange?: (event: any) => void;
   onBlur?: (event: any) => void;
   onFocus?: (event: any) => void;
   refInput?: (elm: any) => void;
@@ -327,7 +327,7 @@ function RichTextEditor(props: {
       setInternalEditorState(newEditorState);
       const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
       setInternalEditorStateHtml(html);
-      props.onChange?.(html);
+      props.onChange?.({target: {value: html}});
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
