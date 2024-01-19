@@ -212,7 +212,9 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
             fixedColumnCount={fixedColumnCount}
             headerContainers={self.headerRenderer.headerContainers}
             renderEditor={() => (
-              <TableViewEditor key={`${editingRowIndex}@${editingColumnIndex}`}/>
+              <TableViewEditor
+                expand={this.props.tablePanelView?.expandEditorAfterMounting}
+                key={`${editingRowIndex}@${editingColumnIndex}`}/>
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}

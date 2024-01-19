@@ -51,6 +51,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
   isEditing: boolean;
+  expandEditorAfterMounting: boolean;
   fixedColumnCount: number;
   configurationManager: IConfigurationManager;
 
@@ -74,7 +75,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 
-  onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): Generator;
+  onCellClick(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}): Generator;
 
   onNoCellClick(): Generator;
 

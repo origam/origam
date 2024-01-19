@@ -87,6 +87,7 @@ export class TableViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: (event: any) => Promise<void>;
   onEditorKeyDown?: (event: any) => void;
+  expand?: boolean
 }> {
 
   componentDidMount() {
@@ -220,6 +221,7 @@ export class TableViewEditor extends React.Component<{
                 gridFocusManager.editorBlur = undefined;
               }
             }}
+            expandAfterMounting={this.props.expand}
             newRecordScreen={property.lookup?.newRecordScreen}
             onAddNewRecordClick={makeOnAddNewRecordClick(property)}
             autoSort={property.autoSort}
@@ -303,11 +305,11 @@ export class TableViewEditor extends React.Component<{
   }
 
   onDoubleClick(event: any) {
-    getTablePanelView(this.props.property).setEditing(false);
     const dataView = getDataView(this.props.property);
     if (!dataView.firstEnabledDefaultAction) {
       return;
     }
+    getTablePanelView(this.props.property).setEditing(false);
     uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
       event,
       dataView.firstEnabledDefaultAction
