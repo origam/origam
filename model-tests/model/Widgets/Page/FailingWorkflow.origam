@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:wp="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowPage/6.0.0">
+  <wp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    wp:disableConstraintForInputValidation="false"
+    x:id="9bd0c179-64b8-4387-b98d-24d2eb3b3e8e"
+    ap:mimeType="application/json"
+    asi:name="FailingWorkflow"
+    ap:roles="*"
+    ap:url="api/public/failingWorkflow"
+    wp:workflow="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/ddb1cedf-c05a-472f-bb5d-f5d070e627ed" />
+</x:file>
