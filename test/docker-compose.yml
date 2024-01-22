@@ -36,6 +36,8 @@ services:
         - ExternalDomain_SetOnStart=${ExternalDomain_SetOnStart}
         - OrigamSettings_ReportDefinitionsPath=${OrigamSettings_ReportDefinitionsPath}
         - EnableChat=${EnableChat}
+        - BUILDKIT_PROGRESS=tty
+        - CI=true
     ports:
       - "8080:8080"
     depends_on:
