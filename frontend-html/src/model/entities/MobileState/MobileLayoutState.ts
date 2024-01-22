@@ -13,6 +13,7 @@ export interface IMobileLayoutState {
   showHamburgerMenuButton: boolean;
   heading: string;
   showOkButton: boolean;
+  showBackButton: boolean;
 
   showCloseButton(someScreensAreOpen: boolean): boolean;
 
@@ -29,6 +30,7 @@ export class MenuLayoutState implements IMobileLayoutState {
   showSearchButton = true;
   showHamburgerMenuButton = false;
   showOkButton = false;
+  showBackButton = false;
   heading = T("Menu", "menu");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -52,6 +54,7 @@ export class AboutLayoutState implements IMobileLayoutState {
   showSearchButton = true;
   showHamburgerMenuButton = true;
   showOkButton = false;
+  showBackButton = false;
   heading = T("About", "about_application");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -75,6 +78,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   showSearchButton = false;
   showHamburgerMenuButton = true;
   showOkButton = false;
+  showBackButton = false;
   heading = T("Search", "mobile_search_title");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -98,6 +102,7 @@ export class EditLayoutState implements IMobileLayoutState {
   showSearchButton = false;
   showHamburgerMenuButton = false;
   showOkButton = true;
+  showBackButton = false;
   private readonly showCloseButton_: boolean;
 
   constructor(
@@ -132,6 +137,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   showSearchButton = true;
   showHamburgerMenuButton = true;
   showOkButton = false;
+  showBackButton = true;
   heading = "";
 
   showCloseButton(someScreensAreOpen: boolean) {
