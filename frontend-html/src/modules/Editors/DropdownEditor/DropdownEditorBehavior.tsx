@@ -77,7 +77,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private setup: () => DropdownEditorSetup;
   private cache: DropdownEditorLookupListCache;
   public isReadOnly: boolean;
-  private onDoubleClick?: (event: any) => void;
+  public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
   public onBlur?: (target?: any) => void;
   public subscribeToFocusManager?: (obj:IFocusable) => void;
