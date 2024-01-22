@@ -593,6 +593,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="New TestQueue1_Row"
+    x:id="d84de70e-ab86-468a-96e2-a619a6f37600"
+    asi:name="CreateWQRow_TestQueue1"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/CreateWQRow_TestQueue1.origam#CreateWQRow_TestQueue1/8ec8b363-d365-41b8-b076-207750bafa14" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="RuleTest"
     x:id="fec8466e-ced8-4f60-b683-2de37bde96a4"
     asi:name="RuleTest"

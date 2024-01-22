@@ -90,7 +90,10 @@ import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import {TabIndex} from "./TabIndexOwner";
 
 class SavedViewState {
-  constructor(public selectedRowId: string | undefined) {
+  constructor(
+    public selectedRowId: string | undefined,
+    public selectedRowIndex: number | undefined
+  ) {
   }
 }
 
@@ -740,7 +743,6 @@ export class DataView implements IDataView {
     yield*this.setSelectedRowId(this.dataTable.getRowId(row));
   }
 
-
   *setSelectedRowId(id: string | undefined): Generator {
     if (this.selectedRowId === id) {
       return;
@@ -761,16 +763,33 @@ export class DataView implements IDataView {
 
   @action.bound
   saveViewState(): void {
-    this.viewStateStack.push(new SavedViewState(this.selectedRowId));
+    this.viewStateStack.push(
+      new SavedViewState(
+        this.selectedRowId,
+        this.getRowIndexById(this.selectedRowId)
+      )
+    );
   }
 
   @action.bound
   *restoreViewState() {
     const state = this.viewStateStack.pop();
     if (state && state.selectedRowId) {
-      yield*this.setSelectedRowId(state.selectedRowId);
+      const row = this.dataTable.getRowById(state.selectedRowId);
+      if(row) {
+        yield*this.setSelectedRowId(state.selectedRowId);
+      }
+      else if (state.selectedRowIndex) {
+        const nextRow = this.tableRows[state.selectedRowIndex];
+        const isDataRow = Array.isArray(nextRow);
+        if(isDataRow){
+          const nextRowId = this.dataTable.getRowId(nextRow);
+          yield*this.setSelectedRowId(nextRowId);
+          return;
+        }
+      }
       if (!getSelectedRow(this)) {
-        this.selectFirstRow();
+        yield*this.reselectOrSelectFirst();
       }
       getTablePanelView(this).scrollToCurrentCell();
     }

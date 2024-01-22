@@ -922,7 +922,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
-    yield*rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
@@ -956,9 +955,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (this.initialSelectedRowId) {
         yield*rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
-        yield*rootDataView.reselectOrSelectFirst();
+        yield*rootDataView.restoreViewState();
       }
-      yield*rootDataView.restoreViewState();
+      getTablePanelView(rootDataView).scrollToCurrentCell();
     } finally {
       yield*rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
       this.monitor.inFlow--;
