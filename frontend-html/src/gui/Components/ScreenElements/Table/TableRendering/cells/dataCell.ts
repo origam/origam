@@ -146,7 +146,14 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, true);
+            yield*getTablePanelView(ctx).onCellClick(
+              {
+                event: event,
+                row: row,
+                columnId: columnId,
+                isControlInteraction: true,
+                isDoubleClick: false
+              });
           }
         })();
       },
@@ -165,8 +172,25 @@ function registerClickHandler(columnId: string) {
           if (defaultAction && defaultAction.isEnabled) {
             yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
           }
+          else {
+            yield*getTablePanelView(ctx).onCellClick(
+              {
+                event: event,
+                row: row,
+                columnId: columnId,
+                isControlInteraction: false,
+                isDoubleClick: true
+              });
+          }
         } else {
-          yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+          yield*getTablePanelView(ctx).onCellClick(
+            {
+              event: event,
+              row: row,
+              columnId: columnId,
+              isControlInteraction: false,
+              isDoubleClick: false
+            });
         }
       })();
     },

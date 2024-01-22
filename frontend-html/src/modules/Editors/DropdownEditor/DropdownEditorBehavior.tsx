@@ -62,6 +62,7 @@ export interface IBehaviorData {
   subscribeToFocusManager?: (obj: IFocusable) => void,
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
+  expandAfterMounting?: boolean,
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
   newRecordScreen?: NewRecordScreen,
   onAddNewRecordClick?: () => void;
@@ -84,6 +85,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onMount?(onChange?: (value: any) => void): void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private expandAfterMounting?: boolean;
   private newRecordScreen?: NewRecordScreen;
   public onAddNewRecordClick?: () => void;
   private readonly handleInputChangeDeb: _.DebouncedFunc<() => void>;
@@ -113,6 +115,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onTextOverflowChanged = args.onTextOverflowChanged;
     this.newRecordScreen = args.newRecordScreen;
     this.onAddNewRecordClick = args.onAddNewRecordClick;
+    this.expandAfterMounting = args.expandAfterMounting;
     this.handleInputChangeDeb = _.debounce(this.handleInputChangeImm, args.typingDelayMillis ?? 300);
   }
 
@@ -127,6 +130,19 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   willLoadPage = 1;
   willLoadNextPage = true;
 
+  public handleDoubleClick(event: any){
+    this.onDoubleClick?.(event);
+    this.dropDown();
+  }
+
+  public onEditorMounted(){
+    if(this.isReadOnly){
+      return;
+    }
+    if(this.expandAfterMounting) {
+      this.dropDown();
+    }
+  }
   @computed get isBodyDisplayed() {
     return this.isDropped && (this.dataTable.rowCount > 0 || this.hasNewScreenButton);
   }

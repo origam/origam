@@ -73,7 +73,7 @@ export function DropdownEditorInput(props: {
           onKeyDown={beh.handleInputKeyDown}
           onFocus={beh.handleInputFocus}
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
-          onDoubleClick={beh.onDoubleClick}
+          onDoubleClick={event => beh.handleDoubleClick(event)}
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}

@@ -97,6 +97,7 @@ export function XmlBuildDropdownEditor(props: {
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
+  expandAfterMounting?: boolean;
   onMount?(onChange?: (value: any) => void): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
@@ -147,6 +148,7 @@ export function XmlBuildDropdownEditor(props: {
       subscribeToFocusManager: props.subscribeToFocusManager,
       onKeyDown: props.onKeyDown,
       autoSort: props.autoSort,
+      expandAfterMounting: props.expandAfterMounting,
       onTextOverflowChanged: props.onTextOverflowChanged,
       newRecordScreen: props.newRecordScreen,
       onAddNewRecordClick: props.onAddNewRecordClick,

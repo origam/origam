@@ -83,6 +83,7 @@ export class TablePanelView implements ITablePanelView {
   @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number,
     Map<number, ICellRectangle>>();
 
+  expandEditorAfterMounting = false;
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
@@ -170,9 +171,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): any {
+  *onCellClick(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}): any {
     const dataView = getDataView(this);
-    const rowId = this.dataTable.getRowId(row);
+    const rowId = this.dataTable.getRowId(args.row);
 
     getTablePanelView(this).setEditing(false);
     yield*flushCurrentRowData(this)();
@@ -185,57 +186,54 @@ export class TablePanelView implements ITablePanelView {
       }
     }
     if(isMobileLayoutActive(dataView)){
-      yield*this.onCellClickInternalMobile(event, row, columnId, isControlInteraction);
+      yield*this.onCellClickInternalMobile(args);
       yield dataView.activateFormView!({saveNewState: false});
     }else{
-      yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+      yield*this.onCellClickInternal(args);
     }
   }
 
-  *onCellClickInternalMobile(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
-    const property = this.propertyMap.get(columnId)!;
-    if (property.column !== "CheckBox" || !isControlInteraction) {
+  *onCellClickInternalMobile(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean}) {
+    const property = this.propertyMap.get(args.columnId)!;
+    if (property.column !== "CheckBox" || !args.isControlInteraction) {
       this.setEditing(false);
-      yield*this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+      yield*this.selectCell(this.dataTable.getRowId(args.row) as string, property.id);
     } else {
-      const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(rowId, columnId);
+      const rowId = this.dataTable.getRowId(args.row);
+      yield*this.selectCellAsync(rowId, args.columnId);
     }
     if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();
     }
   }
 
-  *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
-    const property = this.propertyMap.get(columnId)!;
-    if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
-        yield*getDataView(this).navigateLookupLink(property, row);
+  *onCellClickInternal(args:{event: any, row: any[], columnId: string, isControlInteraction: boolean, isDoubleClick: boolean}) {
+    const property = this.propertyMap.get(args.columnId)!;
+    if (property.column !== "CheckBox" || !args.isControlInteraction) {
+      if (property.isLink && property.column !== "TagInput" && (args.event.ctrlKey || args.event.metaKey)) {
+        yield*getDataView(this).navigateLookupLink(property, args.row);
       } else {
-        if (this.dataTable.getRowId(row) === this.selectedRowId) {
-          yield*this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+        if (this.dataTable.getRowId(args.row) === this.selectedRowId) {
+          yield*this.selectCell(this.dataTable.getRowId(args.row) as string, property.id);
+          if(args.isDoubleClick && property.column === "ComboBox") {
+            this.expandEditorAfterMounting = true;
+          }
           this.setEditing(true);
         } else {
-          const {isEditing} = this;
-          if (isEditing) {
-            this.setEditing(false);
-          }
-          yield*this.selectCellAsync(this.dataTable.getRowId(row) as string, property.id);
-          if (isEditing) {
-            this.setEditing(true);
-          }
+          this.setEditing(false);
+          yield*this.selectCellAsync(this.dataTable.getRowId(args.row) as string, property.id);
         }
       }
     } else {
-      const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(rowId, columnId);
+      const rowId = this.dataTable.getRowId(args.row);
+      yield*this.selectCellAsync(rowId, args.columnId);
 
       if (!isReadOnly(property!, rowId)) {
         yield*onFieldChangeG(this)({
           event: undefined,
-          row: row,
+          row: args.row,
           property: property,
-          value: !getCellValue(this, row, property),
+          value: !getCellValue(this, args.row, property),
         });
       }
     }
@@ -542,6 +540,9 @@ export class TablePanelView implements ITablePanelView {
       this.setSelectedColumnId(properties[0].id);
     }
     this.isEditing = state;
+    if(!this.isEditing){
+      this.expandEditorAfterMounting = false;
+    }
   }
 
   @action.bound
