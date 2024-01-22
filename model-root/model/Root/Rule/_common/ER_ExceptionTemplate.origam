@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
-  xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:ar1="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:er="http://schemas.origam.com/Origam.Schema.RuleModel.EndRule/6.0.0"
+  xmlns:er1="http://schemas.origam.com/Origam.Schema.RuleModel.EndRule/6.0.0"
   xmlns:xr="http://schemas.origam.com/Origam.Schema.RuleModel.XslRule/6.0.0">
-  <er:Rule
+  <er1:Rule
     asi:abstract="false"
-    ar:dataType="Boolean"
+    ar1:dataType="Boolean"
     x:id="e1c65fcd-118d-4eb3-9c2f-aa27fec132ba"
     asi:name="ER_ExceptionTemplate"
     xr:xsl="-***-ExternalFile:ER_ExceptionTemplate.origam___xsl___e1c65fcd-118d-4eb3-9c2f-aa27fec132ba.xslt" />

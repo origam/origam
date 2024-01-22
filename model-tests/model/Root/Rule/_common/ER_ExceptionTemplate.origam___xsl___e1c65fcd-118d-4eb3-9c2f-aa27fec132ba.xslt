@@ -5,6 +5,7 @@
 		<xsl:param name="EntityName"/>
 		<xsl:param name="Message"/>
 		<xsl:param name="Severity"/>
+		<xsl:param name="HttpStatusCode"/>
 
 		<RuleExceptionData>
 			<FieldName>
@@ -19,6 +20,9 @@
 			<Severity>
 				<xsl:value-of select="$Severity"/>
 			</Severity>
+			<HttpStatusCode>
+				<xsl:value-of select="$HttpStatusCode"/>
+			</HttpStatusCode>
 		</RuleExceptionData>
 	</xsl:template>
 </xsl:stylesheet>
