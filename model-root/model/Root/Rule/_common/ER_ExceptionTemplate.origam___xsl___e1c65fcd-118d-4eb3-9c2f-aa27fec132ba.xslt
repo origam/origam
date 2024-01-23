@@ -5,7 +5,7 @@
 		<xsl:param name="EntityName"/>
 		<xsl:param name="Message"/>
 		<xsl:param name="Severity"/>
-		<xsl:param name="HttpStatusCode"/>
+		<xsl:param name="HttpStatusCode" select="400"/>
 
 		<RuleExceptionData>
 			<FieldName>
