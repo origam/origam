@@ -5,7 +5,7 @@
   "dependencies": {
     "jest": "^27.3.1",
     "jest-trx-results-processor": "^3.0.2",
-    "msnodesqlv8": "^2.2.0",
+    "msnodesqlv8": "^4.1.2",
     "mssql": "^7.2.1",
     "puppeteer": "^10.1.0"
   },
