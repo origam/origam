@@ -4,3 +4,6 @@
 GET https://localhost:{{port}}/api/public/Attachment/E65251F1-FD5B-4307-B0A7-4C9F5594A1AF
 
 
+###
+// fails and sends custom http return core
+GET https://localhost:{{port}}/api/public/failingWorkflow

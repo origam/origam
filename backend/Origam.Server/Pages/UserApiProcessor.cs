@@ -178,11 +178,26 @@ namespace Origam.Server.Pages
                     message = JsonConvert.SerializeObject(ex);
                 }
                 context.Response.Clear();
-                context.Response.StatusCode = 400;
+                context.Response.StatusCode = GetStausCode(ex);
                 context.Response.ContentType = "application/json";   
                 context.Response.Write(message);
                 context.Response.End();
             }
+        }
+
+        private int GetStausCode(Exception ex)
+        {
+            if (ex is RuleException ruleException)
+            {
+                var dataList = ruleException.RuleResult
+                    .OfType<RuleExceptionData>()
+                    .ToList();
+                if (dataList.Count == 1)
+                {
+                    return dataList[0].HttpStatusCode;
+                }
+            }
+            return 400;
         }
 
         protected virtual void Handle404(IHttpContextWrapper context)

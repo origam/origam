@@ -14,6 +14,17 @@
     ade:readOnly="false">
     <df:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="4020bc56-a75e-4da6-87b1-d62af56a25e9"
+      adec:isPrimaryKey="false"
+      asi:name="HttpStatusCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
