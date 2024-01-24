@@ -185,7 +185,8 @@ namespace Origam.Server.Pages
             }
         }
 
-        private int GetStausCode(Exception ex) {
+        private int GetStausCode(Exception ex)
+        {
             if (ex is RuleException ruleException)
             {
                 var dataList = ruleException.RuleResult
