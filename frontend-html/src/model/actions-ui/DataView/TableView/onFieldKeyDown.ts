@@ -137,7 +137,7 @@ export function onFieldKeyDown(ctx: any) {
         default: {
           if (isSaveShortcut(event)) {
             yield*flushCurrentRowData(ctx)();
-            if(geScreenActionButtonsState(ctx)?.isSaveButtonVisible){
+            if (geScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
               const formScreenLifecycle = getFormScreenLifecycle(ctx);
               yield*formScreenLifecycle.onSaveSession();
             }
