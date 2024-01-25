@@ -93,12 +93,12 @@ namespace Origam.Server.Controller
                 }
                 Stream resultStream;
                 MemoryStream memoryStream;
-                var processBlobField 
+                var blobMemberAvailable 
                     = !string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
                       && (blobDownloadRequest.Row[
                               blobDownloadRequest.BlobMember] != DBNull.Value);
                 if((blobDownloadRequest.BlobLookupId != Guid.Empty) 
-                && !processBlobField)
+                && !blobMemberAvailable)
                 {
                     var lookupService = ServiceManager.Services
                         .GetService<IDataLookupService>();
