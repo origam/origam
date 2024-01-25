@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Principal;
@@ -34,7 +33,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.DA;
 using Origam.Schema;
-using Origam.Server;
 using Origam.Workbench.Services;
 using ImageMagick;
 using Origam.Server.Model.Blob;
@@ -47,11 +45,11 @@ namespace Origam.Server.Controller
     public class BlobController : AbstractController
     {
         private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly CoreHttpTools httpTools = new CoreHttpTools();
+        private readonly CoreHttpTools httpTools = new();
         public BlobController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log, sessionObjects)
+            ILogger<BlobController> log) : base(log, sessionObjects)
         {
             this.localizer = localizer;
         }
@@ -93,12 +91,12 @@ namespace Origam.Server.Controller
                 }
                 Stream resultStream;
                 MemoryStream memoryStream;
-                var processBlobField 
-                    = string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
+                var blobMemberAvailable 
+                    = !string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
                       && (blobDownloadRequest.Row[
                               blobDownloadRequest.BlobMember] != DBNull.Value);
                 if((blobDownloadRequest.BlobLookupId != Guid.Empty) 
-                && !processBlobField)
+                && !blobMemberAvailable)
                 {
                     var lookupService = ServiceManager.Services
                         .GetService<IDataLookupService>();
@@ -132,7 +130,7 @@ namespace Origam.Server.Controller
                 }
                 else
                 {
-                    if(blobDownloadRequest.Row[blobDownloadRequest.BlobMember] 
+                    if(blobDownloadRequest.Row[blobDownloadRequest.BlobMember!] 
                     == DBNull.Value)
                     {
                         return BadRequest(localizer["ErrorBlobRecordEmpty"]
