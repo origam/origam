@@ -357,13 +357,15 @@ export class FormViewEditor extends React.Component<{
             }
             return;
           }
-          if (isSaveShortcut(event) && geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
+          if (isSaveShortcut(event)) {
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {
                 yield*flushCurrentRowData(dataView)();
-                const formScreenLifecycle = getFormScreenLifecycle(dataView);
-                yield*formScreenLifecycle.onSaveSession();
+                if(geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
+                  const formScreenLifecycle = getFormScreenLifecycle(dataView);
+                  yield*formScreenLifecycle.onSaveSession();
+                }
               }()
             });
             return;
