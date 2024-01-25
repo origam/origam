@@ -362,7 +362,7 @@ export class FormViewEditor extends React.Component<{
               ctx: dataView,
               generator: function*() {
                 yield*flushCurrentRowData(dataView)();
-                if(geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
+                if (geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
                   const formScreenLifecycle = getFormScreenLifecycle(dataView);
                   yield*formScreenLifecycle.onSaveSession();
                 }
