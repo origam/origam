@@ -135,10 +135,12 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         default: {
-          if (isSaveShortcut(event) && geScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
+          if (isSaveShortcut(event)) {
             yield*flushCurrentRowData(ctx)();
-            const formScreenLifecycle = getFormScreenLifecycle(ctx);
-            yield*formScreenLifecycle.onSaveSession();
+            if(geScreenActionButtonsState(ctx)?.isSaveButtonVisible){
+              const formScreenLifecycle = getFormScreenLifecycle(ctx);
+              yield*formScreenLifecycle.onSaveSession();
+            }
           }
           else if (isRefreshShortcut(event) && geScreenActionButtonsState(ctx)?.isRefreshButtonVisible) {
             tablePanelView.setEditing(false);
