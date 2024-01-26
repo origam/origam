@@ -41,7 +41,7 @@ import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { onEscapePressed } from "model/actions-ui/DataView/onEscapePressed";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
@@ -137,12 +137,12 @@ export function onFieldKeyDown(ctx: any) {
         default: {
           if (isSaveShortcut(event)) {
             yield*flushCurrentRowData(ctx)();
-            if (geScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
+            if (getScreenActionButtonsState(ctx)?.isSaveButtonVisible) {
               const formScreenLifecycle = getFormScreenLifecycle(ctx);
               yield*formScreenLifecycle.onSaveSession();
             }
           }
-          else if (isRefreshShortcut(event) && geScreenActionButtonsState(ctx)?.isRefreshButtonVisible) {
+          else if (isRefreshShortcut(event) && getScreenActionButtonsState(ctx)?.isRefreshButtonVisible) {
             tablePanelView.setEditing(false);
             yield*flushCurrentRowData(ctx)();
             const formScreenLifecycle = getFormScreenLifecycle(ctx);
