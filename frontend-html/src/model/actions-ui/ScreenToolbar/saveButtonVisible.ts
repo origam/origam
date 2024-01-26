@@ -22,7 +22,7 @@ import { IFormScreen } from "model/entities/types/IFormScreen";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 
-export function geScreenActionButtonsState(ctx: any): IScreenActionButtonsState | undefined{
+export function getScreenActionButtonsState(ctx: any): IScreenActionButtonsState | undefined{
   const activeScreen = getActiveScreen(ctx);
   if (activeScreen && !activeScreen.content) return undefined;
   const formScreen =

@@ -63,7 +63,7 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { makeOnAddNewRecordClick, onSaveClick } from "gui/connections/NewRecordScreen";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
@@ -362,7 +362,7 @@ export class FormViewEditor extends React.Component<{
               ctx: dataView,
               generator: function*() {
                 yield*flushCurrentRowData(dataView)();
-                if (geScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
+                if (getScreenActionButtonsState(dataView)?.isSaveButtonVisible) {
                   const formScreenLifecycle = getFormScreenLifecycle(dataView);
                   yield*formScreenLifecycle.onSaveSession();
                 }
@@ -370,7 +370,7 @@ export class FormViewEditor extends React.Component<{
             });
             return;
           }
-          if (isRefreshShortcut(event) && geScreenActionButtonsState(dataView)?.isRefreshButtonVisible) {
+          if (isRefreshShortcut(event) && getScreenActionButtonsState(dataView)?.isRefreshButtonVisible) {
             await runGeneratorInFlowWithHandler({
               ctx: dataView,
               generator: function*() {

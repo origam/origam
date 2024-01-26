@@ -51,7 +51,7 @@ import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
 import { showDialog } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { isRefreshShortcut, isSaveShortcut } from "utils/keyShortcuts";
 
 @observer
@@ -203,7 +203,7 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   renderForFormScreen() {
-    const actionButtonsState = geScreenActionButtonsState(this.application);
+    const actionButtonsState = getScreenActionButtonsState(this.application);
     if(!actionButtonsState){
       return null;
     }
