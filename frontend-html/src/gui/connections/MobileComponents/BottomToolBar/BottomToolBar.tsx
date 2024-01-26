@@ -23,7 +23,7 @@ import "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { MobXProviderContext, observer } from "mobx-react";
-import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
+import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveButtonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { computed } from "mobx";
@@ -56,7 +56,7 @@ export class BottomToolBar extends React.Component<{
   }
 
   render() {
-    const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
+    const actionButtonsState = getScreenActionButtonsState(this.props.ctx);
     const buttons = [];
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
       buttons.push(
