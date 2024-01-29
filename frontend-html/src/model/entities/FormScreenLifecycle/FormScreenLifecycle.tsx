@@ -92,6 +92,7 @@ import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { isISectionPlugin } from "plugins/interfaces/ISectionPlugin";
 import { isIScreenPlugin } from "plugins/interfaces/IScreenPlugin";
+import { questionCancelWorkflow } from "model/entities/FormScreenLifecycle/QuestionCancelWorkflow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -284,7 +285,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onWorkflowAbortClick(event: any): Generator {
-    if(this.workflowAbortActive > 0) return;
+    if(!(yield questionCancelWorkflow(this))){
+      return false;
+    }
+    if(this.workflowAbortActive > 0) return false;
     this.workflowAbortActive++;
     while(this.flushDataEntered > 0) yield when(() => !this.flushDataEntered);
     this.workflowAbortEntered++;
@@ -301,6 +305,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.killForm();
       yield*this.start({initUIResult: uiResult});
+      return true;
     } finally {
       this.workflowAbortEntered--;
       this.workflowAbortActive--;

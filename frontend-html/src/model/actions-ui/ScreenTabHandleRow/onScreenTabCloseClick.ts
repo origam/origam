@@ -44,8 +44,9 @@ export function onScreenTabCloseClick(ctx: any) {
   return flow(function*onFormTabCloseClick(event: any, closeWithoutSaving?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
     const formScreen = openedScreen.content?.formScreen;
-    if(formScreen?.showWorkflowNextButton && !(yield questionCancelWorkflow(ctx))) {
-      return false;
+    const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
+    if(formScreen?.showWorkflowNextButton) {
+      return yield*lifecycle.onWorkflowAbortClick(null);
     }
     let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
     for (const dataView of dataViews) {
@@ -58,7 +59,6 @@ export function onScreenTabCloseClick(ctx: any) {
       closingScreens.add(openedScreen);
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
-        const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
         yield*lifecycle.onRequestScreenClose(closeWithoutSaving);
       } else {
         yield*closeForm(ctx)();
@@ -71,13 +71,4 @@ export function onScreenTabCloseClick(ctx: any) {
       closingScreens.delete(openedScreen);
     }
   });
-}
-
-
-function questionCancelWorkflow(ctx: any) {
-  return askYesNoQuestion(
-    ctx,
-    getOpenedScreen(ctx).tabTitle,
-    T("Are you sure you want to cancel the workflow?", "cancel_workflow_confirmation")
-  );
 }
