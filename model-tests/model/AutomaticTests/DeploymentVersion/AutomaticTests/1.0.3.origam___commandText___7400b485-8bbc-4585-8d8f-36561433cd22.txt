@@ -1,0 +1,12 @@
+﻿CREATE PROCEDURE restoreWidgetSectionTestMasterForRefreshTest
+AS
+DELETE FROM [dbo].[WidgetSectionTestDetailDetail];
+DELETE FROM [dbo].[WidgetSectionTestDetail];
+DELETE FROM [dbo].[WidgetSectionTestMaster];
+
+INSERT [dbo].[WidgetSectionTestMaster] ([Text1], [Text2], [Memo1], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'text21', N'text22', NULL, N'69aacf26-300e-477b-b9a6-408324ca1cad', N'69aacf26-300e-477b-b9a6-408324ca1cad', N'c947a2f0-d287-4361-baeb-235150993b05', CAST(N'2024-01-30T16:21:25.590' AS DateTime), CAST(N'2024-01-30T16:22:59.033' AS DateTime))
+INSERT [dbo].[WidgetSectionTestMaster] ([Text1], [Text2], [Memo1], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'text11', N'text12', NULL, N'69aacf26-300e-477b-b9a6-408324ca1cad', NULL, N'7f223028-0214-4b6a-90e8-498d6ad2ad9e', CAST(N'2024-01-30T16:22:10.327' AS DateTime), NULL)
+INSERT [dbo].[WidgetSectionTestDetail] ([refWidgetSectionTestMasterId], [Text1], [Text2], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'7f223028-0214-4b6a-90e8-498d6ad2ad9e', N'detail1', NULL, N'69aacf26-300e-477b-b9a6-408324ca1cad', NULL, N'924f48a9-bc75-4334-80ed-b08b82507952', CAST(N'2024-01-30T16:22:36.987' AS DateTime), NULL)
+INSERT [dbo].[WidgetSectionTestDetail] ([refWidgetSectionTestMasterId], [Text1], [Text2], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'c947a2f0-d287-4361-baeb-235150993b05', N'detail2', NULL, N'69aacf26-300e-477b-b9a6-408324ca1cad', N'69aacf26-300e-477b-b9a6-408324ca1cad', N'516cfe82-cf2b-43b5-9519-f9fc1a0e7044', CAST(N'2024-01-30T16:21:41.770' AS DateTime), CAST(N'2024-01-30T16:23:10.083' AS DateTime))
+INSERT [dbo].[WidgetSectionTestDetailDetail] ([refWidgetSectionTestDetailId], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Text1]) VALUES (N'516cfe82-cf2b-43b5-9519-f9fc1a0e7044', N'69aacf26-300e-477b-b9a6-408324ca1cad', N'69aacf26-300e-477b-b9a6-408324ca1cad', N'37479aed-fab6-4b0e-98db-5b714d31b5ec', CAST(N'2024-01-30T16:21:55.960' AS DateTime), CAST(N'2024-01-30T16:23:18.283' AS DateTime), N'subDetail2')
+INSERT [dbo].[WidgetSectionTestDetailDetail] ([refWidgetSectionTestDetailId], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Text1]) VALUES (N'924f48a9-bc75-4334-80ed-b08b82507952', N'69aacf26-300e-477b-b9a6-408324ca1cad', NULL, N'9335fa1d-5fc6-4737-8c49-e406c9e6cddd', CAST(N'2024-01-30T16:22:42.803' AS DateTime), NULL, N'subDetail1')
