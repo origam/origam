@@ -23,9 +23,14 @@ async function restoreWidgetSectionTestMaster(){
   await executeProcedure("dbo.restoreWidgetSectionTestMaster");
 }
 
+// clears all data and insert new data used for the test
+async function restoreWidgetSectionTestMasterForRefreshTest(){
+  await executeProcedure("dbo.restoreWidgetSectionTestMasterForRefreshTest");
+}
+
 async function putNumericTestDataToAllDataTypes(){
   await executeProcedure("dbo.putNumericTestDataToAllDataTypes");
 }
 
 module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster, clearScreenConfiguration,
-  putNumericTestDataToAllDataTypes }
+  putNumericTestDataToAllDataTypes, restoreWidgetSectionTestMasterForRefreshTest }
