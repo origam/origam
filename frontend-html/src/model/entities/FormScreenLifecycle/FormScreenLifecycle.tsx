@@ -758,7 +758,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     } finally {
       for (let dataView of formScreen.nonRootDataViews) {
-        yield*dataView.lifecycle.startSelectedRowReaction();
+        yield*dataView.lifecycle.startSelectedRowReaction(true);
       }
       this.monitor.inFlow--;
     }
