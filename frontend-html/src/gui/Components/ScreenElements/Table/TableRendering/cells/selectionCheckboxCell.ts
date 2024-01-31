@@ -23,6 +23,7 @@ import {
   currentDataRow,
   dataView,
   isCheckBoxedTable,
+  isLastRow,
   recordId,
   rowId,
   rowIndex,
@@ -54,6 +55,7 @@ import { flow } from "mobx";
 import { hasSelectedRowId, setSelectedStateRowId, } from "model/actions-tree/selectionCheckboxes";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { drawBottomLineBorder } from "./dataCell";
 
 export const selectionCheckBoxColumnWidth = 20;
 
@@ -161,5 +163,9 @@ export function drawSelectionCheckboxBackground() {
   );
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth / 2);
+  }
+
+  if (isLastRow()) {
+    drawBottomLineBorder();
   }
 }
