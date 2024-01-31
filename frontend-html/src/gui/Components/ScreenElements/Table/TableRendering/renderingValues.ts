@@ -52,6 +52,13 @@ export function getCurrentRowRightBorderDrawn() {
 
 export const rowId = () => dataTable().getRowId(currentDataRow());
 
+export const isLastRow = () => {
+  const rows = dataTable().rows;
+  if (rows.length === 0) return false;
+  const lastRowId = dataTable().getRowId(rows[rows.length-1]);
+  return lastRowId === rowId();
+}
+
 export const selectionColumnShown = () => getIsSelectionCheckboxesShown(context());
 
 export const dataCellOffset = () => {
