@@ -164,7 +164,6 @@ export function drawSelectionCheckboxBackground() {
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth / 2);
   }
-
   if (isLastRow()) {
     drawBottomLineBorder();
   }

@@ -228,7 +228,7 @@ export function drawBottomLineBorder() {
   const y2 = y1;
   ctx2d.moveTo(x1, y1);
   ctx2d.lineTo(x2, y2);
-  ctx2d.lineWidth = 0.6
+  ctx2d.lineWidth = 0.6;
   ctx2d.strokeStyle = 'lightgray';
   ctx2d.stroke();
   ctx2d.restore();
@@ -260,7 +260,6 @@ export function drawDataCellBackground() {
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth);
   }
-
   if (isLastRow()) {
     drawBottomLineBorder();
   }
