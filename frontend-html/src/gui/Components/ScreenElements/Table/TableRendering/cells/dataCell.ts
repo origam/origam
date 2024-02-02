@@ -46,7 +46,9 @@ import {
   context2d,
   currentDataRow,
   drawingColumnIndex,
+  isLastRow,
   recordId,
+  rowHeight,
   rowIndex,
   tableColumnIds,
   tablePanelView,
@@ -216,6 +218,22 @@ function getCheckboxClickableArea() {
   };
 }
 
+export function drawBottomLineBorder() {
+  const ctx2d = context2d();
+  ctx2d.save();
+  ctx2d.beginPath();
+  const x1 = CPR() * currentColumnLeft();
+  const y1 = CPR() * (currentRowTop() + rowHeight() - 1);
+  const x2 = x1 + CPR() * currentColumnWidth();
+  const y2 = y1;
+  ctx2d.moveTo(x1, y1);
+  ctx2d.lineTo(x2, y2);
+  ctx2d.lineWidth = 0.6;
+  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--background4');
+  ctx2d.stroke();
+  ctx2d.restore();
+}
+
 export function drawDataCellBackground() {
   const ctx2d = context2d();
   const ctx = context();
@@ -241,6 +259,9 @@ export function drawDataCellBackground() {
   );
   if (isRowCursor) {
     drawSelectedRowBorder(frontStripWidth);
+  }
+  if (isLastRow()) {
+    drawBottomLineBorder();
   }
 }
 
