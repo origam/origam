@@ -57,11 +57,25 @@ namespace Origam.Server.Pages
             set
             {
                 var mediaType = new MediaTypeHeaderValue(value);
-                mediaType.Encoding = encoding;
+                // if we're sending a zip file, we need to kick out the encoding
+                // otherwise the delivered file is invalid and of double size
+                if (!IsZipType(value)) {
+                    mediaType.Encoding = encoding;
+                }
                 response.ContentType = mediaType.ToString();
             }
         }
 
+        private bool IsZipType(string contentType)
+        {
+            return contentType switch
+            {
+                "application/zip" => true,
+                "application/octet-stream" => true,
+                "application/x-zip-compressed" => true,
+                _ => false
+            };
+        }
 
         public bool TrySkipIisCustomErrors
         {
