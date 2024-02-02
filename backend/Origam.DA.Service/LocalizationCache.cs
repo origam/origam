@@ -156,7 +156,9 @@ namespace Origam.DA.ObjectPersistence
 						}
 
 						string memberValue = it.Current.Value;
-
+						if (element.ContainsKey(memberName)) {
+							throw new Exception($"Error when loading file {path}. Element id {id} contains category {memberName} multiple times. Please remove the duplicates from the file and try again.");
+						}
 						element.Add(memberName, memberValue);
 					} while (it.Current.MoveToNext());
 				}

@@ -63,6 +63,7 @@ namespace Origam
 			int roundRobinBatchSize,
 			string slogan,
 			string localizationFolder,
+			string localizationIncludedDocumentationElements,
 			bool executeUpgradeScriptsOnStart,
 			int exportRecordsLimit,
 			string helpUrl,
@@ -97,6 +98,7 @@ namespace Origam
 			this.WorkQueueProcessingMode = workQueueProcessingMode;
 			this.Slogan = slogan;
 			this.LocalizationFolder = localizationFolder;
+			this.LocalizationIncludedDocumentationElements = localizationIncludedDocumentationElements;
 			this.ExecuteUpgradeScriptsOnStart = executeUpgradeScriptsOnStart;
 			this.ExportRecordsLimit = exportRecordsLimit;
 			this.HelpUrl = helpUrl;
@@ -187,7 +189,11 @@ namespace Origam
 		[Category("Localization")]
 		public string LocalizationFolder { get; set; } = "";
 
-		[Category("Localization")]
+        [Category("Localization")]
+        [Description("Comma separated names of documentation categories to be include in the generated localization files e.g. USER_SHORT_HELP,USER_LONG_HELP")]
+        public string LocalizationIncludedDocumentationElements { get; set; } = "";
+
+        [Category("Localization")]
 		[Description("List of languages that will be used when generating translation files in Architect. Comma separated e.g. en-US,de-DE.")]
 		public string TranslationBuilderLanguages { get; set; } = "";
 
@@ -331,6 +337,7 @@ namespace Origam
 				this.RoundRobinBatchSize,
 				this.Slogan,
 				this.LocalizationFolder,
+				this.LocalizationIncludedDocumentationElements,
 				this.ExecuteUpgradeScriptsOnStart,
 				this.ExportRecordsLimit,
 				this.HelpUrl,
