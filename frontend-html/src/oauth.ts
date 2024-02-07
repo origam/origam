@@ -62,5 +62,6 @@ export async function ensureLogin() {
 }
 
 export async function logoff() {
+  await userManager.signoutRedirectCallback();
   await userManager.signoutRedirect();
 }
