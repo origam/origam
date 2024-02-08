@@ -44,9 +44,11 @@ export function onScreenTabCloseClick(ctx: any) {
   return flow(function*onFormTabCloseClick(event: any, closeWithoutSaving?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
     const formScreen = openedScreen.content?.formScreen;
-    const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
-    if(formScreen?.showWorkflowNextButton) {
-      return yield*lifecycle.onWorkflowAbortClick(null);
+    if(formScreen){
+      const lifecycle = getFormScreenLifecycle(formScreen);
+      if(formScreen?.showWorkflowNextButton) {
+        return yield*lifecycle.onWorkflowAbortClick(null);
+      }
     }
     let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
     for (const dataView of dataViews) {
@@ -59,6 +61,7 @@ export function onScreenTabCloseClick(ctx: any) {
       closingScreens.add(openedScreen);
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
+        const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
         yield*lifecycle.onRequestScreenClose(closeWithoutSaving);
       } else {
         yield*closeForm(ctx)();
