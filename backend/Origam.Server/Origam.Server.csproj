@@ -120,6 +120,9 @@
     <Content Include="assets\identity\icons\user.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="assets\identity\js\signout-redirect.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="assets\identity\js\form-sumbit.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -214,6 +217,7 @@
 
   <ItemGroup>
     <Compile Remove="Authorization\RoleStore.cs" />
+    <None Remove="assets\identity\js\signout-redirect.js" />
     <Compile Update="Resources\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
