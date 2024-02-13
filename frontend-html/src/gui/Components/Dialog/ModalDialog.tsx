@@ -21,6 +21,7 @@ import React, { useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ModalWindow } from "gui/Components/Dialogs/Dialog";
+import { isPhoneLayoutActive } from "model/selectors/isPhoneLayoutActive";
 
 export const ModalDialog: React.FC<{
   title: React.ReactNode;
@@ -47,7 +48,7 @@ export const ModalDialog: React.FC<{
       buttonsCenter={props.buttonsCenter}
       width={props.width}
       height={props.height}
-      fullScreen={isMobileLayoutActive(application)}
+      fullScreen={isPhoneLayoutActive(application)}
       topPosiotionProc={props.topPosiotionProc}
       onKeyDown={props.onKeyDown}
       onWindowMove={props.onWindowMove}
