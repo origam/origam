@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -62,8 +63,9 @@ namespace Origam.Server
         private IDictionary<string, IDictionary> _variables;
         private string _workflowTaskId;
 
-        public UIResult(Guid sessionId, IDictionary<string, object> data, IDictionary<string, IDictionary> variables)
+        public UIResult(Guid sessionId, IDictionary<string, object> data, IDictionary<string, IDictionary> variables, bool isDirty)
         {
+            IsDirty = isDirty;
             this.SessionId = sessionId;
             this.Data = data;
             if (variables != null)
@@ -71,6 +73,8 @@ namespace Origam.Server
                 this.Variables = variables;
             }
         }
+
+        public bool IsDirty { get; }
 
         public string FormDefinition
         {
