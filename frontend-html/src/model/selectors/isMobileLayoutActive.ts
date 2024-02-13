@@ -24,5 +24,5 @@ export function isMobileLayoutActive(ctx: any) {
   if(!breakpoint){
     return false;
   }
-  return breakpoint.includes("small") || breakpoint.includes("medium");
+  return breakpoint.includes("small") ;
 }
