@@ -192,6 +192,9 @@
     <None Update="assets\fonts\ibm-plex-sans-v8-latin-ext_latin-regular.woff2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="assets\identity\js\custom.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TemplateFiles\custom.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
