@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "./Dialog.module.scss";
+import S from "./ModalWindow.module.scss";
 import React from "react";
 
 import { observer, Observer } from "mobx-react";
 import { action, observable } from "mobx";
 import Measure, { BoundingRect } from "react-measure";
-import { Icon } from "../Icon/Icon";
 import { requestFocus } from "utils/focus";
 
 @observer
@@ -213,10 +212,3 @@ export class ModalWindow extends React.Component<{
   }
 }
 
-export const CloseButton = (props: { onClick?: (event: any) => void }) => (
-  <button className={S.btnClose} onClick={props.onClick}>
-    <div className={S.btnIconContainer}>
-      <Icon src="./icons/close.svg" tooltip={""}/>
-    </div>
-  </button>
-);

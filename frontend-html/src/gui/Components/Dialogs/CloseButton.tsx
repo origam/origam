@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,19 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import S from "gui/Components/Dialogs/ModalWindow.module.scss";
+import { Icon } from "gui/Components/Icon/Icon";
 import React from "react";
-import S from "./Dialog.module.scss";
 
-
-export const Dialog: React.FC<{
-  heading: string
-}> = (props) => {
-  return (
-    <div className={S.root}>
-      <div className={S.topBar}>
-        {props.heading}
-      </div>
-      {props.children}
+export const CloseButton = (props: { onClick?: (event: any) => void }) => (
+  <button className={S.btnClose} onClick={props.onClick}>
+    <div className={S.btnIconContainer}>
+      <Icon src="./icons/close.svg" tooltip={""}/>
     </div>
-  );
-}
+  </button>
+);

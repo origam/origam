@@ -35,7 +35,7 @@ import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { CloseButton } from "gui/Components/Dialogs/Dialog";
+import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
