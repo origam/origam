@@ -28,8 +28,8 @@ export function getDialogStack(ctx: any) {
   return getApplication(ctx).dialogStack;
 }
 
-export function showDialog(ctx: any, key: string, component: React.ReactElement) {
-  if(isMobileLayoutActive(ctx)){
+export function showDialog(ctx: any, key: string, component: React.ReactElement, boolMustRunFullScreenInMobile?: boolean,) {
+  if(isMobileLayoutActive(ctx) && boolMustRunFullScreenInMobile){
     const mobileState =  getMobileState(ctx);
     let layoutBefore = mobileState.layoutState;
     mobileState.layoutState = new EditLayoutState(

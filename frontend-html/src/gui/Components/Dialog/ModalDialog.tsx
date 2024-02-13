@@ -35,6 +35,7 @@ export const ModalDialog: React.FC<{
   topPosiotionProc?: number;
   onKeyDown?: (event: any) => void;
   onWindowMove?: (top: number, left: number)=>void;
+  mustRunFullScreenInMobile?: boolean;
 }> = (props) => {
   const application = useContext(MobXProviderContext).application
 
@@ -48,7 +49,7 @@ export const ModalDialog: React.FC<{
       buttonsCenter={props.buttonsCenter}
       width={props.width}
       height={props.height}
-      fullScreen={isPhoneLayoutActive(application)}
+      fullScreen={isPhoneLayoutActive(application) || isMobileLayoutActive (application) && props.mustRunFullScreenInMobile}
       topPosiotionProc={props.topPosiotionProc}
       onKeyDown={props.onKeyDown}
       onWindowMove={props.onWindowMove}
