@@ -7,7 +7,7 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: master
+  value: licenseupdate
 - name: VERSION_NUMBER # version number of the build
   value: 2024.3.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
@@ -15,13 +15,13 @@ variables:
 - name: TAG # tag to be used
   value: 2024.3-alpha.0
 - name: TAG_LATEST # tag to be used
-  value: master-latest
+  value: licenseupdate
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2024.2.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2024.3
+  value: licenseupdate
 
 
 resources:
@@ -190,7 +190,7 @@ jobs:
        displayName: 'Prepare sources for setup (model)'
      - powershell: |
         & "$(WIX)bin\candle.exe" -ext WixSqlExtension -ext WixUtilExtension ArchitectSetup.wxs
-        & "$(WIX)bin\light.exe" -ext WixSqlExtension -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
+        & "$(WIX)bin\light.exe" -ext WixSqlExtension -dWixUILicenseRtf=gpl-3.0.rtf -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
         New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
         Copy-Item OrigamSetup.msi $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
        workingDirectory: $(Agent.BuildDirectory)\s\backend\OrigamSetup
