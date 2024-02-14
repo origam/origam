@@ -24,7 +24,7 @@ import { CWorkQueues } from "gui/connections/CWorkQueues";
 import { CSidebarInfoSection } from "gui/connections/CSidebarInfoSection";
 import { T } from "utils/translation";
 import { SearchResults } from "gui/Components/Search/SearchResults";
-import { CFavorites, onDragEndAction } from "gui/connections/CFavorites";
+import { onDragEndAction } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { MenuItemList } from "../MenuItemList";
 import S from "gui/connections/MobileComponents/MobileSideBar.module.scss";
@@ -37,6 +37,7 @@ import { CChatSection } from "../CChatSection";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { SidebarState } from "model/entities/SidebarState";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
+import { MobileFavoriteFolder } from "./MobileFavoriteFolder";
 
 
 export const MobileSideBar = observer( () => {
@@ -61,12 +62,10 @@ export const MobileSideBar = observer( () => {
           <DragDropContext onDragEnd={(result) => onDragEndAction(result, workbench)}>
           {favorites.favoriteFolders
             .map((folder) => (
-              <CFavorites
+              <MobileFavoriteFolder
                 key={folder.id}
                 ctx={workbench}
-                folder={folder}
-                isActive={true}
-                forceOpen={true}/>
+                folder={folder}/>
             ))
             }
           </DragDropContext>
@@ -83,7 +82,6 @@ export const MobileSideBar = observer( () => {
   }
 
   return (
-
     <div className={S.root}>
       <div className={S.contentContainer}>
         {renderContent()}

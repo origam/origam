@@ -27,6 +27,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     top: -3px;
     left: 15px;
   }
+
+  :global(.favorites) {
+    border-left: none; 
+  }
+
+  :global(.devider) {
+    height: 0px;
+    border-top: none;
+    margin: 0;
+  }
 }
 
 .workQueueButton {
@@ -36,11 +46,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .contentContainer {
   overflow: auto;
   height: 100%;
+  background-color: var(--background2);
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .bottomContainer {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;

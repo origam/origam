@@ -64,66 +64,7 @@ export class CFavorites extends React.Component<{
   }
 
   componentDidMount() {
-   this.removeOutdatedMenuItemIds();
-  }
-
-  removeOutdatedMenuItemIds(){
-    const mainMenu = getMainMenu(this.props.ctx);
-    if(!mainMenu){
-      return;
-    }
-    const allMenuNodes = getAllElements(mainMenu?.menuUI)
-
-    const missingIds = this.props.folder.itemIds
-      .filter(itemId => {
-        const menuItem = allMenuNodes.find((childNode: any) => childNode.attributes["id"] === itemId)
-        return !menuItem;
-      })
-
-    runInFlowWithHandler({
-      ctx: this.props.ctx,
-      action: () => this.favorites.removeList(missingIds),
-    });
-  }
-
-  get canBeDeleted() {
-    return this.props.folder.id !== this.favorites.defaultFavoritesFolderId;
-  }
-
-  onCreateNewFolderClick() {
-    const closeDialog = showDialog(this.props.ctx,
-      "",
-      <FavoriteFolderPropertiesDialog
-        title={T("New Favourites Folder", "new_group_title")}
-        onOkClick={(name, isPinned) => {
-          runInFlowWithHandler({
-            ctx: this.props.ctx,
-            action: () => this.favorites.createFolder(name, isPinned),
-          });
-          closeDialog();
-        }}
-        onCancelClick={() => closeDialog()}
-      />
-    );
-  }
-
-  onFolderPropertiesClick() {
-    const closeDialog = showDialog(this.props.ctx,
-      "",
-      <FavoriteFolderPropertiesDialog
-        title={T("Favourites Folder Properties", "group_properties_title")}
-        name={this.props.folder.name}
-        isPinned={this.props.folder.isPinned}
-        onOkClick={(name, isPinned) => {
-          runInFlowWithHandler({
-            ctx: this.props.ctx,
-            action: () => this.favorites.updateFolder(this.props.folder.id, name, isPinned),
-          });
-          closeDialog();
-        }}
-        onCancelClick={() => closeDialog()}
-      />
-    );
+   removeOutdatedMenuItemIds(this.props.ctx, this.props.folder);
   }
 
   onMouseEnter() {
@@ -137,81 +78,6 @@ export class CFavorites extends React.Component<{
   onEditClick() {
     this.dragStateContainer.flipEditEnabled();
     this.props.onHeaderClick?.();
-  }
-
-  listFromNode(node: any, level: number, isOpen: boolean) {
-    const menuNodes = getAllElements(node)
-      .filter(
-        (childNode: any) =>
-          childNode.attributes.isHidden !== "true" &&
-          childNode.name !== "Submenu")
-    return (
-      <Dropdowner
-        trigger={({refTrigger, setDropped}) => (
-          <div
-            ref={refTrigger}
-            className={S.favoritesList}
-            onContextMenu={(event) => {
-              setDropped(true, event);
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          >
-            <Droppable droppableId={"favorite_folder_" + this.props.folder.id}>
-              {(provided) => (
-                <Observer>
-                  {() => (
-                    <div  {...provided.droppableProps} ref={provided.innerRef}>
-                      {this.props.folder.itemIds
-                        .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
-                        .filter(node => node)
-                        .map((node: any, index: number) =>
-                          <Draggable
-                            key={node.$iid}
-                            draggableId={"favorite_item_" + node.attributes.id}
-                            index={index}
-                            isDragDisabled={!this.dragStateContainer.editingEnabled}
-                          >
-                            {(provided) => (
-                              <Observer>
-                                {() =>
-                                  <div
-                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <CFavoritesMenuItem
-                                      node={node}
-                                      level={level}
-                                      isOpen={isOpen}
-                                      editingEnabled={this.dragStateContainer.editingEnabled}
-                                    />
-                                  </div>
-                                }
-                              </Observer>
-                            )}
-                          </Draggable>
-                        )
-                      }
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Observer>
-              )}
-            </Droppable>
-          </div>
-        )}
-        content={({setDropped}) => (
-          <Dropdown>
-            <DropdownItem
-              onClick={(event: any) => {
-                setDropped(false);
-                this.onCreateNewFolderClick();
-              }}
-            >
-              {T("Add Folder", "add_group")}
-            </DropdownItem>
-          </Dropdown>
-        )}
-      />
-    );
   }
 
   renderHeader() {
@@ -261,7 +127,7 @@ export class CFavorites extends React.Component<{
         )}
         content={({setDropped}) => (
           <Dropdown>
-            {this.canBeDeleted && (
+            {canBeDeleted(this.props.folder, this.favorites) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -303,7 +169,7 @@ export class CFavorites extends React.Component<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onCreateNewFolderClick();
+                onCreateFavoritesFolderClick(this.props.ctx);
               }}
             >
               {T("Put to favourites", "add_group")}
@@ -311,7 +177,7 @@ export class CFavorites extends React.Component<{
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onFolderPropertiesClick();
+                onFolderPropertiesClick(this.props.ctx, this.props.folder);
               }}
             >
               {T("Properties", "group_properties")}
@@ -332,11 +198,16 @@ export class CFavorites extends React.Component<{
     }
 
     return this.props.forceOpen ? (
-      <div className={S.forceOpenSection}>
+      <div className={S.forceOpenSection + " favorites"}>
         <SidebarSectionDivider/>
         {this.renderHeader()}
         <SidebarSectionBody isActive={true}>
-          {this.props.folder && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+          {this.props.folder && 
+            <FavoriteItemsList 
+              folder={this.props.folder}
+              dragStateContainer={this.dragStateContainer}
+              ctx={this.props.ctx} 
+            />}
         </SidebarSectionBody>
       </div>
     ) : (
@@ -344,14 +215,18 @@ export class CFavorites extends React.Component<{
         <SidebarSectionDivider/>
         {this.renderHeader()}
         <SidebarSectionBody isActive={this.props.isActive}>
-          {this.props.folder && this.props.isActive && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+          {this.props.folder && this.props.isActive && 
+            <FavoriteItemsList 
+              folder={this.props.folder}
+              dragStateContainer={this.dragStateContainer}
+              ctx={this.props.ctx} />}
         </SidebarSectionBody>
       </SidebarSection>
     );
   }
 }
 
-class DragStateContainer {
+export class DragStateContainer {
 
   private static instances: DragStateContainer[] = [];
 
@@ -415,5 +290,131 @@ function getIdFromDropIdentifier(droppableId: string) {
   let split = droppableId.split("_");
   return split[split.length - 1]
 }
+
+export const FavoriteItemsList = observer((props: {
+  dragStateContainer: DragStateContainer, 
+  folder: FavoriteFolder,
+  ctx:any
+}) => {
+  const mainMenu = getMainMenu(props.ctx);
+
+  function listFromNode(node: any, level: number, isOpen: boolean) {
+    const menuNodes = getAllElements(node)
+      .filter(
+        (childNode: any) =>
+          childNode.attributes.isHidden !== "true" &&
+          childNode.name !== "Submenu")
+    return (
+      <div className={S.favoritesList}>
+        <Droppable droppableId={"favorite_folder_" + props.folder.id}>
+          {(provided) => (
+            <Observer>
+              {() => (
+                <div  {...provided.droppableProps} ref={provided.innerRef}>
+                  {props.folder.itemIds
+                    .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
+                    .filter(node => node)
+                    .map((node: any, index: number) =>
+                      <Draggable
+                        key={node.$iid}
+                        draggableId={"favorite_item_" + node.attributes.id}
+                        index={index}
+                        isDragDisabled={!props.dragStateContainer.editingEnabled}
+                      >
+                        {(provided) => (
+                          <Observer>
+                            {() =>
+                              <div
+                                ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <CFavoritesMenuItem
+                                  node={node}
+                                  level={level}
+                                  isOpen={isOpen}
+                                  editingEnabled={props.dragStateContainer.editingEnabled}
+                                />
+                              </div>
+                            }
+                          </Observer>
+                        )}
+                      </Draggable>
+                    )
+                  }
+                {provided.placeholder}
+                </div>
+              )}
+            </Observer>
+          )}
+        </Droppable>
+      </div>
+    )
+  }
+
+  return mainMenu
+    ? listFromNode(mainMenu.menuUI ,1, true) 
+    : null;
+});
+
+export function  removeOutdatedMenuItemIds(ctx: any, folder: FavoriteFolder) {
+  const favorites = getFavorites(ctx);
+  const mainMenu = getMainMenu(ctx);
+  if(!mainMenu){
+    return;
+  }
+  const allMenuNodes = getAllElements(mainMenu?.menuUI)
+
+  const missingIds = folder.itemIds
+    .filter(itemId => {
+      const menuItem = allMenuNodes.find((childNode: any) => childNode.attributes["id"] === itemId)
+      return !menuItem;
+    })
+
+  runInFlowWithHandler({
+    ctx: ctx,
+    action: () => favorites.removeList(missingIds),
+  });
+}
+
+export function canBeDeleted(folder: FavoriteFolder, favorites: Favorites) {
+  return folder.id !== favorites.defaultFavoritesFolderId;
+}
+
+export function onCreateFavoritesFolderClick(ctx: any) {
+  const favorites = getFavorites(ctx);
+  const closeDialog = showDialog(ctx,
+    "",
+    <FavoriteFolderPropertiesDialog
+      title={T("New Favourites Folder", "new_group_title")}
+      onOkClick={(name, isPinned) => {
+        runInFlowWithHandler({
+          ctx: ctx,
+          action: () => favorites.createFolder(name, isPinned),
+        });
+        closeDialog();
+      }}
+      onCancelClick={() => closeDialog()}
+    />
+  );
+}
+
+export function onFolderPropertiesClick(ctx: any, folder: FavoriteFolder) {
+  const favorites = getFavorites(ctx);
+  const closeDialog = showDialog(ctx,
+    "",
+    <FavoriteFolderPropertiesDialog
+      title={T("Favourites Folder Properties", "group_properties_title")}
+      name={folder.name}
+      isPinned={folder.isPinned}
+      onOkClick={(name, isPinned) => {
+        runInFlowWithHandler({
+          ctx:ctx,
+          action: () => favorites.updateFolder(folder.id, name, isPinned),
+        });
+        closeDialog();
+      }}
+      onCancelClick={() => closeDialog()}
+    />
+  );
+}
+
 
 
