@@ -18,10 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { MobXProviderContext, observer } from "mobx-react";
-import React, { useContext } from "react";
-import { ModalWindow } from "./Dialog";
+import React from "react";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
-import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class YesNoQuestion extends React.Component<{
@@ -46,10 +45,9 @@ export class YesNoQuestion extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={this.props.screenTitle}
         titleButtons={null}
-        fullScreen={isMobileLayoutActive(this.context.application)}
         buttonsCenter={
           <>
             <button
@@ -74,7 +72,7 @@ export class YesNoQuestion extends React.Component<{
         buttonsRight={null}
       >
         <div className={CS.dialogContent}>{this.props.message}</div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

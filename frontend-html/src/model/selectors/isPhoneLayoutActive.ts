@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getApplication } from "model/selectors/getApplication";
 
-export function isMobileLayoutActive(ctx: any) {
+export function isPhoneLayoutActive(ctx: any) {
   const breakpoint = getApplication(ctx).breakpoint;
-  if(!breakpoint){
+  if (!breakpoint) {
     return false;
   }
-  return breakpoint.includes("small");
+  return breakpoint.includes("xsmall");
 }
