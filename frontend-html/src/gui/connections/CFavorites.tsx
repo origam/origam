@@ -386,3 +386,34 @@ function*getAllElementsRecursive(elements: any[]): any {
   }
 }
 
+
+export const onDragEndAction = action((result: any, ctx: any) => onDragEnd(result, ctx));
+
+async function onDragEnd(result: any, ctx: any) {
+  if (!result.destination) return;
+
+  let sourceFolderId = getIdFromDropIdentifier(result.source.droppableId);
+  let destinationFolderId = getIdFromDropIdentifier(result.destination.droppableId);
+  let itemId = getIdFromDropIdentifier(result.draggableId);
+
+  const favorites = getFavorites(ctx);
+  const destinationFolder = favorites.favoriteFolders
+    .find(folder => folder.id === destinationFolderId)!;
+  const sourceFolder = favorites.favoriteFolders
+    .find(folder => folder.id === sourceFolderId)!;
+  if (sourceFolderId === destinationFolderId) {
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+    await favorites.moveItemInFolder(sourceFolder.itemIds, result.source.index, result.destination.index)
+    return;
+  }
+  await favorites.moveItemBetweenFolders(itemId, sourceFolder, destinationFolder);
+}
+
+function getIdFromDropIdentifier(droppableId: string) {
+  let split = droppableId.split("_");
+  return split[split.length - 1]
+}
+
+

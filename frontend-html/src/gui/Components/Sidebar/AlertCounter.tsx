@@ -20,8 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/Sidebar/AlertCounter.module.scss";
 
-export class SidebarAlertCounter extends React.Component {
+export class SidebarAlertCounter extends React.Component<{className?: string}> {
   render() {
-    return <div className={S.root}>{this.props.children}</div>;
+    return <div className={S.root + " " + (this.props.className ? this.props.className: "")}>
+        {this.props.children}
+      </div>;
   }
 }
