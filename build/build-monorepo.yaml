@@ -7,7 +7,7 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: licenseupdate
+  value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2024.3.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
@@ -15,13 +15,13 @@ variables:
 - name: TAG # tag to be used
   value: 2024.3-alpha.0
 - name: TAG_LATEST # tag to be used
-  value: licenseupdate
+  value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2024.2.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: licenseupdate
+  value: 2024.3
 
 
 resources:
@@ -30,7 +30,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: master
+     ref: $(BRANCH)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
