@@ -120,7 +120,10 @@
     <Content Include="assets\identity\icons\user.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="assets\identity\js\form-sumbit.js">
+    <Content Include="assets\identity\js\signout-redirect.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\identity\js\form-submit.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Views\Account\LoginTwoStep.cshtml">
@@ -189,6 +192,9 @@
     <None Update="assets\fonts\ibm-plex-sans-v8-latin-ext_latin-regular.woff2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="assets\identity\js\custom.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TemplateFiles\custom.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -214,6 +220,7 @@
 
   <ItemGroup>
     <Compile Remove="Authorization\RoleStore.cs" />
+    <None Remove="assets\identity\js\signout-redirect.js" />
     <Compile Update="Resources\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
