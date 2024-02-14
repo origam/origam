@@ -39,11 +39,23 @@ export class TextCellDriver implements IBodyCellDriver {
     return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
   }
 
+  highlightMatches(text: string, filterPhrase: string) {
+    const regex = new RegExp(`(${filterPhrase})`, 'gi');
+    const parts = text.split(regex);
+    return parts.map((part, index) =>
+      (regex.test(part) && filterPhrase.length > 0) ? <span key={index} style={{ backgroundColor: 'yellow' }}>{part}</span> : part
+    );
+  }
+
   render(rowIndex: number) {
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     if(rowId === null || rowId === ""){
       console.error("There are rows with missing identifier in the dropdown. This causes confusing row coloring. Fix your model!")
     }
+
+    const textContent = this.formattedText(rowIndex);
+    const highlightedText = this.highlightMatches(textContent, this.dataTable.filterPhrase);
+
     return (
       <div
         className={bodyCellClass(
@@ -57,7 +69,7 @@ export class TextCellDriver implements IBodyCellDriver {
         }
         }
       >
-        {this.formattedText(rowIndex)}
+        {highlightedText}
       </div>
     );
   }
