@@ -82,7 +82,7 @@ export class ModalWindow extends React.Component<{
     this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
 
     clearTimeout(this.timeout);
-    this.timeout = setTimeout(()=> {
+    this.timeout = setTimeout(() => {
       this.isHidden = false;
     }, 20);
   }
