@@ -172,9 +172,13 @@ namespace Origam.Server
                 columns = ss.DataListLoadedColumns;
             }
             DatasetTools.CheckRowErrorOfChangedRows(ss.InitialData);
-            UIResult result = new UIResult(ss.Id, DataTools.DatasetToHashtable(
-                ss.InitialData, columns, initialPageNumberOfRecords,
-                ss.CurrentRecordId, ss.DataListEntity, ss), ss.Variables);
+            UIResult result = new UIResult(
+                sessionId: ss.Id, 
+                data: DataTools.DatasetToHashtable(
+                    ss.InitialData, columns, initialPageNumberOfRecords,
+                    ss.CurrentRecordId, ss.DataListEntity, ss), 
+                variables: ss.Variables, 
+                isDirty: ss.HasChanges());
             result.Notifications = ss.Notifications;
             result.HasPartialData = ss.IsPagedLoading;
             if(ss is WorkflowSessionStore)
@@ -359,7 +363,7 @@ namespace Origam.Server
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
-            UIResult result = new UIResult(Guid.Empty, null, null);
+            UIResult result = new UIResult(Guid.Empty, null, null, false);
 
             XmlDocument dashboardViews = DashboardViews(objectId);
             XmlDocument formXml;
