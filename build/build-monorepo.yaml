@@ -190,7 +190,7 @@ jobs:
        displayName: 'Prepare sources for setup (model)'
      - powershell: |
         & "$(WIX)bin\candle.exe" -ext WixSqlExtension -ext WixUtilExtension ArchitectSetup.wxs
-        & "$(WIX)bin\light.exe" -ext WixSqlExtension -dWixUILicenseRtf=gpl3.rtf -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
+        & "$(WIX)bin\light.exe" -ext WixSqlExtension -dWixUILicenseRtf=$(Agent.BuildDirectory)\s\backend\OrigamSetup\gpl3.rtf -ext WixUtilExtension -ext WixNetFxExtension -sice:ICE20 -cultures:en-us -loc resources.en-us.wxl -out OrigamSetup.msi ArchitectSetup.wixobj
         New-Item -ItemType File -Path $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
         Copy-Item OrigamSetup.msi $(build.artifactstagingdirectory)\origam-setup\OrigamSetup.msi -Force
        workingDirectory: $(Agent.BuildDirectory)\s\backend\OrigamSetup
