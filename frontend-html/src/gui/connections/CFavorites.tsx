@@ -307,43 +307,44 @@ export const FavoriteItemsList = observer((props: {
     return (
       <div className={S.favoritesList}>
         <Droppable droppableId={"favorite_folder_" + props.folder.id}>
-          {(provided) => (
-            <Observer>
-              {() => (
-                <div  {...provided.droppableProps} ref={provided.innerRef}>
-                  {props.folder.itemIds
-                    .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
-                    .filter(node => node)
-                    .map((node: any, index: number) =>
-                      <Draggable
-                        key={node.$iid}
-                        draggableId={"favorite_item_" + node.attributes.id}
-                        index={index}
-                        isDragDisabled={!props.dragStateContainer.editingEnabled}
-                      >
-                        {(provided) => (
-                          <Observer>
-                            {() =>
-                              <div
-                                ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                <CFavoritesMenuItem
-                                  node={node}
-                                  level={level}
-                                  isOpen={isOpen}
-                                  editingEnabled={props.dragStateContainer.editingEnabled}
-                                />
-                              </div>
-                            }
-                          </Observer>
-                        )}
-                      </Draggable>
-                    )
-                  }
-                {provided.placeholder}
-                </div>
-              )}
-            </Observer>
-          )}
+          {(provided) => 
+            <div>
+              <Observer>
+                {() => (
+                  <div  {...provided.droppableProps} ref={provided.innerRef}>
+                    {props.folder.itemIds
+                      .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
+                      .filter(node => node)
+                      .map((node: any, index: number) =>
+                        <Draggable
+                          key={node.$iid}
+                          draggableId={"favorite_item_" + node.attributes.id}
+                          index={index}
+                          isDragDisabled={!props.dragStateContainer.editingEnabled}
+                        >
+                          {(provided) => (
+                            <Observer>
+                              {() =>
+                                <div
+                                  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                  <CFavoritesMenuItem
+                                    node={node}
+                                    level={level}
+                                    isOpen={isOpen}
+                                    editingEnabled={props.dragStateContainer.editingEnabled}
+                                  />
+                                </div>
+                              }
+                            </Observer>
+                          )}
+                        </Draggable>
+                      )
+                    }
+                  </div>
+                )}
+              </Observer>
+              {provided.placeholder}
+            </div>}
         </Droppable>
       </div>
     )
