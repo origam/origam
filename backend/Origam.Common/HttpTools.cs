@@ -236,15 +236,15 @@ namespace Origam
 
 			// try to parse user credentials and if present:
 			// use it as a http basic authorization
-			string cred = myUrl.UserInfo;
-			if (cred.Contains(":"))
+			string credentials = myUrl.UserInfo;
+			if (credentials.Contains(":"))
 			{
-				string[] credparts = cred.Split(':');
-				if (credparts.Length == 2)
+				string[] credentialsSplit = credentials.Split(':');
+				if (credentialsSplit.Length == 2)
 				{
 					return SendRequest(url, method, content, contentType,
-						headers, "Basic", MyUri.UnescapeDataString(credparts[0]),
-						MyUri.UnescapeDataString(credparts[1]), false, timeout);
+						headers, "Basic", MyUri.UnescapeDataString(credentialsSplit[0]),
+						MyUri.UnescapeDataString(credentialsSplit[1]), false, timeout);
 				}
 			}
 			return SendRequest(url, method, content, contentType,
