@@ -47,30 +47,20 @@ namespace Origam.Workflow
 
 		public override void Run()
 		{
-			switch(this.MethodName)
+			switch(MethodName)
 			{
 				case "SendRequest":
-					// Check input parameters
-					if(! (this.Parameters["Url"] is string))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorPathNotString"));
-
-					if(! (this.Parameters["Method"] is string || this.Parameters["Method"] == null))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorArgumentsNotString"));
-                    int? timeout = null;
-                    if(this.Parameters["Timeout"] is int)
-                    {
-                        timeout = (int)this.Parameters["Timeout"];
-                    }
-                    _result = HttpTools.Instance.SendRequest(
-						(string)this.Parameters["Url"], 
-						this.Parameters["Method"] as string,
-                        GetContent(this.Parameters["Content"]) as string,
-						this.Parameters["ContentType"] as string,
-						this.Parameters["Headers"] as Hashtable,
-						timeout);
-				    break;
+					_result = HttpTools.Instance.SendRequest(
+											url: Parameters.Get<string>("Url"),
+											method: Parameters.Get<string>("Method"),
+											content: GetContent(Parameters["Content"]),
+											contentType: Parameters.Get<string>("ContentType"),
+											headers: Parameters["Headers"] as Hashtable,
+											timeout: Parameters.Get<int>("Timeout")
+										);
+					break;
 				default:
-					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
+					throw new ArgumentOutOfRangeException("MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
         private string GetContent(object obj)
