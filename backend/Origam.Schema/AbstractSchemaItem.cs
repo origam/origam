@@ -1812,7 +1812,7 @@ namespace Origam.Schema
 		public virtual ISchemaItem ConvertTo(Type type)
 		{
 			var methodInfo = typeof(AbstractSchemaItem).GetMethod(
-				"ConvertTo", BindingFlags.NonPublic);
+				"ConvertTo", BindingFlags.NonPublic | BindingFlags.Instance);
 			var genericMethodInfo = methodInfo.MakeGenericMethod(type);
 			return (ISchemaItem)genericMethodInfo.Invoke(this, null);
 		}

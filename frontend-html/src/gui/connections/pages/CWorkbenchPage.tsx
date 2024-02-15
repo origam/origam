@@ -86,13 +86,13 @@ export class CWorkbenchPage extends React.Component {
               }
             />
           </Breakpoint>
-          <BreakpointProvider/>
+          <OrigamBreakpointProvider/>
         </>
     );
   }
 }
 
-const BreakpointProvider: React.FC<{}> = (props) => {
+const OrigamBreakpointProvider: React.FC<{}> = (props) => {
   const breakpoint = useCurrentBreakpointName();
   const application = useContext(MobXProviderContext).application
   setTimeout(() => {

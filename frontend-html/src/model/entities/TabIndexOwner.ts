@@ -91,6 +91,9 @@ function compareFraction(
 }
 
 function has(tabIndexOwner: ITabIndexOwner, fractionIndex: number) {
+  if (!tabIndexOwner.tabIndex.fractions) {
+    return false;
+  }
   return tabIndexOwner.tabIndex.fractions.length - 1 >= fractionIndex;
 }
 

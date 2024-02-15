@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "./Dialog.module.scss";
+import S from "./ModalWindow.module.scss";
 import React from "react";
 
 import { observer, Observer } from "mobx-react";
 import { action, observable } from "mobx";
 import Measure, { BoundingRect } from "react-measure";
-import { Icon } from "../Icon/Icon";
 import { requestFocus } from "utils/focus";
 
 @observer
@@ -62,6 +61,8 @@ export class ModalWindow extends React.Component<{
     return this._left;
   }
   @observable isDragging = false;
+  @observable
+  isHidden = true;
 
   reportingWindowMove = false;
   dragStartMouseX = 0;
@@ -69,19 +70,21 @@ export class ModalWindow extends React.Component<{
   dragStartPosX = 0;
   dragStartPosY = 0;
 
-  isInitialized = false;
+  timeout: NodeJS.Timeout | undefined;
+  contentRect?: { bounds: BoundingRect };
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
-    if (!(!this.isInitialized && contentRect.bounds!.height && contentRect.bounds!.width)) {
-      return;
-    }
     if (this.props.topPosiotionProc) {
       this.top = window.innerHeight * this.props.topPosiotionProc / 100;
     } else {
       this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
     }
     this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
-    this.isInitialized = true;
+
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      this.isHidden = false;
+    }, 20);
   }
 
   @action.bound handleTitleMouseDown(event: any) {
@@ -190,6 +193,7 @@ export class ModalWindow extends React.Component<{
                   left: this.props.fullScreen ? 0 : this.left,
                   minWidth: this.props.fullScreen ? "100%" : this.props.width,
                   minHeight: this.props.fullScreen ? "100%" : this.props.height,
+                  visibility: this.isHidden ? "hidden" : undefined
                 }}
                 tabIndex={0}
                 onKeyDown={(event: any) => this.onKeyDown(event)}
@@ -219,10 +223,3 @@ export class ModalWindow extends React.Component<{
   }
 }
 
-export const CloseButton = (props: { onClick?: (event: any) => void }) => (
-  <button className={S.btnClose} onClick={props.onClick}>
-    <div className={S.btnIconContainer}>
-      <Icon src="./icons/close.svg" tooltip={""}/>
-    </div>
-  </button>
-);

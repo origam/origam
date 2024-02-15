@@ -454,6 +454,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield*newFormScreen.start(
         {
           initUIResult: initUIResult,
+          preloadIsDirty: initUIResult.isDirty,
           createNewRecord: args.createNewRecord
         });
       const rowIdToSelect = args.parameters["id"];
