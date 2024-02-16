@@ -170,7 +170,7 @@ namespace Origam.BI.CrystalReports
                     ""),
                 "application/xml",
                 new Hashtable(),
-                timeout);
+                timeout).Content;
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report finished");

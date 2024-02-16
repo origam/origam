@@ -2040,7 +2040,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 		// SEND REQUEST
 		object result = HttpTools.SendRequest(url, method, content, contentType,
             headersCollection, authenticationType, userName, password, false,
-            null);
+            null).Content;
 
 		string stringResult = result as string;
 		byte[] byteResult = result as byte[];

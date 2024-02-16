@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Xml;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -50,19 +51,52 @@ namespace Origam.Workflow
 			switch(MethodName)
 			{
 				case "SendRequest":
-					_result = HttpTools.Instance.SendRequest(
-											url: Parameters.Get<string>("Url"),
-											method: Parameters.Get<string>("Method"),
-											content: GetContent(Parameters["Content"]),
-											contentType: Parameters.Get<string>("ContentType"),
-											headers: Parameters["Headers"] as Hashtable,
-											timeout: Parameters.Get<int>("Timeout")
-										);
+                    HttpResponse httpResponse = 
+						HttpTools.Instance.SendRequest(
+							url: Parameters.Get<string>("Url"),
+							method: Parameters.Get<string>("Method"),
+							content: GetContent(Parameters["Content"]),
+							contentType: Parameters.TryGet<string>("ContentType"),
+							headers: Parameters["Headers"] as Hashtable,
+							timeout: Parameters.TryGet<int?>("Timeout")
+						);
+                    XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>("ResponseMetadata");
+					if (responseMetadata != null)
+                    {
+                        AddMetaData(responseMetadata, httpResponse);
+                    }
+                    _result = httpResponse.Content;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
+
+        private static void AddMetaData(XmlContainer responseMetadata, HttpResponse httpResponse)
+        {
+            var document = responseMetadata.Xml;
+
+            XmlElement httpResponseNode = document.CreateElement("HttpResponse");
+            document.AppendChild(httpResponseNode);
+
+            XmlElement statusCodeNode = document.CreateElement("StatusCode");
+            statusCodeNode.InnerText = httpResponse.StatusCode.ToString();
+            httpResponseNode.AppendChild(statusCodeNode);
+
+            XmlElement statusDescriptionNode = document.CreateElement("StatusDescription");
+            statusDescriptionNode.InnerText = httpResponse.StatusDescription;
+            httpResponseNode.AppendChild(statusDescriptionNode);
+
+            XmlElement headersNode = document.CreateElement("Headers");
+            httpResponseNode.AppendChild(headersNode);
+            foreach (string name in httpResponse.Headers.Keys)
+            {
+                XmlElement headerNode = document.CreateElement(name);
+                headerNode.InnerText = httpResponse.Headers[name];
+                headersNode.AppendChild(headerNode);
+            }
+        }
+
         private string GetContent(object obj)
         {
             if (obj is XmlContainer xmlContainer)

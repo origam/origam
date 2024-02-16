@@ -106,7 +106,7 @@ namespace Origam.Gui.Win
 								if (svalue.StartsWith("http"))
 								{
 									stream = HttpTools.Instance.SendRequest(
-										path, "GET", null, null, null, null, null, null, true, null) as Stream;
+										path, "GET", null, null, null, null, null, null, true, null).Content as Stream;
 								}
 								{
 									path = Path.Combine(Application.StartupPath, @"images\");

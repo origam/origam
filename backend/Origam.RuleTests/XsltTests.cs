@@ -1547,7 +1547,7 @@ public class XsltTests
         httpToolsMock
             .Setup(x => x.SendRequest(url, null, null, null,
                 new Hashtable(), null, null, null, false,
-                null))
+                null).Content)
             .Returns(expectedResult);
 
         object xPathResult = RunInXpath(xsltCall);

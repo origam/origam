@@ -38,7 +38,11 @@ namespace Origam
 {
 	public class HttpTools : IHttpTools
 	{
-		public static HttpTools Instance { get; set; } = new();
+        private static readonly log4net.ILog log = 
+			log4net.LogManager.GetLogger(System.Reflection.MethodBase
+        .GetCurrentMethod().DeclaringType);
+
+        public static HttpTools Instance { get; set; } = new();
 		
 		public static void SetDIServiceProvider(IServiceProvider serviceProvider)
 		{
@@ -224,12 +228,12 @@ namespace Origam
 			return result;
 		}
 
-		public object SendRequest(string url, string method)
+		public HttpResponse SendRequest(string url, string method)
 		{
 			return SendRequest(url, method, null, null, null, null);
 		}
 
-		public object SendRequest(string url, string method, string content,
+		public HttpResponse SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, int? timeout)
 		{
 			Uri myUrl = new Uri(url);
@@ -250,67 +254,27 @@ namespace Origam
 			return SendRequest(url, method, content, contentType,
 				headers, null, null, null, false, timeout);
 		}
-		public object SendRequest(string url, string method, string content,
+		public HttpResponse SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, bool returnAsStream,
             int? timeout)
 		{
 			try
 			{
-				using WebResponse response = GetResponse(url, method, content, 
-					contentType, headers, authenticationType, userName, 
-					password, timeout, null, false);
+				using WebResponse response = GetResponse(url, method, content,
+						contentType, headers, authenticationType, userName,
+						password, timeout, null, false);
 				if (response is not HttpWebResponse httpResponse)
 				{
 					throw new Exception(
-						"WebResponse is not of HttpResponse type.");
+							"WebResponse is not of HttpResponse type.");
 				}
-				using Stream responseStream = StreamFromResponse(httpResponse);
-				if (returnAsStream)
-				{
-					return responseStream;
-				}
-				if (response.ContentType.Equals("text/xml")
-				    || response.ContentType.Equals("application/xml")
-				    || response.ContentType.EndsWith("+xml"))
-				{
-					// for xml we will ignore encoding set in the HTTP header 
-					// because sometimes it is not present
-					// but we have the encoding in the XML header, so we take
-					// it from there
-					IXmlContainer container = new XmlContainer();
-					if (response.ContentLength != 0)
-					{
-						container.Xml.Load(responseStream);
-					}
-					return container;
-				}
-				if (response.ContentType.StartsWith("text/"))
-				{
-					// result is text
-					return ReadResponseText(httpResponse, responseStream);
-				}
-				if (response.ContentType.StartsWith("application/json")
-				    || response.ContentType.EndsWith("+json"))
-				{
-					string body = ReadResponseText(
-						httpResponse, responseStream);
-					XmlDocument xmlDocument;
-					// deserialize from JSON to XML
-					try
-					{
-						xmlDocument = JsonConvert.DeserializeXmlNode(
-							body, "ROOT");
-					}
-					catch (JsonSerializationException)
-					{
-						xmlDocument = JsonConvert.DeserializeXmlNode(
-							"{\"ARRAY\":" + body + "}", "ROOT");
-					}
-					return new XmlContainer(xmlDocument);
-				}
-				// result is binary
-				return StreamTools.ReadToEnd(responseStream);
+                return new HttpResponse(
+					Content: ProcessReturnValue(returnAsStream, response, httpResponse), 
+					StatusCode: (int)httpResponse.StatusCode, 
+					StatusDescription: httpResponse.StatusDescription, 
+					Headers: httpResponse.Headers.AllKeys
+								.ToDictionary(key => key, key => httpResponse.Headers[key]));
 			}
 			catch (WebException webException)
 			{
@@ -324,6 +288,56 @@ namespace Origam
 					webException.Message + Environment.NewLine + info, 
 					webException);
 			}
+		}
+
+		private object ProcessReturnValue(bool returnAsStream, WebResponse response, HttpWebResponse httpResponse)
+		{ 
+				using Stream responseStream = StreamFromResponse(httpResponse);
+				if (returnAsStream)
+				{
+						return responseStream;
+				}
+				if (response.ContentType.Equals("text/xml")
+						|| response.ContentType.Equals("application/xml")
+						|| response.ContentType.EndsWith("+xml"))
+				{
+						// for xml we will ignore encoding set in the HTTP header 
+						// because sometimes it is not present
+						// but we have the encoding in the XML header, so we take
+						// it from there
+						IXmlContainer container = new XmlContainer();
+						if (response.ContentLength != 0)
+						{
+								container.Xml.Load(responseStream);
+						}
+						return container;
+				}
+				if (response.ContentType.StartsWith("text/"))
+				{
+						// result is text
+						return ReadResponseText(httpResponse, responseStream);
+				}
+				if (response.ContentType.StartsWith("application/json")
+						|| response.ContentType.EndsWith("+json"))
+				{
+						string body = ReadResponseText(
+								httpResponse, responseStream);
+						XmlDocument xmlDocument;
+						// deserialize from JSON to XML
+						try
+						{
+								xmlDocument = JsonConvert.DeserializeXmlNode(
+										body, "ROOT");
+						}
+						catch (JsonSerializationException)
+						{
+								xmlDocument = JsonConvert.DeserializeXmlNode(
+										"{\"ARRAY\":" + body + "}", "ROOT");
+						}
+						return new XmlContainer(xmlDocument);
+				}
+				// result is binary
+				return StreamTools.ReadToEnd(responseStream);
 		}
 
 		private static Stream StreamFromResponse(HttpWebResponse response)
@@ -356,9 +370,16 @@ namespace Origam
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
 		{
-			var providerContainer = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
 			headers ??= new Hashtable();
-			providerContainer.TryAuthenticate(url, headers);
+			if (serviceProvider != null)
+			{
+				var providerContainer = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
+				providerContainer.TryAuthenticate(url, headers);
+			}
+			else 
+			{
+				log.Warn("Request could not be authenticated because serviceProvider is null. This is expected if you send Http requests from the Architect.");
+			}
 
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
 			                                       SecurityProtocolType.Tls11 |
@@ -557,6 +578,12 @@ namespace Origam
 			return sb.ToString();
 		}
 	}
+
+	public record HttpResponse(
+		object Content, 
+		int StatusCode,
+		string StatusDescription,
+		Dictionary<string, string> Headers);
 
 	public class MyUri : Uri
 	{

@@ -67,7 +67,7 @@ namespace Origam.Git
 
         private object GetData(string url)
         {
-            return HttpTools.Instance.SendRequest(url, method: "GET");
+            return HttpTools.Instance.SendRequest(url, method: "GET").Content;
         }
 
         private string BuildUrl(string name)

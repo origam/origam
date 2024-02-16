@@ -29,9 +29,9 @@ namespace Origam;
 public interface IHttpTools
 {
     string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped);
-    object SendRequest(string url, string method);
+    HttpResponse SendRequest(string url, string method);
 
-    object SendRequest(string url, string method, string content,
+    HttpResponse SendRequest(string url, string method, string content,
         string contentType, Hashtable headers, string authenticationType,
         string userName, string password, bool returnAsStream,
         int? timeout);
