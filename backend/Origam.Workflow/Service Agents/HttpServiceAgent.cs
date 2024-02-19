@@ -54,16 +54,17 @@ namespace Origam.Workflow
 				case "TrySendRequest":
                 {
                     HttpResponse httpResponse = 
-						HttpTools.Instance.SendRequest(
-							url: Parameters.Get<string>("Url"),
-							method: Parameters.Get<string>("Method"),
-							content: GetContent(Parameters["Content"]),
-							contentType: Parameters.TryGet<string>("ContentType"),
-							headers: Parameters["Headers"] as Hashtable,
-							timeout: Parameters.TryGet<int?>("Timeout"),
+					    HttpTools.Instance.SendRequest(
+						    url: Parameters.Get<string>("Url"),
+						    method: Parameters.Get<string>("Method"),
+						    content: GetContent(Parameters["Content"]),
+						    contentType: Parameters.TryGet<string>("ContentType"),
+						    headers: Parameters["Headers"] as Hashtable,
+						    timeout: Parameters.TryGet<int?>("Timeout"),
                             throwExceptionOnError: MethodName == "SendRequest"
-						);
-                    XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>("ResponseMetadata");
+					    );
+                    XmlContainer responseMetadata = Parameters
+                            .TryGet<XmlContainer>("ResponseMetadata");
 					if (responseMetadata != null)
                     {
                         AddMetaData(responseMetadata, httpResponse);
@@ -72,7 +73,8 @@ namespace Origam.Workflow
 					break;
                 }
 				default:
-					throw new ArgumentOutOfRangeException("MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
+					throw new ArgumentOutOfRangeException(
+                        "MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
 

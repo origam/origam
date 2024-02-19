@@ -262,12 +262,12 @@ namespace Origam
 			try
 			{
 				using WebResponse response = GetResponse(url, method, content,
-						contentType, headers, authenticationType, userName,
-						password, timeout, null, false);
+					contentType, headers, authenticationType, userName,
+					password, timeout, null, false);
 				if (response is not HttpWebResponse httpResponse)
 				{
 					throw new Exception(
-							"WebResponse is not of HttpResponse type.");
+						"WebResponse is not of HttpResponse type.");
 				}
 				return new HttpResponse(
 					Content: ProcessReturnValue(returnAsStream, httpResponse), 
@@ -278,11 +278,12 @@ namespace Origam
 			}
 			catch (WebException webException)
 			{
-					return HandleWebException(returnAsStream, throwExceptionOnError, webException);
+				return HandleWebException(returnAsStream, throwExceptionOnError, webException);
 			}
 		}
 
-		private HttpResponse HandleWebException(bool returnAsStream, bool throwExceptionOnError, WebException webException)
+		private HttpResponse HandleWebException(bool returnAsStream, 
+			bool throwExceptionOnError, WebException webException)
 		{
 			if (throwExceptionOnError)
 			{
@@ -301,20 +302,20 @@ namespace Origam
 				if (webException.Response is HttpWebResponse httpResponse)
 				{
 					return new HttpResponse(
-							Content: ProcessReturnValue(returnAsStream, httpResponse),
-							StatusCode: (int)httpResponse.StatusCode,
-							StatusDescription: httpResponse.StatusDescription,
-							Headers: httpResponse.Headers.AllKeys
-													.ToDictionary(key => key, key => httpResponse.Headers[key]));
+						Content: ProcessReturnValue(returnAsStream, httpResponse),
+						StatusCode: (int)httpResponse.StatusCode,
+						StatusDescription: httpResponse.StatusDescription,
+						Headers: httpResponse.Headers.AllKeys
+							.ToDictionary(key => key, key => httpResponse.Headers[key]));
 				}
 				else
 				{
 					return new HttpResponse(
-							Content: null,
-							StatusCode: null,
-							StatusDescription: null,
-							Headers: null,
-							Exception: webException);
+						Content: null,
+						StatusCode: null,
+						StatusDescription: null,
+						Headers: null,
+						Exception: webException);
 				}
 			}
 		}
@@ -324,7 +325,7 @@ namespace Origam
 			using Stream responseStream = StreamFromResponse(response);
 			if (returnAsStream)
 			{
-					return responseStream;
+				return responseStream;
 			}
 			if (response.ContentType.Equals("text/xml")
 					|| response.ContentType.Equals("application/xml")
@@ -343,8 +344,8 @@ namespace Origam
 			}
 			if (response.ContentType.StartsWith("text/"))
 			{
-					// result is text
-					return ReadResponseText(response, responseStream);
+				// result is text
+				return ReadResponseText(response, responseStream);
 			}
 			if (response.ContentType.StartsWith("application/json")
 					|| response.ContentType.EndsWith("+json"))
@@ -355,13 +356,13 @@ namespace Origam
 				// deserialize from JSON to XML
 				try
 				{
-						xmlDocument = JsonConvert.DeserializeXmlNode(
-								body, "ROOT");
+					xmlDocument = JsonConvert.DeserializeXmlNode(
+							body, "ROOT");
 				}
 				catch (JsonSerializationException)
 				{
-						xmlDocument = JsonConvert.DeserializeXmlNode(
-								"{\"ARRAY\":" + body + "}", "ROOT");
+					xmlDocument = JsonConvert.DeserializeXmlNode(
+							"{\"ARRAY\":" + body + "}", "ROOT");
 				}
 				return new XmlContainer(xmlDocument);
 			}
