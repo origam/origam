@@ -126,24 +126,6 @@ namespace Origam
 			return singleCookies;
 		}
 
-//		public static string GetFileDisposition(HttpRequest request, string fileName)
-//		{
-//			bool isFirefox = request.UserAgent != null && request.UserAgent.IndexOf("Firefox") >= 0;
-//
-//			string dispositionLeft = "filename=";
-//			if (isFirefox)
-//			{
-//				dispositionLeft = "filename*=utf-8''";
-//			}
-//
-//			// no commas allowed in the file name
-//			fileName = fileName.Replace(",", "");
-//
-//			string disposition = dispositionLeft + HttpUtility.UrlPathEncode(fileName);
-//
-//			return disposition;
-//		}
-
 		public string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped)
 		{
 			Hashtable urlParameters = new Hashtable();
@@ -496,7 +478,6 @@ namespace Origam
 
 		public string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
-			//HttpWebResponse httpResponse = response as HttpWebResponse;
 			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
 			using (Stream responseStream =
 				encodingString.Contains("gzip") ?
@@ -515,13 +496,6 @@ namespace Origam
 
 		public Encoding EncodingFromResponse(HttpWebResponse response)
 		{
-			/*
-			if(response.ContentEncoding != String.Empty)
-			{
-				return Encoding.GetEncoding(response.ContentEncoding);
-			}
-			*/
-
 			if (response.CharacterSet != String.Empty && response.CharacterSet != null)
 			{
 				return Encoding.GetEncoding(response.CharacterSet);
@@ -541,30 +515,6 @@ namespace Origam
 
 			return Encoding.UTF8;
 		}
-
-//		public static void WriteFile(HttpRequest request, HttpResponse response, byte[] file, string fileName, bool isPreview)
-//		{
-//			WriteFile(request, response, file, fileName, isPreview, null);
-//		}
-//
-//		public static void WriteFile(HttpRequest request, HttpResponse response, byte[] file, string fileName, bool isPreview, string overrideContentType)
-//		{
-//			// set proper content type
-//			if (overrideContentType != null)
-//			{
-//				response.ContentType = overrideContentType;
-//			}
-//			else
-//			{
-//				response.ContentType = GetMimeType(fileName);
-//			}
-//			response.Charset = Encoding.UTF8.WebName;
-//			string disposition = GetFileDisposition(request, fileName);
-//			if (!isPreview) disposition = "attachment; " + disposition;
-//			response.AppendHeader("content-disposition", disposition);
-//			// write to response.OutputStream
-//			response.OutputStream.Write(file, 0, file.Length);
-//		}
 
 		public string GetMimeType(string fileName)
 		{
