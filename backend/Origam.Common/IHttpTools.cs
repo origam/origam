@@ -34,7 +34,7 @@ public interface IHttpTools
     HttpResponse SendRequest(string url, string method, string content,
         string contentType, Hashtable headers, string authenticationType,
         string userName, string password, bool returnAsStream,
-        int? timeout);
+        int? timeout, bool throwExceptionOnError= true);
 
     WebResponse GetResponse(string url, string method, string content,
         string contentType, Hashtable headers);

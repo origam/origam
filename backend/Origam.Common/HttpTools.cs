@@ -234,7 +234,7 @@ namespace Origam
 		}
 
 		public HttpResponse SendRequest(string url, string method, string content,
-			string contentType, Hashtable headers, int? timeout)
+			string contentType, Hashtable headers, int? timeout, bool throwExceptionOnError=true)
 		{
 			Uri myUrl = new Uri(url);
 
@@ -252,12 +252,12 @@ namespace Origam
 				}
 			}
 			return SendRequest(url, method, content, contentType,
-				headers, null, null, null, false, timeout);
+				headers, null, null, null, false, timeout, throwExceptionOnError);
 		}
 		public HttpResponse SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, bool returnAsStream,
-            int? timeout)
+            int? timeout, bool throwExceptionOnError=true)
 		{
 			try
 			{
@@ -269,14 +269,22 @@ namespace Origam
 					throw new Exception(
 							"WebResponse is not of HttpResponse type.");
 				}
-                return new HttpResponse(
-					Content: ProcessReturnValue(returnAsStream, response, httpResponse), 
+				return new HttpResponse(
+					Content: ProcessReturnValue(returnAsStream, httpResponse), 
 					StatusCode: (int)httpResponse.StatusCode, 
 					StatusDescription: httpResponse.StatusDescription, 
 					Headers: httpResponse.Headers.AllKeys
 								.ToDictionary(key => key, key => httpResponse.Headers[key]));
 			}
 			catch (WebException webException)
+			{
+					return HandleWebException(returnAsStream, throwExceptionOnError, webException);
+			}
+		}
+
+		private HttpResponse HandleWebException(bool returnAsStream, bool throwExceptionOnError, WebException webException)
+		{
+			if (throwExceptionOnError)
 			{
 				var info = "";
 				if (webException.Response is HttpWebResponse httpResponse)
@@ -285,59 +293,80 @@ namespace Origam
 						httpResponse);
 				}
 				throw new Exception(
-					webException.Message + Environment.NewLine + info, 
+					webException.Message + Environment.NewLine + info,
 					webException);
+			}
+			else
+			{
+				if (webException.Response is HttpWebResponse httpResponse)
+				{
+					return new HttpResponse(
+							Content: ProcessReturnValue(returnAsStream, httpResponse),
+							StatusCode: (int)httpResponse.StatusCode,
+							StatusDescription: httpResponse.StatusDescription,
+							Headers: httpResponse.Headers.AllKeys
+													.ToDictionary(key => key, key => httpResponse.Headers[key]));
+				}
+				else
+				{
+					return new HttpResponse(
+							Content: null,
+							StatusCode: null,
+							StatusDescription: null,
+							Headers: null,
+							Exception: webException);
+				}
 			}
 		}
 
-		private object ProcessReturnValue(bool returnAsStream, WebResponse response, HttpWebResponse httpResponse)
+		private object ProcessReturnValue(bool returnAsStream, HttpWebResponse response)
 		{ 
-				using Stream responseStream = StreamFromResponse(httpResponse);
-				if (returnAsStream)
+			using Stream responseStream = StreamFromResponse(response);
+			if (returnAsStream)
+			{
+					return responseStream;
+			}
+			if (response.ContentType.Equals("text/xml")
+					|| response.ContentType.Equals("application/xml")
+					|| response.ContentType.EndsWith("+xml"))
+			{
+				// for xml we will ignore encoding set in the HTTP header 
+				// because sometimes it is not present
+				// but we have the encoding in the XML header, so we take
+				// it from there
+				IXmlContainer container = new XmlContainer();
+				if (response.ContentLength != 0)
 				{
-						return responseStream;
+						container.Xml.Load(responseStream);
 				}
-				if (response.ContentType.Equals("text/xml")
-						|| response.ContentType.Equals("application/xml")
-						|| response.ContentType.EndsWith("+xml"))
+				return container;
+			}
+			if (response.ContentType.StartsWith("text/"))
+			{
+					// result is text
+					return ReadResponseText(response, responseStream);
+			}
+			if (response.ContentType.StartsWith("application/json")
+					|| response.ContentType.EndsWith("+json"))
+			{
+				string body = ReadResponseText(
+						response, responseStream);
+				XmlDocument xmlDocument;
+				// deserialize from JSON to XML
+				try
 				{
-						// for xml we will ignore encoding set in the HTTP header 
-						// because sometimes it is not present
-						// but we have the encoding in the XML header, so we take
-						// it from there
-						IXmlContainer container = new XmlContainer();
-						if (response.ContentLength != 0)
-						{
-								container.Xml.Load(responseStream);
-						}
-						return container;
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+								body, "ROOT");
 				}
-				if (response.ContentType.StartsWith("text/"))
+				catch (JsonSerializationException)
 				{
-						// result is text
-						return ReadResponseText(httpResponse, responseStream);
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+								"{\"ARRAY\":" + body + "}", "ROOT");
 				}
-				if (response.ContentType.StartsWith("application/json")
-						|| response.ContentType.EndsWith("+json"))
-				{
-						string body = ReadResponseText(
-								httpResponse, responseStream);
-						XmlDocument xmlDocument;
-						// deserialize from JSON to XML
-						try
-						{
-								xmlDocument = JsonConvert.DeserializeXmlNode(
-										body, "ROOT");
-						}
-						catch (JsonSerializationException)
-						{
-								xmlDocument = JsonConvert.DeserializeXmlNode(
-										"{\"ARRAY\":" + body + "}", "ROOT");
-						}
-						return new XmlContainer(xmlDocument);
-				}
-				// result is binary
-				return StreamTools.ReadToEnd(responseStream);
+				return new XmlContainer(xmlDocument);
+			}
+			// result is binary
+			return StreamTools.ReadToEnd(responseStream);
 		}
 
 		private static Stream StreamFromResponse(HttpWebResponse response)
@@ -581,9 +610,10 @@ namespace Origam
 
 	public record HttpResponse(
 		object Content, 
-		int StatusCode,
-		string StatusDescription,
-		Dictionary<string, string> Headers);
+		int? StatusCode,
+		string? StatusDescription,
+		Dictionary<string, string> Headers,
+		Exception Exception=null);
 
 	public class MyUri : Uri
 	{

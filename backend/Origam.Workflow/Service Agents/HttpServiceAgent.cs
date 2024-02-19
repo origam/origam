@@ -51,6 +51,8 @@ namespace Origam.Workflow
 			switch(MethodName)
 			{
 				case "SendRequest":
+				case "TrySendRequest":
+                {
                     HttpResponse httpResponse = 
 						HttpTools.Instance.SendRequest(
 							url: Parameters.Get<string>("Url"),
@@ -58,7 +60,8 @@ namespace Origam.Workflow
 							content: GetContent(Parameters["Content"]),
 							contentType: Parameters.TryGet<string>("ContentType"),
 							headers: Parameters["Headers"] as Hashtable,
-							timeout: Parameters.TryGet<int?>("Timeout")
+							timeout: Parameters.TryGet<int?>("Timeout"),
+                            throwExceptionOnError: MethodName == "SendRequest"
 						);
                     XmlContainer responseMetadata = Parameters.TryGet<XmlContainer>("ResponseMetadata");
 					if (responseMetadata != null)
@@ -67,6 +70,7 @@ namespace Origam.Workflow
                     }
                     _result = httpResponse.Content;
 					break;
+                }
 				default:
 					throw new ArgumentOutOfRangeException("MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
@@ -75,25 +79,43 @@ namespace Origam.Workflow
         private static void AddMetaData(XmlContainer responseMetadata, HttpResponse httpResponse)
         {
             var document = responseMetadata.Xml;
+            if (httpResponse.Exception != null) {
+                XmlElement exceptionElement = document.CreateElement("Exception");
+                document.AppendChild(exceptionElement);
 
-            XmlElement httpResponseNode = document.CreateElement("HttpResponse");
-            document.AppendChild(httpResponseNode);
+                XmlElement typeElement = document.CreateElement("Type");
+                typeElement.InnerText = httpResponse.Exception.GetType().FullName;
+                exceptionElement.AppendChild(typeElement);
 
-            XmlElement statusCodeNode = document.CreateElement("StatusCode");
-            statusCodeNode.InnerText = httpResponse.StatusCode.ToString();
-            httpResponseNode.AppendChild(statusCodeNode);
+                XmlElement messageElement = document.CreateElement("Message");
+                messageElement.InnerText = httpResponse.Exception.Message;
+                exceptionElement.AppendChild(messageElement);
 
-            XmlElement statusDescriptionNode = document.CreateElement("StatusDescription");
-            statusDescriptionNode.InnerText = httpResponse.StatusDescription;
-            httpResponseNode.AppendChild(statusDescriptionNode);
-
-            XmlElement headersNode = document.CreateElement("Headers");
-            httpResponseNode.AppendChild(headersNode);
-            foreach (string name in httpResponse.Headers.Keys)
+                XmlElement stackTraceElement = document.CreateElement("StackTrace");
+                stackTraceElement.InnerText = httpResponse.Exception.StackTrace;
+                exceptionElement.AppendChild(stackTraceElement);
+            }
+            else
             {
-                XmlElement headerNode = document.CreateElement(name);
-                headerNode.InnerText = httpResponse.Headers[name];
-                headersNode.AppendChild(headerNode);
+                XmlElement httpResponseElement = document.CreateElement("HttpResponse");
+                document.AppendChild(httpResponseElement);
+
+                XmlElement statusCodeElement = document.CreateElement("StatusCode");
+                statusCodeElement.InnerText = httpResponse.StatusCode.ToString();
+                httpResponseElement.AppendChild(statusCodeElement);
+
+                XmlElement statusDescriptionElement = document.CreateElement("StatusDescription");
+                statusDescriptionElement.InnerText = httpResponse.StatusDescription;
+                httpResponseElement.AppendChild(statusDescriptionElement);
+
+                XmlElement headersElement = document.CreateElement("Headers");
+                httpResponseElement.AppendChild(headersElement);
+                foreach (string name in httpResponse.Headers.Keys)
+                {
+                    XmlElement headerElement = document.CreateElement(name);
+                    headerElement.InnerText = httpResponse.Headers[name];
+                    headersElement.AppendChild(headerElement);
+                }
             }
         }
 
