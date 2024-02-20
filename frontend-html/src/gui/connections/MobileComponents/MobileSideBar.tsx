@@ -115,7 +115,7 @@ export const MobileSideBar = observer( () => {
         }
         <Icon
           className={getSectionIconClass("Search", sidebarState)}
-          src="./icons/search.svg"
+          src="./icons/search-results.svg"
           tooltip={T("Search", "search_result", sidebarState.resultCount)}
           onClick={() => sidebarState.activeSection = "Search"}
         />
