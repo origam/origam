@@ -53,7 +53,7 @@ namespace Origam.Workflow
 				case "SendRequest":
 				case "TrySendRequest":
                 {
-                    HttpResponse httpResponse = 
+                    HttpResult httpResponse = 
 					    HttpTools.Instance.SendRequest(
 						    url: Parameters.Get<string>("Url"),
 						    method: Parameters.Get<string>("Method"),
@@ -78,7 +78,7 @@ namespace Origam.Workflow
 			}
 		}
 
-        private static void AddMetaData(XmlContainer responseMetadata, HttpResponse httpResponse)
+        private static void AddMetaData(XmlContainer responseMetadata, HttpResult httpResponse)
         {
             var document = responseMetadata.Xml;
             if (httpResponse.Exception != null) {

@@ -1548,7 +1548,7 @@ public class XsltTests
             .Setup(x => x.SendRequest(url, null, null, null,
                 new Hashtable(), null, null, null, false,
                 null, true))
-            .Returns(new HttpResponse(expectedResult, null, null, null, null));
+            .Returns(new HttpResult(expectedResult, null, null, null, null));
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));

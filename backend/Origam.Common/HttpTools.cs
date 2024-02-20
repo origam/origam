@@ -210,12 +210,12 @@ namespace Origam
 			return result;
 		}
 
-		public HttpResponse SendRequest(string url, string method)
+		public HttpResult SendRequest(string url, string method)
 		{
 			return SendRequest(url, method, null, null, null, null);
 		}
 
-		public HttpResponse SendRequest(string url, string method, string content,
+		public HttpResult SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, int? timeout, bool throwExceptionOnError=true)
 		{
 			Uri myUrl = new Uri(url);
@@ -236,7 +236,7 @@ namespace Origam
 			return SendRequest(url, method, content, contentType,
 				headers, null, null, null, false, timeout, throwExceptionOnError);
 		}
-		public HttpResponse SendRequest(string url, string method, string content,
+		public HttpResult SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, bool returnAsStream,
             int? timeout, bool throwExceptionOnError=true)
@@ -251,7 +251,7 @@ namespace Origam
 					throw new Exception(
 						"WebResponse is not of HttpResponse type.");
 				}
-				return new HttpResponse(
+				return new HttpResult(
 					Content: ProcessReturnValue(returnAsStream, httpResponse), 
 					StatusCode: (int)httpResponse.StatusCode, 
 					StatusDescription: httpResponse.StatusDescription, 
@@ -264,7 +264,7 @@ namespace Origam
 			}
 		}
 
-		private HttpResponse HandleWebException(bool returnAsStream, 
+		private HttpResult HandleWebException(bool returnAsStream, 
 			bool throwExceptionOnError, WebException webException)
 		{
 			if (throwExceptionOnError)
@@ -283,7 +283,7 @@ namespace Origam
 			{
 				if (webException.Response is HttpWebResponse httpResponse)
 				{
-					return new HttpResponse(
+					return new HttpResult(
 						Content: ProcessReturnValue(returnAsStream, httpResponse),
 						StatusCode: (int)httpResponse.StatusCode,
 						StatusDescription: httpResponse.StatusDescription,
@@ -292,7 +292,7 @@ namespace Origam
 				}
 				else
 				{
-					return new HttpResponse(
+					return new HttpResult(
 						Content: null,
 						StatusCode: null,
 						StatusDescription: null,
@@ -559,7 +559,7 @@ namespace Origam
 		}
 	}
 
-	public record HttpResponse(
+	public record HttpResult(
 		object Content, 
 		int? StatusCode,
 		string? StatusDescription,
