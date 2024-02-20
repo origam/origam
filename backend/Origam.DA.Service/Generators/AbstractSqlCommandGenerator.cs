@@ -3137,7 +3137,7 @@ namespace Origam.DA.Service
             else if (item is DetachedField detachedField)
             {
                 return renderSqlForDetachedFields 
-                    ? RenderSqlExpression(entity, detachedField) 
+                    ? RenderSqlExpression(entity, detachedField, parameterReferences) 
                     : "";
             }
             else if (item is AggregatedColumn)
@@ -3147,7 +3147,8 @@ namespace Origam.DA.Service
         }
 
         public string RenderSqlExpression(DataStructureEntity entity,
-            DetachedField detachedField)
+            DetachedField detachedField,
+            Hashtable parameterReferences)
         {
             if (detachedField.ArrayRelation == null)
             {
@@ -3170,7 +3171,18 @@ namespace Origam.DA.Service
                 $"(SELECT STRING_AGG({sqlRenderer.Text(RenderExpression(columnRenderItem, null, null, null))} ," +
                 sqlRenderer.Char(1) + " ) ");
             RenderSelectFromClause(sqlExpression, relation);
-            RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, null);
+            RenderSelectRelation(
+                sqlExpression: sqlExpression, 
+                dsEntity: relation, 
+                stopAtEntity: relation, 
+                filter: null, 
+                replaceParameterTexts: null, 
+                skipStopAtEntity: true, 
+                includeFilter: true, 
+                numberOfJoins: 0, 
+                includeAllRelations: false, 
+                dynamicParameters: null, 
+                parameterReferences: parameterReferences);
             sqlExpression.Append(")");
             return sqlExpression.ToString();
         }
