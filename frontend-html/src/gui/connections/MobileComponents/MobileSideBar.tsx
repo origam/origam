@@ -83,54 +83,54 @@ export const MobileSideBar = observer( () => {
             }
           }
           
-          return (
-            <div className={S.root}>
-      <div className={S.contentContainer}>
-        {renderContent()}
-      </div>
-      <div className={S.bottomContainer}>
-        <Icon 
-          className={getSectionIconClass("Favorites", sidebarState)}
-          src="./icons/favorites.svg" 
-          tooltip={T("Search", "search_result", sidebarState.resultCount)}
-          onClick={() => sidebarState.activeSection = "Favorites"}
-        />
-        { showWorkQues &&
-          <SectionButton
-            sectionName="WorkQueues"
-            iconPath="./icons/work-queue.svg"
-            tooltip={T("Work Queues", "work_queue_measure")}
-            onClick={() => sidebarState.activeSection = "WorkQueues"}
-            itemCount={workQueuesItemsCount}
-            sidebarState={sidebarState}
+    return (
+      <div className={S.root}>
+        <div className={S.contentContainer}>
+          {renderContent()}
+        </div>
+        <div className={S.bottomContainer}>
+          <Icon 
+            className={getSectionIconClass("Favorites", sidebarState)}
+            src="./icons/favorites.svg" 
+            tooltip={T("Search", "search_result", sidebarState.resultCount)}
+            onClick={() => sidebarState.activeSection = "Favorites"}
           />
-        }
-        { showChat &&
-          <SectionButton
-            sectionName="Chat"
-            iconPath="./icons/chat.svg"
-            tooltip={T("Chat", "chat")}
-            onClick={() => sidebarState.activeSection = "Chat"}
-            itemCount={totalUnreadMessages}
-            sidebarState={sidebarState}
+          { showWorkQues &&
+            <SectionButton
+              sectionName="WorkQueues"
+              iconPath="./icons/work-queue.svg"
+              tooltip={T("Work Queues", "work_queue_measure")}
+              onClick={() => sidebarState.activeSection = "WorkQueues"}
+              itemCount={workQueuesItemsCount}
+              sidebarState={sidebarState}
+            />
+          }
+          { showChat &&
+            <SectionButton
+              sectionName="Chat"
+              iconPath="./icons/chat.svg"
+              tooltip={T("Chat", "chat")}
+              onClick={() => sidebarState.activeSection = "Chat"}
+              itemCount={totalUnreadMessages}
+              sidebarState={sidebarState}
+            />
+          }
+          <Icon 
+            className={getSectionIconClass("Menu", sidebarState)}
+            src="./icons/menu.svg" 
+            tooltip={T("Menu", "menu")}
+            onClick={() => sidebarState.activeSection = "Menu"}
           />
-        }
-        <Icon 
-          className={getSectionIconClass("Menu", sidebarState)}
-          src="./icons/menu.svg" 
-          tooltip={T("Menu", "menu")}
-          onClick={() => sidebarState.activeSection = "Menu"}
-        />
-        {searcher.resultGroups.length > 0 &&
-         <Icon
-          className={getSectionIconClass("Search", sidebarState)}
-          src="./icons/search-results.svg"
-          tooltip={T("Search", "search_result", sidebarState.resultCount)}
-          onClick={() => sidebarState.activeSection = "Search"}
-        />}
+          {searcher.resultGroups.length > 0 &&
+          <Icon
+            className={getSectionIconClass("Search", sidebarState)}
+            src="./icons/search-results.svg"
+            tooltip={T("Search", "search_result", sidebarState.resultCount)}
+            onClick={() => sidebarState.activeSection = "Search"}
+          />}
+        </div>
       </div>
-    </div>
-  );
+    );
 });
 
 const SectionButton = (props: {

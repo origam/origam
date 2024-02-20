@@ -32,7 +32,7 @@ import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { T } from "utils/translation";
 import { Button } from "gui/Components/Button/Button";
 import { BottomButton } from "gui/connections/MobileComponents/BottomToolBar/BottomButton";
-import { TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
+import { ScreenLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -51,9 +51,11 @@ export class BottomToolBar extends React.Component<{
     return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
-
   showNextButton() {
-    return this.activeScreen && this.activeScreen.showWorkflowNextButton;
+    return (
+      this.mobileState.layoutState instanceof ScreenLayoutState &&
+      this.activeScreen && 
+      this.activeScreen.showWorkflowNextButton);
   }
 
   render() {
