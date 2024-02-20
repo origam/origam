@@ -1547,8 +1547,8 @@ public class XsltTests
         httpToolsMock
             .Setup(x => x.SendRequest(url, null, null, null,
                 new Hashtable(), null, null, null, false,
-                null, true).Content)
-            .Returns(expectedResult);
+                null, true))
+            .Returns(new HttpResponse(expectedResult, null, null, null, null));
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
