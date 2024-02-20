@@ -38,6 +38,7 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { SidebarState } from "model/entities/SidebarState";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { MobileFavoriteFolder } from "./MobileFavoriteFolder";
+import { getSearcher } from "model/selectors/getSearcher";
 
 
 export const MobileSideBar = observer( () => {
@@ -50,6 +51,7 @@ export const MobileSideBar = observer( () => {
   const showWorkQues = getShowWorkQues(workbench);
   const workQueuesItemsCount = getWorkQueuesTotalItemsCount(workbench);
   const totalUnreadMessages = getChatrooms(workbench).totalItemCount;
+  const searcher = getSearcher(workbench);
 
   function renderContent() {
     switch (sidebarState.activeSection) {
@@ -119,12 +121,13 @@ export const MobileSideBar = observer( () => {
           tooltip={T("Menu", "menu")}
           onClick={() => sidebarState.activeSection = "Menu"}
         />
-        <Icon
+        {searcher.resultGroups.length > 0 &&
+         <Icon
           className={getSectionIconClass("Search", sidebarState)}
           src="./icons/search-results.svg"
           tooltip={T("Search", "search_result", sidebarState.resultCount)}
           onClick={() => sidebarState.activeSection = "Search"}
-        />
+        />}
       </div>
     </div>
   );
