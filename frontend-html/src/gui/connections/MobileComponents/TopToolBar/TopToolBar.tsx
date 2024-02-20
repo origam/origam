@@ -31,7 +31,8 @@ import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSele
 import { SearchButton } from "gui/connections/MobileComponents/TopToolBar/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { AboutLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { AboutLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
+import { Icon } from "gui/Components/Icon/Icon";
 
 @observer
 export class TopToolBar extends React.Component<{
@@ -53,13 +54,27 @@ export class TopToolBar extends React.Component<{
   }
 
   getLeftElement(){
-    if(this.layoutState.showHamburgerMenuButton){
-      return <MenuButton/>
+    if(this.layoutState.topLeftComponent === TopLeftComponent.Menu) {
+      return <MenuButton/>;
     }
-    if(this.layoutState.showSearchButton){
-      return <div style={{minWidth: "90px"}}/>
+    else if(this.layoutState.topLeftComponent === TopLeftComponent.Close) {
+      return (
+       <div className={S.toCloseButton}>< Icon 
+            src={"./icons/close-mobile.svg"}
+            onClick={async () => {
+              await this.props.mobileState.close()
+            }}
+          />
+        </div> );
     }
-    return <div style={{minWidth: "67px"}}/>
+    else if(this.layoutState.topLeftComponent === TopLeftComponent.None) {
+      return this.layoutState.showSearchButton
+        ? <div style={{minWidth: "90px"}}/>
+        : <div style={{minWidth: "67px"}}/>;
+    }
+    else {
+      throw new Error("Unsupported top left component: " + this.layoutState.topLeftComponent);
+    }
   }
 
   render() {

@@ -10,7 +10,7 @@ export interface IMobileLayoutState {
   saveButtonHidden: boolean;
   showOpenTabCombo: boolean;
   showSearchButton: boolean;
-  showHamburgerMenuButton: boolean;
+  topLeftComponent: TopLeftComponent;
   heading: string;
   showOkButton: boolean;
   showBackButton: boolean;
@@ -22,13 +22,19 @@ export interface IMobileLayoutState {
   close(ctx: any): Promise<IMobileLayoutState>;
 }
 
+export enum TopLeftComponent {
+  Menu,
+  Close,
+  None
+}
+
 export class MenuLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
   showOpenTabCombo = false;
   showSearchButton = true;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.Close;
   showOkButton = false;
   showBackButton = false;
   heading = T("Menu", "menu");
@@ -52,7 +58,7 @@ export class AboutLayoutState implements IMobileLayoutState {
   saveButtonHidden = true;
   showOpenTabCombo = false;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = false;
   heading = T("About", "about_application");
@@ -76,7 +82,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   saveButtonHidden = true;
   showOpenTabCombo = false;
   showSearchButton = false;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = false;
   heading = T("Search", "mobile_search_title");
@@ -100,7 +106,7 @@ export class EditLayoutState implements IMobileLayoutState {
   saveButtonHidden = true;
   showOpenTabCombo = false;
   showSearchButton = false;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.None;
   showOkButton = true;
   showBackButton = false;
   private readonly showCloseButton_: boolean;
@@ -135,7 +141,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   saveButtonHidden = false;
   showOpenTabCombo = true;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = true;
   heading = "";
