@@ -73,25 +73,25 @@ export const MobileSideBar = observer( () => {
       case "Search":
         return (
           <SearchResults groups={sidebarState.searchResultGroups} ctx={workbench}/>
-        );
-      case "Chat":
-        return <CChatSection/>;
-      default:
-        return <MenuItemList ctx={application} />;
-    }
-  }
-
-  return (
-    <div className={S.root}>
+          );
+          case "Chat":
+            return <CChatSection/>;
+            default:
+              return <MenuItemList ctx={application} />;
+            }
+          }
+          
+          return (
+            <div className={S.root}>
       <div className={S.contentContainer}>
         {renderContent()}
       </div>
       <div className={S.bottomContainer}>
         <Icon 
-          className={getSectionIconClass("Menu", sidebarState)}
-          src="./icons/menu.svg" 
-          tooltip={T("Menu", "menu")}
-          onClick={() => sidebarState.activeSection = "Menu"}
+          className={getSectionIconClass("Favorites", sidebarState)}
+          src="./icons/favorites.svg" 
+          tooltip={T("Search", "search_result", sidebarState.resultCount)}
+          onClick={() => sidebarState.activeSection = "Favorites"}
         />
         { showWorkQues &&
           <SectionButton
@@ -113,17 +113,17 @@ export const MobileSideBar = observer( () => {
             sidebarState={sidebarState}
           />
         }
+        <Icon 
+          className={getSectionIconClass("Menu", sidebarState)}
+          src="./icons/menu.svg" 
+          tooltip={T("Menu", "menu")}
+          onClick={() => sidebarState.activeSection = "Menu"}
+        />
         <Icon
           className={getSectionIconClass("Search", sidebarState)}
           src="./icons/search-results.svg"
           tooltip={T("Search", "search_result", sidebarState.resultCount)}
           onClick={() => sidebarState.activeSection = "Search"}
-        />
-        <Icon 
-          className={getSectionIconClass("Favorites", sidebarState)}
-          src="./icons/favorites.svg" 
-          tooltip={T("Search", "search_result", sidebarState.resultCount)}
-          onClick={() => sidebarState.activeSection = "Favorites"}
         />
       </div>
     </div>
