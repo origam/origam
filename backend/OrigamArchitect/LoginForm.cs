@@ -85,22 +85,21 @@ namespace OrigamArchitect
             try
             {
 				using (WebResponse webResponse = HttpTools.Instance.GetResponse(
-					url: string.Format("{0}AjaxLogin", frmMain.ORIGAM_COM_API_BASEURL),
-					method: "POST",
-					content: jobj.ToString(),
-					contentType: "application/json",
-					headers: new Hashtable{ { "Accept-Encoding", "gzip,deflate"} },
-					authenticationType: null,
-					userName: null,
-					password: null,
-					timeoutMs: 10000,
-					cookies: null, 
-					ignoreHTTPSErrors: frmMain.IgnoreHTTPSErrors))
+					new Request(
+						url: string.Format("{0}AjaxLogin", frmMain.ORIGAM_COM_API_BASEURL),
+						method: "POST",
+						content: jobj.ToString(),
+						contentType: "application/json",
+						headers: new Hashtable { { "Accept-Encoding", "gzip,deflate" } },
+						timeout: 10000,
+						ignoreHTTPSErrors: frmMain.IgnoreHTTPSErrors)
+					)
+				)
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-                    string output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					string output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 
-                    JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
+					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK && (int)jResult["Status"] == 200)
 					{
 						return;

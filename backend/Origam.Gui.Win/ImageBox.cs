@@ -106,7 +106,7 @@ namespace Origam.Gui.Win
 								if (svalue.StartsWith("http"))
 								{
 									stream = HttpTools.Instance.SendRequest(
-										new Request(url: path,method: "GET")
+										new Request(url: path, method: "GET")
 										).Content as Stream;
 								}
 								{

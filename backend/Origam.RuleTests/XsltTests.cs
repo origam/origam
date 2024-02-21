@@ -1544,11 +1544,10 @@ public class XsltTests
         string xsltCall = $"AS:HttpRequest('{url}')";
         string expectedResult = "testResult";
 
-        var request = new Request(url: url, method: null, headers: new Hashtable());
         httpToolsMock
             .Setup(x => x.SendRequest(new Request(url, null, null, null,
                 new Hashtable(), null, null, null, false,
-                null, true)))
+                null, true, null, false)))
             .Returns(new HttpResult(expectedResult, null, null, null, null));
 
         object xPathResult = RunInXpath(xsltCall);

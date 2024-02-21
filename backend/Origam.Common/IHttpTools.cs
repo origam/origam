@@ -32,13 +32,7 @@ public interface IHttpTools
 
     HttpResult SendRequest(Request request);
 
-    WebResponse GetResponse(string url, string method, string content,
-        string contentType, Hashtable headers);
-
-    WebResponse GetResponse(string url, string method, string content,
-        string contentType, Hashtable headers, string authenticationType,
-        string userName, string password, int? timeoutMs, CookieCollection cookies,
-        bool ignoreHTTPSErrors);
+    WebResponse GetResponse(Request request);
 
     string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream);
     string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse);
