@@ -2531,13 +2531,13 @@ namespace OrigamArchitect
 						 method:"GET",
 						 headers: new Hashtable(){ { "Accept-Encoding", "gzip,deflate"} },
                          timeout: 10000, 
-						 ignoreHTTPSErrors: IgnoreHTTPSErrors)
+						 ignoreHttpsErrors: IgnoreHTTPSErrors)
 					 )
 				)
 				{
 					string output;
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectingContentEncoding(httpWebResponse);
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 
 					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]

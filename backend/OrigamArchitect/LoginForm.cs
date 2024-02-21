@@ -92,12 +92,12 @@ namespace OrigamArchitect
 						contentType: "application/json",
 						headers: new Hashtable { { "Accept-Encoding", "gzip,deflate" } },
 						timeout: 10000,
-						ignoreHTTPSErrors: frmMain.IgnoreHTTPSErrors)
+						ignoreHttpsErrors: frmMain.IgnoreHTTPSErrors)
 					)
 				)
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					string output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					string output = HttpTools.Instance.ReadResponseTextRespectingContentEncoding(httpWebResponse);
 
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK && (int)jResult["Status"] == 200)
