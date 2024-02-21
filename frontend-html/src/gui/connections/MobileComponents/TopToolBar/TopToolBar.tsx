@@ -24,7 +24,7 @@ import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdo
 import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
-import { action } from "mobx";
+import { action, computed } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSelector";
@@ -33,6 +33,7 @@ import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { AboutLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 import { Icon } from "gui/Components/Icon/Icon";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class TopToolBar extends React.Component<{
@@ -48,6 +49,11 @@ export class TopToolBar extends React.Component<{
     return this.props.mobileState.layoutState;
   }
 
+  @computed
+  get activeScreen() {
+    return getActiveScreen(this.application.workbench)?.content?.formScreen;
+  }
+
   @action.bound
   handleLogoutClick(event: any) {
     onScreenToolbarLogoutClick(this.application)(event);
@@ -58,19 +64,19 @@ export class TopToolBar extends React.Component<{
       return <MenuButton/>;
     }
     else if(this.layoutState.topLeftComponent === TopLeftComponent.Close) {
-      return (
-       <div className={S.toCloseButton}>< Icon 
-            src={"./icons/close-mobile.svg"}
-            onClick={async () => {
-              await this.props.mobileState.close()
-            }}
-          />
-        </div> );
+      if (this.layoutState.showCloseButton(!!this.activeScreen)) {
+        return (
+         <div className={S.toCloseButton}>< Icon 
+              src={"./icons/close-mobile.svg"}
+              onClick={async () => {
+                await this.props.mobileState.close()
+              }}
+            />
+          </div> );
+      }
     }
     else if(this.layoutState.topLeftComponent === TopLeftComponent.None) {
-      return this.layoutState.showSearchButton
-        ? <div style={{minWidth: "90px"}}/>
-        : <div style={{minWidth: "67px"}}/>;
+      return null;
     }
     else {
       throw new Error("Unsupported top left component: " + this.layoutState.topLeftComponent);
@@ -82,18 +88,22 @@ export class TopToolBar extends React.Component<{
     const userName = getLoggedUserName(this.application);
     return (
       <div className={S.root}>
-        {this.getLeftElement()}
-        <TabSelector mobileState={this.props.mobileState}/>
-        {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
-        <UserMenuDropdown
-          avatarLink={avatarLink}
-          handleLogoutClick={(event) => this.handleLogoutClick(event)}
-          userName={userName}
-          hideLabel={true}
-          ctx={this.application}
-          onAboutClick={() => this.props.mobileState.layoutState = new AboutLayoutState()}
-          helpUrl={getHelpUrl(this.application)}
-        />
+        <div className={S.sideContainer}>
+          {this.getLeftElement()}
+        </div>
+          <TabSelector mobileState={this.props.mobileState}/>
+        <div className={S.sideContainer}>
+          {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
+          <UserMenuDropdown
+            avatarLink={avatarLink}
+            handleLogoutClick={(event) => this.handleLogoutClick(event)}
+            userName={userName}
+            hideLabel={true}
+            ctx={this.application}
+            onAboutClick={() => this.props.mobileState.layoutState = new AboutLayoutState()}
+            helpUrl={getHelpUrl(this.application)}
+            />
+        </div>
       </div>
     );
   }
