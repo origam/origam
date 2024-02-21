@@ -8,9 +8,11 @@ WORKDIR /home/origam
 
 RUN mkdir HTML5
 RUN mkdir HTML5-SOURCE
+RUN mkdir Scheduler
 
 COPY HTML5 HTML5/
 COPY HTML5-SOURCE HTML5-SOURCE/
+COPY Scheduler Scheduler/
 
 WORKDIR /home/origam/HTML5
 
