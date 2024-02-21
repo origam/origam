@@ -24,111 +24,114 @@ using System.Collections;
 using System.Xml;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class HttpServiceAgent : AbstractServiceAgent
 {
-	public class HttpServiceAgent : AbstractServiceAgent
-	{
-		public HttpServiceAgent()
-		{
-		}
+    public HttpServiceAgent()
+    {
+    }
 
-		#region IServiceAgent Members
+    #region IServiceAgent Members
 
-		private object _result;
-		public override object Result
-		{
-			get
-			{
-				object temp = _result;
-				_result = null;
-				
-				return temp;
-			}
-		}
+    private object _result;
+    public override object Result
+    {
+        get
+        {
+            object temp = _result;
+            _result = null;
 
-		public override void Run()
-		{
-			switch(MethodName)
-			{
-				case "SendRequest":
-				case "TrySendRequest":
+            return temp;
+        }
+    }
+
+    public override void Run()
+    {
+        switch (MethodName)
+        {
+            case "SendRequest":
+            case "TrySendRequest":
                 {
-                    HttpResult httpResponse = 
-					    HttpTools.Instance.SendRequest(
-						    url: Parameters.Get<string>("Url"),
-						    method: Parameters.Get<string>("Method"),
-						    content: GetContent(Parameters["Content"]),
-						    contentType: Parameters.TryGet<string>("ContentType"),
-						    headers: Parameters["Headers"] as Hashtable,
-						    timeout: Parameters.TryGet<int?>("Timeout"),
-                            throwExceptionOnError: MethodName == "SendRequest"
-					    );
+                    HttpResult httpResponse =
+                        HttpTools.Instance.SendRequest(
+                            new Request(
+                                url: Parameters.Get<string>("Url"),
+                                method: Parameters.Get<string>("Method"),
+                                content: GetContent(Parameters["Content"]),
+                                contentType: Parameters.TryGet<string>("ContentType"),
+                                headers: Parameters["Headers"] as Hashtable,
+                                timeout: Parameters.TryGet<int?>("Timeout"),
+                                throwExceptionOnError: MethodName == "SendRequest"
+                            )
+                        );
                     XmlContainer responseMetadata = Parameters
                             .TryGet<XmlContainer>("ResponseMetadata");
-					if (responseMetadata != null)
+                    if (responseMetadata != null)
                     {
                         AddMetaData(responseMetadata, httpResponse);
                     }
                     _result = httpResponse.Content;
-					break;
+                    break;
                 }
-				default:
-					throw new ArgumentOutOfRangeException(
-                        "MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
-			}
-		}
-
-        private static void AddMetaData(XmlContainer responseMetadata, HttpResult httpResponse)
-        {
-            var document = responseMetadata.Xml;
-            if (httpResponse.Exception != null) {
-                XmlElement exceptionElement = document.CreateElement("Exception");
-                document.AppendChild(exceptionElement);
-
-                XmlElement typeElement = document.CreateElement("Type");
-                typeElement.InnerText = httpResponse.Exception.GetType().FullName;
-                exceptionElement.AppendChild(typeElement);
-
-                XmlElement messageElement = document.CreateElement("Message");
-                messageElement.InnerText = httpResponse.Exception.Message;
-                exceptionElement.AppendChild(messageElement);
-
-                XmlElement stackTraceElement = document.CreateElement("StackTrace");
-                stackTraceElement.InnerText = httpResponse.Exception.StackTrace;
-                exceptionElement.AppendChild(stackTraceElement);
-            }
-            else
-            {
-                XmlElement httpResponseElement = document.CreateElement("HttpResponse");
-                document.AppendChild(httpResponseElement);
-
-                XmlElement statusCodeElement = document.CreateElement("StatusCode");
-                statusCodeElement.InnerText = httpResponse.StatusCode.ToString();
-                httpResponseElement.AppendChild(statusCodeElement);
-
-                XmlElement statusDescriptionElement = document.CreateElement("StatusDescription");
-                statusDescriptionElement.InnerText = httpResponse.StatusDescription;
-                httpResponseElement.AppendChild(statusDescriptionElement);
-
-                XmlElement headersElement = document.CreateElement("Headers");
-                httpResponseElement.AppendChild(headersElement);
-                foreach (string name in httpResponse.Headers.Keys)
-                {
-                    XmlElement headerElement = document.CreateElement(name);
-                    headerElement.InnerText = httpResponse.Headers[name];
-                    headersElement.AppendChild(headerElement);
-                }
-            }
+            default:
+                throw new ArgumentOutOfRangeException(
+                "MethodName", MethodName, ResourceUtils.GetString("InvalidMethodName"));
         }
-
-        private string GetContent(object obj)
-        {
-            if (obj is XmlContainer xmlContainer)
-            {
-                return xmlContainer.Xml.OuterXml;
-            }
-            return XmlTools.ConvertToString(obj);
-        }
-        #endregion
     }
+
+    private static void AddMetaData(XmlContainer responseMetadata, HttpResult httpResponse)
+    {
+        var document = responseMetadata.Xml;
+        if (httpResponse.Exception != null)
+        {
+            XmlElement exceptionElement = document.CreateElement("Exception");
+            document.AppendChild(exceptionElement);
+
+            XmlElement typeElement = document.CreateElement("Type");
+            typeElement.InnerText = httpResponse.Exception.GetType().FullName;
+            exceptionElement.AppendChild(typeElement);
+
+            XmlElement messageElement = document.CreateElement("Message");
+            messageElement.InnerText = httpResponse.Exception.Message;
+            exceptionElement.AppendChild(messageElement);
+
+            XmlElement stackTraceElement = document.CreateElement("StackTrace");
+            stackTraceElement.InnerText = httpResponse.Exception.StackTrace;
+            exceptionElement.AppendChild(stackTraceElement);
+        }
+        else
+        {
+            XmlElement httpResponseElement = document.CreateElement("HttpResponse");
+            document.AppendChild(httpResponseElement);
+
+            XmlElement statusCodeElement = document.CreateElement("StatusCode");
+            statusCodeElement.InnerText = httpResponse.StatusCode.ToString();
+            httpResponseElement.AppendChild(statusCodeElement);
+
+            XmlElement statusDescriptionElement = document.CreateElement("StatusDescription");
+            statusDescriptionElement.InnerText = httpResponse.StatusDescription;
+            httpResponseElement.AppendChild(statusDescriptionElement);
+
+            XmlElement headersElement = document.CreateElement("Headers");
+            httpResponseElement.AppendChild(headersElement);
+            foreach (string name in httpResponse.Headers.Keys)
+            {
+                XmlElement headerElement = document.CreateElement(name);
+                headerElement.InnerText = httpResponse.Headers[name];
+                headersElement.AppendChild(headerElement);
+            }
+        }
+    }
+
+    private string GetContent(object obj)
+    {
+        if (obj is XmlContainer xmlContainer)
+        {
+            return xmlContainer.Xml.OuterXml;
+        }
+        return XmlTools.ConvertToString(obj);
+    }
+    #endregion
 }
+

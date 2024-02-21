@@ -162,15 +162,15 @@ namespace Origam.BI.CrystalReports
                     ser.WriteObject(xmlWriter, request);
                 }
             }
-            var result = HttpTools.Instance.SendRequest(baseUrl +
-                $"api/{method}?report={fileName}{paramString}",
-                "POST",
-                stringBuilder.ToString().Replace(
-                    " xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",
-                    ""),
-                "application/xml",
-                new Hashtable(),
-                timeout).Content;
+            var result = HttpTools.Instance.SendRequest(
+                new Request(
+                    url:  baseUrl + $"api/{method}?report={fileName}{paramString}",
+                    method: "POST",
+                    content: stringBuilder.ToString()
+                        .Replace(" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",""),
+                    contentType:"application/xml",
+                    timeout: timeout)
+                ).Content;
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report finished");

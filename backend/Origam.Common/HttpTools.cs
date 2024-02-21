@@ -210,49 +210,20 @@ namespace Origam
 			return result;
 		}
 
-		public HttpResult SendRequest(string url, string method)
-		{
-			return SendRequest(url, method, null, null, null, null);
-		}
-
-		public HttpResult SendRequest(string url, string method, string content,
-			string contentType, Hashtable headers, int? timeout, bool throwExceptionOnError=true)
-		{
-			Uri myUrl = new Uri(url);
-
-			// try to parse user credentials and if present:
-			// use it as a http basic authorization
-			string credentials = myUrl.UserInfo;
-			if (credentials.Contains(":"))
-			{
-				string[] credentialsSplit = credentials.Split(':');
-				if (credentialsSplit.Length == 2)
-				{
-					return SendRequest(url, method, content, contentType,
-						headers, "Basic", MyUri.UnescapeDataString(credentialsSplit[0]),
-						MyUri.UnescapeDataString(credentialsSplit[1]), false, timeout);
-				}
-			}
-			return SendRequest(url, method, content, contentType,
-				headers, null, null, null, false, timeout, throwExceptionOnError);
-		}
-		public HttpResult SendRequest(string url, string method, string content,
-			string contentType, Hashtable headers, string authenticationType,
-			string userName, string password, bool returnAsStream,
-            int? timeout, bool throwExceptionOnError=true)
-		{
-			try
-			{
-				using WebResponse response = GetResponse(url, method, content,
-					contentType, headers, authenticationType, userName,
-					password, timeout, null, false);
+		public HttpResult SendRequest(Request request)
+        {
+            try
+            {
+				using WebResponse response = GetResponse(request.Url, request.Method, request.Content,
+                    request.ContentType, request.Headers, request.AuthenticationType, request.UserName,
+                    request.Password, request.Timeout, null, false);
 				if (response is not HttpWebResponse httpResponse)
 				{
 					throw new Exception(
 						"WebResponse is not of HttpResponse type.");
 				}
 				return new HttpResult(
-					Content: ProcessReturnValue(returnAsStream, httpResponse), 
+					Content: ProcessReturnValue(request.ReturnAsStream, httpResponse), 
 					StatusCode: (int)httpResponse.StatusCode, 
 					StatusDescription: httpResponse.StatusDescription, 
 					Headers: httpResponse.Headers.AllKeys
@@ -260,14 +231,13 @@ namespace Origam
 			}
 			catch (WebException webException)
 			{
-				return HandleWebException(returnAsStream, throwExceptionOnError, webException);
+				return HandleWebException(request, webException);
 			}
 		}
 
-		private HttpResult HandleWebException(bool returnAsStream, 
-			bool throwExceptionOnError, WebException webException)
+		private HttpResult HandleWebException(Request request, WebException webException)
 		{
-			if (throwExceptionOnError)
+			if (request.ThrowExceptionOnError)
 			{
 				var info = "";
 				if (webException.Response is HttpWebResponse httpResponse)
@@ -284,7 +254,7 @@ namespace Origam
 				if (webException.Response is HttpWebResponse httpResponse)
 				{
 					return new HttpResult(
-						Content: ProcessReturnValue(returnAsStream, httpResponse),
+						Content: ProcessReturnValue(request.ReturnAsStream, httpResponse),
 						StatusCode: (int)httpResponse.StatusCode,
 						StatusDescription: httpResponse.StatusDescription,
 						Headers: httpResponse.Headers.AllKeys
@@ -579,4 +549,105 @@ namespace Origam
 			return Uri.EscapeDataString(stringToEscape);
 		}
 	}
+
+    public class Request
+    {
+        public string Url { get; }
+        public string Method { get; }
+        public string Content { get; }
+        public string ContentType { get; }
+        public Hashtable Headers { get; }
+        public bool ReturnAsStream { get; }
+        public int? Timeout { get; }
+        public bool ThrowExceptionOnError { get; }
+        public string Password { get; }
+        public string UserName { get; }
+        public string AuthenticationType { get; }
+
+    public Request(string url, string method, string content = null,
+        string contentType = null, Hashtable headers = null, string authenticationType = null,
+        string userName = null, string password = null, bool returnAsStream = false,
+        int? timeout = null, bool throwExceptionOnError = true)
+        {
+            Url = url;
+            Method = method;
+            Content = content;
+            ContentType = contentType;
+            Headers = headers;
+            ReturnAsStream = returnAsStream;
+            Timeout = timeout;
+            ThrowExceptionOnError = throwExceptionOnError;
+            (AuthenticationType, UserName, Password) =
+                ParseAuthentication(url, authenticationType, userName, password);
+        }
+
+        private (string type, string userName, string password) ParseAuthentication(
+            string url, string authenticationType, string userName, string password)
+        {
+            if (
+                string.IsNullOrEmpty(authenticationType) &&
+                string.IsNullOrEmpty(password) &&
+                string.IsNullOrEmpty(userName))
+            {
+                Uri myUrl = new Uri(url);
+
+                // try to parse user credentials and if present:
+                // use it as a http basic authorization
+                string credentials = myUrl.UserInfo;
+                if (credentials.Contains(":"))
+                {
+                    string[] credentialsSplit = credentials.Split(':');
+                    if (credentialsSplit.Length == 2)
+                    {
+                        return (
+                            "Basic",
+                             MyUri.UnescapeDataString(credentialsSplit[0]),
+                             MyUri.UnescapeDataString(credentialsSplit[1]));
+                    }
+                }
+            }
+            return (authenticationType, userName, password);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Request request &&
+                   Url == request.Url &&
+                   Method == request.Method &&
+                   Content == request.Content &&
+                   ContentType == request.ContentType &&
+                   (
+					   EqualityComparer<Hashtable>.Default.Equals(Headers, request.Headers) || 
+					   Headers.Count == 0 && request.Headers.Count == 0
+				   ) &&
+                   ReturnAsStream == request.ReturnAsStream &&
+                   Timeout == request.Timeout &&
+                   ThrowExceptionOnError == request.ThrowExceptionOnError &&
+                   Password == request.Password &&
+                   UserName == request.UserName &&
+                   AuthenticationType == request.AuthenticationType;
+        }
+
+		private static readonly int emptyHashTableHash = EqualityComparer<Hashtable>.Default.GetHashCode(new Hashtable());
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1786848019;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Url);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Method);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Content);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ContentType);
+			hashCode = hashCode * -1521134295 + (Headers != null && Headers.Count == 0 
+				? emptyHashTableHash 
+				: EqualityComparer<Hashtable>.Default.GetHashCode(Headers) 
+			);
+            hashCode = hashCode * -1521134295 + ReturnAsStream.GetHashCode();
+            hashCode = hashCode * -1521134295 + Timeout.GetHashCode();
+            hashCode = hashCode * -1521134295 + ThrowExceptionOnError.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UserName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(AuthenticationType);
+            return hashCode;
+        }
+    }
 }
