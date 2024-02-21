@@ -23,24 +23,25 @@ import { MainMenuLI } from "gui/Components/MainMenu/MainMenuLI";
 import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
 import { CMainMenuFolderItem, CMainMenuCommandItem } from "./CMainMenu";
 import { observer } from "mobx-react";
+import { IEditingState } from "model/entities/types/IMainMenu";
 
-export const MenuItemList = observer((props: { ctx: any; }) => {
+export const MenuItemList = observer((props: { ctx: any; editingState: IEditingState}) => {
   const mainMenu = getMainMenu(props.ctx);
-  return mainMenu ? listFromNode(mainMenu.menuUI, 1, true) : null;
+  return mainMenu ? listFromNode(mainMenu.menuUI, 1, true, props.editingState) : null;
 });
 
-function itemForNode(node: any, level: number, isOpen: boolean) {
+function itemForNode(node: any, level: number, isOpen: boolean, editingState: IEditingState) {
   switch (node.name) {
     case "Submenu":
       return (
         <MainMenuLI key={node.$iid}>
-          <CMainMenuFolderItem node={node} level={level} isOpen={isOpen} />
+          <CMainMenuFolderItem node={node} level={level} isOpen={isOpen} editingState={editingState}  />
         </MainMenuLI>
       );
     case "Command":
       return (
         <MainMenuLI key={node.$iid}>
-          <CMainMenuCommandItem node={node} level={level} isOpen={isOpen} />
+          <CMainMenuCommandItem node={node} level={level} isOpen={isOpen} editingState={editingState} />
         </MainMenuLI>
       );
     default:
@@ -48,12 +49,12 @@ function itemForNode(node: any, level: number, isOpen: boolean) {
   }
 }
 
-export function listFromNode(node: any, level: number, isOpen: boolean) {
+export function listFromNode(node: any, level: number, isOpen: boolean, editingState: IEditingState) {
   return (
     <MainMenuUL>
       {node.elements
         .filter((childNode: any) => childNode.attributes.isHidden !== "true")
-        .map((node: any) => itemForNode(node, level, isOpen))}
+        .map((node: any) => itemForNode(node, level, isOpen, editingState))}
     </MainMenuUL>
   );
 }

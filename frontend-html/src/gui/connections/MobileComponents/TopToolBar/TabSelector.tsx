@@ -42,14 +42,6 @@ export class TabSelector extends React.Component<{
   }
 
   render() {
-    if (!this.props.mobileState.layoutState.showOpenTabCombo) {
-      return (
-        <div className={S.heading}>
-          {this.props.mobileState.layoutState.heading}
-        </div>
-      );
-    }
-
     const openedScreens = getOpenedNonDialogScreenItems(this.workbench);
     const someScreenIsDirty = openedScreens.some(screen => screen.content?.formScreen?.isDirty)
     const activeItem = openedScreens.find(item => item.isActive);

@@ -31,9 +31,11 @@ import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSele
 import { SearchButton } from "gui/connections/MobileComponents/TopToolBar/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { AboutLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
+import { AboutLayoutState, TopCenterComponent as TopMiddleComponent, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 import { Icon } from "gui/Components/Icon/Icon";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { EditButton } from "gui/connections/MenuComponents/EditButton";
+import { T } from "utils/translation";
 
 @observer
 export class TopToolBar extends React.Component<{
@@ -63,24 +65,50 @@ export class TopToolBar extends React.Component<{
     if(this.layoutState.topLeftComponent === TopLeftComponent.Menu) {
       return <MenuButton/>;
     }
-    else if(this.layoutState.topLeftComponent === TopLeftComponent.Close) {
+    if(this.layoutState.topLeftComponent === TopLeftComponent.Close) {
       if (this.layoutState.showCloseButton(!!this.activeScreen)) {
         return (
-         <div className={S.toCloseButton}>< Icon 
+         <div className={S.toCloseButton}>
+            <Icon 
               src={"./icons/close-mobile.svg"}
-              onClick={async () => {
-                await this.props.mobileState.close()
-              }}
+              onClick={async () => await this.props.mobileState.close()}
             />
           </div> );
       }
-    }
-    else if(this.layoutState.topLeftComponent === TopLeftComponent.None) {
       return null;
     }
-    else {
-      throw new Error("Unsupported top left component: " + this.layoutState.topLeftComponent);
+    if(this.layoutState.topLeftComponent === TopLeftComponent.None) {
+      return null;
     }
+    throw new Error("Unsupported top left component: " + this.layoutState.topLeftComponent);
+  }
+
+  getCenterElement(){
+    if (this.layoutState.topMiddleComponent == TopMiddleComponent.MenuEditButton) {
+      return (
+        <div className={S.middleContainer}>
+          <div className={S.heading}>
+            {this.layoutState.heading}
+          </div>
+          <EditButton
+            isVisible={true}
+            isEnabled={this.props.mobileState.sidebarState.editingEnabled}
+            onClick={() => this.props.mobileState.sidebarState.flipEditEnabled()}
+            tooltip={T("Edit Favourites", "edit_favorites")}
+          />
+        </div>);
+    }
+    if (this.layoutState.topMiddleComponent == TopMiddleComponent.Heading) {
+      return (
+        <div className={S.heading}>
+          {this.layoutState.heading}
+        </div>
+      );
+    }
+    if (this.layoutState.topMiddleComponent == TopMiddleComponent.OpenTabCombo) {
+      return <TabSelector mobileState={this.props.mobileState}/>
+    }
+    throw new Error("Unsupported top center component: " + this.layoutState.topMiddleComponent);
   }
 
   render() {
@@ -91,7 +119,7 @@ export class TopToolBar extends React.Component<{
         <div className={S.sideContainer}>
           {this.getLeftElement()}
         </div>
-          <TabSelector mobileState={this.props.mobileState}/>
+          {this.getCenterElement()}
         <div className={S.sideContainer}>
           {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
           <UserMenuDropdown

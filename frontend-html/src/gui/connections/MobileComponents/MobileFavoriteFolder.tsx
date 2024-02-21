@@ -17,28 +17,28 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { useRef, useState } from "react";
-import { DragStateContainer, FavoriteItemsList, canBeDeleted, onCreateFavoritesFolderClick, onFolderPropertiesClick } from "gui/connections/CFavorites";
+import { useState } from "react";
+import { FavoriteItemsList, canBeDeleted, onCreateFavoritesFolderClick, onFolderPropertiesClick } from "gui/connections/CFavorites";
 import { FavoriteFolder } from "model/entities/Favorites";
-import { Observer, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Droppable } from "react-beautiful-dnd";
 import S from "gui/connections/CFavorites.module.scss";
 import { Icon } from "gui/Components/Icon/Icon";
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
-import { EditButton } from "../MenuComponents/EditButton";
 import { T } from "utils/translation";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { IEditingState } from "model/entities/types/IMainMenu";
 
 export const MobileFavoriteFolder = observer((props: {
   ctx: any;
   folder: FavoriteFolder;
+  editingState: IEditingState;
 }) => {
   const [isEditButtonVisible, setIsEditButtonVisible] = useState(false);
-  const dragStateContainer = useRef(new DragStateContainer());
   const favorites = getFavorites(props.ctx);
 
   function renderHeader(){
@@ -64,18 +64,6 @@ export const MobileFavoriteFolder = observer((props: {
                     event.stopPropagation();
                   }}
                 />
-                <Observer>
-                  {() =>
-                    <div>
-                      <EditButton
-                        isVisible={isEditButtonVisible}
-                        isEnabled={dragStateContainer.current.editingEnabled}
-                        onClick={() => dragStateContainer.current.flipEditEnabled()}
-                        tooltip={T("Edit Favourites", "edit_favorites")}
-                      />
-                    </div>
-                  }
-                </Observer>
                 {provided.placeholder}
               </div>}
           </Droppable>
@@ -101,7 +89,7 @@ export const MobileFavoriteFolder = observer((props: {
                 onCreateFavoritesFolderClick(props.ctx);
               }}
             >
-              {T("Put to favourites", "add_group")}
+              {T("Add Folder", "add_group")}
             </DropdownItem>
             <DropdownItem
               onClick={(event: any) => {
@@ -124,7 +112,7 @@ export const MobileFavoriteFolder = observer((props: {
       {renderHeader()}
       <FavoriteItemsList 
         folder={props.folder}
-        dragStateContainer={dragStateContainer.current}
+        editingState={props.editingState}
         ctx={props.ctx} 
       />
     </div>

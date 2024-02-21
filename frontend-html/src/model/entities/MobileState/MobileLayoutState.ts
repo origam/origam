@@ -8,7 +8,7 @@ export interface IMobileLayoutState {
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
-  showOpenTabCombo: boolean;
+  topMiddleComponent: TopCenterComponent;
   showSearchButton: boolean;
   topLeftComponent: TopLeftComponent;
   heading: string;
@@ -28,11 +28,17 @@ export enum TopLeftComponent {
   None
 }
 
+export enum TopCenterComponent {
+  OpenTabCombo,
+  MenuEditButton,
+  Heading
+}
+
 export class MenuLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.MenuEditButton;
   showSearchButton = true;
   topLeftComponent = TopLeftComponent.Close;
   showOkButton = false;
@@ -56,7 +62,7 @@ export class AboutLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = true;
   topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
@@ -80,7 +86,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = false;
   topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
@@ -104,7 +110,7 @@ export class EditLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = false;
   topLeftComponent = TopLeftComponent.None;
   showOkButton = true;
@@ -139,7 +145,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
-  showOpenTabCombo = true;
+  topMiddleComponent = TopCenterComponent.OpenTabCombo;
   showSearchButton = true;
   topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;

@@ -21,7 +21,6 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { useContext } from "react";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CWorkQueues } from "gui/connections/CWorkQueues";
-import { CSidebarInfoSection } from "gui/connections/CSidebarInfoSection";
 import { T } from "utils/translation";
 import { SearchResults } from "gui/Components/Search/SearchResults";
 import { onDragEndAction } from "gui/connections/CFavorites";
@@ -39,13 +38,15 @@ import { SidebarState } from "model/entities/SidebarState";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { MobileFavoriteFolder } from "./MobileFavoriteFolder";
 import { getSearcher } from "model/selectors/getSearcher";
+import { Application } from "model/entities/Application";
 
 
 export const MobileSideBar = observer( () => {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench as IWorkbench;
   const sidebarState = workbench.sidebarState;
-  const application = mobxContext.application;
+  const application = mobxContext.application as Application;
+  const mobileSidebarState = application.mobileState.sidebarState;
   const favorites = getFavorites(workbench);
   const showChat = getShowChat(workbench);
   const showWorkQues = getShowWorkQues(workbench);
@@ -56,7 +57,11 @@ export const MobileSideBar = observer( () => {
   function renderContent() {
     switch (sidebarState.activeSection) {
       case "Menu":
-        return <MenuItemList ctx={application} />;
+        return (
+          <MenuItemList
+            ctx={application} 
+            editingState={mobileSidebarState} />
+        );
       case "WorkQueues":
         return <CWorkQueues />;
       case "Favorites":
@@ -67,7 +72,8 @@ export const MobileSideBar = observer( () => {
               <MobileFavoriteFolder
                 key={folder.id}
                 ctx={workbench}
-                folder={folder}/>
+                folder={folder}
+                editingState={mobileSidebarState}/>
             ))
             }
           </DragDropContext>
@@ -78,10 +84,14 @@ export const MobileSideBar = observer( () => {
           );
           case "Chat":
             return <CChatSection/>;
-            default:
-              return <MenuItemList ctx={application} />;
-            }
+          default:
+            return (
+              <MenuItemList 
+                ctx={application} 
+                editingState={mobileSidebarState} />
+            );
           }
+        }
           
     return (
       <div className={S.root}>

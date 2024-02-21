@@ -42,6 +42,7 @@ import { action, observable } from "mobx";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { PinButton } from "gui/connections/MenuComponents/PinButton";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { IEditingState } from "model/entities/types/IMainMenu";
 
 @observer
 export class CFavorites extends React.Component<{
@@ -172,7 +173,7 @@ export class CFavorites extends React.Component<{
                 onCreateFavoritesFolderClick(this.props.ctx);
               }}
             >
-              {T("Put to favourites", "add_group")}
+              {T("Add Folder", "add_group")}
             </DropdownItem>
             <DropdownItem
               onClick={(event: any) => {
@@ -205,7 +206,7 @@ export class CFavorites extends React.Component<{
           {this.props.folder && 
             <FavoriteItemsList 
               folder={this.props.folder}
-              dragStateContainer={this.dragStateContainer}
+              editingState={this.dragStateContainer}
               ctx={this.props.ctx} 
             />}
         </SidebarSectionBody>
@@ -218,7 +219,7 @@ export class CFavorites extends React.Component<{
           {this.props.folder && this.props.isActive && 
             <FavoriteItemsList 
               folder={this.props.folder}
-              dragStateContainer={this.dragStateContainer}
+              editingState={this.dragStateContainer}
               ctx={this.props.ctx} />}
         </SidebarSectionBody>
       </SidebarSection>
@@ -226,7 +227,7 @@ export class CFavorites extends React.Component<{
   }
 }
 
-export class DragStateContainer {
+export class DragStateContainer implements IEditingState{
 
   private static instances: DragStateContainer[] = [];
 
@@ -292,7 +293,7 @@ function getIdFromDropIdentifier(droppableId: string) {
 }
 
 export const FavoriteItemsList = observer((props: {
-  dragStateContainer: DragStateContainer, 
+  editingState: IEditingState, 
   folder: FavoriteFolder,
   ctx:any
 }) => {
@@ -320,7 +321,7 @@ export const FavoriteItemsList = observer((props: {
                           key={node.$iid}
                           draggableId={"favorite_item_" + node.attributes.id}
                           index={index}
-                          isDragDisabled={!props.dragStateContainer.editingEnabled}
+                          isDragDisabled={!props.editingState.editingEnabled}
                         >
                           {(provided) => (
                             <Observer>
@@ -331,7 +332,7 @@ export const FavoriteItemsList = observer((props: {
                                     node={node}
                                     level={level}
                                     isOpen={isOpen}
-                                    editingEnabled={props.dragStateContainer.editingEnabled}
+                                    editingEnabled={props.editingState.editingEnabled}
                                   />
                                 </div>
                               }
