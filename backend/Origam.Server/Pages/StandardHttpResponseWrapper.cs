@@ -30,6 +30,11 @@ namespace Origam.Server.Pages
 {
     internal class StandardHttpResponseWrapper : IResponseWrapper
     {
+        private sealed class StringWriterWithUtf8Encoding : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+        }
+
         private readonly HttpContext httpContext;
         private readonly HttpResponse response;
         private readonly Encoding encoding;
@@ -95,7 +100,7 @@ namespace Origam.Server.Pages
 
         public void WriteToOutput(Action<TextWriter> writeAction)
         {
-            TextWriter textWriter = new StringWriterWithEncoding();
+            TextWriter textWriter = new StringWriterWithUtf8Encoding();
             writeAction(textWriter);
             response.WriteAsync(textWriter.ToString()).Wait();
         }
@@ -142,20 +147,6 @@ namespace Origam.Server.Pages
         public void AppendHeader(string contentDisposition, string disposition)
         {
             response.Headers[contentDisposition] = disposition;
-        }
-    }
-
-    public sealed class StringWriterWithEncoding : StringWriter
-    {
-        private readonly Encoding encoding;
-
-        public StringWriterWithEncoding()  
-        {
-            encoding = Encoding.UTF8;
-        }
-        public override Encoding Encoding
-        {
-            get { return encoding; }
         }
     }
 }
