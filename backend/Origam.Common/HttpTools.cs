@@ -77,7 +77,9 @@ public class HttpTools : IHttpTools
 		{
 			Match match = Regex.Match(singleCookie, @"(\S+?)=(.+?);");
 			if (match.Captures.Count == 0)
+			{
 				continue;
+			}
 			cookies.Add(
 				new Cookie(
 					match.Groups[1].ToString(),
