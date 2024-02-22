@@ -2525,15 +2525,19 @@ namespace OrigamArchitect
 
 			try
 			{
-				using (WebResponse webResponse = HttpTools.Instance.GetResponse(url,
-					"GET", null, null,
-					new Hashtable()
-					{ { "Accept-Encoding", "gzip,deflate"} }
-					, null, null, null, 10000, null, IgnoreHTTPSErrors))
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(
+					 new Request(
+						 url: url,
+						 method:"GET",
+						 headers: new Hashtable(){ { "Accept-Encoding", "gzip,deflate"} },
+                         timeout: 10000, 
+						 ignoreHttpsErrors: IgnoreHTTPSErrors)
+					 )
+				)
 				{
 					string output;
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectingContentEncoding(httpWebResponse);
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 
 					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]

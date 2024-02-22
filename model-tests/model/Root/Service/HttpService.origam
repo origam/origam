@@ -4,17 +4,122 @@
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
-  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:sm1="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
   xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="3bcee140-d809-41ed-80c7-f2e8efde8ed9"
     asi:name="HttpService">
-    <sm:ServiceMethod
+    <sm1:ServiceMethod
+      asi:abstract="false"
+      x:id="a59df58b-542e-41d6-b31e-a56763aa5627"
+      asi:name="TrySendRequest"
+      sm1:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="200"
+        sip:dataType="String"
+        x:id="52b5b895-6b4f-419f-b19b-13651ff97966"
+        asi:name="ContentType" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="5b708679-557f-4701-bc2c-04402ab4b4f8"
+        asi:name="Method" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Array"
+        x:id="6dbd4d72-2c13-4b38-9ee0-59982ffc38c0"
+        asi:name="Headers" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Memo"
+        x:id="7afa9c39-943c-4d5c-ac0c-af5aa0835999"
+        asi:name="Content" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="90aab1bc-4ec9-43bb-b127-b87a8a1690bd"
+        asi:name="Url" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Integer"
+        x:id="b8a678a7-d85e-42ea-a65f-943b6676dbab"
+        asi:name="Timeout" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
+        x:id="d0a879de-7af1-4265-bc33-a08776c9f403"
+        asi:name="ResponseMetadata" />
+    </sm1:ServiceMethod>
+    <sm1:ServiceMethod
       asi:abstract="false"
       x:id="a5ce96de-5114-4bb3-9525-5df9808037d2"
       asi:name="SendRequest"
-      sm:returnValueDataType="String">
+      sm1:returnValueDataType="String">
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -100,6 +205,6 @@
         sip:dataType="Integer"
         x:id="ded687bd-6818-4c6a-9604-5d94f5e42c8e"
         asi:name="Timeout" />
-    </sm:ServiceMethod>
+    </sm1:ServiceMethod>
   </s:Service>
 </x:file>

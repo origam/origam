@@ -88,17 +88,21 @@ namespace OrigamArchitect
 			
 			string output = null;
 			try
-			{				
+			{
 				using (WebResponse webResponse = HttpTools.Instance.GetResponse(
-					string.Format("{0}public/RegisterDownloadsUser", frmMain.ORIGAM_COM_API_BASEURL),
-				"POST", jobj.ToString(), "application/json",
-				new Hashtable()
-				{ { "Accept-Encoding", "gzip,deflate"} }
-				, null, null, null, 15000, null,
-				frmMain.IgnoreHTTPSErrors))
+					new Request(
+						url:string.Format("{0}public/RegisterDownloadsUser", frmMain.ORIGAM_COM_API_BASEURL),
+						method: "POST",
+						content: jobj.ToString(), 
+						contentType: "application/json",
+						headers: new Hashtable(){ { "Accept-Encoding", "gzip,deflate"} },
+						timeout: 15000, 
+						ignoreHttpsErrors: frmMain.IgnoreHTTPSErrors)
+					)
+				)
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectingContentEncoding(httpWebResponse);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK)
 					{
 						MessageBox.Show(string.Format(
@@ -107,7 +111,7 @@ namespace OrigamArchitect
 								strings.RegisterForm_Success_Label,
 								MessageBoxButtons.OK,
 								MessageBoxIcon.Information);
-						
+
 						// success
 						this.DialogResult = DialogResult.OK;
 						this.Close();
@@ -130,7 +134,7 @@ namespace OrigamArchitect
 				{
 					if (httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
 					{
-						errorInfo = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+						errorInfo = HttpTools.Instance.ReadResponseTextRespectingContentEncoding(httpWebResponse);
 						JObject jResult = (JObject)JsonConvert.DeserializeObject(errorInfo);
 
 						if (jResult["ClassName"] != null)

@@ -1545,10 +1545,10 @@ public class XsltTests
         string expectedResult = "testResult";
 
         httpToolsMock
-            .Setup(x => x.SendRequest(url, null, null, null,
+            .Setup(x => x.SendRequest(new Request(url, null, null, null,
                 new Hashtable(), null, null, null, false,
-                null))
-            .Returns(expectedResult);
+                null, true, null, false)))
+            .Returns(new HttpResult(expectedResult, null, null, null, null));
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));

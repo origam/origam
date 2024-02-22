@@ -94,14 +94,20 @@ namespace Origam.Workflow.WorkQueue
                 _authentication = "Basic";
             }
             string url = _url.Replace("{lastState}", lastState);
-            using(WebResponse response = HttpTools.Instance.GetResponse(
-                url, null, null, null, null, _authentication, _userName, 
-                _password, null, null, false))
+            using (WebResponse response = HttpTools.Instance.GetResponse(
+                new Request(
+                    url: url,
+                    method: null,
+                    authenticationType: _authentication,
+                    userName:_userName,
+                    password: _password)
+                )
+            )
             {
                 HttpWebResponse httpResponse = response as HttpWebResponse;
                 Stream responseStream = response.GetResponseStream();
                 WorkQueueFileLoader.FileType mode;
-                if(response.ContentType.ToLower().StartsWith("text/")
+                if (response.ContentType.ToLower().StartsWith("text/")
                 || response.ContentType.ToLower() == "application/json"
                 || response.ContentType.ToLower() == "application/xml")
                 {
@@ -113,11 +119,11 @@ namespace Origam.Workflow.WorkQueue
                 }
                 DataSet dataset = WorkQueueFileLoader.GetFileFromStream(
                     responseStream, mode, response.ResponseUri.AbsoluteUri,
-                    response.ResponseUri.AbsoluteUri, 
+                    response.ResponseUri.AbsoluteUri,
                     HttpTools.Instance.EncodingFromResponse(httpResponse).WebName);
                 WorkQueueAdapterResult result = new WorkQueueAdapterResult(
                     DataDocumentFactory.New(dataset));
-                if(!String.IsNullOrEmpty(_stateXPath))
+                if (!String.IsNullOrEmpty(_stateXPath))
                 {
                     result.State = GetNewStateViaXPath(dataset, lastState);
                 }
