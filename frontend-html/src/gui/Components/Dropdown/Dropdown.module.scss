@@ -163,8 +163,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .input {
+  color: var(--foreground1) !important;
+  cursor: text;
+
   &:global(.isLink) {
-    color: var(--foreground1) !important;
     cursor: pointer !important;
   }
 }
