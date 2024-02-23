@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./MobileMain.module.scss";
 import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar/TopToolBar";
-import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState, } from "model/entities/MobileState/MobileState";
 import { About } from "model/entities/AboutInfo";
@@ -44,6 +43,7 @@ import { CDialogContent } from "gui/connections/CDialogContent";
 import "gui/connections/MobileComponents/mobile.module.scss"
 import { observable } from "mobx";
 import { viewportHeight } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
+import { MobileSideBar } from "./MobileSideBar";
 
 @observer
 export class MobileMain extends React.Component<{}> {
@@ -77,6 +77,9 @@ export class MobileMain extends React.Component<{}> {
   }
 
   private onResize() {
+    if (!viewportHeight.isSet()){
+      return;
+    }
     const keyboardHeight = viewportHeight.get() - (VisualViewport as any).height;
     if (keyboardHeight > 0) {
       this.rootStyle = {"padding-bottom": keyboardHeight + "px"};
@@ -96,7 +99,7 @@ export class MobileMain extends React.Component<{}> {
 
   private renderStateComponent() {
     if (this.mobileState.layoutState instanceof MenuLayoutState) {
-      return <CSidebar/>;
+      return <MobileSideBar/>;
     }
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>

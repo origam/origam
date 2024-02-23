@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @import "src/gui/definitions";
+@import "src/gui/commonStyles";
 
 .root{
   display: flex;
@@ -25,12 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .noSelect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none;
+  @include noSelect;
 }
 
 .header {

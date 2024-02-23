@@ -8,9 +8,9 @@ export interface IMobileLayoutState {
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
-  showOpenTabCombo: boolean;
+  topMiddleComponent: TopCenterComponent;
   showSearchButton: boolean;
-  showHamburgerMenuButton: boolean;
+  topLeftComponent: TopLeftComponent;
   heading: string;
   showOkButton: boolean;
   showBackButton: boolean;
@@ -22,13 +22,25 @@ export interface IMobileLayoutState {
   close(ctx: any): Promise<IMobileLayoutState>;
 }
 
+export enum TopLeftComponent {
+  Menu,
+  Close,
+  None
+}
+
+export enum TopCenterComponent {
+  OpenTabCombo,
+  MenuEditButton,
+  Heading
+}
+
 export class MenuLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.MenuEditButton;
   showSearchButton = true;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.Close;
   showOkButton = false;
   showBackButton = false;
   heading = T("Menu", "menu");
@@ -50,9 +62,9 @@ export class AboutLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = false;
   heading = T("About", "about_application");
@@ -74,9 +86,9 @@ export class SearchLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = false;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = false;
   heading = T("Search", "mobile_search_title");
@@ -98,9 +110,9 @@ export class EditLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpenTabCombo = false;
+  topMiddleComponent = TopCenterComponent.Heading;
   showSearchButton = false;
-  showHamburgerMenuButton = false;
+  topLeftComponent = TopLeftComponent.None;
   showOkButton = true;
   showBackButton = false;
   private readonly showCloseButton_: boolean;
@@ -133,9 +145,9 @@ export class ScreenLayoutState implements IMobileLayoutState {
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
-  showOpenTabCombo = true;
+  topMiddleComponent = TopCenterComponent.OpenTabCombo;
   showSearchButton = true;
-  showHamburgerMenuButton = true;
+  topLeftComponent = TopLeftComponent.Menu;
   showOkButton = false;
   showBackButton = true;
   heading = "";

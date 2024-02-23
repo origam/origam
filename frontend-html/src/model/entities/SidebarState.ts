@@ -78,8 +78,12 @@ export class SidebarState {
 
 export class MainMenuState implements IMainMenuState {
 
+  flipEditEnabled(): void {
+    this.editingEnabled = !this.editingEnabled;
+  }
+
   @observable
-  editing = false;
+  editingEnabled = false;
 
   @observable
   folderStateMap: Map<string, boolean> = new Map();

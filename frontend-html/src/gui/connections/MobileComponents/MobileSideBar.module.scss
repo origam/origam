@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,51 +17,53 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.tabbedPanel {
+.root {
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100%;
-  flex-grow: 1;
   overflow: hidden;
+
+  .alertCounter{
+    top: -3px;
+    left: 15px;
+  }
+
+  :global(.favorites) {
+    border-left: none; 
+  }
+
+  :global(.devider) {
+    height: 0px;
+    border-top: none;
+    margin: 0;
+  }
 }
 
-.tabHandles {
-  user-select: none;
+.workQueueButton {
+  position: relative;
+}
+
+.contentContainer {
+  overflow: auto;
+  height: 100%;
+  background-color: var(--background2);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.bottomContainer {
   display: flex;
-  flex-direction: row;
-  min-height: 20px;
-  flex-shrink: 0;
-  flex-grow: 0;
-  overflow: hidden;
+  gap: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.tabHandle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--background6);
-  color: var(--background4);
-  height: 20px;
-  padding: 2px 10px 2px 10px;
-  border-right: 1px solid var(--background3);
-  cursor: default;
-}
-
-.tabHandle:hover,
-.tabHandle:global(.active) {
-  background-color: var(--foreground6);
-  color:var(--background1);
-}
-
-.tabBody {
-  flex-grow: 1;
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.tabBody:global(.hidden) {
-  display: none;
+.sectionIcon {
+  width: 30px;
+  &.active {
+      stroke: var(--foreground1);
+      stroke-width: 2;
+  }
 }

@@ -54,8 +54,7 @@ export interface IMainMenuEnvelope {
 }
 
 
-export interface IMainMenuState {
-  editing: boolean;
+export interface IMainMenuState extends IEditingState {
   highLightedItemId: string | undefined;
 
   highlightItem(itemId: string): void;
@@ -71,6 +70,12 @@ export interface IMainMenuState {
   setReference(id: string, ref: RefObject<HTMLElement>): void;
 
   scrollToItem(id: string): void
+}
+
+export interface IEditingState {
+  flipEditEnabled(): void
+  
+  editingEnabled: boolean;
 }
 
 export type IMainMenu = IMainMenuEnvelope & IMainMenuContent;
