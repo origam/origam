@@ -30,6 +30,11 @@ namespace Origam.Server.Pages
 {
     internal class StandardHttpResponseWrapper : IResponseWrapper
     {
+        private sealed class StringWriterWithUtf8Encoding : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+        }
+
         private readonly HttpContext httpContext;
         private readonly HttpResponse response;
         private readonly Encoding encoding;
@@ -59,7 +64,8 @@ namespace Origam.Server.Pages
                 var mediaType = new MediaTypeHeaderValue(value);
                 // if we're sending a zip file, we need to kick out the encoding
                 // otherwise the delivered file is invalid and of double size
-                if (!IsZipType(value)) {
+                if (!IsZipType(value))
+                {
                     mediaType.Encoding = encoding;
                 }
                 response.ContentType = mediaType.ToString();
@@ -89,13 +95,13 @@ namespace Origam.Server.Pages
 
         public string Charset
         {
-            get => throw new NotImplementedException(); 
+            get => throw new NotImplementedException();
             set => throw new NotImplementedException();
         }
 
         public void WriteToOutput(Action<TextWriter> writeAction)
         {
-            TextWriter textWriter = new StringWriter();
+            TextWriter textWriter = new StringWriterWithUtf8Encoding();
             writeAction(textWriter);
             response.WriteAsync(textWriter.ToString()).Wait();
         }
@@ -121,12 +127,12 @@ namespace Origam.Server.Pages
 
         public void AddHeader(string name, string value)
         {
-            response.Headers[name]= value;
+            response.Headers[name] = value;
         }
 
         public void BinaryWrite(byte[] bytes)
         {
-            response.Body.WriteAsync(bytes,0, bytes.Length).Wait();
+            response.Body.WriteAsync(bytes, 0, bytes.Length).Wait();
         }
 
         public void Redirect(string requestUrlReferrerAbsolutePath)
