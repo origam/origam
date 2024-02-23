@@ -75,7 +75,7 @@ export function DropdownEditorInput(props: {
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input, ctrlKeyPressed ? ["isLink", S.isLink] : "")}
+          className={cx("input", S.input, (ctrlKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
