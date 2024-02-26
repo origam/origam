@@ -211,7 +211,7 @@
       <frmi:MenuItem
         asi:abstract="false"
         frmi:autoSaveOnListRecordChange="false"
-        ami:displayName="Dropdown Search By First ColumnO nly"
+        ami:displayName="Dropdown Search By First Column Only"
         x:id="d28dfa42-c298-4705-9ba6-c3e88c15abd0"
         asi:name="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
         ami:openExclusively="false"
