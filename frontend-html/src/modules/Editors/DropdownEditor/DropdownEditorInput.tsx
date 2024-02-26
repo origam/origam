@@ -22,6 +22,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from "gui/Components/Dropdown/Dropdown.module.scss";
+import { T } from "utils/translation";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
@@ -76,6 +77,7 @@ export function DropdownEditorInput(props: {
       {() => (
         <input
           className={cx("input", S.input, (ctrlKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
+          title={T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip")}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
