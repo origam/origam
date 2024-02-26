@@ -77,7 +77,7 @@ export function DropdownEditorInput(props: {
       {() => (
         <input
           className={cx("input", S.input, (ctrlKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
-          title={T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip")}
+          title={setup.isLink ? T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip") : ""}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
