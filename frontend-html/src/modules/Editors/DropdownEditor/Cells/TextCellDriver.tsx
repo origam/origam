@@ -62,6 +62,7 @@ export class TextCellDriver implements IBodyCellDriver {
       <Highlighter
         searchWords={[this.dataTable.filterPhrase]}
         textToHighlight={this.formattedText(rowIndex)}
+        autoEscape={true}
       />
       </div>
     );
