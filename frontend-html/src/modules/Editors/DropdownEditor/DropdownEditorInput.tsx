@@ -18,10 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from "gui/Components/Dropdown/Dropdown.module.scss";
+import { T } from "utils/translation";
 
 export function DropdownEditorInput(props: {
   backgroundColor?: string;
@@ -31,6 +32,7 @@ export function DropdownEditorInput(props: {
   const beh = useContext(CtxDropdownEditor).behavior;
   const data = useContext(CtxDropdownEditor).editorData;
   const setup = useContext(CtxDropdownEditor).setup;
+  const [ctrlKeyPressed, setCtrlKeyPressed] = useState<boolean>(false);
   const refInput = useMemo(() => {
     return (elm: any) => {
       beh.refInputElement(elm);
@@ -60,12 +62,22 @@ export function DropdownEditorInput(props: {
     }
   }
 
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey)
+      setCtrlKeyPressed(true)
+  });
+  
+  document.addEventListener('keyup', function(event) {
+    if (!event.ctrlKey)
+      setCtrlKeyPressed(false)
+  });
 
   return (
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input, {isLink: setup.isLink})}
+          className={cx("input", S.input, (ctrlKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
+          title={setup.isLink ? T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip") : ""}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
