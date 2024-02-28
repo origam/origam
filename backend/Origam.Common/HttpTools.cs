@@ -38,7 +38,10 @@ namespace Origam
 {
 	public class HttpTools : IHttpTools
 	{
-		public static HttpTools Instance { get; set; } = new();
+        private static readonly log4net.ILog log =
+        log4net.LogManager.GetLogger(System.Reflection.MethodBase
+            .GetCurrentMethod()?.DeclaringType);
+        public static HttpTools Instance { get; set; } = new();
 		
 		public static void SetDIServiceProvider(IServiceProvider serviceProvider)
 		{
@@ -356,9 +359,19 @@ namespace Origam
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
 		{
-			var providerContainer = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
+
 			headers ??= new Hashtable();
-			providerContainer.TryAuthenticate(url, headers);
+            if (serviceProvider != null)
+            {
+                var providerContainer
+                    = serviceProvider.GetService<ClientAuthenticationProviderContainer>();
+                providerContainer.TryAuthenticate(url, headers);
+            }
+            else
+            {
+                log.Warn("Request could not be authenticated because serviceProvider is null. " +
+						 "This is expected if you send Http requests from the Architect or the Scheduller.");
+            }
 
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
 			                                       SecurityProtocolType.Tls11 |
