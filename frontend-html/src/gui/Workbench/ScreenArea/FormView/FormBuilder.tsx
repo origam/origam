@@ -26,7 +26,7 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormField } from "gui/Components/Form/FormField";
+import { FormField, getToolTip } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
 import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
@@ -178,18 +178,20 @@ export class FormBuilder extends React.Component<{
                   if (property.column === "CheckBox") {
                     return (
                       <Provider property={property}>
-                        <CheckBox
-                          fieldDimensions={dimensionsFromProperty(property)}
-                          isHidden={isHidden}
-                          checked={value}
-                          readOnly={!row || isReadOnly(property, rowId)}
-                          onKeyDown={(event) => self.onKeyDown(event)}
-                          subscribeToFocusManager={(radioInput) =>
-                            focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
-                          }
-                          onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
-                          labelColor={foreGroundColor}
-                        />
+                        <div title={getToolTip(property.toolTip)}>
+                           <CheckBox
+                            fieldDimensions={dimensionsFromProperty(property)}
+                            isHidden={isHidden}
+                            checked={value}
+                            readOnly={!row || isReadOnly(property, rowId)}
+                            onKeyDown={(event) => self.onKeyDown(event)}
+                            subscribeToFocusManager={(radioInput) =>
+                              focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
+                            }
+                            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+                            labelColor={foreGroundColor}
+                            />
+                        </div>
                       </Provider>
                     );
                   }
