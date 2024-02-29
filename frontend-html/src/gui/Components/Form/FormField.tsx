@@ -70,7 +70,7 @@ export interface IFormFieldProps {
 export class FormField extends React.Component<IFormFieldProps> {
 
   @observable
-  toolTip: string | undefined | null;
+  dynamicToolTip: string | undefined | null;
 
   render() {
     const row = getSelectedRow(this.props.property);
@@ -84,7 +84,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <label
           className={S.caption}
           style={getCaptionStyle(this.props)}
-          title={getToolTip(this.props, this.toolTip)}
+          title={getToolTip(this.props.toolTip, this.dynamicToolTip)}
         >
           {this.props.caption}
         </label>
@@ -92,7 +92,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <div
           className={S.editor}
           style={getFormFieldStyle(this.props)}
-          title={getToolTip(this.props, this.toolTip)}
+          title={getToolTip(this.props.toolTip, this.dynamicToolTip)}
         >
           <FormViewEditor
             value={this.props.value}
@@ -100,7 +100,7 @@ export class FormField extends React.Component<IFormFieldProps> {
             textualValue={this.props.textualValue}
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
-            onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            onTextOverflowChanged={toolTip => this.dynamicToolTip = toolTip}
             dock={this.props.dock}
           />
           {invalidMessage && (
@@ -172,10 +172,10 @@ export function getFormFieldStyle(props: IFormFieldProps) {
   };
 }
 
-export function getToolTip(props: IFormFieldProps, toolTip: string | undefined | null){
-  let finalToolTip = props.toolTip ?? "";
-  if (toolTip) {
-    finalToolTip = toolTip + "\n\n" + finalToolTip;
+export function getToolTip(propertyToolTip: string | undefined, additionalText: string | undefined | null = "" ){
+  let finalToolTip = propertyToolTip ?? "";
+  if (additionalText) {
+    finalToolTip = additionalText + "\n\n" + finalToolTip;
   }
   return formatTooltipPlaintext(finalToolTip);
 }
