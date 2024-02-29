@@ -218,7 +218,7 @@ function parseProperty(node: any, idx: number): IProperty {
     isAggregatedColumn: node.attributes.Aggregated || false,
     isLookupColumn: node.attributes.IsLookupColumn || false,
     style: cssString2Object(node.attributes.Style),
-    toolTip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
+    tooltip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
     supportsServerSideSorting: node.attributes.SupportsServerSideSorting === "true",
     fieldType: node.attributes.FieldType
   });

@@ -56,7 +56,7 @@ export class TextEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   onMount?(onChange?: (value: any) => void): void;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
   disposers: any[] = [];

@@ -81,7 +81,7 @@ export class Property implements IProperty {
   isLookupColumn: boolean = false;
   style: any;
   controlPropertyId?: string;
-  toolTip: string = null as any;
+  tooltip: string = null as any;
   suppressEmptyColumns: boolean = false;
   supportsServerSideSorting: boolean = false;
   isInteger = false;

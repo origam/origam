@@ -47,7 +47,7 @@ export interface IFormFieldProps {
   isHidden?: boolean;
   hideCaption?: boolean;
   captionColor?: string;
-  toolTip?: string;
+  tooltip?: string;
   xmlNode?: any;
   value?: any;
   textualValue?: any;
@@ -84,7 +84,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <label
           className={S.caption}
           style={getCaptionStyle(this.props)}
-          title={getToolTip(this.props.toolTip, this.dynamicToolTip)}
+          title={getToolTip(this.props.tooltip, this.dynamicToolTip)}
         >
           {this.props.caption}
         </label>
@@ -92,7 +92,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <div
           className={S.editor}
           style={getFormFieldStyle(this.props)}
-          title={getToolTip(this.props.toolTip, this.dynamicToolTip)}
+          title={getToolTip(this.props.tooltip, this.dynamicToolTip)}
         >
           <FormViewEditor
             value={this.props.value}
@@ -100,7 +100,7 @@ export class FormField extends React.Component<IFormFieldProps> {
             textualValue={this.props.textualValue}
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
-            onTextOverflowChanged={toolTip => this.dynamicToolTip = toolTip}
+            onTextOverflowChanged={tooltip => this.dynamicToolTip = tooltip}
             dock={this.props.dock}
           />
           {invalidMessage && (
