@@ -98,7 +98,7 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: () => Promise<any>;
   backgroundColor?: string;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
   focusManager: FormFocusManager;

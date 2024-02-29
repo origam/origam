@@ -47,7 +47,7 @@ export interface IComboBoxProps {
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   dataView: IDataView;
   property: IProperty;
   onKeyDown?(event: any): void;
@@ -110,7 +110,7 @@ export function XmlBuildDropdownEditor(props: {
   editingTags?: boolean;
   isLink?: boolean;
   autoSort?: boolean;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   onValueSelected: () => void;
   onKeyDown?(event: any): void;
   dataView: IDataView,

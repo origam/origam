@@ -99,7 +99,7 @@ export function XmlBuildDropdownEditor(props: {
   autoSort?: boolean;
   expandAfterMounting?: boolean;
   onMount?(onChange?: (value: any) => void): void;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
   onBlur?: (target: any) => void;
