@@ -609,6 +609,31 @@
         asi:name="AllDataTypes"
         sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="fca61a1a-4f58-4940-8931-87cb411bac15"
+      euia:label="RuleDisplayTest"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="true"
+      euia:mode="ActiveRecord"
+      asi:name="RuleDisplayTest"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:modalDialogHeight="200"
+      euia:modalDialogWidth="400"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/RuleDisplayTest.origam#RuleDisplayTest/67c3f849-6384-4d46-9228-8e8b89d1b8bb" />
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
