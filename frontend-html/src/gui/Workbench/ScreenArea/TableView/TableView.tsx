@@ -60,6 +60,8 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import cx from "classnames";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
 import {getScreenFocusManager} from "../../../../model/selectors/FormScreen/getScreenFocusManager";
+import { getTooltip } from "gui/Components/ScreenElements/Table/TableRendering/onClick";
+import { formatTooltipPlaintext } from "gui/Components/ToolTip/FormatTooltipText";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -409,6 +411,7 @@ class HeaderRenderer implements IHeaderRendererData {
           isFirst={args.isFirst}
           width={args.columnWidth}
           label={header.label}
+          tooltip={property.toolTip}
           orderingDirection={header.ordering}
           orderingOrder={header.order + 1}
           onColumnWidthChange={this.onColumnWidthChange}
