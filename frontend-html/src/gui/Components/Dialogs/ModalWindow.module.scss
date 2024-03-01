@@ -130,6 +130,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .body {
   flex-grow: 1;
+  overflow: auto;
+  // word-break: break-all;
   /*padding: 10px;*/
 }
 

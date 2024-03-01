@@ -39,6 +39,10 @@ export const WorkflowFinishedPanel: React.FC<{
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // const regex = new RegExp(`<P>|</P>`, 'g');
+  // var arr = props.message.split(regex)
+  // const str = arr[0] + "<P>" + "Error message" + "</P>" + arr[2];
+
   return (
     <div className={S.root}>
       {props.isRepeatButton && <button ref={repeatButton} onClick={props.onRepeatClick}>{T("Repeat", "button_repeat")}</button>}
