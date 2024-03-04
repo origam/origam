@@ -27,7 +27,6 @@ import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "model/actions-ui-tree";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getShowTooltipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowTooltipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
   currentColumnLeft,
@@ -69,6 +68,7 @@ import {
   getPaddingRight,
   xCenter,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -351,4 +351,8 @@ function getBackGroundColor() {
         : getComputedStyle(document.documentElement).getPropertyValue('--background1');
     }
   }
+}
+
+function getShowTooltipsForMemoFieldsOnly(ctx: any) {
+  return getWorkbenchLifecycle(ctx).portalSettings?.showTooltipsForMemoFieldsOnly;
 }
