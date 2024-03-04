@@ -139,7 +139,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function getToolTipContent(event: any, boundingRectangle: DOMRect) {
+  function getTooltipContent(event: any, boundingRectangle: DOMRect) {
     return getTooltip(
       event.clientX - boundingRectangle.x + scrollLeftObs.get(),
       event.clientY - boundingRectangle.y + scrollTopObs.get(),
@@ -147,7 +147,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     );
   }
 
-  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent};
+  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getTooltipContent: getTooltipContent};
 }
 
 export const Table: React.FC<ITableProps & {
