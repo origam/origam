@@ -23,7 +23,7 @@ import { IDockType, IProperty } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
+import { formatTooltipPlaintext } from "../Tooltip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
 import { observable } from "mobx";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
@@ -70,7 +70,7 @@ export interface IFormFieldProps {
 export class FormField extends React.Component<IFormFieldProps> {
 
   @observable
-  dynamicToolTip: string | undefined | null;
+  dynamicTooltip: string | undefined | null;
 
   render() {
     const row = getSelectedRow(this.props.property);
@@ -84,7 +84,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <label
           className={S.caption}
           style={getCaptionStyle(this.props)}
-          title={getToolTip(this.props.tooltip, this.dynamicToolTip)}
+          title={getTooltip(this.props.tooltip, this.dynamicTooltip)}
         >
           {this.props.caption}
         </label>
@@ -92,7 +92,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         <div
           className={S.editor}
           style={getFormFieldStyle(this.props)}
-          title={getToolTip(this.props.tooltip, this.dynamicToolTip)}
+          title={getTooltip(this.props.tooltip, this.dynamicTooltip)}
         >
           <FormViewEditor
             value={this.props.value}
@@ -100,7 +100,7 @@ export class FormField extends React.Component<IFormFieldProps> {
             textualValue={this.props.textualValue}
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
-            onTextOverflowChanged={tooltip => this.dynamicToolTip = tooltip}
+            onTextOverflowChanged={tooltip => this.dynamicTooltip = tooltip}
             dock={this.props.dock}
           />
           {invalidMessage && (
@@ -172,12 +172,12 @@ export function getFormFieldStyle(props: IFormFieldProps) {
   };
 }
 
-export function getToolTip(propertyToolTip: string | undefined, additionalText: string | undefined | null = "" ){
-  let finalToolTip = propertyToolTip ?? "";
+export function getTooltip(propertyTooltip: string | undefined, additionalText: string | undefined | null = "" ){
+  let finalTooltip = propertyTooltip ?? "";
   if (additionalText) {
-    finalToolTip = additionalText + "\n\n" + finalToolTip;
+    finalTooltip = additionalText + "\n\n" + finalTooltip;
   }
-  return formatTooltipPlaintext(finalToolTip);
+  return formatTooltipPlaintext(finalTooltip);
 }
 
 

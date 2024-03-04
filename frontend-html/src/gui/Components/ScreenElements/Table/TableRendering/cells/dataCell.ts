@@ -27,7 +27,7 @@ import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "model/actions-ui-tree";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getShowToolTipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
+import { getShowTooltipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowTooltipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
   currentColumnLeft,
@@ -82,11 +82,11 @@ export function dataColumnsDraws() {
     clipCell();
     drawCellValue();
     registerClickHandler(id);
-    registerToolTipGetter(id);
+    registerTooltipGetter(id);
   });
 }
 
-function registerToolTipGetter(columnId: string) {
+function registerTooltipGetter(columnId: string) {
   const ctx2d = context2d();
   const property = currentProperty();
   const cellRenderer = currentDataCellRenderer(ctx2d);
@@ -98,7 +98,7 @@ function registerToolTipGetter(columnId: string) {
   }
 
   if (
-    getShowToolTipsForMemoFieldsOnly(property) &&
+    getShowTooltipsForMemoFieldsOnly(property) &&
     (property.column !== "Text" || !property.multiline)
   ) {
     return;

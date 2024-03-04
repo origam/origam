@@ -19,6 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
-export function getShowToolTipsForMemoFieldsOnly(ctx: any) {
-  return getWorkbenchLifecycle(ctx).portalSettings?.showToolTipsForMemoFieldsOnly;
+export function getShowTooltipsForMemoFieldsOnly(ctx: any) {
+  return getWorkbenchLifecycle(ctx).portalSettings?.showTooltipsForMemoFieldsOnly;
 }

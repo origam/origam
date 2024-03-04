@@ -26,7 +26,7 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormField, getToolTip as getTooltip } from "gui/Components/Form/FormField";
+import { FormField, getTooltip as getTooltip } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
 import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
