@@ -24,7 +24,7 @@ import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
 import cx from "classnames";
-import { formatTooltipPlaintext } from "gui/Components/Tooltip/FormatTooltipText";
+import { formatTooltipPlaintext } from "gui/Components/ToolTip/FormatTooltipText";
 
 const MIN_COLUMN_WIDTH = 30;
 

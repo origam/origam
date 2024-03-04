@@ -23,7 +23,7 @@ import { IDockType, IProperty } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { formatTooltipPlaintext } from "../Tooltip/FormatTooltipText";
+import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
 import { observable } from "mobx";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
