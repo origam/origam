@@ -112,8 +112,8 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   handleInputChange(event: any) {
     this.userEnteredValue = event.target.value;
 
+    this.dataTable.setFilterPhrase(this.userEnteredValue || "");
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
-      this.dataTable.setFilterPhrase(this.userEnteredValue || "");
       if (this.setup().cached && this.cache.hasCachedListRows()) {
         this.dataTable.setData(this.cache.getCachedListRows());
       } else {

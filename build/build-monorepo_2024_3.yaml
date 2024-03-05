@@ -7,21 +7,21 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: 2024.1
+  value: 2024.3
 - name: VERSION_NUMBER # version number of the build
-  value: 2024.1.2.$(Build.BuildId)
+  value: 2024.3.1.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 24.1.2.$(Build.BuildId)
+  value: 24.3.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2024.1.2
+  value: 2024.3.1
 - name: TAG_LATEST # tag to be used
-  value: 2024.1.2
+  value: 2024.3.1
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2024.1.1
+  value: 2024.3.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2024.1
+  value: 2024.3
 
 
 resources:
@@ -423,10 +423,26 @@ jobs:
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam/$(TAG_LATEST) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
          repositoryName: 'origam/origam-html-chat'
          action: 'delete'
          tag: '$(TAG)'
        displayName: Delete previous GitHub origam-html-chat/$(TAG) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam-html-chat'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam-html-chat/$(TAG_LATEST) release
        continueOnError: true
      - script: |
         git tag -f $(TAG)
@@ -441,9 +457,9 @@ jobs:
        workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat
        displayName: 'Tag origam-html-chat'
      - powershell: |
-        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-html.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-server.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
-        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-client.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-desktop-client.zip"); }
        displayName: Zip files for release
      # ------------------------------------
      # RELEASE ORIGAM_ORIGAM - TAG
@@ -471,9 +487,9 @@ jobs:
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
-           $(Build.ArtifactStagingDirectory)/origam-client.zip
+           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
-           $(Build.ArtifactStagingDirectory)/origam-html.zip
+           $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
