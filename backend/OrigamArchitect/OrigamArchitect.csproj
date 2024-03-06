@@ -340,12 +340,6 @@
     <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="ControlsLookUpService.cs" />
     <Compile Include="DebugInfo.cs" />
-    <Compile Include="LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainClass.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -364,12 +358,6 @@
     <Compile Include="NewProjectWizardSettings.cs" />
     <Compile Include="OrigamTheme.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="RegisterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RegisterForm.Designer.cs">
-      <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -420,14 +408,8 @@
     <EmbeddedResource Include="ArchitectWorkbench.resx">
       <DependentUpon>ArchitectWorkbench.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="NewProjectWizard.resx">
       <DependentUpon>NewProjectWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RegisterForm.resx">
-      <DependentUpon>RegisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
