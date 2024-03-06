@@ -282,7 +282,7 @@ export class MobileFormBuilder extends React.Component<{
                   captionLength={property.captionLength}
                   captionColor={foreGroundColor}
                   dock={property.dock}
-                  toolTip={property.toolTip}
+                  tooltip={property.tooltip}
                   value={value}
                   isRichText={property.isRichText}
                   textualValue={textualValue}

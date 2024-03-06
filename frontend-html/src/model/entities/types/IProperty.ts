@@ -58,7 +58,7 @@ export interface IPropertyData extends ITabIndexOwner{
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;
   autoSort: boolean;
-  toolTip: string;
+  tooltip: string;
   suppressEmptyColumns: boolean;
   supportsServerSideSorting: boolean;
   isInteger: boolean;

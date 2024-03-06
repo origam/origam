@@ -565,7 +565,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       showChat: portalInfo.chatRefreshInterval > 0,
       showWorkQueues: portalInfo.workQueueListRefreshInterval > 0,
       helpUrl: portalInfo.helpUrl,
-      showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
+      showTooltipsForMemoFieldsOnly: portalInfo.showTooltipsForMemoFieldsOnly,
       rowStatesDebouncingDelayMilliseconds: portalInfo.rowStatesDebouncingDelayMilliseconds,
       dropDownTypingDebouncingDelayMilliseconds: portalInfo.dropDownTypingDebouncingDelayMilliseconds,
       filterConfig: {
