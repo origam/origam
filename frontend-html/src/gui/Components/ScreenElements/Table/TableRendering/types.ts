@@ -63,7 +63,7 @@ export interface IGroupTreeNode {
 export type ITableRow = any[] | IGroupRow;
 
 export interface IMouseOverSubsItem {
-  toolTipGetter(worldX: number, worldY: number, canvasX: number, canvasY: number): IToolTipData;
+  tooltipGetter(worldX: number, worldY: number, canvasX: number, canvasY: number): ITooltipData;
 
   x: number;
   y: number;
@@ -71,7 +71,7 @@ export interface IMouseOverSubsItem {
   h: number;
 }
 
-export interface IToolTipData {
+export interface ITooltipData {
   content: any;
   columnIndex: number;
   rowIndex: number;

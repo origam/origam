@@ -45,7 +45,7 @@ export interface IMobileBehaviorData {
   cache: DropdownEditorLookupListCache,
   onValueSelected?: () => void,
   autoSort?: boolean,
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void,
 }
 
 export class MobileDropdownBehavior implements IDropdownEditorBehavior{
@@ -57,7 +57,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   private cache: DropdownEditorLookupListCache;
   public onValueSelected?: () => void;
   private autoSort?: boolean;
-  private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
 
   constructor(args: IMobileBehaviorData) {
     this.api = args.api;
