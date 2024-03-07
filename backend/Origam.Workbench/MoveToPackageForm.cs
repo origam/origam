@@ -97,7 +97,6 @@ public partial class MoveToPackageForm : Form
 
         persistenceProvider.EndTransaction();
 
-
         ISchemaItemProvider rootProvider = GetActiveItemRootProvider();
         schema.SchemaBrowser.EbrSchemaBrowser.RefreshItem(rootProvider);
         Close();
@@ -131,7 +130,8 @@ public partial class MoveToPackageForm : Form
         MoveGroupAndTopLevelItems(group, targetPackage);
     }
 
-    private void MoveGroupAndTopLevelItems(SchemaItemGroup group, Package targetPackage)
+    private void MoveGroupAndTopLevelItems(SchemaItemGroup group,
+        Package targetPackage)
     {
         foreach (var child in group.ChildItems)
         {
@@ -153,8 +153,8 @@ public partial class MoveToPackageForm : Form
     {
         groupComboBox.Items.Clear();
         Package package = packageComboBox.SelectedItem as Package;
-        List<SchemaItemGroup> childGroups = GetActiveItemRootProvider().ChildGroups;
-        childGroups
+        GetActiveItemRootProvider()
+            .ChildGroups
             .OrderBy(group => group.Name)
             .Where(group => group.Package.Id == package.Id)
             .ForEach(group => {
@@ -205,7 +205,6 @@ public partial class MoveToPackageForm : Form
     {
         return "[" + string.Join("\n", schemaItems.Select(x => x.Id)) + "]";
     }
-
 }
 
 internal class GroupContainer
