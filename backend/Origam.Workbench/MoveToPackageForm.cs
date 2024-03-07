@@ -23,12 +23,14 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.UI;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Origam.Workbench;
 
@@ -49,21 +51,25 @@ public partial class MoveToPackageForm : Form
         groupComboBox.DisplayMember = "Name";
     }
 
-    private ISchemaItemProvider GetActiveItemRootProvider() {
-        if (schema.ActiveNode is AbstractSchemaItem schemaItem) { 
+    private ISchemaItemProvider GetActiveItemRootProvider()
+    {
+        if (schema.ActiveNode is AbstractSchemaItem schemaItem)
+        {
             return schemaItem.RootProvider;
         }
-        if (schema.ActiveNode is SchemaItemGroup group) { 
-            return group.RootProvider; 
+        if (schema.ActiveNode is SchemaItemGroup group)
+        {
+            return group.RootProvider;
         }
-        throw new Exception("Cannot process " + schema.ActiveNode.GetType());   
+        throw new Exception("Cannot process " + schema.ActiveNode.GetType());
     }
 
     private void okButton_Click(object sender, EventArgs e)
     {
         var targetPackage = packageComboBox.SelectedItem as Package;
-        var targetGroup = groupComboBox.SelectedItem as SchemaItemGroup;
-        if (targetPackage == null) { 
+        var targetGroup = (groupComboBox.SelectedItem as GroupContainer).Group;
+        if (targetPackage == null)
+        {
             return;
         }
         try
@@ -82,21 +88,23 @@ public partial class MoveToPackageForm : Form
                 return;
             }
         }
-        catch
+        catch (Exception ex)
         {
             persistenceProvider.EndTransactionDontSave();
-            throw;
+            AsMessageBox.ShowError(this, ex.Message, "Error", ex);
+            return;
         }
 
         persistenceProvider.EndTransaction();
-        
+
 
         ISchemaItemProvider rootProvider = GetActiveItemRootProvider();
         schema.SchemaBrowser.EbrSchemaBrowser.RefreshItem(rootProvider);
         Close();
     }
 
-    private void MoveSchemaItem(Package targetPackage, SchemaItemGroup targetGroup, AbstractSchemaItem item)
+    private void MoveSchemaItem(Package targetPackage, 
+        SchemaItemGroup targetGroup, AbstractSchemaItem item)
     {
         item.Group = targetGroup;
         MoveSchemaItem(item, targetPackage);
@@ -109,10 +117,11 @@ public partial class MoveToPackageForm : Form
         item.Persist();
     }
 
-    private void MoveGroupRecursive(Package targetPackage, SchemaItemGroup targetGroup, SchemaItemGroup group)
+    private void MoveGroupRecursive(Package targetPackage, 
+        SchemaItemGroup targetGroup, SchemaItemGroup group)
     {
         group.ParentGroup = targetGroup;
-        foreach (var child in group.ChildItemsRecursive)
+        foreach (var child in group.ChildGroupsRecursive)
         {
             if (child is SchemaItemGroup childGroup)
             {
@@ -148,7 +157,10 @@ public partial class MoveToPackageForm : Form
         childGroups
             .OrderBy(group => group.Name)
             .Where(group => group.Package.Id == package.Id)
-            .ForEach(group => groupComboBox.Items.Add(group));
+            .ForEach(group => {
+                    GroupContainer[] containers = GroupContainer.Create(group);
+                    groupComboBox.Items.AddRange(containers);
+                });
         groupComboBox.SelectedIndex = 0;
     }
 
@@ -195,3 +207,31 @@ public partial class MoveToPackageForm : Form
     }
 
 }
+
+internal class GroupContainer
+{
+    internal static GroupContainer[] Create(SchemaItemGroup group)
+    {
+        var containers = new List<GroupContainer>();
+        CreateGroupContainers(group, containers, 0);
+        return containers.ToArray();
+    }
+
+    private static void CreateGroupContainers(SchemaItemGroup group,
+        List<GroupContainer> containers, int level)
+    {
+        containers.Add(new GroupContainer(group, level));
+        foreach (SchemaItemGroup childGroup in group.ChildGroups)
+        {
+            CreateGroupContainers(childGroup, containers, level + 1);
+        }
+    }
+    public string Name { get; }
+    public SchemaItemGroup Group { get; }
+
+    private GroupContainer(SchemaItemGroup group, int level)
+    {
+        Name = new string(' ', level * 2) + group.Name;
+        Group = group;
+    }
+};
