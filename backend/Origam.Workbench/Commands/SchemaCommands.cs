@@ -219,106 +219,6 @@ namespace Origam.Workbench.Commands
 
 	}
 
-	/// <summary>
-	/// Moves an existing schema item to a different schema extension.
-	/// </summary>
-	public class MoveToExtension : AbstractMenuCommand
-	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-		public override bool IsEnabled
-		{
-			get
-			{
-				AbstractSchemaItem schemaItem = (AbstractSchemaItem) _schema.ActiveNode;
-				if (schemaItem.Package == Owner) return false;
-				if (schemaItem.ParentItem == null) return true;
-				return !schemaItem.Package.IncludedPackages.Contains(Owner) ||
-				       schemaItem.ParentItem.Package == Owner;
-			}
-			set => throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-		}
-
-		public override void Run()
-		{
-			IPersistenceProvider persistenceProvider = ServiceManager.Services
-				.GetService<IPersistenceService>().SchemaProvider;
-			if(!(Owner is Package targetPackage))
-			{
-				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorNotSchemaExtension"));
-			}
-
-
-			if(_schema.ActiveNode is SchemaItemGroup)
-			{
-				SchemaItemGroup activeItem = _schema.ActiveNode as SchemaItemGroup;
-
-				activeItem.Package = targetPackage;
-			
-				activeItem.Persist();
-			}
-			else if(_schema.ActiveNode is AbstractSchemaItem activeItem)
-			{
-				CheckCanBeMovedOrThrow(activeItem, targetPackage);
-
-				activeItem.SetExtensionRecursive(targetPackage);
-
-				persistenceProvider.BeginTransaction();
-				activeItem.Persist();
-				persistenceProvider.EndTransaction();
-			}
-		}
-
-		private static void CheckCanBeMovedOrThrow(AbstractSchemaItem activeItem,
-			Package targetPackage)
-		{
-			List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
-				= activeItem.GetDependencies(true)
-					.Cast<object>()
-					.OfType<ISchemaItem>()
-					.Where(item =>
-						!targetPackage.IncludedPackages.Contains(item.Package)
-						&& item.Package != targetPackage)
-					.ToList();
-			if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
-			{
-				throw new Exception(string.Format(
-					Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
-					targetPackage.Name,
-					FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)));
-			}
-
-			List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage
-				= activeItem.GetUsage()
-					.Cast<object>()
-					.OfType<ISchemaItem>()
-					.Where(item =>
-						!item.Package.IncludedPackages.Contains(targetPackage)
-						&& item.Package != targetPackage)
-					.ToList();
-
-			if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
-			{
-				throw new Exception(String.Format(
-					Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
-					targetPackage.Name, 
-					FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)));
-			}
-		}
-
-		private static string FormatToIdList(List<ISchemaItem> schemaItems)
-		{
-			return "["+ string.Join("\n", schemaItems.Select(x => x.Id)) +"]";
-		}
-
-		public override void Dispose()
-		{
-			_schema = null;
-
-			base.Dispose ();
-		}
-
-	}
 
 	/// <summary>
 	/// Creates a new group and displays it in editor.
@@ -720,6 +620,42 @@ namespace Origam.Workbench.Commands
 			_schema = null;
 		}
 
+	}
+	
+	public class MoveToAnotherPackage : AbstractMenuCommand
+	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+                if ((_schema.ActiveNode is not AbstractSchemaItem &&
+					_schema.ActiveNode is not SchemaItemGroup)  || 
+					!_schema.IsSchemaLoaded ||
+                    _schema.LoadedPackages.Count < 2 ||
+                    _schema.ActiveExtension.IncludedPackages.Count == 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
+            var selectForm = new MoveToPackageForm();
+			selectForm.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+		}
+
+		public override void Dispose()
+		{
+			_schema = null;
+		}
 	}
 
 	/// <summary>
