@@ -470,7 +470,10 @@ namespace Origam.DA.Service
                     task.Run();
                 }
 
-                foreach (OrigamFile origamFile in pathFileDict.Values)
+                IOrderedEnumerable<OrigamFile> topGroupFilesFirst = pathFileDict.Values
+                    .OrderBy(x => x is not OrigamGroupFile)
+                    .ThenBy(x => x.Path.Absolute.Length);
+                foreach (OrigamFile origamFile in topGroupFilesFirst)
                 {
                     origamFile.FinalizeSave();
                     origamFile.DeferredSaveDocument = null;
