@@ -60,7 +60,7 @@ public class Request
         Method = method;
         Content = content;
         ContentType = contentType;
-        Headers = headers;
+        Headers = headers ?? new Hashtable();
         ReturnAsStream = returnAsStream;
         Timeout = timeout;
         ThrowExceptionOnError = throwExceptionOnError;
