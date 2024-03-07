@@ -371,8 +371,8 @@ public class HttpTools : IHttpTools
 		{
 			var credentials = Convert.ToBase64String(
 				Encoding.ASCII.GetBytes(request.UserName + ":" + request.Password));
-			request.Headers[HttpRequestHeader.Authorization] 
-				= $"{request.AuthenticationType} {credentials}";
+			webRequest.Headers[HttpRequestHeader.Authorization] 
+                = $"{request.AuthenticationType} {credentials}";
 		}
 		if (request.Content != null)
 		{

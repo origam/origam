@@ -99,7 +99,7 @@ namespace Origam.Workflow.WorkQueue
                     url: url,
                     method: null,
                     authenticationType: _authentication,
-                    userName:_userName,
+                    userName: _userName,
                     password: _password)
                 )
             )
