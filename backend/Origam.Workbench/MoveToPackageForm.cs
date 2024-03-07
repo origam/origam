@@ -23,24 +23,21 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
-using Origam.UI;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Origam.Workbench;
 
 public partial class MoveToPackageForm : Form
 {
-    WorkbenchSchemaService schema = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+    WorkbenchSchemaService schema = ServiceManager.Services
+        .GetService<WorkbenchSchemaService>();
+    IPersistenceProvider persistenceProvider = ServiceManager.Services
+        .GetService<IPersistenceService>().SchemaProvider;
     public MoveToPackageForm()
     {
         InitializeComponent();
@@ -50,16 +47,6 @@ public partial class MoveToPackageForm : Form
             .ForEach(package => packageComboBox.Items.Add(package));
         packageComboBox.DisplayMember = "Name";
         groupComboBox.DisplayMember = "Name";
-    }
-
-    private Package GetActiveItemPackage() {
-        if (schema.ActiveNode is AbstractSchemaItem schemaItem) { 
-            return schemaItem.Package;
-        }
-        if (schema.ActiveNode is SchemaItemGroup group) { 
-            return group.Package; 
-        }
-        throw new Exception("Cannot process " + schema.ActiveNode.GetType());   
     }
 
     private ISchemaItemProvider GetActiveItemRootProvider() {
@@ -74,55 +61,78 @@ public partial class MoveToPackageForm : Form
 
     private void okButton_Click(object sender, EventArgs e)
     {
-        IPersistenceProvider persistenceProvider = ServiceManager.Services
-            .GetService<IPersistenceService>().SchemaProvider;
         var targetPackage = packageComboBox.SelectedItem as Package;
         var targetGroup = groupComboBox.SelectedItem as SchemaItemGroup;
         if (targetPackage == null) { 
             return;
         }
-
-        if (schema.ActiveNode is SchemaItemGroup activeGroup)
+        try
         {
             persistenceProvider.BeginTransaction();
-            activeGroup.Package = targetPackage;
-            activeGroup.ParentGroup = targetGroup;
-            foreach (var child in activeGroup.ChildItemsRecursive) {
-                if (child is SchemaItemGroup group) {
-                    group.Package = targetPackage;
-                    group.Persist();
-                }
-            }
-            foreach (var child in activeGroup.ChildItems)
+            if (schema.ActiveNode is SchemaItemGroup activeGroup)
             {
-                if (child is AbstractSchemaItem schemaItem)
-                {
-                    schemaItem.Package = targetPackage;
-                    schemaItem.Persist();
-                }
+                MoveGroupRecursive(targetPackage, targetGroup, activeGroup);
             }
-            activeGroup.Persist();
-            persistenceProvider.EndTransaction();
+            else if (schema.ActiveNode is AbstractSchemaItem activeItem)
+            {
+                MoveSchemaItem(targetPackage, targetGroup, activeItem);
+            }
+            else
+            {
+                return;
+            }
         }
-        else if (schema.ActiveNode is AbstractSchemaItem activeItem)
+        catch
         {
-            CheckCanBeMovedOrThrow(activeItem, targetPackage);
-
-            activeItem.SetExtensionRecursive(targetPackage);
-            activeItem.Group = targetGroup;
-
-            persistenceProvider.BeginTransaction();
-            activeItem.Persist();
-            persistenceProvider.EndTransaction();
+            persistenceProvider.EndTransactionDontSave();
+            throw;
         }
-        else
-        {
-            return;
-        }
+
+        persistenceProvider.EndTransaction();
+        
 
         ISchemaItemProvider rootProvider = GetActiveItemRootProvider();
         schema.SchemaBrowser.EbrSchemaBrowser.RefreshItem(rootProvider);
         Close();
+    }
+
+    private void MoveSchemaItem(Package targetPackage, SchemaItemGroup targetGroup, AbstractSchemaItem item)
+    {
+        item.Group = targetGroup;
+        MoveSchemaItem(item, targetPackage);
+    }
+
+    private void MoveSchemaItem(AbstractSchemaItem item, Package targetPackage)
+    {
+        CheckCanBeMovedOrThrow(item, targetPackage);
+        item.SetExtensionRecursive(targetPackage);
+        item.Persist();
+    }
+
+    private void MoveGroupRecursive(Package targetPackage, SchemaItemGroup targetGroup, SchemaItemGroup group)
+    {
+        group.ParentGroup = targetGroup;
+        foreach (var child in group.ChildItemsRecursive)
+        {
+            if (child is SchemaItemGroup childGroup)
+            {
+                MoveGroupAndTopLevelItems(childGroup, targetPackage);
+            }
+        }
+        MoveGroupAndTopLevelItems(group, targetPackage);
+    }
+
+    private void MoveGroupAndTopLevelItems(SchemaItemGroup group, Package targetPackage)
+    {
+        foreach (var child in group.ChildItems)
+        {
+            if (child is AbstractSchemaItem schemaItem)
+            {
+                MoveSchemaItem(schemaItem, targetPackage);
+            }
+        }
+        group.Package = targetPackage;
+        group.Persist();
     }
 
     private void CancelButton_Click(object sender, EventArgs e)
