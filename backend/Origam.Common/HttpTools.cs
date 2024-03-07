@@ -310,12 +310,11 @@ public class HttpTools : IHttpTools
 
 	public WebResponse GetResponse(Request request)
 	{
-		var headers = request.Headers ?? new Hashtable();
 		if (serviceProvider != null)
 		{
 			var providerContainer 
 				= serviceProvider.GetService<ClientAuthenticationProviderContainer>();
-			providerContainer.TryAuthenticate(request.Url, headers);
+			providerContainer.TryAuthenticate(request.Url, request.Headers);
 		}
 		else 
 		{
@@ -347,9 +346,9 @@ public class HttpTools : IHttpTools
 				}
 			}
 		}
-		if (headers != null)
+		if (request.Headers != null)
 		{
-			foreach (DictionaryEntry entry in headers)
+			foreach (DictionaryEntry entry in request.Headers)
 			{
 				string name = (string)entry.Key;
 				string value = (string)entry.Value;
@@ -372,8 +371,8 @@ public class HttpTools : IHttpTools
 		{
 			var credentials = Convert.ToBase64String(
 				Encoding.ASCII.GetBytes(request.UserName + ":" + request.Password));
-			request.Headers[HttpRequestHeader.Authorization] 
-				= $"{request.AuthenticationType} {credentials}";
+			webRequest.Headers[HttpRequestHeader.Authorization] 
+                = $"{request.AuthenticationType} {credentials}";
 		}
 		if (request.Content != null)
 		{
