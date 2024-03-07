@@ -548,7 +548,10 @@ namespace Origam.Server
             return dataSetTable.Rows;
         }
 
-        public abstract bool HasChanges();
+        public virtual bool HasChanges()
+        {
+            return false;
+        }
 
         public void SetDataSource(object dataSource)
         {

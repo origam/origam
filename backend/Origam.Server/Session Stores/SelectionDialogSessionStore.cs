@@ -77,11 +77,6 @@ namespace Origam.Server
 
         #region Overriden SessionStore Methods
 
-        public override bool HasChanges()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Init()
         {
             LoadData();
