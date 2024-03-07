@@ -100,7 +100,7 @@ namespace Origam.DA.Common
 
         public Versions(Versions other, IEnumerable<string> deadClasses)
         {
-            versionDict.AddRange(other.versionDict);
+            versionDict.AddOrReplaceRange(other.versionDict);
             foreach (string deadClassName in deadClasses)
             {
                 if (!versionDict.ContainsKey(deadClassName))

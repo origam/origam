@@ -88,7 +88,7 @@ namespace Origam.DA.Service
         {
             if (instance.IsFileRootElement)
             {
-                newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
+                newFile.ParentFolderIds.AddOrReplaceRange(instance.ParentFolderIds);
             }
 
             var objectInfo = CreateObjectInfo(instance, newFile);

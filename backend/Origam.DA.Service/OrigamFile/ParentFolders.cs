@@ -64,7 +64,7 @@ namespace Origam.DA.Service
 
         public void CopyTo(ParentFolders other)
         {
-            other.AddRange(this);
+            other.AddOrReplaceRange(this);
         }
 
         public ParentFolders()
@@ -75,7 +75,7 @@ namespace Origam.DA.Service
             OrigamPath patentFilePath)
         {
             CheckIsValid(parentIdDict,patentFilePath);
-            this.AddRange(parentIdDict);
+            this.AddOrReplaceRange(parentIdDict);
         }
 
         public ParentFolders(IList<string> defaultFolders)
