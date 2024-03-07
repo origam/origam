@@ -23,6 +23,7 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 using System;
@@ -113,6 +114,10 @@ public partial class MoveToPackageForm : Form
     {
         CheckCanBeMovedOrThrow(item, targetPackage);
         item.SetExtensionRecursive(targetPackage);
+        if (item is PanelControlSet panelControlSet) {
+            panelControlSet.PanelControl.SetExtensionRecursive(targetPackage);
+            panelControlSet.PanelControl.Persist();
+        }
         item.Persist();
     }
 
