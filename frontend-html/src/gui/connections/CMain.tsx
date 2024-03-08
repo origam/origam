@@ -38,19 +38,11 @@ export class CMain extends React.Component {
   }
 
   render() {
-    setDefaultBreakpoints([
-      { xsmall: 0 },
-      { small: 400 }, // smaller is phone, bigger is tablet
-      { medium: 576 } // smaller is phone or tablet, bigger is desktop
-    ]);
-
     return (
       <div className={"toplevelContainer"}>
         <Provider workbench={this.workbench}>
           <ApplicationDialogStack/>
-          <BreakpointProvider>
-            <CWorkbenchPage/>
-          </BreakpointProvider>
+          <CWorkbenchPage/>
         </Provider>
       </div>
     );

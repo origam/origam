@@ -25,17 +25,19 @@ import { IDialogStack } from "./types/IDialogStack";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { IWorkbench } from "./types/IWorkbench";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { observable } from "mobx";
+import { LayoutManager } from "./LayoutManager";
 
 export class Application implements IApplication {
 
   $type_IApplication: 1 = 1;
+  layoutManager: LayoutManager;
 
   constructor(data: IApplicationData) {
     Object.assign(this, data);
     this.applicationLifecycle.parent = this;
     this.dialogStack.parent = this;
     this.errorDialogController.parent = this;
+    this.layoutManager = new LayoutManager();
   }
 
   errorDialogController: IErrorDialogController = null as any;
@@ -65,8 +67,9 @@ export class Application implements IApplication {
     }
   }
 
-  parent?: any;
+  get layout (){
+    return this.layoutManager.layout;
+  }
 
-  @observable
-  breakpoint = "";
+  parent?: any;
 }

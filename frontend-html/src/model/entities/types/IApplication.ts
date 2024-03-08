@@ -40,13 +40,19 @@ export interface IApplication extends IApplicationData {
 
   parent?: any;
 
-  breakpoint: string;
+  layout: Layout;
 
   resetWorkbench(): void;
 
   setWorkbench(workbench: IWorkbench): void;
 
   run(): Generator;
+}
+
+export enum Layout {
+  Phone = "phone",
+  Tablet = "tablet",
+  Desktop = "desktop",
 }
 
 export const isIApplication = (o: any): o is IApplication =>

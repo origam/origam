@@ -17,12 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Layout } from "model/entities/types/IApplication";
 import { getApplication } from "model/selectors/getApplication";
 
 export function isMobileLayoutActive(ctx: any) {
-  const breakpoint = getApplication(ctx).breakpoint;
-  if(!breakpoint){
-    return false;
-  }
-  return breakpoint.includes("small");
+  return getApplication(ctx).layout == Layout.Phone || getApplication(ctx).layout == Layout.Tablet;
 }
