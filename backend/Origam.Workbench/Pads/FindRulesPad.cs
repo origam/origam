@@ -249,13 +249,10 @@ namespace Origam.Workbench.Pads
 
         private void AddResult(AbstractSchemaItem item,string text)
 		{
-			if(item == null) return;
-
-			if(! LicensePolicy.ModelElementPolicy(item.GetType().Name, ModelElementPolicyCommand.Show))
+			if (item == null)
 			{
 				return;
 			}
-
 			string name = item.ModelDescription();
 			string rootName = item.RootItem.ModelDescription();
 

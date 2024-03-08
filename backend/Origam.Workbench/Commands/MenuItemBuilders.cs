@@ -78,7 +78,6 @@ namespace Origam.Workbench.Commands
             {
                 activeItem = nonpersistentNode.ParentNode as AbstractSchemaItem;
             }
-            Type[] validTypes = ValidTypes(factory);
             var items = new List<AsMenuCommand>();
             if (factory.NewItemTypes != null)
             {
@@ -102,7 +101,7 @@ namespace Origam.Workbench.Commands
                 }
 
                 ArrayList nameableTypes = new ArrayList();
-                foreach (Type type in validTypes)
+                foreach (Type type in factory.NewItemTypes)
                 {
                     if (names.Count == 0 || !IsNameableType(factory, type))
                     {
@@ -136,20 +135,6 @@ namespace Origam.Workbench.Commands
 				}
 			}
 			return false;
-		}
-
-		public static Type[] ValidTypes(ISchemaItemFactory factory)
-		{
-			ArrayList result = new ArrayList();
-			foreach (Type type in factory.NewItemTypes) 
-			{
-				if(LicensePolicy.ModelElementPolicy(type.Name, ModelElementPolicyCommand.Create))
-				{
-					result.Add(type);
-				}
-			}
-
-			return (Type[])result.ToArray(typeof(Type));
 		}
 
 		public static void AddNewItem(WorkbenchSchemaService sch, Type type,
