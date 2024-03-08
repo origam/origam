@@ -37,15 +37,16 @@ namespace Origam.Workbench;
 
 public partial class MoveToPackageForm : Form
 {
-    WorkbenchSchemaService schema = ServiceManager.Services
+    private readonly WorkbenchSchemaService schema = ServiceManager.Services
         .GetService<WorkbenchSchemaService>();
-    IPersistenceProvider persistenceProvider = ServiceManager.Services
-        .GetService<IPersistenceService>().SchemaProvider;
+
+    private readonly IPersistenceProvider persistenceProvider = 
+        ServiceManager.Services.GetService<IPersistenceService>().SchemaProvider;
     public MoveToPackageForm()
     {
         InitializeComponent();
         schema.ActiveExtension.IncludedPackages
-            .Concat(new Package[] { schema.ActiveExtension })
+            .Concat(new [] { schema.ActiveExtension })
             .OrderBy(package => package.Name)
             .ForEach(package => packageComboBox.Items.Add(package));
         packageComboBox.DisplayMember = "Name";
@@ -54,25 +55,24 @@ public partial class MoveToPackageForm : Form
 
     private ISchemaItemProvider GetActiveItemRootProvider()
     {
-        if (schema.ActiveNode is AbstractSchemaItem schemaItem)
+        return schema.ActiveNode switch
         {
-            return schemaItem.RootProvider;
-        }
-        if (schema.ActiveNode is SchemaItemGroup group)
-        {
-            return group.RootProvider;
-        }
-        throw new Exception("Cannot process " + schema.ActiveNode.GetType());
+            AbstractSchemaItem schemaItem => schemaItem.RootProvider,
+            SchemaItemGroup group => group.RootProvider,
+            _ => throw new Exception("Cannot process " +
+                                     schema.ActiveNode.GetType())
+        };
     }
 
     private void okButton_Click(object sender, EventArgs e)
     {
+        var groupContainer = groupComboBox.SelectedItem as GroupContainer;
         var targetPackage = packageComboBox.SelectedItem as Package;
-        var targetGroup = (groupComboBox.SelectedItem as GroupContainer).Group;
-        if (targetPackage == null)
+        if (groupContainer == null || targetPackage == null)
         {
             return;
         }
+        var targetGroup = groupContainer.Group;
         try
         {
             persistenceProvider.BeginTransaction();
@@ -125,12 +125,9 @@ public partial class MoveToPackageForm : Form
         SchemaItemGroup targetGroup, SchemaItemGroup group)
     {
         group.ParentGroup = targetGroup;
-        foreach (var child in group.ChildGroupsRecursive)
+        foreach (var childGroup in group.ChildGroupsRecursive)
         {
-            if (child is SchemaItemGroup childGroup)
-            {
-                MoveGroupAndTopLevelItems(childGroup, targetPackage);
-            }
+            MoveGroupAndTopLevelItems(childGroup, targetPackage);
         }
         MoveGroupAndTopLevelItems(group, targetPackage);
     }
@@ -140,10 +137,7 @@ public partial class MoveToPackageForm : Form
     {
         foreach (var child in group.ChildItems)
         {
-            if (child is AbstractSchemaItem schemaItem)
-            {
-                MoveSchemaItem(schemaItem, targetPackage);
-            }
+            MoveSchemaItem(child, targetPackage);
         }
         group.Package = targetPackage;
         group.Persist();
@@ -156,14 +150,19 @@ public partial class MoveToPackageForm : Form
 
     private void packageComboBox_SelectedIndexChanged(object sender, EventArgs e)
     {
-        groupComboBox.Items.Clear();
         Package package = packageComboBox.SelectedItem as Package;
+        if (package == null)
+        {
+            return;
+        }
+        groupComboBox.Items.Clear();
         GetActiveItemRootProvider()
             .ChildGroups
             .OrderBy(group => group.Name)
             .Where(group => group.Package.Id == package.Id)
             .ForEach(group => {
-                    GroupContainer[] containers = GroupContainer.Create(group);
+                    var containers = 
+                        GroupContainer.Create(group).ToArray<object>();
                     groupComboBox.Items.AddRange(containers);
                 });
         groupComboBox.SelectedIndex = 0;
@@ -214,11 +213,11 @@ public partial class MoveToPackageForm : Form
 
 internal class GroupContainer
 {
-    internal static GroupContainer[] Create(SchemaItemGroup group)
+    internal static List<GroupContainer> Create(SchemaItemGroup group)
     {
         var containers = new List<GroupContainer>();
         CreateGroupContainers(group, containers, 0);
-        return containers.ToArray();
+        return containers;
     }
 
     private static void CreateGroupContainers(SchemaItemGroup group,
