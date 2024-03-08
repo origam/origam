@@ -359,7 +359,7 @@ public class HttpTools : IHttpTools
 				}
 				else
 				{
-					request.Headers.Add(name, value);
+					httpWebRequest?.Headers.Add(name, value);
 				}
 			}
 		}
