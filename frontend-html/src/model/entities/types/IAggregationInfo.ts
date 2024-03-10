@@ -24,5 +24,6 @@ export interface IAggregationInfo {
   AggregationType: AggregationType;
 }
 
-
-
+export interface IAggregationData extends IAggregationInfo {
+  Value: number;
+}

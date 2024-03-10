@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IAggregationInfo } from "./IAggregationInfo";
+import { IAggregationData, IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
@@ -441,6 +441,7 @@ export interface IApi {
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
+    AggregatedColumns: IAggregationData[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
 }

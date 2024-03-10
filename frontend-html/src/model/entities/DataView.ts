@@ -88,6 +88,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import {TabIndex} from "./TabIndexOwner";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 class SavedViewState {
   constructor(
@@ -943,8 +944,23 @@ export class DataView implements IDataView {
       });
     const excelMaxRowCount = 1048576;
     const api = getApi(this);
+    const dataView = getDataView(this);
+    const aggregationResult = await api.getAggregations({
+      MenuId: getMenuItemId(dataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(dataView),
+      Filter: getUserFilters({ctx: dataView}),
+      FilterLookups: getUserFilterLookups(dataView),
+      MasterRowId: undefined,
+      AggregatedColumns: dataView.aggregationData.map(agg => ({
+        ColumnName: agg.columnId,
+        AggregationType: agg.type,
+      }))
+    });
+
     if (isInfiniteScrollingActive(this)) {
       await api.getExcelFile({
+        AggregatedColumns: aggregationResult,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -963,6 +979,7 @@ export class DataView implements IDataView {
       });
     } else {
       await api.getExcelFile({
+        AggregatedColumns: aggregationResult,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
