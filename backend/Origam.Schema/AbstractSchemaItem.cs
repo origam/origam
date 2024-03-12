@@ -323,11 +323,6 @@ namespace Origam.Schema
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInheritable"));
 			}
 			if(IsPersistable == false) return;
-			// check license policy for new items
-			if(!IsPersisted)
-			{
-				CheckLicense();
-			}
             AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
 			var schemaItemCollection = ChildItems;
             if(!IsDeleted)
@@ -1308,41 +1303,6 @@ namespace Origam.Schema
 	    #endregion
 
         #region Private Methods
-        private void CheckLicense()
-		{
-			AbstractSchemaItem item = this;
-
-			ISchemaItemProvider provider = item.ParentItem == null ? item.RootProvider : item.ParentItem as ISchemaItemProvider;
-
-			if(provider == null)
-			{
-				System.Diagnostics.Debug.Fail("Both ParentItem and RootProvider not specified");
-				return;
-			}
-
-			long limit = LicensePolicy.ModelElementLimit(item.ItemType);
-
-			if(limit != -1)
-			{
-				long count = 0;
-				foreach(ISchemaItem child in provider.ChildItems)
-				{
-					// only count items of same type, from the same package and not derived
-					if(child.ItemType == item.ItemType 
-						& child.Package.PrimaryKey.Equals(item.Package.PrimaryKey)
-						& child.DerivedFrom == null
-						)
-					{
-						count++;
-					}
-				}
-
-				if(count > limit)
-				{
-					throw new Exception(ResourceUtils.GetString("ErrorAddingOnly", limit.ToString(), item.ItemType));
-				}
-			}
-		}
 
 		private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
 		{

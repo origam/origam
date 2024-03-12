@@ -736,7 +736,7 @@ namespace OrigamArchitect
             CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), ImageRes.icon_repeat_new, Keys.F12, _schemaMenu);
 			CreateMenuWithSubmenu(strings.Actions_MenuItem, ImageRes.icon_actions, new SchemaActionsMenuBuilder(), _schemaMenu);
 			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, ImageRes.icon_convert_to, new SchemaItemConvertMenuBuilder(), _schemaMenu);
-			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, ImageRes.icon_move_to_package, new ExtensionMenuBuilder(), _schemaMenu);
+            CreateMenuItem(strings.MoveToPackage_MenuItem, new MoveToAnotherPackage(), ImageRes.icon_move_to_package, Keys.None, _schemaMenu);
 				
 			_schemaMenu.SubItems.Add(CreateSeparator());
 

@@ -609,8 +609,6 @@ namespace Origam.Workbench.Editors
 			{
 				if(e.QueriedObject is AbstractSchemaItem)
 				{
-					e.Filter = ! (LicensePolicy.ModelElementPolicy(e.QueriedObject.GetType().Name, ModelElementPolicyCommand.Show));
-
 					if(! e.Filter)
 					{
 						if((e.QueriedObject as AbstractSchemaItem).ParentItem == null)
@@ -634,10 +632,6 @@ namespace Origam.Workbench.Editors
 				else if(e.QueriedObject is SchemaItemAncestor)
 				{
 					e.Filter = true;
-				}
-				else if(e.QueriedObject is ISchemaItemProvider)
-				{
-					e.Filter = ! (LicensePolicy.IsModelProviderVisible(e.QueriedObject.GetType().Name));
 				}
 			}
 		}

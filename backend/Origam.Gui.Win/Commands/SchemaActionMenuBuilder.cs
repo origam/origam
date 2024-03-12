@@ -160,14 +160,8 @@ namespace Origam.Gui.Win.Commands
 		{
 			AsMenuCommand menuItem = new AsMenuCommand(text, command);
             command.Owner = _owner;
-			bool policy = true;
-
-			if(_owner != null)
-			{
-				policy = LicensePolicy.ModelElementPolicy(_owner.GetType().Name, ModelElementPolicyCommand.CustomAction, command.GetType().FullName);
-			}
-
-			if(menuItem.IsEnabled & policy)
+			
+			if(menuItem.IsEnabled)
 			{
 				menuItem.Click += new EventHandler(MenuItemClick);
 			
