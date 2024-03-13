@@ -50,6 +50,7 @@ import { makeOnAddNewRecordClick } from "gui/connections/NewRecordScreen";
 import { getKeyBuffer } from "model/selectors/getKeyBuffer";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -98,8 +99,10 @@ export class TableViewEditor extends React.Component<{
   getEditor() {
     const property = this.props.property!;
     const rowId = getSelectedRowId(property);
+    const row = getSelectedRow(property);
     const foregroundColor = getRowStateForegroundColor(property, rowId || "");
     const dataView = getDataView(property);
+    const tablePanelView = getTablePanelView(property);
     const readOnly =
       isReadOnly(property!, rowId) ||
       (dataView.orderProperty !== undefined &&
@@ -230,6 +233,11 @@ export class TableViewEditor extends React.Component<{
               gridFocusManager.activeEditor = editor
             }
             typingDelayMillis={portalSettings?.dropDownTypingDebouncingDelayMilliseconds}
+            isLink={property.isLink}
+            onClick={(event) => {
+              tablePanelView.setEditing(false);
+              onDropdownEditorClick(property)(event, property, row);
+            }}
           />
         );
       case "Checklist":
