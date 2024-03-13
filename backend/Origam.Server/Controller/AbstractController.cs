@@ -204,7 +204,7 @@ namespace Origam.Server.Controller
                 requestingGrid: null, 
                 row: rowData.Row, 
                 operation: operation, 
-                RowStateProcessor: null));
+                rowStateProcessor: null));
         }
         protected Result<RowData, IActionResult> AmbiguousInputToRowData(
             AmbiguousInput input, IDataService dataService)
