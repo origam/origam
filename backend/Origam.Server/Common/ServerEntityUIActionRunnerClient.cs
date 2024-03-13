@@ -307,7 +307,12 @@ namespace Origam.Server
                                 break;
 
                             case DataRowState.Deleted:
-                                changes.Add(sessionStore.GetDeletedInfo(null, tableName, rowEntry.Key));
+                                changes.Add(new ChangeInfo
+                                {
+                                    Entity = tableName,
+                                    Operation = Operation.Delete,
+                                    ObjectId = rowEntry.Key
+                                });
                                 break;
 
                             default:

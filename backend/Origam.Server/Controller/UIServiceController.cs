@@ -1176,10 +1176,11 @@ namespace Origam.Server.Controller
                 }
                 return Conflict(ex.Message);
             }
-            return Ok(SessionStore.GetDeleteInfo(
-                                requestingGrid: null,
-                                tableName: rowData.Row.Table.TableName,
-                                objectId: null));
+            return Ok(new ChangeInfo
+            {
+                Entity = rowData.Row.Table.TableName,
+                Operation = Operation.Delete,
+            });
         }
         private IActionResult ThrowAwayReturnData(IActionResult arg)
         {

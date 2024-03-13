@@ -1042,26 +1042,7 @@ namespace Origam.Server
             }
             return ci;
         }
-
-        public ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
-        {
-            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
-        }
-        public static ChangeInfo GetDeleteInfo(string requestingGrid, string tableName, object objectId)
-        {
-            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
-        }
-        private static ChangeInfo CreateDeletedChangeInfo(string requestingGrid, string tableName, object objectId)
-        {
-            ChangeInfo ci = new ChangeInfo
-            {
-                Entity = tableName,
-                Operation = Operation.Delete,
-                RequestingGrid = requestingGrid,
-                ObjectId = objectId
-            };
-            return ci;
-        }
+        
         internal static string ConvertTextToUnixStyle(string text)
         {
             return text.Replace("\r\n", "\n");
