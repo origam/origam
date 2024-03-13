@@ -293,7 +293,11 @@ namespace Origam.Schema
 		        {
 			        CategoryFactory.Create(typeof(Package)),
 			        SchemaItem.SchemaExtensionId
-		        }
+				},
+				{
+					CategoryFactory.Create(typeof(SchemaItemGroup)),
+					SchemaItem.GroupId
+				}
 	        };
 
 		public string Path

@@ -37,7 +37,14 @@ function onLoginEnter(e) {
     }
 }
 
-document.getElementById('passInput').onkeydown = onLoginEnter;
-document.getElementById('userNameInput').onkeydown = onLoginEnter;
+const passwordElement = document.getElementById('passInput');
+if (passwordElement) {
+    passwordElement.onkeydown = onLoginEnter;
+}
+
+const userElement = document.getElementById('userNameInput');
+if (userElement) {
+    userElement.onkeydown = onLoginEnter;
+}
 
 

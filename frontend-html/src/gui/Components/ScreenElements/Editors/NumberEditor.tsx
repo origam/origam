@@ -51,7 +51,7 @@ export interface NumberEditorProps
   onMount?(onChange?: (value: any) => void): void;
   onEditorBlur?(event: any): Promise<void>;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   id?: string
 }
 

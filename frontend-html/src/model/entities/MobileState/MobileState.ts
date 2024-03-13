@@ -6,6 +6,7 @@ import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 import { IMobileLayoutState, MenuLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import React from "react";
+import { IEditingState } from "../types/IMainMenu";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -15,6 +16,8 @@ export class MobileState {
 
   @observable
   activeDataViewId: string | undefined;
+
+  sidebarState = new MobileSidebarState();
 
   breadCrumbsState = new BreadCrumbsState()
 
@@ -72,5 +75,14 @@ export class MobileState {
     }
     this.breadCrumbsState.onFormClose(formScreen);
   }
+}
+
+export class MobileSidebarState implements IEditingState{
+  flipEditEnabled(): void {
+    this.editingEnabled = !this.editingEnabled;
+  }
+  
+  @observable
+  editingEnabled = false;
 }
 

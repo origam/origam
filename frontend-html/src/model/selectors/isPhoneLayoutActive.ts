@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,8 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { getApplication } from "model/selectors/getApplication";
 
-export function getShowToolTipsForMemoFieldsOnly(ctx: any) {
-  return getWorkbenchLifecycle(ctx).portalSettings?.showToolTipsForMemoFieldsOnly;
+export function isPhoneLayoutActive(ctx: any) {
+  const breakpoint = getApplication(ctx).breakpoint;
+  if (!breakpoint) {
+    return false;
+  }
+  return breakpoint.includes("xsmall");
 }

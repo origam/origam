@@ -19,7 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 @import "src/gui/commonStyles";
 
-.resultItem{
+.resultItem {
+  width: 100%;
   padding: 0 1.6667em;
   padding-bottom: 10px;
   display: flex;
@@ -86,13 +87,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   background-color: var(--background2);
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-   -khtml-user-select: none; /* Konqueror HTML */
-     -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* Internet Explorer/Edge */
-          user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome and Opera */
+  @include noSelect;
 }
 
 .groupName{

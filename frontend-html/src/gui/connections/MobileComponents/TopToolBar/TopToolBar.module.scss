@@ -25,3 +25,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   padding-right: 7px;
 }
+
+.heading{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+}
+
+.middleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.sideContainer {
+  display: flex;
+  min-width: 90px;
+  max-width: 90px;
+}
+
+.toCloseButton {
+  display: flex;
+  margin-left: 20px;
+
+  svg {
+    width: 20px;
+  }
+}

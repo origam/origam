@@ -63,7 +63,7 @@ export interface IBehaviorData {
   onKeyDown?: (event: any) => void,
   autoSort?: boolean,
   expandAfterMounting?: boolean,
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+  onTextOverflowChanged?: (tooltip: string | null | undefined) => void,
   newRecordScreen?: NewRecordScreen,
   onAddNewRecordClick?: () => void;
   typingDelayMillis?: number;
@@ -84,7 +84,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onKeyDown?: (event: any) => void;
   private onMount?(onChange?: (value: any) => void): void;
   private autoSort?: boolean;
-  private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   private expandAfterMounting?: boolean;
   private newRecordScreen?: NewRecordScreen;
   public onAddNewRecordClick?: () => void;
@@ -372,8 +372,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     }
     this.userEnteredValue = event.target.value;
 
+    this.dataTable.setFilterPhrase(this.userEnteredValue || "");
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
-      this.dataTable.setFilterPhrase(this.userEnteredValue || "");
       if (this.setup().cached && this.cache.hasCachedListRows()) {
         this.dataTable.setData(this.cache.getCachedListRows());
       } else {

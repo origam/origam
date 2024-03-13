@@ -28,24 +28,14 @@ namespace Origam;
 
 public interface IHttpTools
 {
-    string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped);
-    object SendRequest(string url, string method);
+    string BuildUrl(string url, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped);
 
-    object SendRequest(string url, string method, string content,
-        string contentType, Hashtable headers, string authenticationType,
-        string userName, string password, bool returnAsStream,
-        int? timeout);
+    HttpResult SendRequest(Request request);
 
-    WebResponse GetResponse(string url, string method, string content,
-        string contentType, Hashtable headers);
-
-    WebResponse GetResponse(string url, string method, string content,
-        string contentType, Hashtable headers, string authenticationType,
-        string userName, string password, int? timeoutMs, CookieCollection cookies,
-        bool ignoreHTTPSErrors);
+    WebResponse GetResponse(Request request);
 
     string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream);
-    string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse);
+    string ReadResponseTextRespectingContentEncoding(HttpWebResponse httpResponse);
     Encoding EncodingFromResponse(HttpWebResponse response);
     string GetMimeType(string fileName);
     string GetDefaultExtension(string mimeType);

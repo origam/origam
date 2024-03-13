@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext } from "react";
+import React from "react";
 import S from "./Dialog.module.scss";
-import { MobXProviderContext } from "mobx-react";
-import { MobileState } from "model/entities/MobileState/MobileState";
-import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
+
 
 export const Dialog: React.FC<{
   heading: string

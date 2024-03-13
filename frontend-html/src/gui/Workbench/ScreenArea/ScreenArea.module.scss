@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   background-color: var(--background7);
-  user-select: none;
+  @include noSelect;
 }
 
 .TabHandle {

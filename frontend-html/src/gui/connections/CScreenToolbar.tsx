@@ -154,6 +154,7 @@ export class CScreenToolbar extends React.Component<{}> {
       );
       return (
         <Dropdowner
+          key={action.id}
           style={{width: "auto"}}
           trigger={({refTrigger, setDropped, isDropped}) => (
             <Observer key={action.id}>

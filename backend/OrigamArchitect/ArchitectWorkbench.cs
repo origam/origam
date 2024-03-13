@@ -117,9 +117,7 @@ namespace OrigamArchitect
 		private static ICellStyle _dateCellStyle;
 		private string _configFilePath;
 	    private FormWindowState lastWindowState;
-
-        public const string ORIGAM_COM_BASEURL = "https://origam.com/";
-		public const string ORIGAM_COM_API_BASEURL = "https://origam.com/web/";
+	    
 		public const bool IgnoreHTTPSErrors = false;
 		
 
@@ -133,8 +131,6 @@ namespace OrigamArchitect
         private PictureBox logoPictureBox;
 		private FlowLayoutPanel toolStripFlowLayoutPanel;
 		private Panel toolStripPanel;
-        private BackgroundWorker LicenseBackgroudExtender;
-		private BackgroundWorker AutoUpdateBackgroudFinder;
         private TableLayoutPanel rightToolsTripLayoutPanel;
         private ComboBox searchComboBox;
 
@@ -285,8 +281,6 @@ namespace OrigamArchitect
             this.toolStripPanel = new System.Windows.Forms.Panel();
             this.rightToolsTripLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.searchComboBox = new System.Windows.Forms.ComboBox();
-            this.LicenseBackgroudExtender = new System.ComponentModel.BackgroundWorker();
-            this.AutoUpdateBackgroudFinder = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.sbpText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sbpMemory)).BeginInit();
             this.toolStripFlowLayoutPanel.SuspendLayout();
@@ -425,10 +419,6 @@ namespace OrigamArchitect
             this.searchComboBox.TabStop = false;
 		    this.searchComboBox.KeyDown += searchBox_KeyDown;
             this.searchComboBox.Text = "Search";
-            // 
-            // AutoUpdateBackgroudFinder
-            // 
-            this.AutoUpdateBackgroudFinder.DoWork += new System.ComponentModel.DoWorkEventHandler(this.AutoUpdateBackgroundFinder_DoWork);
             // 
             // frmMain
             // 
@@ -746,7 +736,7 @@ namespace OrigamArchitect
             CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), ImageRes.icon_repeat_new, Keys.F12, _schemaMenu);
 			CreateMenuWithSubmenu(strings.Actions_MenuItem, ImageRes.icon_actions, new SchemaActionsMenuBuilder(), _schemaMenu);
 			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, ImageRes.icon_convert_to, new SchemaItemConvertMenuBuilder(), _schemaMenu);
-			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, ImageRes.icon_move_to_package, new ExtensionMenuBuilder(), _schemaMenu);
+            CreateMenuItem(strings.MoveToPackage_MenuItem, new MoveToAnotherPackage(), ImageRes.icon_move_to_package, Keys.None, _schemaMenu);
 				
 			_schemaMenu.SubItems.Add(CreateSeparator());
 
@@ -1875,15 +1865,7 @@ namespace OrigamArchitect
 				this.dockPanel.ContentRemoved += dockPanel_ContentRemoved;
 				this.dockPanel.ActiveContentChanged +=
 					dockPanel_ActiveContentChanged;
-
-
-
-#if !ORIGAM_CLIENT
-				// auto-update within release-branch
-				AutoUpdateBackgroudFinder.RunWorkerAsync();
-				// search Origam.com for whether there is a newer architect version within the same release branch
-				// as the current branch
-#endif
+				
 				Connect();
 				splash.Dispose();
 			}
@@ -2492,104 +2474,7 @@ namespace OrigamArchitect
             sfd.Title = strings.ExcepExport_Title;
             return sfd;
         }
-
-        private void AutoUpdate()
-		{
-			System.Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-
-			string url = null;
-			string newVersion = null;
-			
-			// don't update if run from dev build (0.0.0.0) or from master build (0.0.0.x) 
-			if ((version.Major == 0) 
-            && (version.Minor == 0) 
-            && (version.Build == 0))
-			{
-				return;
-            }
-
-			if (version.Major == 0)
-			{
-				url = string.Format("{0}{1}",
-					ORIGAM_COM_API_BASEURL,
-					"public/getSetupNewestBuildInMasterBranch");
-}
-			else
-			{
-				/*
-				  https://origam.com/public/getSetupNewestBuildInStableBranch?stableBranch=2016.3
-				*/
-				url = string.Format("{0}public/getSetupNewestBuildInStableBranch?stableBranch={1}.{2}",
-					ORIGAM_COM_API_BASEURL, version.Major, version.Minor);
-			}
-
-			try
-			{
-				using (WebResponse webResponse = HttpTools.Instance.GetResponse(url,
-					"GET", null, null,
-					new Hashtable()
-					{ { "Accept-Encoding", "gzip,deflate"} }
-					, null, null, null, 10000, null, IgnoreHTTPSErrors))
-				{
-					string output;
-					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
-					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
-
-					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]
-						["Releases_Build"][0]["BuildVersion"]));
-					string upgradeUrl = (string)jResult["ROOT"]["Releases_Build"][0]["Url"];
-
-					if (version.Major == 0)
-					{
-						newVersion = string.Format("0.0.0.{0}", newestBuildVersion);
-					}
-					else
-					{
-						newVersion = string.Format("{0}.{1}.{2}.0", version.Major,
-							version.Minor, newestBuildVersion);
-					}
-
-					if (newVersion.CompareTo(version.ToString()) > 0)
-					{
-
-						string message = string.Format(
-							strings.AutoUpdate_NewerVersionNotice,
-							newVersion, version.ToString());
-
-						string caption = strings.NewerVersion_Title;
-						MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-						DialogResult result;
-						// Displays the MessageBox.
-						result = MessageBox.Show(message, caption, buttons);
-
-						if (result == System.Windows.Forms.DialogResult.Yes)
-						{
-							System.Diagnostics.Process.Start(upgradeUrl);
-							// Closes the parent form.
-							this.Close();
-						}
-					}
-				}
-			}
-			catch (Exception)
-			{
-				// continue if auto-upgrade fails
-			}
-		}
-
-		
-		private void AutoUpdateBackgroundFinder_DoWork(object sender, DoWorkEventArgs e)
-		{
-			BackgroundWorker bw = sender as BackgroundWorker;
-			AutoUpdate();
-			e.Result = true;
-			if (bw.CancellationPending)
-			{
-				e.Cancel = true;
-			}
-		}
-
+        
         private static bool TestConnectionToApplicationDataDatabase()
         {
             AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;

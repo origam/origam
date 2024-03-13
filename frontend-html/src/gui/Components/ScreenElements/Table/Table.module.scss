@@ -104,18 +104,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
 }
 
-.toolTip {
+.tooltip {
   height: 100%;
   position: absolute;
   top: 0;
   display: flex;
   align-items: center;
   z-index: 100;
-}
-
-.toolTipContainer{
-  border-radius: 0px;
-  border: 1px;
 }
 
 .tooltipContent{
@@ -125,7 +120,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: left;
 }
 
-.toolTipLine {
+.tooltipLine {
  white-space: pre-wrap;
   text-align: left;
 }

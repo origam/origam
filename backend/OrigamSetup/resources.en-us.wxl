@@ -24,7 +24,7 @@
   <String Id="LicenseAgreementDialogTitle" Overridable="yes">[ProductName] License Agreement</String>
   <String Id="EndUserLicense" Overridable="yes">{\DlgFont16}End-User License Agreement</String>
   <String Id="ReadCarefully" Overridable="yes">Please read the following license agreement carefully</String>
-  <String Id="EULA_file" Overridable="yes">eula.en-us.rtf</String>
+  <String Id="EULA_file" Overridable="yes">gpl3.rtf</String>
   <String Id="AcceptEULA" Overridable="yes">I accept the terms in the License Agreement</String>
   <String Id="DontAcceptEULA" Overridable="yes">I do not accept the terms in the License Agreement</String>
   <String Id="Continue" Overridable="yes">Continue</String>

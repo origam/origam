@@ -77,7 +77,7 @@ export function getTooltip(
 ) {
   for (let h of mouseOverSubscriptions) {
     if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
-      return h.toolTipGetter(canvasX, canvasY, canvasX, canvasY);
+      return h.tooltipGetter(canvasX, canvasY, canvasX, canvasY);
     }
   }
   return undefined;

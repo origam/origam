@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 @import "src/gui/definitions";
+@import "src/gui/commonStyles";
 
 .root {
   display: flex;
@@ -28,7 +29,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-right: 1px solid var(--background3);
   padding: 0 0.5em;
   overflow: hidden;
-  user-select: none;
+  @include noSelect;
 
   flex: 0 1 auto;
   min-width: 0;

@@ -37,7 +37,7 @@ import Scroller from "./Scroller";
 import S from "./Table.module.scss";
 import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
 import { renderTable } from "./TableRendering/renderTable";
-import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow, ITooltipData } from "./TableRendering/types";
 import { IGridDimensions, ITableProps } from "./types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
@@ -139,7 +139,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function getToolTipContent(event: any, boundingRectangle: DOMRect) {
+  function getTooltipContent(event: any, boundingRectangle: DOMRect) {
     return getTooltip(
       event.clientX - boundingRectangle.x + scrollLeftObs.get(),
       event.clientY - boundingRectangle.y + scrollTopObs.get(),
@@ -147,7 +147,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     );
   }
 
-  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent};
+  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getTooltipContent: getTooltipContent};
 }
 
 export const Table: React.FC<ITableProps & {
@@ -342,15 +342,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @observable
-  toolTipData: IToolTipData | undefined = undefined;
+  tooltipData: ITooltipData | undefined = undefined;
 
   @action.bound onMouseOver(event: any, boundingRectangle: DOMRect) {
-    this.toolTipData = undefined;
+    this.tooltipData = undefined;
     setTimeout(() => {
       runInAction(() => {
-        //console.log("mouseOver", boundingRectangle);
-        this.mouseInToolTipEnabledArea = true;
-        //this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+        this.mouseInTooltipEnabledArea = true;
       });
     });
   }
@@ -361,11 +359,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @observable
-  mouseInToolTipEnabledArea = true;
+  mouseInTooltipEnabledArea = true;
 
-  @action.bound onMouseLeaveToolTipEnabledArea(event: any) {
+  @action.bound onMouseLeaveTooltipEnabledArea(event: any) {
     this.tablePanelView.currentTooltipText = undefined;
-    this.mouseInToolTipEnabledArea = false;
+    this.mouseInTooltipEnabledArea = false;
   }
 
   @action.bound handleScrollerClick(event: any) {
@@ -511,7 +509,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           scrollOffsetSource={this.props.scrollState}
                           worldBounds={contentRect.bounds!}
                           cellRectangle={editorCellRectangle!}
-                          onMouseEnter={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
+                          onMouseEnter={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         >
                           {this.props.renderEditor && this.props.renderEditor()}
                         </PositionedField>
@@ -529,7 +527,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         onClick={this.handleScrollerClick}
                         onMouseMove={this.handleScrollerMouseMove}
                         onMouseOver={this.onMouseOver}
-                        onMouseLeave={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
+                        onMouseLeave={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         onKeyDown={this.props.onKeyDown}
                         onFocus={this.props.onFocus}
                       />

@@ -32,6 +32,7 @@ import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { T } from "utils/translation";
 import { Button } from "gui/Components/Button/Button";
 import { BottomButton } from "gui/connections/MobileComponents/BottomToolBar/BottomButton";
+import { ScreenLayoutState, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -50,16 +51,21 @@ export class BottomToolBar extends React.Component<{
     return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
-
   showNextButton() {
-    return this.activeScreen && this.activeScreen.showWorkflowNextButton;
+    return (
+      this.mobileState.layoutState instanceof ScreenLayoutState &&
+      this.activeScreen && 
+      this.activeScreen.showWorkflowNextButton);
   }
 
   render() {
     const actionButtonsState = getScreenActionButtonsState(this.props.ctx);
     const buttons = [];
-    if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
-      { this.props.mobileState.layoutState.showBackButton &&
+    const layoutState = this.props.mobileState.layoutState;
+    if (
+      layoutState.showCloseButton(!!this.activeScreen) &&
+      layoutState.topLeftComponent !== TopLeftComponent.Close) {
+      { layoutState.showBackButton &&
         buttons.push(
           <BottomButton
             key={"back"}
@@ -81,7 +87,7 @@ export class BottomToolBar extends React.Component<{
         />
       );
     }
-    if (this.props.mobileState.layoutState.showOkButton) {
+    if (layoutState.showOkButton) {
       buttons.push(
         <Button
           key={"ok"}
@@ -92,7 +98,7 @@ export class BottomToolBar extends React.Component<{
         />
       );
     }
-    if (!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
+    if (!layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
       buttons.push(
         <BottomIcon
           key={"refresh"}
@@ -101,7 +107,7 @@ export class BottomToolBar extends React.Component<{
         />
       );
     }
-    if (!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
+    if (!layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
       buttons.push(
         <BottomIcon
           key={"save"}

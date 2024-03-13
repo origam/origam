@@ -37,7 +37,7 @@ import cx from "classnames";
 import { IProperty } from "model/entities/types/IProperty";
 import { TabbedViewHandle } from "../TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "../TabbedView/TabbedViewHandleRow";
-import { CloseButton } from "gui/Components/Dialogs/Dialog";
+import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 import { Icon } from "gui/Components/Icon/Icon";
 import { SimpleDropdown } from "gui/Components/Dialogs/SimpleDropdown";
 import { requestFocus } from "utils/focus";

@@ -101,11 +101,6 @@ namespace Origam.Server
 
         #region Overriden Session Methods
 
-        public override bool HasChanges()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Init()
         {
             // resolve the formId for the parameter

@@ -46,6 +46,7 @@ export class CChatSection extends React.Component {
     return (
       <>
         <WorkQueuesItem
+          key={"new_chat"}
           isEmphasized={false}
           isOpenedScreen={false}
           isActiveScreen={false}
@@ -67,6 +68,7 @@ export class CChatSection extends React.Component {
           const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
           return (
             <WorkQueuesItem
+              key={item.id}
               isEmphasized={item.unreadMessageCount > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}

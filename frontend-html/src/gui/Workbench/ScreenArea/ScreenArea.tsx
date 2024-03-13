@@ -35,7 +35,7 @@ import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { CloseButton } from "gui/Components/Dialogs/Dialog";
+import { CloseButton } from "gui/Components/Dialogs/CloseButton";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
@@ -91,6 +91,7 @@ export const DialogScreen: React.FC<{
             buttonsCenter={null}
             buttonsLeft={null}
             onWindowMove={(top, left)=> props.openedScreen.onWindowMove(top, left)}
+            mustRunFullScreenInMobile={true}
             buttonsRight={
               <Observer>
                 {() =>
@@ -147,7 +148,8 @@ export const DialogScreen: React.FC<{
             </Observer>
           </ModalDialog>
         )}
-      </Observer>
+      </Observer>,
+      true
     );
     return closeFunction;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

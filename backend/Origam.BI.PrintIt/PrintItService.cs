@@ -91,7 +91,13 @@ namespace Origam.BI.PrintIt
 					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
 					string serviceUrl = settings.PrintItServiceUrl;
 					// send request to PrintIt service
-					return HttpTools.Instance.SendRequest(serviceUrl, "POST", postData, "application/x-www-form-urlencoded", null, null);
+					return HttpTools.Instance.SendRequest(
+						new Request(
+							url: serviceUrl,
+							method: "POST",
+							content: postData, 
+							contentType: "application/x-www-form-urlencoded")
+						).Content;
 				}
 			}
 		}
