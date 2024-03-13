@@ -5,7 +5,10 @@ import shutil
 from pathlib import Path
 from ui import select_option, run_and_wait_for_key
 
-path_to_config = Path("pluginmanager_config.json")
+import sys
+
+path_to_home = Path(sys.argv[0]).parent
+path_to_config = path_to_home / Path("pluginmanager_config.json")
 origam_repo_path = Path()
 frontend_path = Path()
 origam_plugin_src = Path()
@@ -26,6 +29,9 @@ def add_dependencies(package_json_path, dependencies):
 def copy_dependencies(source_package_json_path, target_package_json_path):
     with open(source_package_json_path) as f:
         source_package_json = json.load(f)
+    if "dependencies" not in source_package_json:
+        print(f"No dependencies found in: {target_package_json_path}")
+        return
     dependency_dict = source_package_json["dependencies"]
     dependencies = [f'"{key}": "{dependency_dict[key]}"' for key in dependency_dict]
     add_dependencies(target_package_json_path, dependencies)
