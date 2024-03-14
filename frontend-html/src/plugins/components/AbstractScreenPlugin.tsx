@@ -24,8 +24,9 @@ import { ILocalization } from "plugins/interfaces/ILocalization";
 import { ILocalizer } from "plugins/interfaces/ILocalizer";
 import { IScreenPluginData } from "plugins/interfaces/IScreenPluginData";
 
-
-export abstract class AbstractScreenPlugin implements IScreenPlugin {
+// The abstract keyword had to be removed because of this issue:
+// https://github.com/vitejs/vite/issues/12955 
+export class AbstractScreenPlugin implements IScreenPlugin {
   $type_IScreenPlugin: 1 = 1; // required by the isIScreenPlugin function
   id: string = ""
 
@@ -38,9 +39,11 @@ export abstract class AbstractScreenPlugin implements IScreenPlugin {
 
   setScreenParameters: ((parameters: { [p: string]: string }) => void) | undefined;
 
-  abstract getComponent(
+  getComponent(
     data: IScreenPluginData,
-    createLocalizer: (localizations: ILocalization[]) => ILocalizer): JSX.Element
+    createLocalizer: (localizations: ILocalization[]) => ILocalizer): JSX.Element {
+      return <></>;
+    }
 
   onSessionRefreshed() {
     this.refreshHandler.call();
