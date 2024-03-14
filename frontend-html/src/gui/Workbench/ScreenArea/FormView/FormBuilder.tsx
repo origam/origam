@@ -43,7 +43,7 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
 import { findStrings } from "xmlInterpreters/xmlUtils";
 import { TabIndex } from "model/entities/TabIndexOwner";
-import { BackupFocusPlaceHolder } from "BackupFocusPlaceHolder";
+import { BackupFocusPlaceHolder } from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder";
 
 
 @inject(({dataView}) => {

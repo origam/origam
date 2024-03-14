@@ -21,7 +21,7 @@ import React, { useEffect, useRef } from "react";
 import { getFormFocusManager } from "model/selectors/DataView/getFormFocusManager";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import uiActions from "model/actions-ui-tree";
-import S from "BackupFocusPlaceHolder.module.scss";
+import S from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder.module.scss";
 
 
 // This components should get focus if there are no other focusable inputs on the screen section.
