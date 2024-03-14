@@ -8,23 +8,27 @@ namespace Origam.Schema.EntityModel
     {
         public override Exception CheckRule(object instance)
         {
-            throw new NotImplementedException();
+            return new NotSupportedException(
+                ResourceUtils.GetString("MemberNameRequired"));
         }
 
         public override Exception CheckRule(object instance, string memberName)
         {
-            if (memberName == string.Empty | memberName == null) CheckRule(instance);
-
-            var filterset = (DataStructureFilterSet)instance;
-            ArrayList filters = filterset.ChildItemsRecursive;
+            if (string.IsNullOrEmpty(memberName))
+            {
+                CheckRule(instance);
+            }
+            var filterSet = (DataStructureFilterSet)instance;
+            ArrayList filters = filterSet.ChildItemsRecursive;
             foreach (DataStructureFilterSetFilter filter in filters)
             {
-                if ((filter.IgnoreFilterConstantId != Guid.Empty || 
-                        !string.IsNullOrEmpty(filter.IgnoreFilterParameterName) ||
-                        filter.PassWhenParameterMatch) && 
-                        !filterset.IsDynamic)
+                if (((filter.IgnoreFilterConstantId != Guid.Empty)
+                     || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName) 
+                     || filter.PassWhenParameterMatch) 
+                    && !filterSet.IsDynamic)
                 {
-                    return new Exception(ResourceUtils.GetString("ErrorDynamicParameter", memberName));
+                    return new Exception( ResourceUtils.GetString(
+                        "ErrorDynamicParameter", memberName));
                 }
             }
             return null;

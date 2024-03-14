@@ -45,7 +45,7 @@ namespace Origam.Schema.EntityModel
 		private bool _isDynamic = false;
 		[DefaultValue(false)]
         [XmlAttribute("dynamic")]
-        [DynamicModelElementRule()]
+        [DynamicModelElementRule]
         public bool IsDynamic
 		{
 			get => _isDynamic;
