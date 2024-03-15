@@ -299,17 +299,33 @@ namespace Origam.Server
                         switch (changeType)
                         {
                             case DataRowState.Added:
-                                changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Create, ignoreKeys, false, hasErrors, hasChanges));
+                                changes.AddRange(sessionStore.GetChanges(
+                                    entity: tableName, 
+                                    id: rowEntry.Key, 
+                                    operation: Operation.Create, 
+                                    ignoreKeys: ignoreKeys, 
+                                    includeRowStates: true, 
+                                    hasErrors: hasErrors, 
+                                    hasChanges: hasChanges));
                                 break;
-
                             case DataRowState.Modified:
-                                changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Update, ignoreKeys, false, hasErrors, hasChanges));
+                                changes.AddRange(sessionStore.GetChanges(
+                                    entity: tableName, 
+                                    id: rowEntry.Key, 
+                                    operation: Operation.Update, 
+                                    ignoreKeys: ignoreKeys, 
+                                    includeRowStates: true, 
+                                    hasErrors: hasErrors, 
+                                    hasChanges: hasChanges));
                                 break;
-
                             case DataRowState.Deleted:
-                                changes.Add(sessionStore.GetDeletedInfo(null, tableName, rowEntry.Key));
+                                changes.Add(new ChangeInfo
+                                {
+                                    Entity = tableName,
+                                    Operation = Operation.Delete,
+                                    ObjectId = rowEntry.Key
+                                });
                                 break;
-
                             default:
                                 throw new Exception(Resources.ErrorUnknownRowChangeState);
                         }

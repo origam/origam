@@ -323,7 +323,23 @@ namespace Origam.Schema
 			}
 		}
 
-		public ISchemaItemProvider RootProvider { get; set; } = null;
+        public IEnumerable<SchemaItemGroup> ChildGroupsRecursive
+        {
+            get
+            {
+                foreach (var childGroup in ChildGroups)
+                {
+					yield return childGroup;
+                    foreach (var innerChildGroup in childGroup.ChildGroupsRecursive)
+                    {
+						yield return innerChildGroup;
+                    };
+                }
+            }
+        }
+
+
+        public ISchemaItemProvider RootProvider { get; set; } = null;
 
 		public ArrayList ChildItemsRecursive
 		{
