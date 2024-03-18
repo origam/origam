@@ -44,7 +44,11 @@ function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any,
 
   const newColumnConfigurations = properties
     .filter(property => !parsedColumnConfigurationIds.includes(property.id))
-    .map(property => new TableColumnConfiguration(property.id, property.columnWidth));
+    .map(property => {
+      const columnConfig = new TableColumnConfiguration(property.id, property.columnWidth);
+      columnConfig.isVisible = property.gridColumnWidth >= 0;
+      return columnConfig;
+    });
   return columnConfigurations.concat(newColumnConfigurations);
 }
 
