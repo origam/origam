@@ -57,6 +57,7 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 }
 
 export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
+  onClose: (() => void) | undefined;
   focusedDataViewId: string | undefined;
   $type_IFormScreenLifecycle: 1;
 

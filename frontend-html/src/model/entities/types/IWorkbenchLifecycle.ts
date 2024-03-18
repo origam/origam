@@ -69,7 +69,8 @@ export interface IWorkbenchLifecycle {
       isSleepingDirty?: boolean,
       refreshOnReturnType?: IRefreshOnReturnType,
       isSingleRecordEdit?: boolean,
-      createNewRecord?: boolean
+      createNewRecord?: boolean,
+      onClose?: ()=> void
     }
   ): Generator;
 

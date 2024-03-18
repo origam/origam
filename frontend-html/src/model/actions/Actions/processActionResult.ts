@@ -50,6 +50,7 @@ export interface IOpenNewForm {
       isSessionRebirth?: boolean,
       isSleepingDirty?: boolean,
       refreshOnReturnType?: IRefreshOnReturnType,
+      onClose?: ()=> void
     }
   ): Generator; //boolean
 }
@@ -106,6 +107,11 @@ export function processActionResult2(dep: {
       if (b[1].type === IActionResultType.DestroyForm) return 1;
       return a[0] - b[0]
     })
+    let onCloseUserScript;
+    const willOpenNewWindow = actionResultList.some(x => x.type === IActionResultType.OpenForm);
+    if (willOpenNewWindow) {
+      onCloseUserScript = actionResultList.find(x => x.type === IActionResultType.Script);
+    }
     for (let actionResultItem of indexedList.map(item => item[1])) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
@@ -135,6 +141,9 @@ export function processActionResult2(dep: {
               parentContext: dep.parentContext,
               requestParameters: actionResultItem.request,
               refreshOnReturnType: refreshOnReturnType,
+              onClose: onCloseUserScript
+                ? () => processScript(onCloseUserScript, dep.getPanelFunc)
+                : undefined
             }
           );
           break;
@@ -154,30 +163,23 @@ export function processActionResult2(dep: {
           break;
         }
         case IActionResultType.OpenUrl: {
-          yield*dep.openNewUrl(
-            actionResultItem.url,
-            actionResultItem.urlOpenMethod,
-            actionResultItem.request.caption
-          );
-          if (getOpenedScreen(dep.parentContext).isDialog) {
-            yield*dep.closeForm();
-          }
-          break;
-        }
-        case IActionResultType.Script: {
-          try {
-            // eslint-disable-next-line no-new-func
-            const actionScript = new Function("getPanel", actionResultItem.script);
-            actionScript(dep.getPanelFunc);
-          } catch (e: any) {
-            let message = "An error occurred while executing custom script: " + actionResultItem.script + ", \n" + e.message;
-            if (e.stackTrace)
-              message += (", \n" + e.stackTrace);
-            throw new Error(message)
-          }
+          processScript(actionResultItem, dep.getPanelFunc);
           break;
         }
       }
     }
   };
+}
+
+function processScript(actionResultItem: any, getPanelFunc: (modelInstanceId: string) => IDataView) {
+  try {
+    // eslint-disable-next-line no-new-func
+    const actionScript = new Function("getPanel", actionResultItem.script);
+    actionScript(getPanelFunc);
+  } catch (e: any) {
+    let message = "An error occurred while executing custom script: " + actionResultItem.script + ", \n" + e.message;
+    if (e.stackTrace)
+      message += (", \n" + e.stackTrace);
+    throw new Error(message)
+  }
 }
