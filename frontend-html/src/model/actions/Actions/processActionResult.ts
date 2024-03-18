@@ -75,6 +75,18 @@ export interface IProcessCRUDResult {
   (data: { crudResults: ICRUDResult[], resortTables?: boolean }): Generator;
 }
 
+export interface IActionResult {
+  changes: any[] | null;
+  refreshOnReturnSessionId: string | null;
+  refreshOnReturnType: IRefreshOnReturnType | undefined;
+  request: any;
+  script: string | null;
+  type: IActionResultType;
+  uiResult: any;
+  url: string | null;
+  urlOpenMethod: IUrlUpenMethod;
+}
+
 export function new_ProcessActionResult(ctx: any) {
   const workbenchLifecycle = getWorkbenchLifecycle(ctx);
   const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
@@ -100,7 +112,7 @@ export function processActionResult2(dep: {
   processCRUDResult: IProcessCRUDResult;
   parentContext: any
 }) {
-  return function*processActionResult2(actionResultList: any[]) {
+  return function*processActionResult2(actionResultList: IActionResult[]) {
     const indexedList = actionResultList.map((item, index) => [index, item]);
     indexedList.sort((a: any, b: any) => {
       if (a[1].type === IActionResultType.DestroyForm) return -1;
@@ -112,7 +124,7 @@ export function processActionResult2(dep: {
     if (willOpenNewWindow) {
       onCloseUserScript = actionResultList.find(x => x.type === IActionResultType.Script);
     }
-    for (let actionResultItem of indexedList.map(item => item[1])) {
+    for (let actionResultItem of indexedList.map(item => item[1] as IActionResult)) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
           const menuItem = getMainMenuItemById(dep.parentContext, actionResultItem.request.objectId);
@@ -158,7 +170,7 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.UpdateData: {
           yield*dep.processCRUDResult(
-            {crudResults: actionResultItem.changes, resortTables: true}
+            {crudResults: actionResultItem.changes!, resortTables: true}
           );
           break;
         }
