@@ -202,7 +202,7 @@ namespace Origam.Gui
             ExecuteActionProcessData processData,
             string transactionId);
 
-        private void AppendScriptCalls(
+        protected void AppendScriptCalls(
             EntityWorkflowAction entityWorkflowAction,
             ExecuteActionProcessData processData)
         {
