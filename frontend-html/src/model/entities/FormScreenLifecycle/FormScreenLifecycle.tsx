@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
 import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
-import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
+import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
@@ -1369,7 +1369,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
 
-      yield*new_ProcessActionResult(action)(result);
+      yield*processActionResult(action)(result);
       yield*refreshRowStates(this)();
       const dataView = getDataView(action);
       dataView?.formFocusManager?.refocusLast();

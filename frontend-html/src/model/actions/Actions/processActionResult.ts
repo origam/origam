@@ -87,10 +87,10 @@ export interface IActionResult {
   urlOpenMethod: IUrlOpenMethod;
 }
 
-export function new_ProcessActionResult(ctx: any) {
+export function processActionResult(ctx: any) {
   const workbenchLifecycle = getWorkbenchLifecycle(ctx);
   const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
-  return processActionResult2({
+  return internalProcessActionResult({
     getPanelFunc: getPanelFunc,
     openNewForm: workbenchLifecycle.openNewForm,
     openNewUrl: openNewUrl(ctx),
@@ -102,7 +102,7 @@ export function new_ProcessActionResult(ctx: any) {
   });
 }
 
-export function processActionResult2(dep: {
+function internalProcessActionResult(dep: {
   getPanelFunc: (modelInstanceId: string) => IDataView;
   openNewForm: IOpenNewForm;
   openNewUrl: IOpenNewUrl;
@@ -112,7 +112,7 @@ export function processActionResult2(dep: {
   processCRUDResult: IProcessCRUDResult;
   parentContext: any
 }) {
-  return function*processActionResult2(actionResultList: IActionResult[]) {
+  return function*internalProcessActionResult(actionResultList: IActionResult[]) {
     const indexedList = actionResultList.map((item, index) => [index, item]);
     indexedList.sort((a: any, b: any) => {
       if (a[1].type === IActionResultType.DestroyForm) return -1;
