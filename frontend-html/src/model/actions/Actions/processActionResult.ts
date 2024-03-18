@@ -26,7 +26,7 @@ import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 
 import actions from "model/actions-tree";
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { openNewUrl } from "../Workbench/openNewUrl";
 import { ICRUDResult, processCRUDResult } from "../DataLoading/processCRUDResult";
 import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
@@ -56,7 +56,7 @@ export interface IOpenNewForm {
 }
 
 export interface IOpenNewUrl {
-  (url: string, urlOpenMethod: IUrlUpenMethod, title: string): Generator;
+  (url: string, urlOpenMethod: IUrlOpenMethod, title: string): Generator;
 }
 
 export interface IGetActionCaption {
@@ -84,7 +84,7 @@ export interface IActionResult {
   type: IActionResultType;
   uiResult: any;
   url: string | null;
-  urlOpenMethod: IUrlUpenMethod;
+  urlOpenMethod: IUrlOpenMethod;
 }
 
 export function new_ProcessActionResult(ctx: any) {

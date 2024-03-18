@@ -45,7 +45,7 @@ import { observable } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
-import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
@@ -297,7 +297,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         }
       }
     } else {
-      yield*openNewUrl(this)(url, IUrlUpenMethod.OrigamTab, item.topic);
+      yield*openNewUrl(this)(url, IUrlOpenMethod.OrigamTab, item.topic);
     }
   }
 
