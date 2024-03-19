@@ -27,7 +27,7 @@ import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { T } from "utils/translation";
 
 @observer
@@ -57,7 +57,7 @@ export class CChatSection extends React.Component {
             flow(function*() {
               yield*openNewUrl(self.workbench)(
                 `chatrooms/index.html#/chatroom`,
-                IUrlUpenMethod.OrigamTab,
+                IUrlOpenMethod.OrigamTab,
                 "New Chat"
               );
             })();

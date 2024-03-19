@@ -51,10 +51,8 @@ using System.Linq;
 using Origam.BI.CrystalReports;
 using MoreLinq;
 using Origam.Extensions;
-using Origam.Git;
 using Origam.Gui;
 using Origam.Service.Core;
-using Origam.Windows.Editor.GIT;
 
 namespace OrigamArchitect.Commands
 {
@@ -865,7 +863,7 @@ namespace OrigamArchitect.Commands
 			foreach(string language in languages)
 			{
 				string fileName = packageName + "-" + language.Trim() + ".xml";
-				string outputPath = Path.Combine(Path.Combine(settings.ModelSourceControlLocation, "l10n"), fileName);
+				string outputPath = Path.Combine(Path.Combine(settings.ModelSourceControlLocation, @"..\l10n"), fileName);
 				if (!string.IsNullOrEmpty(settings.LocalizationFolder))
 				{
 					outputPath = Path.Combine(settings.LocalizationFolder, fileName);

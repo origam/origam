@@ -342,4 +342,7 @@
   <data name="ERRTransformationNotFound" xml:space="preserve">
     <value>Couldn't find transformation with id: {0}</value>
   </data>
+  <data name="ErrorDynamicParameter" xml:space="preserve">
+    <value>IsDynamic parameter must to be set to True</value>
+  </data>
 </root>

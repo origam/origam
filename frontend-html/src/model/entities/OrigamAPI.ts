@@ -37,6 +37,7 @@ import fileDownload from "js-file-download";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
 import { layoutToString } from "model/entities/TablePanelView/layout";
+import { IActionResult } from "model/actions/Actions/processActionResult";
 
 
 export enum IAuditLogColumnIndices {
@@ -450,7 +451,7 @@ export class OrigamAPI implements IApi {
     SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
-  }): Promise<any> {
+  }): Promise<IActionResult> {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
   }
 

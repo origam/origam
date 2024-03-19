@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { requestFocus } from "utils/focus";
 
 export function openNewUrl(ctx: any) {
   return function*openNewUrl(
     url: string,
-    urlOpenMethod: IUrlUpenMethod,
+    urlOpenMethod: IUrlOpenMethod,
     title: string
   ) {
     switch (urlOpenMethod) {
-      case IUrlUpenMethod.OrigamTab:
+      case IUrlOpenMethod.OrigamTab:
         yield*getWorkbenchLifecycle(ctx).openNewUrl(url, title);
         break;
       default:
