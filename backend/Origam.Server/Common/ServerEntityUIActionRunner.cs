@@ -273,7 +273,7 @@ namespace Origam.Server
             {
                 resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
             }
-            else if(entityWorkflowAction==null && processData.IsModalDialog)
+            else if(entityWorkflowAction == null && processData.IsModalDialog)
             {
                 resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
             }
