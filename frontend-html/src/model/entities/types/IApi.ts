@@ -23,6 +23,7 @@ import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
+import { IActionResult } from "model/actions/Actions/processActionResult";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -242,7 +243,7 @@ export interface IApi {
     SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
-  }): Promise<any>;
+  }): Promise<IActionResult>;
 
   getReportInfo(data: {
     ReportId: string
