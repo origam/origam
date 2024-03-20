@@ -68,7 +68,9 @@ namespace Origam.Server.Controller
                         nameof(input.LazyLoadedEntityInput));
                 }
 
-                if (!isLazyLoaded && (input.RowIds == null || input.RowIds.Count == 0 ))
+                if (!isLazyLoaded && 
+                    (input.RowIds == null || input.RowIds.Count == 0 ) &&  
+                    input.Grouping == null)
                 {
                     return BadRequest(
                         "Export from non lazy loaded entities requires "+nameof(input.RowIds));
@@ -76,6 +78,7 @@ namespace Origam.Server.Controller
                 
                 var entityExportInfo = new EntityExportInfo
                 {
+                    Grouping = input.Grouping,
                     Entity = input.Entity,
                     Fields = input.Fields,
                     RowIds = input.RowIds,

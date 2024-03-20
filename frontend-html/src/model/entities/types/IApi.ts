@@ -23,6 +23,7 @@ import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -441,9 +442,23 @@ export interface IApi {
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
+    Grouping: IGroupingInfo;
     AggregatedColumns: IAggregationData[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
+}
+
+
+export interface IGroupingInfo {
+  groups: IGroupNode[];
+  columns: string[];
+}
+
+export interface IGroupNode {
+  columnId: string;
+  value: any;
+  childGroups: IGroupNode[];
+  rowIds: string[] | undefined;
 }
 
 export interface ILazyLoadedEntityInput {

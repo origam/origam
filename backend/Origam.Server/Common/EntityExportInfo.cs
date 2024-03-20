@@ -40,6 +40,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -108,5 +109,21 @@ namespace Origam.Server
             get { return _ss; }
             set { _ss = value; }
         }
+
+        public GroupingInfo Grouping { get; set; }
+    }
+    
+    public class GroupingInfo
+    {
+        public GroupNode[] Groups { get; set; }
+        public string[] Columns { get; set; }
+    }
+    
+    public class GroupNode
+    {
+        public string ColumnId { get; set; }
+        public object Value { get; set; }
+        public GroupNode[] ChildGroups { get; set; }
+        public string[] RowIds { get; set; }
     }
 }

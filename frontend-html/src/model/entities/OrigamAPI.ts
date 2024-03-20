@@ -23,12 +23,12 @@ import axios, { AxiosInstance } from "axios";
 import _ from "lodash";
 import {
   IApi,
-  IEntityExportField,
+  IEntityExportField, IGroupingInfo, IGroupNode,
   ILazyLoadedEntityInput,
   IUIGridFilterCoreConfiguration,
   IUpdateData
 } from "./types/IApi";
-import { IAggregationInfo } from "./types/IAggregationInfo";
+import { IAggregationData, IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
@@ -37,6 +37,7 @@ import fileDownload from "js-file-download";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
 import { layoutToString } from "model/entities/TablePanelView/layout";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 
 export enum IAuditLogColumnIndices {
@@ -851,6 +852,8 @@ export class OrigamAPI implements IApi {
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
+    Grouping: IGroupingInfo;
+    AggregatedColumns: IAggregationData[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any> {
     const response = await this.axiosInstance({

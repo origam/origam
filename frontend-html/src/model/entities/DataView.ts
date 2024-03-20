@@ -87,8 +87,10 @@ import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
-import {TabIndex} from "./TabIndexOwner";
+import { TabIndex } from "./TabIndexOwner";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { IGroupNode } from "model/entities/types/IApi";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 class SavedViewState {
   constructor(
@@ -957,9 +959,15 @@ export class DataView implements IDataView {
         AggregationType: agg.type,
       }))
     });
-
+    const tablePanelView = getTablePanelView(this);
+    const getRowId = dataView.dataTable.getRowId.bind(dataView.dataTable);
+    const groupingColumns = tablePanelView?.groupingConfiguration?.orderedGroupingColumnSettings
+      .map(setting => setting.columnId);
     if (isInfiniteScrollingActive(this)) {
       await api.getExcelFile({
+        Grouping: {
+          groups: toGroupNodes(this.serverSideGrouper.topLevelGroups, node => []),
+          columns: groupingColumns },
         AggregatedColumns: aggregationResult,
         Entity: this.entity,
         Fields: fields,
@@ -979,11 +987,16 @@ export class DataView implements IDataView {
       });
     } else {
       await api.getExcelFile({
+        Grouping: {
+          groups: toGroupNodes(this.clientSideGrouper.topLevelGroups, node => node.childRows.map(row => getRowId(row))),
+          columns: groupingColumns },
         AggregatedColumns: aggregationResult,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
-        RowIds: this.dataTable.rows.map((row) => this.dataTable.getRowId(row)),
+        RowIds: tablePanelView?.groupingConfiguration.isGrouping
+          ? []
+          : this.dataTable.rows.map((row) => this.dataTable.getRowId(row)),
         LazyLoadedEntityInput: undefined,
       });
     }
@@ -997,4 +1010,18 @@ export class DataView implements IDataView {
         return map;
       }, {});
   }
+}
+
+function toGroupNodes(nodes: IGroupTreeNode [], getRowIds: (node: IGroupTreeNode) => string[]){
+  const groupNodes: IGroupNode[] = [];
+  for (let node of nodes) {
+    const childGroups = toGroupNodes(node.childGroups, getRowIds);
+    groupNodes.push({
+      columnId: node.columnId,
+      value: node.columnValue,
+      childGroups: childGroups,
+      rowIds: childGroups.length == 0 ? getRowIds(node) : []
+    });
+  }
+  return groupNodes;
 }

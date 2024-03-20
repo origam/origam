@@ -28,6 +28,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using NPOI.HSSF.UserModel;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Origam.DA;
@@ -68,8 +69,7 @@ namespace Origam.Server
             int rowIndex = 0;
             foreach (var row in rows)
             {
-                if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
-                                       && (rowIndex > settings.ExportRecordsLimit))
+                if (RowLimitReached(rowIndex))
                 {
                     FillExportLimitExceeded(workbook, sheet, rowIndex);
                     break;
@@ -88,10 +88,13 @@ namespace Origam.Server
             SetupSheetHeader(sheet, info);
             bool isPkGuid
                 = info.Table.PrimaryKey[0].DataType == typeof(Guid);
+            if (info.Grouping != null)
+            {
+                return FillWorkBookGrouping(workbook, sheet, info, isPkGuid);
+            }
             for (int rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
             {
-                if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
-                                       && (rowNumber > settings.ExportRecordsLimit))
+                if (RowLimitReached(rowNumber))
                 {
                     FillExportLimitExceeded(workbook, sheet, rowNumber);
                     break;
@@ -105,6 +108,66 @@ namespace Origam.Server
             }
 
             return workbook;
+        }
+        
+        public IWorkbook FillWorkBookGrouping( IWorkbook workbook,
+            ISheet sheet, EntityExportInfo info,  bool isPkGuid)
+        {
+            int rowNumber = 1;
+            int groupLevel = 0;
+            foreach (var group in info.Grouping.Groups)
+            {
+                rowNumber = FillWorkBookGroupingRecursive(
+                    workbook, sheet, info, group, isPkGuid, rowNumber, groupLevel);
+            }
+
+            return workbook;
+        }
+        
+        public int FillWorkBookGroupingRecursive( IWorkbook workbook,
+            ISheet sheet, EntityExportInfo info, GroupNode group,  bool isPkGuid,
+            int rowNumber, int groupLevel)
+        {
+            if (RowLimitReached(rowNumber))
+            {
+                FillExportLimitExceeded(workbook, sheet, rowNumber);
+                return rowNumber;
+            }
+            AddGroupHeading(workbook, sheet, rowNumber, groupLevel, group);
+            rowNumber++;
+            foreach (var rowId in group.RowIds)
+            {
+                if (RowLimitReached(rowNumber))
+                {
+                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    return rowNumber;
+                }
+                DataRow row = GetDataRow(info, rowId, isPkGuid);
+                if (row != null)
+                {
+                    AddRowToSheet(
+                        info: info, 
+                        workbook: workbook, 
+                        sheet: sheet, 
+                        rowNumber: rowNumber, 
+                        row: row, 
+                        columnOffset: info.Grouping.Columns.Length);
+                    rowNumber++;
+                } 
+            }
+            foreach (var childGroup in group.ChildGroups)
+            {
+                 rowNumber = FillWorkBookGroupingRecursive(
+                    workbook, sheet, info, childGroup, isPkGuid, rowNumber, groupLevel + 1);
+                rowNumber++;
+            }
+            return rowNumber;
+        }
+
+        private bool RowLimitReached(int rowNumber)
+        {
+            return !isExportUnlimited && (settings.ExportRecordsLimit > -1)
+                                      && (rowNumber > settings.ExportRecordsLimit);
         }
 
         private IWorkbook CreateWorkbook()
@@ -169,21 +232,35 @@ namespace Origam.Server
 
         private void AddRowToSheet(
             EntityExportInfo info, IWorkbook workbook, ISheet sheet,
-            int rowNumber, DataRow row)
+            int rowNumber, DataRow row, int columnOffset = 0)
         {
             IRow excelRow = sheet.CreateRow(rowNumber);
             for (int i = 0; i < info.Fields.Count; i++)
             {
-                AddCellToRow(info, workbook, excelRow, i, row);
+                AddCellToRow(
+                    info: info,
+                    workbook: workbook, 
+                    excelRow: excelRow, 
+                    dataColumnIndex: i, 
+                    excelColumnIndex: columnOffset + i, 
+                    row: row);
             }
+        }
+
+        private void AddGroupHeading (IWorkbook workbook, ISheet sheet,
+            int rowNumber,int groupLevel, GroupNode group)
+        {
+            IRow excelRow = sheet.CreateRow(rowNumber);
+            ICell cell = excelRow.CreateCell(groupLevel);
+            SetCellValue(workbook, group.Value, cell);
         }
 
         private void AddCellToRow(
             EntityExportInfo info, IWorkbook workbook, IRow excelRow,
-            int columnIndex, DataRow row)
+            int dataColumnIndex, int excelColumnIndex, DataRow row)
         {
-            EntityExportField field = info.Fields[columnIndex];
-            ICell cell = excelRow.CreateCell(columnIndex);
+            EntityExportField field = info.Fields[dataColumnIndex];
+            ICell cell = excelRow.CreateCell(excelColumnIndex);
             object val;
             if (SessionStore.IsColumnArray(info.Table.Columns[field.FieldName]))
             {
@@ -274,10 +351,15 @@ namespace Origam.Server
         private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
         {
             IRow headerRow = sheet.CreateRow(0);
+            for (int i = 0; i < info.Grouping.Columns.Length; i++)
+            {
+                headerRow.CreateCell(i).SetCellValue(info.Grouping.Columns[i]);
+            }
             for (int i = 0; i < info.Fields.Count; i++)
             {
                 EntityExportField field = info.Fields[i];
-                headerRow.CreateCell(i).SetCellValue(field.Caption);
+                headerRow.CreateCell( info.Grouping.Columns.Length + i)
+                    .SetCellValue(field.Caption);
             }
         }
 
@@ -291,17 +373,22 @@ namespace Origam.Server
         private DataRow GetDataRow(
             EntityExportInfo info, int rowNumber, bool isPkGuid)
         {
-            object pk = info.RowIds[rowNumber - 1];
-            if (isPkGuid && (pk is string))
+            object rowId = info.RowIds[rowNumber - 1];
+            return GetDataRow(info, rowId, isPkGuid);
+        }
+        private DataRow GetDataRow(
+            EntityExportInfo info, object rowId, bool isPkGuid)
+        {
+            if (isPkGuid && (rowId is string stringRowId))
             {
-                pk = new Guid((string) pk);
+                rowId = new Guid(stringRowId);
             }
 
-            DataRow row = info.Table.Rows.Find(pk);
+            DataRow row = info.Table.Rows.Find(rowId);
             // make sure lazy loaded list gets filled
             if (info.Store.IsLazyLoadedRow(row))
             {
-                info.Store.LazyLoadListRowData(pk, row);
+                info.Store.LazyLoadListRowData(rowId, row);
             }
 
             return row;

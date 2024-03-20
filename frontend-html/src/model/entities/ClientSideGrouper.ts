@@ -86,9 +86,9 @@ export class ClientSideGrouper implements IGrouper {
     for (let group of groups) {
       if (this.expandedGroupDisplayValues.has(group.getColumnDisplayValue())) {
         group.isExpanded = true;
-        this.loadChildrenInternal(group);
-        this.loadRecursively(group.childGroups);
       }
+      this.loadChildrenInternal(group);
+      this.loadRecursively(group.childGroups);
     }
   }
 
