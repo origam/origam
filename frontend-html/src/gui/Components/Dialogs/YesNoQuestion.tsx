@@ -21,6 +21,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import React from "react";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class YesNoQuestion extends React.Component<{
@@ -38,7 +39,7 @@ export class YesNoQuestion extends React.Component<{
   componentDidMount() {
     setTimeout(() => {
       if (this.elmPrimaryBtn) {
-        this.elmPrimaryBtn.focus?.();
+        requestFocus(this.elmPrimaryBtn);
       }
     }, 150);
   }
