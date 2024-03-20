@@ -620,7 +620,8 @@ namespace Origam.Server
                 ObjectId = workflowSessionStore.Request.ObjectId,
                 Type = workflowSessionStore.Request.Type,
                 Icon = workflowSessionStore.Request.Icon,
-                Caption = workflowSessionStore.Request.Caption
+                Caption = workflowSessionStore.Request.Caption,
+                Parameters = workflowSessionStore.Request.Parameters
             };
             DestroyUI(sessionFormIdentifier);
             return InitUI(request);
