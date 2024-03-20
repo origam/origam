@@ -47,7 +47,9 @@ export class SearchView extends React.Component<{
   }
 
   componentDidMount() {
-    requestFocus(this.viewState.input);
+    setTimeout(()=>{
+      requestFocus(this.viewState.input);
+    }, 100);
   }
 
   render() {
