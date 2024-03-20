@@ -966,7 +966,7 @@ export class DataView implements IDataView {
     if (isInfiniteScrollingActive(this)) {
       await api.getExcelFile({
         Grouping: {
-          groups: toGroupNodes(this.serverSideGrouper.topLevelGroups, node => []),
+          groups: [],
           columns: groupingColumns },
         AggregatedColumns: aggregationResult,
         Entity: this.entity,
