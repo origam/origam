@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using Origam.Server;
+using Origam.Server.Model.UIService;
 
 namespace Origam.Server
 {
@@ -29,7 +30,7 @@ namespace Origam.Server
     {
         string Filter { get; set; }
         Dictionary<string, Guid> FilterLookups { get; set; }
-        List<IRowOrdering> OrderingList { get; }
+        List<InputRowOrdering> Ordering { get; }
         Dictionary<string, string> Parameters { get; set; }
         int RowLimit { get; set; }        
         int RowOffset { get; set; }

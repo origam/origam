@@ -41,8 +41,7 @@ namespace Origam.Server.Model.UIService
         public Dictionary<string, Guid> FilterLookups { get; set; }
         public List<InputRowOrdering> Ordering { get; set; }
 
-        public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();
+        // public List<InputRowOrdering> OrderingList => Ordering;
 
         [Required]
         public int RowLimit { get; set; }        

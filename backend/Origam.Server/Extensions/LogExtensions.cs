@@ -28,7 +28,7 @@ namespace Origam.Server.Extensions
     {
         public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
         {
-            log.LogInformation(message, new []{arg} );
+            log.LogInformation(message, new object[]{arg} );
         }
     }
 }

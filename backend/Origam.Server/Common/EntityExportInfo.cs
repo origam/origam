@@ -116,7 +116,7 @@ namespace Origam.Server
     public class GroupingInfo
     {
         public GroupNode[] Groups { get; set; }
-        public string[] Columns { get; set; }
+        public ColumnSettings[] ColumnSettings { get; set; }
     }
     
     public class GroupNode
@@ -125,5 +125,12 @@ namespace Origam.Server
         public object Value { get; set; }
         public GroupNode[] ChildGroups { get; set; }
         public string[] RowIds { get; set; }
+    }
+
+    public class ColumnSettings
+    {
+        public string Id { get; set; }
+        public string GroupingUnit { get; set; }
+        public Guid GroupByLookupId { get; set; }
     }
 }

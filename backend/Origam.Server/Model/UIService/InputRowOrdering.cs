@@ -25,7 +25,7 @@ using Origam.Server;
 
 namespace Origam.Server.Model.UIService
 {
-    public class InputRowOrdering : IRowOrdering
+    public class InputRowOrdering
     {
         [Required] public string ColumnId { get; set; }
 

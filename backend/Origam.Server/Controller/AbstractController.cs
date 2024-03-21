@@ -369,9 +369,9 @@ namespace Origam.Server.Controller
             return Result.Ok<DataStructureQuery, IActionResult>(query);
         }
 
-        protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
+        protected CustomOrderings GetOrderings(List<InputRowOrdering> ordering)
         {
-            var orderings = orderingList
+            var orderings = ordering
                 .Select((inputOrdering, i) => 
                     new Ordering(
                         columnName: inputOrdering.ColumnId, 
@@ -385,7 +385,7 @@ namespace Origam.Server.Controller
         protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             ILazyRowLoadInput input, EntityData entityData)
         {
-            var customOrderings = GetOrderings(input.OrderingList);
+            var customOrderings = GetOrderings(input.Ordering);
 
             if(input.RowOffset != 0 && customOrderings.IsEmpty)
             {
@@ -513,7 +513,7 @@ namespace Origam.Server.Controller
         protected Result<DataStructureQuery, IActionResult> WorkQueueGetRowsGetRowsQuery(
             ILazyRowLoadInput input, WorkQueueSessionStore sessionStore)
         {
-            var customOrderings = GetOrderings(input.OrderingList);
+            var customOrderings = GetOrderings(input.Ordering);
             if (input.RowOffset != 0 && customOrderings.IsEmpty)
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(BadRequest($"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
@@ -568,7 +568,7 @@ namespace Origam.Server.Controller
         protected Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
             GetGroupsInput input, EntityData entityData)
         {
-            var customOrdering = GetOrderings(input.OrderingList);
+            var customOrdering = GetOrderings(input.Ordering);
         
             DataStructureColumn column = entityData.Entity.Column(input.GroupBy);
             if (column == null)

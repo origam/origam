@@ -151,7 +151,7 @@ namespace Origam.Server
                         sheet: sheet, 
                         rowNumber: rowNumber, 
                         row: row, 
-                        columnOffset: info.Grouping.Columns.Length);
+                        columnOffset: info.Grouping.ColumnSettings.Length);
                     rowNumber++;
                 } 
             }
@@ -351,14 +351,14 @@ namespace Origam.Server
         private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
         {
             IRow headerRow = sheet.CreateRow(0);
-            for (int i = 0; i < info.Grouping.Columns.Length; i++)
+            for (int i = 0; i < info.Grouping.ColumnSettings.Length; i++)
             {
-                headerRow.CreateCell(i).SetCellValue(info.Grouping.Columns[i]);
+                headerRow.CreateCell(i).SetCellValue(info.Grouping.ColumnSettings[i].Id);
             }
             for (int i = 0; i < info.Fields.Count; i++)
             {
                 EntityExportField field = info.Fields[i];
-                headerRow.CreateCell( info.Grouping.Columns.Length + i)
+                headerRow.CreateCell( info.Grouping.ColumnSettings.Length + i)
                     .SetCellValue(field.Caption);
             }
         }

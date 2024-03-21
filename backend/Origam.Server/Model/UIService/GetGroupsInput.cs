@@ -49,8 +49,7 @@ namespace Origam.Server.Model.UIService
         public Guid SessionFormIdentifier { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
 
-        public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();    
+        // public List<InputRowOrdering> OrderingList => Ordering;    
 
         public Dictionary<string, Guid> FilterLookups { get; set; }
     }
