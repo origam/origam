@@ -118,7 +118,7 @@ function registerTooltipGetter(columnId: string) {
     h: cellClickableArea.height,
     handler(event: any) {
       tablePanelView.property = property;
-      const nonPrintableChar = (tablePanelView.currentTooltipText?.startsWith('\t')) ? '\v' : '\t'; // switching nonprintable char so the tooltip always rerenders
+      const nonPrintableChar = tablePanelView.currentTooltipText?.startsWith('\t') ? '\v' : '\t'; // nonprintable chars so the tooltip always rerenders
       if (cellTextRendered as string === "") {
         tablePanelView.currentTooltipText = undefined;
       }
@@ -126,7 +126,8 @@ function registerTooltipGetter(columnId: string) {
         tablePanelView.currentTooltipText = hasTooltip ? nonPrintableChar + cellTextRendered : undefined;
       }
       else {
-        tablePanelView.currentTooltipText = nonPrintableChar + T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+        tablePanelView.currentTooltipText = nonPrintableChar + (hasTooltip ? cellTextRendered : "")
+        + '\n' + T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
       }
     },
   });

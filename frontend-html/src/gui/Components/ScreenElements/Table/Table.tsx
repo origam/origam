@@ -49,7 +49,6 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getSessionId } from "model/selectors/getSessionId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
-import { currentProperty } from "./TableRendering/currentCell";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
