@@ -50,6 +50,7 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { getSessionId } from "model/selectors/getSessionId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import cx from 'classnames';
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -498,9 +499,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
                   <div
                     ref={measureRef}
-                    className={S.cellAreaContainer}
+                    className={cx("cellAreaContainer", S.cellAreaContainer, (this.isCursorIconPointer()) ? ["isLink", S.isLink] : "")}
                     title={this.tablePanelView.currentTooltipText}
-                    style={{cursor: this.isCursorIconPointer() ? 'pointer' : 'default'}}
                   >
                     <>
                       {contentRect.bounds!.height ? (
