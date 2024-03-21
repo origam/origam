@@ -538,32 +538,28 @@ namespace Origam.Server
             return null;
         }
 
-        public Result<RowData, IActionResult> GetRow(
-            Guid sessionFormIdentifier, string entity, 
+        public RowData GetRow(Guid sessionFormIdentifier, string entity, 
             DataStructureEntity dataStructureEntity, Guid rowId)
         {
             SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
             switch(sessionStore)
             {
                 case null:
-                    return Result.Ok<RowData, IActionResult>(
-                        new RowData{Row = null, Entity = null});
+                    return new RowData{Row = null, Entity = null};
                 default:
                 {
                     var row = sessionStore.GetSessionRow(entity, rowId);
-                    return Result.Ok<RowData, IActionResult>(
-                        new RowData{Row = row, Entity = dataStructureEntity});
+                    return new RowData{Row = row, Entity = dataStructureEntity};
                 }
             }
         }
-        public Result<Guid, IActionResult> GetEntityId(
-            Guid sessionFormIdentifier, string entity)
+        public Guid GetEntityId(Guid sessionFormIdentifier, string entity)
         {
             SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
             switch(sessionStore)
             {
                 case null:
-                    return Result.Ok<Guid, IActionResult>(Guid.Empty);
+                    return Guid.Empty;
                 default:
                 {
                     var table = sessionStore.GetTable(entity, sessionStore.Data);
@@ -572,10 +568,11 @@ namespace Origam.Server
                     {
                         entityId = (Guid)table.ExtendedProperties["EntityId"];
                     }
-                    return Result.Ok<Guid, IActionResult>(entityId);
+                    return entityId;
                 }
             }
         }
+        
         public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
         {
             if(sessionManager.GetSession(

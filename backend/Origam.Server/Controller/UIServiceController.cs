@@ -925,7 +925,7 @@ namespace Origam.Server.Controller
                    rowId: input.Id); 
             }
             return FindEntity(input.DataStructureEntityId)
-                .Bind(dataStructureEntity =>
+                .Map(dataStructureEntity =>
                     sessionObjects.UIService.GetRow(
                         input.SessionFormIdentifier, input.Entity,
                         dataStructureEntity, input.Id));
