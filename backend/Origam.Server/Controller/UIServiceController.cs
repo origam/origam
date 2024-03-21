@@ -1073,56 +1073,7 @@ namespace Origam.Server.Controller
             public DataStructureQuery DataStructureQuery { get; set; }
             public EntityData EntityData { get; set; }
         }
-
-        private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
-            GetGroupsInput input, EntityData entityData)
-        {
-            var customOrdering = GetOrderings(input.OrderingList);
-
-            DataStructureColumn column = entityData.Entity.Column(input.GroupBy);
-            if (column == null)
-            {
-                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest($"Cannot group by \"{input.GroupBy}\" because the column does not exist."));
-            }
-
-            var field = column.Field;
-            var columnData = new ColumnData(
-                name: input.GroupBy,
-                isVirtual: (field is DetachedField),
-                defaultValue: (field as DetachedField)
-                ?.DefaultValue?.Value,
-                hasRelation: (field as DetachedField)
-                ?.ArrayRelation != null);
-
-            List<ColumnData> columns = new List<ColumnData>
-                {columnData, ColumnData.GroupByCountColumn};
-
-            if(input.GroupByLookupId != Guid.Empty)
-            {
-                columns.Add(ColumnData.GroupByCaptionColumn);
-            }
-
-            var query = new DataStructureQuery
-            {
-                Entity = entityData.Entity.Name,
-                CustomFilters = new CustomFilters
-                {
-                    Filters = input.Filter,
-                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
-                },
-                CustomOrderings = customOrdering,
-                RowLimit = input.RowLimit,
-                ColumnsInfo = new ColumnsInfo(
-                    columns: columns, 
-                    renderSqlForDetachedFields: true),
-                ForceDatabaseCalculation = true,
-                CustomGrouping= new Grouping(
-                    input.GroupBy, input.GroupByLookupId, input.GroupingUnit),
-                AggregatedColumns = input.AggregatedColumns 
-            };
-            return AddMethodAndSource(
-                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
-        }
+        
         private static void FillRow(
             RowData rowData, Dictionary<string, string> newValues)
         {
