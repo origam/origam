@@ -77,7 +77,7 @@ import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToL
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrdering";
-import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
+import { IOrderByDirection, IOrdering } from "model/entities/types/IOrderingConfiguration";
 import selectors from "model/selectors-tree";
 import { produce } from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
@@ -91,6 +91,8 @@ import { TabIndex } from "./TabIndexOwner";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGroupNode } from "model/entities/types/IApi";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IAggregationInfo } from "model/entities/types/IAggregationInfo";
+import { groupingUnitToString } from "model/entities/types/GroupingUnit";
 
 class SavedViewState {
   constructor(
@@ -947,28 +949,20 @@ export class DataView implements IDataView {
     const excelMaxRowCount = 1048576;
     const api = getApi(this);
     const dataView = getDataView(this);
-    const aggregationResult = await api.getAggregations({
-      MenuId: getMenuItemId(dataView),
-      SessionFormIdentifier: getSessionId(this),
-      DataStructureEntityId: getDataStructureEntityId(dataView),
-      Filter: getUserFilters({ctx: dataView}),
-      FilterLookups: getUserFilterLookups(dataView),
-      MasterRowId: undefined,
-      AggregatedColumns: dataView.aggregationData.map(agg => ({
-        ColumnName: agg.columnId,
-        AggregationType: agg.type,
-      }))
-    });
     const tablePanelView = getTablePanelView(this);
     const getRowId = dataView.dataTable.getRowId.bind(dataView.dataTable);
-    const groupingColumns = tablePanelView?.groupingConfiguration?.orderedGroupingColumnSettings
-      .map(setting => setting.columnId);
+    const groupingColumnSettings = tablePanelView?.groupingConfiguration?.orderedGroupingColumnSettings
+      .map(setting => {return { 
+        id: setting.columnId,
+        groupingUnit: groupingUnitToString(setting.groupingUnit),
+        groupByLookupId: dataView.properties.find(prop => prop.id === setting.columnId)?.lookupId
+      }});
     if (isInfiniteScrollingActive(this)) {
       await api.getExcelFile({
         Grouping: {
           groups: [],
-          columns: groupingColumns },
-        AggregatedColumns: aggregationResult,
+          columnSettings: groupingColumnSettings },
+        AggregatedColumns: undefined,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -978,7 +972,7 @@ export class DataView implements IDataView {
           Filter: getUserFilters({ctx: this}),
           MenuId: getMenuItemId(this),
           DataStructureEntityId: getDataStructureEntityId(this),
-          Ordering: getUserOrdering(this),
+          OrderingList: getUserOrdering(this),
           RowLimit: excelMaxRowCount,
           RowOffset: 0,
           ColumnNames: getColumnNamesToLoad(this),
@@ -989,8 +983,8 @@ export class DataView implements IDataView {
       await api.getExcelFile({
         Grouping: {
           groups: toGroupNodes(this.clientSideGrouper.topLevelGroups, node => node.childRows.map(row => getRowId(row))),
-          columns: groupingColumns },
-        AggregatedColumns: aggregationResult,
+          columnSettings: groupingColumnSettings },
+        AggregatedColumns: undefined,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),

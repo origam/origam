@@ -442,8 +442,8 @@ export interface IApi {
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
-    Grouping: IGroupingInfo;
-    AggregatedColumns: IAggregationData[];
+    Grouping: IGroupingInfo | undefined;
+    AggregatedColumns: IAggregationData[] | undefined;
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
 }
@@ -451,7 +451,13 @@ export interface IApi {
 
 export interface IGroupingInfo {
   groups: IGroupNode[];
-  columns: string[];
+  columnSettings: IColumnSettings[];
+}
+
+export interface IColumnSettings {
+  id: string
+  groupingUnit: string | undefined;
+  groupByLookupId: string | undefined;
 }
 
 export interface IGroupNode {
@@ -465,7 +471,7 @@ export interface ILazyLoadedEntityInput {
   MenuId: string;
   DataStructureEntityId: string;
   Filter: string;
-  Ordering: IOrdering[];
+  OrderingList: IOrdering[];
   RowLimit: number;
   RowOffset: number;
   ColumnNames: string[];

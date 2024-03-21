@@ -852,8 +852,8 @@ export class OrigamAPI implements IApi {
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
-    Grouping: IGroupingInfo;
-    AggregatedColumns: IAggregationData[];
+    Grouping: IGroupingInfo | undefined;
+    AggregatedColumns: IAggregationData[] | undefined;
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any> {
     const response = await this.axiosInstance({
