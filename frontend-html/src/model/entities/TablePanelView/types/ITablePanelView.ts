@@ -66,6 +66,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   allTableProperties: IProperty[];
   propertyMap: Map<string, IProperty>;
 
+  property: IProperty | undefined;
+
   hiddenPropertyIds: Map<string, boolean>;
   aggregations: AggregationContainer;
 
@@ -86,6 +88,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectionRangeIndex0: number | undefined;
   selectionRangeIndex1: number | undefined;
   shiftPressed: boolean;
+  ctrlPressed: boolean;
   selectionTargetState: boolean;
   selectionInProgress: boolean;
 
@@ -96,6 +99,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   onWindowKeyUp(event: any): Generator;
 
   selectionCellHoveredId: any;
+
+  onMouseMoveOutsideCells(): void;
 
   onOutsideTableClick(): Generator;
 

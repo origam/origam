@@ -91,6 +91,8 @@ export class TablePanelView implements ITablePanelView {
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
 
+  @observable property: IProperty | undefined = undefined;
+
   @observable _currentTooltipText?: string = undefined;
   @computed get currentTooltipText() {
     return this._currentTooltipText;
@@ -262,6 +264,7 @@ export class TablePanelView implements ITablePanelView {
   lastSelectionRowIdUnderMouse: any = undefined;
   windowMouseMoveDeadPeriod = false;
   @observable shiftPressed = false;
+  @observable ctrlPressed = false;
   @observable selectionCellHoveredId: any = undefined;
   @observable selectionTargetState: boolean = true;
   @observable lastSelectedRowId: any = undefined;
@@ -401,14 +404,32 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onWindowKeyDown(event: any) {
-    if(event.key === 'Shift') {
-      this.shiftPressed = true;
+    switch (event.key) {
+      case 'Shift':
+        this.shiftPressed = true;
+        break;
+
+      case 'Control':
+        this.ctrlPressed = true;
+        break;
+
+      default:
+        break;
     }
   }
 
   *onWindowKeyUp(event: any) {
-    if(event.key === 'Shift') {
-      this.shiftPressed = false;
+    switch (event.key) {
+      case 'Shift':
+        this.shiftPressed = false;
+        break;
+
+      case 'Control':
+        this.ctrlPressed = false;
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -441,6 +462,10 @@ export class TablePanelView implements ITablePanelView {
         this.isScrollByKeyboard = false;
       });
     }
+  }
+
+  onMouseMoveOutsideCells() {
+    this.currentTooltipText = undefined;
   }
 
   dontHandleNextScroll() {

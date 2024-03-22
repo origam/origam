@@ -69,6 +69,7 @@ import {
   xCenter,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { T } from "utils/translation";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -116,10 +117,17 @@ function registerTooltipGetter(columnId: string) {
     w: cellClickableArea.width,
     h: cellClickableArea.height,
     handler(event: any) {
-      if (hasTooltip) {
-        tablePanelView.currentTooltipText = cellTextRendered;
-      } else {
+      tablePanelView.property = property;
+      const nonPrintableChar = tablePanelView.currentTooltipText?.startsWith('\t') ? '\v' : '\t'; // nonprintable chars so the tooltip always rerenders
+      if (cellTextRendered as string === "") {
         tablePanelView.currentTooltipText = undefined;
+      }
+      else if (!property.isLink) {
+        tablePanelView.currentTooltipText = hasTooltip ? nonPrintableChar + cellTextRendered : undefined;
+      }
+      else {
+        tablePanelView.currentTooltipText = nonPrintableChar + (hasTooltip ? cellTextRendered : "")
+        + '\n' + T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
       }
     },
   });
