@@ -1,6 +1,7 @@
 #region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,15 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+using System;
+using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public abstract class AbstractLookupInput
 {
-    public class LookupLabelsInput : AbstractLookupInput
-    {
-        [Required]
-        public object[] LabelIds { get; set; }
-    }
+    [RequiredNonDefault] public Guid LookupId { get; set; }
+    public Guid MenuId { get; set; } = Guid.Empty;
 }

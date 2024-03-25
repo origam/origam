@@ -1,6 +1,7 @@
 #region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,15 +18,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class LookupNewRecordInitialValuesInput : AbstractLookupRowDataInput
 {
-    public class LookupLabelsInput : AbstractLookupInput
-    {
-        [Required]
-        public object[] LabelIds { get; set; }
-    }
+    // key parameter name, value target field
+    public IDictionary<string, string> ParameterMappings { get; set; }
+    // key parameter name, value source field
+    public IDictionary<string, object> Parameters { get; set; }
+    public string SearchText { get; set; }
 }

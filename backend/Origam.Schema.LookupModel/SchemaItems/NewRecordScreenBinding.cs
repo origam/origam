@@ -153,9 +153,15 @@ public class NewRecordScreenBinding
         typeof(NewRecordScreenBindingParameterMapping)
     };
     #endregion
+
+    public NewRecordScreenBindingParameterMapping[] GetParameterMappings()
+    {
+        return ChildItems
+            .ToGeneric()
+            .OfType<NewRecordScreenBindingParameterMapping>()
+            .ToArray();
+    }
 }
-
-
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
 class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute 

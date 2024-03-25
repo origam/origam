@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:nrsbpm="http://schemas.origam.com/Origam.Schema.LookupModel.NewRecordScreenBindingParameterMapping/6.0.0">
+  <nrsbpm:NewRecordScreenBindingParameterMapping
+    asi:abstract="false"
+    x:id="8add99ac-9c64-4781-81ef-16b7af02fbcc"
+    asi:name="HuhuParameter-Number"
+    nrsbpm:parameterName="HuhuParameter"
+    nrsbpm:targetRootEntityField="Number" />
+</x:file>

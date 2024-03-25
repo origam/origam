@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -17,35 +18,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class LookupListInput : AbstractLookupRowDataInput
 {
-    public class LookupListInput 
-    {
-        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
-        public Guid DataStructureEntityId { get; set; }
-        public string Entity { get; set; }
-        [Required]
-        public string[] ColumnNames { get; set; }
-        [Required]
-        public string Property { get; set; }
-        public Guid Id { get; set; } = Guid.Empty;
-        [RequiredNonDefault]
-        public Guid LookupId { get; set; }
-        public IDictionary<string, object> Parameters { get; set; }
-        public bool ShowUniqueValues { get; set; }
-        public string SearchText { get; set; }
-        [Range(-1, 10_000)]
-        public int PageSize { get; set; } = -1;
-        [Range(1, 10_000)]
-        public int PageNumber { get; set; } = -1;
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-    }
+    [Required] public string[] ColumnNames { get; set; }
+    [Required] public string Property { get; set; }
+    public IDictionary<string, object> Parameters { get; set; }
+    public bool ShowUniqueValues { get; set; }
+    public string SearchText { get; set; }
+    [Range(-1, 10_000)] public int PageSize { get; set; } = -1;
+    [Range(1, 10_000)] public int PageNumber { get; set; } = -1;
 }
