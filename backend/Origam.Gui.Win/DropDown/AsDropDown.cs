@@ -570,6 +570,14 @@ namespace Origam.Gui.Win
 							_origamMetadata.SchemaExtensionId, null);
 					mapping.Name = parameterName;
 				}
+				foreach (SchemaItemParameter schemaItemParameter in DataLookup
+					         .ListDataStructure.Parameters)
+				{
+					var mapping =
+						_origamMetadata.NewItem<ColumnParameterMapping>(
+							_origamMetadata.SchemaExtensionId, null);
+					mapping.Name = schemaItemParameter.Name;
+				}
 			}
 
 			//Refill Parameter collection (and dictionary)
