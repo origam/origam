@@ -51,7 +51,7 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     public override string ItemType => CategoryConst;
 
     public override SchemaItemCollection ChildItems => new();
-    
+
     #endregion
     
     #region Properties

@@ -104,6 +104,8 @@ public class NewRecordScreenBinding
     {
         return newNode is AbstractDataLookup;
     }
+    
+    public override bool UseFolders => false;
 
     #endregion
 
