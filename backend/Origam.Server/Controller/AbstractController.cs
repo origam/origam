@@ -371,7 +371,7 @@ namespace Origam.Server.Controller
 
         protected CustomOrderings GetOrderings(List<InputRowOrdering> ordering)
         {
-            var orderings = ordering
+            var orderings = (ordering ?? new List<InputRowOrdering>())
                 .Select((inputOrdering, i) => 
                     new Ordering(
                         columnName: inputOrdering.ColumnId, 

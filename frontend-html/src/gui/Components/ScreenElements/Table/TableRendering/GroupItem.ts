@@ -207,35 +207,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   }
 
   get groupFilters() {
-    if (this.groupingUnit !== undefined) {
-      const momentValueStart = moment(this.columnValue);
-      const momentValueEnd = moment(this.columnValue);
-      switch (this.groupingUnit) {
-        case GroupingUnit.Year:
-          momentValueEnd.set({'year': momentValueStart.year() + 1});
-          break;
-        case GroupingUnit.Month:
-          momentValueEnd.set({'month': momentValueStart.month() + 1});
-          break;
-        case GroupingUnit.Day:
-          momentValueEnd.set({'day': momentValueStart.day() + 1});
-          break;
-        case GroupingUnit.Hour:
-          momentValueEnd.set({'hour': momentValueStart.hour() + 1});
-          break;
-        case GroupingUnit.Minute:
-          momentValueEnd.set({'minute': momentValueStart.minute() + 1});
-          break;
-        default:
-          throw new Error("Filter generation for groupingUnit:" + this.groupingUnit + " not implemented");
-      }
-      return [
-        toFilterItem(this.columnId, null, "gte", momentValueStart),
-        toFilterItem(this.columnId, null, "lt", momentValueEnd)
-      ];
-    } else {
-      return [toFilterItem(this.columnId, null, "eq", this.columnValue)]
-    }
+    return groupFilters(this.columnId, this.columnValue, this.groupingUnit);
   }
 
   composeGroupingFilter(): string {
@@ -276,4 +248,36 @@ function getAllParents(group: IGroupTreeNode) {
 function allChildGroups(group: IGroupTreeNode): IGroupTreeNode[] {
   const allChildGroups = group.childGroups.flatMap(childGroup => childGroup.allChildGroups)
   return [...group.childGroups, ...allChildGroups];
+}
+
+export function groupFilters(columnId: string, columnValue: any, groupingUnit: GroupingUnit | undefined) {
+  if (groupingUnit !== undefined) {
+    const momentValueStart = moment(columnValue);
+    const momentValueEnd = moment(columnValue);
+    switch (groupingUnit) {
+      case GroupingUnit.Year:
+        momentValueEnd.set({'year': momentValueStart.year() + 1});
+        break;
+      case GroupingUnit.Month:
+        momentValueEnd.set({'month': momentValueStart.month() + 1});
+        break;
+      case GroupingUnit.Day:
+        momentValueEnd.set({'day': momentValueStart.day() + 1});
+        break;
+      case GroupingUnit.Hour:
+        momentValueEnd.set({'hour': momentValueStart.hour() + 1});
+        break;
+      case GroupingUnit.Minute:
+        momentValueEnd.set({'minute': momentValueStart.minute() + 1});
+        break;
+      default:
+        throw new Error("Filter generation for groupingUnit:" + groupingUnit + " not implemented");
+    }
+    return [
+      toFilterItem(columnId, null, "gte", momentValueStart),
+      toFilterItem(columnId, null, "lt", momentValueEnd)
+    ];
+  } else {
+    return [toFilterItem(columnId, null, "eq", columnValue)]
+  }
 }

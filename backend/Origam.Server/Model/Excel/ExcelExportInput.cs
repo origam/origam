@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Origam.DA;
 using Origam.Server;
 using Origam.Server.Model.UIService;
 
@@ -43,4 +44,6 @@ public class ExcelExportInput
     public GetRowsInput LazyLoadedEntityInput { get; set; }
     
     public GroupingInfo Grouping { get; set; }
+    
+    public List<Aggregation> AggregatedColumns { get; set; }
 }

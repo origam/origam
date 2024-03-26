@@ -64,7 +64,10 @@ namespace Origam.Server
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
             ISheet sheet = workbook.CreateSheet("Data");
-            SetupSheetHeader(sheet, info);
+            var groupNames = info.Grouping
+                .ColumnSettings.Select(x => x.Id)
+                .ToList();
+            SetupSheetHeader(sheet, info, groupNames);
             
             int rowIndex = 0;
             foreach (var row in rows)
@@ -85,7 +88,10 @@ namespace Origam.Server
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
             ISheet sheet = workbook.CreateSheet("Data");
-            SetupSheetHeader(sheet, info);
+            var groupNames = info.Grouping
+                .ColumnSettings.Select(x => x.Id)
+                .ToList();
+            SetupSheetHeader(sheet, info, groupNames);
             bool isPkGuid
                 = info.Table.PrimaryKey[0].DataType == typeof(Guid);
             if (info.Grouping != null)
@@ -109,22 +115,96 @@ namespace Origam.Server
 
             return workbook;
         }
-        
-        public IWorkbook FillWorkBookGrouping( IWorkbook workbook,
+
+        public IWorkbook FillWorkBookGrouping(EntityExportInfo info, RootGroup rootGroup)
+        {
+            IWorkbook workbook = CreateWorkbook();
+            SetupDateCellStyle(workbook);
+            ISheet sheet = workbook.CreateSheet("Data");
+            List<string> groupNames = info.Grouping.ColumnSettings
+                .Select(x => x.Id)
+                .ToList();
+            SetupSheetHeader(sheet, info, groupNames);
+            int rowNumber = 1;
+            foreach (var group in rootGroup.GetGroups())
+            {
+                rowNumber = FillWorkBookGroupingRecursive(workbook, sheet, info,
+                    group, rowNumber);
+            }
+            return workbook;
+        }
+
+        private int FillWorkBookGroupingRecursive(IWorkbook workbook,
+            ISheet sheet, EntityExportInfo info, IGroup group,
+            int rowNumber)
+        {
+            if (RowLimitReached(rowNumber))
+            {
+                FillExportLimitExceeded(workbook, sheet, rowNumber);
+                return rowNumber;
+            }
+            AddGroupHeading(workbook, sheet, rowNumber, group.Level, group.ColumnValue);
+            rowNumber++;
+            int groupFirstRow = rowNumber;
+
+            var childGroups = group.GetGroups();
+            foreach (var childGroup in childGroups)
+            {
+                rowNumber = FillWorkBookGroupingRecursive(workbook, sheet, info,
+                    childGroup, rowNumber);
+            }
+
+            if (childGroups.Count == 0)
+            { 
+                var dataRow = info.Table.NewRow();
+                foreach (List<IEnumerable<object>> row in group.GetRows())
+                {
+                    if (RowLimitReached(rowNumber))
+                    {
+                        FillExportLimitExceeded(workbook, sheet, rowNumber);
+                        break;
+                    }
+                    List<object> values = row[0].ToList();
+                    for (int i = 0; i < info.Fields.Count; i++)
+                    {
+                        var columnName = info.Fields[i].FieldName;
+                        DataColumn column = info.Table.Columns[columnName];
+                        if (values[i] is string[] array && column.DataType == typeof(long))
+                        {
+                            dataRow[columnName] = array.Length;
+                        }
+                        else
+                        {
+                            dataRow[columnName] = values[i] == null 
+                                ? DBNull.Value 
+                                : values[i];
+                        }
+                    }
+                    AddRowToSheet(
+                        info, workbook, sheet, rowNumber, dataRow, columnOffset:group.Level + 1);
+                    rowNumber++;
+                }
+                rowNumber++;
+            }
+            sheet.GroupRow(groupFirstRow, rowNumber - 2);
+            return rowNumber;
+        }
+
+        public IWorkbook FillWorkBookGrouping(IWorkbook workbook,
             ISheet sheet, EntityExportInfo info,  bool isPkGuid)
         {
             int rowNumber = 1;
             int groupLevel = 0;
             foreach (var group in info.Grouping.Groups)
             {
-                rowNumber = FillWorkBookGroupingRecursive(
+               FillWorkBookGroupingRecursive(
                     workbook, sheet, info, group, isPkGuid, rowNumber, groupLevel);
             }
 
             return workbook;
         }
         
-        public int FillWorkBookGroupingRecursive( IWorkbook workbook,
+        private int FillWorkBookGroupingRecursive(IWorkbook workbook,
             ISheet sheet, EntityExportInfo info, GroupNode group,  bool isPkGuid,
             int rowNumber, int groupLevel)
         {
@@ -133,34 +213,39 @@ namespace Origam.Server
                 FillExportLimitExceeded(workbook, sheet, rowNumber);
                 return rowNumber;
             }
-            AddGroupHeading(workbook, sheet, rowNumber, groupLevel, group);
+            AddGroupHeading(workbook, sheet, rowNumber, groupLevel, group.Value);
             rowNumber++;
-            foreach (var rowId in group.RowIds)
-            {
-                if (RowLimitReached(rowNumber))
-                {
-                    FillExportLimitExceeded(workbook, sheet, rowNumber);
-                    return rowNumber;
-                }
-                DataRow row = GetDataRow(info, rowId, isPkGuid);
-                if (row != null)
-                {
-                    AddRowToSheet(
-                        info: info, 
-                        workbook: workbook, 
-                        sheet: sheet, 
-                        rowNumber: rowNumber, 
-                        row: row, 
-                        columnOffset: info.Grouping.ColumnSettings.Length);
-                    rowNumber++;
-                } 
-            }
+            int groupFirstRow = rowNumber;
             foreach (var childGroup in group.ChildGroups)
             {
                  rowNumber = FillWorkBookGroupingRecursive(
                     workbook, sheet, info, childGroup, isPkGuid, rowNumber, groupLevel + 1);
                 rowNumber++;
             }
+            if (group.RowIds.Length > 0)
+            {
+                foreach (var rowId in group.RowIds)
+                {
+                    if (RowLimitReached(rowNumber))
+                    {
+                        FillExportLimitExceeded(workbook, sheet, rowNumber);
+                        return rowNumber;
+                    }
+                    DataRow row = GetDataRow(info, rowId, isPkGuid);
+                    if (row != null)
+                    {
+                        AddRowToSheet(
+                            info: info, 
+                            workbook: workbook, 
+                            sheet: sheet, 
+                            rowNumber: rowNumber, 
+                            row: row, 
+                            columnOffset: info.Grouping.ColumnSettings.Length);
+                        rowNumber++;
+                    } 
+                }
+            }
+            sheet.GroupRow(groupFirstRow, rowNumber - 1);
             return rowNumber;
         }
 
@@ -248,11 +333,22 @@ namespace Origam.Server
         }
 
         private void AddGroupHeading (IWorkbook workbook, ISheet sheet,
-            int rowNumber,int groupLevel, GroupNode group)
+            int rowNumber, int groupLevel, object groupName)
         {
             IRow excelRow = sheet.CreateRow(rowNumber);
             ICell cell = excelRow.CreateCell(groupLevel);
-            SetCellValue(workbook, group.Value, cell);
+            SetTextBold(workbook, cell);
+            SetCellValue(workbook, groupName, cell);
+        }
+
+        private static void SetTextBold(IWorkbook workbook, ICell cell)
+        {
+            var font = workbook.CreateFont();
+            font.FontHeightInPoints = 11;
+            font.FontName = "Arial";
+            font.IsBold = true; 
+            cell.CellStyle = workbook.CreateCellStyle();
+            cell.CellStyle.SetFont(font);
         }
 
         private void AddCellToRow(
@@ -348,17 +444,19 @@ namespace Origam.Server
                 workbook, Resources.ExportLimitExceeded, cell);
         }
 
-        private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
+        private void SetupSheetHeader(ISheet sheet, EntityExportInfo info, List<string> groupNames)
         {
             IRow headerRow = sheet.CreateRow(0);
-            for (int i = 0; i < info.Grouping.ColumnSettings.Length; i++)
+            for (int i = 0; i < groupNames.Count; i++)
             {
-                headerRow.CreateCell(i).SetCellValue(info.Grouping.ColumnSettings[i].Id);
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(groupNames[i]);
+                SetTextBold(sheet.Workbook, cell);
             }
             for (int i = 0; i < info.Fields.Count; i++)
             {
                 EntityExportField field = info.Fields[i];
-                headerRow.CreateCell( info.Grouping.ColumnSettings.Length + i)
+                headerRow.CreateCell( groupNames.Count + i)
                     .SetCellValue(field.Caption);
             }
         }
@@ -468,6 +566,117 @@ namespace Origam.Server
                     cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
                 }
             }
+        }
+    }
+
+    public interface IGroup
+    {
+        EntityExportInfo ExportInfo { get; }
+        int Level { get; }
+        object ColumnValue { get; }
+        string ColumnId { get; }
+        IGroup Parent { get; }
+        public string ChildFilter { get; }
+        List<IGroup> GetGroups();
+        IEnumerable<object> GetRows();
+        List<IGroup> GetParentsIncludingThis();
+    }
+
+    public class RootGroup : IGroup
+    {
+        private readonly Func<IGroup, List<IGroup>> childGroupGetter;
+        public EntityExportInfo ExportInfo { get; }
+        public int Level { get; } = -1;
+        public object ColumnValue { get; }
+        public string ColumnId { get; }
+        public IGroup Parent { get; }
+        public string ChildFilter { get; }
+
+        public RootGroup(EntityExportInfo exportInfo, Func<IGroup, List<IGroup>> childGroupGetter)
+        {
+            this.childGroupGetter = childGroupGetter;
+            ExportInfo = exportInfo;
+            ChildFilter = ExportInfo.LazyLoadedEntityInput.Filter;
+        }
+        
+        public List<IGroup> GetGroups()
+        {
+            return childGroupGetter(this);
+        }
+
+        public IEnumerable<object> GetRows()
+        {
+            yield break;
+        }
+
+        public List<IGroup> GetParentsIncludingThis()
+        {
+            return new List<IGroup> { this };
+        }
+    }
+
+    class Group : IGroup
+    {
+        private readonly Func<IGroup, List<IGroup>> childGroupGetter;
+        private readonly Func<IGroup, IEnumerable<object>> childRowGetter;
+        private readonly int childLevel;
+
+        public EntityExportInfo ExportInfo { get; }
+        public int Level { get; }
+        public object ColumnValue { get; }
+        public string ColumnId { get; }
+        public IGroup Parent { get;} 
+        
+        public string ChildFilter => 
+            SetParameterValues(ExportInfo.Grouping.ColumnSettings[Level].Filter);
+
+        public Group(EntityExportInfo entityExportInfo, int level,
+            object columnValue, Func<IGroup, List<IGroup>> childGroupGetter, 
+            Func<IGroup, IEnumerable<object>> childRowGetter, IGroup parent)
+        {
+            ExportInfo = entityExportInfo;
+            Level = level;
+            childLevel = level + 1;
+            ColumnId = entityExportInfo.Grouping.ColumnSettings[level].Id;
+            ColumnValue = columnValue;
+            this.childGroupGetter = childGroupGetter;
+            this.childRowGetter = childRowGetter;
+            Parent = parent;
+        }
+
+        public List<IGroup> GetGroups()
+        {
+            return childLevel >= ExportInfo.Grouping.ColumnSettings.Length
+                ? new List<IGroup>()
+                : childGroupGetter(this);
+        }
+
+        public IEnumerable<object> GetRows()
+        {
+            return childRowGetter(this);
+        }
+
+        public List<IGroup> GetParentsIncludingThis()
+        {
+            List<IGroup> parents = new List<IGroup>{this};
+            IGroup parent = Parent;
+            while (parent != null)
+            {
+                parents.Add(parent);
+                parent = parent.Parent;
+            }
+            return parents;
+        }
+        
+        private string SetParameterValues(string filterWithPaceHolders)
+        {
+            foreach (var group in GetParentsIncludingThis().OfType<Group>())
+            {
+                filterWithPaceHolders = filterWithPaceHolders.Replace(
+                    $"{group.ColumnId}_placeHolder", group.ColumnValue.ToString());
+            }
+
+            return filterWithPaceHolders;
         }
     }
 }

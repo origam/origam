@@ -458,6 +458,8 @@ export interface IColumnSettings {
   id: string
   groupingUnit: string | undefined;
   groupByLookupId: string | undefined;
+  filter: string | undefined,
+  ordering: IOrdering[]
 }
 
 export interface IGroupNode {
@@ -471,7 +473,7 @@ export interface ILazyLoadedEntityInput {
   MenuId: string;
   DataStructureEntityId: string;
   Filter: string;
-  OrderingList: IOrdering[];
+  Ordering: IOrdering[];
   RowLimit: number;
   RowOffset: number;
   ColumnNames: string[];

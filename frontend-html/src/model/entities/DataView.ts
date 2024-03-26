@@ -89,10 +89,12 @@ import { GridFocusManager } from "model/entities/GridFocusManager";
 import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 import { TabIndex } from "./TabIndexOwner";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { IGroupNode } from "model/entities/types/IApi";
+import { IColumnSettings, IGroupNode } from "model/entities/types/IApi";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
-import { IAggregationInfo } from "model/entities/types/IAggregationInfo";
 import { groupingUnitToString } from "model/entities/types/GroupingUnit";
+import { groupFilters } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import { joinWithAND } from "model/entities/OrigamApiHelpers";
+import { IGroupingSettings } from "model/entities/types/IGroupingConfiguration";
 
 class SavedViewState {
   constructor(
@@ -951,12 +953,7 @@ export class DataView implements IDataView {
     const dataView = getDataView(this);
     const tablePanelView = getTablePanelView(this);
     const getRowId = dataView.dataTable.getRowId.bind(dataView.dataTable);
-    const groupingColumnSettings = tablePanelView?.groupingConfiguration?.orderedGroupingColumnSettings
-      .map(setting => {return { 
-        id: setting.columnId,
-        groupingUnit: groupingUnitToString(setting.groupingUnit),
-        groupByLookupId: dataView.properties.find(prop => prop.id === setting.columnId)?.lookupId
-      }});
+    const groupingColumnSettings = getGroupingSettings(dataView);
     if (isInfiniteScrollingActive(this)) {
       await api.getExcelFile({
         Grouping: {
@@ -972,10 +969,10 @@ export class DataView implements IDataView {
           Filter: getUserFilters({ctx: this}),
           MenuId: getMenuItemId(this),
           DataStructureEntityId: getDataStructureEntityId(this),
-          OrderingList: getUserOrdering(this),
+          Ordering: getUserOrdering(this),
           RowLimit: excelMaxRowCount,
           RowOffset: 0,
-          ColumnNames: getColumnNamesToLoad(this),
+          ColumnNames: fields.map(field => field.FieldName),
           FilterLookups: getUserFilterLookups(this),
         },
       });
@@ -1004,6 +1001,44 @@ export class DataView implements IDataView {
         return map;
       }, {});
   }
+}
+
+function getFilters(groupSettings: IGroupingSettings[], i: number, dataView: IDataView, currentSettings: IGroupingSettings) {
+  const filters = groupSettings.slice(0, i+1)
+    .flatMap(settings => groupFilters(
+      settings.columnId, settings.columnId + "_placeHolder", settings.groupingUnit))
+  const joinedGroupFilters = joinWithAND(filters);
+  const userFilters = getUserFilters({ctx: dataView, excludePropertyId: currentSettings.columnId});
+
+  const finalFilters = userFilters
+    ? joinWithAND([joinedGroupFilters, userFilters])
+    : joinedGroupFilters;
+  return finalFilters;
+}
+
+function getGroupingSettings(dataView: IDataView): IColumnSettings[] {
+  const tablePanelView = getTablePanelView(dataView)
+  const groupSettings = tablePanelView?.groupingConfiguration?.orderedGroupingColumnSettings;
+  if (!groupSettings) {
+    return [];
+  }
+  return groupSettings
+    ?.map((currentSettings, i) => {
+      const finalFilters = getFilters(groupSettings, i, dataView, currentSettings);
+      const lookupId = dataView.properties.find(prop => prop.id === currentSettings.columnId)?.lookupId;
+      const ordering: IOrdering = {
+        columnId: currentSettings.columnId,
+        direction: IOrderByDirection.ASC,
+        lookupId: lookupId,
+      };
+      return {
+        id: currentSettings.columnId,
+        groupingUnit: groupingUnitToString(currentSettings.groupingUnit),
+        groupByLookupId: lookupId,
+        ordering: [ordering],
+        filter: finalFilters
+      }
+    });
 }
 
 function toGroupNodes(nodes: IGroupTreeNode [], getRowIds: (node: IGroupTreeNode) => string[]){

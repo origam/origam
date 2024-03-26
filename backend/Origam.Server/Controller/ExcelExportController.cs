@@ -82,9 +82,10 @@ namespace Origam.Server.Controller
                     Entity = input.Entity,
                     Fields = input.Fields,
                     RowIds = input.RowIds,
-                    SessionFormIdentifier = input.SessionFormIdentifier.ToString(),
+                    SessionFormIdentifier = input.SessionFormIdentifier,
                     Store = sessionStore,
-                    LazyLoadedEntityInput = input.LazyLoadedEntityInput
+                    LazyLoadedEntityInput = input.LazyLoadedEntityInput,
+                    AggregatedColumns = input.AggregatedColumns
                 };
 
                 return GetExcelFile(entityExportInfo);
@@ -155,16 +156,23 @@ namespace Origam.Server.Controller
                        entityExportInfo, 
                        readeResult.DataStructureQuery
                         .GetAllQueryColumns()
-                        .Select(x =>x.Name)
+                        .Select(x => x.Name)
                         .ToList(),
                        readeResult.Rows));               
             }
             bool isLazyLoaded =
                 entityExportInfo.Store.IsLazyLoadedEntity(entityExportInfo.Entity);
 
+            var input = entityExportInfo.LazyLoadedEntityInput;
+            IWorkbook workBook;
             if (isLazyLoaded)
             {
-                ILazyRowLoadInput input = entityExportInfo.LazyLoadedEntityInput;
+                if (entityExportInfo.Grouping != null)
+                {
+                    var rootGroup = new RootGroup(entityExportInfo, GetGroups);
+                    workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo, rootGroup);
+                    return Result.Ok<IWorkbook, IActionResult>(workBook);
+                }
 
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
@@ -177,8 +185,114 @@ namespace Origam.Server.Controller
                             .ToList(),
                         readeResult.Rows));
             }
-            IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
-            return Result.Ok<IWorkbook, IActionResult>(workBook) ;
+            workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
+            return Result.Ok<IWorkbook, IActionResult>(workBook);
+        }
+
+        private IEnumerable<object> GetRows(IGroup group)
+        {
+            int rowOffset = 0;
+            int rowLimit = 1000;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var rows = GetRows(group, rowOffset, rowLimit);
+                if (rows.Any())
+                {
+                    rowOffset += rowLimit;
+                    yield return rows;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private IEnumerable<object> GetRows(IGroup group, int rowOffset, int rowLimit)
+        {
+            var lazyInput = group.ExportInfo.LazyLoadedEntityInput;
+            var input = new GetRowsInput
+            {
+                MenuId = lazyInput.MenuId,
+                DataStructureEntityId = lazyInput.DataStructureEntityId,
+                Filter = group.ChildFilter,
+                Parameters = lazyInput.Parameters,
+                FilterLookups = lazyInput.FilterLookups,
+                Ordering = lazyInput.Ordering,
+                RowLimit = rowLimit,
+                RowOffset = rowOffset,
+                ColumnNames = group.ExportInfo.Fields
+                    .Select(x => x.FieldName)
+                    .ToArray(),
+                MasterRowId = Guid.Empty,
+                SessionFormIdentifier = lazyInput.SessionFormIdentifier
+            };
+
+            var sessionStore = sessionObjects.SessionManager.GetSession(
+                input.SessionFormIdentifier);
+             
+            Result<IEnumerable<object>, IActionResult> rows = 
+                sessionStore is WorkQueueSessionStore workQueueSessionStore
+                    ? WorkQueueGetRowsGetRowsQuery(input,
+                            workQueueSessionStore)
+                        .Bind(dataStructureQuery =>
+                            ExecuteDataReader(
+                                dataStructureQuery: dataStructureQuery,
+                                methodId: input.MenuId))
+                    : EntityIdentificationToEntityData(input)
+                        .Bind(entityData => GetRowsGetQuery(input, entityData))
+                        .Bind(dataStructureQuery =>
+                            ExecuteDataReader(
+                                dataStructureQuery: dataStructureQuery,
+                                methodId: input.MenuId));
+            if (rows.IsSuccess)
+            {
+                return rows.Value;
+            }
+
+            throw new Exception();
+        }
+
+        private List<IGroup> GetGroups(IGroup group)
+        {
+            var entityExportInfo = group.ExportInfo;
+            var childGroupLevel = group.Level + 1;
+            var input = entityExportInfo.LazyLoadedEntityInput;
+            ColumnSettings columnSettings = entityExportInfo.Grouping.ColumnSettings[childGroupLevel];
+            GetGroupsInput groupsInput = new GetGroupsInput
+            {
+                MenuId = input.MenuId,
+                DataStructureEntityId = input.DataStructureEntityId,
+                Filter = group.ChildFilter,  
+                Ordering = columnSettings.Ordering,
+                RowLimit = int.MaxValue,
+                GroupBy = columnSettings.Id,
+                GroupingUnit = columnSettings.GroupingUnit,
+                MasterRowId = Guid.Empty,
+                GroupByLookupId = columnSettings.GroupByLookupId,
+                SessionFormIdentifier = entityExportInfo.SessionFormIdentifier,
+                AggregatedColumns = entityExportInfo.AggregatedColumns,
+                FilterLookups = input.FilterLookups,
+            };
+            var groups = EntityIdentificationToEntityData(input)
+                .Bind(entityData => 
+                    GetRowsGetGroupQuery(groupsInput, entityData))
+                .Bind(ExecuteDataReaderGetPairs);
+            if (groups.IsSuccess)
+            {
+                return groups.Value
+                    .Select(groupDict =>
+                        new Group(
+                            level: childGroupLevel,
+                            parent: group,
+                            entityExportInfo: entityExportInfo,
+                            childRowGetter: GetRows,
+                            childGroupGetter: GetGroups,
+                            columnValue: groupDict[columnSettings.Id]))
+                    .ToList<IGroup>();
+            }
+            throw new Exception(groups.Error.ToString());
         }
     }
 }

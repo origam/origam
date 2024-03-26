@@ -40,9 +40,6 @@ namespace Origam.Server.Model.UIService
         public Dictionary<string, string> Parameters { get; set; }
         public Dictionary<string, Guid> FilterLookups { get; set; }
         public List<InputRowOrdering> Ordering { get; set; }
-
-        // public List<InputRowOrdering> OrderingList => Ordering;
-
         [Required]
         public int RowLimit { get; set; }        
         public int RowOffset { get; set; }

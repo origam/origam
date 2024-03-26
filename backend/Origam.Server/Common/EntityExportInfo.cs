@@ -43,6 +43,8 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Origam.DA;
+using Origam.Server.Model.UIService;
 
 namespace Origam.Server
 {
@@ -51,7 +53,6 @@ namespace Origam.Server
         private string _entity;
         private List<EntityExportField> _fields = new List<EntityExportField>();
         private List<object> _rowIds = new List<object>();
-        private string _sessionFormIdentifier;
         private SessionStore _ss;
 
         public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
@@ -74,11 +75,7 @@ namespace Origam.Server
             set { _rowIds = value; }
         }
 
-        public string SessionFormIdentifier
-        {
-            get { return _sessionFormIdentifier; }
-            set { _sessionFormIdentifier = value; }
-        }
+        public Guid SessionFormIdentifier { get; set; }
 
         public DataTable Table
         {
@@ -111,6 +108,7 @@ namespace Origam.Server
         }
 
         public GroupingInfo Grouping { get; set; }
+        public List<Aggregation> AggregatedColumns { get; set; }
     }
     
     public class GroupingInfo
@@ -132,5 +130,7 @@ namespace Origam.Server
         public string Id { get; set; }
         public string GroupingUnit { get; set; }
         public Guid GroupByLookupId { get; set; }
+        public string Filter { get; set; }
+        public List<InputRowOrdering>  Ordering { get; set; }
     }
 }
