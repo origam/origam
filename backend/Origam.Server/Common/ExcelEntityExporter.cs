@@ -332,7 +332,7 @@ namespace Origam.Server
         private static void SetTextBold(IWorkbook workbook, ICell cell)
         {
             var font = workbook.CreateFont();
-            font.FontHeightInPoints = 11;
+            font.FontHeightInPoints = 10;
             font.FontName = "Arial";
             font.IsBold = true; 
             cell.CellStyle = workbook.CreateCellStyle();
