@@ -92,11 +92,9 @@ namespace Origam.Server
                 .ColumnSettings.Select(x => x.Id)
                 .ToList();
             SetupSheetHeader(sheet, info, groupNames);
-            bool isPkGuid
-                = info.Table.PrimaryKey[0].DataType == typeof(Guid);
             if (!info.Grouping.IsEmpty)
             {
-                return FillWorkBookGrouping(workbook, sheet, info, isPkGuid);
+                return FillWorkBookGrouping(workbook, sheet, info);
             }
             for (int rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
             {
@@ -106,7 +104,7 @@ namespace Origam.Server
                     break;
                 }
 
-                DataRow row = GetDataRow(info, rowNumber, isPkGuid);
+                DataRow row = GetDataRow(info, rowNumber);
                 if (row != null)
                 {
                     AddRowToSheet(info, workbook, sheet, rowNumber, row);
@@ -191,21 +189,21 @@ namespace Origam.Server
         }
 
         public IWorkbook FillWorkBookGrouping(IWorkbook workbook,
-            ISheet sheet, EntityExportInfo info,  bool isPkGuid)
+            ISheet sheet, EntityExportInfo info)
         {
             int rowNumber = 1;
             int groupLevel = 0;
             foreach (var group in info.Grouping.Groups)
             {
                FillWorkBookGroupingRecursive(
-                    workbook, sheet, info, group, isPkGuid, rowNumber, groupLevel);
+                    workbook, sheet, info, group, rowNumber, groupLevel);
             }
 
             return workbook;
         }
         
         private int FillWorkBookGroupingRecursive(IWorkbook workbook,
-            ISheet sheet, EntityExportInfo info, GroupNode group,  bool isPkGuid,
+            ISheet sheet, EntityExportInfo info, GroupNode group,
             int rowNumber, int groupLevel)
         {
             if (RowLimitReached(rowNumber))
@@ -219,7 +217,7 @@ namespace Origam.Server
             foreach (var childGroup in group.ChildGroups)
             {
                  rowNumber = FillWorkBookGroupingRecursive(
-                    workbook, sheet, info, childGroup, isPkGuid, rowNumber, groupLevel + 1);
+                    workbook, sheet, info, childGroup, rowNumber, groupLevel + 1);
                 rowNumber++;
             }
             if (group.RowIds.Length > 0)
@@ -231,7 +229,7 @@ namespace Origam.Server
                         FillExportLimitExceeded(workbook, sheet, rowNumber);
                         return rowNumber;
                     }
-                    DataRow row = GetDataRow(info, rowId, isPkGuid);
+                    DataRow row = GetDataRow(info, rowId);
                     if (row != null)
                     {
                         AddRowToSheet(
@@ -469,14 +467,15 @@ namespace Origam.Server
         }
 
         private DataRow GetDataRow(
-            EntityExportInfo info, int rowNumber, bool isPkGuid)
+            EntityExportInfo info, int rowNumber)
         {
             object rowId = info.RowIds[rowNumber - 1];
-            return GetDataRow(info, rowId, isPkGuid);
+            return GetDataRow(info, rowId);
         }
         private DataRow GetDataRow(
-            EntityExportInfo info, object rowId, bool isPkGuid)
+            EntityExportInfo info, object rowId)
         {
+            bool isPkGuid = info.Table.PrimaryKey[0].DataType == typeof(Guid);
             if (isPkGuid && (rowId is string stringRowId))
             {
                 rowId = new Guid(stringRowId);
@@ -579,7 +578,6 @@ namespace Origam.Server
         public string ChildFilter { get; }
         List<IGroup> GetGroups();
         IEnumerable<object> GetRows();
-        List<IGroup> GetParentsIncludingThis();
     }
 
     public class RootGroup : IGroup
@@ -607,11 +605,6 @@ namespace Origam.Server
         public IEnumerable<object> GetRows()
         {
             yield break;
-        }
-
-        public List<IGroup> GetParentsIncludingThis()
-        {
-            return new List<IGroup> { this };
         }
     }
 
@@ -656,7 +649,7 @@ namespace Origam.Server
             return childRowGetter(this);
         }
 
-        public List<IGroup> GetParentsIncludingThis()
+        private List<IGroup> GetParentsIncludingThis()
         {
             List<IGroup> parents = new List<IGroup>{this};
             IGroup parent = Parent;
