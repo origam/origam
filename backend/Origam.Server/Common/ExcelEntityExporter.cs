@@ -62,19 +62,18 @@ namespace Origam.Server
         public IWorkbook FillWorkBook(EntityExportInfo info, List<string> columns, IEnumerable<IEnumerable<object>> rows)
         {
             ISheet sheet = InitSheet(info);
-            IWorkbook workbook = sheet.Workbook;
             int rowIndex = 0;
             foreach (var row in rows)
             {
                 if (RowLimitReached(rowIndex))
                 {
-                    FillExportLimitExceeded(workbook, sheet, rowIndex);
+                    FillExportLimitExceeded(sheet, rowIndex);
                     break;
                 }
                 rowIndex++;
-                AddRowToSheet(info, workbook, sheet, rowIndex, columns, row.ToList());
+                AddRowToSheet(info, sheet, rowIndex, columns, row.ToList());
             }
-            return workbook;
+            return sheet.Workbook;
         }
 
         private ISheet InitSheet(EntityExportInfo info)
@@ -95,14 +94,14 @@ namespace Origam.Server
             {
                 if (RowLimitReached(rowNumber))
                 {
-                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    FillExportLimitExceeded(sheet, rowNumber);
                     break;
                 }
 
                 DataRow row = GetDataRow(info, rowNumber);
                 if (row != null)
                 {
-                    AddRowToSheet(info, workbook, sheet, rowNumber, row);
+                    AddRowToSheet(info, sheet, rowNumber, row);
                 }
             }
 
@@ -139,33 +138,32 @@ namespace Origam.Server
         public IWorkbook FillWorkBookGrouping(EntityExportInfo info, RootGroup rootGroup)
         {
             ISheet sheet = InitSheet(info);
-            IWorkbook workbook = sheet.Workbook;
             int rowNumber = 1;
             foreach (var group in rootGroup.GetGroups())
             {
-                rowNumber = FillWorkBookGroupingRecursive(workbook, sheet, info,
+                rowNumber = FillWorkBookGroupingRecursive(sheet, info,
                     group, rowNumber);
             }
-            return workbook;
+            return sheet.Workbook;
         }
 
-        private int FillWorkBookGroupingRecursive(IWorkbook workbook,
+        private int FillWorkBookGroupingRecursive(
             ISheet sheet, EntityExportInfo info, IGroup group,
             int rowNumber)
         {
             if (RowLimitReached(rowNumber))
             {
-                FillExportLimitExceeded(workbook, sheet, rowNumber);
+                FillExportLimitExceeded(sheet, rowNumber);
                 return rowNumber;
             }
-            AddGroupHeading(workbook, sheet, rowNumber, group.Level, group.ColumnValue);
+            AddGroupHeading(sheet, rowNumber, group.Level, group.ColumnValue);
             rowNumber++;
             int groupFirstRow = rowNumber;
 
             var childGroups = group.GetGroups();
             foreach (var childGroup in childGroups)
             {
-                rowNumber = FillWorkBookGroupingRecursive(workbook, sheet, info,
+                rowNumber = FillWorkBookGroupingRecursive(sheet, info,
                     childGroup, rowNumber);
             }
 
@@ -180,13 +178,12 @@ namespace Origam.Server
         private int AddRows(ISheet sheet, EntityExportInfo info,
             IGroup group, int rowNumber)
         {
-            IWorkbook workbook = sheet.Workbook;
             var dataRow = info.Table.NewRow();
             foreach (IEnumerable<object> row in group.GetRows())
             {
                 if (RowLimitReached(rowNumber))
                 {
-                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    FillExportLimitExceeded(sheet, rowNumber);
                     break;
                 }
                     
@@ -207,7 +204,7 @@ namespace Origam.Server
                     }
                 }
                 AddRowToSheet(
-                    info, workbook, sheet, rowNumber, dataRow, columnOffset:group.Level + 1);
+                    info, sheet, rowNumber, dataRow, columnOffset:group.Level + 1);
                 rowNumber++;
             }
             rowNumber++;
@@ -222,29 +219,28 @@ namespace Origam.Server
             int groupLevel = 0;
             foreach (var group in info.Grouping.Groups)
             {
-               FillWorkBookGroupingRecursive(
-                    workbook, sheet, info, group, rowNumber, groupLevel);
+               FillWorkBookGroupingRecursive(sheet, info, group, rowNumber, groupLevel);
             }
 
             return workbook;
         }
         
-        private int FillWorkBookGroupingRecursive(IWorkbook workbook,
+        private int FillWorkBookGroupingRecursive(
             ISheet sheet, EntityExportInfo info, GroupNode group,
             int rowNumber, int groupLevel)
         {
             if (RowLimitReached(rowNumber))
             {
-                FillExportLimitExceeded(workbook, sheet, rowNumber);
+                FillExportLimitExceeded(sheet, rowNumber);
                 return rowNumber;
             }
-            AddGroupHeading(workbook, sheet, rowNumber, groupLevel, group.Value);
+            AddGroupHeading( sheet, rowNumber, groupLevel, group.Value);
             rowNumber++;
             int groupFirstRow = rowNumber;
             foreach (var childGroup in group.ChildGroups)
             {
                  rowNumber = FillWorkBookGroupingRecursive(
-                    workbook, sheet, info, childGroup, rowNumber, groupLevel + 1);
+                    sheet, info, childGroup, rowNumber, groupLevel + 1);
                  rowNumber++;
             }
             if (group.RowIds.Length > 0)
@@ -260,12 +256,11 @@ namespace Origam.Server
         private int AddRows(ISheet sheet, EntityExportInfo info,
             GroupNode group, int rowNumber)
         {
-            IWorkbook workbook = sheet.Workbook;
             foreach (var rowId in group.RowIds)
             {
                 if (RowLimitReached(rowNumber))
                 {
-                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    FillExportLimitExceeded(sheet, rowNumber);
                     return rowNumber;
                 }
                 DataRow row = GetDataRow(info, rowId);
@@ -273,7 +268,6 @@ namespace Origam.Server
                 {
                     AddRowToSheet(
                         info: info, 
-                        workbook: workbook, 
                         sheet: sheet, 
                         rowNumber: rowNumber, 
                         row: row, 
@@ -304,7 +298,7 @@ namespace Origam.Server
         }
 
         private void AddRowToSheet(
-            EntityExportInfo info, IWorkbook workbook, ISheet sheet,
+            EntityExportInfo info, ISheet sheet,
             int rowNumber, List<string> columns, List<object> row)
         {
             if (ExportFormat == ExcelFormat.XLS && rowNumber >= 65536)
@@ -315,7 +309,7 @@ namespace Origam.Server
             IRow excelRow = sheet.CreateRow(rowNumber);
             for (int i = 0; i < info.Fields.Count; i++)
             {
-                AddCellToRow(info, workbook, excelRow, i, columns, row);
+                AddCellToRow(info, sheet.Workbook, excelRow, i, columns, row);
             }
         }
         
@@ -352,7 +346,7 @@ namespace Origam.Server
         }
 
         private void AddRowToSheet(
-            EntityExportInfo info, IWorkbook workbook, ISheet sheet,
+            EntityExportInfo info, ISheet sheet,
             int rowNumber, DataRow row, int columnOffset = 0)
         {
             IRow excelRow = sheet.CreateRow(rowNumber);
@@ -360,7 +354,7 @@ namespace Origam.Server
             {
                 AddCellToRow(
                     info: info,
-                    workbook: workbook, 
+                    workbook: sheet.Workbook, 
                     excelRow: excelRow, 
                     dataColumnIndex: i, 
                     excelColumnIndex: columnOffset + i, 
@@ -368,13 +362,13 @@ namespace Origam.Server
             }
         }
 
-        private void AddGroupHeading (IWorkbook workbook, ISheet sheet,
+        private void AddGroupHeading (ISheet sheet,
             int rowNumber, int groupLevel, object groupName)
         {
             IRow excelRow = sheet.CreateRow(rowNumber);
             ICell cell = excelRow.CreateCell(groupLevel);
-            SetTextBold(workbook, cell);
-            SetCellValue(workbook, groupName, cell);
+            SetTextBold(sheet.Workbook, cell);
+            SetCellValue(sheet.Workbook, groupName, cell);
         }
 
         private static void SetTextBold(IWorkbook workbook, ICell cell)
@@ -471,13 +465,11 @@ namespace Origam.Server
             }
         }
 
-        private void FillExportLimitExceeded(
-            IWorkbook workbook, ISheet sheet, int rowNumber)
+        private void FillExportLimitExceeded(ISheet sheet, int rowNumber)
         {
             IRow excelRow = sheet.CreateRow(rowNumber);
             ICell cell = excelRow.CreateCell(0);
-            SetCellValue(
-                workbook, Resources.ExportLimitExceeded, cell);
+            SetCellValue(sheet.Workbook, Resources.ExportLimitExceeded, cell);
         }
 
         private void SetupSheetHeader(ISheet sheet, EntityExportInfo info, List<string> groupNames)
