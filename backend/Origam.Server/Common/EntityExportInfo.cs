@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Linq;
 using Origam.DA;
 using Origam.Server.Model.UIService;
 
@@ -118,6 +119,9 @@ namespace Origam.Server
         public ColumnSettings[] ColumnSettings { get; set; }
         
         public bool IsEmpty => ColumnSettings.Length == 0;
+        
+        public List<string> GroupNames  => ColumnSettings.Select(x => x.Id)
+            .ToList();
     }
     
     public class GroupNode

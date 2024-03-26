@@ -185,7 +185,14 @@ namespace Origam.Server.Controller
                             .ToList(),
                         readeResult.Rows));
             }
-            workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
+            if (!entityExportInfo.Grouping.IsEmpty)
+            {
+                workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo);
+            }
+            else
+            {
+                workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
+            }
             return Result.Ok<IWorkbook, IActionResult>(workBook);
         }
 

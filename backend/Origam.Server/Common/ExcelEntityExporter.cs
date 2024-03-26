@@ -61,14 +61,8 @@ namespace Origam.Server
 
         public IWorkbook FillWorkBook(EntityExportInfo info, List<string> columns, IEnumerable<IEnumerable<object>> rows)
         {
-            IWorkbook workbook = CreateWorkbook();
-            SetupDateCellStyle(workbook);
-            ISheet sheet = workbook.CreateSheet("Data");
-            var groupNames = info.Grouping
-                .ColumnSettings.Select(x => x.Id)
-                .ToList();
-            SetupSheetHeader(sheet, info, groupNames);
-            
+            ISheet sheet = InitSheet(info);
+            IWorkbook workbook = sheet.Workbook;
             int rowIndex = 0;
             foreach (var row in rows)
             {
@@ -83,19 +77,19 @@ namespace Origam.Server
             return workbook;
         }
 
-        public IWorkbook FillWorkBook(EntityExportInfo info)
+        private ISheet InitSheet(EntityExportInfo info)
         {
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
             ISheet sheet = workbook.CreateSheet("Data");
-            var groupNames = info.Grouping
-                .ColumnSettings.Select(x => x.Id)
-                .ToList();
-            SetupSheetHeader(sheet, info, groupNames);
-            if (!info.Grouping.IsEmpty)
-            {
-                return FillWorkBookGrouping(workbook, sheet, info);
-            }
+            SetupSheetHeader(sheet, info, info.Grouping.GroupNames);
+            return sheet;
+        }
+
+        public IWorkbook FillWorkBook(EntityExportInfo info)
+        {
+            ISheet sheet = InitSheet(info);
+            IWorkbook workbook = sheet.Workbook;
             for (int rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
             {
                 if (RowLimitReached(rowNumber))
@@ -116,13 +110,8 @@ namespace Origam.Server
 
         public IWorkbook FillWorkBookGrouping(EntityExportInfo info, RootGroup rootGroup)
         {
-            IWorkbook workbook = CreateWorkbook();
-            SetupDateCellStyle(workbook);
-            ISheet sheet = workbook.CreateSheet("Data");
-            List<string> groupNames = info.Grouping.ColumnSettings
-                .Select(x => x.Id)
-                .ToList();
-            SetupSheetHeader(sheet, info, groupNames);
+            ISheet sheet = InitSheet(info);
+            IWorkbook workbook = sheet.Workbook;
             int rowNumber = 1;
             foreach (var group in rootGroup.GetGroups())
             {
@@ -188,9 +177,10 @@ namespace Origam.Server
             return rowNumber;
         }
 
-        public IWorkbook FillWorkBookGrouping(IWorkbook workbook,
-            ISheet sheet, EntityExportInfo info)
+        public IWorkbook FillWorkBookGrouping(EntityExportInfo info)
         {
+            ISheet sheet = InitSheet(info);
+            IWorkbook workbook = sheet.Workbook;
             int rowNumber = 1;
             int groupLevel = 0;
             foreach (var group in info.Grouping.Groups)
