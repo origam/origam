@@ -959,7 +959,7 @@ export class DataView implements IDataView {
         Grouping: {
           groups: [],
           columnSettings: groupingColumnSettings },
-        AggregatedColumns: undefined,
+        Aggregations: undefined,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -981,7 +981,7 @@ export class DataView implements IDataView {
         Grouping: {
           groups: toGroupNodes(this.clientSideGrouper.topLevelGroups, node => node.childRows.map(row => getRowId(row))),
           columnSettings: groupingColumnSettings },
-        AggregatedColumns: undefined,
+        Aggregations: dataView.aggregationData,
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),

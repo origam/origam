@@ -443,7 +443,7 @@ export interface IApi {
     SessionFormIdentifier: string;
     RowIds: any[];
     Grouping: IGroupingInfo | undefined;
-    AggregatedColumns: IAggregationData[] | undefined;
+    Aggregations: IAggregationData[] | undefined;
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any>;
 }

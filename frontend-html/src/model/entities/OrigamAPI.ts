@@ -853,7 +853,7 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string;
     RowIds: any[];
     Grouping: IGroupingInfo | undefined;
-    AggregatedColumns: IAggregationData[] | undefined;
+    Aggregations: IAggregationData[] | undefined;
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
   }): Promise<any> {
     const response = await this.axiosInstance({
