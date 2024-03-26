@@ -45,5 +45,5 @@ public class ExcelExportInput
     
     public GroupingInfo Grouping { get; set; }
     
-    public List<Aggregation> AggregatedColumns { get; set; }
+    public List<AggregationData> Aggregations { get; set; }
 }

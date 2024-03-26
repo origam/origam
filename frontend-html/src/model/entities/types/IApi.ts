@@ -24,6 +24,7 @@ import { IAboutInfo } from "./IAboutInfo";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IAggregation } from "model/entities/types/IAggregation";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -467,6 +468,7 @@ export interface IGroupNode {
   value: any;
   childGroups: IGroupNode[];
   rowIds: string[] | undefined;
+  aggregations: IAggregationData[] | undefined;
 }
 
 export interface ILazyLoadedEntityInput {

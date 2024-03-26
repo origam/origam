@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AggregationType } from "./AggregationType";
+import { IAggregation } from "model/entities/types/IAggregation";
 
 export interface IAggregationInfo {
   ColumnName: string;
@@ -26,4 +27,12 @@ export interface IAggregationInfo {
 
 export interface IAggregationData extends IAggregationInfo {
   Value: number;
+}
+
+export function toAggregationData(aggregation: IAggregation): IAggregationData{
+  return {
+    ColumnName: aggregation.columnId,
+    AggregationType: aggregation.type,
+    Value: aggregation.value
+  }
 }

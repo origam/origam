@@ -110,7 +110,9 @@ namespace Origam.Server
         }
 
         public GroupingInfo Grouping { get; set; }
-        public List<Aggregation> AggregatedColumns { get; set; }
+        
+        public List<AggregationData> Aggregations { get; set; }
+        
     }
     
     public class GroupingInfo
@@ -133,6 +135,7 @@ namespace Origam.Server
         public GroupNode[] ChildGroups { get; set; }
         [Required]
         public string[] RowIds { get; set; }
+        public List<AggregationData> Aggregations { get; set; }
     }
 
     public class ColumnSettings

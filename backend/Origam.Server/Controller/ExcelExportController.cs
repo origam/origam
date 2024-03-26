@@ -86,7 +86,7 @@ namespace Origam.Server.Controller
                     SessionFormIdentifier = input.SessionFormIdentifier,
                     Store = sessionStore,
                     LazyLoadedEntityInput = input.LazyLoadedEntityInput,
-                    AggregatedColumns = input.AggregatedColumns
+                    Aggregations = input.Aggregations
                 };
 
                 return GetExcelFile(entityExportInfo);
@@ -168,32 +168,35 @@ namespace Origam.Server.Controller
             IWorkbook workBook;
             if (isLazyLoaded)
             {
-                if (!entityExportInfo.Grouping.IsEmpty)
+                if (entityExportInfo.Grouping.IsEmpty)
                 {
-                    var rootGroup = new RootGroup(entityExportInfo, GetGroups);
-                    workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo, rootGroup);
-                    return Result.Ok<IWorkbook, IActionResult>(workBook);
+                    return EntityIdentificationToEntityData(input)
+                        .Bind(entityData => GetRowsGetQuery(input, entityData))
+                        .Bind(dataStructureQuery =>
+                            ReadRows(entityExportInfo, dataStructureQuery))
+                        .Map(readeResult => excelEntityExporter.FillWorkBook(
+                            entityExportInfo,
+                            readeResult.DataStructureQuery
+                                .GetAllQueryColumns()
+                                .Select(x => x.Name)
+                                .ToList(),
+                            readeResult.Rows));
                 }
+                var rootGroup = new RootGroup(entityExportInfo, GetGroups);
+                workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo, rootGroup);
+                return Result.Ok<IWorkbook, IActionResult>(workBook);
+            }
 
-                return EntityIdentificationToEntityData(input)
-                    .Bind(entityData => GetRowsGetQuery(input, entityData))
-                    .Bind(dataStructureQuery => ReadRows(entityExportInfo, dataStructureQuery))
-                    .Map(readeResult => excelEntityExporter.FillWorkBook(
-                        entityExportInfo,
-                        readeResult.DataStructureQuery
-                            .GetAllQueryColumns()
-                            .Select(x => x.Name)
-                            .ToList(),
-                        readeResult.Rows));
-            }
-            if (!entityExportInfo.Grouping.IsEmpty)
-            {
-                workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo);
-            }
-            else
+            if (entityExportInfo.Grouping.IsEmpty)
             {
                 workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
             }
+            else
+            {
+                workBook =
+                    excelEntityExporter.FillWorkBookGrouping(entityExportInfo);
+            }
+
             return Result.Ok<IWorkbook, IActionResult>(workBook);
         }
 
@@ -283,7 +286,7 @@ namespace Origam.Server.Controller
                 MasterRowId = Guid.Empty,
                 GroupByLookupId = columnSettings.GroupByLookupId,
                 SessionFormIdentifier = entityExportInfo.SessionFormIdentifier,
-                AggregatedColumns = entityExportInfo.AggregatedColumns,
+                AggregatedColumns = entityExportInfo.Aggregations.ToList<Aggregation>(),
                 FilterLookups = input.FilterLookups,
             };
             var groups = EntityIdentificationToEntityData(input)

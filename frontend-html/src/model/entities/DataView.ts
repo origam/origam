@@ -95,6 +95,7 @@ import { groupingUnitToString } from "model/entities/types/GroupingUnit";
 import { groupFilters } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { joinWithAND } from "model/entities/OrigamApiHelpers";
 import { IGroupingSettings } from "model/entities/types/IGroupingConfiguration";
+import { toAggregationData } from "model/entities/types/IAggregationInfo";
 
 class SavedViewState {
   constructor(
@@ -981,7 +982,7 @@ export class DataView implements IDataView {
         Grouping: {
           groups: toGroupNodes(this.clientSideGrouper.topLevelGroups, node => node.childRows.map(row => getRowId(row))),
           columnSettings: groupingColumnSettings },
-        Aggregations: dataView.aggregationData,
+        Aggregations: dataView.aggregationData.map(x => toAggregationData(x)),
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -1049,7 +1050,8 @@ function toGroupNodes(nodes: IGroupTreeNode [], getRowIds: (node: IGroupTreeNode
       columnId: node.columnId,
       value: node.columnValue,
       childGroups: childGroups,
-      rowIds: childGroups.length == 0 ? getRowIds(node) : []
+      rowIds: childGroups.length == 0 ? getRowIds(node) : [],
+      aggregations: node?.aggregations?.map(x => toAggregationData(x))
     });
   }
   return groupNodes;

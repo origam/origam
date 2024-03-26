@@ -90,7 +90,8 @@ namespace Origam.Server
         {
             ISheet sheet = InitSheet(info);
             IWorkbook workbook = sheet.Workbook;
-            for (int rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
+            int rowNumber;
+            for (rowNumber = 1; rowNumber <= info.RowIds.Count; rowNumber++)
             {
                 if (RowLimitReached(rowNumber))
                 {
@@ -105,7 +106,34 @@ namespace Origam.Server
                 }
             }
 
+            AddAggregations(sheet, info, info.Aggregations, rowNumber);
             return workbook;
+        }
+
+        private int AddAggregations(ISheet sheet, EntityExportInfo info, 
+            List<AggregationData> aggregations, int rowNumber)
+        {
+            IRow aggregationsRow = sheet.CreateRow(rowNumber);
+            foreach (AggregationData aggregation in aggregations)
+            {
+                int columnIndex = GetColumnIndex(info, aggregation.ColumnName);
+                aggregationsRow.CreateCell(columnIndex).SetCellValue(
+                    $"{aggregation.AggregationType}: {aggregation.Value}");
+            }
+
+            return ++rowNumber;
+        }
+
+        private int GetColumnIndex(EntityExportInfo info, string columnName)
+        {
+            var index = info.Fields.FindIndex(field => field.FieldName == columnName);
+            if (index == -1)
+            {
+                throw new Exception(
+                    $"Column {columnName} not found among fields" +
+                    $" [{ string.Join(", ",info.Fields.Select(x => x.FieldName))}]");
+            }
+            return index + info.Grouping.GroupNames.Count;
         }
 
         public IWorkbook FillWorkBookGrouping(EntityExportInfo info, RootGroup rootGroup)
@@ -223,8 +251,9 @@ namespace Origam.Server
             {
                 rowNumber = AddRows(sheet, info, group, rowNumber);
             }
-            
             sheet.GroupRow(groupFirstRow, rowNumber - 1);
+            rowNumber = AddAggregations(sheet, info, group.Aggregations, rowNumber);
+            
             return rowNumber;
         }
 
