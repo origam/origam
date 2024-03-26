@@ -144,27 +144,28 @@ namespace Origam.Server
             if (childGroups.Count == 0)
             { 
                 var dataRow = info.Table.NewRow();
-                foreach (List<IEnumerable<object>> row in group.GetRows())
+                foreach (IEnumerable<object> row in group.GetRows())
                 {
                     if (RowLimitReached(rowNumber))
                     {
                         FillExportLimitExceeded(workbook, sheet, rowNumber);
                         break;
                     }
-                    List<object> values = row[0].ToList();
-                    for (int i = 0; i < info.Fields.Count; i++)
+                    
+                    using var enumerator = row.GetEnumerator();
+                    foreach (var field in info.Fields)
                     {
-                        var columnName = info.Fields[i].FieldName;
+                        enumerator.MoveNext();
+                        var value = enumerator.Current;
+                        var columnName = field.FieldName;
                         DataColumn column = info.Table.Columns[columnName];
-                        if (values[i] is string[] array && column.DataType == typeof(long))
+                        if (value is string[] array && column.DataType == typeof(long))
                         {
                             dataRow[columnName] = array.Length;
                         }
                         else
                         {
-                            dataRow[columnName] = values[i] == null 
-                                ? DBNull.Value 
-                                : values[i];
+                            dataRow[columnName] = value ?? DBNull.Value;
                         }
                     }
                     AddRowToSheet(
@@ -567,7 +568,7 @@ namespace Origam.Server
         IGroup Parent { get; }
         public string ChildFilter { get; }
         List<IGroup> GetGroups();
-        IEnumerable<object> GetRows();
+        IEnumerable<IEnumerable<object>> GetRows();
     }
 
     public class RootGroup : IGroup
@@ -592,7 +593,7 @@ namespace Origam.Server
             return childGroupGetter(this);
         }
 
-        public IEnumerable<object> GetRows()
+        public IEnumerable<IEnumerable<object>>  GetRows()
         {
             yield break;
         }
@@ -601,7 +602,7 @@ namespace Origam.Server
     class Group : IGroup
     {
         private readonly Func<IGroup, List<IGroup>> childGroupGetter;
-        private readonly Func<IGroup, IEnumerable<object>> childRowGetter;
+        private readonly Func<IGroup, IEnumerable<IEnumerable<object>>> childRowGetter;
         private readonly int childLevel;
 
         public EntityExportInfo ExportInfo { get; }
@@ -615,7 +616,7 @@ namespace Origam.Server
 
         public Group(EntityExportInfo entityExportInfo, int level,
             object columnValue, Func<IGroup, List<IGroup>> childGroupGetter, 
-            Func<IGroup, IEnumerable<object>> childRowGetter, IGroup parent)
+            Func<IGroup, IEnumerable<IEnumerable<object>>> childRowGetter, IGroup parent)
         {
             ExportInfo = entityExportInfo;
             Level = level;
@@ -634,7 +635,7 @@ namespace Origam.Server
                 : childGroupGetter(this);
         }
 
-        public IEnumerable<object> GetRows()
+        public IEnumerable<IEnumerable<object>> GetRows()
         {
             return childRowGetter(this);
         }

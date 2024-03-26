@@ -34,6 +34,7 @@ using NPOI.SS.UserModel;
 using Origam.DA;
 using Origam.Excel;
 using Origam.Server;
+using Origam.Server.Extensions;
 using Origam.Server.Model.Excel;
 using Origam.Server.Model.UIService;
 
@@ -196,22 +197,25 @@ namespace Origam.Server.Controller
             return Result.Ok<IWorkbook, IActionResult>(workBook);
         }
 
-        private IEnumerable<object> GetRows(IGroup group)
+        private IEnumerable<IEnumerable<object>> GetRows(IGroup group)
         {
             int rowOffset = 0;
             int rowLimit = 1000;
 
             for (int i = 0; i < 1000; i++)
             {
+                bool rowsReturned = false;
                 var rows = GetRows(group, rowOffset, rowLimit);
-                if (rows.Any())
+                foreach (IEnumerable<object> row in rows)
                 {
                     rowOffset += rowLimit;
-                    yield return rows;
+                    rowsReturned = true;
+                    yield return row;
                 }
-                else
+
+                if (!rowsReturned)
                 {
-                    break;
+                    yield break;
                 }
             }
         }
@@ -258,7 +262,7 @@ namespace Origam.Server.Controller
                 return rows.Value;
             }
 
-            throw new Exception();
+            throw new Exception(rows.Error.GetMessage());
         }
 
         private List<IGroup> GetGroups(IGroup group)
