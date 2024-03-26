@@ -916,16 +916,31 @@ namespace Origam.Server.Controller
             foreach (KeyValuePair<string, string> parameterMapping 
                      in input.ParameterMappings)
             {
-                initialValues.Add(
-                    // target column name
-                    parameterMapping.Value,
-                    // target column value
-                    parameterMapping.Key.Equals(
-                        "SearchText", 
-                        StringComparison.InvariantCultureIgnoreCase)
-                    ? input.SearchText
-                    : rowData.Row[(string)input.Parameters[parameterMapping.Key]]
-                        .ToString());
+                if (parameterMapping.Key.Equals(
+                        "SearchText",
+                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    initialValues.Add(
+                        // target column name
+                        parameterMapping.Value,
+                        // target column value
+                        input.SearchText);
+                }
+                else if (rowData.Row.Table.Columns.Contains(
+                            (string)input.Parameters[parameterMapping.Key]))
+                {
+                    initialValues.Add(
+                        // target column name
+                        parameterMapping.Value,
+                        // target column value
+                        rowData.Row[(string)input.Parameters[
+                                parameterMapping.Key]].ToString());
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"Parameter '{parameterMapping.Key}' maps to not available source column '{input.Parameters[parameterMapping.Key]}'.");
+                }
             }
             return initialValues;
         } 
