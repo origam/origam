@@ -46,7 +46,7 @@ namespace Origam.Server.Model.UIService
         [Required]
         public string[] ColumnNames { get; set; }
         public Guid MasterRowId { get; set; }
-        
+        [RequiredNonDefault]
         public Guid SessionFormIdentifier { get; set; }
     }
 }

@@ -42,6 +42,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using Origam.DA;
 using Origam.Server.Model.UIService;
@@ -119,14 +120,18 @@ namespace Origam.Server
     
     public class GroupNode
     {
+        [Required]
         public string ColumnId { get; set; }
         public object Value { get; set; }
+        [Required]
         public GroupNode[] ChildGroups { get; set; }
+        [Required]
         public string[] RowIds { get; set; }
     }
 
     public class ColumnSettings
     {
+        [Required]
         public string Id { get; set; }
         public string GroupingUnit { get; set; }
         public Guid GroupByLookupId { get; set; }
