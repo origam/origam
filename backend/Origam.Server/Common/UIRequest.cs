@@ -70,6 +70,9 @@ namespace Origam.Server
         public bool IsModalDialog { get; set; } = false;
         public bool RegisterSession { get; set; } = true;
         public bool DataRequested { get; set; } = true;
+
+        public IDictionary NewRecordInitialValues { get; set; } 
+            = new Hashtable();
         public QueryParameterCollection QueryParameters
         {
             get

@@ -912,14 +912,14 @@ namespace Origam.Server.Controller
                 LookupNewRecordInitialValuesInput input, RowData rowData)
         {
             var initialValues = new Dictionary<string, string>();
-            // key parameter name, value target field name
+            // key parameter name, value target column name
             foreach (KeyValuePair<string, string> parameterMapping 
                      in input.ParameterMappings)
             {
                 initialValues.Add(
-                    // target field name
+                    // target column name
                     parameterMapping.Value,
-                    // target field value
+                    // target column value
                     parameterMapping.Key.Equals(
                         "SearchText", 
                         StringComparison.InvariantCultureIgnoreCase)

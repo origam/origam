@@ -20,11 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Data;
 using System.Globalization;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
@@ -35,13 +34,6 @@ namespace Origam.Server;
 public class NewRecordSessionStore : FormSessionStore
 {
     public NewRecordSessionStore(IBasicUIService service, UIRequest request,
-        string name, FormReferenceMenuItem menuItem, Analytics analytics) 
-        : base(service, request, name, menuItem, analytics)
-    {
-        IsModalDialog = true;
-    }
-
-    public NewRecordSessionStore(IBasicUIService service, UIRequest request,
         string name, Analytics analytics)
         : base(service, request, name, analytics)
     {
@@ -50,26 +42,34 @@ public class NewRecordSessionStore : FormSessionStore
 
     public override void Init()
     {
-        IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
-        IPersistenceProvider schemaProvider = persistence.SchemaProvider;
+        var persistence = ServiceManager.Services.GetService<IPersistenceService>();
+        var schemaProvider = persistence.SchemaProvider;
         var formMenuItem = schemaProvider.RetrieveInstance<FormReferenceMenuItem>(new Guid(Request.ObjectId));
         var screen = schemaProvider.RetrieveInstance<FormControlSet>(formMenuItem.ScreenId);
         var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(screen.DataSourceId);
         var rootEntity = ((DataStructureEntity)dataStructure.Entities[0])!.RootEntity;
-           
         var dataService  = Workbench.Services.CoreServices.DataServiceFactory.GetDataService();
         var dataSet = dataService.GetEmptyDataSet(
             rootEntity.ParentItemId, CultureInfo.InvariantCulture);
         var table = dataSet.Tables[rootEntity.Name];
-        var row = table.NewRow();
-            
+        var row = table!.NewRow();
         DatasetTools.ApplyPrimaryKey(row);
         DatasetTools.UpdateOrigamSystemColumns(
             row, true, SecurityManager.CurrentUserProfile().Id);
-        row.Table.NewRow();
-        
+        FillInitialValues(row);
         dataSet.RemoveNullConstraints();
-        dataSet.Tables[rootEntity.Name].Rows.Add(row);
+        table.Rows.Add(row);
         SetDataSource(dataSet);
+    }
+
+    private void FillInitialValues(DataRow row)
+    {
+        foreach (string columnName in Request.NewRecordInitialValues.Keys)
+        {
+            if (Request.NewRecordInitialValues[columnName] != null)
+            {
+                row[columnName] = Request.NewRecordInitialValues[columnName];
+            }
+        }
     }
 }
