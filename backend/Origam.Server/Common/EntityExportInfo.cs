@@ -116,6 +116,8 @@ namespace Origam.Server
     {
         public GroupNode[] Groups { get; set; }
         public ColumnSettings[] ColumnSettings { get; set; }
+        
+        public bool IsEmpty => ColumnSettings.Length == 0;
     }
     
     public class GroupNode

@@ -167,7 +167,7 @@ namespace Origam.Server.Controller
             IWorkbook workBook;
             if (isLazyLoaded)
             {
-                if (entityExportInfo.Grouping != null)
+                if (!entityExportInfo.Grouping.IsEmpty)
                 {
                     var rootGroup = new RootGroup(entityExportInfo, GetGroups);
                     workBook = excelEntityExporter.FillWorkBookGrouping(entityExportInfo, rootGroup);

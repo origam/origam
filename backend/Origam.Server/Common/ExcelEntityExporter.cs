@@ -94,7 +94,7 @@ namespace Origam.Server
             SetupSheetHeader(sheet, info, groupNames);
             bool isPkGuid
                 = info.Table.PrimaryKey[0].DataType == typeof(Guid);
-            if (info.Grouping != null)
+            if (!info.Grouping.IsEmpty)
             {
                 return FillWorkBookGrouping(workbook, sheet, info, isPkGuid);
             }
