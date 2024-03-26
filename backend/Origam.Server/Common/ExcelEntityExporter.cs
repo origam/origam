@@ -142,39 +142,47 @@ namespace Origam.Server
             }
 
             if (childGroups.Count == 0)
-            { 
-                var dataRow = info.Table.NewRow();
-                foreach (IEnumerable<object> row in group.GetRows())
-                {
-                    if (RowLimitReached(rowNumber))
-                    {
-                        FillExportLimitExceeded(workbook, sheet, rowNumber);
-                        break;
-                    }
-                    
-                    using var enumerator = row.GetEnumerator();
-                    foreach (var field in info.Fields)
-                    {
-                        enumerator.MoveNext();
-                        var value = enumerator.Current;
-                        var columnName = field.FieldName;
-                        DataColumn column = info.Table.Columns[columnName];
-                        if (value is string[] array && column.DataType == typeof(long))
-                        {
-                            dataRow[columnName] = array.Length;
-                        }
-                        else
-                        {
-                            dataRow[columnName] = value ?? DBNull.Value;
-                        }
-                    }
-                    AddRowToSheet(
-                        info, workbook, sheet, rowNumber, dataRow, columnOffset:group.Level + 1);
-                    rowNumber++;
-                }
-                rowNumber++;
+            {
+                rowNumber = AddRows(sheet, info, group, rowNumber);
             }
             sheet.GroupRow(groupFirstRow, rowNumber - 2);
+            return rowNumber;
+        }
+
+        private int AddRows(ISheet sheet, EntityExportInfo info,
+            IGroup group, int rowNumber)
+        {
+            IWorkbook workbook = sheet.Workbook;
+            var dataRow = info.Table.NewRow();
+            foreach (IEnumerable<object> row in group.GetRows())
+            {
+                if (RowLimitReached(rowNumber))
+                {
+                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    break;
+                }
+                    
+                using var enumerator = row.GetEnumerator();
+                foreach (var field in info.Fields)
+                {
+                    enumerator.MoveNext();
+                    var value = enumerator.Current;
+                    var columnName = field.FieldName;
+                    DataColumn column = info.Table.Columns[columnName];
+                    if (value is string[] array && column.DataType == typeof(long))
+                    {
+                        dataRow[columnName] = array.Length;
+                    }
+                    else
+                    {
+                        dataRow[columnName] = value ?? DBNull.Value;
+                    }
+                }
+                AddRowToSheet(
+                    info, workbook, sheet, rowNumber, dataRow, columnOffset:group.Level + 1);
+                rowNumber++;
+            }
+            rowNumber++;
             return rowNumber;
         }
 
@@ -209,32 +217,42 @@ namespace Origam.Server
             {
                  rowNumber = FillWorkBookGroupingRecursive(
                     workbook, sheet, info, childGroup, rowNumber, groupLevel + 1);
-                rowNumber++;
+                 rowNumber++;
             }
             if (group.RowIds.Length > 0)
             {
-                foreach (var rowId in group.RowIds)
-                {
-                    if (RowLimitReached(rowNumber))
-                    {
-                        FillExportLimitExceeded(workbook, sheet, rowNumber);
-                        return rowNumber;
-                    }
-                    DataRow row = GetDataRow(info, rowId);
-                    if (row != null)
-                    {
-                        AddRowToSheet(
-                            info: info, 
-                            workbook: workbook, 
-                            sheet: sheet, 
-                            rowNumber: rowNumber, 
-                            row: row, 
-                            columnOffset: info.Grouping.ColumnSettings.Length);
-                        rowNumber++;
-                    } 
-                }
+                rowNumber = AddRows(sheet, info, group, rowNumber);
             }
+            
             sheet.GroupRow(groupFirstRow, rowNumber - 1);
+            return rowNumber;
+        }
+
+        private int AddRows(ISheet sheet, EntityExportInfo info,
+            GroupNode group, int rowNumber)
+        {
+            IWorkbook workbook = sheet.Workbook;
+            foreach (var rowId in group.RowIds)
+            {
+                if (RowLimitReached(rowNumber))
+                {
+                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    return rowNumber;
+                }
+                DataRow row = GetDataRow(info, rowId);
+                if (row != null)
+                {
+                    AddRowToSheet(
+                        info: info, 
+                        workbook: workbook, 
+                        sheet: sheet, 
+                        rowNumber: rowNumber, 
+                        row: row, 
+                        columnOffset: info.Grouping.ColumnSettings.Length);
+                    rowNumber++;
+                } 
+            }
+
             return rowNumber;
         }
 
