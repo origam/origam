@@ -59,11 +59,13 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     [Category("Data")]
     [NotNullModelElementRule]
     [XmlAttribute("parameterName")]
+    [Description("Data structure parameter used in lookup list mapping on screen secetion to reference source column.")]
     public string ParameterName { get; set; }
     
     [Category("Data")]
     [NotNullModelElementRule]
     [XmlAttribute("targetRootEntityField")]
+    [Description("Column in target root entity to be filled.")]
     public string TargetRootEntityField { get; set; }
 		
     #endregion
