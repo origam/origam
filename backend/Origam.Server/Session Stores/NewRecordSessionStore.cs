@@ -28,6 +28,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 
@@ -42,13 +43,19 @@ public class NewRecordSessionStore : FormSessionStore
 
     public override void Init()
     {
-        var persistence = ServiceManager.Services.GetService<IPersistenceService>();
+        var persistence 
+            = ServiceManager.Services.GetService<IPersistenceService>();
         var schemaProvider = persistence.SchemaProvider;
-        var formMenuItem = schemaProvider.RetrieveInstance<FormReferenceMenuItem>(new Guid(Request.ObjectId));
-        var screen = schemaProvider.RetrieveInstance<FormControlSet>(formMenuItem.ScreenId);
-        var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(screen.DataSourceId);
-        var rootEntity = ((DataStructureEntity)dataStructure.Entities[0])!.RootEntity;
-        var dataService  = Workbench.Services.CoreServices.DataServiceFactory.GetDataService();
+        var formMenuItem = schemaProvider
+            .RetrieveInstance<FormReferenceMenuItem>(
+                new Guid(Request.ObjectId));
+        var screen = schemaProvider.RetrieveInstance<FormControlSet>(
+            formMenuItem.ScreenId);
+        var dataStructure = schemaProvider.RetrieveInstance<DataStructure>(
+            screen.DataSourceId);
+        var rootEntity 
+            = ((DataStructureEntity)dataStructure.Entities[0])!.RootEntity;
+        var dataService  = DataServiceFactory.GetDataService();
         var dataSet = dataService.GetEmptyDataSet(
             rootEntity.ParentItemId, CultureInfo.InvariantCulture);
         var table = dataSet.Tables[rootEntity.Name];
