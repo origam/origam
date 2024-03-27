@@ -61,17 +61,12 @@ export class ModalWindow extends React.Component<{
     return this._left;
   }
   @observable isDragging = false;
-  @observable
-  isHidden = true;
 
   reportingWindowMove = false;
   dragStartMouseX = 0;
   dragStartMouseY = 0;
   dragStartPosX = 0;
   dragStartPosY = 0;
-
-  timeout: NodeJS.Timeout | undefined;
-  contentRect?: { bounds: BoundingRect };
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
     if (this.props.topPosiotionProc) {
@@ -80,11 +75,6 @@ export class ModalWindow extends React.Component<{
       this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
     }
     this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
-
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
-      this.isHidden = false;
-    }, 20);
   }
 
   @action.bound handleTitleMouseDown(event: any) {
@@ -193,7 +183,6 @@ export class ModalWindow extends React.Component<{
                   left: this.props.fullScreen ? 0 : this.left,
                   minWidth: this.props.fullScreen ? "100%" : this.props.width,
                   minHeight: this.props.fullScreen ? "100%" : this.props.height,
-                  visibility: this.isHidden ? "hidden" : undefined
                 }}
                 tabIndex={0}
                 onKeyDown={(event: any) => this.onKeyDown(event)}
