@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Data;
-using System.Linq;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
@@ -171,6 +170,20 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				newRecordElement.SetAttribute("Height", XmlConvert.ToString(newRecordScreenBinding.DialogHeight));
 				newRecordElement.SetAttribute("MenuItemId", XmlConvert.ToString(newRecordScreenBinding.MenuItemId));
 				propertyElement.AppendChild(newRecordElement);
+				foreach (var parameterMapping 
+				         in newRecordScreenBinding.GetParameterMappings())
+				{
+					XmlElement parameterMappingElement
+						= newRecordElement.OwnerDocument.CreateElement(
+							"ParameterMapping");
+					parameterMappingElement.SetAttribute(
+						"ParameterName", 
+						parameterMapping.ParameterName);
+					parameterMappingElement.SetAttribute(
+						"TargetRootEntityField", 
+						parameterMapping.TargetRootEntityField);
+					newRecordElement.AppendChild(parameterMappingElement);
+				}
 			}
 
 			propertyElement.SetAttribute("Cached", XmlConvert.ToString(useCache));

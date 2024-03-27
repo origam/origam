@@ -119,7 +119,12 @@ export function DropdownEditorControl(props: {
             customStyle={props.customStyle}
           />
           {!beh.isReadOnly && beh.hasNewScreenButton
-             && <div className={"inputBtn"} onClick={beh.onAddNewRecordClick}>+</div>
+             && <div
+              className={"inputBtn"}
+              onClick={() => beh.onAddNewRecordClick?.(beh.userEnteredValue)}
+            >
+              +
+            </div>
           }
           {!beh.isReadOnly
             && <div

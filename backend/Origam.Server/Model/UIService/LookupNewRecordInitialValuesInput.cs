@@ -1,5 +1,7 @@
+#region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,11 +19,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export class LookupLister {
-  constructor() {
-  }
+#endregion
 
-  getLookupList(): any[][] {
-    return []
-  }
+using System.Collections.Generic;
+
+namespace Origam.Server.Model.UIService;
+
+public class LookupNewRecordInitialValuesInput : AbstractLookupRowDataInput
+{
+    // key parameter name, value target field
+    public IDictionary<string, string> ParameterMappings { get; set; }
+    // key parameter name, value source field
+    public IDictionary<string, object> Parameters { get; set; }
+    public string SearchText { get; set; }
 }

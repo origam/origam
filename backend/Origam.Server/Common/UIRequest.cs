@@ -63,13 +63,14 @@ namespace Origam.Server
         public string Icon { get; set; }
         public string ObjectId { get; set; }
         public bool IsSingleRecordEdit { get; set; }
-        public bool CreateNewRecord { get; set; }
         public bool RequestCurrentRecordId { get; set; }
         public int DialogWidth { get; set; }
         public int DialogHeight { get; set; }
         public bool IsModalDialog { get; set; } = false;
         public bool RegisterSession { get; set; } = true;
         public bool DataRequested { get; set; } = true;
+
+        public IDictionary NewRecordInitialValues { get; set; } 
         public QueryParameterCollection QueryParameters
         {
             get

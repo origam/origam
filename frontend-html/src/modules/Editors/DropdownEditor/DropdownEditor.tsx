@@ -104,7 +104,7 @@ export function XmlBuildDropdownEditor(props: {
   onClick?: (event: any) => void;
   onBlur?: (target: any) => void;
   newRecordScreen? : NewRecordScreen;
-  onAddNewRecordClick?: () => void;
+  onAddNewRecordClick?: (searchText?: string) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
   typingDelayMillis?: number;

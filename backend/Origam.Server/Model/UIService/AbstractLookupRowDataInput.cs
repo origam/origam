@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,13 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.ComponentModel.DataAnnotations;
+using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public abstract class AbstractLookupRowDataInput : AbstractLookupInput
 {
-    public class LookupLabelsInput : AbstractLookupInput
-    {
-        [Required]
-        public object[] LabelIds { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+    public Guid DataStructureEntityId { get; set; }
+    public Guid Id { get; set; } = Guid.Empty;
+    public string Entity { get; set; }
+    
 }
