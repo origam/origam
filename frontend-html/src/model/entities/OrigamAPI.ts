@@ -216,7 +216,7 @@ export class OrigamAPI implements IApi {
     "Entity": string,
     "SessionFormIdentifier": string,
     "MenuId": string
-  }){
+  }) {
     return (await this.axiosInstance.post("/UIService/GetLookupNewRecordInitialValues", data)).data;
   }
 
