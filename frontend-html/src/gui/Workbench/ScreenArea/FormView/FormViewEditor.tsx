@@ -113,7 +113,7 @@ export class FormViewEditor extends React.Component<{
     const rowId = getSelectedRowId(property);
     const row = getSelectedRow(property);
     const foregroundColor = getRowStateForegroundColor(property, rowId || "");
-    const  dataView = getDataView(property);
+    const dataView = getDataView(property);
     const readOnly =
       !row ||
       isReadOnly(property, rowId) ||

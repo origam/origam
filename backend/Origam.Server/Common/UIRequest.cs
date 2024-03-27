@@ -63,7 +63,6 @@ namespace Origam.Server
         public string Icon { get; set; }
         public string ObjectId { get; set; }
         public bool IsSingleRecordEdit { get; set; }
-        public bool CreateNewRecord { get; set; }
         public bool RequestCurrentRecordId { get; set; }
         public int DialogWidth { get; set; }
         public int DialogHeight { get; set; }
@@ -72,7 +71,6 @@ namespace Origam.Server
         public bool DataRequested { get; set; } = true;
 
         public IDictionary NewRecordInitialValues { get; set; } 
-            = new Hashtable();
         public QueryParameterCollection QueryParameters
         {
             get

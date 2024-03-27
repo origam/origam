@@ -159,7 +159,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             isLazyLoading: lazyLoading === "true",
             dialogInfo: dialogInfo,
             parameters: args.idParameter ? {id: args.idParameter} : {},
-            createNewRecord: args.isSingleRecordEdit
+            newRecordInitialValues: args.isSingleRecordEdit? {} : undefined
           });
         }
       }
@@ -414,7 +414,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isSleepingDirty?: boolean,
     refreshOnReturnType?: IRefreshOnReturnType,
     isSingleRecordEdit?: boolean,
-    createNewRecord?: boolean,
+    newRecordInitialValues?: {[p:string]: string},
     onClose?: ()=> void
   }
   ) {
@@ -434,7 +434,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       parameters: args.parameters,
       isSleeping: args.isSessionRebirth,
       isSleepingDirty: args.isSleepingDirty,
-      isNewRecordScreen: args.createNewRecord
+      isNewRecordScreen: !!args.newRecordInitialValues,
     });
     try {
       openedScreens.pushItem(newScreen);
@@ -452,13 +452,13 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         !args.isSessionRebirth,
         args.requestParameters,
         args.isSingleRecordEdit,
-        args.createNewRecord
+        args.newRecordInitialValues
       );
       yield*newFormScreen.start(
         {
           initUIResult: initUIResult,
           preloadIsDirty: initUIResult.isDirty,
-          createNewRecord: args.createNewRecord
+          createNewRecord: !!args.newRecordInitialValues,
         });
       const rowIdToSelect = args.parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
@@ -492,7 +492,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isNewSession: boolean,
     requestParameters?: object | undefined,
     isSingleRecordEdit?: boolean,
-    createNewRecord?: boolean
+    newRecordInitialValues?: {[p:string]: string}
   ): any {
     const api = getApi(this);
     if (requestParameters) {
@@ -508,7 +508,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
       IsSingleRecordEdit: isSingleRecordEdit,
-      CreateNewRecord: createNewRecord,
+      NewRecordInitialValues: newRecordInitialValues,
       RequestCurrentRecordId: true
     });
   }

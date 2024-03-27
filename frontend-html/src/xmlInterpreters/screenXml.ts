@@ -108,6 +108,14 @@ function getPropertyParameters(node: any) {
   }
   return result;
 }
+function getParameterMappings(node: any) {
+  const parameters = findStopping(node, (n) => n.name === "ParameterMapping");
+  const result: { [key: string]: any } = {};
+  for (let p of parameters) {
+    result[p.attributes.ParameterName] = p.attributes.TargetRootEntityField;
+  }
+  return result;
+}
 
 const instance2XmlNode = new WeakMap<any, any>();
 
@@ -133,7 +141,8 @@ function getNewRecordScreen(node: any){
     {
       width: parseInt(newRecordScreenNode.attributes.Width),
       height: parseInt(newRecordScreenNode.attributes.Height),
-      menuItemId: newRecordScreenNode.attributes.MenuItemId
+      menuItemId: newRecordScreenNode.attributes.MenuItemId,
+      parameterMappings: getParameterMappings(newRecordScreenNode)
     });
 }
 
