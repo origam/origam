@@ -999,11 +999,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _readFirstChunkOfRowsScheduled = false;
 
   *readFirstChunkOfRowsWithGate(rootDataView: IDataView) {
+    if (this._readFirstChunkOfRowsRunning) {
+      this._readFirstChunkOfRowsScheduled = true;
+      return;
+    }
     try {
-      if (this._readFirstChunkOfRowsRunning) {
-        this._readFirstChunkOfRowsScheduled = true;
-        return;
-      }
       this._readFirstChunkOfRowsRunning = true;
       do {
         this._readFirstChunkOfRowsScheduled = false;
