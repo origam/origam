@@ -4,7 +4,6 @@
   xmlns:acs1="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractControlSet/6.0.0"
   xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:cpm1="http://schemas.origam.com/Origam.Schema.GuiModel.ColumnParameterMapping/6.0.0"
   xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0"
   xmlns:pbi="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyBindingInfo/6.0.0"
   xmlns:pcs="http://schemas.origam.com/Origam.Schema.GuiModel.PanelControlSet/6.0.0"
@@ -30,15 +29,6 @@
         asi:name="AsDropDown1"
         csi:requestSaveAfterChange="false"
         csi:widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe">
-        <cpm1:ColumnParameterMapping
-          asi:abstract="false"
-          cpm1:field="Long1"
-          x:id="94b0fe3d-a94f-495e-a849-8e169bf971a0"
-          asi:name="NumberParameter" />
-        <cpm1:ColumnParameterMapping
-          asi:abstract="false"
-          x:id="fabb316a-a4a3-4cb4-b549-2141f8c41cf7"
-          asi:name="AllDataTypes_parText1" />
         <pbi:PropertyBindingInfo
           asi:abstract="false"
           pbi:designDataSetPath="AllDataTypes.refTagInputSourceId"
@@ -51,7 +41,7 @@
           x:id="1473e826-7cfb-4503-975c-6274f0ddc302"
           asi:name="LookupId"
           apvi:propertyId="61c678bc-15aa-4ffc-a696-5524ae54c93f"
-          pvi1:value="3983860e-f6f9-4c61-be2f-e2dd1f36be04" />
+          pvi1:value="991a8bec-5169-4506-9457-7f91c27bb5fd" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="2331d4cc-67e3-4353-84fb-c59c670845fb"
