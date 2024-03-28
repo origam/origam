@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
   <p:package
     x:id="a9c25bbd-9a31-427d-bde5-1a442d4d9c38"
     x:isFolder="true"
     p:name="Workflow"
-    p:version="1.0.0">
-    <pr:packageReference
-      x:id="8af1bd41-ceb6-41d0-80fc-8971ec8321f7"
-      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
+    p:version="1.1.0">
     <pr:packageReference
       x:id="4673b01c-6304-4a5c-bf39-3ca333260d1f"
       pr:referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
+    <pr:packageReference
+      x:id="8af1bd41-ceb6-41d0-80fc-8971ec8321f7"
+      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
   </p:package>
 </x:file>

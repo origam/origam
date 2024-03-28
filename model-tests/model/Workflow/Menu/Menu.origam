@@ -7,6 +7,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow Merge Test 1st Phase"
+    x:id="bb756351-37d6-46ef-a3cc-5342d1629850"
+    asi:name="MergetTestFirstPhase"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Workflow/Workflow/Workflow/MergetTestFirstPhase.origam#MergetTestFirstPhase/f5db6277-34c3-473f-aa47-8ff8eb4d18a0" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Test1"
     x:id="e231e8c7-6a5f-4032-a2ac-4e4862aeeb28"
     asi:name="Test1"

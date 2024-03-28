@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="8014c9cd-013f-430b-8ed5-5128c444d9e2"
+    asi:name="MergeTestSecondPhase"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="db5b9df2-648b-4866-97b6-1ee1e4c7bab4"
+      cs:isReturnValue="false"
+      asi:name="WorkflowMergeTestEntity"
+      cs:structure="Workflow/DataStructure/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/c3b7bc07-2b1c-4f90-9462-0eec30657075" />
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="e2eb5262-b021-4d0a-b89b-c606fce74be8"
+      uift:isFinalForm="true"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="0100_UI"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeTestSecondPhase.origam#MergeTestSecondPhase/WorkflowMergeTestEntity/db5b9df2-648b-4866-97b6-1ee1e4c7bab4"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Workflow/FormControlSet/Workflow/WorkflowMergeTestEntitySecondPhase.origam#WorkflowMergeTestEntitySecondPhase/8c02c942-4eed-44b6-ac4e-1e46c3cc62ff" />
+  </w:Workflow>
+</x:file>
