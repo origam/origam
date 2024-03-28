@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="c3b7bc07-2b1c-4f90-9462-0eec30657075"
+    ds1:localized="false"
+    asi:name="WorkflowMergeTestEntity">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Workflow/DataEntity/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/cd988e55-2fbd-4e93-bc2d-af98071f157e"
+      x:id="a893d0ca-5d09-425f-9425-b55320cc6176"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkflowMergeTestEntity"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="b20faeab-50c7-4c0f-b9e4-03c3716a4b68"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Workflow/DataStructure/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/WorkflowMergeTestEntity/a893d0ca-5d09-425f-9425-b55320cc6176"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="874a0bd5-14c8-4542-85dc-32b7f02ade0c"
+        asi:name="WorkflowMergeTestEntity_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>
