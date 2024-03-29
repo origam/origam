@@ -88,7 +88,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectionRangeIndex0: number | undefined;
   selectionRangeIndex1: number | undefined;
   shiftPressed: boolean;
-  ctrlPressed: boolean;
+  ctrlOrCmdPressed: boolean;
   selectionTargetState: boolean;
   selectionInProgress: boolean;
 

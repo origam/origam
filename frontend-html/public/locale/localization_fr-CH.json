@@ -131,5 +131,6 @@
   "order_columns_title": "organiser les colonnes",
   "add_new_record": "Ajouter nouveau dossier",
   "cancel_workflow_confirmation": "Êtes-vous certain de vouloir annuler le flux de travail?",
-  "hold_ctrl_tool_tip": "Maintenez Ctrl enfoncé et cliquez pour ouvrir le lien"
+  "hold_ctrl_tool_tip": "Maintenez Ctrl enfoncé et cliquez pour ouvrir le lien",
+  "hold_cmd_tool_tip": "Maintenez Cmd enfoncé et cliquez pour ouvrir le lien"
 }

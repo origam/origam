@@ -32,7 +32,9 @@ export function DropdownEditorInput(props: {
   const beh = useContext(CtxDropdownEditor).behavior;
   const data = useContext(CtxDropdownEditor).editorData;
   const setup = useContext(CtxDropdownEditor).setup;
-  const [ctrlKeyPressed, setCtrlKeyPressed] = useState<boolean>(false);
+  const [ctrlOrCmdKeyPressed, setCtrlOrCmdKeyPressed] = useState<boolean>(false);
+  const isMacOS = () => {return navigator.userAgent.toLowerCase().includes("mac")};
+
   const refInput = useMemo(() => {
     return (elm: any) => {
       beh.refInputElement(elm);
@@ -63,21 +65,31 @@ export function DropdownEditorInput(props: {
   }
 
   document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey)
-      setCtrlKeyPressed(true)
+    if (event.ctrlKey || event.metaKey)
+      setCtrlOrCmdKeyPressed(true);
   });
   
   document.addEventListener('keyup', function(event) {
-    if (!event.ctrlKey)
-      setCtrlKeyPressed(false)
+    if (!event.ctrlKey && !event.metaKey)
+      setCtrlOrCmdKeyPressed(false);
   });
+
+  const getTitle = () => {
+    if (!setup.isLink)
+      return "";
+    
+    else if (isMacOS())
+      return T("Hold Cmd and click to open link", "hold_cmd_tool_tip");
+
+    return T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+  }
 
   return (
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input, (ctrlKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
-          title={setup.isLink ? T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip") : ""}
+          className={cx("input", S.input, (ctrlOrCmdKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
+          title={getTitle()}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}

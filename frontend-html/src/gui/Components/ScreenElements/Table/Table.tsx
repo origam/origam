@@ -429,7 +429,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   isCursorIconPointer(): boolean {
     return !!this.tablePanelView.property?.isLink
-    && this.tablePanelView.ctrlPressed
+    && this.tablePanelView.ctrlOrCmdPressed
     && this.tablePanelView.currentTooltipText !== undefined;
   }
 
