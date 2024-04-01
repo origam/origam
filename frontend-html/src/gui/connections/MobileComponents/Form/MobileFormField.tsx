@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
+import "gui/connections/MobileComponents/Form/MobileForm.scss";
 import {
   getCaptionStyle, getFormFieldStyle,
   getTooltip,
