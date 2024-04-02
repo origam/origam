@@ -30,6 +30,11 @@ namespace Origam.Server.Pages
 {
     internal class StandardHttpResponseWrapper : IResponseWrapper
     {
+        private sealed class StringWriterWithUtf8Encoding : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+        }
+
         private readonly HttpContext httpContext;
         private readonly HttpResponse response;
         private readonly Encoding encoding;
@@ -57,11 +62,25 @@ namespace Origam.Server.Pages
             set
             {
                 var mediaType = new MediaTypeHeaderValue(value);
-                mediaType.Encoding = encoding;
+                // if we're sending a zip file, we need to kick out the encoding
+                // otherwise the delivered file is invalid and of double size
+                if (!IsZipType(value)) {
+                    mediaType.Encoding = encoding;
+                }
                 response.ContentType = mediaType.ToString();
             }
         }
 
+        private bool IsZipType(string contentType)
+        {
+            return contentType switch
+            {
+                "application/zip" => true,
+                "application/octet-stream" => true,
+                "application/x-zip-compressed" => true,
+                _ => false
+            };
+        }
 
         public bool TrySkipIisCustomErrors
         {
@@ -81,7 +100,7 @@ namespace Origam.Server.Pages
 
         public void WriteToOutput(Action<TextWriter> writeAction)
         {
-            TextWriter textWriter = new StringWriter();
+            TextWriter textWriter = new StringWriterWithUtf8Encoding();
             writeAction(textWriter);
             response.WriteAsync(textWriter.ToString()).Wait();
         }

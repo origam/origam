@@ -94,7 +94,7 @@ namespace Origam.Server.Controller
                 Stream resultStream;
                 MemoryStream memoryStream;
                 var processBlobField 
-                    = string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
+                    = !string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
                       && (blobDownloadRequest.Row[
                               blobDownloadRequest.BlobMember] != DBNull.Value);
                 if((blobDownloadRequest.BlobLookupId != Guid.Empty) 
