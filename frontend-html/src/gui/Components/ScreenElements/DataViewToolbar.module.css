@@ -23,7 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background1);
   display: flex;
   flex-direction: row;
- var(--background1)-space: nowrap;
+  white-space: nowrap;
 }
 
 .dataViewToolbar :global(.red) {
