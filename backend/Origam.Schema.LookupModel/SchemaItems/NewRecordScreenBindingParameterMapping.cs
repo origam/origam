@@ -59,7 +59,7 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     [Category("Data")]
     [NotNullModelElementRule]
     [XmlAttribute("parameterName")]
-    [Description("Data structure parameter used in lookup list mapping on screen secetion to reference source column. If the value is SearchText the actual text content of the lookup field will be used.")]
+    [Description("Parameter used in (added to) the list data structure of the lookup. The reference source column will be set in the properties of the screen section combo box where the lookup is used. If the actual text content of the lookup field should be copied, the value should be set to SearchText.")]
     public string ParameterName { get; set; }
     
     [Category("Data")]
