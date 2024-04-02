@@ -3274,10 +3274,10 @@ html-encoding-sniffer@^3.0.0:
   dependencies:
     whatwg-encoding "^2.0.0"
 
-html-entities@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.4.0.tgz#edd0cee70402584c8c76cc2c0556db09d1f45061"
-  integrity sha512-igBTJcNNNhvZFRtm8uA6xMY6xYleeDwn3PeBCkDz7tHttv4F2hsDI2aPgNERWzvRcNYHNT3ymRaQzllmXj4YsQ==
+html-entities@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.5.2.tgz#201a3cf95d3a15be7099521620d19dfb4f65359f"
+  integrity sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -4627,13 +4627,13 @@ raf-schd@^4.0.2:
   resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.3.tgz#5d6c34ef46f8b2a0e880a8fcdb743efc5bfdbc1a"
   integrity sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==
 
-ranges-apply@^7.0.15:
-  version "7.0.15"
-  resolved "https://registry.yarnpkg.com/ranges-apply/-/ranges-apply-7.0.15.tgz#f77fb693d8033661b215b5cd02825aa0a2ce4452"
-  integrity sha512-YMYWexEb5+irsSRGCV4JnWflhc5TvMNbaZrqNTXQYD6vA6hk60CrPZyd5bxTUoZ8Phd1v80UIQJCoxh+bSiHdg==
+ranges-apply@^7.0.16:
+  version "7.0.16"
+  resolved "https://registry.yarnpkg.com/ranges-apply/-/ranges-apply-7.0.16.tgz#693d648cd43019675aff36e96b84a9a0117b337b"
+  integrity sha512-4rGJHOyA7qatiMDg3vcETkc/TVBPU86/xZRTXff6o7a2neYLmj0EXUUAlhLVuiWAzTPHDPHOQxtk8EDrIF4ohg==
   dependencies:
     ranges-merge "^9.0.15"
-    tiny-invariant "^1.3.1"
+    tiny-invariant "^1.3.3"
 
 ranges-merge@^9.0.15:
   version "9.0.15"
@@ -5182,16 +5182,16 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-string-strip-html@*, string-strip-html@^13.4.6:
-  version "13.4.6"
-  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.6.tgz#8de638bd2e5b0e9a5e3b43d2cadf4b6a5890cce9"
-  integrity sha512-I1uUTS/BGQ/3jj+9WF6GENATSUPy9UruqVHdvAikOqlvFvlOAQL8M3qjoLu60Usp2x3yJpnAYtUTzDYiDdqXqg==
+string-strip-html@*, string-strip-html@^13.4.7:
+  version "13.4.7"
+  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.7.tgz#521be02cd889c76892066967d813a578507e1983"
+  integrity sha512-eO/Fzr7S/B6xk9AcFNASVFR5MaqM+40obIewQIaR5Ngt9x1Ty1jaf6IqfeKOS6v+OqIEPBcWIFdYG5EV004Lwg==
   dependencies:
     "@types/lodash-es" "^4.17.12"
     codsen-utils "^1.6.4"
-    html-entities "^2.4.0"
+    html-entities "^2.5.2"
     lodash-es "^4.17.21"
-    ranges-apply "^7.0.15"
+    ranges-apply "^7.0.16"
     ranges-push "^7.0.15"
     string-left-right "^6.0.17"
 
@@ -5285,10 +5285,15 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-tiny-invariant@^1.0.6, tiny-invariant@^1.3.1:
+tiny-invariant@^1.0.6:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.3.1.tgz#8560808c916ef02ecfd55e66090df23a4b7aa642"
   integrity sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==
+
+tiny-invariant@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.3.3.tgz#46680b7a873a0d5d10005995eb90a70d74d60127"
+  integrity sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==
 
 tinycolor2@^1.4.1:
   version "1.6.0"
