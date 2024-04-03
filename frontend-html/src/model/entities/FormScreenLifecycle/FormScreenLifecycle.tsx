@@ -843,7 +843,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
-      yield*clearRowStates(dataView)();
+      const updatedEntities = updateObjectResult.map((result: any) => result.entity) as string[];
+      yield*clearRowStates(dataView, updatedEntities)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
     return true;

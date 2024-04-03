@@ -20,10 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 
-export function clearRowStates(ctx: any) {
+export function clearRowStates(ctx: any, entities: string[]) {
   return function*clearRowStates() {
     for (let dataSource of getDataSources(ctx)) {
-      getRowStates(dataSource).clearAll();
+      if(entities.includes(dataSource.entity)){
+        getRowStates(dataSource).clearAll();
+      }
     }
   };
 }
