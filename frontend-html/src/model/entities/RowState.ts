@@ -233,26 +233,26 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = true;
   }
 
+  clearValue(rowId: string){
+    const rowStateRequest = this.requests.get(rowId);
+    if (rowStateRequest) {
+      rowStateRequest.dispose();
+      this.requests.delete(rowId);
+    }
+  }
+
   @action.bound reload() {
    // Store the rest of values to suppress flickering while reloading.
     this.temporaryRequestsValues = new Map(this.requests.entries());
     // This actually causes reloading of the values (by views calling getValue(...) )
     for (let rowStateRequest of this.requests.values()) {
-      rowStateRequest.atom?.onBecomeUnobservedListeners?.clear();
-      rowStateRequest.atom?.onBecomeObservedListeners?.clear();
-      rowStateRequest.atom = undefined;
-      rowStateRequest.isValid = false;
-      rowStateRequest.processingSate = undefined;
+      rowStateRequest.dispose();
     }
   }
 
   @action.bound clearAll() {
     for (let rowStateRequest of this.requests.values()) {
-      rowStateRequest.atom?.onBecomeUnobservedListeners?.clear();
-      rowStateRequest.atom?.onBecomeObservedListeners?.clear();
-      rowStateRequest.atom = undefined;
-      rowStateRequest.isValid = false;
-      rowStateRequest.processingSate = undefined;
+      rowStateRequest.dispose();
     }
     this.requests.clear();
     this.firstLoadingPerformed = false;
@@ -310,6 +310,14 @@ class RowStateRequest {
     public atom?: IAtom
   ) {
     this.rowId = rowId;
+  }
+
+  dispose() {
+    this.atom?.onBecomeUnobservedListeners?.clear();
+    this.atom?.onBecomeObservedListeners?.clear();
+    this.atom = undefined;
+    this.isValid = false;
+    this.processingSate = undefined;
   }
 }
 
