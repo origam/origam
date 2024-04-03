@@ -160,6 +160,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     if (this.isDropped) {
       this.ensureRequestCancelled();
       this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
       this.dataTable.clearData();
       this.isDropped = false;
       this.willLoadPage = 1;
@@ -264,6 +265,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
       case "Escape":
         this.dropUp();
         this.userEnteredValue = undefined;
+        this.dataTable.setFilterPhrase("");
         if (wasDropped) {
           event.closedADropdown = true;
           return;
@@ -403,6 +405,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
     this.data.chooseNewValue(id);
+    this.userEnteredValue = "";
+    this.dataTable.setFilterPhrase("");
     this.dropUp();
   }
 
