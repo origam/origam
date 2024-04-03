@@ -88,7 +88,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { isISectionPlugin } from "plugins/interfaces/ISectionPlugin";
 import { isIScreenPlugin } from "plugins/interfaces/IScreenPlugin";
@@ -843,7 +842,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
-      yield*clearRowStates(dataView)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
     return true;

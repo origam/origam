@@ -233,6 +233,18 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = true;
   }
 
+  clearValue(rowId: string){
+    const rowStateRequest = this.requests.get(rowId);
+    if (rowStateRequest) {
+      rowStateRequest.atom?.onBecomeUnobservedListeners?.clear();
+      rowStateRequest.atom?.onBecomeObservedListeners?.clear();
+      rowStateRequest.atom = undefined;
+      rowStateRequest.isValid = false;
+      rowStateRequest.processingSate = undefined;
+      this.requests.delete(rowId);
+    }
+  }
+
   @action.bound reload() {
    // Store the rest of values to suppress flickering while reloading.
     this.temporaryRequestsValues = new Map(this.requests.entries());

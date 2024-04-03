@@ -29,6 +29,7 @@ import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewCache } from "../../selectors/FormScreen/getDataViewCache";
 import { getFocusManager } from "model/selectors/getFocusManager";
+import {clearRowStateValue} from "../RowStates/clearRowStateValue";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -81,6 +82,10 @@ function updateRowState(ctx: any, resultItem: ICRUDResult) {
     // TODO: Context for all CRUD ops?
     // TODO: Actions are pre data view vs state is related to entity?
     putRowStateValue(ctx)(resultItem.entity, resultItem.state);
+  }
+  else
+  {
+    clearRowStateValue(ctx)(resultItem.entity, resultItem.objectId);
   }
 }
 
