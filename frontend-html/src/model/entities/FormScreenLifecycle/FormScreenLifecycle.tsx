@@ -143,7 +143,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onFlushData(): Generator<unknown, any, unknown> {
-    yield*this.flushData();
+    return yield*this.flushData();
   }
 
   *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
@@ -811,6 +811,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
         yield*this.saveSession();
       }
+      return updateObjectDidRun;
     } finally {
       this.flushDataEntered--;
       this.monitor.inFlow--;
