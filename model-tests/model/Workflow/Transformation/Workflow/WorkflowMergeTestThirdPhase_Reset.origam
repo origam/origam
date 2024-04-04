@@ -8,6 +8,6 @@
     asi:abstract="false"
     xt:engineType="XslCompiledTransform"
     x:id="b359e5c8-55cd-48f5-835c-681126dd4868"
-    asi:name="WorkflowMergeTestSecondPhase_Reset"
-    xt:text="-***-ExternalFile:WorkflowMergeTestSecondPhase_Reset.origam___text___b359e5c8-55cd-48f5-835c-681126dd4868.xslt" />
+    asi:name="WorkflowMergeTestThirdPhase_Reset"
+    xt:text="-***-ExternalFile:WorkflowMergeTestThirdPhase_Reset.origam___text___b359e5c8-55cd-48f5-835c-681126dd4868.xslt" />
 </x:file>

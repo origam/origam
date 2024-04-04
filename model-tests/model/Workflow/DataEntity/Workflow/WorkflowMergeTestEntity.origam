@@ -63,6 +63,43 @@
     </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="56b940d4-6d2b-4833-9851-609b3df544a3"
+      euia:label="MergeThroughDifferentEntitySecondPhase"
+      ewa:mergeType="FullMerge"
+      euia:modal="true"
+      euia:modalDialogHeight="200"
+      euia:modalDialogWidth="350"
+      euia:mode="ActiveRecord"
+      asi:name="MergeThroughDifferentEntitySecondPhase"
+      euia:order="20"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="MergeModalDialogChanges"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Workflow/Workflow/Workflow/MergeThroughDifferentEntitySecondPhase.origam#MergeThroughDifferentEntitySecondPhase/5f3693fe-1836-4ef0-b4a0-aeca95420503">
+      <euiapm:EntityUIActionParameterMapping
+        asi:abstract="false"
+        euiapm:field="."
+        x:id="c1c8c106-588c-45ed-b168-4b0d905a86fb"
+        asi:name="MergeThroughDifferentEntity"
+        euiapm:type="Current" />
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="89ac3315-ab4e-418c-86b1-60a6d9c1a8e4"
+        asi:name="WorkflowMergeTestEntityFirstPhase"
+        sc2:screen="Workflow/FormControlSet/Workflow/WorkflowMergeTestEntityFirstPhase.origam#WorkflowMergeTestEntityFirstPhase/97047455-85ba-4a3a-acba-7f6dbc5c8502" />
+    </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
       euia:actionType="Workflow"
       ewa:cleanDataBeforeMerge="false"
       ewa:closeType="CloseAndCommit"
