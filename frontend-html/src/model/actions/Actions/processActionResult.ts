@@ -175,6 +175,17 @@ function internalProcessActionResult(dep: {
           break;
         }
         case IActionResultType.OpenUrl: {
+          yield*dep.openNewUrl(
+            actionResultItem.url!,
+            actionResultItem.urlOpenMethod,
+            actionResultItem.request.caption
+          );
+          if (getOpenedScreen(dep.parentContext).isDialog) {
+            yield*dep.closeForm();
+          }
+          break;
+        }
+        case IActionResultType.Script: {
           processScript(actionResultItem, dep.getPanelFunc);
           break;
         }
