@@ -5201,10 +5201,10 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-string-strip-html@*, string-strip-html@^13.4.7:
-  version "13.4.7"
-  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.7.tgz#521be02cd889c76892066967d813a578507e1983"
-  integrity sha512-eO/Fzr7S/B6xk9AcFNASVFR5MaqM+40obIewQIaR5Ngt9x1Ty1jaf6IqfeKOS6v+OqIEPBcWIFdYG5EV004Lwg==
+string-strip-html@*, string-strip-html@^13.4.8:
+  version "13.4.8"
+  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.4.8.tgz#76bedb53abdece17fcf1d9d3b8e5c2d04c3b8f09"
+  integrity sha512-vlcRAtx5DN6zXGUx3EYGFg0/JOQWM65mqLgDaBHviQPP+ovUFzqZ30iQ+674JHWr9wNgnzFGxx9TGipPZMnZXg==
   dependencies:
     "@types/lodash-es" "^4.17.12"
     codsen-utils "^1.6.4"
