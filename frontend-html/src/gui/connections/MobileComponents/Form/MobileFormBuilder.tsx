@@ -37,7 +37,7 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { compareTabIndexOwners, ITabIndexOwner, TabIndex } from "model/entities/TabIndexOwner";
 import { FormRoot } from "gui/Workbench/ScreenArea/FormView/FormRoot";
-import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
+import "gui/connections/MobileComponents/Form/MobileForm.scss";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";

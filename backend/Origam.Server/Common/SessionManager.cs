@@ -255,16 +255,10 @@ namespace Origam.Server
 
                     case UIRequestType.FormReferenceMenuItem:
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
-                        formMenuItem = menuItem as FormReferenceMenuItem;
                         // FORM
-                        if (request.CreateNewRecord)
-                        {
-                            ss = new NewRecordSessionStore(basicUIService, request, menuItem.Name, analytics);
-                        }
-                        else
-                        {
-                            ss = new FormSessionStore(basicUIService, request, menuItem.Name, analytics);
-                        }
+                        ss = request.NewRecordInitialValues != null 
+                            ? new NewRecordSessionStore(basicUIService, request, menuItem.Name, analytics) 
+                            : new FormSessionStore(basicUIService, request, menuItem.Name, analytics);
                         break;
 
                     case UIRequestType.WorkflowReferenceMenuItem:

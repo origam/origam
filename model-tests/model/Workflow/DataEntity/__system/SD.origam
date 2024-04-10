@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
+  xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
+  xmlns:sc2="http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0">
+  <ewa:EntityUIAction
+    asi:abstract="false"
+    euia:actionType="Workflow"
+    ewa:cleanDataBeforeMerge="false"
+    ewa:closeType="CloseAndCommit"
+    ewa:commitChangesAfterMerge="false"
+    euia:default="true"
+    x:id="e6cfd9bb-4da2-45de-8d7a-7a512bd0e2ff"
+    euia:label="MergeThroughDifferentEntityThirdPhase"
+    ewa:mergeType="AppendMergeExisting"
+    euia:modal="false"
+    euia:mode="ActiveRecord"
+    asi:name="MergeThroughDifferentEntityThirdPhase"
+    euia:order="10"
+    x:parentId="a9770d71-2ee1-464a-8e17-1fae683edd34"
+    euia:placement="Toolbar"
+    euia:refreshAfterReturn="None"
+    ewa:refreshAfterWorkflow="RefreshChangedRecords"
+    ewa:refreshPortalAfterFinish="false"
+    ewa:requestSaveBeforeWorkflow="false"
+    euia:roles="*"
+    ewa:saveAfterWorkflow="false"
+    euia:valueType="SavedValue"
+    ewa:workflow="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/0f39770b-9d73-475f-aba6-122dec2370ca">
+    <euiapm:EntityUIActionParameterMapping
+      asi:abstract="false"
+      euiapm:field="/"
+      x:id="8fa31eac-62db-44fb-93d5-70811a7a0e16"
+      asi:name="WorkflowMergeTestEntity"
+      euiapm:type="Current" />
+    <sc2:ScreenCondition
+      asi:abstract="false"
+      x:id="7e8d4604-1ca6-4c12-8204-5f253dce3828"
+      asi:name="MergeThroughDifferentEntity"
+      sc2:screen="Workflow/FormControlSet/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/143feb0a-5dbd-4bfe-b342-9308c6e1322d" />
+  </ewa:EntityUIAction>
+</x:file>

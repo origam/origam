@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,14 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-:global(.formItem) {
-  margin-top: 5px;
-  margin-bottom: 5px;
+import {getRowStatesByEntity} from "../../selectors/RowState/getRowStatesByEntity";
+
+export function clearRowStateValue(ctx: any) {
+    return function putRowStateValue(entity: string, rowId: string) {
+        const rowStates = getRowStatesByEntity(ctx, entity);
+        rowStates && rowStates.clearValue(rowId);
+    };
 }
-
-
-:global(.formRootMobile) {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-

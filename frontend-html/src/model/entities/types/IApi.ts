@@ -72,6 +72,19 @@ export interface IApi {
     }[]
   ): Promise<{ [key: string]: { [key: string]: string } }>;
 
+  getLookupNewRecordInitialValues(data: {
+    "Property": string,
+    "Id": string,
+    "LookupId": string,
+    "Parameters": { [key: string]: string } | undefined,
+    "ParameterMappings": { [key: string]: string } | undefined,
+    "SearchText": string | undefined,
+    "DataStructureEntityId": string,
+    "Entity": string,
+    "SessionFormIdentifier": string,
+    "MenuId": string
+  }): Promise<{ [key: string]: string }>;
+
   newEntity(data: { DataStructureEntityId: string; MenuId: string }): Promise<any>;
 
   putEntity(data: {
@@ -174,7 +187,7 @@ export interface IApi {
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
     IsSingleRecordEdit?: boolean;
-    CreateNewRecord?: boolean
+    NewRecordInitialValues?: {[p:string]: string};
     RequestCurrentRecordId: boolean;
   }): Promise<any>;
 

@@ -90,7 +90,7 @@ export class FormFocusManager {
   forceAutoFocus() {
     if (this.focusableContainers.length === 0 && this.backupFocusPlaceholder) {
       setTimeout(() => {
-        this.backupFocusPlaceholder?.focus();
+        requestFocus(this.backupFocusPlaceholder);
       }, 0);
       return;
     }

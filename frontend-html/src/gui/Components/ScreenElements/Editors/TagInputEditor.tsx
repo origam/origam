@@ -102,7 +102,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
         if (props.autoFocus) {
-          setTimeout(() => inputElement?.focus());
+          setTimeout(() => requestFocus(inputElement));
         }
       }, [beh, inputElement, props.autoFocus]);
 
