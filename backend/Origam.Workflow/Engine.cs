@@ -707,40 +707,48 @@ namespace Origam.Workflow
 			return false;
 		}
 
-		private void HandleWorkflowException(Exception ex)
+		private void HandleWorkflowException(Exception exception)
 		{
-			this.Exception = ex;
-
-			ArrayList keys = new ArrayList(_taskResults.Keys);
-
-			foreach(object key in keys)
+			Exception = exception;
+			var keys = new ArrayList(_taskResults.Keys);
+			foreach (object key in keys)
 			{
-				if((WorkflowStepResult)_taskResults[key] == WorkflowStepResult.Ready)
+				if ((WorkflowStepResult)_taskResults[key] 
+                        == WorkflowStepResult.Ready)
 				{
 					_taskResults[key] = WorkflowStepResult.NotRun;
 				}
 			}
-
-			if(IsTrace(this.WorkflowBlock))
+			if (IsTrace(WorkflowBlock))
 			{
-				string recursiveExceptionText = ex.Message;
-				Exception recursiveEx = ex;
-				while(recursiveEx.InnerException != null)
+				string recursiveExceptionText = exception.Message;
+				Exception recursiveEx = exception;
+				while (recursiveEx.InnerException != null)
 				{
-					recursiveExceptionText += Environment.NewLine + "-------------------------------- " + Environment.NewLine + recursiveEx.InnerException.Message;
-
+					recursiveExceptionText += Environment.NewLine 
+						   + "-------------------------------- " 
+						   + Environment.NewLine 
+						   + recursiveEx.InnerException.Message;
 					recursiveEx = recursiveEx.InnerException;
 				}
-
-				_tracingService.TraceStep(this.WorkflowInstanceId, (this.WorkflowBlock as AbstractSchemaItem).Path, (Guid)this.WorkflowBlock.PrimaryKey["Id"], "Process", "Error", null, recursiveExceptionText, recursiveEx.StackTrace, ex.Message);
+				_tracingService.TraceStep(
+					workflowInstanceId: WorkflowInstanceId, 
+					stepPath: (WorkflowBlock as AbstractSchemaItem)?.Path, 
+					stepId: (Guid)WorkflowBlock.PrimaryKey["Id"], 
+					category: "Process", 
+					subCategory: "Error", 
+					remark: null, 
+					data1: recursiveExceptionText, 
+					data2: recursiveEx.StackTrace, 
+					exception.Message);
 			}
-
-            if (log.IsErrorEnabled)
+            if (exception is not WorkflowCancelledByUserException 
+                && log.IsErrorEnabled)
             {
-	            log.LogOrigamError($"{ex.Message}\n{workflowStackTrace}", ex);
+	            log.LogOrigamError(
+		            $"{exception.Message}\n{workflowStackTrace}", exception);
             }
-
-			FinishWorkflow(ex);
+			FinishWorkflow(exception);
 		}
 
 		private void SetStepStatus(IWorkflowStep step, WorkflowStepResult status)
