@@ -1,14 +1,12 @@
 const {
-    sleep, xPathContainsClass, openMenuItem, login, catchRequests, afterEachTest, beforeEachTest
+    sleep, openMenuItem, login, afterEachTest, beforeEachTest
 } = require('./testTools');
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration } = require("./dbTools");
-const { widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
-    topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId } = require("./modelIds");
+const { clearScreenConfiguration } = require("./dbTools");
+const { topMenuHeader, reportWindowMenuItemId } = require("./modelIds");
 
 
 let browser;
 let page;
-const reportWindowId = "menu_3dc51183-a78e-4663-bd41-97b230de7b7d";
 
 beforeAll(async () => {
     await clearScreenConfiguration();
@@ -30,10 +28,10 @@ describe("Html client", () => {
             page,
             [
                 topMenuHeader,
-                reportWindowId,
+                reportWindowMenuItemId,
             ]);
 
-        await sleep(1500);
+        await sleep(2500);
         let reportWindowTab = await page.$(`[class*='tabHandle']`);
         const box = await reportWindowTab.boundingBox();
         await page.mouse.click(
@@ -41,9 +39,9 @@ describe("Html client", () => {
           box.y + 1
         );
 
-        await sleep(500);
+        await sleep(1000);
         reportWindowTab = await page.$(`[class*='tabHandle']`);
         await sleep(500);
-        expect(reportWindowTab).toBe(null);
+        expect(reportWindowTab).toBeNull();
     });
 });
