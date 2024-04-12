@@ -235,9 +235,9 @@ namespace OrigamScheduler
 
 				WorkflowHost.DefaultHost.ExecuteWorkflow(engine);
 
-				if(engine.Exception != null)
+				if(engine.WorkflowException != null)
 				{
-					throw engine.Exception;
+					throw engine.WorkflowException;
 				}
 
                 if (log.IsInfoEnabled)
