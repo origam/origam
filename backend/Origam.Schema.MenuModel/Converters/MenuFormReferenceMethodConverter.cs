@@ -50,7 +50,7 @@ namespace Origam.Schema.MenuModel
 				return new StandardValuesCollection(new ArrayList());
 			}
 			var output = new ArrayList(methods.Count);
-			foreach(AbstractSchemaItem method in methods)
+			foreach (AbstractSchemaItem method in methods)
 			{
 				output.Add(method);
 			}
