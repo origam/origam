@@ -40,23 +40,23 @@ namespace Origam.Schema.MenuModel
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		public override StandardValuesCollection 
 			GetStandardValues(ITypeDescriptorContext context)
 		{
-			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			ArrayList methods = currentItem.Screen.DataStructure.Methods;
-
-			ArrayList array = new ArrayList(methods.Count);
-			foreach(AbstractSchemaItem item in methods)
+			var currentItem = context.Instance as FormReferenceMenuItem;
+			ArrayList methods = currentItem?.Screen?.DataStructure?.Methods;
+			if (methods == null)
 			{
-				array.Add(item);
+				return new StandardValuesCollection(new ArrayList());
 			}
-
-			array.Add(null);
-			
-			array.Sort();
-
-			return new StandardValuesCollection(array);
+			var output = new ArrayList(methods.Count);
+			foreach(AbstractSchemaItem method in methods)
+			{
+				output.Add(method);
+			}
+			output.Add(null);
+			output.Sort();
+			return new StandardValuesCollection(output);
 		}
 
 		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)

@@ -740,8 +740,8 @@ namespace Origam.Workflow
 		private void ResolveFormReferenceMenuItem(FormReferenceMenuItem menu,
 			out DataStructure ds, out DataStructureMethod method)
 		{
-			ds = (menu.ListDataStructure == null ? menu.Screen.DataStructure : menu.ListDataStructure);
-			method = (menu.ListMethod == null ?  menu.Method : menu.ListMethod);
+			ds = menu.ListDataStructure ?? menu.Screen?.DataStructure;
+			method = menu.ListMethod ?? menu.Method;
 		}
 
 		private void ResolveFilterLookup(EntityFilterLookupReference reference,
