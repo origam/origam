@@ -4,7 +4,10 @@
   xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
-  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsr1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRule/6.0.0"
+  xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
+  xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0">
   <ds1:DataStructure
     asi:abstract="false"
     x:id="8fbfcb2c-eb8a-4932-ac5a-9a1a4d90df39"
@@ -21,5 +24,25 @@
       asi:name="TagInputSource"
       dse:relationType="Normal"
       dse:useUpsert="false" />
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="989a8c58-ce20-4d31-a504-fbbcede446ad"
+      asi:name="Default">
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/TagInputSource.origam#TagInputSource/TagInputSource/10eb49c9-30bb-4341-9807-8697da7ef41e"
+        x:id="3b7170e2-fae7-4fb1-8f47-8573e1582de1"
+        asi:name="LabelToModifiedString"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/Label/25ba0ff2-4452-40be-a748-4428bce1c18f"
+        dsr1:valueRule="Widgets/Rule/Widgets/ModifyString.origam#ModifyString/423c3f7f-83e9-483c-8f27-1e98901d072d">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/TagInputSource.origam#TagInputSource/TagInputSource/10eb49c9-30bb-4341-9807-8697da7ef41e"
+          dsrd:field="Widgets/DataEntity/Widgets/TagInputSource.origam#TagInputSource/Number/3220b91a-532f-46ce-82dc-0a8af2786937"
+          x:id="487d37b4-717c-4700-a1ec-d16146c24629"
+          asi:name="TagInputSource_Number" />
+      </dsr1:DataStructureRule>
+    </dsrs:DataStructureRuleSet>
   </ds1:DataStructure>
 </x:file>
