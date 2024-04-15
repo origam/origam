@@ -1046,7 +1046,7 @@ namespace Origam.Workflow
 
             WorkflowHost.DefaultHost.ExecuteWorkflow(engine);
 
-            if (engine.Exception != null) throw engine.Exception;
+            if (engine.WorkflowException != null) throw engine.WorkflowException;
 
             if (log.IsDebugEnabled)
             {
