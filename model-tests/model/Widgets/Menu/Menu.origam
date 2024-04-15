@@ -110,6 +110,23 @@
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes_MultipleCheckboxesActionTest.origam#AllDataTypes_MultipleCheckboxesActionTest/c025c9df-6bbb-4a9c-920a-66dcd7d7d348"
       frmi:sortSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Read Only"
+      x:id="65139aee-9cc9-42c4-8b1c-7519c1eb8db8"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+      asi:name="AllDataTypes_ReadOnly"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="true"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     <s2:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"
