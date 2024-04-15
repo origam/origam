@@ -63,20 +63,29 @@ public class NewRecordSessionStore : FormSessionStore
         DatasetTools.ApplyPrimaryKey(row);
         DatasetTools.UpdateOrigamSystemColumns(
             row, true, SecurityManager.CurrentUserProfile().Id);
-        FillInitialValues(row);
         dataSet.RemoveNullConstraints();
         table.Rows.Add(row);
         SetDataSource(dataSet);
+        FillInitialValues(row);
     }
 
     private void FillInitialValues(DataRow row)
     {
-        foreach (string columnName in Request.NewRecordInitialValues.Keys)
+        try
         {
-            if (Request.NewRecordInitialValues[columnName] != null)
+            RegisterEvents();
+            foreach (string columnName in Request.NewRecordInitialValues.Keys)
             {
-                row[columnName] = Request.NewRecordInitialValues[columnName];
+                if (Request.NewRecordInitialValues[columnName] != null)
+                {
+                    row[columnName] 
+                        = Request.NewRecordInitialValues[columnName];
+                }
             }
+        }
+        finally
+        {
+            UnregisterEvents();
         }
     }
 }
