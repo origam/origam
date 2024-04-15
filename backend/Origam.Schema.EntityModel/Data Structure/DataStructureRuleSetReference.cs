@@ -112,12 +112,11 @@ namespace Origam.Schema.EntityModel
 
             if ((obj as DataStructureRuleSetReference) != null)
             {
-                // sort ruleset reference by name
                 return this.Name.CompareTo((obj as DataStructureRuleSetReference).Name);
             }
             else
             {
-                // rulesets are always an top, so rulesets are lower
+                // rulesets are always an top, so rules are lower
                 return -1;
             }
         }

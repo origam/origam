@@ -113,7 +113,7 @@ export class FormViewEditor extends React.Component<{
     const rowId = getSelectedRowId(property);
     const row = getSelectedRow(property);
     const foregroundColor = getRowStateForegroundColor(property, rowId || "");
-    const  dataView = getDataView(property);
+    const dataView = getDataView(property);
     const readOnly =
       !row ||
       isReadOnly(property, rowId) ||
@@ -409,12 +409,12 @@ export class FormViewEditor extends React.Component<{
             return;
           }
           if (event.key === "Enter") {
-            await this.props.onEditorBlur?.();
+            const updateExecuted = await this.props.onEditorBlur?.();
             if (openedScreen.isNewRecordScreen){
               await onSaveClick(openedScreen);
               return;
             }
-            if (dataView.firstEnabledDefaultAction) {
+            if (!updateExecuted && dataView.firstEnabledDefaultAction) {
               uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
                 event,
                 dataView.firstEnabledDefaultAction

@@ -1,5 +1,7 @@
+#region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,13 +19,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getRowStates } from "model/selectors/RowState/getRowStates";
-import { getDataSources } from "model/selectors/DataSources/getDataSources";
+#endregion
 
-export function clearRowStates(ctx: any) {
-  return function*clearRowStates() {
-    for (let dataSource of getDataSources(ctx)) {
-      getRowStates(dataSource).clearAll();
-    }
-  };
+using System;
+using Origam.Server.Attributes;
+
+namespace Origam.Server.Model.UIService;
+
+public abstract class AbstractLookupInput
+{
+    [RequiredNonDefault] public Guid LookupId { get; set; }
+    public Guid MenuId { get; set; } = Guid.Empty;
 }

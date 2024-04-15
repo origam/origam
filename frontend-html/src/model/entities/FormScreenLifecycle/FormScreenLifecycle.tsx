@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
 import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
-import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
+import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
@@ -88,7 +88,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { isISectionPlugin } from "plugins/interfaces/ISectionPlugin";
 import { isIScreenPlugin } from "plugins/interfaces/IScreenPlugin";
@@ -110,6 +109,7 @@ export const closingScreens = new WeakSet<any>();
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  onClose: (() => void) | undefined;
   parameters: { [key: string]: string } = {};
   focusedDataViewId: string | undefined;
   _updateRequestAggregator: UpdateRequestAggregator | undefined;
@@ -142,7 +142,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onFlushData(): Generator<unknown, any, unknown> {
-    yield*this.flushData();
+    return yield*this.flushData();
   }
 
   *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
@@ -810,6 +810,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
         yield*this.saveSession();
       }
+      return updateObjectDidRun;
     } finally {
       this.flushDataEntered--;
       this.monitor.inFlow--;
@@ -842,7 +843,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // Parallel promises will be resolved all by the same result of merged update request.
     if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
       this._processedUpdateObjectResults.add(updateObjectResult);
-      yield*clearRowStates(dataView)();
       yield*processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
     return true;
@@ -999,11 +999,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _readFirstChunkOfRowsScheduled = false;
 
   *readFirstChunkOfRowsWithGate(rootDataView: IDataView) {
+    if (this._readFirstChunkOfRowsRunning) {
+      this._readFirstChunkOfRowsScheduled = true;
+      return;
+    }
     try {
-      if (this._readFirstChunkOfRowsRunning) {
-        this._readFirstChunkOfRowsScheduled = true;
-        return;
-      }
       this._readFirstChunkOfRowsRunning = true;
       do {
         this._readFirstChunkOfRowsScheduled = false;
@@ -1368,7 +1368,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
 
-      yield*new_ProcessActionResult(action)(result);
+      yield*processActionResult(action)(result);
       yield*refreshRowStates(this)();
       const dataView = getDataView(action);
       dataView?.formFocusManager?.refocusLast();

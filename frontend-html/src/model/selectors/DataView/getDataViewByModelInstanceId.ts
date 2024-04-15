@@ -21,7 +21,8 @@ import { IDataView } from "../../entities/types/IDataView";
 import { getOpenedScreen } from "../getOpenedScreen";
 
 export function getDataViewByModelInstanceId(ctx: any, modelInstanceId: string): IDataView | undefined {
-  return getOpenedScreen(ctx).content.formScreen!.dataViews.find(
+  const formScreen = getOpenedScreen(ctx).content.formScreen;
+  return formScreen!.dataViews.find(
     item => item.modelInstanceId === modelInstanceId
   );
 }

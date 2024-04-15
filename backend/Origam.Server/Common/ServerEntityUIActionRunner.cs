@@ -268,14 +268,18 @@ namespace Origam.Server
                 result.RefreshOnReturnType = processData.Action.RefreshAfterReturn.ToString();
             }
             resultList.Add(result);
-            EntityWorkflowAction ewa = processData.Action as EntityWorkflowAction;
-            if (ewa != null && ewa.CloseType != ModalDialogCloseType.None)
+            var entityWorkflowAction = processData.Action as EntityWorkflowAction;
+            if (entityWorkflowAction != null && entityWorkflowAction.CloseType != ModalDialogCloseType.None)
             {
                 resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
             }
-            else if(ewa==null && processData.IsModalDialog)
+            else if(entityWorkflowAction == null && processData.IsModalDialog)
             {
                 resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
+            }
+            if (entityWorkflowAction != null)
+            {
+                AppendScriptCalls(entityWorkflowAction, processData);
             }
         }
 

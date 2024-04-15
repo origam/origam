@@ -161,13 +161,13 @@ namespace Origam.Workflow.WorkQueue
 				log.Debug("Finishing workflow " + _workflow.Name);
 			}
 			// handle exception
-			if(workflowEngine.Exception != null)
+			if(workflowEngine.WorkflowException != null)
 			{
 				if(log.IsErrorEnabled)
 				{
-					log.LogOrigamError(workflowEngine.Exception.Message, workflowEngine.Exception);
+					log.LogOrigamError(workflowEngine.WorkflowException.Message, workflowEngine.WorkflowException);
 				}
-				throw workflowEngine.Exception;
+				throw workflowEngine.WorkflowException;
 			}
 			XmlContainer resultData = workflowEngine.ReturnValue as XmlContainer;
 			_resultState = (string)workflowEngine.RuleEngine.GetContext(new ModelElementKey(new Guid("f405cef2-2fad-4d58-a71c-10df3831e966")));

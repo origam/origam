@@ -7,7 +7,7 @@
 -->
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="761870eb-6df8-40f6-83e1-3d12bebdb0e3">
+  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="ba97ae1f-5d79-4327-9f97-e55faafb3c9f">
     <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine">
     </Package>
     <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high">
@@ -431,14 +431,14 @@
             <Directory Id="lib" Name="lib">
               <Directory Id="win32" Name="win32">
                 <Directory Id="dir_x64" Name="x64">
-                  <Component Id="GIT2_A2BDE63.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
-                    <File Id="GIT2_A2BDE63.DLL_X64" Name="git2-a2bde63.dll" Source="source\lib\win32\x64\git2-a2bde63.dll">
+                  <Component Id="GIT2_A418D9D.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
+                    <File Id="GIT2_A418D9D.DLL_X64" Name="git2-a418d9d.dll" Source="source\lib\win32\x64\git2-a418d9d.dll">
                     </File>
                   </Component>
                 </Directory>
                 <Directory Id="dir_x86" Name="x86">
-                  <Component Id="GIT2_A2BDE63.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
-                    <File Id="GIT2_A2BDE63.DLL_X86" Name="git2-a2bde63.dll" Source="source\lib\win32\x86\git2-a2bde63.dll">
+                  <Component Id="GIT2_A418D9D.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
+                    <File Id="GIT2_A418D9D.DLL_X86" Name="git2-a418d9d.dll" Source="source\lib\win32\x86\git2-a418d9d.dll">
                     </File>
                   </Component>
                 </Directory>
@@ -699,9 +699,9 @@
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GIT.DLL">
       </ComponentRef>
-      <ComponentRef Id="GIT2_A2BDE63.DLL_X86">
+      <ComponentRef Id="GIT2_A418D9D.DLL_X86">
       </ComponentRef>
-      <ComponentRef Id="GIT2_A2BDE63.DLL_X64">
+      <ComponentRef Id="GIT2_A418D9D.DLL_X64">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL">
       </ComponentRef>

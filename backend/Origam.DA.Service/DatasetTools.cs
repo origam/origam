@@ -433,8 +433,8 @@ namespace Origam.DA
 							aRowKey[i] = ConvertValue(drSource[adcPK[i].ColumnName], adcPK[i].DataType);
 						}
 					}
-
-					// Locate source row in target 
+					// first we make sure that deleted source is not already deleted
+					// in target, if it is deleted there is nothing to do
 					if (drSource.RowState == DataRowState.Deleted)
 					{
 						DataRow deletedRow = inout_dtTarget.Rows.Cast<DataRow>()
@@ -444,13 +444,11 @@ namespace Origam.DA
 							);
 						if (deletedRow != null)
 						{
-							continue; // Deleted row is already marked as deleted so there is nothing to do
+							continue; 
 						}
 					}
-					else
-					{
-						drTarget = inout_dtTarget.Rows.Find(aRowKey); 
-					}
+					// Locate source row in target 
+					drTarget = inout_dtTarget.Rows.Find(aRowKey); 
 				}
 
 				if (null == drTarget)

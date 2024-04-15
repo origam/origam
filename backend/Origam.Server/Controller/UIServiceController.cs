@@ -41,7 +41,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
@@ -341,8 +340,17 @@ namespace Origam.Server.Controller
         public IActionResult GetLookupList([FromBody]LookupListInput input)
         {
             //todo: implement GetFilterLookupList
-            return LookupListInputToRowData(input)
+            return LookupInputToRowData(input)
                 .Bind(rowData => GetLookupRows(input, rowData))
+                .Map(ToActionResult)
+                .Finally(UnwrapReturnValue);
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetLookupNewRecordInitialValues(
+            [FromBody]LookupNewRecordInitialValuesInput input)
+        {
+            return LookupInputToRowData(input)
+                .Bind(rowData => RowDataToNewRecordInitialValues(input, rowData))
                 .Map(ToActionResult)
                 .Finally(UnwrapReturnValue);
         }
@@ -356,7 +364,7 @@ namespace Origam.Server.Controller
                 if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
                 {
                     return WorkQueueGetRowsGetRowsQuery(input, workQueueSessionStore)
-                        .Bind(dataStructureQuery=>
+                        .Bind(dataStructureQuery =>
                             ExecuteDataReader(
                                 dataStructureQuery: dataStructureQuery,
                                 methodId: input.MenuId))
@@ -653,7 +661,7 @@ namespace Origam.Server.Controller
         {
             return RunWithErrorHandler(() => Ok(GetMenuId(
                 lookupId: input.LookupId, 
-                ReferenceId: input.ReferenceId))
+                referenceId: input.ReferenceId))
             );
         }
         
@@ -726,11 +734,11 @@ namespace Origam.Server.Controller
             };
         }
         
-        private string GetMenuId(Guid lookupId, Guid ReferenceId)
+        private string GetMenuId(Guid lookupId, Guid referenceId)
         {
             return ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(lookupId, ReferenceId)
+                .GetMenuBinding(lookupId, referenceId)
                 .MenuId;
         }
         private Result<object, IActionResult> ExtractAggregationList(IEnumerable<Dictionary<string, object>> readerResult)
@@ -898,9 +906,46 @@ namespace Origam.Server.Controller
                     GetRowData(input, dataTable))
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
-        }
-        private Result<RowData, IActionResult> LookupListInputToRowData(
-            LookupListInput input)
+        } 
+        private Result<Dictionary<string, string>, IActionResult> 
+            RowDataToNewRecordInitialValues(
+                LookupNewRecordInitialValuesInput input, RowData rowData)
+        {
+            var initialValues = new Dictionary<string, string>();
+            // key parameter name, value target column name
+            foreach (KeyValuePair<string, string> parameterMapping 
+                     in input.ParameterMappings)
+            {
+                if (parameterMapping.Key.Equals(
+                        "SearchText",
+                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    initialValues.Add(
+                        // target column name
+                        parameterMapping.Value,
+                        // target column value
+                        input.SearchText);
+                }
+                else if (rowData.Row.Table.Columns.Contains(
+                            (string)input.Parameters[parameterMapping.Key]))
+                {
+                    initialValues.Add(
+                        // target column name
+                        parameterMapping.Value,
+                        // target column value
+                        rowData.Row[(string)input.Parameters[
+                                parameterMapping.Key]].ToString());
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"Parameter '{parameterMapping.Key}' maps to not available source column '{input.Parameters[parameterMapping.Key]}'.");
+                }
+            }
+            return initialValues;
+        } 
+        private Result<RowData, IActionResult> LookupInputToRowData(
+            AbstractLookupRowDataInput input)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
@@ -1176,10 +1221,11 @@ namespace Origam.Server.Controller
                 }
                 return Conflict(ex.Message);
             }
-            return Ok(SessionStore.GetDeleteInfo(
-                                requestingGrid: null,
-                                tableName: rowData.Row.Table.TableName,
-                                objectId: null));
+            return Ok(new ChangeInfo
+            {
+                Entity = rowData.Row.Table.TableName,
+                Operation = Operation.Delete,
+            });
         }
         private IActionResult ThrowAwayReturnData(IActionResult arg)
         {

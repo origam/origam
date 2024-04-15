@@ -78,7 +78,6 @@ namespace Origam.Workbench.Commands
             {
                 activeItem = nonpersistentNode.ParentNode as AbstractSchemaItem;
             }
-            Type[] validTypes = ValidTypes(factory);
             var items = new List<AsMenuCommand>();
             if (factory.NewItemTypes != null)
             {
@@ -102,7 +101,7 @@ namespace Origam.Workbench.Commands
                 }
 
                 ArrayList nameableTypes = new ArrayList();
-                foreach (Type type in validTypes)
+                foreach (Type type in factory.NewItemTypes)
                 {
                     if (names.Count == 0 || !IsNameableType(factory, type))
                     {
@@ -136,20 +135,6 @@ namespace Origam.Workbench.Commands
 				}
 			}
 			return false;
-		}
-
-		public static Type[] ValidTypes(ISchemaItemFactory factory)
-		{
-			ArrayList result = new ArrayList();
-			foreach (Type type in factory.NewItemTypes) 
-			{
-				if(LicensePolicy.ModelElementPolicy(type.Name, ModelElementPolicyCommand.Create))
-				{
-					result.Add(type);
-				}
-			}
-
-			return (Type[])result.ToArray(typeof(Type));
 		}
 
 		public static void AddNewItem(WorkbenchSchemaService sch, Type type,
@@ -305,84 +290,7 @@ namespace Origam.Workbench.Commands
 	}
 
 
-	public class ExtensionMenuBuilder : ISubmenuBuilder
-	{
-		#region ISubmenuBuilder Members
-        public bool LateBound
-        {
-            get
-            {
-                return true;
-            }
-        }
-        public bool HasItems()
-        {
-            WorkbenchSchemaService sch = ServiceManager.Services.GetService(
-                typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-            if (sch.ActiveSchemaItem != null)
-            {
-                if (!LicensePolicy.ModelElementPolicy(
-                    sch.ActiveSchemaItem.GetType().Name,
-                    ModelElementPolicyCommand.MoveToPackage))
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-            if (sch.IsSchemaLoaded == false) return false;
-            return sch.LoadedPackages.Count > 1;
-        }
-
-        public AsMenuCommand[] BuildSubmenu(object owner)
-		{
-			ArrayList extArray = new ArrayList();
-            WorkbenchSchemaService sch = ServiceManager.Services.GetService(
-                typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-            AddExtensionsToList(extArray, sch.LoadedPackages);
-			extArray.Sort();
-			AsMenuCommand[] items = new AsMenuCommand[extArray.Count];
-			int i = 0;
-			foreach(Package ext in extArray)
-			{
-				MoveToExtension cmd = new MoveToExtension();
-				cmd.Owner = ext;
-				AsMenuCommand menu = new AsMenuCommand(ext.Name, cmd);
-				items[i] = menu;
-				menu.Click += new EventHandler(MoveItem);
-
-				i++;
-			}
-			return items;
-		}
-
-		#endregion
-
-		private void MoveItem(object sender, EventArgs e)
-		{
-			try
-			{
-				(sender as AsMenuCommand).Command.Run();
-			}
-			catch(Exception ex)
-			{
-				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
-			}
-		}
-
-		private void AddExtensionsToList(ArrayList list, ArrayList extensions)
-		{
-			foreach(Package ext in extensions)
-			{
-				list.Add(ext);
-				//AddExtensionsToList(list, ext.ChildExtensions);
-			}
-		}
-	}
-
-	public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
+    public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
 	{
         private ArrayList _types;
 		private string _name;

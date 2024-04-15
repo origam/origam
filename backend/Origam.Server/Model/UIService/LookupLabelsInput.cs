@@ -19,18 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using Origam.Server.Attributes;
 
 namespace Origam.Server.Model.UIService
 {
-    public class LookupLabelsInput
+    public class LookupLabelsInput : AbstractLookupInput
     {
-        [RequiredNonDefault]
-        public Guid LookupId { get; set; }
         [Required]
         public object[] LabelIds { get; set; }
-        public Guid MenuId { get; set; } = Guid.Empty;
     }
 }

@@ -261,4 +261,7 @@
     <data name="ErrorCompareDataStructureSortSetItem">
         <value>Není možno porovnat jiné objekty než objekty typu DataStructureSortSetItem.</value>
     </data>
+    <data name="ErrorDynamicParameter" xml:space="preserve">
+        <value>IsDynamic parameter musí být nastaven na True</value>
+    </data>
 </root>

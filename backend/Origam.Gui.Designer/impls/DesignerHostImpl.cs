@@ -1050,7 +1050,7 @@ namespace Origam.Gui.Designer
 				{
 					try 
 					{
-						rootDesignerHolder.Dispose();
+						rootDesignerHolder?.Dispose();
 					}
 					catch 
 					{

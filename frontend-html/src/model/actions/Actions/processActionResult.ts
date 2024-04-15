@@ -26,7 +26,7 @@ import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 
 import actions from "model/actions-tree";
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { IUrlOpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { openNewUrl } from "../Workbench/openNewUrl";
 import { ICRUDResult, processCRUDResult } from "../DataLoading/processCRUDResult";
 import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
@@ -50,12 +50,13 @@ export interface IOpenNewForm {
       isSessionRebirth?: boolean,
       isSleepingDirty?: boolean,
       refreshOnReturnType?: IRefreshOnReturnType,
+      onClose?: ()=> void
     }
   ): Generator; //boolean
 }
 
 export interface IOpenNewUrl {
-  (url: string, urlOpenMethod: IUrlUpenMethod, title: string): Generator;
+  (url: string, urlOpenMethod: IUrlOpenMethod, title: string): Generator;
 }
 
 export interface IGetActionCaption {
@@ -74,10 +75,22 @@ export interface IProcessCRUDResult {
   (data: { crudResults: ICRUDResult[], resortTables?: boolean }): Generator;
 }
 
-export function new_ProcessActionResult(ctx: any) {
+export interface IActionResult {
+  changes: any[] | null;
+  refreshOnReturnSessionId: string | null;
+  refreshOnReturnType: IRefreshOnReturnType | undefined;
+  request: any;
+  script: string | null;
+  type: IActionResultType;
+  uiResult: any;
+  url: string | null;
+  urlOpenMethod: IUrlOpenMethod;
+}
+
+export function processActionResult(ctx: any) {
   const workbenchLifecycle = getWorkbenchLifecycle(ctx);
   const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
-  return processActionResult2({
+  return internalProcessActionResult({
     getPanelFunc: getPanelFunc,
     openNewForm: workbenchLifecycle.openNewForm,
     openNewUrl: openNewUrl(ctx),
@@ -89,7 +102,7 @@ export function new_ProcessActionResult(ctx: any) {
   });
 }
 
-export function processActionResult2(dep: {
+function internalProcessActionResult(dep: {
   getPanelFunc: (modelInstanceId: string) => IDataView;
   openNewForm: IOpenNewForm;
   openNewUrl: IOpenNewUrl;
@@ -99,14 +112,19 @@ export function processActionResult2(dep: {
   processCRUDResult: IProcessCRUDResult;
   parentContext: any
 }) {
-  return function*processActionResult2(actionResultList: any[]) {
+  return function*internalProcessActionResult(actionResultList: IActionResult[]) {
     const indexedList = actionResultList.map((item, index) => [index, item]);
     indexedList.sort((a: any, b: any) => {
       if (a[1].type === IActionResultType.DestroyForm) return -1;
       if (b[1].type === IActionResultType.DestroyForm) return 1;
       return a[0] - b[0]
     })
-    for (let actionResultItem of indexedList.map(item => item[1])) {
+    let onCloseUserScript;
+    const willOpenNewWindow = actionResultList.some(x => x.type === IActionResultType.OpenForm);
+    if (willOpenNewWindow) {
+      onCloseUserScript = actionResultList.find(x => x.type === IActionResultType.Script);
+    }
+    for (let actionResultItem of indexedList.map(item => item[1] as IActionResult)) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
           const menuItem = getMainMenuItemById(dep.parentContext, actionResultItem.request.objectId);
@@ -135,6 +153,9 @@ export function processActionResult2(dep: {
               parentContext: dep.parentContext,
               requestParameters: actionResultItem.request,
               refreshOnReturnType: refreshOnReturnType,
+              onClose: onCloseUserScript
+                ? () => processScript(onCloseUserScript, dep.getPanelFunc)
+                : undefined
             }
           );
           break;
@@ -149,13 +170,13 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.UpdateData: {
           yield*dep.processCRUDResult(
-            {crudResults: actionResultItem.changes, resortTables: true}
+            {crudResults: actionResultItem.changes!, resortTables: true}
           );
           break;
         }
         case IActionResultType.OpenUrl: {
           yield*dep.openNewUrl(
-            actionResultItem.url,
+            actionResultItem.url!,
             actionResultItem.urlOpenMethod,
             actionResultItem.request.caption
           );
@@ -165,19 +186,23 @@ export function processActionResult2(dep: {
           break;
         }
         case IActionResultType.Script: {
-          try {
-            // eslint-disable-next-line no-new-func
-            const actionScript = new Function("getPanel", actionResultItem.script);
-            actionScript(dep.getPanelFunc);
-          } catch (e: any) {
-            let message = "An error occurred while executing custom script: " + actionResultItem.script + ", \n" + e.message;
-            if (e.stackTrace)
-              message += (", \n" + e.stackTrace);
-            throw new Error(message)
-          }
+          processScript(actionResultItem, dep.getPanelFunc);
           break;
         }
       }
     }
   };
+}
+
+function processScript(actionResultItem: any, getPanelFunc: (modelInstanceId: string) => IDataView) {
+  try {
+    // eslint-disable-next-line no-new-func
+    const actionScript = new Function("getPanel", actionResultItem.script);
+    actionScript(getPanelFunc);
+  } catch (e: any) {
+    let message = "An error occurred while executing custom script: " + actionResultItem.script + ", \n" + e.message;
+    if (e.stackTrace)
+      message += (", \n" + e.stackTrace);
+    throw new Error(message)
+  }
 }

@@ -49,6 +49,8 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getSessionId } from "model/selectors/getSessionId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import cx from 'classnames';
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -129,6 +131,9 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       scrollTopObs.get(),
       mouseMoveSubscriptions
     );
+    if (!handlingResult.handled) {
+      getTablePanelView(ctx).onMouseMoveOutsideCells();
+    }
     return handlingResult;
   }
 
@@ -422,6 +427,12 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     }
   }
 
+  isCursorIconPointer(): boolean {
+    return !!this.tablePanelView.property?.isLink
+    && this.tablePanelView.ctrlPressed
+    && this.tablePanelView.currentTooltipText !== undefined;
+  }
+
   render() {
     const editorCellRectangle =
       this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
@@ -488,7 +499,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
                   <div
                     ref={measureRef}
-                    className={S.cellAreaContainer}
+                    className={cx("cellAreaContainer", S.cellAreaContainer, (this.isCursorIconPointer()) ? ["isLink", S.isLink] : "")}
                     title={this.tablePanelView.currentTooltipText}
                   >
                     <>

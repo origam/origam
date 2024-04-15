@@ -24,6 +24,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 
 export class FormFocusManager {
   autoFocusDisabled = false;
+  backupFocusPlaceholder: HTMLInputElement | undefined | null;
 
   private isFormPerspectiveActive(){
     const dataView = getDataView(this.parent);
@@ -61,6 +62,10 @@ export class FormFocusManager {
     this.focusableContainers = this.focusableContainers.sort(compareTabIndexOwners);
   }
 
+  setBackupFocusPlaceHolder(input: HTMLInputElement | null) {
+    this.backupFocusPlaceholder = input
+  }
+
   focus(name: string) {
     let focusable = this.focusableContainers.find((container) => container.name === name)?.focusable;
     this.focusAndRemember(focusable);
@@ -83,6 +88,12 @@ export class FormFocusManager {
   }
 
   forceAutoFocus() {
+    if (this.focusableContainers.length === 0 && this.backupFocusPlaceholder) {
+      setTimeout(() => {
+        requestFocus(this.backupFocusPlaceholder);
+      }, 0);
+      return;
+    }
     const focusable = this.focusableContainers[0].focusable;
     if (focusable.disabled) {
       //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
@@ -95,7 +106,8 @@ export class FormFocusManager {
   }
 
   autoFocus() {
-    if (this.focusableContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
+    const nothingToFocus = this.focusableContainers.length === 0 && !this.backupFocusPlaceholder;
+    if (nothingToFocus || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
       return;
     }
     this.forceAutoFocus();

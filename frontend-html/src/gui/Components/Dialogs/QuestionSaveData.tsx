@@ -22,6 +22,7 @@ import { observer } from "mobx-react";
 import CS from "./DialogsCommon.module.css";
 import { T } from "../../../utils/translation";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class QuestionSaveData extends React.Component<{
@@ -36,7 +37,7 @@ export class QuestionSaveData extends React.Component<{
   componentDidMount() {
     setTimeout(() => {
       if (this.elmPrimaryBtn) {
-        this.elmPrimaryBtn.focus?.();
+         requestFocus(this.elmPrimaryBtn);
       }
     }, 150);
   }

@@ -143,7 +143,7 @@ namespace Origam.Workflow
 			{
 				if(this.EndRule != null)
 				{
-					this.WorkflowEngine.EvaluateEndRule(this.EndRule, this.NextData);
+					this.WorkflowEngine.EvaluateEndRule(this.EndRule, this.NextData, null);
 				}
 			}
 			catch(RuleException ruleEx)

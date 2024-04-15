@@ -80,7 +80,6 @@ namespace Origam.Workbench
             this.EbrSchemaBrowser.ShowFilter = false;
             this.EbrSchemaBrowser.Size = new System.Drawing.Size(292, 271);
             this.EbrSchemaBrowser.TabIndex = 1;
-            this.EbrSchemaBrowser.QueryFilterNode += new Origam.Workbench.FilterEventHandler(this.ebrSchemaBrowser_QueryFilterNode);
             // 
             // SchemaBrowser
             // 
@@ -108,23 +107,7 @@ namespace Origam.Workbench
             EbrSchemaBrowser.RemoveAllNodes();
             EbrSchemaBrowser.AddRootNode(schemaService.ActiveExtension);
 		}
-
-		private void ebrSchemaBrowser_QueryFilterNode(object sender,
-			ExpressionBrowserEventArgs e)
-		{
-			if(e.QueriedObject is ISchemaItemProvider)
-			{
-				e.Filter = ! LicensePolicy.IsModelProviderVisible(
-					e.QueriedObject.GetType().Name);
-			}
-
-			if(e.QueriedObject is ISchemaItem)
-			{
-				e.Filter = ! LicensePolicy.ModelElementPolicy(
-					e.QueriedObject.GetType().Name, ModelElementPolicyCommand.Show);
-			}
-		}
-
+		
 		public override void RedrawContent()
 		{
 			EbrSchemaBrowser.Redraw();

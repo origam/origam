@@ -43,6 +43,7 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
 import { findStrings } from "xmlInterpreters/xmlUtils";
 import { TabIndex } from "model/entities/TabIndexOwner";
+import { BackupFocusPlaceHolder } from "gui/Workbench/ScreenArea/FormView/BackupFocusPlaceHolder";
 
 
 @inject(({dataView}) => {
@@ -92,6 +93,7 @@ export class FormBuilder extends React.Component<{
             style={{backgroundColor}}
           >
             {xfo.elements.map((child: any) => recursive(child))}
+            <BackupFocusPlaceHolder ctx={self.props.dataView}/>
           </FormRoot>
         );
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import "gui/Components/Form/FormSection.module.scss";
+import "gui/Components/Form/FormSection.scss";
 import cx from "classnames";
 import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";

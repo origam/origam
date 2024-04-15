@@ -37,6 +37,7 @@ import fileDownload from "js-file-download";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
 import { layoutToString } from "model/entities/TablePanelView/layout";
+import { IActionResult } from "model/actions/Actions/processActionResult";
 
 
 export enum IAuditLogColumnIndices {
@@ -148,7 +149,7 @@ export class OrigamAPI implements IApi {
     Caption: string;
     Parameters: { [key: string]: any };
     IsSingleRecordEdit?: boolean;
-    CreateNewRecord?: boolean;
+    NewRecordInitialValues?: {[p:string]: string};
     RequestCurrentRecordId: boolean;
   }) {
     const result = (await this.axiosInstance.post("/UIService/InitUI", data)).data;
@@ -202,6 +203,21 @@ export class OrigamAPI implements IApi {
       return {LookupId: {}}
     }
     return (await this.axiosInstance.post("/UIService/GetLookupLabelsEx", query)).data;
+  }
+
+  async  getLookupNewRecordInitialValues(data: {
+    "Property": string,
+    "Id": string,
+    "LookupId": string,
+    "Parameters": { [key: string]: string },
+    "ParameterMappings": { [key: string]: string },
+    "SearchText": string,
+    "DataStructureEntityId": string,
+    "Entity": string,
+    "SessionFormIdentifier": string,
+    "MenuId": string
+  }) {
+    return (await this.axiosInstance.post("/UIService/GetLookupNewRecordInitialValues", data)).data;
   }
 
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
@@ -450,7 +466,7 @@ export class OrigamAPI implements IApi {
     SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
-  }): Promise<any> {
+  }): Promise<IActionResult> {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
   }
 

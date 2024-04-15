@@ -35,20 +35,29 @@ import { NewRecordScreenData } from "model/entities/NewRecordScreenData";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import cx from "classnames";
 import { getFormFocusManager } from "model/selectors/DataView/getFormFocusManager";
+import { getApi } from "model/selectors/getApi";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
 
 export class NewRecordScreen {
   private _width: number;
   private _height: number;
   private _menuItemId: string;
+  private _parameterMappings:  { [p: string]: any };
 
   constructor(args: {
-    width: number,
+    width: number;
+    menuItemId: any;
     height: number,
-    menuItemId: string}
+    parameterMappings: { [p: string]: any }
+  }
   ) {
     this._width = args.width;
     this._height = args.height;
     this._menuItemId = args.menuItemId;
+    this._parameterMappings = args.parameterMappings;
   }
 
   get width() {
@@ -61,6 +70,10 @@ export class NewRecordScreen {
 
   get menuItemId() {
     return this._menuItemId;
+  }
+
+  get parameterMappings() {
+    return this._parameterMappings;
   }
 }
 
@@ -151,7 +164,7 @@ function*updateComboBoxValue(insertedRowId: string, openedScreen: IOpenedScreen)
 
 
 export function makeOnAddNewRecordClick(property: IProperty){
-  return async function onAddNewRecordClick(){
+  return async function onAddNewRecordClick(searchText?: string){
     if (!property.lookup?.newRecordScreen) {
       throw new Error("newRecordScreen not found on property " + property.id);
     }
@@ -159,15 +172,33 @@ export function makeOnAddNewRecordClick(property: IProperty){
     const menuItem = getMainMenuItemById(property, property.lookup.newRecordScreen.menuItemId);
     const workbenchLifecycle = getWorkbenchLifecycle(property);
     const dialogInfo = new DialogInfo(newRecordScreen.width, newRecordScreen.height);
-
     const selectedRow = getDataView(property).selectedRow!;
     getWorkbench(property).newRecordScreenData = new NewRecordScreenData(property, selectedRow);
-
+    const dataView = getDataView(property);
     const tablePanelView = getTablePanelView(property)!;
     tablePanelView.isEditing = false;
     await runGeneratorInFlowWithHandler({
       ctx: property,
       generator: function*() {
+        const api = getApi(property);
+        const parameters = property.lookup?.dropDownParameters
+            .reduce((paramsObj, param) => {
+              paramsObj[param.parameterName] = param.fieldName;
+              return paramsObj;
+            }, {} as {[p:string]: string});
+        const newRecordInitialValues = (yield api.getLookupNewRecordInitialValues({
+          Property: property.id,
+          Id: dataView.selectedRowId!,
+          LookupId: property.lookupId!,
+          Parameters: parameters,
+          ParameterMappings: property.lookup?.newRecordScreen?.parameterMappings,
+          SearchText: searchText,
+          DataStructureEntityId: getDataStructureEntityId(property),
+          Entity:  getEntity(property),
+          SessionFormIdentifier: getSessionId(property),
+          MenuId: getMenuItemId(property)
+        })) as { [key: string]: string };
+
         yield*workbenchLifecycle.openNewForm(
           {
             id: property!.lookup!.newRecordScreen!.menuItemId,
@@ -177,7 +208,7 @@ export function makeOnAddNewRecordClick(property: IProperty){
             dialogInfo: dialogInfo,
             parameters: { },
             isSingleRecordEdit: true,
-            createNewRecord: true
+            newRecordInitialValues: newRecordInitialValues
           }
         );
       }()

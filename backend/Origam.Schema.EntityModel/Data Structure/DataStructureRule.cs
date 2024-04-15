@@ -175,11 +175,24 @@ namespace Origam.Schema.EntityModel
 			return newNode.Equals(ParentItem);
 		}
 
-		#endregion
+        public override int CompareTo(object obj)
+        {
 
-		#region ISchemaItemFactory Members
+            if ((obj as DataStructureRule) != null)
+            {
+                return this.Name.CompareTo((obj as DataStructureRule).Name);
+            }
+            else
+            {
+                // rulesets are always an top, so rules are lower
+                return 1;
+            }
+        }
+        #endregion
 
-		public override Type[] NewItemTypes => new[]
+        #region ISchemaItemFactory Members
+
+        public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataStructureRuleDependency)
 		};

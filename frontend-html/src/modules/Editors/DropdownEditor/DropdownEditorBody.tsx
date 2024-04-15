@@ -84,7 +84,7 @@ function AddNewDropDown(props: {rowHeight: number}) {
       className={S.table}>
       <div
         className={"cell withCursor"}
-        onClick={beh.onAddNewRecordClick}
+        onClick={() => beh.onAddNewRecordClick?.(beh.userEnteredValue)}
       >
         {T("Add New Record", "add_new_record")}
       </div>

@@ -98,7 +98,7 @@ namespace Origam.Extensions
             }
         }
 
-        public static void AddRange<K, V>(this IDictionary<K, V> dict,
+        public static void AddOrReplaceRange<K, V>(this IDictionary<K, V> dict,
             IDictionary<K, V> otherDict)
         {
             if (otherDict == null)

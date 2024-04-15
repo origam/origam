@@ -31,6 +31,8 @@ export interface IRowState extends IRowStateData {
 
   loadValues(keys: string[]): Promise<any>;
 
+  clearValue(rowId: string): void;
+
   putValue(state: any): void;
 
   hasValue(key: string): boolean;

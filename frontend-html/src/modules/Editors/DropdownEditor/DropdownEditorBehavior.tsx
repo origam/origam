@@ -34,7 +34,7 @@ import { NewRecordScreen } from "gui/connections/NewRecordScreen";
 export const  dropdownPageSize = 100;
 
 export interface IDropdownEditorBehavior extends IDriverState{
-  onAddNewRecordClick?: () => void;
+  onAddNewRecordClick?: (searchText?: string) => void;
   scrollToRowIndex: number | undefined;
   willLoadPage: number;
   hasNewScreenButton: boolean;
@@ -65,7 +65,7 @@ export interface IBehaviorData {
   expandAfterMounting?: boolean,
   onTextOverflowChanged?: (tooltip: string | null | undefined) => void,
   newRecordScreen?: NewRecordScreen,
-  onAddNewRecordClick?: () => void;
+  onAddNewRecordClick?: (searchText?: string) => void;
   typingDelayMillis?: number;
 }
 
@@ -87,7 +87,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private onTextOverflowChanged?: (tooltip: string | null | undefined) => void;
   private expandAfterMounting?: boolean;
   private newRecordScreen?: NewRecordScreen;
-  public onAddNewRecordClick?: () => void;
+  public onAddNewRecordClick?: (searchText?: string) => void;
   private readonly handleInputChangeDeb: _.DebouncedFunc<() => void>;
 
   get hasNewScreenButton() {
@@ -160,6 +160,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     if (this.isDropped) {
       this.ensureRequestCancelled();
       this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
       this.dataTable.clearData();
       this.isDropped = false;
       this.willLoadPage = 1;
@@ -264,6 +265,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
       case "Escape":
         this.dropUp();
         this.userEnteredValue = undefined;
+        this.dataTable.setFilterPhrase("");
         if (wasDropped) {
           event.closedADropdown = true;
           return;
@@ -271,7 +273,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         break;
       case "Enter":
         if (this.addNewDropDownVisible) {
-          this.onAddNewRecordClick?.();
+          this.onAddNewRecordClick?.(this.userEnteredValue);
         }
         if (this.isDropped && !this.isWorking) {
           this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
@@ -403,6 +405,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
     this.data.chooseNewValue(id);
+    this.userEnteredValue = "";
+    this.dataTable.setFilterPhrase("");
     this.dropUp();
   }
 

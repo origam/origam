@@ -830,7 +830,7 @@ namespace Origam.Server
                     requestingGrid: requestingGrid,
                     row: row,
                     operation: operation,
-                    RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                    rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                 listOfChanges.Add(ci);
             }
 
@@ -907,7 +907,7 @@ namespace Origam.Server
                         requestingGrid: requestingGrid,
                         row: row,
                         operation: operation,
-                        RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                        rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                     changes.Add(ci);
                 }
                 else if (ignoreKeys == null || !ignoreKeys.Contains(ignoreRowIndex))
@@ -934,7 +934,7 @@ namespace Origam.Server
                             requestingGrid: null,
                             row: row,
                             operation: op,
-                            RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                            rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                         changes.Add(ci);
                         // we processed it once so we do not want to get it again in a next iteration
                         if (ignoreKeys != null)
@@ -1023,7 +1023,7 @@ namespace Origam.Server
             return GetChangeInfo(requestingGrid, row, operation, RowStates);
         }
 
-        public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], ArrayList> RowStateProcessor)
+        public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], ArrayList> rowStateProcessor)
         {
             ChangeInfo ci = new ChangeInfo();
             ci.Entity = row.Table.TableName;
@@ -1035,33 +1035,14 @@ namespace Origam.Server
             {
                 string[] columns = GetColumnNames(row.Table);
                 ci.WrappedObject = GetRowData(row, columns);
-                if (RowStateProcessor != null)
+                if (rowStateProcessor != null)
                 {
-                    ci.State = RowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0] as RowSecurityState;
+                    ci.State = rowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0] as RowSecurityState;
                 }
             }
             return ci;
         }
-
-        public ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
-        {
-            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
-        }
-        public static ChangeInfo GetDeleteInfo(string requestingGrid, string tableName, object objectId)
-        {
-            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
-        }
-        private static ChangeInfo CreateDeletedChangeInfo(string requestingGrid, string tableName, object objectId)
-        {
-            ChangeInfo ci = new ChangeInfo
-            {
-                Entity = tableName,
-                Operation = Operation.Delete,
-                RequestingGrid = requestingGrid,
-                ObjectId = objectId
-            };
-            return ci;
-        }
+        
         internal static string ConvertTextToUnixStyle(string text)
         {
             return text.Replace("\r\n", "\n");

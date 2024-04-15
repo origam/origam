@@ -6,6 +6,7 @@
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
   xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
   xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
+  xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0"
   xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
   <rrmi:MenuItem
     asi:abstract="false"
@@ -18,7 +19,13 @@
     ami:order="100"
     x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
     rrmi:report="Widgets/Report/LinkReport.origam#LinkReport/1802bcc1-dff2-420c-b26a-af6041702622"
-    ami:roles="*" />
+    ami:roles="*">
+    <sdpm:SelectionDialogParameterMapping
+      asi:abstract="false"
+      x:id="567ff3db-6028-49a7-b581-1d139faa2315"
+      sdpm:itemType="SelectionDialogParameterMapping"
+      asi:name="NewSelectionDialogParameterMapping" />
+  </rrmi:MenuItem>
   <s2:MenuItem
     asi:abstract="false"
     ami:displayName="Widgets"

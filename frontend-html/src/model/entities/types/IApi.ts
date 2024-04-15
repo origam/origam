@@ -23,6 +23,7 @@ import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { EventHandler } from "utils/events";
+import { IActionResult } from "model/actions/Actions/processActionResult";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -70,6 +71,19 @@ export interface IApi {
       LabelIds: string[];
     }[]
   ): Promise<{ [key: string]: { [key: string]: string } }>;
+
+  getLookupNewRecordInitialValues(data: {
+    "Property": string,
+    "Id": string,
+    "LookupId": string,
+    "Parameters": { [key: string]: string } | undefined,
+    "ParameterMappings": { [key: string]: string } | undefined,
+    "SearchText": string | undefined,
+    "DataStructureEntityId": string,
+    "Entity": string,
+    "SessionFormIdentifier": string,
+    "MenuId": string
+  }): Promise<{ [key: string]: string }>;
 
   newEntity(data: { DataStructureEntityId: string; MenuId: string }): Promise<any>;
 
@@ -173,7 +187,7 @@ export interface IApi {
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
     IsSingleRecordEdit?: boolean;
-    CreateNewRecord?: boolean
+    NewRecordInitialValues?: {[p:string]: string};
     RequestCurrentRecordId: boolean;
   }): Promise<any>;
 
@@ -242,7 +256,7 @@ export interface IApi {
     SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
-  }): Promise<any>;
+  }): Promise<IActionResult>;
 
   getReportInfo(data: {
     ReportId: string

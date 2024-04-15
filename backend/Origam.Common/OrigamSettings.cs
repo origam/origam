@@ -186,8 +186,13 @@ namespace Origam
 		[Category("(Configuration)")]
 		public string Name { get; set; } = "New Configuration";
 
+		private string _localization = "";
 		[Category("Localization")]
-		public string LocalizationFolder { get; set; } = "";
+		public string LocalizationFolder 
+		{ 
+			get { return _localization; }
+			set { _localization = value?.Trim(); } 
+		}
 
         [Category("Localization")]
         [Description("Comma separated names of documentation categories to be include in the generated localization files e.g. USER_SHORT_HELP,USER_LONG_HELP")]

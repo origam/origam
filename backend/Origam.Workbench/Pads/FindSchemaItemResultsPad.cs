@@ -230,13 +230,10 @@ namespace Origam.Workbench.Pads
 
 		private ListViewItem GetResult(AbstractSchemaItem item, List<Guid> referencePackages)
 		{
-			if(item == null) return null;
-
-			if(! LicensePolicy.ModelElementPolicy(item.GetType().Name, ModelElementPolicyCommand.Show))
+			if (item == null)
 			{
 				return null;
 			}
-
 			string name = item.ModelDescription();
 			item.PersistenceProvider.RestrictToLoadedPackage(false);
 			string rootName = item.RootItem.ModelDescription();

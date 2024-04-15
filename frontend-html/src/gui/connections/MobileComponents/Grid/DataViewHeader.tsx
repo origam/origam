@@ -56,7 +56,7 @@ import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
 import {  renderRowCount} from "gui/connections/CDataViewHeader";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
-import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
+import "gui/connections/MobileComponents/Grid/DataViewHeader.scss"
 import { getMobileState } from "model/selectors/getMobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";

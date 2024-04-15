@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:dlmb="http://schemas.origam.com/Origam.Schema.LookupModel.DataLookupMenuBinding/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dlmb="http://schemas.origam.com/Origam.Schema.LookupModel.DataLookupMenuBinding/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0"
+  xmlns:nrsb="http://schemas.origam.com/Origam.Schema.LookupModel.NewRecordScreenBinding/6.0.0"
+  xmlns:nrsbpm="http://schemas.origam.com/Origam.Schema.LookupModel.NewRecordScreenBindingParameterMapping/6.0.0">
   <dsdl:DataLookup
     asi:abstract="false"
     adl:alwaysAllowReturnToForm="false"
@@ -25,5 +32,26 @@
       dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/AllDataTypes/423a08e5-b1cf-4341-a342-d9b57667d1b9"
       asi:name="MenuBinding"
       dlmb:roles="*" />
+    <nrsb:NewRecordScreenBinding
+      asi:abstract="false"
+      nrsb:dialogHeight="200"
+      nrsb:dialogWidth="600"
+      x:id="fd3df3b6-9631-44f4-8928-3ed10cd9c84f"
+      nrsb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/MasterData/TagInputSource/83efdf7d-fa37-4c5e-905f-ff9cff25bbf2"
+      asi:name="NewRecordScreen"
+      nrsb:roles="*">
+      <nrsbpm:NewRecordScreenBindingParameterMapping
+        asi:abstract="false"
+        x:id="28753733-ddd5-4481-ab7a-28c0fb0c6d5b"
+        asi:name="NumberParameter-Number"
+        nrsbpm:parameterName="NumberParameter"
+        nrsbpm:targetRootEntityField="Number" />
+      <nrsbpm:NewRecordScreenBindingParameterMapping
+        asi:abstract="false"
+        x:id="519d537c-42fb-4b76-953d-68b3f8f23b09"
+        asi:name="SearchText-Label"
+        nrsbpm:parameterName="SearchText"
+        nrsbpm:targetRootEntityField="Label" />
+    </nrsb:NewRecordScreenBinding>
   </dsdl:DataLookup>
 </x:file>
