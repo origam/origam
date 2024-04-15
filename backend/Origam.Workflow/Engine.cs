@@ -42,9 +42,6 @@ using Origam.Service.Core;
 
 namespace Origam.Workflow;
 
-/// <summary>
-/// Summary description for Engine
-/// </summary>
 public class WorkflowEngine : IDisposable
 {
 	private static readonly ILog log = LogManager.GetLogger(
@@ -755,10 +752,14 @@ public class WorkflowEngine : IDisposable
 			switch (dependencyResult)
 			{
 				case WorkflowStepResult.Running:
+				{
 					return false;
+				}
 				case WorkflowStepResult.FailureNotRun:
+				{
 					SetStepStatus(step, WorkflowStepResult.FailureNotRun);
 					return false;
+				}
 				case WorkflowStepResult.NotRun:
 				{
 					// If dependent task did not run
@@ -795,9 +796,11 @@ public class WorkflowEngine : IDisposable
 							return false;
 						}
 						case WorkflowStepResult.Ready:
+						{
 							// The dependent task did not run, yet.
 							// So we still have to wait a bit.
 							return false;
+						}
 					}
 					break;
 				}
@@ -1043,8 +1046,10 @@ public class WorkflowEngine : IDisposable
 						break;
 					}
 					default:
+					{
 						throw new ArgumentOutOfRangeException(
 							"method", method, "Unsupported merge method.");
+					}
 				}
 			}
 			else if (inputXmlDoc != null)
@@ -1323,7 +1328,7 @@ public class WorkflowEngine : IDisposable
 		}
 		var documentationService 
 			= ServiceManager.Services.GetService<IDocumentationService>();
-		if(documentationService == null)
+		if (documentationService == null)
 		{
 			return task.Name + append;
 		}
