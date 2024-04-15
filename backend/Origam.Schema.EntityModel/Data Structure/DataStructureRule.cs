@@ -62,17 +62,7 @@ namespace Origam.Schema.EntityModel
 
 		private string entityName;
 
-		public String EntityName
-		{
-			get
-			{
-				if (entityName == null)
-				{
-					entityName = Entity.Name;
-				}
-				return entityName;
-			}
-		}
+		public string EntityName => entityName ??= Entity?.Name;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
