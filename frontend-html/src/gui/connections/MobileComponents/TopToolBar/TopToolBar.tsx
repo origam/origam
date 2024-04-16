@@ -31,7 +31,12 @@ import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSele
 import { SearchButton } from "gui/connections/MobileComponents/TopToolBar/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { AboutLayoutState, TopCenterComponent as TopMiddleComponent, TopLeftComponent } from "model/entities/MobileState/MobileLayoutState";
+import {
+  AboutLayoutState,
+  TopCenterComponent,
+  TopCenterComponent as TopMiddleComponent,
+  TopLeftComponent
+} from "model/entities/MobileState/MobileLayoutState";
 import { Icon } from "gui/Components/Icon/Icon";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
@@ -84,11 +89,12 @@ export class TopToolBar extends React.Component<{
   }
 
   getCenterElement(){
-    if (this.layoutState.topMiddleComponent == TopMiddleComponent.MenuEditButton) {
+    const {heading, topMiddleComponent} = this.layoutState.getTopComponentState(this.application);
+    if (topMiddleComponent == TopMiddleComponent.MenuEditButton) {
       return (
         <div className={S.middleContainer}>
           <div className={S.heading}>
-            {this.layoutState.heading}
+            {heading}
           </div>
           <EditButton
             isVisible={true}
@@ -98,17 +104,17 @@ export class TopToolBar extends React.Component<{
           />
         </div>);
     }
-    if (this.layoutState.topMiddleComponent == TopMiddleComponent.Heading) {
+    if (topMiddleComponent == TopMiddleComponent.Heading) {
       return (
         <div className={S.heading}>
-          {this.layoutState.heading}
+          {heading}
         </div>
       );
     }
-    if (this.layoutState.topMiddleComponent == TopMiddleComponent.OpenTabCombo) {
+    if (topMiddleComponent == TopMiddleComponent.OpenTabCombo) {
       return <TabSelector mobileState={this.props.mobileState}/>
     }
-    throw new Error("Unsupported top center component: " + this.layoutState.topMiddleComponent);
+    throw new Error("Unsupported top center component: " + topMiddleComponent);
   }
 
   render() {

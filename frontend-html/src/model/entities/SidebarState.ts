@@ -27,7 +27,12 @@ import { RefObject } from "react";
 import { IMainMenuState } from "./types/IMainMenu";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
-export class SidebarState {
+export interface ISidebarState {
+  activeSection: string;
+  resultCount: number;
+}
+
+export class SidebarState implements ISidebarState{
 
   @observable
   searchResultGroups: ISearchResultGroup[] = [];

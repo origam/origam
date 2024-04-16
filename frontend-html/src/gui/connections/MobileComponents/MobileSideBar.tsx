@@ -17,35 +17,35 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Icon } from "gui/Components/Icon/Icon";
-import { useContext } from "react";
-import { MobXProviderContext, observer } from "mobx-react";
-import { CWorkQueues } from "gui/connections/CWorkQueues";
-import { T } from "utils/translation";
-import { SearchResults } from "gui/Components/Search/SearchResults";
-import { onDragEndAction } from "gui/connections/CFavorites";
-import { getFavorites } from "model/selectors/MainMenu/getFavorites";
-import { MenuItemList } from "../MenuItemList";
+import {Icon} from "gui/Components/Icon/Icon";
+import {useContext} from "react";
+import {MobXProviderContext, observer} from "mobx-react";
+import {CWorkQueues} from "gui/connections/CWorkQueues";
+import {T} from "utils/translation";
+import {SearchResults} from "gui/Components/Search/SearchResults";
+import {onDragEndAction} from "gui/connections/CFavorites";
+import {getFavorites} from "model/selectors/MainMenu/getFavorites";
+import {MenuItemList} from "../MenuItemList";
 import S from "gui/connections/MobileComponents/MobileSideBar.module.scss";
-import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
-import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
-import { DragDropContext } from "react-beautiful-dnd";
-import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
-import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
-import { CChatSection } from "../CChatSection";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { SidebarState } from "model/entities/SidebarState";
-import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
-import { MobileFavoriteFolder } from "./MobileFavoriteFolder";
-import { getSearcher } from "model/selectors/getSearcher";
-import { Application } from "model/entities/Application";
+import {getShowChat} from "model/selectors/PortalSettings/getShowChat";
+import {getShowWorkQues} from "model/selectors/PortalSettings/getShowWorkQues";
+import {DragDropContext} from "react-beautiful-dnd";
+import {getWorkQueuesTotalItemsCount} from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
+import {SidebarAlertCounter} from "gui/Components/Sidebar/AlertCounter";
+import {CChatSection} from "../CChatSection";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {ISidebarState, SidebarState} from "model/entities/SidebarState";
+import {getChatrooms} from "model/selectors/Chatrooms/getChatrooms";
+import {MobileFavoriteFolder} from "./MobileFavoriteFolder";
+import {getSearcher} from "model/selectors/getSearcher";
+import {Application} from "model/entities/Application";
 
 
 export const MobileSideBar = observer( () => {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench as IWorkbench;
-  const sidebarState = workbench.sidebarState;
   const application = mobxContext.application as Application;
+  const sidebarState =  application.mobileState.sidebarState;
   const mobileSidebarState = application.mobileState.sidebarState;
   const favorites = getFavorites(workbench);
   const showChat = getShowChat(workbench);
@@ -147,7 +147,7 @@ export const MobileSideBar = observer( () => {
 
 const SectionButton = (props: {
   sectionName: string,
-  sidebarState: SidebarState,
+  sidebarState: ISidebarState,
   iconPath: string,
   tooltip: string,
   itemCount: number,
@@ -156,7 +156,7 @@ const SectionButton = (props: {
   return(
     <div 
       className={S.workQueueButton}
-      onClick={() => props.sidebarState.activeSection = props.sectionName}>
+      onClick={props.onClick}>
       <Icon
         className={getSectionIconClass(props.sectionName, props.sidebarState)}
         src={props.iconPath}
@@ -169,7 +169,7 @@ const SectionButton = (props: {
   );
 }
 
-function getSectionIconClass(sectionName: string, sidebarState: SidebarState) {
+function getSectionIconClass(sectionName: string, sidebarState: ISidebarState) {
   return sidebarState.activeSection === sectionName
     ? S.sectionIcon  + " " + S.active
     : S.sectionIcon;
