@@ -93,6 +93,7 @@ function registerTooltipGetter(columnId: string) {
   const cellRenderer = currentDataCellRenderer(ctx2d);
   const cellClickableArea = getCellClickableArea();
   const cellWidth = currentColumnWidth();
+  const isMacOS = () => {return navigator.userAgent.toLowerCase().includes("mac")};
 
   if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
     return;
@@ -126,8 +127,9 @@ function registerTooltipGetter(columnId: string) {
         tablePanelView.currentTooltipText = hasTooltip ? nonPrintableChar + cellTextRendered : undefined;
       }
       else {
-        tablePanelView.currentTooltipText = nonPrintableChar + (hasTooltip ? cellTextRendered : "")
-        + '\n' + T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+        const tooltipTranslation = isMacOS() ? T("Hold Cmd and click to open link", "hold_cmd_tool_tip")
+        : T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
+        tablePanelView.currentTooltipText = nonPrintableChar + (hasTooltip ? cellTextRendered : "") + '\n' + tooltipTranslation;
       }
     },
   });

@@ -143,5 +143,6 @@
   "order_columns_title": "Order Columns",
   "add_new_record": "Add New Record",
   "cancel_workflow_confirmation": "Are you sure you want to cancel the workflow?",
-  "hold_ctrl_tool_tip": "Hold Ctrl and click to open link"
+  "hold_ctrl_tool_tip": "Hold Ctrl and click to open link",
+  "hold_cmd_tool_tip": "Hold Cmd and click to open link"
 }
