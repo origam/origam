@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema.EntityModel;
@@ -74,13 +75,15 @@ public class NewRecordSessionStore : FormSessionStore
         try
         {
             RegisterEvents();
-            foreach (string columnName in Request.NewRecordInitialValues.Keys)
+            // we're sorting column names in order to introduce
+            // a level of predictability in the order of rule processing
+            var sortedColumnNames = Request.NewRecordInitialValues.Keys.ToList<string>();
+            sortedColumnNames.Sort();
+            foreach (var columnName in sortedColumnNames
+                         .Where(columnName 
+                             => Request.NewRecordInitialValues[columnName] != null))
             {
-                if (Request.NewRecordInitialValues[columnName] != null)
-                {
-                    row[columnName] 
-                        = Request.NewRecordInitialValues[columnName];
-                }
+                row[columnName] = Request.NewRecordInitialValues[columnName]!;
             }
         }
         finally
