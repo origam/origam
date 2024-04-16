@@ -31,17 +31,12 @@ describe("Html client", () => {
                 reportWindowMenuItemId,
             ]);
 
-        await sleep(2500);
-        let reportWindowTab = await page.$(`[class*='tabHandle']`);
-        const box = await reportWindowTab.boundingBox();
-        await page.mouse.click(
-          box.x + 1,
-          box.y + 1
-        );
-
-        await sleep(1000);
-        reportWindowTab = await page.$(`[class*='tabHandle']`);
+        let reportWindowTab = await page.waitForXPath(`//*[contains(@class, 'tabHandle')]`, { visible: true });
         await sleep(500);
+
+        await reportWindowTab.click();
+        
+        reportWindowTab = await page.$(`[class*='tabHandle']`);
         expect(reportWindowTab).toBeNull();
     });
 });
