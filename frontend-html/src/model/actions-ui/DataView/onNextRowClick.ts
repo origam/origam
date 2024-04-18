@@ -24,6 +24,11 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
 import { getFocusManager } from "model/selectors/getFocusManager";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function onNextRowClick(ctx: any) {
   return flow(function*onNextRowClick(event: any) {
@@ -35,6 +40,13 @@ export function onNextRowClick(ctx: any) {
         return;
       }
       yield*selectNextRow(ctx)();
+      yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+        getMenuItemId(dataView),
+        getDataStructureEntityId(dataView),
+        getSelectedRowId(ctx),
+        getSessionId(dataView)
+      );
+
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;
