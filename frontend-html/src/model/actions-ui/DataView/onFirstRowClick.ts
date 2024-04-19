@@ -27,7 +27,6 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getSessionId } from "model/selectors/getSessionId";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export function onFirstRowClick(ctx: any) {
   return flow(function*onFirstRowClick(event: any) {
@@ -42,7 +41,7 @@ export function onFirstRowClick(ctx: any) {
       yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
         getMenuItemId(dataView),
         getDataStructureEntityId(dataView),
-        getSelectedRowId(ctx),
+        dataView.selectedRowId,
         getSessionId(dataView)
       );
 

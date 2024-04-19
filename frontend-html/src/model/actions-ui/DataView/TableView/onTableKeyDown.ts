@@ -29,7 +29,6 @@ import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 import uiActions from "../../../actions-ui-tree";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getSessionId } from "model/selectors/getSessionId";
 
@@ -48,7 +47,7 @@ export function onTableKeyDown(ctx: any) {
           yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
             getMenuItemId(dataView),
             getDataStructureEntityId(dataView),
-            getSelectedRowId(ctx),
+            dataView.selectedRowId,
             getSessionId(dataView)
           );
 
@@ -64,7 +63,7 @@ export function onTableKeyDown(ctx: any) {
           yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
             getMenuItemId(dataView),
             getDataStructureEntityId(dataView),
-            getSelectedRowId(ctx),
+            dataView.selectedRowId,
             getSessionId(dataView)
           );
 

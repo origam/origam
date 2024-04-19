@@ -25,7 +25,6 @@ import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 import { getFocusManager } from "model/selectors/getFocusManager";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getSessionId } from "model/selectors/getSessionId";
 
@@ -42,7 +41,7 @@ export function onPrevRowClick(ctx: any) {
       yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
         getMenuItemId(dataView),
         getDataStructureEntityId(dataView),
-        getSelectedRowId(ctx),
+        dataView.selectedRowId,
         getSessionId(dataView)
       );
 
