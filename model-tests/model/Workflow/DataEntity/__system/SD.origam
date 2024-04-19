@@ -15,7 +15,7 @@
     euia:default="true"
     x:id="e6cfd9bb-4da2-45de-8d7a-7a512bd0e2ff"
     euia:label="MergeThroughDifferentEntityThirdPhase"
-    ewa:mergeType="AppendMergeExisting"
+    ewa:mergeType="FullMerge"
     euia:modal="false"
     euia:mode="ActiveRecord"
     asi:name="MergeThroughDifferentEntityThirdPhase"
@@ -33,8 +33,8 @@
     <euiapm:EntityUIActionParameterMapping
       asi:abstract="false"
       euiapm:field="/"
-      x:id="8fa31eac-62db-44fb-93d5-70811a7a0e16"
-      asi:name="WorkflowMergeTestEntity"
+      x:id="d82a7668-ec3a-43c3-beb6-4c239650b941"
+      asi:name="MergeThroughDifferentEntity"
       euiapm:type="Current" />
     <sc2:ScreenCondition
       asi:abstract="false"

@@ -384,7 +384,6 @@ namespace Origam.DA
 			int iCol;
 			DataRow drSource, drTarget;
 			int nbRowSource = in_dtSource.Rows.Count;// optim
-			int nbRowTarget = inout_dtTarget.Rows.Count;// optim
 			int nbCol = in_dtSource.Columns.Count;// optim
 			bool bDoIt;
 			bool bRowModified;
@@ -636,7 +635,7 @@ namespace Origam.DA
 					adcPK = in_dtSource.PrimaryKey;
 					aRowKey = new object[adcPK.Length];
 					ArrayList rowsToDelete = new ArrayList();					
-
+					int nbRowTarget = inout_dtTarget.Rows.Count;
 					for (int iRowTarget = 0 ; nbRowTarget > iRowTarget ; ++iRowTarget) 
 					{
 						drTarget = inout_dtTarget.Rows[iRowTarget];
