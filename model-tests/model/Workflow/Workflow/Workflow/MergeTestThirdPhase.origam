@@ -23,8 +23,8 @@
       cs:disableConstraints="false"
       x:id="18f72143-f543-4608-b41e-4dabb8dfa4d8"
       cs:isReturnValue="false"
-      asi:name="WorkflowMergeTestEntity"
-      cs:structure="Workflow/DataStructure/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/c3b7bc07-2b1c-4f90-9462-0eec30657075" />
+      asi:name="MergeThroughDifferentEntity"
+      cs:structure="Workflow/DataStructure/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/2ddb9548-2649-4f92-b63f-745799ba317f" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="a4844bb8-90eb-495d-b3ae-0a6d02b9a774"
@@ -42,9 +42,9 @@
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
         <dsr:DataStructureReference
           asi:abstract="false"
-          dsr:dataStructure="Workflow/DataStructure/Workflow/WorkflowMergeTestEntity.origam#WorkflowMergeTestEntity/c3b7bc07-2b1c-4f90-9462-0eec30657075"
+          dsr:dataStructure="Workflow/DataStructure/Workflow/MergeThroughDifferentEntity.origam#MergeThroughDifferentEntity/2ddb9548-2649-4f92-b63f-745799ba317f"
           x:id="2076a5bb-b047-4589-8b6e-41485fdf4993"
-          asi:name="WorkflowMergeTestEntity" />
+          asi:name="MergeThroughDifferentEntity" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -59,9 +59,9 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="Xml"
-          cr:contextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/WorkflowMergeTestEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
+          cr:contextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/MergeThroughDifferentEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
           x:id="d536963b-4a7e-431f-95ff-cf57dce751a9"
-          asi:name="WorkflowMergeTestEntity"
+          asi:name="MergeThroughDifferentEntity"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
@@ -84,7 +84,7 @@
           asi:abstract="false"
           x:id="d2229acb-ca3e-47e0-8422-e2435bed4ebc"
           asi:name="WorkflowMergeTestSecondPhase_Reset"
-          tr:transformation="Workflow/Transformation/Workflow/WorkflowMergeTestSecondPhase_Reset.origam#WorkflowMergeTestSecondPhase_Reset/b359e5c8-55cd-48f5-835c-681126dd4868" />
+          tr:transformation="Workflow/Transformation/Workflow/WorkflowMergeTestThirdPhase_Reset.origam#WorkflowMergeTestThirdPhase_Reset/b359e5c8-55cd-48f5-835c-681126dd4868" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
