@@ -45,6 +45,8 @@ import { getScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/save
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -97,7 +99,7 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Enter": {
-          tablePanelView.setEditing(false);
+          let isLastRow = getDataTable(ctx).getLastRow() === getSelectedRow(ctx);
           event.persist?.();
           event.preventDefault();
 
@@ -109,13 +111,14 @@ export function onFieldKeyDown(ctx: any) {
 
           if (event.shiftKey) {
             yield*selectPrevRow(ctx)();
+            isLastRow = false;
           } else {
             yield*selectNextRow(ctx)();
           }
           yield*dataView.lifecycle.runRecordChangedReaction();
 
           tablePanelView.scrollToCurrentCell();
-          tablePanelView.setEditing(true);
+          tablePanelView.setEditing(!isLastRow);
           break;
         }
         case "F2": {
