@@ -19,15 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for SaveRefreshType.
+/// </summary>
+public enum SaveRefreshType
 {
-	/// <summary>
-	/// Summary description for SaveRefreshType.
-	/// </summary>
-	public enum SaveRefreshType
-	{
-		RefreshChangedRecords,
-		ReloadActualRecord,
-		RefreshCompleteForm
-	}
+	RefreshChangedRecords,
+	ReloadActualRecord,
+	RefreshCompleteForm
 }

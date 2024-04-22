@@ -34,21 +34,21 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 
-namespace OrigamArchitect
+namespace OrigamArchitect;
+
+/// <summary>
+/// Summary description for WorkQueuePad.
+/// </summary>
+public class WorkQueueWindow : AsForm
 {
-	/// <summary>
-	/// Summary description for WorkQueuePad.
-	/// </summary>
-	public class WorkQueueWindow : AsForm
-	{
-		private Origam.Gui.Win.CollapsibleSplitter collapsibleSplitter1;
-		private System.Windows.Forms.Panel panel1;
-		private Origam.Gui.Win.AsPanelTitle label2;
-		private System.Windows.Forms.Label lblTitle;
-		private AsPanel _dataPanel;
+	private Origam.Gui.Win.CollapsibleSplitter collapsibleSplitter1;
+	private System.Windows.Forms.Panel panel1;
+	private Origam.Gui.Win.AsPanelTitle label2;
+	private System.Windows.Forms.Label lblTitle;
+	private AsPanel _dataPanel;
 	
-		public WorkQueueWindow()
-		{
+	public WorkQueueWindow()
+	{
 			InitializeComponent();
 
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
@@ -63,9 +63,9 @@ namespace OrigamArchitect
 		    Console.WriteLine(strings.Commands_PanelTitle);
 		}
 
-		#region Windows Form Designer generated code
-		private void InitializeComponent()
-		{
+	#region Windows Form Designer generated code
+	private void InitializeComponent()
+	{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkQueueWindow));
             this.collapsibleSplitter1 = new Origam.Gui.Win.CollapsibleSplitter();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -73,10 +73,8 @@ namespace OrigamArchitect
             this.lblTitle = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // collapsibleSplitter1
-            // 
-            this.collapsibleSplitter1.AnimationDelay = 20;
+            // 	 // collapsibleSplitter1
+            // 	 this.collapsibleSplitter1.AnimationDelay = 20;
             this.collapsibleSplitter1.AnimationStep = 20;
             this.collapsibleSplitter1.BorderStyle3D = System.Windows.Forms.Border3DStyle.Flat;
             this.collapsibleSplitter1.ControlToHide = this.panel1;
@@ -87,20 +85,16 @@ namespace OrigamArchitect
             this.collapsibleSplitter1.TabStop = false;
             this.collapsibleSplitter1.UseAnimations = false;
             this.collapsibleSplitter1.VisualStyle = Origam.Gui.Win.VisualStyles.XP;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
+            // 	 // panel1
+            // 	 this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.label2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 35);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(192, 385);
             this.panel1.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.BackColor = System.Drawing.Color.Orange;
+            // 	 // label2
+            // 	 this.label2.BackColor = System.Drawing.Color.Orange;
             this.label2.Dock = System.Windows.Forms.DockStyle.Top;
             this.label2.EndColor = System.Drawing.Color.Empty;
             this.label2.ForeColor = System.Drawing.Color.White;
@@ -114,10 +108,8 @@ namespace OrigamArchitect
             this.label2.StartColor = System.Drawing.Color.Empty;
             this.label2.StatusIcon = null;
             this.label2.TabIndex = 0;
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.BackColor = System.Drawing.Color.Transparent;
+            // 	 // lblTitle
+            // 	 this.lblTitle.BackColor = System.Drawing.Color.Transparent;
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
@@ -125,10 +117,8 @@ namespace OrigamArchitect
             this.lblTitle.Size = new System.Drawing.Size(944, 35);
             this.lblTitle.TabIndex = 2;
             this.lblTitle.Text = "label1";
-            // 
-            // WorkQueueWindow
-            // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            // 	 // WorkQueueWindow
+            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.ClientSize = new System.Drawing.Size(944, 420);
             this.Controls.Add(this.collapsibleSplitter1);
             this.Controls.Add(this.panel1);
@@ -141,41 +131,41 @@ namespace OrigamArchitect
             this.ResumeLayout(false);
 
 		}
-		#endregion
+	#endregion
 
-		private void WorkQueueWindow_TitleNameChanged(object sender, EventArgs e)
-		{
+	private void WorkQueueWindow_TitleNameChanged(object sender, EventArgs e)
+	{
 			lblTitle.Text = this.TitleName;
 		}
 
-		private Guid _workQueueId;
-		public Guid QueueId
+	private Guid _workQueueId;
+	public Guid QueueId
+	{
+		get
 		{
-			get
-			{
 				return _workQueueId;
 			}
-			set
-			{
+		set
+		{
 				_workQueueId = value;
 			}
-		}
+	}
 
-		private string _workQueueClass;
-		public string QueueClass
+	private string _workQueueClass;
+	public string QueueClass
+	{
+		get
 		{
-			get
-			{
 				return _workQueueClass;
 			}
-			set
-			{
+		set
+		{
 				_workQueueClass = value;
 			}
-		}
+	}
 
-		public void LoadQueue()
-		{
+	public void LoadQueue()
+	{
 			IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
 
 			WorkQueueClass wqc = (WorkQueueClass)wqs.WQClass(this.QueueClass);
@@ -184,8 +174,8 @@ namespace OrigamArchitect
 			BuildCommands();
 		}
 
-		private void BuildCommands()
-		{
+	private void BuildCommands()
+	{
 			DataSet data = DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, "WorkQueueCommand_parWorkQueueId", this.QueueId);
 
 			int x = 8;
@@ -213,8 +203,8 @@ namespace OrigamArchitect
 			}
 		}
 
-		private void BuildUI(WorkQueueClass wqc, Guid queueId)
-		{
+	private void BuildUI(WorkQueueClass wqc, Guid queueId)
+	{
 			this.FormGenerator = new FormGenerator();
 			this.FormGenerator.MainFormDataStructureId = wqc.WorkQueueStructureId;
 			this.FormGenerator.MainFormMethodId = wqc.WorkQueueStructureUserListMethodId;
@@ -352,8 +342,8 @@ namespace OrigamArchitect
 			panel.Focus();
 		}
 
-		private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
+	private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+	{
 			DataRow row = (DataRow)e.Link.LinkData;
 
 			DataGrid grid = _dataPanel.Grid;
@@ -398,5 +388,4 @@ namespace OrigamArchitect
 				this.RefreshContent();
 			}
 		}
-	}
 }

@@ -25,13 +25,13 @@ using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+
+public class AsTransform
 {
-	public class AsTransform
-	{
-        public static IXsltEngine GetXsltEngine(
-            XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
-        {
+    public static IXsltEngine GetXsltEngine(
+        XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
+    {
             switch(xsltEngineType)
             {
                 case XsltEngineType.XslTransform:
@@ -42,9 +42,9 @@ namespace Origam.Rule
                     throw new Exception("Unknown XsltEngine type.");
             }
         }
-        public static IXsltEngine GetXsltEngine(
-            IPersistenceProvider persistence, Guid transformationId)
-        {
+    public static IXsltEngine GetXsltEngine(
+        IPersistenceProvider persistence, Guid transformationId)
+    {
             AbstractSchemaItem transformation = persistence.RetrieveInstance(
                 typeof(AbstractSchemaItem), 
                 new ModelElementKey(transformationId))
@@ -62,5 +62,4 @@ namespace Origam.Rule
                     persistence);
             }
         }
-	}
 }

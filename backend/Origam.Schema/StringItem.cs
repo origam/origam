@@ -25,51 +25,50 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+
+/// <summary>
+/// Summary description for String.
+/// </summary>
+[SchemaItemDescription("String", "icon_string.png")]
+[HelpTopic("String+Library")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class StringItem : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for String.
-	/// </summary>
-	[SchemaItemDescription("String", "icon_string.png")]
-    [HelpTopic("String+Library")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class StringItem : AbstractSchemaItem
-	{
-		public const string CategoryConst = "String";
+	public const string CategoryConst = "String";
 
-		public StringItem() : base(){}
+	public StringItem() : base(){}
 
-		public StringItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public StringItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public StringItem(Key primaryKey) : base(primaryKey)	{}
+	public StringItem(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		private string _string;
-		[Localizable(true)]
-        [XmlAttribute("string")]
-        public string String
+	#region Properties
+	private string _string;
+	[Localizable(true)]
+	[XmlAttribute("string")]
+	public string String
+	{
+		get
 		{
-			get
-			{
 				return _string;
 			}
-			set
-			{
+		set
+		{
 				_string = value;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

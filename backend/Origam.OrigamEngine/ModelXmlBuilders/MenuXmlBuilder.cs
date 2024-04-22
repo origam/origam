@@ -27,15 +27,15 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for MenuXmlBuilder.
+/// </summary>
+public class MenuXmlBuilder
 {
-	/// <summary>
-	/// Summary description for MenuXmlBuilder.
-	/// </summary>
-	public class MenuXmlBuilder
-	{
-        public static string GetMenu()
-        {
+    public static string GetMenu()
+    {
             SchemaService schema = ServiceManager.Services.GetService(
                 typeof(SchemaService)) as SchemaService;
             MenuSchemaItemProvider menuProvider = schema.GetProvider(
@@ -53,16 +53,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             return doc.OuterXml;
         }
 
-        public static XmlDocument GetXml(Menu menu)
-        {
+    public static XmlDocument GetXml(Menu menu)
+    {
             XmlDocument doc = new XmlDocument();
             RenderNode(doc, doc, menu);
             return doc;
         }
 
-        private static void RenderNode(
-            XmlDocument doc, XmlNode parentNode, AbstractSchemaItem item)
-        {
+    private static void RenderNode(
+        XmlDocument doc, XmlNode parentNode, AbstractSchemaItem item)
+    {
             AbstractMenuItem menuItem = item as AbstractMenuItem;
             bool process;
             if (menuItem == null)
@@ -225,9 +225,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             }
         }
 
-        private static XmlElement GetMenuItemElement(
-            XmlDocument doc, AbstractMenuItem menu)
-        {
+    private static XmlElement GetMenuItemElement(
+        XmlDocument doc, AbstractMenuItem menu)
+    {
             XmlElement el = doc.CreateElement("Command");
             el.SetAttribute("type", menu.GetType().Name);
             el.SetAttribute("id", menu.Id.ToString());
@@ -239,8 +239,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             return el;
         }
 
-        public static string ResolveMenuIcon(string type, Graphics menuIcon)
-        {
+    public static string ResolveMenuIcon(string type, Graphics menuIcon)
+    {
             if (menuIcon != null)
             {
                 return menuIcon.Name;
@@ -265,9 +265,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             }
         }
 
-        public static void GetSelectionDialogSize(
-            PanelControlSet panel, out int width, out int height)
-        {
+    public static void GetSelectionDialogSize(
+        PanelControlSet panel, out int width, out int height)
+    {
             width = 0;
             height = 0;
             foreach (PropertyValueItem prop 
@@ -287,14 +287,13 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             }
         }
 
-        private static void SetSelectionDialogSize(
-            XmlElement element, PanelControlSet panel)
-        {
+    private static void SetSelectionDialogSize(
+        XmlElement element, PanelControlSet panel)
+    {
             int width = 0;
             int height = 0;
             GetSelectionDialogSize(panel, out width, out height);
             element.SetAttribute("dialogHeight", XmlConvert.ToString(height));
             element.SetAttribute("dialogWidth", XmlConvert.ToString(width));
         }
-	}
 }

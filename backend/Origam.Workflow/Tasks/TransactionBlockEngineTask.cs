@@ -24,22 +24,22 @@ using System.Collections;
 
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Workflow.Tasks
-{
-	/// <summary>
-	/// Summary description for TransactionBlockEngineTask.
-	/// </summary>
-	public class TransactionBlockEngineTask : BlockEngineTask
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		WorkflowEngine _call;
+namespace Origam.Workflow.Tasks;
 
-		public TransactionBlockEngineTask() : base()
-		{
+/// <summary>
+/// Summary description for TransactionBlockEngineTask.
+/// </summary>
+public class TransactionBlockEngineTask : BlockEngineTask
+{
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	WorkflowEngine _call;
+
+	public TransactionBlockEngineTask() : base()
+	{
 		}
 
-		public override void Execute()
-		{
+	public override void Execute()
+	{
 			Exception exception = null;
 
 			try
@@ -53,8 +53,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		protected override void OnExecute()
-		{
+	protected override void OnExecute()
+	{
 			this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
 			this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
 
@@ -83,8 +83,8 @@ namespace Origam.Workflow.Tasks
 			Engine.ExecuteSubEngineWorkflow(_call);
 		}
 
-		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-		{
+	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+	{
 			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 			{
 				UnsubscribeEvents();
@@ -124,8 +124,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-		{
+	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+	{
 			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 			{
 				if(e.Exception != null)
@@ -136,8 +136,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		private void HandleException(Exception ex)
-		{
+	private void HandleException(Exception ex)
+	{
 			// rollback the transaction, if we initiated the transaction
 			if(_call.TransactionId != null & this.Engine.TransactionId == null)
 			{
@@ -159,10 +159,9 @@ namespace Origam.Workflow.Tasks
 			OnFinished(new WorkflowEngineTaskEventArgs(ex));
 		}
 
-		private void UnsubscribeEvents()
-		{
+	private void UnsubscribeEvents()
+	{
 			this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
 			this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
 		}
-	}
 }

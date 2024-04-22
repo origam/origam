@@ -25,15 +25,15 @@ using Origam.DA;
 using Origam.Workbench.Services;
 using Origam.Schema;
 
-namespace Origam.Workbench
+namespace Origam.Workbench;
+
+/// <summary>
+/// Summary description for AuditLogDA.
+/// </summary>
+public class AuditLogDA
 {
-	/// <summary>
-	/// Summary description for AuditLogDA.
-	/// </summary>
-	public class AuditLogDA
+	public static bool IsRecordIdValid(object recordId)
 	{
-		public static bool IsRecordIdValid(object recordId)
-		{
 			if(recordId is Guid) return true;
 
 			string stringId = recordId as string;
@@ -54,8 +54,8 @@ namespace Origam.Workbench
 			return false;
 		}
 
-		public static DataSet RetrieveLog(Guid entityId, object recordId)
-		{
+	public static DataSet RetrieveLog(Guid entityId, object recordId)
+	{
 			if(! IsRecordIdValid(recordId)) return null;
 
 			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
@@ -75,8 +75,8 @@ namespace Origam.Workbench
 			return result;
 		}
 
-		public static DataSet RetrieveLogTransformed(Guid entityId, object recordId)
-		{
+	public static DataSet RetrieveLogTransformed(Guid entityId, object recordId)
+	{
             if(!IsRecordIdValid(recordId))
             {
                 return null;
@@ -126,8 +126,8 @@ namespace Origam.Workbench
 			return dataSet;
 		}
 
-        private static string GetProperty(DataRow row)
-        {
+	private static string GetProperty(DataRow row)
+	{
             var columnId = (Guid)row["refColumnId"];
             try
             {
@@ -153,8 +153,8 @@ namespace Origam.Workbench
                 return columnId.ToString();
             }
         }
-        private static string GetEntity(DataRow row)
-        {
+	private static string GetEntity(DataRow row)
+	{
             if((DataRowState)row["ActionType"] != DataRowState.Deleted)
             {
 				return null;
@@ -178,5 +178,4 @@ namespace Origam.Workbench
                 return entityId.ToString();
             }
         }
-	}
 }

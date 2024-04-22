@@ -28,176 +28,175 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextContainer
 {
-	[XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("6.0.0")]
-    public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextContainer
-	{
-		public const string CategoryConst = "Page";
+	public const string CategoryConst = "Page";
 
-		public AbstractPage() : base() {Init();}
-		public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public AbstractPage(Key primaryKey) : base(primaryKey) {Init();}
+	public AbstractPage() : base() {Init();}
+	public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public AbstractPage(Key primaryKey) : base(primaryKey) {Init();}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{		
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{		
 			if (this.InputValidationRule != null) dependencies.Add(this.InputValidationRule);			
 			base.GetExtraDependencies(dependencies); 
 		}
 
-		private void Init()
-		{
+	private void Init()
+	{
 		}
 
-		#region Properties
-		private string _url = "";
-		[Category("Page")]
-		[StringNotEmptyModelElementRule()]
-		[XmlAttribute("url")]
-		public string Url
+	#region Properties
+	private string _url = "";
+	[Category("Page")]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("url")]
+	public string Url
+	{
+		get
 		{
-			get
-			{
 				return _url;
 			}
-			set
-			{
+		set
+		{
 				_url = value;
 			}
-		}
+	}
 
-		private string _roles;
-		[Category("Security")]
-		[NotNullModelElementRule()]
-		[XmlAttribute("roles")]
-        public string Roles
+	private string _roles;
+	[Category("Security")]
+	[NotNullModelElementRule()]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
+	}
 
-		public Guid InputValidationRuleId;
+	public Guid InputValidationRuleId;
 
-		[Category("InputValidation")]
-		[Description("Validate input parameters. Can validate input parameters before any further action is taken.")]
-		[TypeConverter(typeof(EndRuleConverter))]
-        [XmlReference("inputValidationRule", "InputValidationRuleId")]
-		public IEndRule InputValidationRule
+	[Category("InputValidation")]
+	[Description("Validate input parameters. Can validate input parameters before any further action is taken.")]
+	[TypeConverter(typeof(EndRuleConverter))]
+	[XmlReference("inputValidationRule", "InputValidationRuleId")]
+	public IEndRule InputValidationRule
+	{
+		get
 		{
-			get
-			{
 				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.InputValidationRuleId));
 			}
-			set
-			{
+		set
+		{
 				this.InputValidationRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		private string _features;
-		[XmlAttribute("features")]
-        public string Features
+	private string _features;
+	[XmlAttribute("features")]
+	public string Features
+	{
+		get
 		{
-			get
-			{
 				return _features;
 			}
-			set
-			{
+		set
+		{
 				_features = value;
 			}
-		}		
+	}		
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-        public Guid CacheMaxAgeDataConstantId;
+	public Guid CacheMaxAgeDataConstantId;
 
-        [Category("Caching")]
-        [Description("Sets the number of seconds by which the result should be cached in the user's browser. If not specified the content will not get cached.")]
-        [TypeConverter(typeof(DataConstantConverter))]
-        [XmlReference("cacheMaxAge", "CacheMaxAgeDataConstantId")]
-        public DataConstant CacheMaxAge
-        {
-            get
-            {
+	[Category("Caching")]
+	[Description("Sets the number of seconds by which the result should be cached in the user's browser. If not specified the content will not get cached.")]
+	[TypeConverter(typeof(DataConstantConverter))]
+	[XmlReference("cacheMaxAge", "CacheMaxAgeDataConstantId")]
+	public DataConstant CacheMaxAge
+	{
+		get
+		{
                 return (DataConstant)PersistenceProvider.RetrieveInstance(
                     typeof(AbstractSchemaItem), new ModelElementKey(CacheMaxAgeDataConstantId));
             }
-            set
-            {
+		set
+		{
                 CacheMaxAgeDataConstantId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
             }
-        }
+	}
 
-        private string _mimeType;
-        [Category("Page")]
-        [StringNotEmptyModelElementRule()]
-        [XmlAttribute("mimeType")]
-        public string MimeType
-        {
-            get
-            {
+	private string _mimeType;
+	[Category("Page")]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("mimeType")]
+	public string MimeType
+	{
+		get
+		{
                 return _mimeType;
             }
-            set
-            {
+		set
+		{
                 _mimeType = value;
             }
-        }
+	}
 
-        private bool _allowPUT;
-        [Category("Updating")]
-        [XmlAttribute("allowPut")]
-        public bool AllowPUT
-        {
-            get
-            {
+	private bool _allowPUT;
+	[Category("Updating")]
+	[XmlAttribute("allowPut")]
+	public bool AllowPUT
+	{
+		get
+		{
                 return _allowPUT;
             }
-            set
-            {
+		set
+		{
                 _allowPUT = value;
             }
-        }
+	}
 
-        private bool _allowDELETE;
-        [Category("Updating")]
-        [XmlAttribute("allowDelete")]
-        public bool AllowDELETE
-        {
-            get
-            {
+	private bool _allowDELETE;
+	[Category("Updating")]
+	[XmlAttribute("allowDelete")]
+	public bool AllowDELETE
+	{
+		get
+		{
                 return _allowDELETE;
             }
-            set
-            {
+		set
+		{
                 _allowDELETE = value;
             }
-        }
-        #endregion
+	}
+	#endregion
 
-        #region IAuthorizationContextContainer
-        [Browsable(false)]
-		public string AuthorizationContext
+	#region IAuthorizationContextContainer
+	[Browsable(false)]
+	public string AuthorizationContext
+	{
+		get
 		{
-			get
-			{
 				return this.Roles;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

@@ -26,25 +26,25 @@ using System.Xml.Serialization;
 
 using Schedule;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("Simple Schedule", "simple-schedule-1.png")]
+[ClassMetaVersion("6.0.0")]
+public class SimpleScheduleTime : AbstractScheduleTime
 {
-	[SchemaItemDescription("Simple Schedule", "simple-schedule-1.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class SimpleScheduleTime : AbstractScheduleTime
+	public SimpleScheduleTime() {}
+
+	public SimpleScheduleTime(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+
+	public SimpleScheduleTime(Key primaryKey) : base(primaryKey) {}
+
+	#region Override AbstractScheduleTime Members
+	public override bool CanConvertTo(Type type) => 
+		type == typeof(ScheduleGroup);
+
+	protected override ISchemaItem ConvertTo<T>()
 	{
-		public SimpleScheduleTime() {}
-
-		public SimpleScheduleTime(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public SimpleScheduleTime(Key primaryKey) : base(primaryKey) {}
-
-		#region Override AbstractScheduleTime Members
-		public override bool CanConvertTo(Type type) => 
-			type == typeof(ScheduleGroup);
-
-		protected override ISchemaItem ConvertTo<T>()
-		{
 			if(typeof(T) != typeof(ScheduleGroup))
 			{
 				return base.ConvertTo<T>();
@@ -61,22 +61,22 @@ namespace Origam.Schema.WorkflowModel
 			return converted;
 		}
 
-		public override bool CanMove(UI.IBrowserNode2 newNode)
-		{
+	public override bool CanMove(UI.IBrowserNode2 newNode)
+	{
 			return ((AbstractSchemaItem)newNode).RootProvider == RootProvider;
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		private ScheduleIntervalType _intervalType = ScheduleIntervalType.Daily;
-		[Category("Schedule Interval"), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("intervalType")]
-		public ScheduleIntervalType IntervalType
+	#region Properties
+	private ScheduleIntervalType _intervalType = ScheduleIntervalType.Daily;
+	[Category("Schedule Interval"), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("intervalType")]
+	public ScheduleIntervalType IntervalType
+	{
+		get => _intervalType;
+		set
 		{
-			get => _intervalType;
-			set
-			{
 				switch(value)
 				{
 					case ScheduleIntervalType.Monthly:
@@ -108,17 +108,17 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_intervalType = value;
 			}
-		}
+	}
 
-		private int _milliseconds = 0;
+	private int _milliseconds = 0;
 		
-		[Browsable(false)]
-        [XmlAttribute("milliseconds")]
-		public int Milliseconds
+	[Browsable(false)]
+	[XmlAttribute("milliseconds")]
+	public int Milliseconds
+	{
+		get => _milliseconds;
+		set
 		{
-			get => _milliseconds;
-			set
-			{
 				if((value < 0) || (value > 999))
 				{
 					throw new ArgumentOutOfRangeException(
@@ -127,15 +127,15 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_milliseconds = value;
 			}
-		}
-		private int _seconds = 0;
-		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("seconds")]
-        public int Seconds
+	}
+	private int _seconds = 0;
+	[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("seconds")]
+	public int Seconds
+	{
+		get => _seconds;
+		set
 		{
-			get => _seconds;
-			set
-			{
 				if((value < 0) || (value > 59))
 				{
 					throw new ArgumentOutOfRangeException("Seconds", value, 
@@ -143,16 +143,16 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_seconds = value;
 			}
-		}
+	}
 
-		private int _minutes = 0;
-		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("minutes")]
-        public int Minutes
+	private int _minutes = 0;
+	[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("minutes")]
+	public int Minutes
+	{
+		get => _minutes;
+		set
 		{
-			get => _minutes;
-			set
-			{
 				if((value < 0) || (value > 59))
 				{
 					throw new ArgumentOutOfRangeException("Minutes", value, 
@@ -160,16 +160,16 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_minutes = value;
 			}
-		}
+	}
 
-		private int _hours = 0;
-		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("hours")]
-        public int Hours
+	private int _hours = 0;
+	[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("hours")]
+	public int Hours
+	{
+		get => _hours;
+		set
 		{
-			get => _hours;
-			set
-			{
 				if((value < 0) || (value > 23))
 				{
 					throw new ArgumentOutOfRangeException("Hours", value, 
@@ -177,16 +177,16 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_hours = value;
 			}
-		}
+	}
 
-		private int _days = 0;
-		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("days")]
-        public int Days
+	private int _days = 0;
+	[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("days")]
+	public int Days
+	{
+		get => _days;
+		set
 		{
-			get => _days;
-			set
-			{
 				if(IntervalType == ScheduleIntervalType.Monthly)
 				{
 					if((value < 1) || (value > 31))
@@ -205,12 +205,12 @@ namespace Origam.Schema.WorkflowModel
 				}
 				_days = value;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Public Methods
-		public override IScheduledItem GetScheduledTime()
-		{
+	#region Public Methods
+	public override IScheduledItem GetScheduledTime()
+	{
 			var days = Days;
 			if(IntervalType == ScheduleIntervalType.Monthly)
 			{
@@ -225,12 +225,12 @@ namespace Origam.Schema.WorkflowModel
 			return new ScheduledTime(
 				SchedulerEventTimeBase(IntervalType), span);
 		}
-		#endregion
+	#endregion
 
-		#region Private Methods
+	#region Private Methods
 
-		private EventTimeBase SchedulerEventTimeBase(ScheduleIntervalType intervalType)
-		{
+	private EventTimeBase SchedulerEventTimeBase(ScheduleIntervalType intervalType)
+	{
 			switch(intervalType)
 			{
 				case ScheduleIntervalType.ByMinute:
@@ -252,6 +252,5 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		#endregion
-	}
+	#endregion
 }

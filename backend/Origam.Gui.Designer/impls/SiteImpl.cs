@@ -24,19 +24,19 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
 
-namespace Origam.Gui.Designer
+namespace Origam.Gui.Designer;
+
+/// <summary>
+/// Summary description for SiteImpl.
+/// </summary>
+public class SiteImpl:ISite,IDictionaryService
 {
-	/// <summary>
-	/// Summary description for SiteImpl.
-	/// </summary>
-	public class SiteImpl:ISite,IDictionaryService
+	private IComponent component;
+	private string name;
+	private DesignerHostImpl host;
+	private DictionaryServiceImpl dictionaryService;
+	public SiteImpl(IComponent comp,string name,DesignerHostImpl host)
 	{
-		private IComponent component;
-		private string name;
-		private DesignerHostImpl host;
-		private DictionaryServiceImpl dictionaryService;
-		public SiteImpl(IComponent comp,string name,DesignerHostImpl host)
-		{
 			if(comp==null)
 			{
 				throw new ArgumentException("comp");
@@ -56,40 +56,40 @@ namespace Origam.Gui.Designer
 			dictionaryService = new DictionaryServiceImpl();
 		}
 		
-		#region ISite Members
+	#region ISite Members
 
-		public IComponent Component
+	public IComponent Component
+	{
+		get
 		{
-			get
-			{
 				return component;
 			}
-		}
+	}
 
-		public IContainer Container
+	public IContainer Container
+	{
+		get
 		{
-			get
-			{
 				return host.Container;
 			}
-		}
+	}
 
-		public bool DesignMode
+	public bool DesignMode
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
+	}
 
-		public string Name
+	public string Name
+	{
+		get
 		{
-			get
-			{
 				return name;
 			}
-			set
-			{
+		set
+		{
 				// null name is not valid
 				if (value == null)
 				{
@@ -123,14 +123,14 @@ namespace Origam.Gui.Designer
 				}
 				
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region IServiceProvider Members
+	#region IServiceProvider Members
 
-		public object GetService(Type service) 
-		{
+	public object GetService(Type service) 
+	{
 			if (service == typeof(IDictionaryService)) 
 			{
 				return this;
@@ -139,25 +139,24 @@ namespace Origam.Gui.Designer
 			return host.GetService(service);
 		}
 
-		#endregion
+	#endregion
 		
-		#region IDictionaryService Implementation
+	#region IDictionaryService Implementation
 		
-		public object GetKey(object value)
-		{
+	public object GetKey(object value)
+	{
 			return dictionaryService.GetKey(value);
 		}
 		
-		public object GetValue(object key)
-		{
+	public object GetValue(object key)
+	{
 			return dictionaryService.GetValue(key);
 		}
 		
-		public void SetValue(object key, object value)
-		{
+	public void SetValue(object key, object value)
+	{
 			dictionaryService.SetValue(key,value);
 		}
 		
-		#endregion
-	}
+	#endregion
 }

@@ -22,14 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class CreateObjectInput
 {
-    public class CreateObjectInput
-    {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        public IDictionary<string, object> Values { get; set; }
-        public IDictionary<string, object> Parameters { get; set; }
-        public Guid RequestingGridId { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; }
+    public string Entity { get; set; }
+    public IDictionary<string, object> Values { get; set; }
+    public IDictionary<string, object> Parameters { get; set; }
+    public Guid RequestingGridId { get; set; }
 }

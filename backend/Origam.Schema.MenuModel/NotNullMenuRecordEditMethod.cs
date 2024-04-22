@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+public class NotNullMenuRecordEditMethod : AbstractModelElementRuleAttribute
 {
-    public class NotNullMenuRecordEditMethod : AbstractModelElementRuleAttribute
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
-        {
             return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
         }
 
-        public override Exception CheckRule(object instance, string memberName)
-        {
+    public override Exception CheckRule(object instance, string memberName)
+    {
             if (memberName == String.Empty || memberName == null)
             {
                 CheckRule(instance);
@@ -30,5 +30,4 @@ namespace Origam.Schema.MenuModel
             }
             return null;
         }
-    }
 }

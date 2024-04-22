@@ -21,17 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for TabControlBuilder.
+/// </summary>
+public class GridLayoutPanelBuilder
 {
-	/// <summary>
-	/// Summary description for TabControlBuilder.
-	/// </summary>
-	public class GridLayoutPanelBuilder
+	public static void Build(XmlElement parentNode)
 	{
-		public static void Build(XmlElement parentNode)
-		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "GridLayoutPanel");
 		}
-	}
 }

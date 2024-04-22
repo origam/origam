@@ -5,12 +5,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Origam.Server.IdentityServerGui
+namespace Origam.Server.IdentityServerGui;
+
+public class SecurityHeadersAttribute : ActionFilterAttribute
 {
-    public class SecurityHeadersAttribute : ActionFilterAttribute
+    public override void OnResultExecuting(ResultExecutingContext context)
     {
-        public override void OnResultExecuting(ResultExecutingContext context)
-        {
             var result = context.Result;
             if (result is ViewResult)
             {
@@ -52,5 +52,4 @@ namespace Origam.Server.IdentityServerGui
                 }
             }
         }
-    }
 }

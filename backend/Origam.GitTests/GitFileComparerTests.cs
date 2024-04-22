@@ -26,16 +26,16 @@ using NUnit.Framework;
 using Origam.Git;
 using Origam.TestCommon;
 
-namespace Origam.GitTests
+namespace Origam.GitTests;
+
+[TestFixture]
+public class GitFileComparerTests: AbstractFileTestClass
 {
-    [TestFixture]
-    public class GitFileComparerTests: AbstractFileTestClass
+    protected override TestContext TestContext =>
+        TestContext.CurrentContext;
+    [Test]
+    public void ShouldFindDiferences()
     {
-        protected override TestContext TestContext =>
-            TestContext.CurrentContext;
-        [Test]
-        public void ShouldFindDiferences()
-        {
             string  expectedDiffBody = "     <SchemaItem Id=\"79a66d46-5c51-4502-8fc1-fc65259dd2ff\" ItemType=\"ParameterReference\" Name=\"parUserEmail\" TargetType=\"Origam.Schema.ParameterReference\" IsAbstract=\"true\" G01=\"118a16a2-f31e-40f4-9eff-8deaf1dd4a89\" refSchemaExtensionId=\"951f2cda-2867-4b99-8824-071fa8749ead\" refParentItemId=\"acc82953-468e-4d00-a77d-f31cb76addb9\" />"+ Environment.NewLine +
                        "     <SchemaItem Id=\"bd05e4af-804f-4307-99eb-6bbcee6bfa6a\" ItemType=\"EntityRelation\" Name=\"BusinessPartnerOrigamRole\" TargetType=\"Origam.Schema.EntityModel.EntityRelationItem\" IsAbstract=\"true\" B01=\"true\" G01=\"ad2aebfe-e684-4e2e-8843-775c468357d5\" refSchemaExtensionId=\"951f2cda-2867-4b99-8824-071fa8749ead\" refParentItemId=\"457a4391-e94f-424c-89d0-dc3804121ce6\" />" + Environment.NewLine +
                        "     <SchemaItem Id=\"336dd1f6-1cfc-4121-8df8-8b7504861f5f\" ItemType=\"EntityRelationColumnPair\" Name=\"BusinessPartnerOrigamRoleKey1\" TargetType=\"Origam.Schema.EntityModel.EntityRelationColumnPairItem\" IsAbstract=\"true\" G01=\"2fdc34b8-fe8b-4353-aa84-92bb5d768370\" G02=\"bd07e079-7328-4959-97ed-2575e2db3f02\" refSchemaExtensionId=\"951f2cda-2867-4b99-8824-071fa8749ead\" refParentItemId=\"bd05e4af-804f-4307-99eb-6bbcee6bfa6a\" />" + Environment.NewLine +
@@ -56,9 +56,9 @@ namespace Origam.GitTests
             
             StringAssert.AreEqualIgnoringCase(actualDiffBody, expectedDiffBody);
         }
-        [Test]
-        public void ShouldReturnEmptyDiffIfNoDifferenecesExist()
-        {
+    [Test]
+    public void ShouldReturnEmptyDiffIfNoDifferenecesExist()
+    {
           
             FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
             FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
@@ -67,5 +67,4 @@ namespace Origam.GitTests
             GitDiff gitDiff = gitFileComparer.GetGitDiff(pathToOld, pathToNew);
             Assert.That(gitDiff.IsEmpty);
         }
-    }
 }

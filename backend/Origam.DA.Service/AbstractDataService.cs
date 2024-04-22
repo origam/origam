@@ -32,33 +32,33 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.DA.Service
-{
-    /// <summary>
-    /// Abstract implementation of IDataService, based on ORIGAM metadata
-    /// </summary>
-    public abstract class AbstractDataService : IDataService
-    {
-        private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
+namespace Origam.DA.Service;
 
-        public AbstractDataService()
-        {
+/// <summary>
+/// Abstract implementation of IDataService, based on ORIGAM metadata
+/// </summary>
+public abstract class AbstractDataService : IDataService
+{
+	private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
+
+	public AbstractDataService()
+	{
         }
 
-        public int BulkInsertThreshold { get; set; }
-        public int UpdateBatchSize { get; set; }
+	public int BulkInsertThreshold { get; set; }
+	public int UpdateBatchSize { get; set; }
 
-        public abstract DatabaseType PlatformName { get;  }
+	public abstract DatabaseType PlatformName { get;  }
 
-        private bool _userDefinedParameters = false;
-		public bool UserDefinedParameters
+	private bool _userDefinedParameters = false;
+	public bool UserDefinedParameters
+	{
+		get
 		{
-			get
-			{
 				return _userDefinedParameters;
 			}
-			set
-			{
+		set
+		{
 				_userDefinedParameters = value;
 				
 				if(this.DbDataAdapterFactory != null)
@@ -66,16 +66,16 @@ namespace Origam.DA.Service
 					this.DbDataAdapterFactory.UserDefinedParameters = value;
 				}
 			}
-		}
+	}
 
-		public IPersistenceProvider PersistenceProvider
+	public IPersistenceProvider PersistenceProvider
+	{
+		get
 		{
-			get
-			{
 				return _persistence;
 			}
-			set
-			{
+		set
+		{
 				lock(this)
 				{
 					// We flush cache
@@ -85,58 +85,58 @@ namespace Origam.DA.Service
 					_persistence = value;
 				}
 			}
-		}
+	}
 
-		private IStateMachineService _stateMachine;
-		public IStateMachineService StateMachine
+	private IStateMachineService _stateMachine;
+	public IStateMachineService StateMachine
+	{
+		get
 		{
-			get
-			{
 				return _stateMachine;
 			}
-			set
-			{
+		set
+		{
 				_stateMachine = value;
 			}
-		}
-        private IAttachmentService _attachmentService;
-        public IAttachmentService AttachmentService
-        {
-            get
-            {
+	}
+	private IAttachmentService _attachmentService;
+	public IAttachmentService AttachmentService
+	{
+		get
+		{
                 return _attachmentService;
             }
-            set
-            {
+		set
+		{
                 _attachmentService = value;
             }
-        }
+	}
 
-        public abstract IDbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
-		internal abstract IDbConnection GetConnection(string connectionString);
-		internal abstract IDbTransaction GetTransaction(string transactionId, IsolationLevel isolation);
-        public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
-            string userName, string password, bool integratedAuthentication, bool pooling);
-        public abstract void CreateDatabase(string name);
-        public abstract void DeleteDatabase(string name);
-        public abstract void CreateDatabaseUser(string user, string password, string name, bool databaseIntegratedAuthentication);
-        public abstract void DeleteUser(string user, bool _integratedAuthentication);
-        public virtual string EntityDdl(Guid entity)
-        {
+	public abstract IDbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
+	internal abstract IDbConnection GetConnection(string connectionString);
+	internal abstract IDbTransaction GetTransaction(string transactionId, IsolationLevel isolation);
+	public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
+		string userName, string password, bool integratedAuthentication, bool pooling);
+	public abstract void CreateDatabase(string name);
+	public abstract void DeleteDatabase(string name);
+	public abstract void CreateDatabaseUser(string user, string password, string name, bool databaseIntegratedAuthentication);
+	public abstract void DeleteUser(string user, bool _integratedAuthentication);
+	public virtual string EntityDdl(Guid entity)
+	{
             throw new NotImplementedException();
         }
 
-        public virtual string[] FieldDdl(Guid field)
-        {
+	public virtual string[] FieldDdl(Guid field)
+	{
             throw new NotImplementedException();
         }
 
-        internal virtual void HandleException(Exception ex, string rowErrorMessage, DataRow row)
-		{
+	internal virtual void HandleException(Exception ex, string rowErrorMessage, DataRow row)
+	{
 		}
 
-        internal DbDataAdapter GetAdapter(SelectParameters selectParameters, UserProfile userProfile)
-        {
+	internal DbDataAdapter GetAdapter(SelectParameters selectParameters, UserProfile userProfile)
+	{
             string identityId = "";
 
             if (userProfile != null)
@@ -158,23 +158,23 @@ namespace Origam.DA.Service
             }
         }
 
-        internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, 
-            DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
-        {
+	internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, 
+		DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
+	{
             return GetSelectRowAdapterCached(entity, filterSet, columnsInfo);
         }
 
-		internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, 
-            DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
-		{
+	internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, 
+		DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
+	{
 			return DbDataAdapterFactory.CreateSelectRowDataAdapter(
                 entity, filterSet, columnsInfo, true);
 		}
 
-        private DbDataAdapter GetSelectRowAdapterCached(
-            DataStructureEntity entity, DataStructureFilterSet filterSet,
-            ColumnsInfo columnsInfo)
-        {
+	private DbDataAdapter GetSelectRowAdapterCached(
+		DataStructureEntity entity, DataStructureFilterSet filterSet,
+		ColumnsInfo columnsInfo)
+	{
             string id = "selectRow_" + entity.PrimaryKey["Id"].ToString();
             if (filterSet != null)
             {
@@ -210,13 +210,13 @@ namespace Origam.DA.Service
             return adapter;
         }
 
-		private DbDataAdapter GetAdapterNonCached(SelectParameters adParameters)
-        {
+	private DbDataAdapter GetAdapterNonCached(SelectParameters adParameters)
+	{
 			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  adParameters.ForceDatabaseCalculation);
 		}
 
-		private Hashtable GetCache()
-		{
+	private Hashtable GetCache()
+	{
 			Hashtable context = OrigamUserContext.Context;
 			lock (context)
 			{
@@ -228,8 +228,8 @@ namespace Origam.DA.Service
 			return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
 		}
 		
-		private DbDataAdapter GetAdapterCached(SelectParameters adParameters, string identityId)
-		{
+	private DbDataAdapter GetAdapterCached(SelectParameters adParameters, string identityId)
+	{
 			string id = adParameters.Entity.PrimaryKey["Id"].ToString();
 			if(adParameters.Filter != null)
 			{
@@ -272,8 +272,8 @@ namespace Origam.DA.Service
 			return adapter;
 		}
 
-		internal DataStructureEntity GetDataStructureEntity(DataStructureQuery query)
-		{
+	internal DataStructureEntity GetDataStructureEntity(DataStructureQuery query)
+	{
 			DataStructureEntity result ;
 			try
 			{
@@ -293,13 +293,13 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal DataStructure GetDataStructure(DataStructureQuery query)
-		{
+	internal DataStructure GetDataStructure(DataStructureQuery query)
+	{
 			return GetDataStructure(query.DataSourceId);
 		}
 
-		internal DataStructure GetDataStructure(Guid id)
-		{
+	internal DataStructure GetDataStructure(Guid id)
+	{
 			if(id == Guid.Empty) return null;
 
 			DataStructure result = this.PersistenceProvider.RetrieveInstance(typeof(DataStructure), 
@@ -312,8 +312,8 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal TableMappingItem GetTable(Guid id)
-		{
+	internal TableMappingItem GetTable(Guid id)
+	{
 			TableMappingItem result = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), 
                 new ModelElementKey(id)) as TableMappingItem;
 
@@ -325,8 +325,8 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal FieldMappingItem GetTableColumn(Guid id)
-		{
+	internal FieldMappingItem GetTableColumn(Guid id)
+	{
 			FieldMappingItem result = this.PersistenceProvider.RetrieveInstance(typeof(FieldMappingItem), 
                 new ModelElementKey(id)) as FieldMappingItem;
 
@@ -338,8 +338,8 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal DataStructureFilterSet GetFilterSet(Guid id)
-		{
+	internal DataStructureFilterSet GetFilterSet(Guid id)
+	{
             if (id == Guid.Empty)
             {
                 return null;
@@ -366,8 +366,8 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal DataStructureSortSet GetSortSet(Guid id)
-		{
+	internal DataStructureSortSet GetSortSet(Guid id)
+	{
 			DataStructureSortSet result ;
 			try
 			{
@@ -382,8 +382,8 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal DataStructureDefaultSet GetDefaultSet(Guid id)
-		{
+	internal DataStructureDefaultSet GetDefaultSet(Guid id)
+	{
 			DataStructureDefaultSet result ;
 			try
 			{
@@ -398,18 +398,18 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		internal DataSet GetDataset(DataStructure ds, Guid defaultSetId, bool includeCalculatedColumns)
-		{
+	internal DataSet GetDataset(DataStructure ds, Guid defaultSetId, bool includeCalculatedColumns)
+	{
 			return new DatasetGenerator(UserDefinedParameters).CreateDataSet(ds, includeCalculatedColumns, GetDefaultSet(defaultSetId));
 		}
-		internal DataSet GetDataset(DataStructure ds, Guid defaultSetId)
-		{
+	internal DataSet GetDataset(DataStructure ds, Guid defaultSetId)
+	{
 			return new DatasetGenerator(UserDefinedParameters).CreateDataSet(ds, GetDefaultSet(defaultSetId));
 		}
 
-		internal void BuildParameters(QueryParameterCollection parameters, 
-            IDataParameterCollection dsParameters, UserProfile currentProfile)
-		{
+	internal void BuildParameters(QueryParameterCollection parameters, 
+		IDataParameterCollection dsParameters, UserProfile currentProfile)
+	{
 			foreach(IDbDataParameter dbParam in dsParameters)
 			{
 				if(dbParam.IsNullable && dbParam.Value == null)
@@ -594,12 +594,12 @@ namespace Origam.DA.Service
 				}
 			}
 		}
-        internal abstract object FillParameterArrayData(ICollection ar);
+	internal abstract object FillParameterArrayData(ICollection ar);
 
-        internal DataAuditLog GetLog(
-            DataTable table, UserProfile profile, string transactionId, 
-            int overrideActionType)
-		{
+	internal DataAuditLog GetLog(
+		DataTable table, UserProfile profile, string transactionId, 
+		int overrideActionType)
+	{
             if (!table.ExtendedProperties.Contains(
                 Const.EntityAuditingAttribute))
             {
@@ -739,8 +739,8 @@ namespace Origam.DA.Service
 			return log;
 		}
 
-		private DataAuditLog.AuditRecordRow GetNewLogRow(DataAuditLog log, DataRow row, DataColumn column, int overrideActionType)
-		{
+	private DataAuditLog.AuditRecordRow GetNewLogRow(DataAuditLog log, DataRow row, DataColumn column, int overrideActionType)
+	{
 			string pkName = row.Table.PrimaryKey[0].ColumnName;
 
 			DataAuditLog.AuditRecordRow logRow = log.AuditRecord.NewAuditRecordRow();
@@ -769,20 +769,20 @@ namespace Origam.DA.Service
 			return logRow;
 		}
 
-		#region IDataService Members
-		public virtual string Info
+	#region IDataService Members
+	public virtual string Info
+	{
+		get
 		{
-			get
-			{
 				return this.ToString();
 			}
-		}
+	}
 
-		public abstract string ConnectionString{get; set;}
-        public abstract string DbUser { get; set; }
+	public abstract string ConnectionString{get; set;}
+	public abstract string DbUser { get; set; }
 
-        public string Xsd(Guid dataStructureId)
-		{
+	public string Xsd(Guid dataStructureId)
+	{
 			System.Text.StringBuilder mysb = new System.Text.StringBuilder();
 			// Create the StringWriter object with the StringBuilder object.
 			System.IO.StringWriter myStringWriter = new System.IO.StringWriter(mysb);
@@ -792,13 +792,13 @@ namespace Origam.DA.Service
 			return myStringWriter.ToString();
 		}
 
-		public DataSet GetEmptyDataSet(Guid dataStructureId)
-		{
+	public DataSet GetEmptyDataSet(Guid dataStructureId)
+	{
 			return GetEmptyDataSet(dataStructureId, null);
 		}
 
-		public DataSet GetEmptyDataSet(Guid dataStructureId, CultureInfo culture)
-		{
+	public DataSet GetEmptyDataSet(Guid dataStructureId, CultureInfo culture)
+	{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = dataStructureId;
 
@@ -807,62 +807,61 @@ namespace Origam.DA.Service
 			return new DatasetGenerator(UserDefinedParameters).CreateDataSet(ds, culture);
 		}
 
-		public abstract DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, string transactionId);
+	public abstract DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, string transactionId);
 
-		public abstract DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataSet, string transactionId);
+	public abstract DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataSet, string transactionId);
 
-		public abstract int UpdateData(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet ds, string transactionid);
-		public abstract int UpdateData(
-            DataStructureQuery dataStructureQuery, IPrincipal userProfile, 
-            DataSet ds, string transactionid, bool forceBulkInsert);
+	public abstract int UpdateData(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet ds, string transactionid);
+	public abstract int UpdateData(
+		DataStructureQuery dataStructureQuery, IPrincipal userProfile, 
+		DataSet ds, string transactionid, bool forceBulkInsert);
 
-		public abstract object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId);
+	public abstract object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId);
 
-		public abstract DataSet ExecuteProcedure(string name, string EntityOrder, DataStructureQuery query, string transactionid);
+	public abstract DataSet ExecuteProcedure(string name, string EntityOrder, DataStructureQuery query, string transactionid);
 
-		public abstract ArrayList CompareSchema(IPersistenceProvider provider);
+	public abstract ArrayList CompareSchema(IPersistenceProvider provider);
 
-        public abstract bool IsSchemaItemInDatabase(ISchemaItem schemaItem);
+	public abstract bool IsSchemaItemInDatabase(ISchemaItem schemaItem);
 
-		public virtual string ExecuteUpdate(string command, string transactionId)
-		{
+	public virtual string ExecuteUpdate(string command, string transactionId)
+	{
 			throw new NotImplementedException("ExecuteUpdate() is not implemented by this data service");
 		}
 
-		public virtual string DatabaseSchemaVersion()
-		{
+	public virtual string DatabaseSchemaVersion()
+	{
 			throw new NotImplementedException("DatabaseSchemaVersion() is not implemented by this data service");
 		}
 
-		public virtual void UpdateDatabaseSchemaVersion(string version, string transactionId)
-		{
+	public virtual void UpdateDatabaseSchemaVersion(string version, string transactionId)
+	{
 			throw new NotImplementedException("UpdateDatabaseSchemaVersion() is not implemented by this data service");
 		}
 
-		public abstract int UpdateField(Guid entityId, Guid fieldId, object oldValue, object newValue, IPrincipal userProfile, string transactionId);
-		public abstract int ReferenceCount(Guid entityId, Guid fieldId, object value, IPrincipal userProfile, string transactionId);
-        public abstract string[] DatabaseSpecificDatatypes();
-        public abstract IDataReader ExecuteDataReader(
-            DataStructureQuery dataStructureQuery, 
-            IPrincipal userProfile, 
-            string transactionId);
+	public abstract int UpdateField(Guid entityId, Guid fieldId, object oldValue, object newValue, IPrincipal userProfile, string transactionId);
+	public abstract int ReferenceCount(Guid entityId, Guid fieldId, object value, IPrincipal userProfile, string transactionId);
+	public abstract string[] DatabaseSpecificDatatypes();
+	public abstract IDataReader ExecuteDataReader(
+		DataStructureQuery dataStructureQuery, 
+		IPrincipal userProfile, 
+		string transactionId);
         
-        public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
-	        (DataStructureQuery dataStructureQuery);
+	public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
+		(DataStructureQuery dataStructureQuery);
 
-        public abstract IEnumerable<Dictionary<string, object>>
-	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
+	public abstract IEnumerable<Dictionary<string, object>>
+		ExecuteDataReaderReturnPairs(DataStructureQuery query);
         
-        #endregion
+	#endregion
 
-        #region IDisposable Members
+	#region IDisposable Members
 
-        public virtual void Dispose()
-		{
+	public virtual void Dispose()
+	{
 			_persistence = null;
 			DbDataAdapterFactory.Dispose();
 		}
 
-		#endregion
-	}
+	#endregion
 }

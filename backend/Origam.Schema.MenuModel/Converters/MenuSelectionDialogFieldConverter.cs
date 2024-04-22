@@ -23,26 +23,25 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+public class MenuSelectionDialogFieldConverter : TypeConverter
 {
-    public class MenuSelectionDialogFieldConverter : TypeConverter
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
 
 			AbstractSchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
@@ -69,16 +68,16 @@ namespace Origam.Schema.MenuModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
@@ -106,6 +105,4 @@ namespace Origam.Schema.MenuModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
-
 }

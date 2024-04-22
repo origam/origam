@@ -21,20 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for NotificationList.
-	/// </summary>
-	public class NotificationList : System.Windows.Forms.UserControl
-	{
-		private System.Windows.Forms.ListView listView1;
-		private System.Windows.Forms.ImageList imageList1;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
-		private System.ComponentModel.IContainer components;
+namespace Origam.Gui.Win;
 
-		public NotificationList()
-		{
+/// <summary>
+/// Summary description for NotificationList.
+/// </summary>
+public class NotificationList : System.Windows.Forms.UserControl
+{
+	private System.Windows.Forms.ListView listView1;
+	private System.Windows.Forms.ImageList imageList1;
+	private System.Windows.Forms.ColumnHeader columnHeader1;
+	private System.ComponentModel.IContainer components;
+
+	public NotificationList()
+	{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -42,8 +42,8 @@ namespace Origam.Gui.Win
 
 		}
 
-		public void SetList(string text)
-		{
+	public void SetList(string text)
+	{
 			this.listView1.Items.Clear();
 
 			if(text != null)
@@ -68,11 +68,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary> 
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				if(components != null)
@@ -83,23 +83,21 @@ namespace Origam.Gui.Win
 			base.Dispose( disposing );
 		}
 
-		#region Component Designer generated code
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	#region Component Designer generated code
+	/// <summary> 
+	/// Required method for Designer support - do not modify 
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(NotificationList));
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.SuspendLayout();
-			// 
-			// listView1
-			// 
-			this.listView1.AutoArrange = false;
+			// 		// listView1
+			// 		this.listView1.AutoArrange = false;
 			this.listView1.BackColor = System.Drawing.Color.LemonChiffon;
 			this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -115,27 +113,22 @@ namespace Origam.Gui.Win
 			this.listView1.SmallImageList = this.imageList1;
 			this.listView1.TabIndex = 0;
 			this.listView1.View = System.Windows.Forms.View.Details;
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			// 		// imageList1
+			// 		this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
 			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
 			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// NotificationList
-			// 
-			this.Controls.Add(this.listView1);
+			// 		// NotificationList
+			// 		this.Controls.Add(this.listView1);
 			this.Name = "NotificationList";
 			this.Size = new System.Drawing.Size(336, 19);
 			this.ResumeLayout(false);
 
 		}
-		#endregion
+	#endregion
 
-		private void NotificationList_SizeChanged(object sender, EventArgs e)
-		{
+	private void NotificationList_SizeChanged(object sender, EventArgs e)
+	{
 			this.listView1.Columns[0].Width = this.Width - (this.VScroll ? System.Windows.Forms.SystemInformation.VerticalScrollBarWidth : 0);
 		}
-	}
 }

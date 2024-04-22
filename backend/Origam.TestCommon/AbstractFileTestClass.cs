@@ -22,39 +22,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using NUnit.Framework;
 
-namespace Origam.TestCommon
+namespace Origam.TestCommon;
+
+public abstract class AbstractFileTestClass
 {
-    public abstract class AbstractFileTestClass
-    {
-        protected DirectoryInfo ProjectDir =>
-            new DirectoryInfo(TestContext.TestDirectory);
+    protected DirectoryInfo ProjectDir =>
+        new DirectoryInfo(TestContext.TestDirectory);
 
-        protected virtual string DirName => "";
+    protected virtual string DirName => "";
 
-        protected abstract TestContext TestContext { get; }
+    protected abstract TestContext TestContext { get; }
 
-        protected DirectoryInfo TestFilesDir {
-            get
-            {
+    protected DirectoryInfo TestFilesDir {
+        get
+        {
                 string path = Path.Combine(ProjectDir.FullName,DirName,"TestFiles");
                 Directory.CreateDirectory(path);
                 return new DirectoryInfo(path);
             }
-        }
-        protected DirectoryInfo TestProjectDir {
-            get
-            {
+    }
+    protected DirectoryInfo TestProjectDir {
+        get
+        {
                 string relativeToFilesDir = DirName + @"\TestProject";
                 
                 string path = Path.Combine(ProjectDir.FullName, relativeToFilesDir);
                 Directory.CreateDirectory(path);
                 return  new DirectoryInfo(path);
             }
-        }
+    }
 
-        protected void ClearTestDir()
-        {
+    protected void ClearTestDir()
+    {
             Directory.Delete(TestFilesDir.FullName, true);
         }
-    }
 }

@@ -8,17 +8,17 @@ using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.NamespaceMapping
+namespace Origam.DA.Service.NamespaceMapping;
+
+class Version6PropertyToNamespaceMapping : PropertyToNamespaceMapping
 {
-    class Version6PropertyToNamespaceMapping : PropertyToNamespaceMapping
-    {
-        private static readonly ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping> instances
-            = new ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping>();
-        private static readonly Version version6 = new Version(6,0,0);
+    private static readonly ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping> instances
+        = new ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping>();
+    private static readonly Version version6 = new Version(6,0,0);
         
-        public static Version6PropertyToNamespaceMapping CreateOrGet(
-            Type instanceType, ScriptContainerLocator scriptLocator)
-        {
+    public static Version6PropertyToNamespaceMapping CreateOrGet(
+        Type instanceType, ScriptContainerLocator scriptLocator)
+    {
             return instances.GetOrAdd(
                 instanceType, 
                 type =>
@@ -30,15 +30,15 @@ namespace Origam.DA.Service.NamespaceMapping
                 });
         }
 
-        protected Version6PropertyToNamespaceMapping(List<PropertyMapping> propertyMappings, string typeFullName)
-            : base(propertyMappings, typeFullName)
-        {
+    protected Version6PropertyToNamespaceMapping(List<PropertyMapping> propertyMappings, string typeFullName)
+        : base(propertyMappings, typeFullName)
+    {
             
         }
         
-        protected static List<PropertyMapping> GetPropertyMappings(
-            Type instanceType, ScriptContainerLocator scriptLocator)
-        {
+    protected static List<PropertyMapping> GetPropertyMappings(
+        Type instanceType, ScriptContainerLocator scriptLocator)
+    {
             var propertyMappings = instanceType
                 .GetAllBaseTypes()
                 .Where(baseType =>
@@ -49,9 +49,9 @@ namespace Origam.DA.Service.NamespaceMapping
             return propertyMappings;
         }
 
-        private static PropertyMapping ToPropertyMappings(
-            ScriptContainerLocator scriptLocator, Type type)
-        {
+    private static PropertyMapping ToPropertyMappings(
+        ScriptContainerLocator scriptLocator, Type type)
+    {
             var oldPropertyNameDict = scriptLocator
                                        .TryFindByTypeName(type.FullName)
                                        ?.OldPropertyXmlNames
@@ -69,5 +69,4 @@ namespace Origam.DA.Service.NamespaceMapping
                 xmlNamespace: OrigamNameSpace.CreateOrGet(type, version6),
                 xmlNamespaceName: XmlNamespaceTools.GetXmlNamespaceName(type));
         }
-    }
 }

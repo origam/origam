@@ -21,47 +21,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
+	public ScheduleTimeSchemaItemProvider() {}
+
+	#region ISchemaItemProvider Members
+	public override string RootItemType => AbstractScheduleTime.CategoryConst;
+
+	public override string Group => "BL";
+
+	#endregion
+
+	#region IBrowserNode Members
+
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_28_schedule-times.png";
+
+	public override string NodeText
 	{
-		public ScheduleTimeSchemaItemProvider() {}
+		get => "Schedule Times";
+		set => base.NodeText = value;
+	}
 
-		#region ISchemaItemProvider Members
-		public override string RootItemType => AbstractScheduleTime.CategoryConst;
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		null;
 
-		public override string Group => "BL";
+	#endregion
 
-		#endregion
+	#region ISchemaItemFactory Members
 
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_28_schedule-times.png";
-
-		public override string NodeText
-		{
-			get => "Schedule Times";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(SimpleScheduleTime), typeof(ScheduleGroup)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(SimpleScheduleTime))
 			{
@@ -74,6 +74,5 @@ namespace Origam.Schema.WorkflowModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
-	}
+	#endregion
 }

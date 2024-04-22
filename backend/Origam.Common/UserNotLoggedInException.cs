@@ -21,16 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
+namespace Origam;
+
+public class UserNotLoggedInException : Exception
 {
-    public class UserNotLoggedInException : Exception
+    public override string Message
     {
-        public override string Message
+        get
         {
-            get
-            {
                 return ResourceUtils.GetString("UserNotLoggedInException");
             }
-        }
     }
 }

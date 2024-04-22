@@ -29,18 +29,18 @@ using System.Windows.Forms.Design;
 using System.Globalization;
 using System.Linq;
 
-namespace Origam.Workbench
-{
-    public partial class PropertyGridModelDropdown : UserControl
-    {
-        IDictionary<string, ISchemaItem> _list = new Dictionary<string, ISchemaItem>();
-        IWindowsFormsEditorService _service;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        bool _isStringList = false;
+namespace Origam.Workbench;
 
-        public PropertyGridModelDropdown(ISchemaItem value,
-            IWindowsFormsEditorService service, ITypeDescriptorContext context)
-        {
+public partial class PropertyGridModelDropdown : UserControl
+{
+    IDictionary<string, ISchemaItem> _list = new Dictionary<string, ISchemaItem>();
+    IWindowsFormsEditorService _service;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    bool _isStringList = false;
+
+    public PropertyGridModelDropdown(ISchemaItem value,
+        IWindowsFormsEditorService service, ITypeDescriptorContext context)
+    {
             InitializeComponent();
             _service = service;
             listBox1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
@@ -78,8 +78,8 @@ namespace Origam.Workbench
             }
         }
 
-        private string GetKey(object item)
-        {
+    private string GetKey(object item)
+    {
             ISchemaItem schemaItem = item as ISchemaItem;
             string key = "";
             if (!_isStringList && schemaItem != null)
@@ -93,15 +93,15 @@ namespace Origam.Workbench
             return key;
         }
 
-        private static void SelectItem(ListViewItem selectedItem)
-        {
+    private static void SelectItem(ListViewItem selectedItem)
+    {
             selectedItem.Selected = true;
             selectedItem.EnsureVisible();
             selectedItem.Focused = true;
         }
 
-        private void Populate()
-        {
+    private void Populate()
+    {
             string filter = textBox1.Text;
             bool doFilter = string.IsNullOrEmpty(filter);
             listBox1.BeginUpdate();
@@ -132,10 +132,10 @@ namespace Origam.Workbench
             listBox1.EndUpdate();
         }
 
-        public object SelectedValue { get; set; }
+    public object SelectedValue { get; set; }
 
-        private void listBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
+    private void listBox1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+    {
             if (e.KeyCode == Keys.Enter)
             {
                 Finish();
@@ -146,16 +146,16 @@ namespace Origam.Workbench
             }
         }
 
-        private void Finish()
-        {
+    private void Finish()
+    {
             if (listBox1.SelectedItems.Count == 1)
             {
                 this.SelectedValue = listBox1.SelectedItems[0].Tag;
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
+    private void textBox1_TextChanged(object sender, EventArgs e)
+    {
             Populate();
             if (listBox1.SelectedIndices.Count == 0 && listBox1.Items.Count > 0)
             {
@@ -164,8 +164,8 @@ namespace Origam.Workbench
             }
         }
 
-        private void textBox1_KeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
+    private void textBox1_KeyDown(object sender, PreviewKeyDownEventArgs e)
+    {
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -178,18 +178,17 @@ namespace Origam.Workbench
             }
         }
 
-        private void listBox1_ItemActivate(object sender, EventArgs e)
-        {
+    private void listBox1_ItemActivate(object sender, EventArgs e)
+    {
             Finish();
             _service.CloseDropDown();
         }
 
-        private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
+    private void listBox1_KeyPress(object sender, KeyPressEventArgs e)
+    {
             textBox1.Focus();
             SendKeys.Send(e.KeyChar.ToString());
             textBox1.SelectionStart = 1;
             textBox1.SelectionLength = 0;
         }
-    }
 }

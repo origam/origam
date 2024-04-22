@@ -13,21 +13,21 @@ using Origam.Server.Controller;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
-{
-    public class DataServiceSoap: IDataServiceSoap
-    {
-        
-        private readonly ILogger<AbstractController> log;
+namespace Origam.Server;
 
-        public DataServiceSoap(ILogger<AbstractController> log)
-        {
+public class DataServiceSoap: IDataServiceSoap
+{
+        
+    private readonly ILogger<AbstractController> log;
+
+    public DataServiceSoap(ILogger<AbstractController> log)
+    {
             this.log = log;
         }
 
-        public Task<DataSet> LoadDataAsync(string dataStructureId, string filterId, string defaultSetId,
-            string sortSetId, Parameter[] parameters)
-        {
+    public Task<DataSet> LoadDataAsync(string dataStructureId, string filterId, string defaultSetId,
+        string sortSetId, Parameter[] parameters)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "LoadData");
@@ -50,8 +50,8 @@ namespace Origam.Server
             return Task.FromResult(dataSet);
         }
 
-        public Task<DataSet> LoadData0Async(string dataStructureId, string filterId, string sortSetId, string defaultSetId)
-        {
+    public Task<DataSet> LoadData0Async(string dataStructureId, string filterId, string sortSetId, string defaultSetId)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "LoadData0");
@@ -72,8 +72,8 @@ namespace Origam.Server
             return Task.FromResult(dataSet);
         }
 
-        public Task<DataSet> LoadData1Async(string dataStructureId, string filterId, string defaultSetId, string sortSetId, string paramName1, string paramValue1)
-        {
+    public Task<DataSet> LoadData1Async(string dataStructureId, string filterId, string defaultSetId, string sortSetId, string paramName1, string paramValue1)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "LoadData1");
@@ -95,10 +95,10 @@ namespace Origam.Server
             return Task.FromResult(dataSet);
         }
 
-        public Task<DataSet> LoadData2Async(string dataStructureId, string filterId, 
-            string defaultSetId, string sortSetId, string paramName1, string paramValue1,
-            string paramName2, string paramValue2)
-        {
+    public Task<DataSet> LoadData2Async(string dataStructureId, string filterId, 
+        string defaultSetId, string sortSetId, string paramName1, string paramValue1,
+        string paramName2, string paramValue2)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "LoadData2");
@@ -121,8 +121,8 @@ namespace Origam.Server
             return Task.FromResult(dataSet);
         }
 
-        public Task<DataSet> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
-        {
+    public Task<DataSet> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
+    {
             log.Log(LogLevel.Information,"ExecuteProcedure");
             
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
@@ -131,9 +131,9 @@ namespace Origam.Server
             return Task.FromResult(dataSet);
         }
 
-        public Task<DataSet> StoreDataAsync(string dataStructureId, DataSet data,
-            bool loadActualValuesAfterUpdate)
-        {
+    public Task<DataSet> StoreDataAsync(string dataStructureId, DataSet data,
+        bool loadActualValuesAfterUpdate)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "StoreData");
@@ -173,9 +173,9 @@ namespace Origam.Server
             return Task.FromResult(returnDataSet);
         }
 
-        public Task<DataSet> StoreXmlAsync(string dataStructureId, XmlNode xml,
-            bool loadActualValuesAfterUpdate)
-        {
+    public Task<DataSet> StoreXmlAsync(string dataStructureId, XmlNode xml,
+        bool loadActualValuesAfterUpdate)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "StoreXml");
@@ -210,5 +210,4 @@ namespace Origam.Server
             DataSet dataSet = core.DataService.Instance.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
             return Task.FromResult(dataSet);
         }
-    }
 }

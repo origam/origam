@@ -26,30 +26,30 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkflowSchedule : AbstractSchemaItem
 {
-	[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class WorkflowSchedule : AbstractSchemaItem
+	public const string CategoryConst = "WorkflowSchedule";
+
+	public WorkflowSchedule() {}
+
+	public WorkflowSchedule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public WorkflowSchedule(Key primaryKey) : base(primaryKey)	{}
+
+	#region Properties
+	public Guid WorkflowId;
+
+	[TypeConverter(typeof(WorkflowConverter))]
+	[XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
 	{
-		public const string CategoryConst = "WorkflowSchedule";
-
-		public WorkflowSchedule() {}
-
-		public WorkflowSchedule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WorkflowSchedule(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		public Guid WorkflowId;
-
-		[TypeConverter(typeof(WorkflowConverter))]
-        [XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = WorkflowId
@@ -57,8 +57,8 @@ namespace Origam.Schema.WorkflowModel
 				return (IWorkflow)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					WorkflowId = Guid.Empty;
@@ -68,16 +68,16 @@ namespace Origam.Schema.WorkflowModel
 					WorkflowId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 		
-		public Guid ScheduleTimeId;
+	public Guid ScheduleTimeId;
 
-		[TypeConverter(typeof(ScheduleTimeConverter))]
-        [XmlReference("scheduleTime", "ScheduleTimeId")]
-		public AbstractScheduleTime ScheduleTime
+	[TypeConverter(typeof(ScheduleTimeConverter))]
+	[XmlReference("scheduleTime", "ScheduleTimeId")]
+	public AbstractScheduleTime ScheduleTime
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = ScheduleTimeId
@@ -85,8 +85,8 @@ namespace Origam.Schema.WorkflowModel
 				return (AbstractScheduleTime)PersistenceProvider
 					.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					ScheduleTimeId = Guid.Empty;
@@ -96,38 +96,38 @@ namespace Origam.Schema.WorkflowModel
 					ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(Workflow);
 			dependencies.Add(ScheduleTime);
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override bool UseFolders => false;
+	public override bool UseFolders => false;
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataConstantReference), 
 			typeof(SystemFunctionCall), 
 			typeof(ReportReference)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(DataConstantReference))
 			{
@@ -144,7 +144,6 @@ namespace Origam.Schema.WorkflowModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
+	#endregion
 
-	}
 }

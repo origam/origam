@@ -24,17 +24,17 @@ using System.Data;
 using Origam;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public static class ToolTipTools
 {
-    public static class ToolTipTools
+    public static HelpTooltip NextTooltip()
     {
-        public static HelpTooltip NextTooltip()
-        {
             return NextTooltip(Guid.Empty.ToString());
         }
 
-        public static HelpTooltip NextTooltip(string formId)
-        {
+    public static HelpTooltip NextTooltip(string formId)
+    {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
             // get list of all unused tooltips
@@ -120,5 +120,4 @@ namespace Origam.Server
             
             return tt;
         }  
-    }
 }

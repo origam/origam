@@ -19,17 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Service.MetaModelUpgrade
-{
-    public class UpgradeProgressInfo
-    {
-        public int TotalFiles { get;}
-        public int FilesDone { get; }
+namespace Origam.DA.Service.MetaModelUpgrade;
 
-        public UpgradeProgressInfo(int totalFiles, int filesDone)
-        {
+public class UpgradeProgressInfo
+{
+    public int TotalFiles { get;}
+    public int FilesDone { get; }
+
+    public UpgradeProgressInfo(int totalFiles, int filesDone)
+    {
             TotalFiles = totalFiles;
             FilesDone = filesDone;
         }
-    }
 }

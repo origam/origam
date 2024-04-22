@@ -24,26 +24,26 @@ using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
 
-namespace Origam.JSON
-{
-    class DataSetConverter : newton.DataSetConverter
-    {
-        private readonly bool omitRootElement;
-        private readonly bool omitMainElement;
+namespace Origam.JSON;
 
-        public DataSetConverter(bool omitRootElement, bool omitMainElement)
-        {
+class DataSetConverter : newton.DataSetConverter
+{
+    private readonly bool omitRootElement;
+    private readonly bool omitMainElement;
+
+    public DataSetConverter(bool omitRootElement, bool omitMainElement)
+    {
             this.omitRootElement = omitRootElement;
             this.omitMainElement = omitMainElement;
         }
 
-        public override bool CanConvert(Type valueType)
-        {
+    public override bool CanConvert(Type valueType)
+    {
             return typeof(DataSet).IsAssignableFrom(valueType);
         }
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-            Newtonsoft.Json.JsonSerializer serializer)
-        {
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+        Newtonsoft.Json.JsonSerializer serializer)
+    {
             DataSet dataSet = (DataSet)value;
             DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
 
@@ -89,8 +89,8 @@ namespace Origam.JSON
             }
         }
 
-        private bool IsRoot(DataTable table)
-        {
+    private bool IsRoot(DataTable table)
+    {
             foreach (DataRelation relation in table.DataSet.Relations)
             {
                 if (relation.Nested && relation.ChildTable.Equals(table))
@@ -100,5 +100,4 @@ namespace Origam.JSON
             }
             return true;
         }
-    }
 }

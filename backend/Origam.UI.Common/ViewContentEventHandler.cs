@@ -19,29 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI
+namespace Origam.UI;
+
+public delegate void ViewContentEventHandler(object sender, ViewContentEventArgs e);
+		
+public class ViewContentEventArgs : System.EventArgs
 {
-	public delegate void ViewContentEventHandler(object sender, ViewContentEventArgs e);
+	IViewContent content;
 		
-	public class ViewContentEventArgs : System.EventArgs
+	public IViewContent Content 
 	{
-		IViewContent content;
-		
-		public IViewContent Content 
+		get 
 		{
-			get 
-			{
 				return content;
 			}
-			set 
-			{
+		set 
+		{
 				content = value;
 			}
-		}
+	}
 		
-		public ViewContentEventArgs(IViewContent content)
-		{
+	public ViewContentEventArgs(IViewContent content)
+	{
 			this.content = content;
 		}
-	}
 }

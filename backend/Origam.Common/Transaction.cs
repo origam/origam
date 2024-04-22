@@ -21,24 +21,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
+namespace Origam;
+
+/// <summary>
+/// Summary description for OrigamTransaction.
+/// </summary>
+public abstract class OrigamTransaction
 {
-	/// <summary>
-	/// Summary description for OrigamTransaction.
-	/// </summary>
-	public abstract class OrigamTransaction
-	{
-		public abstract void Commit();
-		public abstract void Rollback();
+	public abstract void Commit();
+	public abstract void Rollback();
 		
-		public virtual void Rollback(string savePointName)
-		{
+	public virtual void Rollback(string savePointName)
+	{
 			throw new NotSupportedException(ResourceUtils.GetString("PartialRollbackNotSupported", this.ToString()));
 		}
 		
-		public virtual void Save(string savePointName)
-		{
+	public virtual void Save(string savePointName)
+	{
 			throw new NotSupportedException(ResourceUtils.GetString("SavingNotSupported", this.ToString()));
 		}
-	}
 }

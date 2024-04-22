@@ -27,30 +27,30 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Schema.LookupModel.UI.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards;
+
+/// <summary>
+/// Summary description for CreateFieldWithLookupRelationshipEntityCommand.
+/// </summary>
+public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
 {
-    /// <summary>
-    /// Summary description for CreateFieldWithLookupRelationshipEntityCommand.
-    /// </summary>
-    public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
-	{
-        CreateFieldWithRelationshipEntityWizardForm wizardForm;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
-		{
-			get
-			{
+    CreateFieldWithRelationshipEntityWizardForm wizardForm;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    public override bool IsEnabled
+    {
+        get
+        {
                 return Owner is IDataEntity
                     || Owner is IDataEntityColumn;
 			}
-			set
-			{
+        set
+        {
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+    }
 
-		public override void Run()
-		{
+    public override void Run()
+    {
             FieldMappingItem baseField = Owner as FieldMappingItem;
             IDataEntity baseEntity = Owner as IDataEntity;
             if (baseField != null)
@@ -97,8 +97,8 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             }
         }
 
-        public override void Execute()
-        {
+    public override void Execute()
+    {
             IDataEntity baseEntity = GetIDataEntity();
             // 1. entity
             TableMappingItem table = (TableMappingItem)baseEntity;
@@ -110,8 +110,8 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             GeneratedModelElements.Add(relation);
         }
 
-        private IDataEntity GetIDataEntity()
-        {
+    private IDataEntity GetIDataEntity()
+    {
             FieldMappingItem baseField = Owner as FieldMappingItem;
             IDataEntity baseEntity = Owner as IDataEntity;
             if (baseField != null)
@@ -121,12 +121,12 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             return baseEntity;
         }
 
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+    public override void SetSummaryText(object summary)
+    {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Field With Relationship Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -150,5 +150,4 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             richTextBoxSummary.AppendText("\t" + wizardForm.RelatedEntityFieldSelect.Name);
             richTextBoxSummary.AppendText(Environment.NewLine);
         }
-    }
 }

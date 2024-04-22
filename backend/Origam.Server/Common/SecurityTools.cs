@@ -25,14 +25,14 @@ using Origam;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Threading;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public static class SecurityTools
 {
-    public static class SecurityTools
+    internal static readonly log4net.ILog log =
+        log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public static UserProfile CurrentUserProfile()
     {
-        internal static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public static UserProfile CurrentUserProfile()
-        {
             try
             {
                 return SecurityManager.CurrentUserProfile();
@@ -45,9 +45,9 @@ namespace Origam.Server
             }
         }
 
-        public static void CreateUpdateOrigamOnlineUser(
-            string username, SessionStats stats)
-        {
+    public static void CreateUpdateOrigamOnlineUser(
+        string username, SessionStats stats)
+    {
             DataSet data = core.DataService.Instance.LoadData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
@@ -83,8 +83,8 @@ namespace Origam.Server
         }
 
        
-        public static void RemoveOrigamOnlineUser(string username)
-        {
+    public static void RemoveOrigamOnlineUser(string username)
+    {
             DataSet data = core.DataService.Instance.LoadData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
@@ -103,5 +103,4 @@ namespace Origam.Server
                 false,
                 null);
         }
-    }
 }

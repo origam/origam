@@ -23,20 +23,20 @@ using Origam.Workbench.Services;
 using System;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+
+public class NewPackageBuilder : AbstractBuilder
 {
-    public class NewPackageBuilder : AbstractBuilder
+    public override string Name
     {
-        public override string Name
+        get
         {
-            get
-            {
                 return "Create New Package";
             }
-        }
+    }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
                 as SchemaService;
             schema.UnloadSchema();
@@ -56,8 +56,7 @@ namespace Origam.ProjectAutomation
             schema.UnloadSchema();
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
         }
-    }
 }

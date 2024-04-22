@@ -27,24 +27,24 @@ using Origam.Schema.WorkflowModel;
 using log4net;
 using Origam.DA.Service;
 
-namespace Origam.Workflow
-{
-    public static class ProfilingTools
-    {
-        private static readonly ILog workflowProfilingLog =
-            LogManager.GetLogger(typeof(WorkflowProfiling));
+namespace Origam.Workflow;
 
-        public static void LogDuration(string logEntryType, IWorkflowStep task,
-            Stopwatch stoppedStopwatch)
-        {
+public static class ProfilingTools
+{
+    private static readonly ILog workflowProfilingLog =
+        LogManager.GetLogger(typeof(WorkflowProfiling));
+
+    public static void LogDuration(string logEntryType, IWorkflowStep task,
+        Stopwatch stoppedStopwatch)
+    {
             if (task == null) return;
             (string id, string path) = GetIdAndPath(task, logEntryType);
             LogDuration(logEntryType, path, id, stoppedStopwatch);
         }
 
-        public static void LogDuration(string logEntryType, string path,
-            string id, Stopwatch stoppedStopwatch)
-        {
+    public static void LogDuration(string logEntryType, string path,
+        string id, Stopwatch stoppedStopwatch)
+    {
             string typeWithDoubleColon = $"{logEntryType}:";
             workflowProfilingLog.Debug(string.Format(
                 "{0,-18}{1,-80} Id: {2}  Duration: {3,7:0.0} ms",
@@ -54,15 +54,15 @@ namespace Origam.Workflow
                 stoppedStopwatch.Elapsed.TotalMilliseconds));
         }
 
-        public static void LogWorkFlowEnd()
-        {
+    public static void LogWorkFlowEnd()
+    {
             workflowProfilingLog.Debug(" ");
         }
 
-        public static void ExecuteAndLogDuration(Action action,
-            string logEntryType, string path,
-            string id, Func<bool> logOnlyIf = null)
-        {
+    public static void ExecuteAndLogDuration(Action action,
+        string logEntryType, string path,
+        string id, Func<bool> logOnlyIf = null)
+    {
             bool FuncToExecute()
             {
                 action();
@@ -73,18 +73,18 @@ namespace Origam.Workflow
                 logOnlyIf);
         }
 
-        public static void ExecuteAndLogDuration(Action action,
-            string logEntryType, IWorkflowStep task,
-            Func<bool> logOnlyIf = null)
-        {
+    public static void ExecuteAndLogDuration(Action action,
+        string logEntryType, IWorkflowStep task,
+        Func<bool> logOnlyIf = null)
+    {
             (string id, string path) = GetIdAndPath(task, logEntryType);
             ExecuteAndLogDuration(action, logEntryType, path, id, logOnlyIf);
         }
 
-        public static bool ExecuteAndLogDuration(Func<bool> funcToExecute,
-            string logEntryType, string path,
-            string id, Func<bool> logOnlyIf = null)
-        {
+    public static bool ExecuteAndLogDuration(Func<bool> funcToExecute,
+        string logEntryType, string path,
+        string id, Func<bool> logOnlyIf = null)
+    {
             bool result;
             if (IsDebugEnabled)
             {
@@ -110,28 +110,28 @@ namespace Origam.Workflow
             return result;
         }
 
-        public static bool IsDebugEnabled =>
-            workflowProfilingLog.IsDebugEnabled;
+    public static bool IsDebugEnabled =>
+        workflowProfilingLog.IsDebugEnabled;
 
-        public static void ClearThreadLoggingContext()
-        {
+    public static void ClearThreadLoggingContext()
+    {
             ThreadContext.Properties["currentTaskPath"] = null;
             ThreadContext.Properties["currentTaskId"] = null;
             ThreadContext.Properties["ServiceMethodName"] = null;
         }
 
-        public static void SetCurrentTaskToThreadLoggingContext(
-            ServiceMethodCallTask task)
-        {
+    public static void SetCurrentTaskToThreadLoggingContext(
+        ServiceMethodCallTask task)
+    {
             ThreadContext.Properties["currentTaskPath"] = task.Path;
             ThreadContext.Properties["currentTaskId"] = task.NodeId;
             ThreadContext.Properties["ServiceMethodName"] =
                 task.ServiceMethod.Name;
         }
 
-        private static (string id, string path) GetIdAndPath(IWorkflowStep task,
-            string logEntryType)
-        {
+    private static (string id, string path) GetIdAndPath(IWorkflowStep task,
+        string logEntryType)
+    {
             string taskPath = task is AbstractSchemaItem schemaItem
                 ? schemaItem.Path
                 : "";
@@ -139,33 +139,33 @@ namespace Origam.Workflow
             string path = taskPath + "/" + logEntryType;
             return ( id,  path);
         }
-        private static bool ShouldLog(Func<bool> logOnlyIf)
-        {
+    private static bool ShouldLog(Func<bool> logOnlyIf)
+    {
             if (logOnlyIf == null) return true;
             return logOnlyIf();
         }
-    }
-    public class OperationTimer
-    {
-        private static OperationTimer instance;
+}
+public class OperationTimer
+{
+    private static OperationTimer instance;
 
-        public static OperationTimer Global =>
-             instance ?? (instance = new OperationTimer());
+    public static OperationTimer Global =>
+        instance ?? (instance = new OperationTimer());
         
-        private readonly Dictionary<int,OperationData> runningOperations =
-            new Dictionary<int, OperationData>();
+    private readonly Dictionary<int,OperationData> runningOperations =
+        new Dictionary<int, OperationData>();
 
-        public void Start(int hash)
-        {
+    public void Start(int hash)
+    {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             var operationData = new OperationData(stopwatch);
             runningOperations.Add(hash,operationData);
         }
         
-        public void Start(string logEntryType, string path, string id, int hash,
-            Stopwatch stopwatch = null)
-        {
+    public void Start(string logEntryType, string path, string id, int hash,
+        Stopwatch stopwatch = null)
+    {
             if (stopwatch == null)
             {
                  stopwatch  = new Stopwatch();
@@ -175,8 +175,8 @@ namespace Origam.Workflow
             runningOperations.Add(hash,operationData);
         }
 
-        public Stopwatch Stop(int hash)
-        {
+    public Stopwatch Stop(int hash)
+    {
             if (!runningOperations.ContainsKey(hash)) return new Stopwatch();
             Stopwatch stopwatch = runningOperations[hash].Stopwatch;
             stopwatch.Stop();
@@ -184,8 +184,8 @@ namespace Origam.Workflow
             return stopwatch;
         }
 
-        public void StopAndLog(int hash)
-        {
+    public void StopAndLog(int hash)
+    {
             if (!runningOperations.ContainsKey(hash)) return;
             
             ProfilingTools.LogDuration(
@@ -195,29 +195,28 @@ namespace Origam.Workflow
                 stoppedStopwatch: runningOperations[hash].Stopwatch);
             runningOperations.Remove(hash);
         }
-        private class OperationData
-        {
-            public string LogEntryType { get; }
-            public string Path { get;  }
-            public string Id { get;  }
-            public Stopwatch Stopwatch { get; }
+    private class OperationData
+    {
+        public string LogEntryType { get; }
+        public string Path { get;  }
+        public string Id { get;  }
+        public Stopwatch Stopwatch { get; }
     
-            public OperationData(Stopwatch stopwatch)
-            {
+        public OperationData(Stopwatch stopwatch)
+        {
                 LogEntryType = "";
                 Path = "";
                 Id = "";
                 Stopwatch = stopwatch;
             }
             
-            public OperationData(string logEntryType, string path, string id, 
-                Stopwatch stopwatch)
-            {
+        public OperationData(string logEntryType, string path, string id, 
+            Stopwatch stopwatch)
+        {
                 LogEntryType = logEntryType;
                 this.Path = path;
                 Id = id;
                 Stopwatch = stopwatch;
             }
-        }
     }
 }

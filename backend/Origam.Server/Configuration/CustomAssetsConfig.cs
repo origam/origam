@@ -21,16 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-namespace Origam.Server.Configuration
-{
-    public class CustomAssetsConfig
-    {
-        public string PathToCustomAssetsFolder { get; set; }
-             
-        public string RouteToCustomAssetsFolder { get; set; }
-   
-        public string IdentityGuiLogoUrl { get; set; }
+namespace Origam.Server.Configuration;
 
-        public string Html5ClientLogoUrl { get; set; }
-    }
+public class CustomAssetsConfig
+{
+    public string PathToCustomAssetsFolder { get; set; }
+             
+    public string RouteToCustomAssetsFolder { get; set; }
+   
+    public string IdentityGuiLogoUrl { get; set; }
+
+    public string Html5ClientLogoUrl { get; set; }
 }

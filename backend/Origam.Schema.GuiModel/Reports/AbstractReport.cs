@@ -25,55 +25,54 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+public abstract class AbstractReport : AbstractSchemaItem
 {
-	[XmlModelRoot(CategoryConst)]
-    public abstract class AbstractReport : AbstractSchemaItem
-		{
-			public const string CategoryConst = "Report";
+	public const string CategoryConst = "Report";
 
-			public AbstractReport() {}
+	public AbstractReport() {}
 		
-			public AbstractReport(Guid schemaExtensionId) 
-				: base(schemaExtensionId) {}
+	public AbstractReport(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
 
-			public AbstractReport(Key primaryKey) : base(primaryKey) {}
+	public AbstractReport(Key primaryKey) : base(primaryKey) {}
 
-			#region Properties
-			private string _caption = "";
-			[Category("User Interface")]
-			[Localizable(true)]
-			public string Caption
-			{
-				get => _caption;
-				set => _caption = value;
-			}
+	#region Properties
+	private string _caption = "";
+	[Category("User Interface")]
+	[Localizable(true)]
+	public string Caption
+	{
+		get => _caption;
+		set => _caption = value;
+	}
 
-			#endregion
+	#endregion
            
-			#region Overriden AbstractSchemaItem Members
-			public override string ItemType => CategoryConst;
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType => CategoryConst;
 
-			#endregion			
+	#endregion			
 
 
-			#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-			public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 			{
 				typeof(DefaultValueParameter), 
 				typeof(SchemaItemParameter), 
 				typeof(XsltInitialValueParameter)
 			};
 
-			public override T NewItem<T>(
-				Guid schemaExtensionId, SchemaItemGroup group)
-			{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 				return base.NewItem<T>(schemaExtensionId, group, 
 					typeof(T) == typeof(FunctionCallParameter) ?
 						"NewParameter" : null);
 			}
-			#endregion
+	#endregion
 
-	}
 }

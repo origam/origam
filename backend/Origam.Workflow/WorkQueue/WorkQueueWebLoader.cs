@@ -29,25 +29,25 @@ using Origam.Workbench.Services;
 using System.Collections;
 using System.Xml.XPath;
 
-namespace Origam.Workflow.WorkQueue
-{
-	/// <summary>
-	/// Summary description for WorkQueueFileLoader.
-	/// </summary>
-	public class WorkQueueWebLoader : WorkQueueLoaderAdapter
-	{
-		string _url = null;
-        string _stateXPath = null;
-		bool _executed = false;
-        string _authentication = null;
-        string _userName = null;
-        string _password = null;
+namespace Origam.Workflow.WorkQueue;
 
-		public override void Connect(
-            IWorkQueueService service, Guid queueId, string workQueueClass, 
-            string connection, string userName, string password, 
-            string transactionId)
-		{
+/// <summary>
+/// Summary description for WorkQueueFileLoader.
+/// </summary>
+public class WorkQueueWebLoader : WorkQueueLoaderAdapter
+{
+	string _url = null;
+	string _stateXPath = null;
+	bool _executed = false;
+	string _authentication = null;
+	string _userName = null;
+	string _password = null;
+
+	public override void Connect(
+		IWorkQueueService service, Guid queueId, string workQueueClass, 
+		string connection, string userName, string password, 
+		string transactionId)
+	{
 			string[] cnParts = connection.Split(";".ToCharArray());
 			foreach (string part in cnParts)
 			{
@@ -78,12 +78,12 @@ namespace Origam.Workflow.WorkQueue
 			}
 		}
 
-		public override void Disconnect()
-		{
+	public override void Disconnect()
+	{
 		}
 
-		public override WorkQueueAdapterResult GetItem(string lastState)
-		{
+	public override WorkQueueAdapterResult GetItem(string lastState)
+	{
             if(_executed)
             {
                 return null;
@@ -131,8 +131,8 @@ namespace Origam.Workflow.WorkQueue
             }
 		}
 
-        private string GetNewStateViaXPath(DataSet dataset, string lastState)
-        {
+	private string GetNewStateViaXPath(DataSet dataset, string lastState)
+	{
             XPathDocument xPathDocument = new XPathDocument(
                 new StringReader(dataset.Tables["File"].Rows[0]["Data"]
                 .ToString()));
@@ -147,5 +147,4 @@ namespace Origam.Workflow.WorkQueue
                 return lastState;
             }
         }
-	}
 }

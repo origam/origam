@@ -24,27 +24,27 @@ using System.Xml;
 
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for AsPanelActionButtonBuilder.
+/// </summary>
+public class AsPanelActionButtonBuilder
 {
-	/// <summary>
-	/// Summary description for AsPanelActionButtonBuilder.
-	/// </summary>
-	public class AsPanelActionButtonBuilder
+	public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
+		ActionButtonPlacement placement, string actionId, string groupId, string caption,
+		string iconUrl, bool isDefault, Hashtable parameters, string confirmationMessage)
 	{
-		public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
-			ActionButtonPlacement placement, string actionId, string groupId, string caption,
-			string iconUrl, bool isDefault, Hashtable parameters, string confirmationMessage)
-		{
 			Build(actionsElement, type, mode, placement, actionId, groupId, caption, iconUrl, isDefault, parameters,
 				false, false, false, 0, "", 0, confirmationMessage);
 		}
 
-		public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
-			ActionButtonPlacement placement, string actionId, string groupId, string caption,
-			string iconUrl, bool isDefault, Hashtable parameters, bool shortcutIsShift, 
-			bool shortcutIsControl,	bool shortcutIsAlt, int shortcutKeyCode, string scannerParameter,
-			int terminatorCharCode, string confirmationMessage)
-		{
+	public static void Build(XmlElement actionsElement, PanelActionType type, PanelActionMode mode,
+		ActionButtonPlacement placement, string actionId, string groupId, string caption,
+		string iconUrl, bool isDefault, Hashtable parameters, bool shortcutIsShift, 
+		bool shortcutIsControl,	bool shortcutIsAlt, int shortcutKeyCode, string scannerParameter,
+		int terminatorCharCode, string confirmationMessage)
+	{
 			XmlElement actionElement = actionsElement.OwnerDocument.CreateElement("Action");
 			actionsElement.AppendChild(actionElement);
 
@@ -98,5 +98,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				}
 			}
 		}
-	}
 }

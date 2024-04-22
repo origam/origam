@@ -25,16 +25,16 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
-{
-    class AbstractMenuItemScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.Schema.MenuModel.AbstractMenuItem";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 
-        public AbstractMenuItemScriptContainer()
-        {
+class AbstractMenuItemScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.Schema.MenuModel.AbstractMenuItem";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+
+    public AbstractMenuItemScriptContainer()
+    {
             AddEmptyUpgrade("6.0.0", "6.0.1");
             upgradeScripts.Add(
                 new UpgradeScript(
@@ -46,5 +46,4 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                         node.Add(new XAttribute(newNameSpace+"order", 100));
                     }));
         }
-    }
 }

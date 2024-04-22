@@ -29,56 +29,56 @@ using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
-namespace Origam.DA.Service
-{
-    public class FilePersistenceIndex: IDisposable
-    {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private ItemTracker itemTracker;
-        private readonly ReaderWriterLockSlim readWriteLock =
-            new ReaderWriterLockSlim();
+namespace Origam.DA.Service;
 
-        public HashSet<Guid> LoadedPackages { internal get; set; }
-        public IEnumerable<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
-        private ItemTracker ItemTracker {
-            get
-            {
+public class FilePersistenceIndex: IDisposable
+{
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private ItemTracker itemTracker;
+    private readonly ReaderWriterLockSlim readWriteLock =
+        new ReaderWriterLockSlim();
+
+    public HashSet<Guid> LoadedPackages { internal get; set; }
+    public IEnumerable<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
+    private ItemTracker ItemTracker {
+        get
+        {
                 return readWriteLock.RunReader(()=> itemTracker);  
             }
+    }
+
+    public FilePersistenceIndex(OrigamPathFactory pathFactory) 
+        : this(new ItemTracker(pathFactory), new HashSet<Guid>())
+    {
         }
 
-        public FilePersistenceIndex(OrigamPathFactory pathFactory) 
-            : this(new ItemTracker(pathFactory), new HashSet<Guid>())
-        {
-        }
-
-        protected FilePersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
-        {
+    protected FilePersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
+    {
             LoadedPackages = loadedPackages;
             this.itemTracker = itemTracker;
         }
 
-        internal static FilePersistenceIndex GetPackageIgnoringVersion(
-            FilePersistenceIndex original) => 
-            new PackageIgnoringPersistenceIndex(
-                original.ItemTracker,
-                original.LoadedPackages);
+    internal static FilePersistenceIndex GetPackageIgnoringVersion(
+        FilePersistenceIndex original) => 
+        new PackageIgnoringPersistenceIndex(
+            original.ItemTracker,
+            original.LoadedPackages);
 
-        internal static FilePersistenceIndex GetPackageRespectingVersion(
-            FilePersistenceIndex original)=>
-            new FilePersistenceIndex(
-                original.ItemTracker,
-                original.LoadedPackages);
+    internal static FilePersistenceIndex GetPackageRespectingVersion(
+        FilePersistenceIndex original)=>
+        new FilePersistenceIndex(
+            original.ItemTracker,
+            original.LoadedPackages);
 
-        public void ClearCache()
-        {
+    public void ClearCache()
+    {
             readWriteLock.RunWriter(()=> itemTracker.ClearCache());
         }
         
-        public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory)
-        {
+    public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory)
+    {
             return readWriteLock.RunWriter(() =>
             {
                 itemTracker.Clear();
@@ -88,18 +88,18 @@ namespace Origam.DA.Service
             });
         }
         
-        public void AddOrReplace(PersistedObjectInfo objInfo)
-        {
+    public void AddOrReplace(PersistedObjectInfo objInfo)
+    {
             readWriteLock.RunWriter(() => itemTracker.AddOrReplace(objInfo));
         }
         
-        public void AddOrReplace(OrigamFile origamFile)
-        {
+    public void AddOrReplace(OrigamFile origamFile)
+    {
             readWriteLock.RunWriter(() => itemTracker.AddOrReplace(origamFile));
         }
 
-        public void AddToPersist(TrackerLoaderFactory trackerLoaderFactory, bool unloadProject)
-        {
+    public void AddToPersist(TrackerLoaderFactory trackerLoaderFactory, bool unloadProject)
+    {
             if (unloadProject)
             {
                 trackerLoaderFactory.BinLoader.StopTask();
@@ -110,14 +110,14 @@ namespace Origam.DA.Service
                 trackerLoaderFactory.BinLoader.MarkToSave(itemTracker);
             }
         }
-        internal void PersistActualIndex(IBinFileLoader binFileLoader)
-        {
+    internal void PersistActualIndex(IBinFileLoader binFileLoader)
+    {
                 readWriteLock.RunWriter(() =>
                    binFileLoader.Persist(itemTracker));
         }
 
-        internal PersistedObjectInfo GetById(Guid id)
-        {
+    internal PersistedObjectInfo GetById(Guid id)
+    {
             return readWriteLock.RunReader(() => { 
                 PersistedObjectInfo objInfo = itemTracker.GetById(id);
                 if (objInfo == null) return null;
@@ -125,45 +125,45 @@ namespace Origam.DA.Service
             });
         }
 
-        internal PersistedObjectInfo GetParent(IFilePersistent instance) =>
-            instance.FileParentId == Guid.Empty 
-                ? null 
-                : GetById(instance.FileParentId);
+    internal PersistedObjectInfo GetParent(IFilePersistent instance) =>
+        instance.FileParentId == Guid.Empty 
+            ? null 
+            : GetById(instance.FileParentId);
 
-        internal IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId)
-        {
+    internal IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetByParentId(parentId)
                     .Where(BelongsToALoadedPackage)
                 );
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetByParentFolder(
-            string category, Guid folderId)
-        {
+    internal IEnumerable<PersistedObjectInfo> GetByParentFolder(
+        string category, Guid folderId)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetByParentFolder(category, folderId)
                     .Where(BelongsToALoadedPackage)
                 );
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetListByCategory(
-            string category)
-        {
+    internal IEnumerable<PersistedObjectInfo> GetListByCategory(
+        string category)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetListByCategory(category)
                     .Where(BelongsToALoadedPackage)
                 );
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetByPackage(Guid packageId)
-        {
+    internal IEnumerable<PersistedObjectInfo> GetByPackage(Guid packageId)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetByPackage(packageId));
         }
 
-        protected virtual bool BelongsToALoadedPackage(PersistedObjectInfo objInfo)
-        {
+    protected virtual bool BelongsToALoadedPackage(PersistedObjectInfo objInfo)
+    {
             if (LoadedPackages.Count == 0) return true;
             
             bool isPackageOrPackageReference =  
@@ -175,15 +175,15 @@ namespace Origam.DA.Service
                    LoadedPackages.Contains(objInfo.Id);
         }
 
-        public Dictionary<Guid,DirectoryInfo> GetLoadedPackageDirectories()
-        {
+    public Dictionary<Guid,DirectoryInfo> GetLoadedPackageDirectories()
+    {
             return LoadedPackages.ToDictionary(
                 id => id,
                 FindPackageDirectory);
         }
 
-        public DirectoryInfo FindPackageDirectory(Guid packageId)
-        {
+    public DirectoryInfo FindPackageDirectory(Guid packageId)
+    {
             return readWriteLock.RunReader(() => 
                 itemTracker.PackegeFiles
                     .First(orFile => orFile.ContainedObjects.Keys.Contains(packageId))
@@ -191,34 +191,34 @@ namespace Origam.DA.Service
                 );  
         }
 
-        public OrigamFile GetByRelativePath(string instanceRelativeFilePath)
-        {
+    public OrigamFile GetByRelativePath(string instanceRelativeFilePath)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetByPath(instanceRelativeFilePath));
         }
 
-        public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory,
-            MetaModelUpgradeMode mode)
+    public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory,
+        MetaModelUpgradeMode mode)
+    {
+        readWriteLock.RunWriter(() =>
         {
-            readWriteLock.RunWriter(() =>
-            {
 #if ORIGAM_CLIENT // temporary solution of: https://bitbucket.org/origamsource/origam-source/issues/198/architect-does-not-upgrade-meta-model-if
-                if (itemTracker.IsEmpty)
-                {
-                    trackerLoaderFactory.BinLoader.LoadInto(itemTracker);
-                }
+            if (itemTracker.IsEmpty)
+            {
+                trackerLoaderFactory.BinLoader.LoadInto(itemTracker);
+            }
 
-                if (itemTracker.IsEmpty)
+            if (itemTracker.IsEmpty)
+            {
+                Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
+                    itemTracker: itemTracker,
+                    mode: MetaModelUpgradeMode.ThrowIfOutdated);
+                if(error.HasValue)
                 {
-                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
-                        itemTracker: itemTracker,
-                        mode: MetaModelUpgradeMode.ThrowIfOutdated);
-                    if(error.HasValue)
-                    {
-                        throw new Exception(error.Value.Message);
-                    }
-                    trackerLoaderFactory.BinLoader.Persist(itemTracker);
+                    throw new Exception(error.Value.Message);
                 }
+                trackerLoaderFactory.BinLoader.Persist(itemTracker);
+            }
 #else
                 Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
                     itemTracker: itemTracker,
@@ -228,75 +228,74 @@ namespace Origam.DA.Service
                     throw new Exception(error.Value.Message);
                 }
 #endif
-            });
-        }
+        });
+    }
 
-        public Maybe<string> GetFileHash(FileInfo file)
-        {
+    public Maybe<string> GetFileHash(FileInfo file)
+    {
             return readWriteLock.RunReader(() => itemTracker.GetFileHash(file));
         }
 
-        public Maybe<ExternalFile> GetExternalFile(FileInfo file)
-        {
+    public Maybe<ExternalFile> GetExternalFile(FileInfo file)
+    {
             return readWriteLock.RunReader(() => itemTracker.GetExternalFile(file));
         }
 
-        public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
-        {
+    public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
+    {
             readWriteLock.RunWriter(() =>
                 itemTracker.RenameDirectory(dirToRename, newDirPath));
         }
 
-        public void AddOrReplaceHash(ITrackeableFile origamFile)
-        {
+    public void AddOrReplaceHash(ITrackeableFile origamFile)
+    {
             readWriteLock.RunWriter(() => 
                 itemTracker.AddOrReplaceHash(origamFile));
         }
 
-        public void RemoveHash(OrigamFile origamFile)
-        {
+    public void RemoveHash(OrigamFile origamFile)
+    {
             readWriteLock.RunWriter(() => itemTracker.RemoveHash(origamFile));
         }
 
-        public void Remove(OrigamFile origamFile)
-        {
+    public void Remove(OrigamFile origamFile)
+    {
             readWriteLock.RunWriter(() =>  itemTracker.Remove(origamFile));
         }
         
-        public void Remove(PersistedObjectInfo updatedObjectInfo)
-        {
+    public void Remove(PersistedObjectInfo updatedObjectInfo)
+    {
             readWriteLock.RunWriter(() => itemTracker.Remove(updatedObjectInfo));
         }
 
-        public bool HasFile(string newRelativePath)
-        {
+    public bool HasFile(string newRelativePath)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.HasFile(newRelativePath));
         }
 
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             readWriteLock?.Dispose();
             itemTracker?.Clear();
             itemTracker = null;
         }
 
-        public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
-        {
+    public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
+    {
             return readWriteLock.RunReader(() =>
                 itemTracker.GetByDirectory(dir));
         }
-    }
+}
 
-    internal class PackageIgnoringPersistenceIndex: FilePersistenceIndex
+internal class PackageIgnoringPersistenceIndex: FilePersistenceIndex
+{
+    public PackageIgnoringPersistenceIndex(ItemTracker itemTracker, 
+        HashSet<Guid> loadedPackages) 
+        : base(itemTracker, loadedPackages)
     {
-        public PackageIgnoringPersistenceIndex(ItemTracker itemTracker, 
-             HashSet<Guid> loadedPackages) 
-            : base(itemTracker, loadedPackages)
-        {
         }
 
-        protected override bool BelongsToALoadedPackage(PersistedObjectInfo objInfo) =>
-            true;
-    }
+    protected override bool BelongsToALoadedPackage(PersistedObjectInfo objInfo) =>
+        true;
 }

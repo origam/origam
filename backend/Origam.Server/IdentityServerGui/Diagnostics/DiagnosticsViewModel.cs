@@ -8,12 +8,12 @@ using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json;
 
-namespace Origam.Server.IdentityServerGui.Diagnostics
+namespace Origam.Server.IdentityServerGui.Diagnostics;
+
+public class DiagnosticsViewModel
 {
-    public class DiagnosticsViewModel
+    public DiagnosticsViewModel(AuthenticateResult result)
     {
-        public DiagnosticsViewModel(AuthenticateResult result)
-        {
             AuthenticateResult = result;
 
             if (result.Properties.Items.ContainsKey("client_list"))
@@ -26,7 +26,6 @@ namespace Origam.Server.IdentityServerGui.Diagnostics
             }
         }
 
-        public AuthenticateResult AuthenticateResult { get; }
-        public IEnumerable<string> Clients { get; } = new List<string>();
-    }
+    public AuthenticateResult AuthenticateResult { get; }
+    public IEnumerable<string> Clients { get; } = new List<string>();
 }

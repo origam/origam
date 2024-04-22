@@ -27,27 +27,27 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[SchemaItemDescription("Screen Mapping", "Screen Mappings", "icon_screen-mapping.png")]
+[HelpTopic("Chart+Screen+Mapping")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ChartFormMapping : AbstractSchemaItem
 {
-	[SchemaItemDescription("Screen Mapping", "Screen Mappings", "icon_screen-mapping.png")]
-    [HelpTopic("Chart+Screen+Mapping")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class ChartFormMapping : AbstractSchemaItem
+	public const string CategoryConst = "ChartFormMapping";
+
+	public ChartFormMapping() : base() {Init();}
+	public ChartFormMapping(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public ChartFormMapping(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
 	{
-		public const string CategoryConst = "ChartFormMapping";
-
-		public ChartFormMapping() : base() {Init();}
-		public ChartFormMapping(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public ChartFormMapping(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
 			
 		}
 
-		private void UpdateName()
-		{
+	private void UpdateName()
+	{
 			if(this.Screen != null)
 			{
 				this.Name = this.Screen.Name;
@@ -59,8 +59,8 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Screen);
 			dependencies.Add(this.Entity);
 
@@ -68,50 +68,49 @@ namespace Origam.Schema.GuiModel
 		}
 
 
-		#region Properties
-		public Guid ScreenId;
+	#region Properties
+	public Guid ScreenId;
 
-		[Category("Screen Reference")]
-		[TypeConverter(typeof(FormControlSetConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("screen", "ScreenId")]
-		public FormControlSet Screen
+	[Category("Screen Reference")]
+	[TypeConverter(typeof(FormControlSetConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("screen", "ScreenId")]
+	public FormControlSet Screen
+	{
+		get
 		{
-			get
-			{
 				return (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
 			}
-			set
-			{
+		set
+		{
 				this.ScreenId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		public Guid EntityId;
+	public Guid EntityId;
 
-		[Category("Screen Reference")]
-		[TypeConverter(typeof(ChartFormMappingEntityConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("entity", "EntityId")]
-		public DataStructureEntity Entity
+	[Category("Screen Reference")]
+	[TypeConverter(typeof(ChartFormMappingEntityConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("entity", "EntityId")]
+	public DataStructureEntity Entity
+	{
+		get
 		{
-			get
-			{
 				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityId));
 			}
-			set
-			{
+		set
+		{
 				this.EntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

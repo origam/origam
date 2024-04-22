@@ -28,22 +28,22 @@ using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service
-{
-    class DirectoryChecker : IFileSystemModelChecker
-    {
-        private readonly DirectoryInfo topDirectory;
-        private readonly string[] ignoreDirectoryNames;
+namespace Origam.DA.Service;
 
-        public DirectoryChecker(string[] ignoreDirectoryNames,
-            FilePersistenceProvider filePersistenceProvider)
-        {
+class DirectoryChecker : IFileSystemModelChecker
+{
+    private readonly DirectoryInfo topDirectory;
+    private readonly string[] ignoreDirectoryNames;
+
+    public DirectoryChecker(string[] ignoreDirectoryNames,
+        FilePersistenceProvider filePersistenceProvider)
+    {
             this.topDirectory = filePersistenceProvider.TopDirectory;
             this.ignoreDirectoryNames = ignoreDirectoryNames;
         }      
 
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
             DirectoryInfo[] packageDirectories = topDirectory.GetDirectories()
                 .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))
                 .ToArray();
@@ -67,8 +67,8 @@ namespace Origam.DA.Service
             );
         }
 
-        private IEnumerable<ErrorMessage> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)
-        {
+    private IEnumerable<ErrorMessage> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)
+    {
             return groupDirectories
                 .Where(dir =>
                        dir.GetFiles().Length != 0
@@ -82,8 +82,8 @@ namespace Origam.DA.Service
                 );
         }
 
-        private IEnumerable<ErrorMessage> FindErrorsInPackageDirectories(DirectoryInfo[] packageDirectories)
-        {
+    private IEnumerable<ErrorMessage> FindErrorsInPackageDirectories(DirectoryInfo[] packageDirectories)
+    {
             var packageFilesMissing = packageDirectories
                 .Where(dir => dir.DoesNotContain(OrigamFile.PackageFileName))
                 .Select(dir => new ErrorMessage(
@@ -104,8 +104,8 @@ namespace Origam.DA.Service
             return packageFilesMissing.Concat(wrongFilesPresent);
         }
 
-        private IEnumerable<ErrorMessage> FindErrorsInPackageSubDirectories(IEnumerable<DirectoryInfo> packageSubDirectories)
-        {
+    private IEnumerable<ErrorMessage> FindErrorsInPackageSubDirectories(IEnumerable<DirectoryInfo> packageSubDirectories)
+    {
             return packageSubDirectories
                     .Where(dir => dir.Contains(OrigamFile.GroupFileName)
                                || dir.Contains(OrigamFile.ReferenceFileName)
@@ -117,16 +117,16 @@ namespace Origam.DA.Service
                     );
         }
 
-        private static bool ContainsOrigamFilesWithMissingExplicitParent(DirectoryInfo directory)
-        {
+    private static bool ContainsOrigamFilesWithMissingExplicitParent(DirectoryInfo directory)
+    {
             return directory
                 .GetFiles()
                 .Where(OrigamFile.IsOrigamFile)
                 .Any(ContainsItemWithMissingReferenceToParentObject);
         }
 
-        private static bool ContainsItemWithMissingReferenceToParentObject(FileInfo origamFile)
-        {
+    private static bool ContainsItemWithMissingReferenceToParentObject(FileInfo origamFile)
+    {
             var document = new XmlDocument();
             try
             {
@@ -150,5 +150,4 @@ namespace Origam.DA.Service
                        })
                    ?? false;
         }
-    }
 }

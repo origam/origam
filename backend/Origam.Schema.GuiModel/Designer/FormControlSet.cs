@@ -25,56 +25,56 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for FormControlSet.
+/// </summary>
+[SchemaItemDescription("Screen", "icon_screen.png")]
+[HelpTopic("Screens")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class FormControlSet : AbstractControlSet
 {
-	/// <summary>
-	/// Summary description for FormControlSet.
-	/// </summary>
-	[SchemaItemDescription("Screen", "icon_screen.png")]
-    [HelpTopic("Screens")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class FormControlSet : AbstractControlSet
-	{
-		public const string CategoryConst = "FormControlSet";
+	public const string CategoryConst = "FormControlSet";
 
-		public FormControlSet() : base() {}
+	public FormControlSet() : base() {}
 		
-		public FormControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public FormControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public FormControlSet(Key primaryKey) : base(primaryKey) {}
+	public FormControlSet(Key primaryKey) : base(primaryKey) {}
 
-		//refDataSource means for PanelCOntolSet reference on DataEntity object
-		// (for FormControlSet refDataSource means reference on DataStructure object
-		public Guid DataSourceId;
+	//refDataSource means for PanelCOntolSet reference on DataEntity object
+	// (for FormControlSet refDataSource means reference on DataStructure object
+	public Guid DataSourceId;
 
-        [XmlReference("dataStructure", "DataSourceId")]
-		public DataStructure DataStructure
+	[XmlReference("dataStructure", "DataSourceId")]
+	public DataStructure DataStructure
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataSourceId;
 
 				return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				this.DataSourceId = (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return FormControlSet.CategoryConst;
 			}
-		}
+	}
 
-        public override Origam.UI.BrowserNodeCollection ChildNodes()
-        {
+	public override Origam.UI.BrowserNodeCollection ChildNodes()
+	{
             if (this.ChildItems.Count == 1)
             {
                 return new UI.BrowserNodeCollection();
@@ -85,14 +85,13 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.DataStructure);
 
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion			
+	#endregion			
 
 
-	}
 }

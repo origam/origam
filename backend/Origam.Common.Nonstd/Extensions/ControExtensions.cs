@@ -26,12 +26,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class ControlExtensions
 {
-    public static class ControlExtensions
+    public static T RunWithInvoke<T>(this Control control, Func<T> func)
     {
-        public static T RunWithInvoke<T>(this Control control, Func<T> func)
-        {
             T result = default(T);
             if (control.InvokeRequired)
             {
@@ -44,8 +44,8 @@ namespace Origam.Extensions
             return result;
         }
 
-        public static void RunWithInvoke(this Control control, Action action)
-        {
+    public static void RunWithInvoke(this Control control, Action action)
+    {
             if (control.InvokeRequired)
             {
                 control.Invoke(action);
@@ -56,8 +56,8 @@ namespace Origam.Extensions
             }
         }
 
-        public static void RunWithInvokeAsync(this Control control, Action action)
-        {
+    public static void RunWithInvokeAsync(this Control control, Action action)
+    {
             if (control.InvokeRequired)
             {
                 Task.Run(() => {
@@ -69,5 +69,4 @@ namespace Origam.Extensions
                 action();
             }
         }
-    }
 }

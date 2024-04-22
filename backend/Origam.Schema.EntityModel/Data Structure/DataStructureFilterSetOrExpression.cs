@@ -23,48 +23,47 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+[SchemaItemDescription("OR Expression", 2)]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DataStructureFilterSetOrExpression : AbstractSchemaItem
 {
-	[SchemaItemDescription("OR Expression", 2)]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DataStructureFilterSetOrExpression : AbstractSchemaItem
-	{
-		public const string CategoryConst = "DataStructureFilterSetFilter";
+	public const string CategoryConst = "DataStructureFilterSetFilter";
 
-		public DataStructureFilterSetOrExpression() {}
+	public DataStructureFilterSetOrExpression() {}
 
-		public DataStructureFilterSetOrExpression(Key primaryKey) 
-			: base(primaryKey) {}
+	public DataStructureFilterSetOrExpression(Key primaryKey) 
+		: base(primaryKey) {}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override string Icon => "2";
+	public override string Icon => "2";
 
-		public override bool UseFolders => false;
+	public override bool UseFolders => false;
 
-		public override bool CanMove(UI.IBrowserNode2 newNode) 
-			=> ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
+	public override bool CanMove(UI.IBrowserNode2 newNode) 
+		=> ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataStructureFilterSetFilter)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(DataStructureDefaultSetDefault) ?
 				"NewDataStructureDefaultSetDefault" : null);
 		}
 
-		#endregion
-	}
+	#endregion
 }

@@ -21,20 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Resources;
 
-namespace Origam.Workbench.Services
-{
-	internal class UpdateScriptHelper
-	{
-		private static ResourceManager m_resourceManager;
+namespace Origam.Workbench.Services;
 
-		static UpdateScriptHelper()
-		{
+internal class UpdateScriptHelper
+{
+	private static ResourceManager m_resourceManager;
+
+	static UpdateScriptHelper()
+	{
 			m_resourceManager = new ResourceManager("Origam.Workbench.Services.RepositoryUpdateScripts", typeof(DataLookupService).Assembly);
 		}
 	
-		public static string GetScript(string name)
-		{
+	public static string GetScript(string name)
+	{
 			return m_resourceManager.GetString(name);
 		}
-	}
 }

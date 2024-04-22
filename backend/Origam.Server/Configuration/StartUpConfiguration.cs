@@ -26,58 +26,58 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration
-{
-    public class StartUpConfiguration
-    {
-        private readonly IConfiguration configuration;
+namespace Origam.Server.Configuration;
 
-        public StartUpConfiguration(IConfiguration configuration)
-        {
+public class StartUpConfiguration
+{
+    private readonly IConfiguration configuration;
+
+    public StartUpConfiguration(IConfiguration configuration)
+    {
             this.configuration = configuration;
         }
         
-        public IEnumerable<string> UserApiPublicRoutes =>  
-            configuration
-                .GetSection("UserApiOptions")
-                .GetSection("PublicRoutes")
-                .GetChildren()
-                .Select(c => c.Value);
+    public IEnumerable<string> UserApiPublicRoutes =>  
+        configuration
+            .GetSection("UserApiOptions")
+            .GetSection("PublicRoutes")
+            .GetChildren()
+            .Select(c => c.Value);
 
-        public IEnumerable<string> UserApiRestrictedRoutes =>
-            configuration   
-                .GetSection("UserApiOptions")
-                .GetSection("RestrictedRoutes")
-                .GetChildren()
-                .Select(c => c.Value);
+    public IEnumerable<string> UserApiRestrictedRoutes =>
+        configuration   
+            .GetSection("UserApiOptions")
+            .GetSection("RestrictedRoutes")
+            .GetChildren()
+            .Select(c => c.Value);
 
-        public bool EnableSoapInterface => configuration
-            .GetSection("SoapAPI")
-            .GetValue<bool>("Enabled");       
+    public bool EnableSoapInterface => configuration
+        .GetSection("SoapAPI")
+        .GetValue<bool>("Enabled");       
         
-        public bool SoapInterfaceRequiresAuthentication => configuration
-            .GetSection("SoapAPI")
-            .GetValue("RequiresAuthentication", true);       
-        public bool ExpectAndReturnOldDotNetAssemblyReferences => configuration
-            .GetSection("SoapAPI")
-            .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
+    public bool SoapInterfaceRequiresAuthentication => configuration
+        .GetSection("SoapAPI")
+        .GetValue("RequiresAuthentication", true);       
+    public bool ExpectAndReturnOldDotNetAssemblyReferences => configuration
+        .GetSection("SoapAPI")
+        .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
 
-        public string PathToCustomAssetsFolder => 
-            configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
-        public string RouteToCustomAssetsFolder => 
-            configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];    
-        public string IdentityGuiLogoUrl => 
-            configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];    
-        public string Html5ClientLogoUrl => 
-            configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
-        public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
-                                       !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
-                                       (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
-                                        !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
-        public string PathToClientApp
+    public string PathToCustomAssetsFolder => 
+        configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
+    public string RouteToCustomAssetsFolder => 
+        configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];    
+    public string IdentityGuiLogoUrl => 
+        configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];    
+    public string Html5ClientLogoUrl => 
+        configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
+    public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
+                                   !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
+                                   (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
+                                    !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
+    public string PathToClientApp
+    {
+        get
         {
-            get
-            {
                 string pathToClientApp = configuration["PathToClientApp"];
                 if(!Path.IsPathRooted(pathToClientApp))
                 {
@@ -85,12 +85,12 @@ namespace Origam.Server.Configuration
                 }
                 return pathToClientApp;
             }
-        } 
+    } 
         
-        public string[] ExtensionDlls
+    public string[] ExtensionDlls
+    {
+        get
         {
-            get
-            {
                 var subSection = configuration.GetSection("ExtensionDlls");
                 if (!subSection.Exists())
                 {
@@ -98,9 +98,8 @@ namespace Origam.Server.Configuration
                 }
                 return subSection.GetStringArrayOrEmpty();
             }
-        }   
+    }   
         
-        public bool ReloadModelWhenFilesChangesDetected =>
-            configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
-    }
+    public bool ReloadModelWhenFilesChangesDetected =>
+        configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
 }

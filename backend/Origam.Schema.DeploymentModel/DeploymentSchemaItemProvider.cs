@@ -24,14 +24,14 @@ using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.DeploymentModel
-{
-	public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
-	{
-		public DeploymentSchemaItemProvider() {}
+namespace Origam.Schema.DeploymentModel;
 
-		public DeploymentVersion CurrentVersion()
-		{
+public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
+{
+	public DeploymentSchemaItemProvider() {}
+
+	public DeploymentVersion CurrentVersion()
+	{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			foreach(var abstractSchemaItem in ChildItems)
@@ -50,39 +50,39 @@ namespace Origam.Schema.DeploymentModel
 			return null;
 		}
 
-		#region ISchemaItemProvider Members
-		public override string RootItemType => DeploymentVersion.CategoryConst;
+	#region ISchemaItemProvider Members
+	public override string RootItemType => DeploymentVersion.CategoryConst;
 
-		public override bool AutoCreateFolder => true;
+	public override bool AutoCreateFolder => true;
 
-		public override string Group => "COMMON";
+	public override string Group => "COMMON";
 
-		#endregion
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public override string Icon => "icon_02_deployment.png";
+	public override string Icon => "icon_02_deployment.png";
 
-		public override string NodeText
-		{
-			get => "Deployment";
-			set => base.NodeText = value;
-		}
+	public override string NodeText
+	{
+		get => "Deployment";
+		set => base.NodeText = value;
+	}
 
-		public override string NodeToolTipText => null;
+	public override string NodeToolTipText => null;
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DeploymentVersion)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			if(typeof(T) != typeof(DeploymentVersion))
 			{
 				return base.NewItem<T>(schemaExtensionId, group);
@@ -102,6 +102,5 @@ namespace Origam.Schema.DeploymentModel
 			return deploymentVersion as T;
 		}
 
-		#endregion
-	}
+	#endregion
 }

@@ -31,31 +31,31 @@ using Origam.Workbench.Services;
 using Origam.Gui.UI;
 
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for AsTextBox.
-	/// </summary>
-	[ToolboxBitmap(typeof(AsTextBox))]
-    public class AsTextBox : EnhancedTextBox, IAsCaptionControl, IAsControl,
-		INotifyPropertyChanged, IAsGridEditor
-    {
-		Label _captionLabel = new Label();
-		private readonly IPersistenceService persistence 
-			= ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+namespace Origam.Gui.Win;
 
-	    public AsTextBox()
-	    {
+/// <summary>
+/// Summary description for AsTextBox.
+/// </summary>
+[ToolboxBitmap(typeof(AsTextBox))]
+public class AsTextBox : EnhancedTextBox, IAsCaptionControl, IAsControl,
+	INotifyPropertyChanged, IAsGridEditor
+{
+	Label _captionLabel = new Label();
+	private readonly IPersistenceService persistence 
+		= ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+	public AsTextBox()
+	{
 		    Click += (sender, args) 
 			    => EditorClick?.Invoke(null, EventArgs.Empty);
 		    DoubleClick += (sender, args) 
 			    => EditorDoubleClick?.Invoke(null, EventArgs.Empty);
 	    }
 
-	    #region Handling base events
+	#region Handling base events
 
-		protected override void InitLayout()
-		{
+	protected override void InitLayout()
+	{
 			if(this.Disposing) return;
 
 			this.BorderStyle = BorderStyle.Fixed3D;
@@ -70,8 +70,8 @@ namespace Origam.Gui.Win
 			this.DataBindings.CollectionChanged += DataBindings_CollectionChanged;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				if(this.Parent != null && this.Parent.Controls.Contains(_captionLabel) && _captionLabel.IsDisposed == false)
@@ -88,53 +88,53 @@ namespace Origam.Gui.Win
 			catch{}
 		}
 
-		protected override void OnMove(EventArgs e)
-		{
+	protected override void OnMove(EventArgs e)
+	{
 			base.OnMove (e);
 
 			PaintCaption();
 		}
 
-		// when disposing, this throws an exception, we have to overcome this...
-		protected override void OnValidated(EventArgs e)
-		{
+	// when disposing, this throws an exception, we have to overcome this...
+	protected override void OnValidated(EventArgs e)
+	{
 			if(! this.Disposing) base.OnValidated (e);
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
+	#region Properties
 		
-		public string DataMember
+	public string DataMember
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-			set
-			{
-			}
-		}
-
-
-		private int captionLength = 100;
-		[Category("(ORIGAM)")]
-		public int CaptionLength
+		set
 		{
-			get => captionLength;
-			set
-			{
+			}
+	}
+
+
+	private int captionLength = 100;
+	[Category("(ORIGAM)")]
+	public int CaptionLength
+	{
+		get => captionLength;
+		set
+		{
 				captionLength = value;
 				PaintCaption();
 			}
-		}
+	}
 
-		private bool hideOnForm = false;
-		public bool HideOnForm
+	private bool hideOnForm = false;
+	public bool HideOnForm
+	{
+		get => hideOnForm;
+		set
 		{
-			get => hideOnForm;
-			set
-			{
 				hideOnForm = value;
 
 				if(value && ! this.DesignMode)
@@ -142,41 +142,41 @@ namespace Origam.Gui.Win
 					this.Hide();
 				}
 			}
-		}
+	}
 
-	    [Description("Valid only for numeric data types. If specified, it will override default formatting for the given data type.")]
-        public string CustomNumericFormat { get; set; } = "";
+	[Description("Valid only for numeric data types. If specified, it will override default formatting for the given data type.")]
+	public string CustomNumericFormat { get; set; } = "";
 
-	    #endregion
+	#endregion
 
-		public override BindingContext BindingContext
+	public override BindingContext BindingContext
+	{
+		get
 		{
-			get
-			{
 				return base.BindingContext;
 			}
-			set
-			{
+		set
+		{
 				//base.BindingContext = value;
 			}
-		}
+	}
 
 
-		public override string Text
+	public override string Text
+	{
+		get => base.Text;
+		set
 		{
-			get => base.Text;
-			set
-			{
 				base.Text = value;
                 OnTextChanged(EventArgs.Empty);
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Text"));
 			}
-		}
-		public bool IsPassword
+	}
+	public bool IsPassword
+	{
+		get => this.PasswordChar == '*';
+		set
 		{
-			get => this.PasswordChar == '*';
-			set
-			{
 				if(value)
 				{
 					this.PasswordChar = '*';
@@ -186,33 +186,33 @@ namespace Origam.Gui.Win
 					this.PasswordChar = (char)0;
 				}
 			}
-		}
+	}
 
-	    [DefaultValue(false)]
-		public bool IsRichText { get; set; } = false;
+	[DefaultValue(false)]
+	public bool IsRichText { get; set; } = false;
 
-		[DefaultValue(false)]
-		public bool AllowTab { get; set; } = false;
+	[DefaultValue(false)]
+	public bool AllowTab { get; set; } = false;
 
-	    [Browsable(false)]
-		public Guid StyleId { get; set; }
+	[Browsable(false)]
+	public Guid StyleId { get; set; }
 
-	    [TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
 		{
-			get
-			{
 				return (UIStyle)persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-			set
-			{
+		set
+		{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		#region private methods
-		private void PaintCaption()
-		{
+	#region private methods
+	private void PaintCaption()
+	{
 			if(_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing) return;
 
 			if(this.CaptionPosition == CaptionPosition.None)
@@ -273,8 +273,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
-		{
+	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
+	{
 			if (!this.DesignMode) return;
 			if (!string.IsNullOrEmpty(this.Caption)) return;
 			if (e.Element == null) return;
@@ -297,8 +297,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void ResetCaption()
-		{
+	private void ResetCaption()
+	{
 			if (!string.IsNullOrEmpty(this.Caption)) return;
 			foreach(Binding binding in this.DataBindings)
 			{
@@ -314,8 +314,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private string TableName(DataSet ds, string dataMember)
-		{
+	private string TableName(DataSet ds, string dataMember)
+	{
 			// In case that dataMember is a path through relations, we find the last table
 			// so we can take a caption out of it
 			string tableName = "";
@@ -339,8 +339,8 @@ namespace Origam.Gui.Win
 			return tableName;
 		}
 
-		private string ColumnCaption(Binding binding)
-		{
+	private string ColumnCaption(Binding binding)
+	{
 			if(binding.DataSource is DataSet)
 			{
 				DataSet dataset = binding.DataSource as DataSet;
@@ -357,8 +357,8 @@ namespace Origam.Gui.Win
 			return binding.BindingMemberInfo.BindingField;
 		}
 
-		protected override void OnMouseWheel(MouseEventArgs e)
-		{
+	protected override void OnMouseWheel(MouseEventArgs e)
+	{
 			if(this.Parent is AsDataGrid grid)
 			{
 				grid.OnControlMouseWheel(e);
@@ -368,54 +368,52 @@ namespace Origam.Gui.Win
 				base.OnMouseWheel (e);
 			}
 		}
-		#endregion
+	#endregion
 
-		#region IAsCaptionControl Members
+	#region IAsCaptionControl Members
 
-	    [Category("(ORIGAM)")]
-		[DefaultValue(100)] 
-		[Description(CaptionDoc.GridColumnWidthDescription)]
-        public int GridColumnWidth { get; set; }
+	[Category("(ORIGAM)")]
+	[DefaultValue(100)] 
+	[Description(CaptionDoc.GridColumnWidthDescription)]
+	public int GridColumnWidth { get; set; }
 
-	    [Category("(ORIGAM)")]
-		public string GridColumnCaption { get; set; } = "";
+	[Category("(ORIGAM)")]
+	public string GridColumnCaption { get; set; } = "";
 
-	    string _caption = "";
-		[Category("(ORIGAM)")]
-		public string Caption
+	string _caption = "";
+	[Category("(ORIGAM)")]
+	public string Caption
+	{
+		get => _caption;
+		set
 		{
-			get => _caption;
-			set
-			{
 			    _caption = value ?? "";
 			    this._captionLabel.Text = _caption;
 				ResetCaption();
 			}
-		}
+	}
 
-		CaptionPosition _captionPosition = CaptionPosition.Left;
-		[Category("(ORIGAM)")]
-		public CaptionPosition CaptionPosition
+	CaptionPosition _captionPosition = CaptionPosition.Left;
+	[Category("(ORIGAM)")]
+	public CaptionPosition CaptionPosition
+	{
+		get => _captionPosition;
+		set
 		{
-			get => _captionPosition;
-			set
-			{
 				_captionPosition = value;
 				PaintCaption();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IAsControl Members
+	#region IAsControl Members
 
-		public string DefaultBindableProperty => "Value";
+	public string DefaultBindableProperty => "Value";
 
-	    #endregion
+	#endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
+	public event PropertyChangedEventHandler PropertyChanged;
 	    
-	    public event EventHandler EditorClick;
-	    public event EventHandler EditorDoubleClick;
-    }
-
+	public event EventHandler EditorClick;
+	public event EventHandler EditorDoubleClick;
 }

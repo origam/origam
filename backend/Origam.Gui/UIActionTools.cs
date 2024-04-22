@@ -26,13 +26,13 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public class UIActionTools
 {
-    public class UIActionTools
+    public static bool GetValidActions(Guid formId, Guid panelId, 
+        bool disableActionButtons, Guid entityId, ArrayList validActions)
     {
-        public static bool GetValidActions(Guid formId, Guid panelId, 
-            bool disableActionButtons, Guid entityId, ArrayList validActions)
-        {
             bool hasMultipleSelection = false;
             if (entityId != Guid.Empty)
             {
@@ -64,8 +64,8 @@ namespace Origam.Gui
             return hasMultipleSelection;
         }
 
-        public static ArrayList GetOriginalParameters(EntityUIAction action)
-        {
+    public static ArrayList GetOriginalParameters(EntityUIAction action)
+    {
             ArrayList originalDataParameters = new ArrayList();
             foreach(EntityUIActionParameterMapping mapping 
                 in action.ChildItemsByType(
@@ -79,13 +79,12 @@ namespace Origam.Gui
             return originalDataParameters;
         }
 
-        public static EntityUIAction GetAction(string action)
-        {
+    public static EntityUIAction GetAction(string action)
+    {
             return !Guid.TryParse(action, out Guid actionId)
                 ? null
                 : ServiceManager.Services
                     .GetService<IPersistenceService>().SchemaProvider
                     .RetrieveInstance<EntityUIAction>(actionId);
         }
-    }
 }

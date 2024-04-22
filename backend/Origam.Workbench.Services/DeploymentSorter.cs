@@ -28,22 +28,22 @@ using MoreLinq;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+
+public class DeploymentSorter
 {
-    public class DeploymentSorter
+    private readonly List<IDeploymentVersion> sortedDeployments =
+        new List<IDeploymentVersion>();
+
+    private List<IDeploymentVersion> remainingDeployments;
+    private IDeploymentVersion current;
+    private List<IDeploymentVersion> allDeployments;
+
+    public event EventHandler<string> SortingFailed;
+
+    public List<IDeploymentVersion> SortToRespectDependencies(
+        IEnumerable<IDeploymentVersion> deplVersionsToSort)
     {
-        private readonly List<IDeploymentVersion> sortedDeployments =
-            new List<IDeploymentVersion>();
-
-        private List<IDeploymentVersion> remainingDeployments;
-        private IDeploymentVersion current;
-        private List<IDeploymentVersion> allDeployments;
-
-        public event EventHandler<string> SortingFailed;
-
-        public List<IDeploymentVersion> SortToRespectDependencies(
-            IEnumerable<IDeploymentVersion> deplVersionsToSort)
-        {
             allDeployments = deplVersionsToSort.ToList();
             remainingDeployments = allDeployments.ToList();
             int inputSize = remainingDeployments.Count;
@@ -77,8 +77,8 @@ namespace Origam.Workbench.Services
             return sortedDeployments;
         }
 
-        private void HandleDeploymentDeadlock()
-        {
+    private void HandleDeploymentDeadlock()
+    {
             string sortedDeploymentsStr = string.Join("\r\n" ,
                 sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
             var deadlockedDeployments = remainingDeployments
@@ -102,8 +102,8 @@ namespace Origam.Workbench.Services
             SortingFailed?.Invoke(this, message);
         }
 
-        private IEnumerable<string> GetDependencyList(IDeploymentVersion deployment)
-        {
+    private IEnumerable<string> GetDependencyList(IDeploymentVersion deployment)
+    {
             Dictionary<Guid,string> packageNameDictionary = allDeployments.
                 GroupBy(x => x.SchemaExtensionId)
                 .ToDictionary(
@@ -126,8 +126,8 @@ namespace Origam.Workbench.Services
             return packageVersions;
         }
 
-        private void HandleInfiniteLoopError()
-        {
+    private void HandleInfiniteLoopError()
+    {
             foreach (var deploymentVersion in remainingDeployments)
             {
                 var dependsOnItSelf = deploymentVersion.DeploymentDependencies
@@ -145,8 +145,8 @@ namespace Origam.Workbench.Services
             SortingFailed?.Invoke(this, "Infinite loop! Could not find any deployments without active dependencies.");
         }
 
-        private void ProcessDependent(IDeploymentVersion deployment)
-        {
+    private void ProcessDependent(IDeploymentVersion deployment)
+    {
             MoveToSorted(deployment);
  
             GetDependentDeployments(deployment)
@@ -155,37 +155,37 @@ namespace Origam.Workbench.Services
                 .ForEach(ProcessDependent);
         }
 
-        private void MoveToSorted(IDeploymentVersion deployment)
-        {
+    private void MoveToSorted(IDeploymentVersion deployment)
+    {
             if (sortedDeployments.Contains(deployment)) return;
             current = deployment;
             sortedDeployments.Add(deployment);
             remainingDeployments.Remove(deployment);
         }
 
-        private List<IDeploymentVersion> GetDependentDeployments(IDeploymentVersion deployment)
-        {
+    private List<IDeploymentVersion> GetDependentDeployments(IDeploymentVersion deployment)
+    {
             return remainingDeployments
                 .Where(remainingDepl => IsAmongDependencies(GetAllDependencies(remainingDepl), deployment))
                 .ToList();
         }
 
-        private bool IsAmongDependencies(IEnumerable<DeploymentDependency> dependencies, IDeploymentVersion deployment)
-        {
+    private bool IsAmongDependencies(IEnumerable<DeploymentDependency> dependencies, IDeploymentVersion deployment)
+    {
             return dependencies.Any(
                 dependency =>
                     dependency.PackageId == deployment.SchemaExtensionId &&
                     dependency.PackageVersion == deployment.Version);
         }
 
-        private bool HasActiveDependencies(IDeploymentVersion deployment)
-        {
+    private bool HasActiveDependencies(IDeploymentVersion deployment)
+    {
             return GetAllDependencies(deployment)
                 .Any(IsInRemainingDeployments);
         }
         
-        private bool SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
-        {
+    private bool SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
+    {
             var previousDeployment = sortedDeployments
                 .LastOrDefault(x => x.SchemaExtensionId == deployment.SchemaExtensionId);
             if (previousDeployment == null)
@@ -198,8 +198,8 @@ namespace Origam.Workbench.Services
                 .Any(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
         }
 
-        private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
-        {
+    private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
+    {
             bool alreadyDependsOnPreviousVersion =
                 deployment.DeploymentDependencies
                     .Any(x => x.PackageId == deployment.SchemaExtensionId);
@@ -216,8 +216,8 @@ namespace Origam.Workbench.Services
             return dependencies;
         }
 
-        private Maybe<DeploymentDependency> GetDependencyOnPreviousVersion(IDeploymentVersion deployment)
-        {
+    private Maybe<DeploymentDependency> GetDependencyOnPreviousVersion(IDeploymentVersion deployment)
+    {
            return allDeployments
                 .Where(x => x.SchemaExtensionId == deployment.SchemaExtensionId)
                 .Where(x => x.Version < deployment.Version)
@@ -227,29 +227,28 @@ namespace Origam.Workbench.Services
                 .FirstOrDefault();
         }
 
-        private bool IsInRemainingDeployments(DeploymentDependency dependency)
-        {
+    private bool IsInRemainingDeployments(DeploymentDependency dependency)
+    {
             return remainingDeployments.Any(deployment =>    
                 deployment.Version == dependency.PackageVersion &&
                 deployment.SchemaExtensionId == dependency.PackageId);
         }
-    }
+}
 
-    class OtherPackagesFirst : Comparer<IDeploymentVersion>
+class OtherPackagesFirst : Comparer<IDeploymentVersion>
+{
+    private readonly Guid thisPackageId;
+
+    public OtherPackagesFirst(Guid thisPackageId)
     {
-        private readonly Guid thisPackageId;
-
-        public OtherPackagesFirst(Guid thisPackageId)
-        {
             this.thisPackageId = thisPackageId;
         }
 
-        public override int Compare(IDeploymentVersion x, IDeploymentVersion y)
-        {
+    public override int Compare(IDeploymentVersion x, IDeploymentVersion y)
+    {
             if (x.SchemaExtensionId == y.SchemaExtensionId) return 0;
             if (x.SchemaExtensionId == thisPackageId) return 1;
             if (y.SchemaExtensionId == thisPackageId) return -1;
             return 0;
         }
-    }
 }

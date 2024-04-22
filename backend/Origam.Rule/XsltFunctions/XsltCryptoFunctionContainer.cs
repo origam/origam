@@ -23,19 +23,19 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Origam.Rule.XsltFunctions
+namespace Origam.Rule.XsltFunctions;
+
+public class XsltCryptoFunctionContainer
 {
-    public class XsltCryptoFunctionContainer
+    public string Nonce()
     {
-        public string Nonce()
-        {
             Guid guid = Guid.NewGuid();
             return Convert.ToBase64String(guid.ToByteArray());
         }
 
-        public string PasswordDigest(
-            string password, string timestamp, string nonce)
-        {
+    public string PasswordDigest(
+        string password, string timestamp, string nonce)
+    {
             SHA1 sha1 = SHA1Managed.Create();
             byte[] passwordHashedBytes = sha1.ComputeHash(
                 Encoding.UTF8.GetBytes(password));
@@ -58,5 +58,4 @@ namespace Origam.Rule.XsltFunctions
             passwordHashedBytes.CopyTo(input, offset);
             return Convert.ToBase64String(sha1.ComputeHash(input));
         }
-    }
 }

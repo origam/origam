@@ -25,51 +25,51 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for EntityFilterReference.
+/// </summary>
+[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
+[HelpTopic("Filter+Reference")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Filter")]
+[ClassMetaVersion("6.0.0")]
+public class EntityFilterReference : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntityFilterReference.
-	/// </summary>
-	[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
-    [HelpTopic("Filter+Reference")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Filter")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityFilterReference : AbstractSchemaItem
-	{
-		public const string CategoryConst = "EntityFilterReference";
+	public const string CategoryConst = "EntityFilterReference";
 
-		public EntityFilterReference() : base() {}
+	public EntityFilterReference() : base() {}
 
-		public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
+	public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Filter != null)
 				base.GetParameterReferences(this.Filter as AbstractSchemaItem, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Filter);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -85,33 +85,33 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		public Guid FilterId;
+	#region Properties
+	public Guid FilterId;
 
-		[TypeConverter(typeof(EntityFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRuleAttribute()]
-        [XmlReference("filter", "FilterId")]
-        public EntityFilter Filter
+	[TypeConverter(typeof(EntityFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRuleAttribute()]
+	[XmlReference("filter", "FilterId")]
+	public EntityFilter Filter
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.FilterId;
 
 				return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.FilterId = Guid.Empty;
@@ -125,22 +125,21 @@ namespace Origam.Schema.EntityModel
 					this.Name = this.Filter.Name;
 				}
 			}
-		}
+	}
 
-		private string _roles;
-		[Category("Security")]
-		[XmlAttribute("roles")]
-        public string Roles
+	private string _roles;
+	[Category("Security")]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

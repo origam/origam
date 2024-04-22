@@ -32,30 +32,30 @@ using Origam.UI.WizardForm;
 using System.Collections;
 using System.Drawing;
 
-namespace Origam.Schema.LookupModel.UI.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards;
+
+/// <summary>
+/// Summary description for CreateLookupFromEntityCommand.
+/// </summary>
+public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
 {
-    /// <summary>
-    /// Summary description for CreateLookupFromEntityCommand.
-    /// </summary>
-    public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
-	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        CreateFieldWithLookupEntityWizardForm createFieldWith;
-        public override bool IsEnabled
-		{
-			get
-			{
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    CreateFieldWithLookupEntityWizardForm createFieldWith;
+    public override bool IsEnabled
+    {
+        get
+        {
                 return Owner is IDataEntity
                     || Owner is IDataEntityColumn;
 			}
-			set
-			{
+        set
+        {
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+    }
 
-		public override void Run()
-		{
+    public override void Run()
+    {
             FieldMappingItem baseField = Owner as FieldMappingItem;
 
             ArrayList list = new ArrayList();
@@ -104,8 +104,8 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             }
         }
 
-        public override void Execute()
-        {
+    public override void Execute()
+    {
             FieldMappingItem baseField = Owner as FieldMappingItem;
             string listDisplayMember = createFieldWith.NameFieldName;
             IDataEntity baseEntity = Owner as IDataEntity;
@@ -248,8 +248,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
                     int i = 0;
                     foreach (var ddl in fkDdl)
                     {
-                        // if the foreign key is based on an existing field 
-                        // take only the foreign key ddl
+                        // if the foreign key is based on an existing field      // take only the foreign key ddl
                         if (baseField == null || i == 1)
                         {
                             var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl,item.Key.PlatformName);
@@ -261,15 +260,15 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             }
         }
 
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
 
-        private TableMappingItem CreateLookupEntity(
-           string LookupName, IDataEntity baseEntity,
-            IDataEntityColumn baseField)
-        {
+    private TableMappingItem CreateLookupEntity(
+        string LookupName, IDataEntity baseEntity,
+        IDataEntityColumn baseField)
+    {
             bool createAncestor = baseField == null;
             TableMappingItem table = EntityHelper.CreateTable(
                 LookupName, baseEntity.Group, false, createAncestor);
@@ -277,8 +276,8 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             GeneratedModelElements.Add(table);
             return table;
         }
-        public override void SetSummaryText(object summary)
-        {
+    public override void SetSummaryText(object summary)
+    {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -313,6 +312,4 @@ namespace Origam.Schema.LookupModel.UI.Wizards
                 richTextBoxSummary.AppendText(Environment.NewLine);
             }
         }
-    }
 }
-

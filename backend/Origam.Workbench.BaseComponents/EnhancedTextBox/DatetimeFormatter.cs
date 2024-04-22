@@ -24,27 +24,27 @@ using System.Globalization;
 using System.Windows.Forms;
 using Origam.Extensions;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+
+internal class DatetimeFormatter : Formatter
 {
-    internal class DatetimeFormatter : Formatter
+
+    private const string DateTimeSeparator = " ";
+    private readonly Func<DateTime> timeNowFunc;
+
+    public DatetimeFormatter(TextBox textBox, string customFormat, Func<DateTime> timeNowFunc)
+        : base(textBox, customFormat)
     {
-
-        private const string DateTimeSeparator = " ";
-        private readonly Func<DateTime> timeNowFunc;
-
-        public DatetimeFormatter(TextBox textBox, string customFormat, Func<DateTime> timeNowFunc)
-            : base(textBox, customFormat)
-        {
             this.timeNowFunc = timeNowFunc;
         }
 
-        private static string DateFormat => Culture.DateTimeFormat.ShortDatePattern;
-        private static string DateSeparator => Culture.DateTimeFormat.DateSeparator;
-        private static string TimeSeparator => Culture.DateTimeFormat.TimeSeparator;
+    private static string DateFormat => Culture.DateTimeFormat.ShortDatePattern;
+    private static string DateSeparator => Culture.DateTimeFormat.DateSeparator;
+    private static string TimeSeparator => Culture.DateTimeFormat.TimeSeparator;
 
 
-        public override void OnLeave(object sender, EventArgs e)
-        {
+    public override void OnLeave(object sender, EventArgs e)
+    {
             Text = Text.Trim();
             if(string.IsNullOrEmpty(Text)) return;
 
@@ -61,8 +61,8 @@ namespace Origam.Gui.UI
             WriteToTextInProperFormat(date);
         }
 
-        private void WriteToTextInProperFormat(DateTime date)
-        {
+    private void WriteToTextInProperFormat(DateTime date)
+    {
             if(string.IsNullOrEmpty(customFormat))
             {
                 Text = date.IsMidnight()
@@ -75,8 +75,8 @@ namespace Origam.Gui.UI
             }
         }
 
-        private (bool parseSucess, DateTime parsedDate) ParseToDate(string dateStr)
-        {
+    private (bool parseSucess, DateTime parsedDate) ParseToDate(string dateStr)
+    {
             var defaultFormatParseSuccess = DateTime.TryParse(dateStr, out var date1);
 
             if(defaultFormatParseSuccess || string.IsNullOrEmpty(customFormat))
@@ -93,8 +93,8 @@ namespace Origam.Gui.UI
             return (customFormatParseSuccess, date2);
         }
 
-        private bool IsAutoCompleteAble(string dateStr)
-        {
+    private bool IsAutoCompleteAble(string dateStr)
+    {
             var dateParts = dateStr.Split(DateTimeSeparator);
             if(dateParts.Length > 2) return false;
             var datePart = dateParts[0];
@@ -113,8 +113,8 @@ namespace Origam.Gui.UI
             return true;
         }
 
-        public override object GetValue()
-        {
+    public override object GetValue()
+    {
             (bool parseSucess, DateTime parsedDate) = ParseToDate(Text);
 
             if(parseSucess)
@@ -124,8 +124,8 @@ namespace Origam.Gui.UI
             return DBNull.Value;
         }
 
-        private string AutoComplete(string text)
-        {
+    private string AutoComplete(string text)
+    {
             return new DateCompleter(
                     dateFormat: DateFormat,
                     dateSeparator: DateSeparator,
@@ -136,24 +136,24 @@ namespace Origam.Gui.UI
                 .AutoComplete(text);
         }
 
-        protected override bool IsValidChar(char input)
-        {
+    protected override bool IsValidChar(char input)
+    {
             return true;
         }
 
-    }
+}
 
-    class DateCompleter
+class DateCompleter
+{
+    private readonly string dateFormat;
+    private readonly string dateSeparator;
+    private readonly string timeSeparator;
+    private readonly string dateTimeSeparator;
+    private readonly Func<DateTime> timeNowFunc;
+
+    public DateCompleter(string dateFormat, string dateSeparator,
+        string timeSeparator, string dateTimeSeparator, Func<DateTime> timeNowFunc)
     {
-        private readonly string dateFormat;
-        private readonly string dateSeparator;
-        private readonly string timeSeparator;
-        private readonly string dateTimeSeparator;
-        private readonly Func<DateTime> timeNowFunc;
-
-        public DateCompleter(string dateFormat, string dateSeparator,
-            string timeSeparator, string dateTimeSeparator, Func<DateTime> timeNowFunc)
-        {
             this.dateFormat = dateFormat;
             this.dateSeparator = dateSeparator;
             this.timeSeparator = timeSeparator;
@@ -161,8 +161,8 @@ namespace Origam.Gui.UI
             this.timeNowFunc = timeNowFunc;
         }
 
-        public string AutoComplete(string text)
-        {
+    public string AutoComplete(string text)
+    {
             var dateAndTime = text.Split(dateTimeSeparator);
             var dateText = dateAndTime[0];
             var completeDate = AutoCompleteDate(dateText);
@@ -176,8 +176,8 @@ namespace Origam.Gui.UI
             return completeDate;
         }
 
-        private string AutoCompleteTime(string incompleteTime)
-        {
+    private string AutoCompleteTime(string incompleteTime)
+    {
             if(incompleteTime.Contains(timeSeparator))
             {
                 return CompleteTimeWithSeparators(incompleteTime);
@@ -185,8 +185,8 @@ namespace Origam.Gui.UI
             return CompleteTimeWithoutSeparators(incompleteTime);
         }
 
-        private string CompleteTimeWithoutSeparators(string incompleteTime)
-        {
+    private string CompleteTimeWithoutSeparators(string incompleteTime)
+    {
             switch(incompleteTime.Length)
             {
                 case 1:
@@ -206,14 +206,14 @@ namespace Origam.Gui.UI
             }
         }
 
-        private static string CompleteTimeWithSeparators(string incompleteTime)
-        {
+    private static string CompleteTimeWithSeparators(string incompleteTime)
+    {
             var parseSuccess = DateTime.TryParse(incompleteTime, out var date);
             return parseSuccess ? date.ToShortTimeString() : incompleteTime;
         }
 
-        private string AutoCompleteDate(string incompleteDate)
-        {
+    private string AutoCompleteDate(string incompleteDate)
+    {
             if(incompleteDate.Contains(dateSeparator) && (incompleteDate.Split(dateSeparator).Length - 1) == 2)
             {
                 return CompleteDateWithSeparators(incompleteDate);
@@ -221,14 +221,14 @@ namespace Origam.Gui.UI
             return CompleteDateWithoutSeparators(incompleteDate);
         }
 
-        private  string CompleteDateWithSeparators(string incompleteDate)
-        {
+    private  string CompleteDateWithSeparators(string incompleteDate)
+    {
             var parseSuccess = DateTime.TryParse(incompleteDate, out var date);
             return parseSuccess ? date.ToShortDateString() : incompleteDate;
         }
 
-        private string CompleteDateWithoutSeparators(string incompleteDate)
-        {
+    private string CompleteDateWithoutSeparators(string incompleteDate)
+    {
             switch(incompleteDate.Length)
             {
                 case 1:
@@ -256,8 +256,8 @@ namespace Origam.Gui.UI
             }
         }
 
-        private string AddMonthAndYear(string day)
-        {
+    private string AddMonthAndYear(string day)
+    {
             var now = timeNowFunc.Invoke();
             var usDateString = $"{now.Month}/{day}/{now.Year}";
 
@@ -269,15 +269,15 @@ namespace Origam.Gui.UI
             return isValidDate ? date.ToShortDateString() : day;
         }
 
-        private string AddYear(string dayAndMonth)
-        {
+    private string AddYear(string dayAndMonth)
+    {
             return dayAndMonth.Substring(0, 2).Replace(dateSeparator,"") + dateSeparator
                   + dayAndMonth.Substring(2).Replace(dateSeparator, "") + dateSeparator
                   + timeNowFunc.Invoke().Year;
         }
 
-        private string AddSeparators(string incompleteDate)
-        {
+    private string AddSeparators(string incompleteDate)
+    {
             var format = GetDoubleDayAndMonthFormat();
 
             var firstIndex = format.IndexOf(dateSeparator);
@@ -301,8 +301,8 @@ namespace Origam.Gui.UI
             return incompleteDate;
         }
 
-        private string GetDoubleDayAndMonthFormat()
-        {
+    private string GetDoubleDayAndMonthFormat()
+    {
             // dateFormat might be d/m/yyyy, this,
             // method makes sure we get dd/mm/yyyy
             var formatHasSingleDigitDayAndMonth = dateFormat.Length == 8;
@@ -318,18 +318,17 @@ namespace Origam.Gui.UI
             }
             return format;
         }
-    }
+}
 
-    static class DateExtensions
+static class DateExtensions
+{
+    public static bool IsIn21stOr20thCentury(this DateTime date)
     {
-        public static bool IsIn21stOr20thCentury(this DateTime date)
-        {
             return date.Year < 2100 && date.Year > 1900;
         }
 
-        public static bool IsMidnight(this DateTime date)
-        {
+    public static bool IsMidnight(this DateTime date)
+    {
             return date.Hour == 0 && date.Minute == 0 && date.Second == 0;
         }
-    }
 }

@@ -31,17 +31,17 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for WorkflowServiceAgent.
+/// </summary>
+public class ModelServiceAgent : AbstractServiceAgent
 {
-    /// <summary>
-    /// Summary description for WorkflowServiceAgent.
-    /// </summary>
-    public class ModelServiceAgent : AbstractServiceAgent
+    const string GENERATED_PACKAGE_ID = "3cfc0308-fd23-454c-9d7a-a00054e0b9b1";
+    const string GENERATED_PACKAGE_NAME = "_generated";
+    public ModelServiceAgent()
     {
-        const string GENERATED_PACKAGE_ID = "3cfc0308-fd23-454c-9d7a-a00054e0b9b1";
-        const string GENERATED_PACKAGE_NAME = "_generated";
-        public ModelServiceAgent()
-        {
             persistenceService = ServiceManager
                 .Services
                 .GetService<IPersistenceService>();
@@ -50,9 +50,9 @@ namespace Origam.Workflow
                 .GetService<TracingService>();
         }
 
-        #region Private Methods
-        private object GenerateSimpleModel(IDataDocument dataDocument)
-        {
+    #region Private Methods
+    private object GenerateSimpleModel(IDataDocument dataDocument)
+    {
             ISchemaService schemaService = ServiceManager.Services.GetService(
                 typeof(ISchemaService)) as ISchemaService;
             schemaService.StorageSchemaExtensionId = new Guid(GENERATED_PACKAGE_ID);
@@ -75,8 +75,8 @@ namespace Origam.Workflow
             return null;
         }
 
-        private OrigamDataType ConvertType(string origamDataTypeId)
-        {
+    private OrigamDataType ConvertType(string origamDataTypeId)
+    {
             switch (origamDataTypeId)
             {
                 case "0dcc6797-c46e-4774-89fe-113eef732651":
@@ -100,23 +100,23 @@ namespace Origam.Workflow
                         origamDataTypeId, "Invalid type");
             }
         }
-        #endregion
+    #endregion
 
-        #region IServiceAgent Members
-        private object _result;
-        private readonly TracingService tracingService;
-        private IPersistenceService persistenceService;
+    #region IServiceAgent Members
+    private object _result;
+    private readonly TracingService tracingService;
+    private IPersistenceService persistenceService;
 
-        public override object Result
+    public override object Result
+    {
+        get
         {
-            get
-            {
                 return _result;
             }
-        }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             switch (MethodName)
             {
                 case "GenerateSimpleModel":
@@ -167,8 +167,8 @@ namespace Origam.Workflow
             }
         }
 
-        private string ElementAttribute(Guid id, string attributeName)
-        {
+    private string ElementAttribute(Guid id, string attributeName)
+    {
             var persistence = ServiceManager.Services.GetService
                 <IPersistenceService>();
             var element = persistence.SchemaProvider.RetrieveInstance
@@ -176,8 +176,8 @@ namespace Origam.Workflow
             return Reflector.GetValue(element.GetType(), element, attributeName)?.ToString() ?? "";
         }
 
-        private IDataDocument ElementList(Guid parentId, string itemType)
-        {
+    private IDataDocument ElementList(Guid parentId, string itemType)
+    {
             var persistence = ServiceManager.Services.GetService
                 <IPersistenceService>();
             var parent = persistence.SchemaProvider.RetrieveInstance
@@ -218,6 +218,5 @@ namespace Origam.Workflow
             }
             return DataDocumentFactory.New(data);
         }
-        #endregion
-    }
+    #endregion
 }

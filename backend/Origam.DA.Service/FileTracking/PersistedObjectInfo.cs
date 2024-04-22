@@ -21,13 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public class PersistedObjectInfo
 {
-    public class PersistedObjectInfo
+    public PersistedObjectInfo(string category, Guid id, Guid parentId,
+        bool isFolder, OrigamFile origamFile, string fullTypeName, Version version)
     {
-        public PersistedObjectInfo(string category, Guid id, Guid parentId,
-            bool isFolder, OrigamFile origamFile, string fullTypeName, Version version)
-        {
             FullTypeName = fullTypeName;
             Version = version;
             Category = category;
@@ -37,23 +37,22 @@ namespace Origam.DA.Service
             IsFolder = isFolder;
         }
 
-        public OrigamFile OrigamFile { get; }
+    public OrigamFile OrigamFile { get; }
 
-        public Guid Id { get; }
+    public Guid Id { get; }
 
-        public bool IsFolder { get; } = false;
+    public bool IsFolder { get; } = false;
 
-        public Guid ParentId { get; }
+    public Guid ParentId { get; }
 
-        public string Category { get; }
+    public string Category { get; }
         
-        public string FullTypeName { get; }
-        public Version Version { get; }
+    public string FullTypeName { get; }
+    public Version Version { get; }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return "OrigamFile path:" + OrigamFile.Path.Absolute + ", Id: " + Id + ", ParentId: " + ParentId +
                    ", Category: " + Category+ ", IsFolder: "+ IsFolder;
         }
-    }
 }

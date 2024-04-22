@@ -28,15 +28,15 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.DA.Service;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for ComboBoxBuilder.
+/// </summary>
+public class ComboBoxBuilder
 {
-	/// <summary>
-	/// Summary description for ComboBoxBuilder.
-	/// </summary>
-	public class ComboBoxBuilder
+	public static void Build(XmlElement propertyElement, Guid lookupId, bool showUniqueValues, string bindingMember, DataTable table)
 	{
-		public static void Build(XmlElement propertyElement, Guid lookupId, bool showUniqueValues, string bindingMember, DataTable table)
-		{
 			propertyElement.SetAttribute("Entity", "String");
 			propertyElement.SetAttribute("Column", "ComboBox");
 			propertyElement.SetAttribute("DropDownShowUniqueValues", XmlConvert.ToString(showUniqueValues));
@@ -44,8 +44,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);
 		}
 
-		public static void BuildCommonDropdown(XmlElement propertyElement, Guid lookupId, string bindingMember, DataTable table)
-		{
+	public static void BuildCommonDropdown(XmlElement propertyElement, Guid lookupId, string bindingMember, DataTable table)
+	{
             if (lookupId == Guid.Empty)
             {
                 throw new Exception("Lookup not set for a DropDown widget bound to the field " + table.TableName + "." + bindingMember);
@@ -188,5 +188,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			propertyElement.SetAttribute("Cached", XmlConvert.ToString(useCache));
 		}
-	}
 }

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 // Copyright 2004 Shouvik - https://www.codeproject.com/Articles/8103/Creating-some-cool-buttons-and-groupboxes
 #endregion
@@ -26,61 +27,60 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for RoundedRectangularGroupBoxWithToolbar.
-	/// </summary>
-	public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
-	{
-		#region Private Data Members
-		// This data member store value of width of the toolbar
-		private int miToolBarWidth = 110;
-		// The enum object to store the colorscheme value
-		private EnmColorScheme meColorScheme = EnmColorScheme.Green;
-		#endregion
+namespace Origam.Gui.Win;
 
-		#region Public Data Members
+/// <summary>
+/// Summary description for RoundedRectangularGroupBoxWithToolbar.
+/// </summary>
+public class RoundedRectangularGroupBoxWithToolbar : BaseContainer
+{
+	#region Private Data Members
+	// This data member store value of width of the toolbar
+	private int miToolBarWidth = 110;
+	// The enum object to store the colorscheme value
+	private EnmColorScheme meColorScheme = EnmColorScheme.Green;
+	#endregion
+
+	#region Public Data Members
 		
-		// This property is used to Get and set the toolbarwidth
-		public int ToolbarWidth
+	// This property is used to Get and set the toolbarwidth
+	public int ToolbarWidth
+	{
+		get
 		{
-			get
-			{
 				return miToolBarWidth;
 			}
-			set
-			{
+		set
+		{
 				miToolBarWidth = value;
 				this.Invalidate();
 			}
-		}
+	}
 		
-		// Overriding the base class's Mustoverride ColorScheme Property
-		public override EnmColorScheme ColorScheme
+	// Overriding the base class's Mustoverride ColorScheme Property
+	public override EnmColorScheme ColorScheme
+	{
+		get
 		{
-			get
-			{
 				return meColorScheme;
 			}
-			set
-			{
+		set
+		{
 				// Create object of ColorScheme Class
 				ColorScheme oColorScheme = new ColorScheme(value);
-				// Set the controls Diffrent color properties depending on the 
-				// Color Scheme selected
+				// Set the controls Diffrent color properties depending on the 			// Color Scheme selected
 				oColorScheme.SetColorScheme(this);
 				meColorScheme = value;
 				this.Invalidate();
 			}
-		}
-		#endregion
-		public RoundedRectangularGroupBoxWithToolbar():base(){}
+	}
+	#endregion
+	public RoundedRectangularGroupBoxWithToolbar():base(){}
         
-		#region Private Methods
-		// This Function is to get the Graphic path to draw the non rectangular interior
-		private GraphicsPath GetInteriorRoundedRectanglarPath(Rectangle aoRectangle, int iBarWidth, Size sz)
-		{
+	#region Private Methods
+	// This Function is to get the Graphic path to draw the non rectangular interior
+	private GraphicsPath GetInteriorRoundedRectanglarPath(Rectangle aoRectangle, int iBarWidth, Size sz)
+	{
 			GraphicsPath oInteriorPath = new GraphicsPath();
 			
 			// Add top horizontal line till the downward curve to graphics path
@@ -113,13 +113,13 @@ namespace Origam.Gui.Win
 			
 			return oInteriorPath;
 		}
-		#endregion
+	#endregion
 
-		#region Overridden Methods
+	#region Overridden Methods
 
-		// this method is called in the Onpaint method of the base class
-		protected override void DrawInterior(System.Drawing.Graphics aoGraphics)
-		{
+	// this method is called in the Onpaint method of the base class
+	protected override void DrawInterior(System.Drawing.Graphics aoGraphics)
+	{
 			// Create rectangle to draw interior
 			Rectangle oRcInterior = new Rectangle(this.BorderRectangle.X + this.BorderWidth + 1, 
 				this.BorderRectangle.Y + this.BorderWidth + 12, 
@@ -180,7 +180,6 @@ namespace Origam.Gui.Win
 			// Fill the rectangle using Gradient Brush created above
 			aoGraphics.FillPath(oGradientBrush, GetInteriorRoundedRectanglarPath(oRcInterior, miToolBarWidth, mosizeBorderPixelIndent));
 		}
-		#endregion
+	#endregion
 		
-	}
 }

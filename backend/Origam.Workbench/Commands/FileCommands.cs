@@ -30,101 +30,100 @@ using Origam.Workbench.Services;
 using Origam.DA.ObjectPersistence;
 using Origam.DA;
 
-namespace Origam.Workbench.Commands
+namespace Origam.Workbench.Commands;
+
+/// <summary>
+/// Connect to the workbench repository
+/// </summary>
+public class ConnectRepository : AbstractMenuCommand
 {
-	/// <summary>
-	/// Connect to the workbench repository
-	/// </summary>
-	public class ConnectRepository : AbstractMenuCommand
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return ! WorkbenchSingleton.Workbench.IsConnected;
 			}
-			set
-			{
+		set
+		{
 				base.IsEnabled = value;
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			WorkbenchSingleton.Workbench.Connect();
 		}		
-	}
+}
 
-	/// <summary>
-	/// Disconnects from the workbench repository
-	/// </summary>
-	public class DisconnectRepository : AbstractMenuCommand
+/// <summary>
+/// Disconnects from the workbench repository
+/// </summary>
+public class DisconnectRepository : AbstractMenuCommand
+{
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return WorkbenchSingleton.Workbench.IsConnected;
 			}
-			set
-			{
+		set
+		{
 				base.IsEnabled = value;
 			}
-		}
-
-		public override void Run()
-		{
-			WorkbenchSingleton.Workbench.Disconnect();
-		}		
 	}
 
-	/// <summary>
-	/// Shows window for editing OrigamSettings.config
-	/// </summary>
-	public class EditConfiguration : AbstractMenuCommand
+	public override void Run()
 	{
-		public override bool IsEnabled
+			WorkbenchSingleton.Workbench.Disconnect();
+		}		
+}
+
+/// <summary>
+/// Shows window for editing OrigamSettings.config
+/// </summary>
+public class EditConfiguration : AbstractMenuCommand
+{
+	public override bool IsEnabled
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-			set
-			{
+		set
+		{
 				base.IsEnabled = value;
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			OrigamSettingsEditor editor = new OrigamSettingsEditor();
 
 			editor.LoadObject(ConfigurationManager.GetAllUserHomeConfigurations());
 			WorkbenchSingleton.Workbench.ShowView(editor);
 		}		
-	}
+}
 
-	/// <summary>
-	/// Saves the active content window.
-	/// </summary>
-	public class SaveContent : AbstractMenuCommand
+/// <summary>
+/// Saves the active content window.
+/// </summary>
+public class SaveContent : AbstractMenuCommand
+{
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
-				// we cannot use IsDirty, because some forms get IsDirty after loosing focus, so 
-				// Save button would be never enabled
+				// we cannot use IsDirty, because some forms get IsDirty after loosing focus, so 			// Save button would be never enabled
 				return WorkbenchSingleton.Workbench.ActiveDocument != null && WorkbenchSingleton.Workbench.ActiveDocument.IsViewOnly == false;  // && WorkbenchSingleton.Workbench.ActiveDocument.IsDirty;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			try
 			{
 				WorkbenchSingleton.Workbench.ActiveDocument.SaveObject();
@@ -135,27 +134,27 @@ namespace Origam.Workbench.Commands
                 AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window, ex.Message, ResourceUtils.GetString("ErrorWhenSaving", WorkbenchSingleton.Workbench.ActiveDocument.TitleName), ex);
 			}
 		}
-	}
+}
 
-	/// <summary>
-	/// Refreshes the active content window.
-	/// </summary>
-	public class RefreshContent : AbstractMenuCommand
+/// <summary>
+/// Refreshes the active content window.
+/// </summary>
+public class RefreshContent : AbstractMenuCommand
+{
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return WorkbenchSingleton.Workbench.ActiveDocument != null && WorkbenchSingleton.Workbench.ActiveDocument.CanRefreshContent;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			try
 			{
 				WorkbenchSingleton.Workbench.ActiveDocument.RefreshContent();
@@ -165,42 +164,42 @@ namespace Origam.Workbench.Commands
 				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window, ex.Message, ResourceUtils.GetString("ErrorWhenRefreshForm", WorkbenchSingleton.Workbench.ActiveDocument.TitleName), ex);
 			}
 		}
-	}
+}
 
-	/// <summary>
-	/// Saves the active content window.
-	/// </summary>
-	public class ExitWorkbench : AbstractMenuCommand
+/// <summary>
+/// Saves the active content window.
+/// </summary>
+public class ExitWorkbench : AbstractMenuCommand
+{
+	public override bool IsEnabled
 	{
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return true;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
-
-		public override void Run()
-		{
-			WorkbenchSingleton.Workbench.ExitWorkbench();
-		}
 	}
 
-	/// <summary>
-	/// Executes all the update scripts in order to update to the current model version
-	/// </summary>
-	public class DeployVersion : AbstractMenuCommand
+	public override void Run()
 	{
-		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+			WorkbenchSingleton.Workbench.ExitWorkbench();
+		}
+}
 
-		public override bool IsEnabled
+/// <summary>
+/// Executes all the update scripts in order to update to the current model version
+/// </summary>
+public class DeployVersion : AbstractMenuCommand
+{
+	SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+
+	public override bool IsEnabled
+	{
+		get
 		{
-			get
-			{
 				if(_schema.IsSchemaLoaded)
 				{
 					try
@@ -226,14 +225,14 @@ namespace Origam.Workbench.Commands
 					return false;
 				}
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
             Origam.Workbench.Commands.ViewLogPad logPad =
                 new Origam.Workbench.Commands.ViewLogPad();
             logPad.Run();
@@ -241,11 +240,10 @@ namespace Origam.Workbench.Commands
 			deployment.Deploy();
 		}
 
-		public override void Dispose()
-		{
+	public override void Dispose()
+	{
 			_schema = null;
 			base.Dispose ();
 		}
 
-	}
 }

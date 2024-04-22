@@ -21,27 +21,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA
+namespace Origam.DA;
+
+public class DatabaseProcedureNotFoundException : Exception
 {
-    public class DatabaseProcedureNotFoundException : Exception
+    public DatabaseProcedureNotFoundException(string procedureName, 
+        Exception innerException) : base(innerException.Message, innerException)
     {
-        public DatabaseProcedureNotFoundException(string procedureName, 
-            Exception innerException) : base(innerException.Message, innerException)
-        {
             _procedureName = procedureName;
         }
 
-        private string _procedureName;
-        public string ProcedureName
+    private string _procedureName;
+    public string ProcedureName
+    {
+        get
         {
-            get
-            {
                 return _procedureName;
             }
-            set
-            {
+        set
+        {
                 _procedureName = value;
             }
-        }
     }
 }

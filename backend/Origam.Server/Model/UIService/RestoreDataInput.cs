@@ -21,11 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class RestoreDataInput
 {
-    public class RestoreDataInput
-    {
-        public Guid SessionFormIdentifier { get; set; }
-        public Guid ObjectId { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; }
+    public Guid ObjectId { get; set; }
 }

@@ -5,20 +5,20 @@ using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Origam.Windows.Editor
-{
-    public partial class FindReplaceForm : Form
-    {
-        public TextEditor Editor { get; set; }
+namespace Origam.Windows.Editor;
 
-        public FindReplaceForm()
-        {
+public partial class FindReplaceForm : Form
+{
+    public TextEditor Editor { get; set; }
+
+    public FindReplaceForm()
+    {
             InitializeComponent();
             this.Shown += FindReplaceForm_Shown;
         }
 
-        private void FindReplaceForm_Shown(object sender, EventArgs e)
-        {
+    private void FindReplaceForm_Shown(object sender, EventArgs e)
+    {
             if (!Editor.TextArea.Selection.IsMultiline)
             {
                 txtFind.Text = Editor.TextArea.Selection.GetText();
@@ -26,14 +26,14 @@ namespace Origam.Windows.Editor
             }
         }
 
-        private void btnFindNext_Click(object sender, EventArgs e)
-        {
+    private void btnFindNext_Click(object sender, EventArgs e)
+    {
             if (!FindNext(txtFind.Text))
                 SystemSounds.Beep.Play();
         }
 
-        private void btnReplace_Click(object sender, EventArgs e)
-        {
+    private void btnReplace_Click(object sender, EventArgs e)
+    {
             Regex regex = GetRegEx(txtFind.Text);
             string input = Editor.Text.Substring(Editor.SelectionStart, Editor.SelectionLength);
             Match match = regex.Match(input);
@@ -49,8 +49,8 @@ namespace Origam.Windows.Editor
                 SystemSounds.Beep.Play();
         }
 
-        private void btnReplaceAll_Click(object sender, EventArgs e)
-        {
+    private void btnReplaceAll_Click(object sender, EventArgs e)
+    {
             if (MessageBox.Show("Are you sure you want to Replace All occurences of \"" +
             txtFind.Text + "\" with \"" + txtReplace.Text + "\"?",
                 "Replace All", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) 
@@ -68,8 +68,8 @@ namespace Origam.Windows.Editor
             }
         }
 
-        private bool FindNext(string textToFind)
-        {
+    private bool FindNext(string textToFind)
+    {
             Regex regex = GetRegEx(textToFind);
             int start = regex.Options.HasFlag(RegexOptions.RightToLeft) ?
             Editor.SelectionStart : Editor.SelectionStart + Editor.SelectionLength;
@@ -93,8 +93,8 @@ namespace Origam.Windows.Editor
             return match.Success;
         }
 
-        private Regex GetRegEx(string textToFind, bool leftToRight = false)
-        {
+    private Regex GetRegEx(string textToFind, bool leftToRight = false)
+    {
             RegexOptions options = RegexOptions.None;
             if (cbSearchUp.Checked && !leftToRight)
                 options |= RegexOptions.RightToLeft;
@@ -116,8 +116,8 @@ namespace Origam.Windows.Editor
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
             if (keyData == Keys.Escape)
             {
                 this.Close();
@@ -125,5 +125,4 @@ namespace Origam.Windows.Editor
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
-    }
 }

@@ -1,26 +1,26 @@
 ﻿using System;
 
-namespace Origam.Windows.Editor.GIT
+namespace Origam.Windows.Editor.GIT;
+
+public class DiffLineViewModel
 {
-    public class DiffLineViewModel
-    {
-        public string Text { get; private set; }
-        public DiffContext Style { get; private set; }
-        public string LineNumber { get; private set; }
-        public string PrefixForStyle { get; private set; }
-        public int PositionInSection { get; private set; }
+    public string Text { get; private set; }
+    public DiffContext Style { get; private set; }
+    public string LineNumber { get; private set; }
+    public string PrefixForStyle { get; private set; }
+    public int PositionInSection { get; private set; }
 
-        public static DiffLineViewModel Empty() =>
-            new DiffLineViewModel
-            {
-                Style = DiffContext.Blank,
-                Text = " ",
-                PrefixForStyle = "",
-                LineNumber="  "
-            };
-
-        public static DiffLineViewModel Create(int positionInSection, string lineNumber, string text)
+    public static DiffLineViewModel Empty() =>
+        new DiffLineViewModel
         {
+            Style = DiffContext.Blank,
+            Text = " ",
+            PrefixForStyle = "",
+            LineNumber="  "
+        };
+
+    public static DiffLineViewModel Create(int positionInSection, string lineNumber, string text)
+    {
             var viewModel = new DiffLineViewModel();
             viewModel.LineNumber = lineNumber;
             viewModel.PositionInSection = positionInSection;
@@ -46,9 +46,8 @@ namespace Origam.Windows.Editor.GIT
             return viewModel;
         }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return String.Format("{0}{1}", PrefixForStyle, Text);
         }
-    }
 }

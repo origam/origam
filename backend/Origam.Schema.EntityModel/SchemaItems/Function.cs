@@ -25,39 +25,39 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public enum OrigamFunctionType
 {
-	public enum OrigamFunctionType
-	{
-		Standard = 0,
-		Database = 1
-	}
+	Standard = 0,
+	Database = 1
+}
 
-	[SchemaItemDescription("Function", "icon_10_functions.png")]
-    [HelpTopic("Functions")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class Function : AbstractSchemaItem
-	{
-		public const string CategoryConst = "Function";
+[SchemaItemDescription("Function", "icon_10_functions.png")]
+[HelpTopic("Functions")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class Function : AbstractSchemaItem
+{
+	public const string CategoryConst = "Function";
 
-		public Function() {}
+	public Function() {}
 
-		public Function(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public Function(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public Function(Key primaryKey) : base(primaryKey)	{}
+	public Function(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		[Browsable(false)]
-		public override bool UseFolders => false;
+	[Browsable(false)]
+	public override bool UseFolders => false;
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				switch(FunctionType) 
 				{
 					case OrigamFunctionType.Database:
@@ -66,44 +66,43 @@ namespace Origam.Schema.EntityModel
 						return "icon_10_functions.png";
 				}
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(FunctionParameter)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(FunctionParameter) ?
 					"NewFunctionParameter" : null);
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		private OrigamDataType _dataType;
-		[XmlAttribute("dataType")]
-		public OrigamDataType DataType
-		{
-			get => _dataType;
-			set => _dataType = value;
-		}
-
-		private OrigamFunctionType _functionType;
-		[XmlAttribute("type")]
-        public OrigamFunctionType FunctionType
-		{
-			get => _functionType;
-			set => _functionType = value;
-		}
-		#endregion
+	#region Properties
+	private OrigamDataType _dataType;
+	[XmlAttribute("dataType")]
+	public OrigamDataType DataType
+	{
+		get => _dataType;
+		set => _dataType = value;
 	}
+
+	private OrigamFunctionType _functionType;
+	[XmlAttribute("type")]
+	public OrigamFunctionType FunctionType
+	{
+		get => _functionType;
+		set => _functionType = value;
+	}
+	#endregion
 }

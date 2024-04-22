@@ -32,28 +32,28 @@ using Origam.Server;
 using Origam.Extensions;
 using Origam.Service.Core;
 
-namespace Origam.Server
-{
-    public class ServerEntityUIActionRunner: EntityUIActionRunner
-    {
-        protected readonly UIManager uiManager;
-        protected readonly SessionManager sessionManager;
-        protected readonly IBasicUIService basicUIService;
-        protected readonly IReportManager reportManager;
+namespace Origam.Server;
 
-        public ServerEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient,
-            UIManager uiManager, SessionManager sessionManager, IBasicUIService basicUIService,
-            IReportManager reportManager) : base(actionRunnerClient)
-        {
+public class ServerEntityUIActionRunner: EntityUIActionRunner
+{
+    protected readonly UIManager uiManager;
+    protected readonly SessionManager sessionManager;
+    protected readonly IBasicUIService basicUIService;
+    protected readonly IReportManager reportManager;
+
+    public ServerEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient,
+        UIManager uiManager, SessionManager sessionManager, IBasicUIService basicUIService,
+        IReportManager reportManager) : base(actionRunnerClient)
+    {
             this.uiManager = uiManager;
             this.sessionManager = sessionManager;
             this.basicUIService = basicUIService;
             this.reportManager = reportManager;
         }
 
-        protected override void PerformAppropriateAction(
-            ExecuteActionProcessData processData)
-        {
+    protected override void PerformAppropriateAction(
+        ExecuteActionProcessData processData)
+    {
             switch (processData.Type)
             {
                 case PanelActionType.QueueAction:
@@ -79,17 +79,17 @@ namespace Origam.Server
             }
         }
         
-        private static void CheckSelectedRowsCountPositive(int count)
-        {
+    private static void CheckSelectedRowsCountPositive(int count)
+    {
             if (count == 0)
             {
                 throw new RuleException(Resources.ErrorNoRecordsSelectedForAction);
             }
         }
 
-        private void ExecuteQueueAction(
-            ExecuteActionProcessData processData)
-        {
+    private void ExecuteQueueAction(
+        ExecuteActionProcessData processData)
+    {
             WorkQueueSessionStore wqss = sessionManager.GetSession(processData) 
                 as WorkQueueSessionStore;
             IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) 
@@ -167,8 +167,8 @@ namespace Origam.Server
             resultList.Add(new PanelActionResult(ActionResultType.RefreshData));
         }
 
-        private void ExecuteReportAction(ExecuteActionProcessData processData)
-        {
+    private void ExecuteReportAction(ExecuteActionProcessData processData)
+    {
             if (processData.Action == null
             || processData.Action.Mode != PanelActionMode.Always)
             {
@@ -209,8 +209,8 @@ namespace Origam.Server
             resultList.Add(result);
         }
 
-        private async void ExecuteChangeUIAction(ExecuteActionProcessData processData)
-        {
+    private async void ExecuteChangeUIAction(ExecuteActionProcessData processData)
+    {
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
             {
@@ -234,9 +234,9 @@ namespace Origam.Server
             await System.Threading.Tasks.Task.CompletedTask; //CS1998
         }
 
-        protected override void ExecuteOpenFormAction(
-            ExecuteActionProcessData processData)
-        {
+    protected override void ExecuteOpenFormAction(
+        ExecuteActionProcessData processData)
+    {
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
             {
@@ -246,8 +246,7 @@ namespace Origam.Server
                 ActionResultType.OpenForm);
             UIRequest uir = RequestTools.GetActionRequest(processData.Parameters, 
                 processData.SelectedIds, processData.Action);
-            // Stack can't handle resending DataDocumentFx, 
-            // it needs to be converted to XmlDocument
+            // Stack can't handle resending DataDocumentFx,      // it needs to be converted to XmlDocument
             // and then converted back to DataDocumentFx
             foreach(object key in uir.Parameters.Keys.ToList<object>())
             {
@@ -283,8 +282,8 @@ namespace Origam.Server
             }
         }
 
-        protected virtual void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
-        {
+    protected virtual void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
+    {
             if (processData.Action == null || 
                 processData.Action.Mode != PanelActionMode.Always)
             {
@@ -294,16 +293,15 @@ namespace Origam.Server
                 processData.ActionId));
         }
 
-        protected override void SetTransactionId(
-            ExecuteActionProcessData processData,
-            string transactionId)
-        {
+    protected override void SetTransactionId(
+        ExecuteActionProcessData processData,
+        string transactionId)
+    {
             sessionManager.GetSession(processData).TransationId = transactionId;
         }
 
-        protected override ActionResult MakeActionResult(ActionResultType type)
-        {
+    protected override ActionResult MakeActionResult(ActionResultType type)
+    {
             return new PanelActionResult(type);
         }
-    }
 }

@@ -28,112 +28,112 @@ using System.Security.Principal;
 using ICSharpCode.SharpZipLib.Zip;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+/// <summary>
+/// Summary description for SerializerDataService.
+/// </summary>
+public class OrigamMetadataDataService : IDataService
 {
-	/// <summary>
-	/// Summary description for SerializerDataService.
-	/// </summary>
-	public class OrigamMetadataDataService : IDataService
+	public OrigamMetadataDataService()
 	{
-		public OrigamMetadataDataService()
-		{
 		}
 
-		#region IDataService Members
-		public virtual string Info
+	#region IDataService Members
+	public virtual string Info
+	{
+		get
 		{
-			get
-			{
 				return "Connection String: " + _connectionString;
 			}
-		}
+	}
 
-		private bool _userDefinedParameters = false;
-		public bool UserDefinedParameters
+	private bool _userDefinedParameters = false;
+	public bool UserDefinedParameters
+	{
+		get
 		{
-			get
-			{
 				return _userDefinedParameters;
 			}
-			set
-			{
+		set
+		{
 				_userDefinedParameters = value;
 			}
-		}
+	}
 
-		private string _connectionString = "";
-		public string ConnectionString
+	private string _connectionString = "";
+	public string ConnectionString
+	{
+		get
 		{
-			get
-			{
 				return _connectionString;
 			}
-			set
-			{
+		set
+		{
 				_connectionString = value;
 			}
-		}
+	}
 
-        public int BulkInsertThreshold { get; set; }
-        public int UpdateBatchSize { get; set; }
+	public int BulkInsertThreshold { get; set; }
+	public int UpdateBatchSize { get; set; }
 
-        private IStateMachineService _stateMachine;
-		public IStateMachineService StateMachine
+	private IStateMachineService _stateMachine;
+	public IStateMachineService StateMachine
+	{
+		get
 		{
-			get
-			{
 				return _stateMachine;
 			}
-			set
-			{
+		set
+		{
 				_stateMachine = value;
 			}
-		}
+	}
 
-        private IAttachmentService _attachmentService;
-        public IAttachmentService AttachmentService
-        {
-            get
-            {
+	private IAttachmentService _attachmentService;
+	public IAttachmentService AttachmentService
+	{
+		get
+		{
                 return _attachmentService;
             }
-            set
-            {
+		set
+		{
                 _attachmentService = value;
             }
-        }
+	}
 
-        public string DbUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string DBPassword { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+	public string DbUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+	public string DBPassword { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public string Xsd(Guid dataStructureId)
-		{
+	public string Xsd(Guid dataStructureId)
+	{
 			throw new NotImplementedException("Not implemented");
 		}
 
-		public DataSet GetEmptyDataSet(Guid dataStructureId)
-		{
+	public DataSet GetEmptyDataSet(Guid dataStructureId)
+	{
 			return new DataSet();
 		}
 
-		public DataSet GetEmptyDataSet(Guid dataStructureId, CultureInfo culture)
-		{
+	public DataSet GetEmptyDataSet(Guid dataStructureId, CultureInfo culture)
+	{
 			return new DataSet();
 		}
 
-		public DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataset, string transactionId)
-		{
+	public DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataset, string transactionId)
+	{
 			dataset.Merge(LoadDataSet(dataStructureQuery, userProfile, transactionId));
 			return dataset;
 		}
 
-		public object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId)
-		{
+	public object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId)
+	{
 			throw new NotImplementedException("Not implemented");
 		}
 
-		public DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, string transactionId)
-		{
+	public DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, string transactionId)
+	{
 			System.Reflection.Assembly thisExe;
 			thisExe = System.Reflection.Assembly.GetExecutingAssembly();
 			System.IO.Stream file = 
@@ -155,101 +155,100 @@ namespace Origam.DA.Service
 			return dataset;
 		}
 
-		public int UpdateData(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataset, string transactionid)
-		{
+	public int UpdateData(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataset, string transactionid)
+	{
 			throw new InvalidOperationException("Cannot update embedded metadata.");
 		}
-		public int UpdateData(
-            DataStructureQuery dataStructureQuery, IPrincipal userProfile, 
-            DataSet dataset, string transactionid, bool forceBulkInsert)
-		{
+	public int UpdateData(
+		DataStructureQuery dataStructureQuery, IPrincipal userProfile, 
+		DataSet dataset, string transactionid, bool forceBulkInsert)
+	{
 			throw new InvalidOperationException("Cannot update embedded metadata.");
 		}
 
-		public DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionid)
-		{
+	public DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionid)
+	{
 			throw new NotSupportedException("ExecuteProcedure is not supported by OrigamMetadataDataService");
 		}
 
-		public ArrayList CompareSchema(IPersistenceProvider provider)
-		{
+	public ArrayList CompareSchema(IPersistenceProvider provider)
+	{
 			throw new NotSupportedException("CompareSchema is not supported by OrigamMetadataDataService");
 		}
 
-		public string ExecuteUpdate(string command, string transactionId)
-		{
+	public string ExecuteUpdate(string command, string transactionId)
+	{
 			throw new NotImplementedException("ExecuteUpdate() is not implemented by this data service");
 		}
 
-		public virtual string DatabaseSchemaVersion()
-		{
+	public virtual string DatabaseSchemaVersion()
+	{
 			throw new NotImplementedException("DatabaseSchemaVersion() is not implemented by this data service");
 		}
 
-		public virtual void UpdateDatabaseSchemaVersion(string version, string transactionId)
-		{
+	public virtual void UpdateDatabaseSchemaVersion(string version, string transactionId)
+	{
 			throw new NotImplementedException("UpdateDatabaseSchemaVersion() is not implemented by this data service");
 		}
 
-		public virtual int UpdateField(Guid entityId, Guid fieldId, object oldValue, object newValue, IPrincipal userProfile, string transactionId)
-		{
+	public virtual int UpdateField(Guid entityId, Guid fieldId, object oldValue, object newValue, IPrincipal userProfile, string transactionId)
+	{
 			throw new NotImplementedException("UpdateField() is not implemented by this data service");
 		}
-		public virtual int ReferenceCount(Guid entityId, Guid fieldId, object value, IPrincipal userProfile, string transactionId)
-		{
+	public virtual int ReferenceCount(Guid entityId, Guid fieldId, object value, IPrincipal userProfile, string transactionId)
+	{
 			throw new NotImplementedException("ReferenceCount() is not implemented by this data service");
 		}
-        public string BuildConnectionString(string serverName, int port , string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
-        {
+	public string BuildConnectionString(string serverName, int port , string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+	{
             throw new NotImplementedException();
         }
-        public void CreateDatabase(string name)
-        {
+	public void CreateDatabase(string name)
+	{
             throw new NotImplementedException();
         }
-        public void DeleteDatabase(string name)
-        {
+	public void DeleteDatabase(string name)
+	{
             throw new NotImplementedException();
         }
-        public string EntityDdl(Guid entity)
-        {
+	public string EntityDdl(Guid entity)
+	{
             throw new NotImplementedException();
         }
-        public string[] FieldDdl(Guid field)
-        {
+	public string[] FieldDdl(Guid field)
+	{
             throw new NotImplementedException();
         }
-        public IDataReader ExecuteDataReader(DataStructureQuery query,
-            IPrincipal principal, string transactionId)
-        { 
+	public IDataReader ExecuteDataReader(DataStructureQuery query,
+		IPrincipal principal, string transactionId)
+	{ 
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery dataStructureQuery)
-        {
+	public IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery dataStructureQuery)
+	{
 	        throw new NotImplementedException();
         }
 
-        public IEnumerable<Dictionary<string, object>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
-        {
+	public IEnumerable<Dictionary<string, object>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+	{
 	        throw new NotImplementedException();
         }
 
-        #endregion
+	#endregion
 
-        #region IDisposable Members
+	#region IDisposable Members
 
-        public void Dispose()
-		{
+	public void Dispose()
+	{
 			
 		}
 
-        public string[] DatabaseSpecificDatatypes()
-        {
+	public string[] DatabaseSpecificDatatypes()
+	{
             throw new NotImplementedException();
         }
 
-        #endregion
+	#endregion
 
-    }
 }

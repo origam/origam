@@ -31,15 +31,15 @@ using System.Text;
 using Origam.ProjectAutomation.Builders;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+
+public class FileModelImportBuilder: AbstractBuilder
 {
-    public class FileModelImportBuilder: AbstractBuilder
+    private string modelSourcesFolder;
+    private string sourcesFolder;
+    public override string Name => "Import Model";
+    public override void Execute(Project project)
     {
-        private string modelSourcesFolder;
-        private string sourcesFolder;
-        public override string Name => "Import Model";
-        public override void Execute(Project project)
-        {
             modelSourcesFolder = project.ModelSourceFolder;
             sourcesFolder = project.SourcesFolder;
             CreateSourceFolder();
@@ -65,8 +65,8 @@ namespace Origam.ProjectAutomation
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
         }
-        private void CheckNewProjectDirectory(Project project)
-        {
+    private void CheckNewProjectDirectory(Project project)
+    {
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists)
             {
@@ -90,21 +90,21 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        private StringBuilder CreateCmdTemplate()
-        {
+    private StringBuilder CreateCmdTemplate()
+    {
             StringBuilder template = new StringBuilder();
             template.AppendLine("docker run --name {projectName} --env-file \"{envFilePath}\" -it -v \"{parentPathProject}\":/home/origam/HTML5/data/origam -p {dockerPort}:8080 origam/server:master-latest.linux");
             return template;
         }
 
-        private void CloneGitRepository(Project project)
-        {
+    private void CloneGitRepository(Project project)
+    {
             GitManager gitManager = new GitManager();
             gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder,
                 project.RepositoryUsername,project.RepositoryPassword);
         }
-        private void CheckModelDirectory(Project project)
-        {
+    private void CheckModelDirectory(Project project)
+    {
             DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (!dir.Exists)
             {
@@ -112,8 +112,8 @@ namespace Origam.ProjectAutomation
                 project.ModelSourceFolder = sourcesFolder;
             }
         }
-        private string GetPackageId()
-        {
+    private string GetPackageId()
+    {
             string modelId = "";
             DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (string.IsNullOrEmpty(modelId) && dir.Exists && dir.EnumerateFileSystemInfos().Any())
@@ -153,8 +153,8 @@ namespace Origam.ProjectAutomation
             }
             return modelId;
         }
-        private string GetFromDockerEnvFile(Project project)
-        {
+    private string GetFromDockerEnvFile(Project project)
+    {
             string path = Path.Combine(project.SourcesFolder, DockerBuilder.DockerFolderName);
             if(!Directory.Exists(path))
             {
@@ -170,12 +170,12 @@ namespace Origam.ProjectAutomation
                 .Select(line => { return line.Split("=")[1] ; }).FirstOrDefault();
             return string.IsNullOrEmpty(guidId)? null: guidId;
         }
-        private void UnzipDefaultModel(Project project)
-        {
+    private void UnzipDefaultModel(Project project)
+    {
             ZipFile.ExtractToDirectory(project.DefaultModelPath, sourcesFolder);
         }
-        private void CreateSourceFolder()
-        {
+    private void CreateSourceFolder()
+    {
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
@@ -183,20 +183,19 @@ namespace Origam.ProjectAutomation
             }
             dir.Create();
         }
-        private void CreateCustomAssetsFolder(string sourcesFolder)
-        {
+    private void CreateCustomAssetsFolder(string sourcesFolder)
+    {
             DirectoryInfo dir = new DirectoryInfo(Path.Combine(sourcesFolder, "customAssets"));
             if (!dir.Exists)
             {
                 dir.Create();
             }
         }
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
             if (Directory.Exists(sourcesFolder))
             {
                 GitManager.DeleteDirectory(sourcesFolder);
             }
         }
-    }
 }

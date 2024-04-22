@@ -25,23 +25,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Origam
-{
-    public abstract class AbstractIndexFile:  IDisposable
-    {
-        private readonly string indexFile;
-        private readonly FileStream fileStream;
-        private bool disposed;
+namespace Origam;
 
-        protected AbstractIndexFile(string indexFile)
-        {
+public abstract class AbstractIndexFile:  IDisposable
+{
+    private readonly string indexFile;
+    private readonly FileStream fileStream;
+    private bool disposed;
+
+    protected AbstractIndexFile(string indexFile)
+    {
             this.indexFile = indexFile;
             fileStream = File.Open(indexFile, FileMode.OpenOrCreate,
                 FileAccess.ReadWrite, FileShare.None);
         }
 
-        public void AddEntryToIndexFile(string entry)
-        {
+    public void AddEntryToIndexFile(string entry)
+    {
             if (disposed) throw new ObjectDisposedException("Dispose method has been already called and file is closed!");
             try
             {
@@ -60,8 +60,8 @@ namespace Origam
             }
         }
     
-        private string ReadAllText()
-        {
+    private string ReadAllText()
+    {
             fileStream.Seek(0, SeekOrigin.Begin);
             byte[] bytes = new byte[fileStream.Length];
             int numBytesToRead = (int)fileStream.Length;
@@ -81,16 +81,16 @@ namespace Origam
             return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
         }
 
-        protected IEnumerable<string> ReadAllLines()
-        {
+    protected IEnumerable<string> ReadAllLines()
+    {
             return ReadAllText()
                 .Split('\n')
                 .Select(line => line.Trim())
                 .Where(line => line != "");
         }
     
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             if (!disposed)
             {
                 fileStream?.Dispose();
@@ -99,11 +99,10 @@ namespace Origam
             disposed = true;
         }
     
-        ~AbstractIndexFile() 
-        {
+    ~AbstractIndexFile() 
+    {
             Dispose();
         }
     
-        public abstract string GetFirstUnprocessedFile(string path, string mask);
-    }
+    public abstract string GetFirstUnprocessedFile(string path, string mask);
 }

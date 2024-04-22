@@ -19,27 +19,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui.Designer
+namespace Origam.Gui.Designer;
+
+using System.Windows.Forms;
+using System.ComponentModel.Design;
+using System.Windows.Forms.Design;
+
+/// This filter is used to catch keyboard input that is meant for the designer.
+/// It does not prevent the message from continuing, but instead merely
+/// deciphers the keystroke and performs the appropriate MenuCommand.
+public class KeystrokeMessageFilter : System.Windows.Forms.IMessageFilter
 {
-	using System.Windows.Forms;
-	using System.ComponentModel.Design;
-	using System.Windows.Forms.Design;
+	private IDesignerHost host;
 
-	/// This filter is used to catch keyboard input that is meant for the designer.
-	/// It does not prevent the message from continuing, but instead merely
-	/// deciphers the keystroke and performs the appropriate MenuCommand.
-	public class KeystrokeMessageFilter : System.Windows.Forms.IMessageFilter
+	public KeystrokeMessageFilter(IDesignerHost host)
 	{
-		private IDesignerHost host;
-
-		public KeystrokeMessageFilter(IDesignerHost host)
-		{
 			this.host = host;
 		}
-		#region Implementation of IMessageFilter
+	#region Implementation of IMessageFilter
 
-		public bool PreFilterMessage(ref Message m)
-		{
+	public bool PreFilterMessage(ref Message m)
+	{
 			// Catch WM_KEYCHAR if the designerView has focus
 			if ((m.Msg == 0x0100) && ((host as DesignerHostImpl).ParentControl as ControlSetEditor).IsDesignerHostFocused)
 			{
@@ -94,6 +94,5 @@ namespace Origam.Gui.Designer
 			return false;
 		}
 
-		#endregion
-	}
+	#endregion
 }

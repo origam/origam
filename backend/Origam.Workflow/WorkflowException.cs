@@ -19,24 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for WorkflowException.
+/// </summary>
+public class WorkflowException : OrigamException
 {
-	/// <summary>
-	/// Summary description for WorkflowException.
-	/// </summary>
-	public class WorkflowException : OrigamException
+	public WorkflowException() : base()
 	{
-		public WorkflowException() : base()
-		{
 		}
 
-		public WorkflowException(string message) : base (message)
-		{
+	public WorkflowException(string message) : base (message)
+	{
 		}
 
-		public WorkflowException(string message, string customStackTrace) : base (message)
-		{
+	public WorkflowException(string message, string customStackTrace) : base (message)
+	{
 			this.AppendStackTrace(customStackTrace);
 		}
-	}
 }

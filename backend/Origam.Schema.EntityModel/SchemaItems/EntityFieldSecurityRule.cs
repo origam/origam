@@ -25,69 +25,68 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for FieldSecurityRule.
+/// </summary>
+[SchemaItemDescription("Row Level Security Rule", "Row Level Security",
+	"icon_row-level-security-rule.png")]
+[HelpTopic("Row+Level+Security+Rules")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityFieldSecurityRule : AbstractEntitySecurityRule
 {
-	/// <summary>
-	/// Summary description for FieldSecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Row Level Security Rule", "Row Level Security",
-        "icon_row-level-security-rule.png")]
-    [HelpTopic("Row+Level+Security+Rules")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityFieldSecurityRule : AbstractEntitySecurityRule
-	{
-		public EntityFieldSecurityRule() : base() {}
+	public EntityFieldSecurityRule() : base() {}
 
-		public EntityFieldSecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityFieldSecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityFieldSecurityRule(Key primaryKey) : base(primaryKey)	{}
+	public EntityFieldSecurityRule(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Properties
-		private bool _read = true;
-		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("readCredential")]
-        public bool ReadCredential
+	#region Properties
+	private bool _read = true;
+	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("readCredential")]
+	public bool ReadCredential
+	{
+		get
 		{
-			get
-			{
 				return _read;
 			}
-			set
-			{
+		set
+		{
 				_read = value;
 				this.CredentialsChanged();
 			}
-		}
+	}
 
-		private bool _update = true;
-		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("updateCredential")]
-        public bool UpdateCredential
+	private bool _update = true;
+	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("updateCredential")]
+	public bool UpdateCredential
+	{
+		get
 		{
-			get
-			{
 				return _update;
 			}
-			set
-			{
+		set
+		{
 				_update = value;
 				this.CredentialsChanged();
 			}
-		}
+	}
 
-		internal override string CredentialsShortcut
+	internal override string CredentialsShortcut
+	{
+		get
 		{
-			get
-			{
 				string result = "";
 				result += (this.ReadCredential ? "Read" : "");
 				result += (this.UpdateCredential ? "Update" : "");
 
 				return result;
 			}
-		}
-
-		#endregion
 	}
+
+	#endregion
 }

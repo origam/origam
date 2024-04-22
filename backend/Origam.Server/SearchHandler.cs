@@ -9,12 +9,12 @@ using Origam.Server.Model.Search;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class SearchHandler
 {
-    public class SearchHandler
+    public IEnumerable<SearchResult> Search(string searchTerm)
     {
-        public IEnumerable<SearchResult> Search(string searchTerm)
-        {
             IOrigamAuthorizationProvider authorizationProvider 
                 = SecurityManager.GetAuthorizationProvider();
             IPrincipal principal = SecurityManager.CurrentPrincipal;
@@ -26,8 +26,8 @@ namespace Origam.Server
                 .SelectMany(dataSource => AttachResultsToResponse(dataSource, searchTerm));
         }
         
-        private IEnumerable<SearchResult> AttachResultsToResponse(SearchDataSource dataSource, string searchTerm)
-        {
+    private IEnumerable<SearchResult> AttachResultsToResponse(SearchDataSource dataSource, string searchTerm)
+    {
             var results = DataService.Instance.LoadData(
                 dataSource.DataStructureId, dataSource.DataStructureMethodId, 
                 Guid.Empty, Guid.Empty, null, dataSource.FilterParameter, 
@@ -52,11 +52,10 @@ namespace Origam.Server
         }
 
         
-        private SearchSchemaItemProvider GetSearchSchemaItemProvider()
-        {
+    private SearchSchemaItemProvider GetSearchSchemaItemProvider()
+    {
             return ServiceManager.Services
                 .GetService<SchemaService>()
                 .GetProvider<SearchSchemaItemProvider>();
         }
-    }
 }

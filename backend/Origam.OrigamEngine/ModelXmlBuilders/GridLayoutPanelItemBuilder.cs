@@ -21,15 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for GridLayoutPanelItemBuilder.
+/// </summary>
+public class GridLayoutPanelItemBuilder
 {
-	/// <summary>
-	/// Summary description for GridLayoutPanelItemBuilder.
-	/// </summary>
-	public class GridLayoutPanelItemBuilder
+	public static void Build(XmlElement parentNode, UIElementRenderData renderData)
 	{
-		public static void Build(XmlElement parentNode, UIElementRenderData renderData)
-		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "GridLayoutPanelItem");
 			parentNode.SetAttribute("Label", renderData.Text);
@@ -38,5 +38,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentNode.SetAttribute("HeightCells", renderData.HeightCells.ToString());
 			parentNode.SetAttribute("WidthCells", renderData.WidthCells.ToString());
 		}
-	}
 }

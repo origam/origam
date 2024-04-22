@@ -25,29 +25,29 @@ using System.Reflection;
 using Origam.DA;
 using Origam.Extensions;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+
+/// <summary>
+/// Summary description for TracingService.
+/// </summary>
+public class TracingService : ITracingService
 {
-	/// <summary>
-	/// Summary description for TracingService.
-	/// </summary>
-	public class TracingService : ITracingService
-	{
-		private static readonly log4net.ILog log =
-			log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	private static readonly log4net.ILog log =
+		log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 			
 		
-		private SchemaService _schema;
-		IServiceAgent _dataServiceAgent;
-		private bool? _enabled;
+	private SchemaService _schema;
+	IServiceAgent _dataServiceAgent;
+	private bool? _enabled;
 
-		public TracingService()
-		{
+	public TracingService()
+	{
 		}
 
-		#region Public Methods
-		public void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName)
-		{
+	#region Public Methods
+	public void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName)
+	{
 			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
@@ -78,10 +78,10 @@ namespace Origam.Workbench.Services
 			);
 		}
 
-		public void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId,
-			string category, string subCategory, string remark, string data1,
-			string data2, string message)
-		{
+	public void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId,
+		string category, string subCategory, string remark, string data1,
+		string data2, string message)
+	{
 			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
@@ -127,14 +127,14 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		public void TraceRule(Guid ruleId, string ruleName, string ruleInput,
-			string ruleResult)
-		{
+	public void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+		string ruleResult)
+	{
 			TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
 		}
 
-		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
-		{
+	public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
+	{
 			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
@@ -176,8 +176,8 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
-		{
+	private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
+	{
 			DataStructureQuery query = new DataStructureQuery(
 				new Guid(dataStructureQueryId));
 
@@ -189,20 +189,20 @@ namespace Origam.Workbench.Services
 			_dataServiceAgent.Run();
 		}
 		
-		#endregion
+	#endregion
 
-		#region IService Members
+	#region IService Members
 
-		public void UnloadService()
-		{
+	public void UnloadService()
+	{
 			_dataServiceAgent = null;
 			_schema = null;
 		}
 
-		public bool Enabled
+	public bool Enabled
+	{
+		get
 		{
-			get
-			{
 				if (_enabled.HasValue)
 				{
 					return _enabled.Value;
@@ -210,15 +210,14 @@ namespace Origam.Workbench.Services
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 				return settings.TraceEnabled;
 			}
-			set => _enabled = value;
-		}
+		set => _enabled = value;
+	}
 
-		public void InitializeService()
-		{
+	public void InitializeService()
+	{
 			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			_schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		}
 
-		#endregion
-	}
+	#endregion
 }

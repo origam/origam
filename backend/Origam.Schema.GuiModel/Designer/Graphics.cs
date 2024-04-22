@@ -30,71 +30,71 @@ using System.Xml.Serialization;
 using Origam.Extensions;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for Graphics.
+/// </summary>
+[SchemaItemDescription("Image", "icon_image.png")]
+[HelpTopic("Images")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class Graphics : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for Graphics.
-	/// </summary>
-	[SchemaItemDescription("Image", "icon_image.png")]
-    [HelpTopic("Images")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class Graphics : AbstractSchemaItem
+	public const string CategoryConst = "Graphics";
+
+	public Graphics() : base()
 	{
-		public const string CategoryConst = "Graphics";
-
-		public Graphics() : base()
-		{
 			InitializeProperyContainers();
 		}
 
-		public Graphics(Guid schemaExtensionId) : base(schemaExtensionId)
-		{
+	public Graphics(Guid schemaExtensionId) : base(schemaExtensionId)
+	{
 			InitializeProperyContainers();
 		}
 
-		public Graphics(Key primaryKey) : base(primaryKey)
-		{
+	public Graphics(Key primaryKey) : base(primaryKey)
+	{
 			InitializeProperyContainers();
 		}
 		
-		private void InitializeProperyContainers()
-		{
+	private void InitializeProperyContainers()
+	{
 			graphicsDataByte = new PropertyContainer<byte[]>(
 				containerName: nameof(graphicsDataByte),
 				containingObject: this);
 		}
 		
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
+	#region Properties
 
-		private PropertyContainer<byte[]> graphicsDataByte;
+	private PropertyContainer<byte[]> graphicsDataByte;
 		
-		[Browsable(false)]
-		[XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
-		public byte[] GraphicsDataByte
-		{
-			get => graphicsDataByte.Get();
-			set => graphicsDataByte.Set(value);
-		}
+	[Browsable(false)]
+	[XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
+	public byte[] GraphicsDataByte
+	{
+		get => graphicsDataByte.Get();
+		set => graphicsDataByte.Set(value);
+	}
 
-		[Category("Graphics")]
-		//[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
-		public Bitmap GraphicsData
+	[Category("Graphics")]
+	//[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
+	public Bitmap GraphicsData
+	{
+		get
 		{
-			get
-			{
 				if(GraphicsDataByte == null) return null;
 
 				Bitmap b = new System.Drawing.Bitmap(new System.IO.MemoryStream(GraphicsDataByte));
@@ -104,8 +104,8 @@ namespace Origam.Schema.GuiModel
 				}
 				return b;
 			}
-			set
-			{
+		set
+		{
 				if (value == null)
 				{
 					GraphicsDataByte = null;
@@ -125,10 +125,10 @@ namespace Origam.Schema.GuiModel
 				}
 				GraphicsDataByte = stream.ToArray();
 			}
-		}
+	}
 
-		private static void SetTransparentColor(Bitmap value)
-		{
+	private static void SetTransparentColor(Bitmap value)
+	{
 			for (int i = 0; i < value.Height; i++)
 			{
 				for (int j = 0; j < value.Width; j++)
@@ -141,8 +141,7 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		public override byte[] NodeImage => GraphicsData.ToByteArray();
+	public override byte[] NodeImage => GraphicsData.ToByteArray();
 
-		#endregion
-	}
+	#endregion
 }

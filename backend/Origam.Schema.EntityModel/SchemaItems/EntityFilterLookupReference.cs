@@ -27,28 +27,28 @@ using Origam.Workbench.Services;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for TransformationReference.
+/// </summary>
+[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
+[HelpTopic("Lookup+Reference")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityFilterLookupReference : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for TransformationReference.
-	/// </summary>
-	[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
-    [HelpTopic("Lookup+Reference")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityFilterLookupReference : AbstractSchemaItem
-	{
-		public const string CategoryConst = "EntityFilterLookupReference";
+	public const string CategoryConst = "EntityFilterLookupReference";
 
-		public EntityFilterLookupReference() : base() {Init();}
+	public EntityFilterLookupReference() : base() {Init();}
 
-		public EntityFilterLookupReference(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public EntityFilterLookupReference(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 
-		public EntityFilterLookupReference(Key primaryKey) : base(primaryKey)	{Init();}
+	public EntityFilterLookupReference(Key primaryKey) : base(primaryKey)	{Init();}
 	
 
-		private void Init()
-		{
+	private void Init()
+	{
 			this.ChildItemTypes.AddRange(
 				new Type[] {
 							   typeof(ParameterReference),
@@ -59,35 +59,35 @@ namespace Origam.Schema.EntityModel
 				);
 		}
 		
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Lookup != null)
 				base.GetParameterReferences(this.Lookup as AbstractSchemaItem, list);
 
 			base.GetParameterReferences(this, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Lookup);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override IList<string> NewTypeNames
+	public override IList<string> NewTypeNames
+	{
+		get
 		{
-			get
-			{
 				try
 				{
 					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
@@ -99,30 +99,29 @@ namespace Origam.Schema.EntityModel
 					return new string[] {};
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		public Guid LookupId;
+	#region Properties
+	public Guid LookupId;
 
-		[Category("Reference")]
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("lookup", "LookupId")]
-        public IDataLookup Lookup
+	[Category("Reference")]
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("lookup", "LookupId")]
+	public IDataLookup Lookup
+	{
+		get
 		{
-			get
-			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
 			}
-			set
-			{
+		set
+		{
 				this.LookupId = (Guid)value.PrimaryKey["Id"];
 
 				this.Name = this.Lookup.Name;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

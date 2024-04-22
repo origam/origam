@@ -23,20 +23,20 @@ using System.Collections;
 using System.Linq;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service
-{
-	/// <summary>
-	/// Summary description for CustomParameterService.
-	/// </summary>
-	public static class CustomParameterService
-	{
-		private static ArrayList _customParameters = new ArrayList();
-		private static bool _isInitialized = false;
+namespace Origam.DA.Service;
 
-		private static ArrayList CustomParameters
+/// <summary>
+/// Summary description for CustomParameterService.
+/// </summary>
+public static class CustomParameterService
+{
+	private static ArrayList _customParameters = new ArrayList();
+	private static bool _isInitialized = false;
+
+	private static ArrayList CustomParameters
+	{
+		get
 		{
-			get
-			{
 				if(! _isInitialized)
 				{
 					Initialize();
@@ -44,10 +44,10 @@ namespace Origam.DA.Service
 
 				return _customParameters;
 			}
-		}
+	}
 
-		public static ICustomParameter MatchParameter(string parameterName)
-		{
+	public static ICustomParameter MatchParameter(string parameterName)
+	{
 			foreach(ICustomParameter customParameter in CustomParameterService.CustomParameters)
 			{
 				if(parameterName.EndsWith(customParameter.Name))
@@ -59,8 +59,8 @@ namespace Origam.DA.Service
 			return null;
 		}
 
-	    public static string GetFirstNonCustomParameter(DataStructureMethod method)
-	    {
+	public static string GetFirstNonCustomParameter(DataStructureMethod method)
+	{
             if (method == null)
             {
                 return null;
@@ -74,8 +74,8 @@ namespace Origam.DA.Service
 	    }
 
 
-        private static void Initialize()
-		{
+	private static void Initialize()
+	{
 			_customParameters.Add(new CustomParameters.CurrentDateCustomParameter());
 			_customParameters.Add(new CustomParameters.CurrentDateLastMinuteCustomParameter());
 			_customParameters.Add(new CustomParameters.CurrentDateTimeCustomParameter());
@@ -87,5 +87,4 @@ namespace Origam.DA.Service
 
 			_isInitialized = true;
 		}
-	}
 }

@@ -28,100 +28,100 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public enum DatabaseMappingObjectType 
 {
-	public enum DatabaseMappingObjectType 
+	Table = 0,
+	View = 1
+}
+
+/// <summary>
+/// Maps physical table to an entity.
+/// </summary>
+[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
+[HelpTopic("Entities")]
+[ClassMetaVersion("6.0.0")]
+public class TableMappingItem : AbstractDataEntity
+{
+	public TableMappingItem() {}
+
+	public TableMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public TableMappingItem(Key primaryKey) : base(primaryKey)	{}
+
+	#region Properties
+	private string _sourceTableName;
+	[Category("Mapping")]
+	[StringNotEmptyModelElementRule()]
+	[Description("Name of the database table name. When loading data from a database for this entity, this name will be used as the table name.")]
+	[XmlAttribute("mappedObjectName")]
+	public string MappedObjectName
 	{
-		Table = 0,
-		View = 1
-	}
-
-	/// <summary>
-	/// Maps physical table to an entity.
-	/// </summary>
-	[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
-    [HelpTopic("Entities")]
-    [ClassMetaVersion("6.0.0")]
-	public class TableMappingItem : AbstractDataEntity
-	{
-		public TableMappingItem() {}
-
-		public TableMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public TableMappingItem(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		private string _sourceTableName;
-		[Category("Mapping")]
-		[StringNotEmptyModelElementRule()]
-		[Description("Name of the database table name. When loading data from a database for this entity, this name will be used as the table name.")]
-        [XmlAttribute("mappedObjectName")]
-        public string MappedObjectName
+		get
 		{
-			get
-			{
 				return _sourceTableName;
 			}
-			set
-			{
+		set
+		{
 				_sourceTableName = value;
 			}
-		}
+	}
 
-		private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
-		[Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
-		[Description("Type of the database object - View or Table. For views the deployment scripts will not be generated.")]
-        [XmlAttribute("databaseObjectType")]
-        public DatabaseMappingObjectType DatabaseObjectType
+	private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
+	[Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
+	[Description("Type of the database object - View or Table. For views the deployment scripts will not be generated.")]
+	[XmlAttribute("databaseObjectType")]
+	public DatabaseMappingObjectType DatabaseObjectType
+	{
+		get
 		{
-			get
-			{
 				return _databaseObjectType;
 			}
-			set
-			{
+		set
+		{
 				_databaseObjectType = value;
 			}
-		}
+	}
 
-		private bool _generateDeploymentScript = true;
-		[Category("Mapping"), DefaultValue(true)]
-		[Description("Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one).")]
-        [XmlAttribute("generateDeploymentScript")]
-        public bool GenerateDeploymentScript
+	private bool _generateDeploymentScript = true;
+	[Category("Mapping"), DefaultValue(true)]
+	[Description("Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one).")]
+	[XmlAttribute("generateDeploymentScript")]
+	public bool GenerateDeploymentScript
+	{
+		get
 		{
-			get
-			{
 				return _generateDeploymentScript;
 			}
-			set
-			{
+		set
+		{
 				_generateDeploymentScript = value;
 			}
-		}
+	}
         
-		public Guid LocalizationRelationId = Guid.Empty;
+	public Guid LocalizationRelationId = Guid.Empty;
 
-		[TypeConverter(typeof(EntityRelationConverter))]
-        [XmlReference("localizationRelation", "LocalizationRelationId")]
-        //[RefreshProperties(RefreshProperties.Repaint)]
-        public EntityRelationItem LocalizationRelation
+	[TypeConverter(typeof(EntityRelationConverter))]
+	[XmlReference("localizationRelation", "LocalizationRelationId")]
+	//[RefreshProperties(RefreshProperties.Repaint)]
+	public EntityRelationItem LocalizationRelation
+	{
+		get
 		{
-			get
-			{
 				return (EntityRelationItem)this.PersistenceProvider.RetrieveInstance(typeof(EntityRelationItem), new ModelElementKey(this.LocalizationRelationId));				
 			}
-			set
-			{   
+		set
+		{   
 				this.LocalizationRelationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];				
 			}
-		}
-        #endregion
+	}
+	#endregion
 
-        public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				switch(DatabaseObjectType)
 				{
 					case DatabaseMappingObjectType.Table:
@@ -134,10 +134,10 @@ namespace Origam.Schema.EntityModel
 						return "0";
 				}
 			}
-		}
+	}
 
-		public override void OnNameChanged(string originalName)
-		{
+	public override void OnNameChanged(string originalName)
+	{
 			if(MappedObjectName == "" 
 				|| MappedObjectName == null
 				|| MappedObjectName == originalName)
@@ -146,11 +146,11 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[Browsable(false)]
-		public override ArrayList EntityPrimaryKey
+	[Browsable(false)]
+	public override ArrayList EntityPrimaryKey
+	{
+		get
 		{
-			get
-			{
 				ArrayList list = new ArrayList();
 
 				foreach(IDataEntityColumn column in this.EntityColumns)
@@ -161,16 +161,16 @@ namespace Origam.Schema.EntityModel
 
 				return list;
 			}
-		}
+	}
 
 
-		public override bool CanConvertTo(Type type)
-		{
+	public override bool CanConvertTo(Type type)
+	{
 			return (type == typeof(DetachedEntity));
 		}
 
-		public override ISchemaItem ConvertTo(Type type)
-		{
+	public override ISchemaItem ConvertTo(Type type)
+	{
 			if(type == typeof(DetachedEntity))
 			{
 				var methodInfo = typeof(Function).GetMethod(
@@ -181,8 +181,8 @@ namespace Origam.Schema.EntityModel
 			return base.ConvertTo(type);
 		}
 		
-		protected override ISchemaItem ConvertTo<T>()
-		{
+	protected override ISchemaItem ConvertTo<T>()
+	{
 			var converted = RootProvider.NewItem<T>(SchemaExtensionId, Group);
 			converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
 			converted.Name = this.Name;
@@ -200,15 +200,15 @@ namespace Origam.Schema.EntityModel
 			persistenceProvider.EndTransaction();
 			return converted;
 		}
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			dependencies.Add(this.LocalizationRelation);
 			
 			base.GetExtraDependencies(dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if (item.OldPrimaryKey != null && this.LocalizationRelation != null)
@@ -223,5 +223,4 @@ namespace Origam.Schema.EntityModel
 
 			base.UpdateReferences();
 		}
-	}
 }

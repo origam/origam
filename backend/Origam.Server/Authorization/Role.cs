@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
-{
-    public class Role
-    {
-        public string Id { get; set; }
+namespace Origam.Server;
 
-        public string Name { get; set; }
-    }
+public class Role
+{
+    public string Id { get; set; }
+
+    public string Name { get; set; }
 }

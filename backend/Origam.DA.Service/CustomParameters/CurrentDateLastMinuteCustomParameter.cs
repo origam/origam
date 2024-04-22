@@ -21,25 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.Service.CustomParameters
+namespace Origam.DA.Service.CustomParameters;
+
+/// <summary>
+/// Returns current date's last minute (DD.MM.YYYY 23:59:59.999)
+/// </summary>
+public class CurrentDateLastMinuteCustomParameter : ICustomParameter
 {
-	/// <summary>
-	/// Returns current date's last minute (DD.MM.YYYY 23:59:59.999)
-	/// </summary>
-	public class CurrentDateLastMinuteCustomParameter : ICustomParameter
+	public string Name
 	{
-		public string Name
+		get
 		{
-			get
-			{
 				return "parCurrentDateLastMinute";
 			}
-		}
+	}
 
-		public object Evaluate(UserProfile profile)
-		{
+	public object Evaluate(UserProfile profile)
+	{
 			DateTime now = DateTime.Now;
 			return new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, 999);
 		}
-	}
 }

@@ -23,17 +23,17 @@ using Origam.Schema.EntityModel.Interfaces;
 using System;
 using System.Data;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-    public class LookupServerSideElementRuleAttribute : AbstractModelElementRuleAttribute
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
-        {
             return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
         }
 
-        public override Exception CheckRule(object instance, string memberName)
-        {
+    public override Exception CheckRule(object instance, string memberName)
+    {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
             var iDataLookup = ((ILookupReference)instance).Lookup;
 
@@ -43,5 +43,4 @@ namespace Origam.Schema.EntityModel
             }
             return new DataException("Lookup has to have property isFilteredServerSide on true.");
         }
-    }
 }

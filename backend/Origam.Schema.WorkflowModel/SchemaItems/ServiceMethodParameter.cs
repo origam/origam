@@ -25,38 +25,38 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Parameter that can be used to parametrize any kind of schema item.
+/// </summary>
+[SchemaItemDescription("Parameter", "Parameters", "parameter-blm.png")]
+[HelpTopic("Service+Method+Parameter")]
+[ClassMetaVersion("6.0.0")]
+public class ServiceMethodParameter : SchemaItemParameter
 {
-	/// <summary>
-	/// Parameter that can be used to parametrize any kind of schema item.
-	/// </summary>
-	[SchemaItemDescription("Parameter", "Parameters", "parameter-blm.png")]
-    [HelpTopic("Service+Method+Parameter")]
-    [ClassMetaVersion("6.0.0")]
-    public class ServiceMethodParameter : SchemaItemParameter
+	public ServiceMethodParameter() : base() {}
+	public ServiceMethodParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public ServiceMethodParameter(Key primaryKey) : base(primaryKey)	{}
+
+	enum CallElementsEnum
 	{
-		public ServiceMethodParameter() : base() {}
-		public ServiceMethodParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-		public ServiceMethodParameter(Key primaryKey) : base(primaryKey)	{}
+		ContextReference = 1,
+		DataConstantReference = 2,
+		DataStructureReference = 4,
+		TransformationReference = 8,
+		ReportReference = 16,
+		WorkflowReference = 32,
+		SystemFunctionCall = 64
+	}
 
-		enum CallElementsEnum
-		{
-			ContextReference = 1,
-			DataConstantReference = 2,
-			DataStructureReference = 4,
-			TransformationReference = 8,
-			ReportReference = 16,
-			WorkflowReference = 32,
-			SystemFunctionCall = 64
-		}
-
-		private bool Resolve(CallElementsEnum element)
-		{
+	private bool Resolve(CallElementsEnum element)
+	{
 			return (CallElements & (int)element) == (int)element;
 		}
 
-		private void Set(CallElementsEnum element, bool value)
-		{
+	private void Set(CallElementsEnum element, bool value)
+	{
 			bool current = Resolve(element);
 			if(current == value) return;
 
@@ -70,126 +70,125 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		#region Properties
-		private int _callElements;
-		[Browsable(false)]
-        [XmlAttribute("callElements")]
-        public int CallElements
+	#region Properties
+	private int _callElements;
+	[Browsable(false)]
+	[XmlAttribute("callElements")]
+	public int CallElements
+	{
+		get
 		{
-			get
-			{
 				return _callElements;
 			}
-			set
-			{
+		set
+		{
 				_callElements = value;
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowContextReference")]
-        public bool AllowContextReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowContextReference")]
+	public bool AllowContextReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.ContextReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.ContextReference, value);
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowDataConstantReference")]
-        public bool AllowDataConstantReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowDataConstantReference")]
+	public bool AllowDataConstantReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.DataConstantReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.DataConstantReference, value);
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowDataStructureReference")]
-        public bool AllowDataStructureReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowDataStructureReference")]
+	public bool AllowDataStructureReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.DataStructureReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.DataStructureReference, value);
 			}
-		}
+	}
 		
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowReportReference")]
-        public bool AllowReportReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowReportReference")]
+	public bool AllowReportReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.ReportReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.ReportReference, value);
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowSystemFunctionCall")]
-        public bool AllowSystemFunctionCall
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowSystemFunctionCall")]
+	public bool AllowSystemFunctionCall
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.SystemFunctionCall);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.SystemFunctionCall, value);
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowTransformationReference")]
-        public bool AllowTransformationReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowTransformationReference")]
+	public bool AllowTransformationReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.TransformationReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.TransformationReference, value);
 			}
-		}
+	}
 
-		[DefaultValue(false),
-		Category("Allowed Child Elements")]
-        [XmlAttribute("allowWorkflowReference")]
-        public bool AllowWorkflowReference
+	[DefaultValue(false),
+	 Category("Allowed Child Elements")]
+	[XmlAttribute("allowWorkflowReference")]
+	public bool AllowWorkflowReference
+	{
+		get
 		{
-			get
-			{
 				return Resolve(CallElementsEnum.WorkflowReference);
 			}
-			set
-			{
+		set
+		{
 				Set(CallElementsEnum.WorkflowReference, value);
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

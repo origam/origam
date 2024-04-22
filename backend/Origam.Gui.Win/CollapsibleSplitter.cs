@@ -57,191 +57,191 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 	
 */
 
-namespace Origam.Gui.Win
-{
-	using System;
-	using System.ComponentModel;
-	using System.Drawing;
-	using System.Windows.Forms;
-    
-	#region Enums
-	/// <summary>
-	/// Enumeration to sepcify the visual style to be applied to the CollapsibleSplitter control
-	/// </summary>
-	public enum VisualStyles
-	{
-		Mozilla = 0,
-		XP,
-		Win9x,
-		DoubleDots,
-		Lines
-	}
+namespace Origam.Gui.Win;
 
-	/// <summary>
-	/// Enumeration to specify the current animation state of the control.
-	/// </summary>
-	public enum SplitterState
-	{
-		Collapsed = 0,
-		Expanding,
-		Expanded,
-		Collapsing
-	}
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+    
+#region Enums
+/// <summary>
+/// Enumeration to sepcify the visual style to be applied to the CollapsibleSplitter control
+/// </summary>
+public enum VisualStyles
+{
+	Mozilla = 0,
+	XP,
+	Win9x,
+	DoubleDots,
+	Lines
+}
+
+/// <summary>
+/// Enumeration to specify the current animation state of the control.
+/// </summary>
+public enum SplitterState
+{
+	Collapsed = 0,
+	Expanding,
+	Expanded,
+	Collapsing
+}
 			
+#endregion
+
+/// <summary>
+/// A custom collapsible splitter that can resize, hide and show associated form controls
+/// </summary>
+[ToolboxBitmap(typeof(CollapsibleSplitter))]
+[DesignerAttribute(typeof(CollapsibleSplitterDesigner))]
+public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPaint
+{
+	#region Private Properties
+
+	// declare and define some base properties
+	private bool hot;
+	private System.Drawing.Color hotColor = CalculateColor(SystemColors.Highlight, SystemColors.Window, 70);
+	private System.Windows.Forms.Control controlToHide;
+	private System.Drawing.Rectangle rr;
+	private System.Windows.Forms.Form parentForm;
+	private bool expandParentForm;
+	private VisualStyles visualStyle;
+
+	// Border added in version 1.3
+	private System.Windows.Forms.Border3DStyle borderStyle = System.Windows.Forms.Border3DStyle.Flat;
+
+	// animation controls introduced in version 1.22
+	private System.Windows.Forms.Timer animationTimer;
+	private int controlWidth;
+	private int controlHeight;
+	private int parentFormWidth;
+	private int parentFormHeight;
+	private SplitterState currentState;
+	private int animationDelay = 20;
+	private int animationStep = 20;
+	private bool useAnimations;
+
 	#endregion
 
+	#region Public Properties
+
 	/// <summary>
-	/// A custom collapsible splitter that can resize, hide and show associated form controls
+	/// The initial state of the Splitter. Set to True if the control to hide is not visible by default
 	/// </summary>
-	[ToolboxBitmap(typeof(CollapsibleSplitter))]
-	[DesignerAttribute(typeof(CollapsibleSplitterDesigner))]
-	public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPaint
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("False"),
+	 Description("The initial state of the Splitter. Set to True if the control to hide is not visible by default")]
+	public bool IsCollapsed
 	{
-		#region Private Properties
-
-		// declare and define some base properties
-		private bool hot;
-		private System.Drawing.Color hotColor = CalculateColor(SystemColors.Highlight, SystemColors.Window, 70);
-		private System.Windows.Forms.Control controlToHide;
-		private System.Drawing.Rectangle rr;
-		private System.Windows.Forms.Form parentForm;
-		private bool expandParentForm;
-		private VisualStyles visualStyle;
-
-		// Border added in version 1.3
-		private System.Windows.Forms.Border3DStyle borderStyle = System.Windows.Forms.Border3DStyle.Flat;
-
-		// animation controls introduced in version 1.22
-		private System.Windows.Forms.Timer animationTimer;
-		private int controlWidth;
-		private int controlHeight;
-		private int parentFormWidth;
-		private int parentFormHeight;
-		private SplitterState currentState;
-		private int animationDelay = 20;
-		private int animationStep = 20;
-		private bool useAnimations;
-
-		#endregion
-
-		#region Public Properties
-
-		/// <summary>
-		/// The initial state of the Splitter. Set to True if the control to hide is not visible by default
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("False"),
-		Description("The initial state of the Splitter. Set to True if the control to hide is not visible by default")]
-		public bool IsCollapsed
-		{
-			get
-			{ 
+		get
+		{ 
 				if(this.controlToHide!= null)
 					return !this.controlToHide.Visible; 
 				else
 					return true;
 			}
-		}
+	}
 
-		/// <summary>
-		/// The System.Windows.Forms.Control that the splitter will collapse
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue(""),
-		Description("The System.Windows.Forms.Control that the splitter will collapse")]
-		public System.Windows.Forms.Control ControlToHide
-		{
-			get{ return this.controlToHide; }
-			set{ this.controlToHide = value; }
-		}
+	/// <summary>
+	/// The System.Windows.Forms.Control that the splitter will collapse
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue(""),
+	 Description("The System.Windows.Forms.Control that the splitter will collapse")]
+	public System.Windows.Forms.Control ControlToHide
+	{
+		get{ return this.controlToHide; }
+		set{ this.controlToHide = value; }
+	}
 
-		/// <summary>
-		/// Determines if the collapse and expanding actions will be animated
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("True"),
-		Description("Determines if the collapse and expanding actions will be animated")]
-		public bool UseAnimations
-		{
-			get { return this.useAnimations; }
-			set { this.useAnimations = value; }
-		}
+	/// <summary>
+	/// Determines if the collapse and expanding actions will be animated
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("True"),
+	 Description("Determines if the collapse and expanding actions will be animated")]
+	public bool UseAnimations
+	{
+		get { return this.useAnimations; }
+		set { this.useAnimations = value; }
+	}
 
-		/// <summary>
-		/// The delay in millisenconds between animation steps
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("20"),
-		Description("The delay in millisenconds between animation steps")]
-		public int AnimationDelay
-		{
-			get{ return this.animationDelay; }
-			set{ this.animationDelay = value; }
-		}
+	/// <summary>
+	/// The delay in millisenconds between animation steps
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("20"),
+	 Description("The delay in millisenconds between animation steps")]
+	public int AnimationDelay
+	{
+		get{ return this.animationDelay; }
+		set{ this.animationDelay = value; }
+	}
 
-		/// <summary>
-		/// The amount of pixels moved in each animation step
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("20"),
-		Description("The amount of pixels moved in each animation step")]
-		public int AnimationStep
-		{
-			get{ return this.animationStep; }
-			set{ this.animationStep = value; }
-		}
+	/// <summary>
+	/// The amount of pixels moved in each animation step
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("20"),
+	 Description("The amount of pixels moved in each animation step")]
+	public int AnimationStep
+	{
+		get{ return this.animationStep; }
+		set{ this.animationStep = value; }
+	}
 
-		/// <summary>
-		/// When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("False"),
-		Description("When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed")]
-		public bool ExpandParentForm
-		{
-			get{ return this.expandParentForm; }
-			set{ this.expandParentForm = value; }
-		}
+	/// <summary>
+	/// When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("False"),
+	 Description("When true the entire parent form will be expanded and collapsed, otherwise just the contol to expand will be changed")]
+	public bool ExpandParentForm
+	{
+		get{ return this.expandParentForm; }
+		set{ this.expandParentForm = value; }
+	}
 
-		/// <summary>
-		/// The visual style that will be painted on the control
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("VisualStyles.XP"),
-		Description("The visual style that will be painted on the control")]
-		public VisualStyles VisualStyle
-		{
-			get{ return this.visualStyle; }
-			set
-			{ 
+	/// <summary>
+	/// The visual style that will be painted on the control
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("VisualStyles.XP"),
+	 Description("The visual style that will be painted on the control")]
+	public VisualStyles VisualStyle
+	{
+		get{ return this.visualStyle; }
+		set
+		{ 
 				this.visualStyle = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		/// <summary>
-		/// An optional border style to paint on the control. Set to Flat for no border
-		/// </summary>
-		[Bindable(true), Category("Collapsing Options"), DefaultValue("System.Windows.Forms.Border3DStyle.Flat"),
-		Description("An optional border style to paint on the control. Set to Flat for no border")]
-		public System.Windows.Forms.Border3DStyle BorderStyle3D
-		{
-			get{ return this.borderStyle; }
-			set
-			{ 
+	/// <summary>
+	/// An optional border style to paint on the control. Set to Flat for no border
+	/// </summary>
+	[Bindable(true), Category("Collapsing Options"), DefaultValue("System.Windows.Forms.Border3DStyle.Flat"),
+	 Description("An optional border style to paint on the control. Set to Flat for no border")]
+	public System.Windows.Forms.Border3DStyle BorderStyle3D
+	{
+		get{ return this.borderStyle; }
+		set
+		{ 
 				this.borderStyle = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region Public Methods
+	#region Public Methods
 
-		public void ToggleState()
-		{
+	public void ToggleState()
+	{
 			this.ToggleSplitter();
 		}
 
-		#endregion
+	#endregion
         
-		#region Constructor
+	#region Constructor
 
-		public CollapsibleSplitter()
-		{
+	public CollapsibleSplitter()
+	{
 			// Register mouse events
 			this.Click += new System.EventHandler(OnClick);
 			this.Resize += new System.EventHandler(OnResize);
@@ -254,12 +254,12 @@ namespace Origam.Gui.Win
 			this.animationTimer.Tick += new System.EventHandler(this.animationTimerTick);
 		}
 
-		#endregion
+	#endregion
 
-		#region Overrides
+	#region Overrides
 
-		protected override void OnHandleCreated(EventArgs e)
-		{
+	protected override void OnHandleCreated(EventArgs e)
+	{
 			base.OnHandleCreated(e);
 			this.parentForm = this.FindForm();
 
@@ -277,18 +277,18 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected override void OnEnabledChanged(System.EventArgs e)
-		{
+	protected override void OnEnabledChanged(System.EventArgs e)
+	{
 			base.OnEnabledChanged(e);
 			this.Invalidate();
 		}
 
-		#endregion
+	#endregion
   
-		#region Event Handlers
+	#region Event Handlers
 
-		protected override void OnMouseDown(MouseEventArgs e)
-		{
+	protected override void OnMouseDown(MouseEventArgs e)
+	{
 			// if the hider control isn't hot, let the base resize action occur
 			if(this.controlToHide!= null)
 			{
@@ -299,15 +299,15 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnResize(object sender, System.EventArgs e)
-		{
+	private void OnResize(object sender, System.EventArgs e)
+	{
 			this.Invalidate();
 		}
 
-		// this method was updated in version 1.11 to fix a flickering problem
-		// discovered by John O'Byrne
-		private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
+	// this method was updated in version 1.11 to fix a flickering problem
+	// discovered by John O'Byrne
+	private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+	{
 			// check to see if the mouse cursor position is within the bounds of our control
 			if(e.X >= rr.X && e.X <= rr.X + rr.Width && e.Y >= rr.Y && e.Y <= rr.Y + rr.Height)
 			{
@@ -347,15 +347,15 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnMouseLeave(object sender, System.EventArgs e)
-		{
+	private void OnMouseLeave(object sender, System.EventArgs e)
+	{
 			// ensure that the hot state is removed
 			this.hot = false;
 			this.Invalidate();;
 		}
 
-		private void OnClick(object sender, System.EventArgs e)
-		{
+	private void OnClick(object sender, System.EventArgs e)
+	{
 			if(controlToHide!= null && hot && 
 				currentState != SplitterState.Collapsing && 
 				currentState != SplitterState.Expanding)
@@ -364,8 +364,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void ToggleSplitter()
-		{
+	private void ToggleSplitter()
+	{
 
 			// if an animation is currently in progress for this control, drop out
 			if(currentState == SplitterState.Collapsing || currentState == SplitterState.Expanding)
@@ -460,14 +460,14 @@ namespace Origam.Gui.Win
 			
 		}
 
-		#endregion
+	#endregion
 
-		#region Implementation
+	#region Implementation
 
-		#region Animation Timer Tick
+	#region Animation Timer Tick
 
-		private void animationTimerTick(object sender, System.EventArgs e)
-		{
+	private void animationTimerTick(object sender, System.EventArgs e)
+	{
 			switch(currentState)
 			{
 				case SplitterState.Collapsing:
@@ -585,13 +585,13 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		#endregion
+	#endregion
 
-		#region Paint the control
+	#region Paint the control
 
-		// OnPaint is now an override rather than an event in version 1.1
-		protected override void OnPaint(PaintEventArgs e)
-		{
+	// OnPaint is now an override rather than an event in version 1.1
+	protected override void OnPaint(PaintEventArgs e)
+	{
 			ModificationStarts?.Invoke(this, EventArgs.Empty);
 			int width = (this.Enabled ? 8 : 1);
 
@@ -852,13 +852,13 @@ namespace Origam.Gui.Win
 			g.Dispose();
 			ModificationEnds?.Invoke(this, EventArgs.Empty);
 		}
-		#endregion	
+	#endregion	
 
-		#region Arrow Polygon Array
+	#region Arrow Polygon Array
 
-		// This creates a point array to draw a arrow-like polygon
-		private Point[] ArrowPointArray(int x, int y)
-		{
+	// This creates a point array to draw a arrow-like polygon
+	private Point[] ArrowPointArray(int x, int y)
+	{
 			Point[] point = new Point[3];
 
 			if(controlToHide!= null)
@@ -912,13 +912,13 @@ namespace Origam.Gui.Win
 			return point;
 		}
 
-		#endregion
+	#endregion
 
-		#region Color Calculator
+	#region Color Calculator
 
-		// this method was borrowed from the RichUI Control library by Sajith M
-		private static Color CalculateColor(Color front, Color back, int alpha)
-		{	
+	// this method was borrowed from the RichUI Control library by Sajith M
+	private static Color CalculateColor(Color front, Color back, int alpha)
+	{	
 			// solid color obtained as a result of alpha-blending
 
 			Color frontColor = Color.FromArgb(255, front);
@@ -941,36 +941,34 @@ namespace Origam.Gui.Win
 			return  Color.FromArgb(255, newRed, newGreen, newBlue);
 		}
 	        
-		#endregion
+	#endregion
 
-		#endregion
+	#endregion
 
-		public event EventHandler ModificationStarts;
-		public event EventHandler ModificationEnds;
-	}
+	public event EventHandler ModificationStarts;
+	public event EventHandler ModificationEnds;
+}
 
-	/// <summary>
-	/// A simple designer class for the CollapsibleSplitter control to remove 
-	/// unwanted properties at design time.
-	/// </summary>
-	public class CollapsibleSplitterDesigner : System.Windows.Forms.Design.ControlDesigner
+/// <summary>
+/// A simple designer class for the CollapsibleSplitter control to remove 
+/// unwanted properties at design time.
+/// </summary>
+public class CollapsibleSplitterDesigner : System.Windows.Forms.Design.ControlDesigner
+{
+	public CollapsibleSplitterDesigner()
 	{
-		public CollapsibleSplitterDesigner()
-		{
 		}
 
-		protected override void PreFilterProperties(System.Collections.IDictionary properties)
-		{
+	protected override void PreFilterProperties(System.Collections.IDictionary properties)
+	{
 			properties.Remove("IsCollapsed");
 			properties.Remove("BorderStyle");
 			properties.Remove("Size");
 		}
-	}
-
-	public interface ICanCangeOnPaint
-	{
-		event EventHandler ModificationStarts;
-		event EventHandler ModificationEnds;
-	}
 }
 
+public interface ICanCangeOnPaint
+{
+	event EventHandler ModificationStarts;
+	event EventHandler ModificationEnds;
+}

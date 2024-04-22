@@ -23,175 +23,175 @@ using System;
 using System.Xml.Serialization;
 using System.Globalization;
 
-namespace Origam.Workflow
-{
-	/// <summary>
-	/// Summary description for TextReaderAgentSeparator.
-	/// </summary>
-	[Serializable()]
-	public class TextReaderOptionsField
-	{
-		private string _name;
-		private string _culture;
-		private string _format;
-		private bool _isQuoted = false;
-		private bool _isOptional = false;
-		private string _quoteChar;
-		private string _decimalSeparator;
-		private int _length = 0;
-		private string _nullValue = null;
-		private bool _isIgnored = false;
-		private string[] _alternativeFormats;
+namespace Origam.Workflow;
 
-		public TextReaderOptionsField()
-		{
+/// <summary>
+/// Summary description for TextReaderAgentSeparator.
+/// </summary>
+[Serializable()]
+public class TextReaderOptionsField
+{
+	private string _name;
+	private string _culture;
+	private string _format;
+	private bool _isQuoted = false;
+	private bool _isOptional = false;
+	private string _quoteChar;
+	private string _decimalSeparator;
+	private int _length = 0;
+	private string _nullValue = null;
+	private bool _isIgnored = false;
+	private string[] _alternativeFormats;
+
+	public TextReaderOptionsField()
+	{
 		}
 
-		[XmlAttribute()]
-		public string Name
+	[XmlAttribute()]
+	public string Name
+	{
+		get
 		{
-			get
-			{
 				return _name;
 			}
-			set
-			{
+		set
+		{
 				_name = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public string Format
+	[XmlAttribute()]
+	public string Format
+	{
+		get
 		{
-			get
-			{
 				return _format;
 			}
-			set
-			{
+		set
+		{
 				_format = value;
 			}
-		}
+	}
 
-		[XmlArrayItem("Format", typeof(string))]
-		public string[] AlternativeFormats
+	[XmlArrayItem("Format", typeof(string))]
+	public string[] AlternativeFormats
+	{
+		get
 		{
-			get
-			{
 				return _alternativeFormats;
 			}
-			set
-			{
+		set
+		{
 				_alternativeFormats = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public string DecimalSeparator
+	[XmlAttribute()]
+	public string DecimalSeparator
+	{
+		get
 		{
-			get
-			{
 				return _decimalSeparator;
 			}
-			set
-			{
+		set
+		{
 				_decimalSeparator = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public string Culture
+	[XmlAttribute()]
+	public string Culture
+	{
+		get
 		{
-			get
-			{
 				return _culture;
 			}
-			set
-			{
+		set
+		{
 				_culture = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public bool IsQuoted
+	[XmlAttribute()]
+	public bool IsQuoted
+	{
+		get
 		{
-			get
-			{
 				return _isQuoted;
 			}
-			set
-			{
+		set
+		{
 				_isQuoted = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public bool IsOptional
+	[XmlAttribute()]
+	public bool IsOptional
+	{
+		get
 		{
-			get
-			{
 				return _isOptional;
 			}
-			set
-			{
+		set
+		{
 				_isOptional = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public bool IsIgnored
+	[XmlAttribute()]
+	public bool IsIgnored
+	{
+		get
 		{
-			get
-			{
 				return _isIgnored;
 			}
-			set
-			{
+		set
+		{
 				_isIgnored = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public string QuoteChar
+	[XmlAttribute()]
+	public string QuoteChar
+	{
+		get
 		{
-			get
-			{
 				return _quoteChar;
 			}
-			set
-			{
+		set
+		{
 				_quoteChar = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public int Length
+	[XmlAttribute()]
+	public int Length
+	{
+		get
 		{
-			get
-			{
 				return _length;
 			}
-			set
-			{
+		set
+		{
 				_length = value;
 			}
-		}
+	}
 
-		[XmlAttribute()]
-		public string NullValue
+	[XmlAttribute()]
+	public string NullValue
+	{
+		get
 		{
-			get
-			{
 				return _nullValue;
 			}
-			set
-			{
+		set
+		{
 				_nullValue = value;
 			}
-		}
+	}
 
-		public CultureInfo GetCulture()
-		{
+	public CultureInfo GetCulture()
+	{
 			if(_culture == null)
 			{
 				return CultureInfo.InvariantCulture;
@@ -202,10 +202,10 @@ namespace Origam.Workflow
 			}
 		}
 
-		public string[] Formats
+	public string[] Formats
+	{
+		get
 		{
-			get
-			{
 				if(this.AlternativeFormats == null || this.AlternativeFormats.Length == 0)
 				{
 					if(this.Format == null)
@@ -234,6 +234,5 @@ namespace Origam.Workflow
 					}
 				}
 			}
-		}
 	}
 }

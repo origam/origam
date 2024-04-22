@@ -26,27 +26,27 @@ using System;
 using System.Data;
 using Origam.Extensions;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+
+public class RowSecurityStateBuilder
 {
-    public class RowSecurityStateBuilder
+    private static readonly log4net.ILog log =
+        log4net.LogManager.GetLogger(System.Reflection.MethodBase.
+            GetCurrentMethod().DeclaringType);
+    public RowSecurityState Result { get; private set; }
+    private DataRow row;
+    private RuleEngine ruleEngine;
+    private Guid entityId;
+    private bool isNew;
+    private XmlContainer originalData;
+    private XmlContainer actualData;
+    private bool isBuildable;
+    private RuleEvaluationCache ruleEvaluationCache;
+
+
+    public static RowSecurityState BuildFull(RuleEngine ruleEngine,
+        DataRow row, object profileId, Guid formId)
     {
-        private static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.
-                GetCurrentMethod().DeclaringType);
-        public RowSecurityState Result { get; private set; }
-        private DataRow row;
-        private RuleEngine ruleEngine;
-        private Guid entityId;
-        private bool isNew;
-        private XmlContainer originalData;
-        private XmlContainer actualData;
-        private bool isBuildable;
-        private RuleEvaluationCache ruleEvaluationCache;
-
-
-        public static RowSecurityState BuildFull(RuleEngine ruleEngine,
-            DataRow row, object profileId, Guid formId)
-        {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
             if (!builder.isBuildable)
             {
@@ -59,9 +59,9 @@ namespace Origam.Rule
                 .Result;
         }
 
-        public static RowSecurityState BuildWithoutRelationsAndActions(
-            RuleEngine ruleEngine, DataRow row)
-        {
+    public static RowSecurityState BuildWithoutRelationsAndActions(
+        RuleEngine ruleEngine, DataRow row)
+    {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
             if (!builder.isBuildable)
             {
@@ -72,10 +72,10 @@ namespace Origam.Rule
                 .Result;
         }
 
-        public static RowSecurityState
-            BuildJustMainEntityRowLevelEvenWithoutFields(RuleEngine ruleEngine,
+    public static RowSecurityState
+        BuildJustMainEntityRowLevelEvenWithoutFields(RuleEngine ruleEngine,
             DataRow row)
-        {
+    {
             var builder = new RowSecurityStateBuilder(row, ruleEngine);
             if (!builder.isBuildable)
             {
@@ -85,8 +85,8 @@ namespace Origam.Rule
                 .Result;
         }
 
-        private RowSecurityStateBuilder(DataRow row, RuleEngine ruleEngine)
-        {
+    private RowSecurityStateBuilder(DataRow row, RuleEngine ruleEngine)
+    {
             if (!DatasetTools.HasRowValidParent(row)
                 || row.Table.ExtendedProperties.Contains("EntityId"))
             {
@@ -109,8 +109,8 @@ namespace Origam.Rule
             isBuildable = true;
         }
 
-        private RowSecurityStateBuilder AddMainEntityRowStateAndFormatting()
-        {
+    private RowSecurityStateBuilder AddMainEntityRowStateAndFormatting()
+    {
             if (!isBuildable)
             {
                 return this;
@@ -133,8 +133,8 @@ namespace Origam.Rule
             return this;
         }
 
-        private RowSecurityStateBuilder AddMainEntityFieldStates()
-        {
+    private RowSecurityStateBuilder AddMainEntityFieldStates()
+    {
             if (!isBuildable)
             {
                 return this;
@@ -169,86 +169,86 @@ namespace Origam.Rule
             return this;
         }      
 
-        private RowSecurityStateBuilder AddRelations(object profileId)
+    private RowSecurityStateBuilder AddRelations(object profileId)
+    {
+        if (!isBuildable)
         {
-            if (!isBuildable)
+            return this;
+        }
+        foreach (DataRelation rel in row.Table.ChildRelations)
+        {
+            Guid childEntityId = (Guid)rel.ChildTable.
+                ExtendedProperties["EntityId"];
+            bool isDummyRow = false;
+            DataRow childRow = null;
+            DataRow[] childRows = row.GetChildRows(rel);                
+            try
             {
-                return this;
-            }
-            foreach (DataRelation rel in row.Table.ChildRelations)
-            {
-                Guid childEntityId = (Guid)rel.ChildTable.
-                    ExtendedProperties["EntityId"];
-                bool isDummyRow = false;
-                DataRow childRow = null;
-                DataRow[] childRows = row.GetChildRows(rel);                
-                try
+                if (childRows.Length > 0)
                 {
-                    if (childRows.Length > 0)
-                    {
-                        childRow = childRows[0];
-                    }
-                    else
-                    {
-                        isDummyRow = true;
-                        childRow = DatasetTools.CreateRow(row,
-                            rel.ChildTable, rel, profileId);
+                    childRow = childRows[0];
+                }
+                else
+                {
+                    isDummyRow = true;
+                    childRow = DatasetTools.CreateRow(row,
+                        rel.ChildTable, rel, profileId);
 
-                        // go through each column and lookup any looked-up
-                        // column values
-                        foreach (DataColumn childCol in
-                            childRow.Table.Columns)
-                        {
+                    // go through each column and lookup any looked-up
+                    // column values
+                    foreach (DataColumn childCol in
+                             childRow.Table.Columns)
+                    {
 #if !ORIGAM_SERVER
                 if (childRow.RowState != DataRowState.Unchanged
                     && childRow.RowState != DataRowState.Detached)
                 {
 #endif
-                            ruleEngine.ProcessRulesLookupFields(childRow,
-                                childCol.ColumnName);
+                        ruleEngine.ProcessRulesLookupFields(childRow,
+                            childCol.ColumnName);
 #if !ORIGAM_SERVER
                 }
 #endif
-                        }
                     }
-                    XmlContainer originalChildData = DatasetTools.GetRowXml(
-                        childRow, DataRowVersion.Original);
-                    XmlContainer actualChildData = DatasetTools.GetRowXml(
-                        childRow, childRow.HasVersion(DataRowVersion.Proposed)
+                }
+                XmlContainer originalChildData = DatasetTools.GetRowXml(
+                    childRow, DataRowVersion.Original);
+                XmlContainer actualChildData = DatasetTools.GetRowXml(
+                    childRow, childRow.HasVersion(DataRowVersion.Proposed)
                         ? DataRowVersion.Proposed : DataRowVersion.Default);
-                    bool allowRelationCreate = ruleEngine.
-                        EvaluateRowLevelSecurityState(originalChildData,
+                bool allowRelationCreate = ruleEngine.
+                    EvaluateRowLevelSecurityState(originalChildData,
                         actualChildData, null,
                         CredentialType.Create,
                         childEntityId, Guid.Empty,
                         row.RowState == DataRowState.Added 
-                            || row.RowState == DataRowState.Detached,
+                        || row.RowState == DataRowState.Detached,
                         ruleEvaluationCache
                     );
-                    Result.Relations.Add(new RelationSecurityState(
-                        rel.ChildTable.TableName, allowRelationCreate));
-                }
-                catch (Exception ex)
+                Result.Relations.Add(new RelationSecurityState(
+                    rel.ChildTable.TableName, allowRelationCreate));
+            }
+            catch (Exception ex)
+            {
+                if (log.IsErrorEnabled)
                 {
-                    if (log.IsErrorEnabled)
-                    {
-                        log.LogOrigamError(string.Format(
-                            "Failed evaluating security rule for "
-                            + "child relation {0} for entity {1}",
-                            rel?.RelationName, entityId), ex);
-                    }
-                    throw;
+                    log.LogOrigamError(string.Format(
+                        "Failed evaluating security rule for "
+                        + "child relation {0} for entity {1}",
+                        rel?.RelationName, entityId), ex);
                 }
-                finally
-                {
-                    if (isDummyRow && childRow != null) childRow.Delete();
-                }
-            }                
-            return this;
-        }
+                throw;
+            }
+            finally
+            {
+                if (isDummyRow && childRow != null) childRow.Delete();
+            }
+        }                
+        return this;
+    }
 
-        private RowSecurityStateBuilder AddDisabledActions(Guid formId)
-        {
+    private RowSecurityStateBuilder AddDisabledActions(Guid formId)
+    {
             if (!isBuildable)
             {
                 return this;
@@ -257,5 +257,4 @@ namespace Origam.Rule
                 originalData, actualData, entityId, formId);            
             return this;
         }
-    }
 }

@@ -12,20 +12,20 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service.NamespaceMapping
-{
-    public class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
-    {
-        private readonly List<PropertyMapping> propertyMappings;
-        private readonly string typeFullName;
-        private static readonly Dictionary<Type, PropertyToNamespaceMapping> instances
-            = new Dictionary<Type, PropertyToNamespaceMapping>();
+namespace Origam.DA.Service.NamespaceMapping;
 
-        public string NodeNamespaceName { get; }
-        public XNamespace NodeNamespace { get; }
+public class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
+{
+    private readonly List<PropertyMapping> propertyMappings;
+    private readonly string typeFullName;
+    private static readonly Dictionary<Type, PropertyToNamespaceMapping> instances
+        = new Dictionary<Type, PropertyToNamespaceMapping>();
+
+    public string NodeNamespaceName { get; }
+    public XNamespace NodeNamespace { get; }
         
-        public static void Init()
-        {
+    public static void Init()
+    {
             if (instances.Count > 0)
             {
                 return;
@@ -47,8 +47,8 @@ namespace Origam.DA.Service.NamespaceMapping
                 .ForEach(AddMapping);
         }
 
-        private static IEnumerable<Type> GetTypes(Assembly assembly)
-        {
+    private static IEnumerable<Type> GetTypes(Assembly assembly)
+    {
             try
             {
                 return assembly.GetTypes();
@@ -74,8 +74,8 @@ namespace Origam.DA.Service.NamespaceMapping
             }
         }
 
-        public static void AddMapping(Type type)
-        {
+    public static void AddMapping(Type type)
+    {
             if (instances.ContainsKey(type))
             {
                 return;
@@ -87,13 +87,13 @@ namespace Origam.DA.Service.NamespaceMapping
                 new PropertyToNamespaceMapping(propertyMappings, typeFullName);
         }
 
-        public static PropertyToNamespaceMapping Get(Type instanceType)
-        {
+    public static PropertyToNamespaceMapping Get(Type instanceType)
+    {
             return instances[instanceType];
         }
 
-        private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, OrigamNameSpace> xmlNamespaceGetter)
-        {
+    private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, OrigamNameSpace> xmlNamespaceGetter)
+    {
             var propertyMappings = instanceType
                 .GetAllBaseTypes()
                 .Where(baseType =>
@@ -107,8 +107,8 @@ namespace Origam.DA.Service.NamespaceMapping
             return propertyMappings;
         }
         
-        protected static IEnumerable<PropertyName> GetXmlPropertyNames(Type type)
-        {
+    protected static IEnumerable<PropertyName> GetXmlPropertyNames(Type type)
+    {
             return type.GetFields()
                 .Cast<MemberInfo>()
                 .Concat(type.GetProperties())
@@ -117,8 +117,8 @@ namespace Origam.DA.Service.NamespaceMapping
                 .Where(x => x != null);
         }
 
-        private static PropertyName ToPropertyName(MemberInfo prop)
-        {
+    private static PropertyName ToPropertyName(MemberInfo prop)
+    {
             string xmlAttributeName;
             if (Attribute.IsDefined(prop, typeof(XmlAttributeAttribute)))
             {
@@ -143,8 +143,8 @@ namespace Origam.DA.Service.NamespaceMapping
             return new PropertyName {Name = prop.Name, XmlAttributeName = xmlAttributeName};
         }
 
-        protected PropertyToNamespaceMapping(List<PropertyMapping> propertyMappings, string typeFullName)
-        {
+    protected PropertyToNamespaceMapping(List<PropertyMapping> propertyMappings, string typeFullName)
+    {
             this.propertyMappings = propertyMappings;
             this.typeFullName = typeFullName;
             
@@ -153,16 +153,16 @@ namespace Origam.DA.Service.NamespaceMapping
             NodeNamespace = mappingForTheInstanceType.XmlNamespace.StringValue;
         }
 
-        public PropertyToNamespaceMapping DeepCopy()
-        {
+    public PropertyToNamespaceMapping DeepCopy()
+    {
             var mappings = propertyMappings
                 .Select(x => x.DeepCopy())
                 .ToList();
             return new PropertyToNamespaceMapping(mappings, typeFullName);
         }
         
-        public void AddNamespacesToDocumentAndAdjustMappings(OrigamXmlDocument xmlDocument)
-        {
+    public void AddNamespacesToDocumentAndAdjustMappings(OrigamXmlDocument xmlDocument)
+    {
             foreach (var propertyMapping in propertyMappings)
             {
                 propertyMapping.XmlNamespaceName = xmlDocument.AddNamespace(
@@ -170,8 +170,8 @@ namespace Origam.DA.Service.NamespaceMapping
                     nameSpace: propertyMapping.XmlNamespace);
             }
         }       
-        public void AddNamespacesToDocumentAndAdjustMappings(OrigamXDocument document)
-        {
+    public void AddNamespacesToDocumentAndAdjustMappings(OrigamXDocument document)
+    {
             foreach (var propertyMapping in propertyMappings)
             {
                 propertyMapping.XmlNamespaceName = document.AddNamespace(
@@ -180,8 +180,8 @@ namespace Origam.DA.Service.NamespaceMapping
             }
         }
 
-        public OrigamNameSpace GetNamespaceByPropertyName(string propertyName)
-        {
+    public OrigamNameSpace GetNamespaceByPropertyName(string propertyName)
+    {
             PropertyMapping propertyMapping = propertyMappings
                 .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
                   ?? throw new Exception(string.Format(
@@ -191,8 +191,8 @@ namespace Origam.DA.Service.NamespaceMapping
             return propertyMapping.XmlNamespace;
         }      
         
-        public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
-        {
+    public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
+    {
             PropertyMapping propertyMapping = propertyMappings
                 .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
                   ?? throw new Exception(string.Format(
@@ -202,37 +202,37 @@ namespace Origam.DA.Service.NamespaceMapping
             return propertyMapping.XmlNamespace.StringValue;
         }
 
-        protected class PropertyName
-        {
-            public string Name { get; set; }
-            public string XmlAttributeName { get; set; }
-        }
+    protected class PropertyName
+    {
+        public string Name { get; set; }
+        public string XmlAttributeName { get; set; }
+    }
 
-        protected class PropertyMapping
-        {
-            public List<PropertyName> PropertyNames { get; }
-            public OrigamNameSpace XmlNamespace { get; }
-            public string XmlNamespaceName { get; set; }
+    protected class PropertyMapping
+    {
+        public List<PropertyName> PropertyNames { get; }
+        public OrigamNameSpace XmlNamespace { get; }
+        public string XmlNamespaceName { get; set; }
 
-            public PropertyMapping(IEnumerable<PropertyName> propertyNames, OrigamNameSpace xmlNamespace, string xmlNamespaceName)
-            {
+        public PropertyMapping(IEnumerable<PropertyName> propertyNames, OrigamNameSpace xmlNamespace, string xmlNamespaceName)
+        {
                 PropertyNames = propertyNames.ToList();
                 XmlNamespace = xmlNamespace;
                 XmlNamespaceName = xmlNamespaceName;
             }
 
-            public bool ContainsPropertyNamed(string propertyName)
-            {
+        public bool ContainsPropertyNamed(string propertyName)
+        {
                 return PropertyNames.Any(propName => propName.Name == propertyName);
             }
 
-            public bool ContainsXmlAttributeNamed(string xmlAttributeName)
-            {
+        public bool ContainsXmlAttributeNamed(string xmlAttributeName)
+        {
                 return PropertyNames.Any(propName => propName.XmlAttributeName == xmlAttributeName);
             }
 
-            public PropertyMapping DeepCopy()
-            {
+        public PropertyMapping DeepCopy()
+        {
                 var propertyNames = PropertyNames
                     .Select(x =>
                         new PropertyName
@@ -242,6 +242,5 @@ namespace Origam.DA.Service.NamespaceMapping
                         });
                 return new PropertyMapping(propertyNames, XmlNamespace, XmlNamespaceName);
             }
-        }
     }
 }

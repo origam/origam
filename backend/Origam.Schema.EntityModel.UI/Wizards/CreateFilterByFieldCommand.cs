@@ -23,78 +23,78 @@ using System;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.UI.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards;
+
+public abstract class AbstractFilterMenuCommand : AbstractMenuCommand
 {
-    public abstract class AbstractFilterMenuCommand : AbstractMenuCommand
-    {
-        public override bool IsEnabled
-        {
-            get
-            {
+	public override bool IsEnabled
+	{
+		get
+		{
                 IDataEntityColumn column = Owner as IDataEntityColumn;
                 return column != null && column.ParentItem is IDataEntity;
             }
-            set
-            {
+		set
+		{
                 throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
             }
-        }
-    }
+	}
+}
 
-    /// <summary>
-    /// Summary description for CreateFilterByFieldCommand.
-    /// </summary>
-    public class CreateFilterByFieldCommand : AbstractFilterMenuCommand
-    {
-		public override void Run()
-		{
+/// <summary>
+/// Summary description for CreateFilterByFieldCommand.
+/// </summary>
+public class CreateFilterByFieldCommand : AbstractFilterMenuCommand
+{
+	public override void Run()
+	{
 			IDataEntityColumn field = Owner as IDataEntityColumn;
 			EntityHelper.CreateFilter(field, "Equal", "GetBy", false, GeneratedModelElements);
 		}
-	}
+}
 
-	public class CreateFilterWithParameterByFieldCommand : AbstractFilterMenuCommand
-    {
-		public override void Run()
-		{
+public class CreateFilterWithParameterByFieldCommand : AbstractFilterMenuCommand
+{
+	public override void Run()
+	{
 			IDataEntityColumn field = Owner as IDataEntityColumn;
 			EntityHelper.CreateFilter(field, "Equal", "GetBy", true, GeneratedModelElements);
 		}
-	}
+}
 
-	public class CreateFilterLikeWithParameterByFieldCommand : AbstractFilterMenuCommand
-    {
-		public override void Run()
-		{
+public class CreateFilterLikeWithParameterByFieldCommand : AbstractFilterMenuCommand
+{
+	public override void Run()
+	{
 			IDataEntityColumn field = Owner as IDataEntityColumn;
 			EntityHelper.CreateFilter(field, "Like", "GetLike", true, GeneratedModelElements);
 		}
-	}
+}
 
-	public class CreateFilterByListWithParameterByFieldCommand : AbstractFilterMenuCommand
-    {
-		public override void Run()
-		{
+public class CreateFilterByListWithParameterByFieldCommand : AbstractFilterMenuCommand
+{
+	public override void Run()
+	{
 			IDataEntityColumn field = Owner as IDataEntityColumn;
 			EntityHelper.CreateFilter(field, "In", "GetBy", true, GeneratedModelElements);
 		}
-	}
+}
 
-	public class CreateFilterLikeByFieldCommand : AbstractFilterMenuCommand
-    {
-		public override void Run()
-		{
+public class CreateFilterLikeByFieldCommand : AbstractFilterMenuCommand
+{
+	public override void Run()
+	{
 			IDataEntityColumn field = Owner as IDataEntityColumn;
 			EntityHelper.CreateFilter(field, "Like", "GetLike", false, GeneratedModelElements);
 		}
-	}
+}
 
-	public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenuCommand
-    {
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+public class CreateFilterBetweenWithParameterByFieldCommand : AbstractFilterMenuCommand
+{
+	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 		    IDataEntityColumn field = Owner as IDataEntityColumn;
             if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
 			IDataEntity entity = field.ParentItem as IDataEntity;
@@ -146,5 +146,4 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 			reference3.Parameter = param2;
 			reference3.Persist();
 		}
-	}
 }

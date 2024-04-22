@@ -26,38 +26,37 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Pie Series", "Data Series", "icon_pie-series.png")]
-    [HelpTopic("Pie+Series")]
-    [ClassMetaVersion("6.0.0")]
-	public class PieSeries : AbstractSeries
-	{
-		public PieSeries() : base() {Init();}
-		public PieSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public PieSeries(Key primaryKey) : base(primaryKey) {Init();}
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Pie Series", "Data Series", "icon_pie-series.png")]
+[HelpTopic("Pie+Series")]
+[ClassMetaVersion("6.0.0")]
+public class PieSeries : AbstractSeries
+{
+	public PieSeries() : base() {Init();}
+	public PieSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public PieSeries(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
+	{
 			
 		}
 
-		#region Properties
-		private string _namefield = "";
-		[Category("Series")]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("nameField")]
-		public string NameField
+	#region Properties
+	private string _namefield = "";
+	[Category("Series")]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("nameField")]
+	public string NameField
+	{
+		get
 		{
-			get
-			{
 				return _namefield;
 			}
-			set
-			{
+		set
+		{
 				_namefield = value;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

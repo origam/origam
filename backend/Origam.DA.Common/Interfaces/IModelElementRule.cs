@@ -21,16 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA
+namespace Origam.DA;
+
+/// <summary>
+/// Summary description for IModelElementRule.
+/// </summary>
+public interface IModelElementRule
 {
-	/// <summary>
-	/// Summary description for IModelElementRule.
-	/// </summary>
-	public interface IModelElementRule
-	{
-        Exception CheckRule(object instance);
-		Exception CheckRule(object instance, string memberName);
-		string Name {get; set;}
-		string ErrorMessage {get; set;}
-	}
+	Exception CheckRule(object instance);
+	Exception CheckRule(object instance, string memberName);
+	string Name {get; set;}
+	string ErrorMessage {get; set;}
 }

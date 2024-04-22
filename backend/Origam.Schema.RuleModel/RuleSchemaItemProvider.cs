@@ -22,15 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System.Collections;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+
+/// <summary>
+/// Summary description for RuleSchemaItemProvider.
+/// </summary>
+public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
 {
-	/// <summary>
-	/// Summary description for RuleSchemaItemProvider.
-	/// </summary>
-	public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
+	public RuleSchemaItemProvider()
 	{
-		public RuleSchemaItemProvider()
-		{
             this.ChildItemTypes.Add(typeof(StartRule));
             this.ChildItemTypes.Add(typeof(EndRule));
             this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
@@ -39,33 +39,33 @@ namespace Origam.Schema.RuleModel
             this.ChildItemTypes.Add(typeof(SimpleDataRule));
         }
 
-		#region ISchemaItemProvider Members
-		public override string RootItemType
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
 		{
-			get
-			{
 				return AbstractRule.CategoryConst;
 			}
-		}
-		public override bool AutoCreateFolder
+	}
+	public override bool AutoCreateFolder
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
-		public override string Group
+	}
+	public override string Group
+	{
+		get
 		{
-			get
-			{
 				return "BL";
 			}
-		}
+	}
 
-        public ArrayList StartRules
-        {
-            get
-            {
+	public ArrayList StartRules
+	{
+		get
+		{
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -76,12 +76,12 @@ namespace Origam.Schema.RuleModel
                 }
                 return result;
             }
-        }
+	}
 
-        public ArrayList EndRules
-        {
-            get
-            {
+	public ArrayList EndRules
+	{
+		get
+		{
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -92,12 +92,12 @@ namespace Origam.Schema.RuleModel
                 }
                 return result;
             }
-        }
+	}
 
-        public ArrayList DataRules
-        {
-            get
-            {
+	public ArrayList DataRules
+	{
+		get
+		{
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -108,12 +108,12 @@ namespace Origam.Schema.RuleModel
                 }
                 return result;
             }
-        }
+	}
 
-        public ArrayList EntityRules
-        {
-            get
-            {
+	public ArrayList EntityRules
+	{
+		get
+		{
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -124,40 +124,39 @@ namespace Origam.Schema.RuleModel
                 }
                 return result;
             }
-        }
-        #endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_27_rules.png";
 			}
-		}
+	}
 
-		public override string NodeText
+	public override string NodeText
+	{
+		get
 		{
-			get
-			{
 				return "Rules";
 			}
-			set
-			{
+		set
+		{
 				base.NodeText = value;
 			}
-		}
-		public override string NodeToolTipText
+	}
+	public override string NodeToolTipText
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
-		}
-
-		#endregion
 	}
+
+	#endregion
 }

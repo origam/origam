@@ -25,19 +25,19 @@ using System.Collections.Generic;
 using System.Data;
 using Origam.DA;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public static class DataTools
 {
-    public static class DataTools
+    public static IDictionary<string, object> DatasetToHashtable(DataSet data)
     {
-        public static IDictionary<string, object> DatasetToHashtable(DataSet data)
-        {
             return DatasetToHashtable(data, null, 0, null, null, null);
         }
 
-        public static IDictionary<string, object> DatasetToHashtable(
-            DataSet data, IList<string> columns, int firstPageRecords, object firstRecordId, 
-            string dataListEntity, SessionStore ss)
-        {
+    public static IDictionary<string, object> DatasetToHashtable(
+        DataSet data, IList<string> columns, int firstPageRecords, object firstRecordId, 
+        string dataListEntity, SessionStore ss)
+    {
             if (data == null) return null;
 
             IDictionary<string, object> resultDataset = new Dictionary<string, object>(data.Tables.Count);
@@ -70,16 +70,16 @@ namespace Origam.Server
             return resultDataset;
         }
 
-        public static IDictionary<string, ArrayList> DatatableToHashtable(
-            DataTable t, bool includeColumnNames)
-        {
+    public static IDictionary<string, ArrayList> DatatableToHashtable(
+        DataTable t, bool includeColumnNames)
+    {
             return DatatableToHashtable(t, null, 0, null, includeColumnNames, null);
         }
 
-        public static IDictionary<string, ArrayList> DatatableToHashtable(
-            DataTable t, IList<string> columns, int initialPageRecords, 
-            object initialRecordId, bool includeColumnNames, SessionStore ss)
-        {
+    public static IDictionary<string, ArrayList> DatatableToHashtable(
+        DataTable t, IList<string> columns, int initialPageRecords, 
+        object initialRecordId, bool includeColumnNames, SessionStore ss)
+    {
             bool primaryKeysOnly = (columns != null);
             IDictionary<string, ArrayList> resultTable = new Dictionary<string, ArrayList>(2);
             string[] allColumnNames = SessionStore.GetColumnNames(t);
@@ -132,8 +132,8 @@ namespace Origam.Server
             return resultTable;
         }
 
-        public static ArrayList DataTableToArrayList(DataTable t, string[] columnNames)
-        {
+    public static ArrayList DataTableToArrayList(DataTable t, string[] columnNames)
+    {
             ArrayList data = new ArrayList(t.Rows.Count);
             foreach (DataRow r in t.Rows)
             {
@@ -145,9 +145,9 @@ namespace Origam.Server
             return data;
         }
 
-        public static ArrayList DataTableToArrayList(DataTable t, int pageSize, 
-            object startRecordId, SessionStore ss)
-        {
+    public static ArrayList DataTableToArrayList(DataTable t, int pageSize, 
+        object startRecordId, SessionStore ss)
+    {
             ArrayList data = new ArrayList(pageSize);
             string[] columnNames = SessionStore.GetColumnNames(t);
             DataRow startRow = null;
@@ -180,5 +180,4 @@ namespace Origam.Server
             }
             return data;
         }
-    }
 }

@@ -30,26 +30,26 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 
-namespace OrigamArchitect.Commands
-{
-	public class GenerateXamlCommand : AbstractMenuCommand
-	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+namespace OrigamArchitect.Commands;
 
-		public override bool IsEnabled
+public class GenerateXamlCommand : AbstractMenuCommand
+{
+	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+	public override bool IsEnabled
+	{
+		get
 		{
-			get
-			{
 				return _schema.ActiveNode is Origam.Schema.MenuModel.Menu;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			SaveFileDialog dialog = new SaveFileDialog();
 			dialog.DefaultExt = "xml";
 			dialog.FileName = "menu.xml";
@@ -72,5 +72,4 @@ namespace OrigamArchitect.Commands
 				}
 			}
 		}
-	}
 }

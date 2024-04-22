@@ -28,29 +28,29 @@ using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
+[HelpTopic("Lookup+Field")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class LookupField : AbstractSchemaItem, IDataEntityColumn
 {
-	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
-    [HelpTopic("Lookup+Field")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class LookupField : AbstractSchemaItem, IDataEntityColumn
+	public const string CategoryConst = "DataEntityColumn";
+		
+	public LookupField() {}
+
+	public LookupField(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public LookupField(Key primaryKey) : base(primaryKey)	{}
+
+	#region IDataEntityColumn Members
+		
+	[Browsable(false)]
+	public OrigamDataType DataType
 	{
-		public const string CategoryConst = "DataEntityColumn";
-		
-		public LookupField() {}
-
-		public LookupField(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public LookupField(Key primaryKey) : base(primaryKey)	{}
-
-		#region IDataEntityColumn Members
-		
-		[Browsable(false)]
-		public OrigamDataType DataType
+		get
 		{
-			get
-			{
 				if(Lookup == null)
 				{
 					return OrigamDataType.Boolean;
@@ -67,14 +67,14 @@ namespace Origam.Schema.EntityModel
 				}
 				return Lookup.ValueDisplayColumn.DataType;
 			}
-			set => throw new NotSupportedException();
-		}
+		set => throw new NotSupportedException();
+	}
 
-		[Browsable(false)]
-		public int DataLength
+	[Browsable(false)]
+	public int DataLength
+	{
+		get
 		{
-			get
-			{
 				if(Lookup == null)
 				{
 					return 0;
@@ -86,59 +86,59 @@ namespace Origam.Schema.EntityModel
 				}
 				return Lookup.ValueColumn.FinalColumn.Field.DataLength;
 			}
-			set => throw new NotSupportedException();
-		}
+		set => throw new NotSupportedException();
+	}
 
-		[Category("Entity Column"), DefaultValue(true)]
-		[XmlAttribute ("allowNulls")]
-		[Description("Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record.")]
-		public bool AllowNulls { get; set; } = true;
+	[Category("Entity Column"), DefaultValue(true)]
+	[XmlAttribute ("allowNulls")]
+	[Description("Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record.")]
+	public bool AllowNulls { get; set; } = true;
 
-		[Category("Entity Column"), DefaultValue(false)]
-		[XmlAttribute ("isPrimaryKey")]
-		[Description("Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys.")]
-		public bool IsPrimaryKey { get; set; } = false;
+	[Category("Entity Column"), DefaultValue(false)]
+	[XmlAttribute ("isPrimaryKey")]
+	[Description("Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys.")]
+	public bool IsPrimaryKey { get; set; } = false;
 
-		[Category("Entity Column")]
-		[XmlAttribute ("caption")]
-		[Localizable(true)]
-		[Description("Default label for the field in a GUI. Audit log viewer also gets the field names from here.")]
-		public string Caption { get; set; } = "";
+	[Category("Entity Column")]
+	[XmlAttribute ("caption")]
+	[Localizable(true)]
+	[Description("Default label for the field in a GUI. Audit log viewer also gets the field names from here.")]
+	public string Caption { get; set; } = "";
 
-		[Category("Entity Column"), DefaultValue(false)]
-		[XmlAttribute ("excludeFromAllFields")]
-		[Description("If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms.")]
-		public bool ExcludeFromAllFields { get; set; } = false;
+	[Category("Entity Column"), DefaultValue(false)]
+	[XmlAttribute ("excludeFromAllFields")]
+	[Description("If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms.")]
+	public bool ExcludeFromAllFields { get; set; } = false;
 
-		[Browsable(false)]
-		public bool AutoIncrement
+	[Browsable(false)]
+	public bool AutoIncrement
+	{
+		get => false;
+		set => throw new NotSupportedException();
+	}
+
+	[Browsable(false)]
+	public long AutoIncrementSeed
+	{
+		get => 0;
+		set => throw new NotSupportedException();
+	}
+
+	[Browsable(false)]
+	public long AutoIncrementStep
+	{
+		get => 1;
+		set => throw new NotSupportedException();
+	}
+
+	public Guid DefaultLookupId;
+
+	[Browsable(false)]
+	[XmlReference("defaultLookup", "DefaultLookupId")]
+	public IDataLookup DefaultLookup
+	{
+		get
 		{
-			get => false;
-			set => throw new NotSupportedException();
-		}
-
-		[Browsable(false)]
-		public long AutoIncrementSeed
-		{
-			get => 0;
-			set => throw new NotSupportedException();
-		}
-
-		[Browsable(false)]
-		public long AutoIncrementStep
-		{
-			get => 1;
-			set => throw new NotSupportedException();
-		}
-
-		public Guid DefaultLookupId;
-
-		[Browsable(false)]
-		[XmlReference("defaultLookup", "DefaultLookupId")]
-		public IDataLookup DefaultLookup
-		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = DefaultLookupId
@@ -153,8 +153,8 @@ namespace Origam.Schema.EntityModel
 					return null;
 				}
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					DefaultLookupId = Guid.Empty;
@@ -164,104 +164,104 @@ namespace Origam.Schema.EntityModel
 					DefaultLookupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[Category("Lookup")]
-		[Description("Lookup to be used by the data service to lookup value by the provided Field.")]
-		[NotNullModelElementRule()]
-		public IDataLookup Lookup
-		{
-			get => DefaultLookup;
-			set => DefaultLookup = value;
-		}
+	[TypeConverter(typeof(DataLookupConverter))]
+	[Category("Lookup")]
+	[Description("Lookup to be used by the data service to lookup value by the provided Field.")]
+	[NotNullModelElementRule()]
+	public IDataLookup Lookup
+	{
+		get => DefaultLookup;
+		set => DefaultLookup = value;
+	}
 
-		[Browsable(false)]
-		public IDataEntity ForeignKeyEntity
-		{
-			get => null;
-			set => throw new NotSupportedException();
-		}
+	[Browsable(false)]
+	public IDataEntity ForeignKeyEntity
+	{
+		get => null;
+		set => throw new NotSupportedException();
+	}
 
-		[Browsable(false)]
-		public IDataEntityColumn ForeignKeyField
-		{
-			get => null;
-			set => throw new NotSupportedException();
-		}
+	[Browsable(false)]
+	public IDataEntityColumn ForeignKeyField
+	{
+		get => null;
+		set => throw new NotSupportedException();
+	}
 
-		[Browsable(false)]
-		public DataConstant DefaultValue
-		{
-			get => null;
-			set => throw new NotSupportedException();
-		}
+	[Browsable(false)]
+	public DataConstant DefaultValue
+	{
+		get => null;
+		set => throw new NotSupportedException();
+	}
 
-		[Browsable(false)]
-		public SchemaItemParameter DefaultValueParameter
-		{
-			get => null;
-			set => throw new NotSupportedException();
-		}
+	[Browsable(false)]
+	public SchemaItemParameter DefaultValueParameter
+	{
+		get => null;
+		set => throw new NotSupportedException();
+	}
 
 
-		[Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-		[XmlAttribute ("xmlMappingType")]
-		public EntityColumnXmlMapping XmlMappingType { get; set; } 
-			= EntityColumnXmlMapping.Attribute;
+	[Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
+	[XmlAttribute ("xmlMappingType")]
+	public EntityColumnXmlMapping XmlMappingType { get; set; } 
+		= EntityColumnXmlMapping.Attribute;
 
-		[Browsable(false)]
-		public OnCopyActionType OnCopyAction
-		{
-			get => OnCopyActionType.Copy;
-			set => throw new NotSupportedException();
-		}
+	[Browsable(false)]
+	public OnCopyActionType OnCopyAction
+	{
+		get => OnCopyActionType.Copy;
+		set => throw new NotSupportedException();
+	}
 
-		[Browsable(false)]
-		public ArrayList RowLevelSecurityRules 
-			=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
+	[Browsable(false)]
+	public ArrayList RowLevelSecurityRules 
+		=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 
-		[Browsable(false)]
-		public ArrayList ConditionalFormattingRules 
-			=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
+	[Browsable(false)]
+	public ArrayList ConditionalFormattingRules 
+		=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 
-		[Browsable(false)]
-		public ArrayList DynamicLabels 
-			=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
-		#endregion
+	[Browsable(false)]
+	public ArrayList DynamicLabels 
+		=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+	#endregion
 
-		#region Properties
-		public Guid FieldId;
+	#region Properties
+	public Guid FieldId;
 
-		[TypeConverter(typeof(EntityColumnReferenceConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[Category("Lookup")]
-        [XmlReference("field", "FieldId")]
-        public IDataEntityColumn Field
-		{
-			get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
-			set => this.FieldId = (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(EntityColumnReferenceConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[Category("Lookup")]
+	[XmlReference("field", "FieldId")]
+	public IDataEntityColumn Field
+	{
+		get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+		set => this.FieldId = (Guid)value.PrimaryKey["Id"];
+	}
 
-        [Browsable(false)]
-        public DataEntityConstraint ForeignKeyConstraint => null;
+	[Browsable(false)]
+	public DataEntityConstraint ForeignKeyConstraint => null;
 
-        public string FieldType { get; } = "LookupField";
+	public string FieldType { get; } = "LookupField";
 
-        #endregion
+	#endregion
 
-        #region Overriden AbstractSchemaItem Methods
-        [Browsable(false)]
-		public bool ReadOnly => false;
+	#region Overriden AbstractSchemaItem Methods
+	[Browsable(false)]
+	public bool ReadOnly => false;
 
-		public override bool CanMove(UI.IBrowserNode2 newNode) 
-			=> newNode is IDataEntity;
+	public override bool CanMove(UI.IBrowserNode2 newNode) 
+		=> newNode is IDataEntity;
 
-		public override string ItemType => AbstractDataEntityColumn.CategoryConst;
+	public override string ItemType => AbstractDataEntityColumn.CategoryConst;
 
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			if(DefaultLookup != null)
 			{
 				dependencies.Add(DefaultLookup);
@@ -281,13 +281,13 @@ namespace Origam.Schema.EntityModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void GetParameterReferences(
-			AbstractSchemaItem parentItem, Hashtable list)
-		{
+	public override void GetParameterReferences(
+		AbstractSchemaItem parentItem, Hashtable list)
+	{
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey?.Equals(Field.PrimaryKey) == true)
@@ -299,11 +299,11 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences();
 		}
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[] 
+	#region ISchemaItemFactory Members
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[] 
 		{
 				typeof(EntityFieldSecurityRule),
 				typeof(EntityFieldDependency),
@@ -311,9 +311,9 @@ namespace Origam.Schema.EntityModel
 				typeof(EntityFieldDynamicLabel)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(EntityFieldSecurityRule))
 			{
@@ -333,6 +333,5 @@ namespace Origam.Schema.EntityModel
 			}
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
-		#endregion
-	}
+	#endregion
 }

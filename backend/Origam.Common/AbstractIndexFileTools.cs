@@ -22,18 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 
-namespace Origam
+namespace Origam;
+
+public class AbstractIndexFileTools<T> where T : IndexFileTools, new()
 {
-    public class AbstractIndexFileTools<T> where T : IndexFileTools, new()
+    public static T GetInstance()
     {
-        public static T GetInstance()
-        {
             return new T();
         }
 
-        public void AddEntryToIndexFile(string indexFile, string entry)
-        {
+    public void AddEntryToIndexFile(string indexFile, string entry)
+    {
             File.AppendAllText(indexFile, entry + Environment.NewLine);
         }
-    }
 }

@@ -23,61 +23,61 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for DropDownFilterPart.
+/// </summary>
+public class BoolFilterPart : FilterPart
 {
-	/// <summary>
-	/// Summary description for DropDownFilterPart.
-	/// </summary>
-	public class BoolFilterPart : FilterPart
+	#region Constructor
+	public BoolFilterPart(AsCheckBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 	{
-		#region Constructor
-		public BoolFilterPart(AsCheckBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
-		{
 			this.FilterCheckBox.CaptionPosition = CaptionPosition.None;
 		}
-		#endregion
+	#endregion
 
-		#region Overriden Members
-		public override FilterOperator[] AllowedOperators
+	#region Overriden Members
+	public override FilterOperator[] AllowedOperators
+	{
+		get
 		{
-			get
-			{
 				return new FilterOperator[] {FilterOperator.Equals};
 			}
-		}
+	}
 
-		public override FilterOperator DefaultOperator
+	public override FilterOperator DefaultOperator
+	{
+		get
 		{
-			get
-			{
 				return FilterOperator.Equals;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		private AsCheckBox CheckBox
+	#region Properties
+	private AsCheckBox CheckBox
+	{
+		get
 		{
-			get
-			{
 				return (AsCheckBox)this.FilteredControl;
 			}
-		}
+	}
 
-		AsCheckBox _filterCheckBox = new AsCheckBox();
-		private AsCheckBox FilterCheckBox
+	AsCheckBox _filterCheckBox = new AsCheckBox();
+	private AsCheckBox FilterCheckBox
+	{
+		get
 		{
-			get
-			{
 				return _filterCheckBox;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Overriden Members
+	#region Overriden Members
 
-		public override void CreateFilterControls()
-		{
+	public override void CreateFilterControls()
+	{
 			UnsubscribeEvents();
 			this.FilterControls.Clear();
 
@@ -92,13 +92,13 @@ namespace Origam.Gui.Win
 			SubscribeEvents();
 		}
 
-		public override void LoadValues()
-		{
+	public override void LoadValues()
+	{
 			this.FilterCheckBox.Value = this.Value1;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				if(this.FilterCheckBox != null)
@@ -112,26 +112,25 @@ namespace Origam.Gui.Win
 		}
 
 
-		#endregion
+	#endregion
 
-		#region EventHandlers
-		private void FilterCheckBox_ValueChanged(object sender, EventArgs e)
-		{
+	#region EventHandlers
+	private void FilterCheckBox_ValueChanged(object sender, EventArgs e)
+	{
 			this.Value1 = this.FilterCheckBox.Value;
 		}
-		#endregion
+	#endregion
 
-		#region Private Methods
-		private void SubscribeEvents()
-		{
+	#region Private Methods
+	private void SubscribeEvents()
+	{
 			this.FilterCheckBox.valueChanged += new EventHandler(FilterCheckBox_ValueChanged);
 		}
 
-		private void UnsubscribeEvents()
-		{
+	private void UnsubscribeEvents()
+	{
 			this.FilterCheckBox.valueChanged -= new EventHandler(FilterCheckBox_ValueChanged);
 		}
-		#endregion
+	#endregion
 
-	}
 }

@@ -28,20 +28,20 @@ using Origam.Workbench.Services;
 using Origam.Workflow;
 using Origam.Workflow.WorkQueue;
 
-namespace Origam.OrigamEngine
-{
-    public interface IRuntimeServiceFactory
-    {
-        void InitializeServices();
-        IPersistenceService CreatePersistenceService();
-        IDocumentationService CreateDocumentationService();
-        void UnloadServices();
-    }
+namespace Origam.OrigamEngine;
 
-    public class RuntimeServiceFactory : IRuntimeServiceFactory
+public interface IRuntimeServiceFactory
+{
+    void InitializeServices();
+    IPersistenceService CreatePersistenceService();
+    IDocumentationService CreateDocumentationService();
+    void UnloadServices();
+}
+
+public class RuntimeServiceFactory : IRuntimeServiceFactory
+{
+    public void InitializeServices()
     {
-        public void InitializeServices()
-        {
             ServiceManager.Services.AddService(new MetaModelUpgradeService());
             ServiceManager.Services.AddService(CreatePersistenceService());
             ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
@@ -60,8 +60,8 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.AddService(new AttachmentService());
             ServiceManager.Services.AddService(new RuleEngineService());
         }
-        public void UnloadServices()
-        {
+    public void UnloadServices()
+    {
             List<IWorkbenchService> services = new []
                 {
                     typeof(IPersistenceService),
@@ -88,39 +88,38 @@ namespace Origam.OrigamEngine
             }
             
         }
-        protected virtual IParameterService CreateParameterService()
-        {
+    protected virtual IParameterService CreateParameterService()
+    {
             return new ParameterService();
         }        
         
-        protected virtual IWorkQueueService CreateWorkQueueService()
-        {
+    protected virtual IWorkQueueService CreateWorkQueueService()
+    {
             return new WorkQueueService();
         }
 
-        public IPersistenceService CreatePersistenceService()
-        {
+    public IPersistenceService CreatePersistenceService()
+    {
             return GetPersistenceBuilder().GetPersistenceService();
         }
         
-        public IDocumentationService CreateDocumentationService()
-        {
+    public IDocumentationService CreateDocumentationService()
+    {
             return GetPersistenceBuilder().GetDocumentationService();
         }
         
-        private static IPersistenceBuilder GetPersistenceBuilder()
-        {
+    private static IPersistenceBuilder GetPersistenceBuilder()
+    {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             string[] classpath = settings.ModelProvider.Split(',');
             return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
         }
-    }
+}
 
-    public class TestRuntimeServiceFactory : RuntimeServiceFactory
+public class TestRuntimeServiceFactory : RuntimeServiceFactory
+{
+    protected override IParameterService CreateParameterService()
     {
-        protected override IParameterService CreateParameterService()
-        {
             return new  NullParameterService();
         }
-    }
 }

@@ -23,20 +23,19 @@ using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.GuiModel
-{
-	/// <summary>
-	/// Summary description for CrystalReport.
-	/// </summary>
-	[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
-    [HelpTopic("Crystal+Report")]
-    [ClassMetaVersion("6.0.0")]
-	public class CrystalReport : AbstractDataReport, IDataStructureReference
-	{	
-		public CrystalReport() : base(){}
-		
-		public CrystalReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
+namespace Origam.Schema.GuiModel;
 
-		public CrystalReport(Key primaryKey) : base(primaryKey)	{}
-	}
+/// <summary>
+/// Summary description for CrystalReport.
+/// </summary>
+[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
+[HelpTopic("Crystal+Report")]
+[ClassMetaVersion("6.0.0")]
+public class CrystalReport : AbstractDataReport, IDataStructureReference
+{	
+	public CrystalReport() : base(){}
+		
+	public CrystalReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public CrystalReport(Key primaryKey) : base(primaryKey)	{}
 }

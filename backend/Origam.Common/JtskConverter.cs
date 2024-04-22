@@ -21,65 +21,65 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Geo
+namespace Origam.Geo;
+
+/// <summary>
+/// Summary description for GeoTools.
+/// </summary>
+public class JtskConverter
 {
-	/// <summary>
-	/// Summary description for GeoTools.
-	/// </summary>
-	public class JtskConverter
+	private const double EPS = 1e-4; // relative accuracy
+
+	struct BLH
 	{
-		private const double EPS = 1e-4; // relative accuracy
+		public double B;
+		public double L;
+		public double H;
+	}
 
-		struct BLH
-		{
-			public double B;
-			public double L;
-			public double H;
-		}
+	struct GeoCoords
+	{
+		public double X;
+		public double Y;
+		public double Z;
+	}
 
-		struct GeoCoords
-		{
-			public double X;
-			public double Y;
-			public double Z;
-		}
+	public struct Jtsk
+	{
+		public double X;
+		public double Y;
+	}
 
-		public struct Jtsk
+	public struct Wgs84
+	{
+		public Wgs84(double latitude, double longitude)
 		{
-			public double X;
-			public double Y;
-		}
-
-		public struct Wgs84
-		{
-			public Wgs84(double latitude, double longitude)
-			{
 				Latitude = latitude;
 				Longitude = longitude;
 				Altitude = 0;
 			}
 
-			public double Latitude;
-			public double Longitude;
-			public double Altitude;
-		}
+		public double Latitude;
+		public double Longitude;
+		public double Altitude;
+	}
 
-		struct Bessel
-		{
-			public double Latitude;
-			public double Longitude;
-		}
+	struct Bessel
+	{
+		public double Latitude;
+		public double Longitude;
+	}
 
-		/**
-		 * Calculate distance between two points
-		 * @param x1
-		 * @param y1
-		 * @param x2
-		 * @param y2
-		 * @returns {*}
-		 */
-		private static double distPoints (double x1, double y1, double x2, double y2)
-		{
+	/**
+	 * Calculate distance between two points
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @returns {*}
+	 */
+	private static double distPoints (double x1, double y1, double x2, double y2)
+	{
 			double dist = hypot(x1 - x2, y1 - y2);
 			if (dist < EPS) 
 			{
@@ -89,15 +89,15 @@ namespace Origam.Geo
 			return dist;
 		}
 
-		/**
-		 * Coordinates transformation
-		 * @param xs
-		 * @param ys
-		 * @param zs
-		 * @returns {Array}
-		 */
-		private static GeoCoords transformCoords (GeoCoords s)
-		{
+	/**
+	 * Coordinates transformation
+	 * @param xs
+	 * @param ys
+	 * @param zs
+	 * @returns {Array}
+	 */
+	private static GeoCoords transformCoords (GeoCoords s)
+	{
 			// coeficients of transformation from WGS-84 to JTSK
 			double dx = -570.69;
 			double dy = -85.69;
@@ -115,19 +115,19 @@ namespace Origam.Geo
 			return result;
 		}
 
-		// helper Math functions
-		private static double deg2rad (double deg) 
-		{
+	// helper Math functions
+	private static double deg2rad (double deg) 
+	{
 			return (deg / 180) * Math.PI;
 		}
 
-		private static double rad2deg (double rad) 
-		{
+	private static double rad2deg (double rad) 
+	{
 			return rad / Math.PI * 180;
 		}
 
-		private static double hypot (double x, double y) 
-		{
+	private static double hypot (double x, double y) 
+	{
 			try
 			{
 				return Math.Sqrt(x * x + y * y);
@@ -138,14 +138,14 @@ namespace Origam.Geo
 			}
 		}
 
-		/**
-		 * Conversion from JTSK to WGS-84 (by iteration)
-		 * @param x
-		 * @param y
-		 * @returns {{lat: number, lon: number}}
-		 */
-		public static Wgs84 JTSKtoWGS84 (Jtsk source)
-		{
+	/**
+	 * Conversion from JTSK to WGS-84 (by iteration)
+	 * @param x
+	 * @param y
+	 * @returns {{lat: number, lon: number}}
+	 */
+	public static Wgs84 JTSKtoWGS84 (Jtsk source)
+	{
 			Wgs84 result = new Wgs84();
 
 			if (source.X == 0 && source.Y == 0) 
@@ -237,14 +237,14 @@ namespace Origam.Geo
 			return result;
 		}
 
-		/**
-		 * Conversion from WGS-84 to JTSK
-		 * @param latitude
-		 * @param longitude
-		 * @returns {{x: number, y: number}}
-		 */
-		public static Jtsk WGS84toJTSK (Wgs84 wgs)
-		{
+	/**
+	 * Conversion from WGS-84 to JTSK
+	 * @param latitude
+	 * @param longitude
+	 * @returns {{x: number, y: number}}
+	 */
+	public static Jtsk WGS84toJTSK (Wgs84 wgs)
+	{
 			Jtsk result = new Jtsk();
 
 			if ((wgs.Latitude < 40) || (wgs.Latitude > 60) || (wgs.Longitude < 5) || (wgs.Longitude > 25)) 
@@ -260,15 +260,15 @@ namespace Origam.Geo
 			}
 		}
 
-		/**
-		 * Conversion from ellipsoid WGS-84 to Bessel's ellipsoid
-		 * @param latitude
-		 * @param longitude
-		 * @param altitude
-		 * @returns {Array}
-		 */
-		private static Bessel WGS84toBessel (Wgs84 wgs)
-		{
+	/**
+	 * Conversion from ellipsoid WGS-84 to Bessel's ellipsoid
+	 * @param latitude
+	 * @param longitude
+	 * @param altitude
+	 * @returns {Array}
+	 */
+	private static Bessel WGS84toBessel (Wgs84 wgs)
+	{
 			BLH blh1 = new BLH();
 			blh1.B = deg2rad(wgs.Latitude);
 			blh1.L = deg2rad(wgs.Longitude);
@@ -286,14 +286,14 @@ namespace Origam.Geo
 			return result;
 		}
 
-		/**
-		 * Conversion from Bessel's lat/lon to WGS-84
-		 * @param latitude
-		 * @param longitude
-		 * @returns {{x: number, y: number}}
-		 */
-		private static Jtsk BesseltoJTSK (Bessel bessel)
-		{
+	/**
+	 * Conversion from Bessel's lat/lon to WGS-84
+	 * @param latitude
+	 * @param longitude
+	 * @returns {{x: number, y: number}}
+	 */
+	private static Jtsk BesseltoJTSK (Bessel bessel)
+	{
 			double e     = 0.081696831215303;
 			double n     = 0.97992470462083;
 			double rho_0 = 12310230.12797036;
@@ -333,15 +333,15 @@ namespace Origam.Geo
 			return result;
 		}
 
-		/**
-		 * Conversion from geodetic coordinates to Cartesian coordinates
-		 * @param B
-		 * @param L
-		 * @param H
-		 * @returns {Array}
-		 */
-		private static GeoCoords BLHToGeoCoords(BLH blh)
-		{
+	/**
+	 * Conversion from geodetic coordinates to Cartesian coordinates
+	 * @param B
+	 * @param L
+	 * @param H
+	 * @returns {Array}
+	 */
+	private static GeoCoords BLHToGeoCoords(BLH blh)
+	{
 			//  WGS-84 ellipsoid parameters
 			double a   = 6378137.0;
 			double f_1 = 298.257223563;
@@ -356,15 +356,15 @@ namespace Origam.Geo
 			return result;
 		}
 
-		/**
-		 * Conversion from Cartesian coordinates to geodetic coordinates
-		 * @param x
-		 * @param y
-		 * @param z
-		 * @returns {Array}
-		 */
-		private static BLH GeoCoordsToBLH (GeoCoords coords)
-		{
+	/**
+	 * Conversion from Cartesian coordinates to geodetic coordinates
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @returns {Array}
+	 */
+	private static BLH GeoCoordsToBLH (GeoCoords coords)
+	{
 			// Bessel's ellipsoid parameters
 			double a   = 6377397.15508;
 			double f_1 = 299.152812853;
@@ -383,5 +383,4 @@ namespace Origam.Geo
 
 			return result;
 		}	
-	}
 }

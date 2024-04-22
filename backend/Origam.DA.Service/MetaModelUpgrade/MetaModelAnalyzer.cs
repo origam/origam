@@ -29,27 +29,27 @@ using System.Xml.Linq;
 using Origam.DA.Common;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.MetaModelUpgrade
+namespace Origam.DA.Service.MetaModelUpgrade;
+
+public class MetaModelAnalyzer
 {
-    public class MetaModelAnalyzer
-    {
-        private readonly IMetaModelUpgrader metaModelUpgrader;
-        private readonly IFileWriter fileWriter;
+    private readonly IMetaModelUpgrader metaModelUpgrader;
+    private readonly IFileWriter fileWriter;
         
-        public MetaModelAnalyzer(IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
-        {
+    public MetaModelAnalyzer(IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
+    {
             this.fileWriter = fileWriter;
             this.metaModelUpgrader = metaModelUpgrader;
         }
 
-        public MetaModelAnalyzer(IMetaModelUpgrader metaModelUpgrader)
-        {
+    public MetaModelAnalyzer(IMetaModelUpgrader metaModelUpgrader)
+    {
             this.metaModelUpgrader = metaModelUpgrader;
             fileWriter = new FileWriter();
         }
         
-        public bool TryUpgrade(XFileData xFileData)
-        {
+    public bool TryUpgrade(XFileData xFileData)
+    {
             bool isVersion5 = IsVersion5(xFileData);
             if (isVersion5)
             {
@@ -74,8 +74,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return false;
         }
 
-        private bool IsVersion5(XFileData xFileData)
-        {
+    private bool IsVersion5(XFileData xFileData)
+    {
            return xFileData.Document
                .FileElement
                .Attributes()
@@ -86,8 +86,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                    value == "http://schemas.origam.com/1.0.0/packagepackage");
         }
 
-        private void WriteFile(XFileData xFileData)
-        {
+    private void WriteFile(XFileData xFileData)
+    {
             if (xFileData.Document.IsEmpty)
             {
                 fileWriter.Delete(xFileData.File);
@@ -103,8 +103,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private bool TryUpgrade(XElement classNode, DocumentContainer documentContainer)
-        {
+    private bool TryUpgrade(XElement classNode, DocumentContainer documentContainer)
+    {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
             string fullTypeName = OrigamNameSpace.CreateOrGet(classNode?.Name.NamespaceName).FullTypeName;
@@ -149,9 +149,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return scriptsRun;
         }
 
-        private static Versions GetCurrentClassVersions(string fullTypeName,
-            Versions persistedClassVersions)
-        {
+    private static Versions GetCurrentClassVersions(string fullTypeName,
+        Versions persistedClassVersions)
+    {
             Versions currentClassVersions =
                 Versions.GetCurrentClassVersions(fullTypeName);
 
@@ -167,8 +167,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return currentClassVersions;
         }
 
-        private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
-        {
+    private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
+    {
             return classNode.Attributes()
                 .Select(attr => attr.Name.NamespaceName)
                 .Concat(new[]{classNode.Name.NamespaceName})
@@ -178,28 +178,28 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 .Distinct()
                 .Select(OrigamNameSpace.CreateOrGet);
         }
-    }
+}
 
-    public class DocumentContainer
+public class DocumentContainer
+{
+    private readonly XFileData fileData;
+    public OrigamXDocument Document => fileData.Document;
+    public FileInfo File => fileData.File;
+    private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs 
+        = new Dictionary<UpgradeScriptContainer, Version>();
+
+    public DocumentContainer(XFileData fileData)
     {
-        private readonly XFileData fileData;
-        public OrigamXDocument Document => fileData.Document;
-        public FileInfo File => fileData.File;
-        private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs 
-            = new Dictionary<UpgradeScriptContainer, Version>();
-
-        public DocumentContainer(XFileData fileData)
-        {
             this.fileData = fileData;
         }
 
-        public void ScheduleNamespaceUpgrade(UpgradeScriptContainer scriptContainer, Version toVersion)
-        {
+    public void ScheduleNamespaceUpgrade(UpgradeScriptContainer scriptContainer, Version toVersion)
+    {
             scriptVersionPairs[scriptContainer] = toVersion;
         }
 
-        public void ExecuteNamespaceUpgrade()
-        {
+    public void ExecuteNamespaceUpgrade()
+    {
             foreach (var scriptVersionPair in scriptVersionPairs)
             {
                 Version toVersion = scriptVersionPair.Value;
@@ -207,5 +207,4 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 upgradeScriptContainer.SetVersion(Document, toVersion);
             }
         }
-    }
 }

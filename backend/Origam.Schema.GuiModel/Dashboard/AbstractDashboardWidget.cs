@@ -27,101 +27,100 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+public abstract class AbstractDashboardWidget : AbstractSchemaItem
 {
-	[XmlModelRoot(CategoryConst)]
-	public abstract class AbstractDashboardWidget : AbstractSchemaItem
+	public const string CategoryConst = "DashboardWidget";
+
+	public AbstractDashboardWidget() : base() {Init();}
+	public AbstractDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public AbstractDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
 	{
-		public const string CategoryConst = "DashboardWidget";
-
-		public AbstractDashboardWidget() : base() {Init();}
-		public AbstractDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public AbstractDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
 			this.ChildItemTypes.Add(typeof(DashboardWidgetParameter));
 		}
 
-		[Browsable(false)]
-		public override bool UseFolders
+	[Browsable(false)]
+	public override bool UseFolders
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 		
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
 			return newNode is DashboardWidgetFolder || newNode is DashboardWidgetsSchemaItemProvider;
 		}
 
 
-		#region Properties
-		private string _caption = "";
-		[Category("User Interface")]
-		[StringNotEmptyModelElementRule()]
-		[Localizable(true)]
-        [XmlAttribute("label")]
-		public string Caption
+	#region Properties
+	private string _caption = "";
+	[Category("User Interface")]
+	[StringNotEmptyModelElementRule()]
+	[Localizable(true)]
+	[XmlAttribute("label")]
+	public string Caption
+	{
+		get
 		{
-			get
-			{
 				return _caption;
 			}
-			set
-			{
+		set
+		{
 				_caption = value;
 			}
-		}
+	}
 
-		private string _roles;
-		[Category("Security")]
-		[XmlAttribute("roles")]
-        public string Roles
+	private string _roles;
+	[Category("Security")]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
+	}
 
-		private string _features;
-		[XmlAttribute("features")]
-        public string Features
+	private string _features;
+	[XmlAttribute("features")]
+	public string Features
+	{
+		get
 		{
-			get
-			{
 				return _features;
 			}
-			set
-			{
+		set
+		{
 				_features = value;
 			}
-		}
+	}
 
-		public abstract ArrayList Properties {get;}
+	public abstract ArrayList Properties {get;}
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "29";
 			}
-		}
+	}
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

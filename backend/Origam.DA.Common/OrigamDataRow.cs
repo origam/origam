@@ -22,20 +22,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Data;
 
-namespace Origam.DA
-{
-    public class OrigamDataRow : DataRow
-    {
-        private List<DataColumn> _columnsWithValidChange 
-            = new List<DataColumn>();
-        private bool _hasChangedOnce = false;
+namespace Origam.DA;
 
-        protected internal OrigamDataRow(DataRowBuilder builder) : base(builder)
-        {
+public class OrigamDataRow : DataRow
+{
+    private List<DataColumn> _columnsWithValidChange 
+        = new List<DataColumn>();
+    private bool _hasChangedOnce = false;
+
+    protected internal OrigamDataRow(DataRowBuilder builder) : base(builder)
+    {
         }
 
-        public void AddColumnWithValidChange(DataColumn dataColumn)
-        {
+    public void AddColumnWithValidChange(DataColumn dataColumn)
+    {
             if (!_columnsWithValidChange.Contains(dataColumn))
             {
                 _columnsWithValidChange.Add(dataColumn);
@@ -43,18 +43,18 @@ namespace Origam.DA
             }
         }
 
-        public bool HasColumnWithValidChange()
-        {
+    public bool HasColumnWithValidChange()
+    {
             return _columnsWithValidChange.Count > 0;
         }
 
-        public bool IsColumnWithValidChange(DataColumn dataColumn)
-        {
+    public bool IsColumnWithValidChange(DataColumn dataColumn)
+    {
             return _columnsWithValidChange.Contains(dataColumn);
         }
 
-        public void ResetColumnsWithValidChange()
-        {
+    public void ResetColumnsWithValidChange()
+    {
             _columnsWithValidChange = new List<DataColumn>();
             if (! _hasChangedOnce && this.RowState == DataRowState.Modified)
             {
@@ -62,16 +62,15 @@ namespace Origam.DA
             }
         }
 
-        public bool HasChangedOnce
+    public bool HasChangedOnce
+    {
+        get
         {
-            get
-            {
                 return _hasChangedOnce;
             }
-            set
-            {
+        set
+        {
                 _hasChangedOnce = value;
             }
-        }
     }
 }

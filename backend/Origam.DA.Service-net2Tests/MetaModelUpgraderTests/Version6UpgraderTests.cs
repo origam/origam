@@ -29,16 +29,16 @@ using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 
-namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
+namespace Origam.DA.ServiceTests.MetaModelUpgraderTests;
+
+[TestFixture]
+public class Version6UpgraderTests: ClassUpgradeTestBase
 {
-    [TestFixture]
-    public class Version6UpgraderTests: ClassUpgradeTestBase
-    {
-        protected override string DirName { get; } = "MetaModelUpgraderTests";
+    protected override string DirName { get; } = "MetaModelUpgraderTests";
         
-        [Test]
-        public void ShouldUpgradeToVersion6()
-        {
+    [Test]
+    public void ShouldUpgradeToVersion6()
+    {
             XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
             var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
             sut.Run();
@@ -56,9 +56,9 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Value, Is.Not.Null);
             Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Name.Namespace, Is.EqualTo(testClassNamespace));
         }            
-        [Test]
-        public void ShouldUpgradeGroupReferenceFileToVersion6()
-        {
+    [Test]
+    public void ShouldUpgradeGroupReferenceFileToVersion6()
+    {
             XFileData xFileData = LoadFile("TestOrigamGroupReferenceV5.0.0.origam");
             var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
             sut.Run();
@@ -81,5 +81,4 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("type"))?.Value, Is.EqualTo("group")); 
             Assert.That(secondGroupReferenceNode.Attribute(persistenceNamespace.GetName("refId"))?.Value, Is.EqualTo("d266feb3-ff9e-4ac2-8386-517a31519d06")); 
         }             
-    }
 }

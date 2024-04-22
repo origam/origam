@@ -26,22 +26,22 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Origam.Server.Middleware
-{
-    // Some classes were in different namespaces and/or assemblies in the old .NET 
-    // this creates issues when these classes are received by an old .NET client.
-    // This middleware fixes those issues by replacing the namespaces. 
-    public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
-    {
-        private readonly RequestDelegate next;
+namespace Origam.Server.Middleware;
 
-        public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
-        {
+// Some classes were in different namespaces and/or assemblies in the old .NET 
+// this creates issues when these classes are received by an old .NET client.
+// This middleware fixes those issues by replacing the namespaces. 
+public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
+{
+    private readonly RequestDelegate next;
+
+    public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
+    {
             this.next = next;
         }
 
-        public async Task Invoke(HttpContext context)
-        {
+    public async Task Invoke(HttpContext context)
+    {
             var originalBodyStream = context.Response.Body;
 
             using (var responseBody = new MemoryStream())
@@ -56,8 +56,8 @@ namespace Origam.Server.Middleware
             }
         }
         
-        private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
-        {
+    private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
+    {
             response.Body.Seek(0, SeekOrigin.Begin);
             using (var streamReader = new StreamReader(response.Body))
             {
@@ -73,5 +73,4 @@ namespace Origam.Server.Middleware
                 return new MemoryStream(responseData);
             }
         }
-    }
 }

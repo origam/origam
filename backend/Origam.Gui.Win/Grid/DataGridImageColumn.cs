@@ -23,44 +23,44 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for DataGridImageColumn.
-	/// </summary>
-	public class DataGridImageColumn : DataGridColumnStyle 
-	{
-		private int _width = 0;
-		private int _height = 0;
+namespace Origam.Gui.Win;
 
-		public DataGridImageColumn(int width, int height) : base()
-		{
+/// <summary>
+/// Summary description for DataGridImageColumn.
+/// </summary>
+public class DataGridImageColumn : DataGridColumnStyle 
+{
+	private int _width = 0;
+	private int _height = 0;
+
+	public DataGridImageColumn(int width, int height) : base()
+	{
 			_width = width;
 			_height = height;
 		}
 
-		protected override int GetPreferredHeight(System.Drawing.Graphics g, object value)
-		{
+	protected override int GetPreferredHeight(System.Drawing.Graphics g, object value)
+	{
 			return _height;
 		}
 
-		protected override int GetMinimumHeight()
-		{
+	protected override int GetMinimumHeight()
+	{
 			return _height;
 		}
 
-		protected override Size GetPreferredSize(Graphics g, object value)
-		{
+	protected override Size GetPreferredSize(Graphics g, object value)
+	{
 			return new Size(_width, _height);
 		}
 
-		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, bool alignToRight)
-		{
+	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, bool alignToRight)
+	{
 			this.Paint(g, bounds, source, rowNum);
 		}
 
-		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum)
-		{
+	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum)
+	{
 			object imageData = this.GetColumnValueAtRow(source, rowNum);
 
 			try
@@ -94,20 +94,19 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected override void Abort(int rowNum)
-		{
+	protected override void Abort(int rowNum)
+	{
 			
 		}
 
-		protected override bool Commit(CurrencyManager dataSource, int rowNum)
-		{
+	protected override bool Commit(CurrencyManager dataSource, int rowNum)
+	{
 			return true;
 		}
 
-		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-		{
+	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+	{
 			
 		}
 
-	}
 }

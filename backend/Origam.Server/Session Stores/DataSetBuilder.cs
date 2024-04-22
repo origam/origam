@@ -12,19 +12,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace Origam.Server.Session_Stores
-{
-    public class DataSetBuilder
-    {
-        private readonly object _lock = new object();
+namespace Origam.Server.Session_Stores;
 
-        public DataSet InitializeFullStructure(Guid id, DataStructureDefaultSet defaultSet)
-        {
+public class DataSetBuilder
+{
+    private readonly object _lock = new object();
+
+    public DataSet InitializeFullStructure(Guid id, DataStructureDefaultSet defaultSet)
+    {
             return new DatasetGenerator(true).CreateDataSet(DataStructure(id), true, defaultSet);
         }
 
-        public DataSet InitializeListStructure(DataSet data, string listEntity, bool isDbSource)
-        {
+    public DataSet InitializeListStructure(DataSet data, string listEntity, bool isDbSource)
+    {
             DataSet listData = DatasetTools.CloneDataSet(data);
             DataTable listTable = listData.Tables[listEntity];
             // turn off constraints checking because we will be loading only partial
@@ -50,21 +50,20 @@ namespace Origam.Server.Session_Stores
                 loadedFlagColumn.AllowDBNull = false;
                 loadedFlagColumn.DefaultValue = false;
             }
-            // we cannot delete non-list tables because child entities will be 
-            // neccessary for array-type fields (TagInput etc.)
+            // we cannot delete non-list tables because child entities will be      // neccessary for array-type fields (TagInput etc.)
             return listData;
         }
 
-        internal DataStructure DataStructure(Guid id)
-        {
+    internal DataStructure DataStructure(Guid id)
+    {
             IPersistenceService persistence = ServiceManager.Services.GetService(
                  typeof(IPersistenceService)) as IPersistenceService;
             return persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure),
                 new ModelElementKey(id)) as DataStructure;
         }
 
-        public DataSet LoadListData(IList<string> dataListLoadedColumns, DataSet data, string listEntity, DataStructureSortSet sortSet, FormReferenceMenuItem _menuItem, QueryParameterCollection queryParameter = null)
-        {
+    public DataSet LoadListData(IList<string> dataListLoadedColumns, DataSet data, string listEntity, DataStructureSortSet sortSet, FormReferenceMenuItem _menuItem, QueryParameterCollection queryParameter = null)
+    {
             dataListLoadedColumns.Clear();
             string initialColumns = ListPrimaryKeyColumns(data, listEntity);
             if (sortSet != null)
@@ -97,9 +96,9 @@ namespace Origam.Server.Session_Stores
             return result;
         }
 
-        private void LoadArrayColumns(DataSet dataset, string entity,
-            QueryParameterCollection qparams, ArrayList arrayColumns, IList<string> DataListLoadedColumns, FormReferenceMenuItem _menuItem)
-        {
+    private void LoadArrayColumns(DataSet dataset, string entity,
+        QueryParameterCollection qparams, ArrayList arrayColumns, IList<string> DataListLoadedColumns, FormReferenceMenuItem _menuItem)
+    {
             lock (_lock)
             {
                 foreach (string column in arrayColumns)
@@ -117,8 +116,8 @@ namespace Origam.Server.Session_Stores
             }
         }
 
-        public static bool IsColumnArray(DataColumn dataColumn)
-        {
+    public static bool IsColumnArray(DataColumn dataColumn)
+    {
             if (dataColumn.ExtendedProperties.Contains(Const.OrigamDataType))
             {
                 return ((Schema.OrigamDataType)dataColumn.ExtendedProperties[Const.OrigamDataType]) == Schema.OrigamDataType.Array;
@@ -128,8 +127,8 @@ namespace Origam.Server.Session_Stores
                 return false;
             }
         }
-        public string ListPrimaryKeyColumns(DataSet data, string listEntity)
-        {
+    public string ListPrimaryKeyColumns(DataSet data, string listEntity)
+    {
             string initialColumns = "";
             foreach (var pkCol in data.Tables[listEntity].PrimaryKey)
             {
@@ -141,5 +140,4 @@ namespace Origam.Server.Session_Stores
             }
             return initialColumns;
         }
-    }
 }

@@ -25,41 +25,41 @@ using System.Windows.Forms;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for FilterPart.
+/// </summary>
+public abstract class FilterPart : IDisposable
 {
-	/// <summary>
-	/// Summary description for FilterPart.
-	/// </summary>
-	public abstract class FilterPart : IDisposable
+	#region Events
+	public event DataViewQueryChanged QueryChanged;
+	public event EventHandler ControlsChanged;
+	#endregion
+
+	#region Private Fields
+		
+	private FormGenerator _formGenerator;
+	private Control _filteredControl;
+	private Type _dataType;
+	private string _dataMember;
+	private string _gridColumnName;
+	private object _value1;
+	private object _value2;
+	private bool _loadingValues = false;
+	private FilterOperator _operator;
+	private string _query = null;
+
+	private Label _label = new Label();
+	private Label _operatorLabelControl = new Label();
+	private ArrayList _filterControls = new ArrayList();
+	private ContextMenu _operatorContextMenu = new ContextMenu();
+		
+	#endregion
+
+	#region Constructor
+	public FilterPart(Control filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator)
 	{
-		#region Events
-		public event DataViewQueryChanged QueryChanged;
-		public event EventHandler ControlsChanged;
-		#endregion
-
-		#region Private Fields
-		
-		private FormGenerator _formGenerator;
-		private Control _filteredControl;
-		private Type _dataType;
-		private string _dataMember;
-		private string _gridColumnName;
-		private object _value1;
-		private object _value2;
-		private bool _loadingValues = false;
-		private FilterOperator _operator;
-		private string _query = null;
-
-		private Label _label = new Label();
-		private Label _operatorLabelControl = new Label();
-		private ArrayList _filterControls = new ArrayList();
-		private ContextMenu _operatorContextMenu = new ContextMenu();
-		
-		#endregion
-
-		#region Constructor
-		public FilterPart(Control filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator)
-		{
 			this.OperatorLabelControl.Font = new System.Drawing.Font(_operatorLabelControl.Font, System.Drawing.FontStyle.Italic);
 			this.OperatorLabelControl.MouseEnter += new EventHandler(OperatorLabelControl_MouseEnter);
 			this.OperatorLabelControl.MouseLeave += new EventHandler(OperatorLabelControl_MouseLeave);
@@ -81,84 +81,84 @@ namespace Origam.Gui.Win
 
 			CreateFilterControls();
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public FormGenerator FormGenerator
+	#region Properties
+	public FormGenerator FormGenerator
+	{
+		get
 		{
-			get
-			{
 				return _formGenerator;
 			}
-		}
+	}
 
-		public Control FilteredControl
+	public Control FilteredControl
+	{
+		get
 		{
-			get
-			{
 				return _filteredControl;
 			}
-		}
+	}
 
-		public Type DataType
+	public Type DataType
+	{
+		get
 		{
-			get
-			{
 				return _dataType;
 			}
-		}
+	}
 
-		public string DataMember
+	public string DataMember
+	{
+		get
 		{
-			get
-			{
 				return _dataMember;
 			}
-		}
+	}
 
-		public string GridColumnName
+	public string GridColumnName
+	{
+		get
 		{
-			get
-			{
 				return _gridColumnName;
 			}
-		}
+	}
 
-		public abstract FilterOperator[] AllowedOperators	{get;}
-		public abstract FilterOperator DefaultOperator {get;}
+	public abstract FilterOperator[] AllowedOperators	{get;}
+	public abstract FilterOperator DefaultOperator {get;}
 
-		public Label LabelControl
+	public Label LabelControl
+	{
+		get
 		{
-			get
-			{
 				return _label;
 			}
-		}
+	}
 
-		public Label OperatorLabelControl
+	public Label OperatorLabelControl
+	{
+		get
 		{
-			get
-			{
 				return _operatorLabelControl;
 			}
-		}
+	}
 
-		public ArrayList FilterControls
+	public ArrayList FilterControls
+	{
+		get
 		{
-			get
-			{
 				return _filterControls;
 			}
-		}
+	}
 
-		public object Value1
+	public object Value1
+	{
+		get
 		{
-			get
-			{
 				return _value1;
 			}
-			set
-			{
+		set
+		{
 				_value1 = value;
 
 				if(! _loadingValues)
@@ -166,16 +166,16 @@ namespace Origam.Gui.Win
 					RefreshQuery();
 				}
 			}
-		}
+	}
 
-		public object Value2
+	public object Value2
+	{
+		get
 		{
-			get
-			{
 				return _value2;
 			}
-			set
-			{
+		set
+		{
 				_value2 = value;
 
 				if(! _loadingValues)
@@ -183,16 +183,16 @@ namespace Origam.Gui.Win
 					RefreshQuery();
 				}
 			}
-		}
+	}
 
-		public FilterOperator Operator
+	public FilterOperator Operator
+	{
+		get
 		{
-			get
-			{
 				return _operator;
 			}
-			set
-			{
+		set
+		{
 				_operator = value;
 
 				_operatorLabelControl.Text = OperatorLabelText(_operator);
@@ -201,24 +201,24 @@ namespace Origam.Gui.Win
 
 				RefreshQuery();
 			}
-		}
+	}
 
-		public string Query
+	public string Query
+	{
+		get
 		{
-			get
-			{
 				return _query;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region public Methods
-		public abstract void CreateFilterControls();
+	#region public Methods
+	public abstract void CreateFilterControls();
 
-		public abstract void LoadValues();
+	public abstract void LoadValues();
 
-		public void ApplyStoredFilter(OrigamPanelFilter.PanelFilterDetailRow filterRow)
-		{
+	public void ApplyStoredFilter(OrigamPanelFilter.PanelFilterDetailRow filterRow)
+	{
 			string columnName1 = StoredFilterColumn1();
 			string columnName2 = StoredFilterColumn2();
 
@@ -253,8 +253,8 @@ namespace Origam.Gui.Win
 			RefreshQuery();
 		}
 
-		public void OnQueryChanged(string query)
-		{
+	public void OnQueryChanged(string query)
+	{
 			if(query == null)
 			{
 				_label.Font = new System.Drawing.Font(_label.Font, System.Drawing.FontStyle.Regular);
@@ -270,29 +270,29 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void OnControlsChanged()
-		{
+	public void OnControlsChanged()
+	{
 			if(ControlsChanged != null)
 			{
 				this.ControlsChanged(this, EventArgs.Empty);
 			}
 		}
 
-		#endregion
+	#endregion
 
-		#region Private Methods
-		private string StoredFilterColumn1()
-		{
+	#region Private Methods
+	private string StoredFilterColumn1()
+	{
 			return StoredFilterColumn(this.DataType, 1);
 		}
 
-		private string StoredFilterColumn2()
-		{
+	private string StoredFilterColumn2()
+	{
 			return StoredFilterColumn(this.DataType, 2);
 		}
 
-		private static string StoredFilterColumn(Type type, int position)
-		{
+	private static string StoredFilterColumn(Type type, int position)
+	{
 			if(type == typeof(string)) return "StringValue" + position.ToString();
 			if(type == typeof(int)) return "IntValue" + position.ToString();
 			if(type == typeof(Guid)) return "GuidValue" + position.ToString();
@@ -301,8 +301,8 @@ namespace Origam.Gui.Win
 			throw new ArgumentOutOfRangeException("type", type, "Unrecognized type. Cannot read stored filter.");
 		}
 
-		private void RefreshQuery()
-		{
+	private void RefreshQuery()
+	{
 			if(this.Operator == FilterOperator.None) return;
 			string field = "[" + this.DataMember + "]";
 
@@ -368,8 +368,8 @@ namespace Origam.Gui.Win
 			OnQueryChanged(_query);
 		}
 
-		private static string QueryValue(object value, FilterOperator oper, Type dataType)
-		{
+	private static string QueryValue(object value, FilterOperator oper, Type dataType)
+	{
 			string result;
 			
 			if(value == null | value == DBNull.Value)
@@ -416,8 +416,8 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		private static string QueryOperator(FilterOperator oper)
-		{
+	private static string QueryOperator(FilterOperator oper)
+	{
 			switch (oper)
 			{
 				case FilterOperator.BeginsWith:
@@ -465,8 +465,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private static string OperatorLabelText(FilterOperator oper)
-		{
+	private static string OperatorLabelText(FilterOperator oper)
+	{
 			switch (oper)
 			{
 				case FilterOperator.None:
@@ -524,39 +524,39 @@ namespace Origam.Gui.Win
 					throw new ArgumentOutOfRangeException("oper", oper, ResourceUtils.GetString("ErrorUnknownFilterOperatorLabel"));
 			}
 		}
-		#endregion
+	#endregion
 
-		#region Event Handlers
-		private void operatorMenu_Click(object sender, EventArgs e)
-		{
+	#region Event Handlers
+	private void operatorMenu_Click(object sender, EventArgs e)
+	{
 			FilterOperatorMenuItem m = (FilterOperatorMenuItem)sender;
 
 			this.Operator = m.Operator;
 		}
 
-		private void OperatorLabelControl_MouseEnter(object sender, EventArgs e)
-		{
+	private void OperatorLabelControl_MouseEnter(object sender, EventArgs e)
+	{
 			(sender as Label).BackColor = OrigamColorScheme.FilterOperatorActiveBackColor;
 			(sender as Label).ForeColor = OrigamColorScheme.FilterOperatorActiveForeColor;
 		}
 
-		private void OperatorLabelControl_MouseLeave(object sender, EventArgs e)
-		{
+	private void OperatorLabelControl_MouseLeave(object sender, EventArgs e)
+	{
 			(sender as Label).BackColor = System.Drawing.Color.Transparent;
 			(sender as Label).ForeColor = System.Drawing.SystemColors.ControlText;
 		}
-		#endregion
+	#endregion
 
-		#region IDisposable Members
+	#region IDisposable Members
 
-		public void Dispose()
-		{
+	public void Dispose()
+	{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
-		{
+	protected virtual void Dispose(bool disposing)
+	{
 			if (disposing)
 			{
 				lock (this)
@@ -600,8 +600,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void ReleaseControl(Control control)
-		{
+	private void ReleaseControl(Control control)
+	{
 			if(control != null)
 			{
 				if(control.Parent != null)
@@ -613,11 +613,10 @@ namespace Origam.Gui.Win
 				control.Dispose();
 			}
 		}
-		#endregion
+	#endregion
 
-		private void OperatorLabelControl_Click(object sender, EventArgs e)
-		{
+	private void OperatorLabelControl_Click(object sender, EventArgs e)
+	{
 			_operatorContextMenu.Show(this.OperatorLabelControl, new System.Drawing.Point(0, this.OperatorLabelControl.Height));
 		}
-	}
 }

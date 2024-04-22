@@ -19,65 +19,64 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class SearchSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class SearchSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public SearchSchemaItemProvider() 
 	{
-		public SearchSchemaItemProvider() 
-		{
 			this.ChildItemTypes.Add(typeof(SearchDataSource));
 		}
 		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
 		{
-			get
-			{
 				return SearchDataSource.CategoryConst;
 			}
-		}
-		public override string Group
+	}
+	public override string Group
+	{
+		get
 		{
-			get
-			{
 				return "UI";
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "icon_23_search-data-sources.png";
 			}
-		}
+	}
 
-		public override string NodeText
+	public override string NodeText
+	{
+		get
 		{
-			get
-			{
 				return "Search Data Sources";
 			}
-			set
-			{
+		set
+		{
 				base.NodeText = value;
 			}
-		}
+	}
 
-		public override string NodeToolTipText
+	public override string NodeToolTipText
+	{
+		get
 		{
-			get
-			{
 				return "List of search data sources";
 			}
-		}
-
-		#endregion
 	}
+
+	#endregion
 }

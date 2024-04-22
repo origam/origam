@@ -24,26 +24,26 @@ using System.Windows.Forms;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for DataGridColumnConfig.
-	/// </summary>
-	public class DataGridColumnConfig : System.Windows.Forms.Form
-	{
-		private System.Windows.Forms.ListView listView1;
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.ColumnHeader colField;
-		private System.Windows.Forms.Button btnDown;
-		private System.Windows.Forms.Button btnUp;
-		private System.Windows.Forms.Button btnOK;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+namespace Origam.Gui.Win;
 
-		public DataGridColumnConfig()
-		{
+/// <summary>
+/// Summary description for DataGridColumnConfig.
+/// </summary>
+public class DataGridColumnConfig : System.Windows.Forms.Form
+{
+	private System.Windows.Forms.ListView listView1;
+	private System.Windows.Forms.Panel panel1;
+	private System.Windows.Forms.ColumnHeader colField;
+	private System.Windows.Forms.Button btnDown;
+	private System.Windows.Forms.Button btnUp;
+	private System.Windows.Forms.Button btnOK;
+	/// <summary>
+	/// Required designer variable.
+	/// </summary>
+	private System.ComponentModel.Container components = null;
+
+	public DataGridColumnConfig()
+	{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -52,11 +52,11 @@ namespace Origam.Gui.Win
 			this.panel1.BackColor = OrigamColorScheme.FormBackgroundColor;
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				if(components != null)
@@ -67,13 +67,13 @@ namespace Origam.Gui.Win
 			base.Dispose( disposing );
 		}
 
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	#region Windows Form Designer generated code
+	/// <summary>
+	/// Required method for Designer support - do not modify
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(DataGridColumnConfig));
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.colField = new System.Windows.Forms.ColumnHeader();
@@ -83,10 +83,8 @@ namespace Origam.Gui.Win
 			this.btnOK = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// listView1
-			// 
-			this.listView1.CheckBoxes = true;
+			// 		// listView1
+			// 		this.listView1.CheckBoxes = true;
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 																						this.colField});
 			this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -99,15 +97,11 @@ namespace Origam.Gui.Win
 			this.listView1.Size = new System.Drawing.Size(234, 296);
 			this.listView1.TabIndex = 0;
 			this.listView1.View = System.Windows.Forms.View.Details;
-			// 
-			// colField
-			// 
-			this.colField.Text = "Sloupce";
+			// 		// colField
+			// 		this.colField.Text = "Sloupce";
 			this.colField.Width = 201;
-			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.btnOK);
+			// 		// panel1
+			// 		this.panel1.Controls.Add(this.btnOK);
 			this.panel1.Controls.Add(this.btnDown);
 			this.panel1.Controls.Add(this.btnUp);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
@@ -115,30 +109,24 @@ namespace Origam.Gui.Win
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(104, 296);
 			this.panel1.TabIndex = 1;
-			// 
-			// btnDown
-			// 
-			this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			// 		// btnDown
+			// 		this.btnDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.btnDown.Image = ((System.Drawing.Image)(resources.GetObject("btnDown.Image")));
 			this.btnDown.Location = new System.Drawing.Point(8, 152);
 			this.btnDown.Name = "btnDown";
 			this.btnDown.Size = new System.Drawing.Size(24, 24);
 			this.btnDown.TabIndex = 3;
 			this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
-			// 
-			// btnUp
-			// 
-			this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			// 		// btnUp
+			// 		this.btnUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.btnUp.Image = ((System.Drawing.Image)(resources.GetObject("btnUp.Image")));
 			this.btnUp.Location = new System.Drawing.Point(8, 104);
 			this.btnUp.Name = "btnUp";
 			this.btnUp.Size = new System.Drawing.Size(24, 24);
 			this.btnUp.TabIndex = 2;
 			this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
-			// 
-			// btnOK
-			// 
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+			// 		// btnOK
+			// 		this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.btnOK.Location = new System.Drawing.Point(8, 16);
 			this.btnOK.Name = "btnOK";
@@ -146,10 +134,8 @@ namespace Origam.Gui.Win
 			this.btnOK.TabIndex = 1;
 			this.btnOK.Text = ResourceUtils.GetString("OK");
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 
-			// DataGridColumnConfig
-			// 
-			this.AcceptButton = this.btnOK;
+			// 		// DataGridColumnConfig
+			// 		this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(338, 296);
 			this.ControlBox = false;
@@ -166,12 +152,12 @@ namespace Origam.Gui.Win
 			this.ResumeLayout(false);
 
 		}
-		#endregion
+	#endregion
 
-		private ArrayList _columns;
+	private ArrayList _columns;
 
-		private void listView1_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
-		{
+	private void listView1_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
+	{
 			DataGridColumnStyleHolder column = listView1.Items[e.Index].Tag as DataGridColumnStyleHolder;
 			
 			if(e.NewValue == CheckState.Checked)
@@ -184,10 +170,10 @@ namespace Origam.Gui.Win
 			}
 		}
 	
-		private DataGridTableStyle _tableStyle;
+	private DataGridTableStyle _tableStyle;
 
-		private void btnUp_Click(object sender, System.EventArgs e)
-		{
+	private void btnUp_Click(object sender, System.EventArgs e)
+	{
 			if(listView1.SelectedItems.Count == 1)
 			{
 				ListViewItem item = listView1.SelectedItems[0];
@@ -213,8 +199,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void btnDown_Click(object sender, System.EventArgs e)
-		{
+	private void btnDown_Click(object sender, System.EventArgs e)
+	{
 			if(listView1.SelectedItems.Count == 1)
 			{
 				ListViewItem item = listView1.SelectedItems[0];
@@ -240,39 +226,39 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void UpdateIndexes()
-		{
+	private void UpdateIndexes()
+	{
 			foreach(ListViewItem it in listView1.Items)
 			{
 				(it.Tag as DataGridColumnStyleHolder).Index = it.Index;
 			}
 		}
 
-		private void btnOK_Click(object sender, System.EventArgs e)
-		{
+	private void btnOK_Click(object sender, System.EventArgs e)
+	{
 			this.Close();
 		}
 
-		public DataGridTableStyle TableStyle
+	public DataGridTableStyle TableStyle
+	{
+		get
 		{
-			get
-			{
 				return _tableStyle;
 			}
-			set
-			{
+		set
+		{
 				_tableStyle = value;
 			}
-		}
+	}
 
-		public ArrayList Columns
+	public ArrayList Columns
+	{
+		get
 		{
-			get
-			{
 				return _columns;
 			}
-			set
-			{
+		set
+		{
 				this.listView1.ItemCheck -= new System.Windows.Forms.ItemCheckEventHandler(this.listView1_ItemCheck);
 
 				_columns = value;
@@ -292,6 +278,5 @@ namespace Origam.Gui.Win
 
 				this.listView1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listView1_ItemCheck);
 			}
-		}
 	}
 }

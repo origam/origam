@@ -19,13 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam
+namespace Origam;
+
+/// <summary>
+/// Summary description for IAuthorizationContextContainer.
+/// </summary>
+public interface IAuthorizationContextContainer
 {
-	/// <summary>
-	/// Summary description for IAuthorizationContextContainer.
-	/// </summary>
-	public interface IAuthorizationContextContainer
-	{
-		string AuthorizationContext {get;}
-	}
+	string AuthorizationContext {get;}
 }

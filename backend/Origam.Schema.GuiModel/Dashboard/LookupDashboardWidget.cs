@@ -26,56 +26,55 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Lookup Widget", "icon_lookup-widget.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class LookupDashboardWidget : AbstractSimpleDashboardWidget
-	{
-		public LookupDashboardWidget() : base() {Init();}
-		public LookupDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public LookupDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Lookup Widget", "icon_lookup-widget.png")]
+[ClassMetaVersion("6.0.0")]
+public class LookupDashboardWidget : AbstractSimpleDashboardWidget
+{
+	public LookupDashboardWidget() : base() {Init();}
+	public LookupDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public LookupDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
+	{
 		}
 
-		public override OrigamDataType DataType
+	public override OrigamDataType DataType
+	{
+		get
 		{
-			get
-			{
 				return this.Lookup.ValueColumn.DataType;
 			}
-		}
+	}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Lookup);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		#region Properties
-		public Guid LookupId;
+	#region Properties
+	public Guid LookupId;
 
-		[Category("Reference")]
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("lookup", "LookupId")]
-		public IDataLookup Lookup
+	[Category("Reference")]
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("lookup", "LookupId")]
+	public IDataLookup Lookup
+	{
+		get
 		{
-			get
-			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
 			}
-			set
-			{
+		set
+		{
 				this.LookupId = (Guid)value.PrimaryKey["Id"];
 
 				this.Name = this.Lookup.Name;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

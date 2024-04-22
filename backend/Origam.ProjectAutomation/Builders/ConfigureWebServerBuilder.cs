@@ -24,25 +24,25 @@ using System.IO;
 using System.Security.AccessControl;
 using Microsoft.Web.Administration;
 
-namespace Origam.ProjectAutomation
-{
-    public class ConfigureWebServerBuilder : AbstractBuilder
-    {
-        ServerManager _serverManager;
-        Site _site;
-        Application _application;
-        ApplicationPool _pool;
+namespace Origam.ProjectAutomation;
 
-        public override string Name
+public class ConfigureWebServerBuilder : AbstractBuilder
+{
+    ServerManager _serverManager;
+    Site _site;
+    Application _application;
+    ApplicationPool _pool;
+
+    public override string Name
+    {
+        get
         {
-            get
-            {
                 return "Configure Web Server";
             }
-        }
+    }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             string applicationPoolName = project.Name;
             _serverManager = new ServerManager();
             _site = _serverManager.Sites[project.WebRootName];
@@ -65,8 +65,8 @@ namespace Origam.ProjectAutomation
             AddPermissionsToSourceFolder(project);
         }
 
-        private void AddPermissionsToSourceFolder(Project project)
-        {
+    private void AddPermissionsToSourceFolder(Project project)
+    {
             string accountName = @"IIS APPPOOL\" + project.Name;
             DirectoryInfo sourceDirInfo = new DirectoryInfo(project.ModelSourceFolder);
 
@@ -87,24 +87,24 @@ namespace Origam.ProjectAutomation
             sourceDirInfo.SetAccessControl(dSecurity);
         }
 
-        private static void SetAuthentication(Configuration config, string name, string authenticationType, bool enabled)
-        {
+    private static void SetAuthentication(Configuration config, string name, string authenticationType, bool enabled)
+    {
             ConfigurationSection authenticationSection =
                 config.GetSection("system.webServer/security/authentication/" + authenticationType,
                 name);
             authenticationSection["enabled"] = enabled;
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
             ServerManager serverManager = new ServerManager();
             RollbackApplication(serverManager);
             RollbackPool(serverManager);
             serverManager.CommitChanges();
         }
 
-        public string[] WebSites()
-        {
+    public string[] WebSites()
+    {
             ServerManager serverManager = new ServerManager();
             string[] result = new string[serverManager.Sites.Count];
             for (int i = 0; i < serverManager.Sites.Count; i++)
@@ -115,8 +115,8 @@ namespace Origam.ProjectAutomation
             return result;
         }
 
-        public string WebSiteUrl(string webSiteName)
-        {
+    public string WebSiteUrl(string webSiteName)
+    {
             ServerManager serverManager = new ServerManager();
             Site site = serverManager.Sites[webSiteName];
             if (site == null)
@@ -153,17 +153,16 @@ namespace Origam.ProjectAutomation
             return null;
         }
 
-        private void RollbackPool(ServerManager serverManager)
-        {
+    private void RollbackPool(ServerManager serverManager)
+    {
             ApplicationPool pool = serverManager.ApplicationPools[_pool.Name];
             serverManager.ApplicationPools.Remove(pool);
         }
 
-        private void RollbackApplication(ServerManager serverManager)
-        {
+    private void RollbackApplication(ServerManager serverManager)
+    {
             Site site = serverManager.Sites[_site.Name];
             Application application = site.Applications[_application.Path];
             site.Applications.Remove(application);
         }
-    }
 }

@@ -24,20 +24,20 @@ using System.Data;
 using System.Collections;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for DropDownList.
-	/// </summary>
-	public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
-	{
-		private System.Windows.Forms.TreeView tree;
-		private System.ComponentModel.IContainer components;
-		private System.Windows.Forms.Timer timer1;
-		private SortedList items_Identifiers;
+namespace Origam.Gui.Win;
 
-		public DropDownTree()
-		{
+/// <summary>
+/// Summary description for DropDownList.
+/// </summary>
+public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
+{
+	private System.Windows.Forms.TreeView tree;
+	private System.ComponentModel.IContainer components;
+	private System.Windows.Forms.Timer timer1;
+	private SortedList items_Identifiers;
+
+	public DropDownTree()
+	{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -46,11 +46,11 @@ namespace Origam.Gui.Win
 			this.items_Identifiers = new SortedList();
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				if(components != null)
@@ -76,21 +76,19 @@ namespace Origam.Gui.Win
 //			e.Graphics.DrawRectangle(SystemPens.ControlDark, borderRect);			
 //		}
 //
-		#region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	#region Windows Form Designer generated code
+	/// <summary>
+	/// Required method for Designer support - do not modify
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
 			this.components = new System.ComponentModel.Container();
 			this.tree = new System.Windows.Forms.TreeView();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
-			// 
-			// tree
-			// 
-			this.tree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			// 		// tree
+			// 		this.tree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.tree.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tree.FullRowSelect = true;
 			this.tree.HideSelection = false;
@@ -104,15 +102,11 @@ namespace Origam.Gui.Win
 			this.tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.List_KeyDown);
 			this.tree.DoubleClick += new System.EventHandler(this.tree_DoubleClick);
 			this.tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
-			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
+			// 		// timer1
+			// 		this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// DropDownTree
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 		// DropDownTree
+			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 336);
 			this.ControlBox = false;
 			this.Controls.Add(this.tree);
@@ -125,13 +119,13 @@ namespace Origam.Gui.Win
 			this.ResumeLayout(false);
 
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public override bool Focused
+	#region Properties
+	public override bool Focused
+	{
+		get
 		{
-			get
-			{
 				if(base.Focused | tree.Focused) 
 				{
 					return true;
@@ -141,20 +135,20 @@ namespace Origam.Gui.Win
 					return false;
 				}
 			}
-		}
+	}
 
-		private bool _canceled = false;
-		public bool Canceled
+	private bool _canceled = false;
+	public bool Canceled
+	{
+		get
 		{
-			get
-			{
 				return _canceled;
 			}
-			set
-			{
+		set
+		{
 				_canceled = value;
 			}
-		}
+	}
 
 //		private ILookupControl _lookupControl;
 //		public ILookupControl LookupControl
@@ -169,15 +163,15 @@ namespace Origam.Gui.Win
 //			}
 //		}
 
-		private DataView _dataSource;
-		public DataView DataSource
+	private DataView _dataSource;
+	public DataView DataSource
+	{
+		get
 		{
-			get
-			{
 				return _dataSource;
 			}
-			set
-			{
+		set
+		{
 				_dataSource = value;
 
 				if(_dataSource != null)
@@ -186,70 +180,70 @@ namespace Origam.Gui.Win
 					FillTree();
 				}
 			}
-		}
+	}
 
-		private string _valueMember;
-		public string ValueMember
+	private string _valueMember;
+	public string ValueMember
+	{
+		get
 		{
-			get
-			{
 				return _valueMember;
 			}
-			set
-			{
+		set
+		{
 				_valueMember = value;
 			}
-		}
+	}
 
-		private string _displayMember;
-		public string DisplayMember
+	private string _displayMember;
+	public string DisplayMember
+	{
+		get
 		{
-			get
-			{
 				return _displayMember;
 			}
-			set
-			{
+		set
+		{
 				_displayMember = value;
 			}
-		}
+	}
 
-		private string _parentMember;
-		public string ParentMember
+	private string _parentMember;
+	public string ParentMember
+	{
+		get
 		{
-			get
-			{
 				return _parentMember;
 			}
-			set
-			{
+		set
+		{
 				_parentMember = value;
 			}
-		}
+	}
 
-		private string _selectedText = "";
-		public string SelectedText
+	private string _selectedText = "";
+	public string SelectedText
+	{
+		get
 		{
-			get
-			{
 				return _selectedText;
 			}
-			set
-			{
+		set
+		{
 				throw new NotImplementedException();
 			}
-		}
+	}
 
-		private bool _selectingValue = false;
-		private object _selectedValue;
-		public object SelectedValue
+	private bool _selectingValue = false;
+	private object _selectedValue;
+	public object SelectedValue
+	{
+		get
 		{
-			get
-			{
 				return _selectedValue;
 			}
-			set
-			{
+		set
+		{
 				_selectedValue = value;
 
 				if(value != DBNull.Value)
@@ -262,25 +256,25 @@ namespace Origam.Gui.Win
 					}
 				}
 			}
-		}
+	}
 
-		private BaseDropDownControl _dropDownControl;
-		public BaseDropDownControl DropDownControl
+	private BaseDropDownControl _dropDownControl;
+	public BaseDropDownControl DropDownControl
+	{
+		get
 		{
-			get
-			{
 				return _dropDownControl;
 			}
-			set
-			{
+		set
+		{
 				_dropDownControl = value;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Methods
-		public void SelectItem()
-		{
+	#region Methods
+	public void SelectItem()
+	{
 			if(tree.SelectedNode is DataTreeViewNode)
 			{
 				_selectedValue = (tree.SelectedNode as DataTreeViewNode).ID;
@@ -293,21 +287,21 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void MoveUp()
-		{
+	public void MoveUp()
+	{
 			this.tree.Focus();
 		}
 
-		public void MoveDown()
-		{
+	public void MoveDown()
+	{
 			this.tree.Focus();
 		}
 
-		#endregion
+	#endregion
 
-		#region Event Handlers
-		private void List_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
+	#region Event Handlers
+	private void List_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+	{
 			switch(e.KeyCode)
 			{
 				case Keys.Up:
@@ -324,18 +318,18 @@ namespace Origam.Gui.Win
 					break;
 			}
 		}
-		#endregion
+	#endregion
 
 
-		private void tree_AfterSelect(object sender, TreeViewEventArgs e)
-		{
+	private void tree_AfterSelect(object sender, TreeViewEventArgs e)
+	{
 //			if(_selectingValue) return;
 //
 //			_readyToClose = true;
 		}
 
-		private void FillTree()
-		{
+	private void FillTree()
+	{
 			tree.Nodes.Clear();
 			tree.BeginUpdate();
 
@@ -374,8 +368,8 @@ namespace Origam.Gui.Win
 			tree.EndUpdate();
 		}
 
-		private bool TryAddNode(DataTreeViewNode node)
-		{
+	private bool TryAddNode(DataTreeViewNode node)
+	{
 			if (node.ParentID == DBNull.Value)
 			{
 				this.AddNode(this.tree.Nodes, node);				
@@ -398,8 +392,8 @@ namespace Origam.Gui.Win
 			return false;
 		}
 
-		private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
-		{
+	private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
+	{
 			if(node.ID.Equals(parentNode.ID))
 			{
 				throw new NotSupportedException("Stromové zobrazení: Není možné pøidat položku pod sebe sama.");
@@ -415,8 +409,8 @@ namespace Origam.Gui.Win
 		}
 		
 
-		private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
-		{
+	private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
+	{
 			if(node.ID == null | node.ID == DBNull.Value) return;
 
 			if(!this.items_Identifiers.ContainsKey(node.ID))
@@ -426,14 +420,14 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private bool _readyToClose = false;
-		private void timer1_Tick(object sender, System.EventArgs e)
-		{
+	private bool _readyToClose = false;
+	private void timer1_Tick(object sender, System.EventArgs e)
+	{
 			if(_readyToClose) this.SelectItem();
 		}
 
-		private void DropDownTree_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
+	private void DropDownTree_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+	{
 			if(e.KeyCode == Keys.Escape)
 			{
 				this.Canceled = true;
@@ -441,90 +435,89 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void tree_DoubleClick(object sender, System.EventArgs e)
-		{
+	private void tree_DoubleClick(object sender, System.EventArgs e)
+	{
 			if(_selectingValue) return;
 			_readyToClose = true;
 		}
 
 
 
-		public class DataTreeViewNode : TreeNode
-		{
-			#region Fields
+	public class DataTreeViewNode : TreeNode
+	{
+		#region Fields
 		
-			private int position;		
+		private int position;		
 
-			private object parentID;
+		private object parentID;
 
-			#endregion
+		#endregion
 
-			#region Constructors
+		#region Constructors
 
-			/// <summary>
-			/// Default constructor of the node.
-			/// </summary>
-			public DataTreeViewNode(object id, object parentId, string text)
-			{
+		/// <summary>
+		/// Default constructor of the node.
+		/// </summary>
+		public DataTreeViewNode(object id, object parentId, string text)
+		{
 				this.ID = id;
 				this.ParentID = parentId;
 				this.Text = text;
 			}
 
-			#endregion
+		#endregion
 
-			#region Implementation
+		#region Implementation
 
-			#endregion
+		#endregion
 
-			#region Properties
+		#region Properties
 
-			/// <summary>
-			/// Identifier of the node.
-			/// </summary>
-			public object ID
-			{
-				get
-				{				
+		/// <summary>
+		/// Identifier of the node.
+		/// </summary>
+		public object ID
+		{
+			get
+			{				
 					return this.Tag;				
 				}
-				set
-				{
+			set
+			{
 					this.Tag = value;
 				}
-			}
+		}
 
-			/// <summary>
-			/// Identifier of the parent node.
-			/// </summary>
-			public object ParentID
+		/// <summary>
+		/// Identifier of the parent node.
+		/// </summary>
+		public object ParentID
+		{
+			get
 			{
-				get
-				{
 					return this.parentID;
 				}
-				set
-				{
+			set
+			{
 					this.parentID = value;
 				}
-			}
+		}
 	
-			/// <summary>
-			/// Position in the current currency manager.
-			/// </summary>
-			public int Position
+		/// <summary>
+		/// Position in the current currency manager.
+		/// </summary>
+		public int Position
+		{
+			get
 			{
-				get
-				{
 					return this.position;
 				}
-				set
-				{
+			set
+			{
 					this.position = value;
 				}
-			}
-
-			#endregion
 		}
+
+		#endregion
 	}
 }

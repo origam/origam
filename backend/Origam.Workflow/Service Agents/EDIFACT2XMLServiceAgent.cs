@@ -28,18 +28,18 @@ using log4net;
 using System.Text;
 using System.IO.Compression;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
 {
-    public class EDIFACT2XMLServiceAgent : AbstractServiceAgent
+    private static readonly ILog log
+        = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+    private object result;
+    public override object Result => result;
+
+    public override void Run()
     {
-        private static readonly ILog log
-            = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        private object result;
-        public override object Result => result;
-
-        public override void Run()
-        {
             EDIFACTDataElement.Tag = "e";
             switch(MethodName)
             {
@@ -55,8 +55,8 @@ namespace Origam.Workflow
                         ResourceUtils.GetString("InvalidMethodName"));
             }
         }
-        private void ParseFile()
-        {
+    private void ParseFile()
+    {
             ValidateParseFileParameters();
             using (EDIFACTParser parser = new EDIFACTParser())
             {
@@ -77,8 +77,8 @@ namespace Origam.Workflow
             }
         }
 
-        private StreamReader GetStreamReader()
-        {
+    private StreamReader GetStreamReader()
+    {
             FileInfo fileInfo = new FileInfo(Parameters["Filename"] as string);
             switch(fileInfo.Extension)
             {
@@ -92,8 +92,8 @@ namespace Origam.Workflow
             }
         }
 
-        private void GenerateXMLFiles(EDIFACTParser parser)
-        {
+    private void GenerateXMLFiles(EDIFACTParser parser)
+    {
             StreamWriter writer = null;
             DateTime timestamp = DateTime.Now;
             int counter = 0;
@@ -148,8 +148,8 @@ namespace Origam.Workflow
                 }
             }
         }
-        private string GetOutputFilename(DateTime timestamp, int counter)
-        {
+    private string GetOutputFilename(DateTime timestamp, int counter)
+    {
             FileInfo fileInfo = new FileInfo(Parameters["Filename"] as string);
             StringBuilder output = new StringBuilder();
             output.Append(Parameters["OutputFolder"] as string);
@@ -165,8 +165,8 @@ namespace Origam.Workflow
             output.Append(".xml");
             return output.ToString();
         }
-        private void ValidateParseFileParameters()
-        {
+    private void ValidateParseFileParameters()
+    {
             if(!(Parameters["Grammar"] is string))
             {
                 throw new InvalidCastException(
@@ -189,8 +189,8 @@ namespace Origam.Workflow
                     ResourceUtils.GetString("ErrorLimitNotInt"));
             }
         }
-        private void ParseString()
-        {
+    private void ParseString()
+    {
             ValidateParseStringParameters();
             using(EDIFACTParser parser = new EDIFACTParser())
             {
@@ -217,8 +217,8 @@ namespace Origam.Workflow
             }
         }
 
-        private void ValidateParseStringParameters()
-        {
+    private void ValidateParseStringParameters()
+    {
             if(!(Parameters["Grammar"] is string))
             {
                 throw new InvalidCastException(
@@ -231,8 +231,8 @@ namespace Origam.Workflow
             }
         }
 
-        private EDIFACTMessageFormat GetMessageFormat()
-        {
+    private EDIFACTMessageFormat GetMessageFormat()
+    {
             EDIFACTMessageFormat messageFormat = new EDIFACTMessageFormat();
             messageFormat.SegmentTerminator = 0x1C; // '
             messageFormat.AlternativeSegmentTerminator = 0x1A;
@@ -242,5 +242,4 @@ namespace Origam.Workflow
             return messageFormat;
         }
         
-    }
 }

@@ -23,16 +23,16 @@ using System.Drawing;
 using System.Windows.Forms;
 using Origam.Extensions;
 
-namespace Origam.Gui.UI
-{
-    public class LabeledToolStrip : ToolStrip
-    {
-        private const int BottomTextMarin = 3;
-        private readonly SolidBrush foreColorBrush;
-        public IToolStripContainer Owner { get; }
+namespace Origam.Gui.UI;
 
-        public LabeledToolStrip(IToolStripContainer owner)
-        {
+public class LabeledToolStrip : ToolStrip
+{
+    private const int BottomTextMarin = 3;
+    private readonly SolidBrush foreColorBrush;
+    public IToolStripContainer Owner { get; }
+
+    public LabeledToolStrip(IToolStripContainer owner)
+    {
             MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
             foreColorBrush = new SolidBrush(ForeColor);
             Renderer = new SideBorderOnlyStripRenderer();
@@ -40,14 +40,14 @@ namespace Origam.Gui.UI
             Owner = owner;
         }
 
-        protected override void OnItemAdded(ToolStripItemEventArgs e)
-        {
+    protected override void OnItemAdded(ToolStripItemEventArgs e)
+    {
             base.OnItemAdded(e);
             Visible = true;
         }
 
-        protected override void OnItemRemoved(ToolStripItemEventArgs e)
-        {
+    protected override void OnItemRemoved(ToolStripItemEventArgs e)
+    {
             base.OnItemRemoved(e);
             if (Items.Count == 0)
             {
@@ -55,8 +55,8 @@ namespace Origam.Gui.UI
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
+    protected override void OnPaint(PaintEventArgs e)
+    {
             base.OnPaint(e);
 
             int textX = (Size.Width - Text.Width(Font)) / 2;
@@ -65,13 +65,13 @@ namespace Origam.Gui.UI
             var LabelFont = new Font(Font.Name, 8, FontStyle.Bold);
             e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
         }
-    }
+}
 
-    internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer 
+internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer 
+{
+    protected override void OnRenderToolStripBorder(
+        ToolStripRenderEventArgs e)
     {
-        protected override void OnRenderToolStripBorder(
-            ToolStripRenderEventArgs e)
-        {
             base.OnRenderToolStripBorder(e);
             var rectangle = new Rectangle(
                 e.AffectedBounds.Location.X-5,
@@ -95,9 +95,8 @@ namespace Origam.Gui.UI
            
         }
 
-        protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
-        {
+    protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
+    {
             // we want no grip
         }
-    }
 }

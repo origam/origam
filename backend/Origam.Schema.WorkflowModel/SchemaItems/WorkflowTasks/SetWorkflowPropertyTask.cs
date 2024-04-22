@@ -26,47 +26,47 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+public enum WorkflowProperty
 {
-	public enum WorkflowProperty
-	{
-		Title,
-		Notification,
-		ResultMessage
+	Title,
+	Notification,
+	ResultMessage
 }
 
-	public enum SetWorkflowPropertyMethod
-	{
-		Overwrite,
-		Add
-	}
+public enum SetWorkflowPropertyMethod
+{
+	Overwrite,
+	Add
+}
 
-	[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
-    [HelpTopic("Set+Workflow+Property+Task")]
-    [ClassMetaVersion("6.0.0")]
-	public class SetWorkflowPropertyTask : AbstractWorkflowStep
-	{
-		public SetWorkflowPropertyTask() {}
+[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
+[HelpTopic("Set+Workflow+Property+Task")]
+[ClassMetaVersion("6.0.0")]
+public class SetWorkflowPropertyTask : AbstractWorkflowStep
+{
+	public SetWorkflowPropertyTask() {}
 
-		public SetWorkflowPropertyTask(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
+	public SetWorkflowPropertyTask(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
 
-		public SetWorkflowPropertyTask(Key primaryKey) : base(primaryKey) {}
+	public SetWorkflowPropertyTask(Key primaryKey) : base(primaryKey) {}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
+	{
 			XsltDependencyHelper.GetDependencies(this, dependencies, XPath);
 			dependencies.Add(this.ContextStore);
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey?.Equals(ContextStore.PrimaryKey) == true)
@@ -77,17 +77,17 @@ namespace Origam.Schema.WorkflowModel
 			}
 			base.UpdateReferences ();
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public Guid ContextStoreId;
+	#region Properties
+	public Guid ContextStoreId;
 
-		[TypeConverter(typeof(ContextStoreConverter))]
-        [XmlReference("contextStore", "ContextStoreId")]
-		public IContextStore ContextStore
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[XmlReference("contextStore", "ContextStoreId")]
+	public IContextStore ContextStore
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = ContextStoreId
@@ -95,8 +95,8 @@ namespace Origam.Schema.WorkflowModel
 				return (IContextStore)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					ContextStoreId = Guid.Empty;
@@ -106,67 +106,66 @@ namespace Origam.Schema.WorkflowModel
 					ContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 		
-		public Guid TransformationId;
+	public Guid TransformationId;
 
-		[TypeConverter(typeof(TransformationConverter))]
-        [XmlReference("transformation", "TransformationId")]
-		public ITransformation Transformation
-		{
-			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(TransformationId)) as ITransformation;
-			set => TransformationId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(TransformationConverter))]
+	[XmlReference("transformation", "TransformationId")]
+	public ITransformation Transformation
+	{
+		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(TransformationId)) as ITransformation;
+		set => TransformationId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 
-		string _xpath;
-		[XmlAttribute("xPath")]
-		public string XPath
-		{
-			get => _xpath;
-			set => _xpath = value;
-		}
+	string _xpath;
+	[XmlAttribute("xPath")]
+	public string XPath
+	{
+		get => _xpath;
+		set => _xpath = value;
+	}
 
-		string _delimiter = "";
-		[XmlAttribute("delimiter")]
-        public string Delimiter
-		{
-			get => _delimiter;
-			set => _delimiter = value;
-		}
+	string _delimiter = "";
+	[XmlAttribute("delimiter")]
+	public string Delimiter
+	{
+		get => _delimiter;
+		set => _delimiter = value;
+	}
 
-		WorkflowProperty _workflowProperty;
-		[XmlAttribute("workflowProperty")]
-		public WorkflowProperty WorkflowProperty
-		{
-			get => _workflowProperty;
-			set => _workflowProperty = value;
-		}
+	WorkflowProperty _workflowProperty;
+	[XmlAttribute("workflowProperty")]
+	public WorkflowProperty WorkflowProperty
+	{
+		get => _workflowProperty;
+		set => _workflowProperty = value;
+	}
 
-		SetWorkflowPropertyMethod _setWorkflowPropertyMethod;
-		[XmlAttribute("method")]
-		public SetWorkflowPropertyMethod Method
-		{
-			get => _setWorkflowPropertyMethod;
-			set => _setWorkflowPropertyMethod = value;
-		}
-		#endregion
+	SetWorkflowPropertyMethod _setWorkflowPropertyMethod;
+	[XmlAttribute("method")]
+	public SetWorkflowPropertyMethod Method
+	{
+		get => _setWorkflowPropertyMethod;
+		set => _setWorkflowPropertyMethod = value;
+	}
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[] 
+	public override Type[] NewItemTypes => new[] 
 		{
 			typeof(WorkflowTaskDependency)
 		};
 
-		public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(WorkflowTaskDependency) ?
 					"NewWorkflowTaskDependency" : null);
 		}
-		#endregion
-	}
+	#endregion
 }

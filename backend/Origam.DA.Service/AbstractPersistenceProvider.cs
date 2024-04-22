@@ -28,40 +28,40 @@ using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+
+public abstract class AbstractPersistenceProvider : IPersistenceProvider
 {
-    public abstract class AbstractPersistenceProvider : IPersistenceProvider
+
+    private readonly Queue<object> transactionEndEventQueue = new Queue<object>();
+    public virtual ICompiledModel CompiledModel
     {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
 
-        private readonly Queue<object> transactionEndEventQueue = new Queue<object>();
-        public virtual ICompiledModel CompiledModel
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+    public event EventHandler<IPersistent> InstancePersisted;
 
-        public event EventHandler<IPersistent> InstancePersisted;
-
-        public void RunInTransaction(Action action)
-        {
+    public void RunInTransaction(Action action)
+    {
             BeginTransaction();
             action();
             EndTransaction();
         }
 
-        public virtual void BeginTransaction()
-        {
+    public virtual void BeginTransaction()
+    {
         }
 
-        public abstract object Clone();
+    public abstract object Clone();
 
-        public abstract void DeletePackage(Guid packageId);
-        public virtual bool IsInTransaction { get; }
+    public abstract void DeletePackage(Guid packageId);
+    public virtual bool IsInTransaction { get; }
 
-        public abstract void Dispose();
+    public abstract void Dispose();
 
-        public virtual void EndTransaction()
-        {
+    public virtual void EndTransaction()
+    {
             while (transactionEndEventQueue.Count > 0)
             {
                 object sender = transactionEndEventQueue.Dequeue();
@@ -69,31 +69,31 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
-        public virtual void EndTransactionDontSave()
-        {
+    public virtual void EndTransactionDontSave()
+    {
             
         }
 
-        public abstract object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
-        public virtual void RestrictToLoadedPackage(bool b)
-        {
+    public abstract object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
+    public virtual void RestrictToLoadedPackage(bool b)
+    {
         }
 
-        public abstract ILocalizationCache LocalizationCache { get;}
+    public abstract ILocalizationCache LocalizationCache { get;}
 
-        public abstract void FlushCache();
+    public abstract void FlushCache();
 
-        public abstract void RemoveFromCache(IPersistent instance);
-        public abstract List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
+    public abstract void RemoveFromCache(IPersistent instance);
+    public abstract List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
 
-        public abstract List<T> RetrieveListByCategory<T>(string category);
+    public abstract List<T> RetrieveListByCategory<T>(string category);
 
-        public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
+    public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
 
-        public abstract T[] FullTextSearch<T>(string text);
+    public abstract T[] FullTextSearch<T>(string text);
 
-        public ArrayList GetReference(Key key)
-        {
+    public ArrayList GetReference(Key key)
+    {
             try
             {
                 RestrictToLoadedPackage(false);
@@ -113,16 +113,16 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
-        public bool IsOfType<T>(Guid id)
-        {
+    public bool IsOfType<T>(Guid id)
+    {
             return RetrieveInstance(
                 type: typeof(T), 
                 primaryKey: new Key(id), 
                 useCache: false) is T;
         }
 
-        private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)
-        {
+    private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)
+    {
             List<object> foundUsages = new List<object>();
             try
             {
@@ -147,58 +147,57 @@ namespace Origam.DA.ObjectPersistence
             return foundUsages;
         }
 
-        public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
-            string parentTableName,
-            string childTableName, bool useCache);
+    public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
+        string parentTableName,
+        string childTableName, bool useCache);
 
-        public abstract List<T> RetrieveListByGroup<T>(Key primaryKey);
+    public abstract List<T> RetrieveListByGroup<T>(Key primaryKey);
 
-        public void OnTransactionEnded(object sender)
-        {
+    public void OnTransactionEnded(object sender)
+    {
             if (InTransaction)
             {
                 transactionEndEventQueue.Enqueue(sender);
             }
         }
 
-        public virtual void Persist(IPersistent obj)
-        {
+    public virtual void Persist(IPersistent obj)
+    {
             if (!InTransaction)
             { 
                 InstancePersisted?.Invoke(this, obj);
             }
         }
 
-        public virtual List<string> Files(IPersistent persistentObject)
-        {
+    public virtual List<string> Files(IPersistent persistentObject)
+    {
             return new List<string>();
         }
 
-        public abstract bool InTransaction { get; }
+    public abstract bool InTransaction { get; }
 
-        public abstract void RefreshInstance(IPersistent persistentObject);
+    public abstract void RefreshInstance(IPersistent persistentObject);
 
-        public abstract object RetrieveInstance(Type type, Key primaryKey);
+    public abstract object RetrieveInstance(Type type, Key primaryKey);
 
-        public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
+    public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 
-        public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
+    public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
 
-        public T RetrieveInstance<T>(Guid instanceId)
-        {
+    public T RetrieveInstance<T>(Guid instanceId)
+    {
             return (T)RetrieveInstance(typeof(T), new Key(instanceId));
         }
 
-        public T RetrieveInstance<T>(Guid instanceId, bool useCache)
-        {
+    public T RetrieveInstance<T>(Guid instanceId, bool useCache)
+    {
             return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache);
         }
 
-        public T RetrieveInstance<T>(
-            Guid instanceId, bool useCache, bool throwNotFoundException)
-        {
+    public T RetrieveInstance<T>(
+        Guid instanceId, bool useCache, bool throwNotFoundException)
+    {
             return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache, 
                 throwNotFoundException);
         }
-    }
 }

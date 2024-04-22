@@ -22,44 +22,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for DropDownFilterPart.
+/// </summary>
+public class DropDownFilterPart : FilterPart
 {
-	/// <summary>
-	/// Summary description for DropDownFilterPart.
-	/// </summary>
-	public class DropDownFilterPart : FilterPart
+	#region Constructor
+	public DropDownFilterPart(AsDropDown filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 	{
-		#region Constructor
-		public DropDownFilterPart(AsDropDown filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
-		{
 			this.FilterDropDown.CaptionPosition = CaptionPosition.None;
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		private AsDropDown DropDown
+	#region Properties
+	private AsDropDown DropDown
+	{
+		get
 		{
-			get
-			{
 				return (AsDropDown)this.FilteredControl;
 			}
-		}
+	}
 
-		AsDropDown _filterDropDown = new AsDropDown();
-		private AsDropDown FilterDropDown
+	AsDropDown _filterDropDown = new AsDropDown();
+	private AsDropDown FilterDropDown
+	{
+		get
 		{
-			get
-			{
 				return _filterDropDown;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Overriden Members
-		public override FilterOperator[] AllowedOperators
+	#region Overriden Members
+	public override FilterOperator[] AllowedOperators
+	{
+		get
 		{
-			get
-			{
 				return new FilterOperator[] {
 												FilterOperator.Equals, 
 												FilterOperator.NotEquals,
@@ -67,19 +67,19 @@ namespace Origam.Gui.Win
 												FilterOperator.NotIsNull
 											};
 			}
-		}
+	}
 
-		public override FilterOperator DefaultOperator
+	public override FilterOperator DefaultOperator
+	{
+		get
 		{
-			get
-			{
 				return FilterOperator.Equals;
 			}
-		}
+	}
 
 
-		public override void CreateFilterControls()
-		{
+	public override void CreateFilterControls()
+	{
 			UnsubscribeEvents();
 			this.FilterControls.Clear();
 
@@ -100,13 +100,13 @@ namespace Origam.Gui.Win
 			OnControlsChanged();
 		}
 
-		public override void LoadValues()
-		{
+	public override void LoadValues()
+	{
 			this.FilterDropDown.LookupValue = this.Value1;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				if(this.FilterDropDown != null)
@@ -120,29 +120,28 @@ namespace Origam.Gui.Win
 		}
 
 
-		#endregion
+	#endregion
 
-		#region EventHandlers
-		private void FilterDropDown_lookupValueChanged(object sender, EventArgs e)
-		{
+	#region EventHandlers
+	private void FilterDropDown_lookupValueChanged(object sender, EventArgs e)
+	{
 			this.Value1 = this.FilterDropDown.LookupValue;
 		}
-		#endregion
+	#endregion
 
-		#region Private Methods
-		private void SubscribeEvents()
-		{
+	#region Private Methods
+	private void SubscribeEvents()
+	{
 		    ServiceManager.Services.GetService<IControlsLookUpService>()
 		        .AddLookupControl(this.FilterDropDown, this.FormGenerator.Form, false);
 			this.FilterDropDown.lookupValueChanged += new EventHandler(FilterDropDown_lookupValueChanged);
 		}
 
-		private void UnsubscribeEvents()
-		{
+	private void UnsubscribeEvents()
+	{
 		    ServiceManager.Services.GetService<IControlsLookUpService>()
 		        .RemoveLookupControl(this.FilterDropDown);
 			this.FilterDropDown.lookupValueChanged -= new EventHandler(FilterDropDown_lookupValueChanged);
 		}
-		#endregion
-	}
+	#endregion
 }

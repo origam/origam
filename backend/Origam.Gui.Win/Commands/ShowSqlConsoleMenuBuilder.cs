@@ -24,14 +24,14 @@ using Origam.Workbench.Services.CoreServices;
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Gui.Win.Commands
-{
-    public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
-    {
-        public bool LateBound => true;
+namespace Origam.Gui.Win.Commands;
 
-        public AsMenuCommand[] BuildSubmenu(object owner)
-        {
+public class ShowSqlConsoleMenuBuilder : ISubmenuBuilder
+{
+	public bool LateBound => true;
+
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
 			var list = new List<AsMenuCommand>();
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             if (settings != null)
@@ -44,20 +44,20 @@ namespace Origam.Gui.Win.Commands
 			return list.ToArray();
 		}
 
-        public bool HasItems()
-        {
+	public bool HasItems()
+	{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 			return settings != null;
         }
 
-		private void MenuItemClick(object sender, EventArgs e)
-		{
+	private void MenuItemClick(object sender, EventArgs e)
+	{
 			AsMenuCommand cmd = sender as AsMenuCommand;
 			cmd.Command.Run();
 		}
 
-		private void CreateMenuItem(List<AsMenuCommand> list, Platform platform)
-		{
+	private void CreateMenuItem(List<AsMenuCommand> list, Platform platform)
+	{
 			SqlConsoleParameters parameters = new SqlConsoleParameters
 			{
 				Platform = platform
@@ -67,5 +67,4 @@ namespace Origam.Gui.Win.Commands
 			menuItem.Click += new EventHandler(MenuItemClick);
 			list.Add(menuItem);
 		}
-	}
 }

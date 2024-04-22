@@ -23,27 +23,27 @@ using System;
 using MailKit.Net.Pop3;
 
 
-namespace Origam.Mail
+namespace Origam.Mail;
+
+/// <summary>
+/// Summary description for Pop3Transaction.
+/// </summary>
+public class Pop3Transaction : OrigamTransaction
 {
-	/// <summary>
-	/// Summary description for Pop3Transaction.
-	/// </summary>
-	public class Pop3Transaction : OrigamTransaction
-	{
-        public Pop3Transaction(Pop3Client client)
-        {
+    public Pop3Transaction(Pop3Client client)
+    {
             PopClient = client;
         }
 
-        public override void Commit()
-        {
+    public override void Commit()
+    {
             CheckStatus();
             PopClient.Disconnect(true);
             PopClient.Dispose();
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
             CheckStatus();
 
             PopClient.Reset();
@@ -51,10 +51,10 @@ namespace Origam.Mail
             PopClient.Dispose();
         }
 
-        public Pop3Client PopClient { get; } = null;
+    public Pop3Client PopClient { get; } = null;
 
-        private void CheckStatus()
-        {
+    private void CheckStatus()
+    {
             if (PopClient == null)
             {
                 throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
@@ -65,5 +65,4 @@ namespace Origam.Mail
                 throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
             }
         }
-    }
 }

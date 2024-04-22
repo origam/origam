@@ -32,14 +32,14 @@ using Origam.Workbench.Services;
 
 
 
-namespace Origam.Workbench.ServicesTests
+namespace Origam.Workbench.ServicesTests;
+
+[TestFixture]
+public class FileStorageDocumentationServiceTests
 {
-    [TestFixture]
-    public class FileStorageDocumentationServiceTests
+    [Test]
+    public void ShouldAddTwoDocumentationItems()
     {
-        [Test]
-        public void ShouldAddTwoDocumentationItems()
-        {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(WritingTestFiles);
             DocumentationComplete dataSet = GetTestDataSet("inputDataSet_2Items.xml");
@@ -48,9 +48,9 @@ namespace Origam.Workbench.ServicesTests
             Assert.That(xmlDocument.FirstChild.ChildNodes, Has.Count.EqualTo(2));
         }
 
-        [Test]
-        public void ShouldUpdateOneDocumentationItem()
-        {
+    [Test]
+    public void ShouldUpdateOneDocumentationItem()
+    {
             var sut = GetFileStorageDocumentationService(WritingTestFiles);
             DocumentationComplete dataSet = GetTestDataSet("inputDataSet_1UpdatedItem.xml");
             sut.SaveDocumentation(dataSet);
@@ -61,9 +61,9 @@ namespace Origam.Workbench.ServicesTests
             Assert.That(updatedNode.ChildNodes[0].InnerText == "Updated text");
         }
 
-        [Test]
-        public void ShouldReadDatSet()
-        {
+    [Test]
+    public void ShouldReadDatSet()
+    {
             var sut = GetFileStorageDocumentationService(ReadingTestFiles);
             DocumentationComplete loadedSet =
                 sut.LoadDocumentation(new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"));
@@ -71,9 +71,9 @@ namespace Origam.Workbench.ServicesTests
             Assert.That(loadedSet.Tables[0].Rows, Has.Count.EqualTo(2));
         }
 
-        [Test]
-        public void ShouldLoadDocumentationOfSpecifiedType()
-        {
+    [Test]
+    public void ShouldLoadDocumentationOfSpecifiedType()
+    {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(ReadingTestFiles);
             string loadedDoc = sut.GetDocumentation(
@@ -83,9 +83,9 @@ namespace Origam.Workbench.ServicesTests
             Assert.That(loadedDoc == "Short help");
         }
         
-        [Test]
-        public void ShouldThrowBecauseCategoryNameIsWrong()
-        {
+    [Test]
+    public void ShouldThrowBecauseCategoryNameIsWrong()
+    {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongCategoryName"));
@@ -97,9 +97,9 @@ namespace Origam.Workbench.ServicesTests
                 });
         }
         
-        [Test]
-        public void ShouldThrowBecauseAStringCannotBeParsedToGuid()
-        {
+    [Test]
+    public void ShouldThrowBecauseAStringCannotBeParsedToGuid()
+    {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongGuid"));
@@ -111,9 +111,9 @@ namespace Origam.Workbench.ServicesTests
             });
         }
         
-        [Test]
-        public void ShouldThrowBecauseANodeNameIsWrong()
-        {
+    [Test]
+    public void ShouldThrowBecauseANodeNameIsWrong()
+    {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongNodeName"));
@@ -125,17 +125,17 @@ namespace Origam.Workbench.ServicesTests
             });
         }
 
-        private DirectoryInfo GetDirectory(string dirName)
-        {
+    private DirectoryInfo GetDirectory(string dirName)
+    {
             string pathToDir =
                 Path.Combine(ReadingTestFiles.FullName, dirName);
             var directoryInfo = new DirectoryInfo(pathToDir);
             return directoryInfo;
         }
 
-        private FileStorageDocumentationService GetFileStorageDocumentationService(
-            DirectoryInfo storageDir)
-        {
+    private FileStorageDocumentationService GetFileStorageDocumentationService(
+        DirectoryInfo storageDir)
+    {
             var mockFileProvider = new MockFileProvider(storageDir);
             var fileStorageDocumentationService =
                 new FileStorageDocumentationService(mockFileProvider, 
@@ -144,16 +144,16 @@ namespace Origam.Workbench.ServicesTests
             return fileStorageDocumentationService;
         }
 
-        private XmlDocument GetOutDocument()
-        {
+    private XmlDocument GetOutDocument()
+    {
             string outFilePath = Path.Combine(WritingTestFiles.FullName, ".origamDoc");
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(outFilePath);
             return xmlDocument;
         }
 
-        private DocumentationComplete GetTestDataSet(string name)
-        {
+    private DocumentationComplete GetTestDataSet(string name)
+    {
             string testInputPath =
                 Path.Combine(WritingTestFiles.FullName, name);
             var dataSet = new DocumentationComplete();
@@ -161,216 +161,215 @@ namespace Origam.Workbench.ServicesTests
             return dataSet;
         }
 
-        protected static readonly DirectoryInfo projectDir =
-            new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+    protected static readonly DirectoryInfo projectDir =
+        new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
 
-        protected DirectoryInfo WritingTestFiles {
-            get
-            {
+    protected DirectoryInfo WritingTestFiles {
+        get
+        {
                 string path = Path.Combine(projectDir.FullName, "FileStorageDocumentationServiceTests", "WritingTestFiles");
                 Directory.CreateDirectory(path);
                 return new DirectoryInfo(path);
             }
-        }
-        protected DirectoryInfo ReadingTestFiles {
-            get
-            {
+    }
+    protected DirectoryInfo ReadingTestFiles {
+        get
+        {
                 string path = Path.Combine(projectDir.FullName, "FileStorageDocumentationServiceTests",  "ReadingTestFiles");
                 Directory.CreateDirectory(path);
                 return new DirectoryInfo(path);
             }
-        }
     }
+}
 
-    internal class MockFileProvider: IFilePersistenceProvider
+internal class MockFileProvider: IFilePersistenceProvider
+{
+    private readonly DirectoryInfo testDir;
+
+    public MockFileProvider(DirectoryInfo testDir)
     {
-        private readonly DirectoryInfo testDir;
-
-        public MockFileProvider(DirectoryInfo testDir)
-        {
             this.testDir = testDir;
             this.LocalizationCache = new LocalizationCache();
         }
         
-        public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
-            testDir;
+    public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
+        testDir;
 
-        public bool Has(Guid id) => true;
-        public DirectoryInfo TopDirectory { get; }
-        public object Clone()
-        {
+    public bool Has(Guid id) => true;
+    public DirectoryInfo TopDirectory { get; }
+    public object Clone()
+    {
             throw new NotImplementedException();
         }
 
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             throw new NotImplementedException();
         }
 
-        public event EventHandler<IPersistent> InstancePersisted
-        {
-            add { }
-            remove { }
-        }
-        public void OnTransactionEnded(object sender)
-        {
+    public event EventHandler<IPersistent> InstancePersisted
+    {
+        add { }
+        remove { }
+    }
+    public void OnTransactionEnded(object sender)
+    {
             throw new NotImplementedException();
         }
 
-        public ICompiledModel CompiledModel { get; set; }
-        public void RefreshInstance(IPersistent persistentObject)
-        {
+    public ICompiledModel CompiledModel { get; set; }
+    public void RefreshInstance(IPersistent persistentObject)
+    {
             throw new NotImplementedException();
         }
 
-        public void RemoveFromCache(IPersistent instance)
-        {
+    public void RemoveFromCache(IPersistent instance)
+    {
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveList<T>(IDictionary<string, object> filter = null)
-        {
+    public List<T> RetrieveList<T>(IDictionary<string, object> filter = null)
+    {
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveListByCategory<T>(string category)
-        {
+    public List<T> RetrieveListByCategory<T>(string category)
+    {
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveListByPackage<T>(Guid packageId)
-        {
+    public List<T> RetrieveListByPackage<T>(Guid packageId)
+    {
             throw new NotImplementedException();
         }
 
-        public T[] FullTextSearch<T>(string text)
-        {
+    public T[] FullTextSearch<T>(string text)
+    {
             throw new NotImplementedException();
         }
 
-        public void Persist(IPersistent obj)
-        {
+    public void Persist(IPersistent obj)
+    {
             throw new NotImplementedException();
         }
 
-        public string DebugInfo()
-        {
+    public string DebugInfo()
+    {
             throw new NotImplementedException();
         }
 
-        public void DebugShow()
-        {
+    public void DebugShow()
+    {
             throw new NotImplementedException();
         }
 
-        public string DebugChangesInfo()
-        {
+    public string DebugChangesInfo()
+    {
             throw new NotImplementedException();
         }
 
-        public void DebugChangesShow()
-        {
+    public void DebugChangesShow()
+    {
             throw new NotImplementedException();
         }
 
-        public void FlushCache()
-        {
+    public void FlushCache()
+    {
             throw new NotImplementedException();
         }
 
-        public void DeletePackage(Guid packageId)
-        {
+    public void DeletePackage(Guid packageId)
+    {
             throw new NotImplementedException();
         }
 
-        public bool IsInTransaction { get; }
+    public bool IsInTransaction { get; }
 
-        public void RunInTransaction(Action action)
-        {
+    public void RunInTransaction(Action action)
+    {
             action();
         }
 
-        public void BeginTransaction()
-        {
+    public void BeginTransaction()
+    {
             throw new NotImplementedException();
         }
 
-        public void EndTransaction()
-        {
+    public void EndTransaction()
+    {
             throw new NotImplementedException();
         }
 
-        public void EndTransactionDontSave()
-        {
+    public void EndTransactionDontSave()
+    {
             throw new NotImplementedException();
         }
 
-        public object RetrieveValue(Guid instanceId, Type parentType, string fieldName)
-        {
+    public object RetrieveValue(Guid instanceId, Type parentType, string fieldName)
+    {
             throw new NotImplementedException();
         }
 
-        public void RestrictToLoadedPackage(bool b)
-        {
+    public void RestrictToLoadedPackage(bool b)
+    {
             throw new NotImplementedException();
         }
 
-        public ILocalizationCache LocalizationCache { get; }
-        public List<string> Files(IPersistent item)
-        {
+    public ILocalizationCache LocalizationCache { get; }
+    public List<string> Files(IPersistent item)
+    {
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveListByGroup<T>(Key primaryKey)
-        {
+    public List<T> RetrieveListByGroup<T>(Key primaryKey)
+    {
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName,
-            string childTableName, bool useCache)
-        {
+    public List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName,
+        string childTableName, bool useCache)
+    {
             throw new NotImplementedException();
         }
 
-        public object RetrieveInstance(Type type, Key primaryKey, bool useCache,
-            bool throwNotFoundException)
-        {
+    public object RetrieveInstance(Type type, Key primaryKey, bool useCache,
+        bool throwNotFoundException)
+    {
             throw new NotImplementedException();
         }
 
-        public object RetrieveInstance(Type type, Key primaryKey, bool useCache)
-        {
+    public object RetrieveInstance(Type type, Key primaryKey, bool useCache)
+    {
             throw new NotImplementedException();
         }
 
-        public object RetrieveInstance(Type type, Key primaryKey)
-        {
+    public object RetrieveInstance(Type type, Key primaryKey)
+    {
             throw new NotImplementedException();
         }
 
-        public ArrayList GetReference( Key key)
-        {
+    public ArrayList GetReference( Key key)
+    {
             throw new NotImplementedException();
         }
 
-        public bool IsOfType<T>(Guid id)
-        {
+    public bool IsOfType<T>(Guid id)
+    {
             throw new NotImplementedException();
         }
 
-        public T RetrieveInstance<T>(Guid instanceId)
-        {
+    public T RetrieveInstance<T>(Guid instanceId)
+    {
             throw new NotImplementedException();
         }
 
-        public T RetrieveInstance<T>(Guid instanceId, bool useCache)
-        {
+    public T RetrieveInstance<T>(Guid instanceId, bool useCache)
+    {
             throw new NotImplementedException();
         }
 
-        public T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException)
-        {
+    public T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException)
+    {
             throw new NotImplementedException();
         }
-    }
 }

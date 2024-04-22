@@ -44,10 +44,9 @@ using System.Collections.Generic;
 using Origam.Schema.GuiModel;
 using System.Web;
 
-namespace Origam.Server.Pages
-{ 
-    public interface IPageRequestHandler
-    {
-        void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response);
-    }
+namespace Origam.Server.Pages;
+
+public interface IPageRequestHandler
+{
+    void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response);
 }

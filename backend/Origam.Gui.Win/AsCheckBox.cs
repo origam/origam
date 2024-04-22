@@ -29,20 +29,20 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for AsCheckBox.
+/// </summary>
+[ToolboxBitmap(typeof(AsCheckBox))]
+public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
 {
-	/// <summary>
-	/// Summary description for AsCheckBox.
-	/// </summary>
-	[ToolboxBitmap(typeof(AsCheckBox))]
-	public class AsCheckBox : CheckBox, IAsControl, IAsCaptionControl
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+	public event EventHandler valueChanged;
+
+	public AsCheckBox()
 	{
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-		public event EventHandler valueChanged;
-
-		public AsCheckBox()
-		{
 			this.FlatStyle = FlatStyle.Flat;
 			this.BackColor = System.Drawing.Color.Transparent;
 
@@ -54,12 +54,12 @@ namespace Origam.Gui.Win
 			this.DataBindings.CollectionChanged += new CollectionChangeEventHandler(DataBindings_CollectionChanged);
 		}
 
-		#region IAsControl Members
+	#region IAsControl Members
 
-		public object Value
+	public object Value
+	{
+		get
 		{
-			get
-			{
 				if(this.CheckState == CheckState.Indeterminate)
 				{
 					return DBNull.Value;
@@ -69,8 +69,8 @@ namespace Origam.Gui.Win
 					return this.Checked;
 				}
 			}
-			set
-			{
+		set
+		{
 				if(value==DBNull.Value | value == null)
 				{
 					if(this.ThreeState)
@@ -103,74 +103,74 @@ namespace Origam.Gui.Win
 		}
 
             
-		}
+	}
 
-		public string DefaultBindableProperty
+	public string DefaultBindableProperty
+	{
+		get
 		{
-			get
-			{
 				return "Value";
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		public override string Text
+	#region Properties
+	public override string Text
+	{
+		get => base.Text;
+		set
 		{
-			get => base.Text;
-			set
-			{
 				if(value != null && !value.StartsWith("AsCheckBox"))
 				{
 					base.Text = value;
 				}
 			}
-		}
+	}
 
-		int _gridColumnWidth;
-		[Category("(ORIGAM)")]
-		[DefaultValue(100)] 
-		[Description(CaptionDoc.GridColumnWidthDescription)]
-		public int GridColumnWidth
+	int _gridColumnWidth;
+	[Category("(ORIGAM)")]
+	[DefaultValue(100)] 
+	[Description(CaptionDoc.GridColumnWidthDescription)]
+	public int GridColumnWidth
+	{
+		get
 		{
-			get
-			{
 				return _gridColumnWidth;
 			}
-			set
-			{
+		set
+		{
 				_gridColumnWidth = value;
 			}
-		}
+	}
 
-		private bool _readOnly = false;
+	private bool _readOnly = false;
 
-		[Browsable(true)]
-		[Category("Behavior")]
-		[DefaultValue(false)]
-		public bool ReadOnly
+	[Browsable(true)]
+	[Category("Behavior")]
+	[DefaultValue(false)]
+	public bool ReadOnly
+	{
+		get
 		{
-			get
-			{
 				return _readOnly;
 			}
-			set
-			{
+		set
+		{
 				_readOnly = value;
 				if(! this.DesignMode) this.Enabled = !value;
 			}
-		}
+	}
 
-		private bool _hideOnForm = false;
-		public bool HideOnForm
+	private bool _hideOnForm = false;
+	public bool HideOnForm
+	{
+		get
 		{
-			get
-			{
 				return _hideOnForm;
 			}
-			set
-			{
+		set
+		{
 				_hideOnForm = value;
 
 				if(value && ! this.DesignMode)
@@ -178,14 +178,14 @@ namespace Origam.Gui.Win
 					this.Hide();
 				}
 			}
-		}
+	}
 
-		private bool _enabled = false;
+	private bool _enabled = false;
 
-		public new bool Enabled
+	public new bool Enabled
+	{
+		get
 		{
-			get
-			{
 				if(this.ReadOnly) 
 				{
 					return false;
@@ -195,8 +195,8 @@ namespace Origam.Gui.Win
 					return _enabled;
 				}
 			}
-			set
-			{
+		set
+		{
 				_enabled = value;
 
 				if(this.ReadOnly)
@@ -215,39 +215,39 @@ namespace Origam.Gui.Win
 					base.Enabled = value;
 				}
 			}
-		}
+	}
 
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
 		{
-			get
-			{
 				return _styleId;
 			}
-			set
-			{
+		set
+		{
 				_styleId = value;
 			}
-		}
+	}
 
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
 		{
-			get
-			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-			set
-			{
+		set
+		{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Events
-		void OnValueChanged(EventArgs e)
-		{
+	#region Events
+	void OnValueChanged(EventArgs e)
+	{
 			if (valueChanged != null) 
 			{
 				valueChanged(this, e);
@@ -255,32 +255,32 @@ namespace Origam.Gui.Win
 
 			this.OnValidating(new CancelEventArgs(false));
 		}
-		#endregion
+	#endregion
 
-		#region Event Handlers
-		private void AsCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
+	#region Event Handlers
+	private void AsCheckBox_CheckedChanged(object sender, EventArgs e)
+	{
 			//OnValueChanged(EventArgs.Empty);
 		}
 
-		private void AsCheckBox_Click(object sender, EventArgs e)
-		{
+	private void AsCheckBox_Click(object sender, EventArgs e)
+	{
 			OnValueChanged(EventArgs.Empty);
 			System.Diagnostics.Debug.WriteLine("Checked changed");
 		}
 
-		private void AsCheckBox_KeyPress(object sender, KeyPressEventArgs e)
-		{
+	private void AsCheckBox_KeyPress(object sender, KeyPressEventArgs e)
+	{
 			//OnValueChanged(EventArgs.Empty);
 		}
 
-		private void AsCheckBox_EnabledChanged(object sender, EventArgs e)
-		{
+	private void AsCheckBox_EnabledChanged(object sender, EventArgs e)
+	{
 			if(this.ReadOnly & base.Enabled) this.Enabled = false;
 		}
 		
-		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
-		{
+	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
+	{
 			if(this.DesignMode)
 			{
 				if(this.Text == "")
@@ -309,64 +309,64 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-		#endregion
+	#endregion
 		
-		#region IAsCaptionControl Members
+	#region IAsCaptionControl Members
 
-		public string Caption
+	public string Caption
+	{
+		get
 		{
-			get
-			{
 				return base.Text;
 			}
-			set
-			{
+		set
+		{
 				base.Text = value ?? "";
 			}
-		}
+	}
 
-		private string _gridColumnCaption;
-		public string GridColumnCaption
+	private string _gridColumnCaption;
+	public string GridColumnCaption
+	{
+		get
 		{
-			get
-			{
 				return _gridColumnCaption;
 			}
-			set
-			{
+		set
+		{
 				_gridColumnCaption = value;
 			}
-		}
+	}
 
-		public int CaptionLength
+	public int CaptionLength
+	{
+		get
 		{
-			get
-			{
 				return this.Width;
 			}
-			set
-			{
+		set
+		{
 				//this.Width = value;
 			}
-		}
+	}
 
-		public CaptionPosition CaptionPosition
+	public CaptionPosition CaptionPosition
+	{
+		get
 		{
-			get
-			{
 				return CaptionPosition.Right;
 			}
-			set
-			{
+		set
+		{
 				// TODO:  Add AsCheckBox.CaptionPosition setter implementation
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region Private Methods
-		private string ColumnCaption(Binding binding)
-		{
+	#region Private Methods
+	private string ColumnCaption(Binding binding)
+	{
 			if(binding.DataSource is DataSet)
 			{
 				DataSet dataset = binding.DataSource as DataSet;
@@ -383,8 +383,8 @@ namespace Origam.Gui.Win
 			return binding.BindingMemberInfo.BindingField;
 		}
 
-		private string TableName(DataSet ds, string dataMember)
-		{
+	private string TableName(DataSet ds, string dataMember)
+	{
 			// In case that dataMember is a path through relations, we find the last table
 			// so we can take a caption out of it
 			string tableName = "";
@@ -408,8 +408,8 @@ namespace Origam.Gui.Win
 			return tableName;
 		}
 
-		private void ResetCaption()
-		{
+	private void ResetCaption()
+	{
 			if(this.Caption == "")
 			{
 				foreach(Binding binding in this.DataBindings)
@@ -426,6 +426,5 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-		#endregion
-	}
+	#endregion
 }

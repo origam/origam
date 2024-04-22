@@ -17,34 +17,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Drawing;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing
-{
-    internal class BalloonPainter: INodeItemPainter
-    {
-        private readonly InternalPainter painter;
-        private readonly SolidBrush balloonBrush;
-        private readonly int balloonRadius = 20;
+namespace Origam.Workbench.Diagram.NodeDrawing;
 
-        public BalloonPainter(InternalPainter painter, SolidBrush balloonBrush)
-        {
+internal class BalloonPainter: INodeItemPainter
+{
+    private readonly InternalPainter painter;
+    private readonly SolidBrush balloonBrush;
+    private readonly int balloonRadius = 20;
+
+    public BalloonPainter(InternalPainter painter, SolidBrush balloonBrush)
+    {
             this.painter = painter;
             this.balloonBrush = balloonBrush;
         }
 
-        public ICurve GetBoundary(Node node)
-        {
+    public ICurve GetBoundary(Node node)
+    {
             return new Ellipse(balloonRadius,balloonRadius,new Point(0,0));
         }
 
-        public bool Draw(Node node, object graphicsObj)
-        {
+    public bool Draw(Node node, object graphicsObj)
+    {
             Graphics editorGraphics = (Graphics) graphicsObj;
             
             SizeF stringSize =
@@ -71,5 +72,4 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             return true;
         }
-    }
 }

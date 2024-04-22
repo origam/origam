@@ -4,20 +4,20 @@ using IdentityServer4.Models;
 using Origam.Server.Configuration;
 using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+static class Settings
 {
-    static class Settings
+    internal static ApiResource[] GetIdentityApiResources()
     {
-        internal static ApiResource[] GetIdentityApiResources()
-        {
             return new[]
             {
                 new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
             };
         }
 
-        internal static IdentityResource[] GetIdentityResources()
-        {
+    internal static IdentityResource[] GetIdentityResources()
+    {
             return new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
@@ -25,9 +25,9 @@ namespace Origam.Server
             };
         }
 
-        internal static Client[] GetIdentityClients(
-            IdentityServerConfig identityServerConfig)
-        {
+    internal static Client[] GetIdentityClients(
+        IdentityServerConfig identityServerConfig)
+    {
             List<Client> clients = new List<Client>();
             if (identityServerConfig.ServerClient != null)
             {
@@ -95,12 +95,11 @@ namespace Origam.Server
             return clients.ToArray();
         }
 
-        public static IEnumerable<ApiScope> GetApiScopes()
-        {
+    public static IEnumerable<ApiScope> GetApiScopes()
+    {
             return new List<ApiScope>
             {
                 new ApiScope(IdentityServerConstants.LocalApi.ScopeName),
             };
         }
-    }
 }

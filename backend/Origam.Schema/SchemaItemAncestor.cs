@@ -29,58 +29,58 @@ using Origam.DA.ObjectPersistence;
 using System.Collections.Generic;
 using Origam.DA;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+
+/// <summary>
+/// Summary description for AncestorItem.
+/// </summary>
+[XmlModelRoot("ancestor")]
+[ClassMetaVersion("6.0.0")]
+public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 
+	ICloneable, IComparable, IFilePersistent
 {
-	/// <summary>
-	/// Summary description for AncestorItem.
-	/// </summary>
-	[XmlModelRoot("ancestor")]
-    [ClassMetaVersion("6.0.0")]
-	public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 
-        ICloneable, IComparable, IFilePersistent
+	public SchemaItemAncestor()
 	{
-		public SchemaItemAncestor()
-		{
 			this.PrimaryKey = new ModelElementKey();
 		}
 
-		public SchemaItemAncestor(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray)	{}
+	public SchemaItemAncestor(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray)	{}
 
-		private AbstractSchemaItem _schemaItem;
-		[Browsable(false)]
-		public AbstractSchemaItem SchemaItem
+	private AbstractSchemaItem _schemaItem;
+	[Browsable(false)]
+	public AbstractSchemaItem SchemaItem
+	{
+		get
 		{
-			get
-			{
 				return _schemaItem;
 			}
-			set
-			{
+		set
+		{
 				_schemaItem = value;
 			}
-		}
+	}
 
-		private Guid _ancestorId;
+	private Guid _ancestorId;
 
-		[Browsable(false)]
-		public Guid AncestorId
+	[Browsable(false)]
+	public Guid AncestorId
+	{
+		get
 		{
-			get
-			{
 				return _ancestorId;
 			}
-			set
-			{
+		set
+		{
 				_ancestorId = value;
 			}
-		}
+	}
 
-		[TypeConverter(typeof(AncestorItemConverter))]
-        [XmlReference("ancestor", "AncestorId")]
-		public AbstractSchemaItem Ancestor
+	[TypeConverter(typeof(AncestorItemConverter))]
+	[XmlReference("ancestor", "AncestorId")]
+	public AbstractSchemaItem Ancestor
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.AncestorId;
 
@@ -93,109 +93,109 @@ namespace Origam.Schema
 					return null;
 				}
 			}
-			set
-			{
+		set
+		{
 				this.AncestorId = (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		#region IBrowserNode2 Members
-		[Browsable(false)] 
-		public bool Hide
+	#region IBrowserNode2 Members
+	[Browsable(false)] 
+	public bool Hide
+	{
+		get
 		{
-			get
-			{
 				return !this.IsPersisted;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public bool CanDelete
+	[Browsable(false)]
+	public bool CanDelete
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 
-		public void Delete()
-		{
+	public void Delete()
+	{
 			this.IsDeleted = true;
 			this.Ancestor.AllAncestors.Remove(this);
 		}
 
-		public bool CanMove(IBrowserNode2 newNode)
-		{
+	public bool CanMove(IBrowserNode2 newNode)
+	{
 			return false;
 		}
 
-		[Browsable(false)]
-		public IBrowserNode2 ParentNode
+	[Browsable(false)]
+	public IBrowserNode2 ParentNode
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErorrMoveAncestor"));
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public byte[] NodeImage
+	[Browsable(false)] 
+	public byte[] NodeImage
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public string NodeId
+	[Browsable(false)] 
+	public string NodeId
+	{
+		get
 		{
-			get
-			{
 				return this.PrimaryKey["Id"].ToString();
 			}
-		}
+	}
 
-        [Browsable(false)]
-        public virtual string FontStyle
-        {
-            get
-            {
+	[Browsable(false)]
+	public virtual string FontStyle
+	{
+		get
+		{
                 return "Regular";
             }
-        }
-        #endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		[Browsable(false)]
-		public bool HasChildNodes
+	[Browsable(false)]
+	public bool HasChildNodes
+	{
+		get
 		{
-			get
-			{
 				return this.ChildNodes().Count > 0;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public bool CanRename
+	[Browsable(false)]
+	public bool CanRename
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 
-		public BrowserNodeCollection ChildNodes()
-		{
+	public BrowserNodeCollection ChildNodes()
+	{
 			BrowserNodeCollection col = new BrowserNodeCollection();
 			Hashtable folders = new Hashtable();
 
@@ -233,85 +233,85 @@ namespace Origam.Schema
 			return col;		
 		}
 
-		[Browsable(false)]
-		public string NodeText
+	[Browsable(false)]
+	public string NodeText
+	{
+		get
 		{
-			get
-			{
 				return this.Ancestor.Name;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorRenameAncestor"));
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public string NodeToolTipText
+	[Browsable(false)]
+	public string NodeToolTipText
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add SchemaItemAncestor.NodeToolTipText getter implementation
 				return null;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public string Icon
+	[Browsable(false)]
+	public string Icon
+	{
+		get
 		{
-			get
-			{
 				return "3";
 			}
-		}
+	}
 
-        public string RelativeFilePath
-        {
-            get
-            {
+	public string RelativeFilePath
+	{
+		get
+		{
                 return SchemaItem?.RelativeFilePath ?? "";
             }
-        }
+	}
 
-        public Guid FileParentId
-        {
-            get => SchemaItem?.Id ?? Guid.Empty;
-            set { }
-	    }
+	public Guid FileParentId
+	{
+		get => SchemaItem?.Id ?? Guid.Empty;
+		set { }
+	}
 
-	    public bool IsFolder
-        {
-            get
-            {
+	public bool IsFolder
+	{
+		get
+		{
                 return false;
             }
-        }
+	}
 
-        public IDictionary<string, Guid> ParentFolderIds =>
-	        new Dictionary<string, Guid>
-	        {
-		        {
-			        CategoryFactory.Create(typeof(Package)),
-			        SchemaItem.SchemaExtensionId
-				},
-				{
-					CategoryFactory.Create(typeof(SchemaItemGroup)),
-					SchemaItem.GroupId
-				}
-	        };
+	public IDictionary<string, Guid> ParentFolderIds =>
+		new Dictionary<string, Guid>
+		{
+			{
+				CategoryFactory.Create(typeof(Package)),
+				SchemaItem.SchemaExtensionId
+			},
+			{
+				CategoryFactory.Create(typeof(SchemaItemGroup)),
+				SchemaItem.GroupId
+			}
+		};
 
-		public string Path
-        {
-            get
-            {
+	public string Path
+	{
+		get
+		{
                 return "";
             }
-        }
+	}
 
-		public bool IsFileRootElement => FileParentId == Guid.Empty;
+	public bool IsFileRootElement => FileParentId == Guid.Empty;
 
-		public override string ToString()
-		{
+	public override string ToString()
+	{
 			if(this.Ancestor != null)
 			{
 				return this.Ancestor.Name;
@@ -322,12 +322,12 @@ namespace Origam.Schema
 			}
 		}
 
-		#endregion
+	#endregion
 
-		#region ICloneable Members
+	#region ICloneable Members
 
-		public object Clone()
-		{
+	public object Clone()
+	{
 			SchemaItemAncestor newItem = new SchemaItemAncestor();
 
 			newItem._ancestorId = this._ancestorId;
@@ -336,11 +336,11 @@ namespace Origam.Schema
 			return newItem;
 		}
 
-		#endregion
+	#endregion
 
-		#region IComparable Members
-		public int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public int CompareTo(object obj)
+	{
 			SchemaItemAncestor anc = obj as SchemaItemAncestor;
 			IBrowserNode other = obj as IBrowserNode;
 
@@ -357,6 +357,5 @@ namespace Origam.Schema
 				throw new InvalidCastException();
 			}
 		}
-        #endregion
-    }
+	#endregion
 }

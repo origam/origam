@@ -33,44 +33,44 @@ using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Type = System.Type;
 
-namespace Origam.Workbench.Editors
+namespace Origam.Workbench.Editors;
+
+public class AbstractEditor : AbstractViewContent, IToolStripContainer	
 {
-	public class AbstractEditor : AbstractViewContent, IToolStripContainer	
+	public event EventHandler ContentLoaded;
+
+	IDocumentationService _documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
+	private Panel toolPanel;
+	private ToolStrip toolStrip1;
+	private ToolStripLabel actionsLabel;
+	private ToolStripLabel newElementsLabel;
+	private Panel headerPanel;
+	private Label lblName;
+	private PictureBox elementPicture;
+	private Label lblType;
+	ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", ImageRes.Save_16x);
+	ToolStripMenuItem dockCmd = new ToolStripMenuItem("Dock", ImageRes.dock);
+	private ISubmenuBuilder _actionsBuilder = null;
+	private ISubmenuBuilder _newElementsBuilder = null;
+
+	protected bool showMenusInAppToolStrip = false;
+
+	public override object Content { get; set; }
+
+	public AbstractSchemaItem ModelContent
 	{
-		public event EventHandler ContentLoaded;
-
-		IDocumentationService _documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-        private Panel toolPanel;
-        private ToolStrip toolStrip1;
-        private ToolStripLabel actionsLabel;
-        private ToolStripLabel newElementsLabel;
-        private Panel headerPanel;
-        private Label lblName;
-        private PictureBox elementPicture;
-        private Label lblType;
-        ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", ImageRes.Save_16x);
-	    ToolStripMenuItem dockCmd = new ToolStripMenuItem("Dock", ImageRes.dock);
-        private ISubmenuBuilder _actionsBuilder = null;
-        private ISubmenuBuilder _newElementsBuilder = null;
-
-	    protected bool showMenusInAppToolStrip = false;
-
-        public override object Content { get; set; }
-
-		public AbstractSchemaItem ModelContent
-        {
-            get
-            {
+		get
+		{
                 return Content as AbstractSchemaItem;
             }
-            set
-            {
+		set
+		{
                 Content = value;
             }
-        }
+	}
 
-		private void InitializeComponent()
-		{
+	private void InitializeComponent()
+	{
             this.toolPanel = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.actionsLabel = new System.Windows.Forms.ToolStripLabel();
@@ -84,20 +84,16 @@ namespace Origam.Workbench.Editors
             this.headerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.elementPicture)).BeginInit();
             this.SuspendLayout();
-            // 
-            // toolPanel
-            // 
-            this.toolPanel.AutoSize = true;
+            // 	 // toolPanel
+            // 	 this.toolPanel.AutoSize = true;
             this.toolPanel.Controls.Add(this.toolStrip1);
             this.toolPanel.Dock = System.Windows.Forms.DockStyle.Right;
             this.toolPanel.Location = new System.Drawing.Point(635, 40);
             this.toolPanel.Name = "toolPanel";
             this.toolPanel.Size = new System.Drawing.Size(79, 521);
             this.toolPanel.TabIndex = 2;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
+            // 	 // toolStrip1
+            // 	 this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.actionsLabel,
@@ -111,26 +107,20 @@ namespace Origam.Workbench.Editors
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // actionsLabel
-            // 
-            this.actionsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            // 	 // actionsLabel
+            // 	 this.actionsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.actionsLabel.Name = "actionsLabel";
             this.actionsLabel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.actionsLabel.Size = new System.Drawing.Size(59, 32);
             this.actionsLabel.Text = "Actions";
-            // 
-            // newElementsLabel
-            // 
-            this.newElementsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            // 	 // newElementsLabel
+            // 	 this.newElementsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.newElementsLabel.Name = "newElementsLabel";
             this.newElementsLabel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.newElementsLabel.Size = new System.Drawing.Size(38, 32);
             this.newElementsLabel.Text = "New";
-            // 
-            // headerPanel
-            // 
-            this.headerPanel.Controls.Add(this.lblName);
+            // 	 // headerPanel
+            // 	 this.headerPanel.Controls.Add(this.lblName);
             this.headerPanel.Controls.Add(this.lblType);
             this.headerPanel.Controls.Add(this.elementPicture);
             this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -138,10 +128,8 @@ namespace Origam.Workbench.Editors
             this.headerPanel.Name = "headerPanel";
             this.headerPanel.Size = new System.Drawing.Size(714, 40);
             this.headerPanel.TabIndex = 0;
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
+            // 	 // lblName
+            // 	 this.lblName.AutoSize = true;
             this.lblName.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblName.Location = new System.Drawing.Point(74, 0);
@@ -151,10 +139,8 @@ namespace Origam.Workbench.Editors
             this.lblName.TabIndex = 1;
             this.lblName.Text = "label1";
             this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblType
-            // 
-            this.lblType.AutoSize = true;
+            // 	 // lblType
+            // 	 this.lblType.AutoSize = true;
             this.lblType.BackColor = System.Drawing.Color.Transparent;
             this.lblType.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblType.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -165,10 +151,8 @@ namespace Origam.Workbench.Editors
             this.lblType.TabIndex = 1;
             this.lblType.Text = "lblType";
             this.lblType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // elementPicture
-            // 
-            this.elementPicture.Dock = System.Windows.Forms.DockStyle.Left;
+            // 	 // elementPicture
+            // 	 this.elementPicture.Dock = System.Windows.Forms.DockStyle.Left;
             this.elementPicture.Location = new System.Drawing.Point(0, 0);
             this.elementPicture.Name = "elementPicture";
             this.elementPicture.Padding = new System.Windows.Forms.Padding(12, 12, 12, 16);
@@ -176,10 +160,8 @@ namespace Origam.Workbench.Editors
             this.elementPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.elementPicture.TabIndex = 0;
             this.elementPicture.TabStop = false;
-            // 
-            // AbstractEditor
-            // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
+            // 	 // AbstractEditor
+            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(714, 561);
             this.Controls.Add(this.toolPanel);
             this.Controls.Add(this.headerPanel);
@@ -199,8 +181,8 @@ namespace Origam.Workbench.Editors
 
 		}
 	
-		public AbstractEditor()
-		{
+	public AbstractEditor()
+	{
 			InitializeComponent();
             // show only vertical scrollbar
             toolPanel.HorizontalScroll.Maximum = 0;
@@ -212,8 +194,8 @@ namespace Origam.Workbench.Editors
 		    LoadSettings();
 		}
 
-		private void LoadSettings()
-		{
+	private void LoadSettings()
+	{
             if (ConfigurationManager.GetActiveConfiguration() != null)
             {
                 showMenusInAppToolStrip = ConfigurationManager
@@ -222,22 +204,22 @@ namespace Origam.Workbench.Editors
             }
         }
 
-		public override string TitleName
-        {
-            get
-            {
+	public override string TitleName
+	{
+		get
+		{
                 return base.TitleName;
             }
 
-            set
-            {
+		set
+		{
                 base.TitleName = value;
                 lblName.Text = TitleName;
             }
-        }
+	}
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
             if (IsDialog())
             {
                 if (keyData == (Keys.S | Keys.Control))
@@ -254,35 +236,35 @@ namespace Origam.Workbench.Editors
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        public ISubmenuBuilder ActionsBuilder
-        {
-            get
-            {
+	public ISubmenuBuilder ActionsBuilder
+	{
+		get
+		{
                 return _actionsBuilder;
             }
 
-            set
-            {
+		set
+		{
                 _actionsBuilder = value;
             }
-        }
+	}
 
-        public ISubmenuBuilder NewElementsBuilder
-        {
-            get
-            {
+	public ISubmenuBuilder NewElementsBuilder
+	{
+		get
+		{
                 return _newElementsBuilder;
             }
 
-            set
-            {
+		set
+		{
                 _newElementsBuilder = value;
                 RebuildActionsPane();
             }
-        }
+	}
 
-        private void RebuildActionsPane()
-        {
+	private void RebuildActionsPane()
+	{
 	        int width = toolPanel.Width;
 	        toolStrip1.AutoSize = false;
 	        toolPanel.AutoSize = false;
@@ -356,8 +338,8 @@ namespace Origam.Workbench.Editors
 			toolPanel.BackColor = toolStrip1.BackColor;
         }
 
-        private void DockCmd_Click(object sender, EventArgs e)
-        {
+	private void DockCmd_Click(object sender, EventArgs e)
+	{
             AbstractEditor newEditor = (AbstractEditor)Activator.CreateInstance(this.GetType(), new object[] { false });
             newEditor.LoadObject(ModelContent);
             newEditor.TitleName = ModelContent.Name;
@@ -366,13 +348,13 @@ namespace Origam.Workbench.Editors
             Close();
 	    }
 
-        private void SaveCmd_Click(object sender, EventArgs e)
-        {
+	private void SaveCmd_Click(object sender, EventArgs e)
+	{
             SaveCommand();
         }
 
-        private void SaveCommand()
-        {
+	private void SaveCommand()
+	{
             SaveObject();
             IsDirty = false;
             if (IsDialog())
@@ -381,13 +363,13 @@ namespace Origam.Workbench.Editors
             }
         }
 
-        public bool IsDialog()
-        {
+	public bool IsDialog()
+	{
             return ParentForm == null;
         }
 
-		protected virtual void OnContentLoaded(EventArgs e)
-		{
+	protected virtual void OnContentLoaded(EventArgs e)
+	{
 			if (ContentLoaded != null) 
 			{
 				ContentLoaded(this, e);
@@ -395,15 +377,15 @@ namespace Origam.Workbench.Editors
             RebuildActionsPane();
 		}
 
-        protected override void OnDirtyChanged(EventArgs e)
-        {
+	protected override void OnDirtyChanged(EventArgs e)
+	{
             base.OnDirtyChanged(e);
             RebuildActionsPane();
             ToolStripsNeedUpdate?.Invoke(this, EventArgs.Empty);
         }
 
-        protected override void ViewSpecificLoad(object objectToLoad)
-		{
+	protected override void ViewSpecificLoad(object objectToLoad)
+	{
             AbstractSchemaItem schemaItem = objectToLoad as AbstractSchemaItem;
             if (schemaItem != null)
 			{
@@ -427,8 +409,8 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-        public override void SaveObject()
-        {
+	public override void SaveObject()
+	{
             try
             {
                 ModelContent.PersistenceProvider.BeginTransaction();
@@ -487,10 +469,10 @@ namespace Origam.Workbench.Editors
             this.DialogResult = DialogResult.OK;
         }
 
-        public override string HelpTopic
-        {
-            get
-            {
+	public override string HelpTopic
+	{
+		get
+		{
                 if (ModelContent != null)
                 {
                     HelpTopicAttribute topic = Help(ModelContent.GetType());
@@ -501,10 +483,10 @@ namespace Origam.Workbench.Editors
                 }
                 return "";
             }
-        }
+	}
 
-        private HelpTopicAttribute Help(Type type)
-        {
+	private HelpTopicAttribute Help(Type type)
+	{
             object[] attributes = type.GetCustomAttributes(typeof(HelpTopicAttribute), true);
 
             if (attributes != null && attributes.Length > 0)
@@ -514,8 +496,8 @@ namespace Origam.Workbench.Editors
 
         }
 
-		private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
+	private void AbstractEditor_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+	{
 			if(IsDirty)
 			{
 				DialogResult result = MessageBox.Show(
@@ -573,7 +555,7 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-	    public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
+	public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
 		    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
 			var actions = ActionsBuilder.BuildSubmenu(Content);
 			var actionToolStrip = MakeLabeledToolStrip(actions, "Actions",maxWidth/2);
@@ -582,9 +564,9 @@ namespace Origam.Workbench.Editors
 			return new List<ToolStrip> {actionToolStrip, newToolStrip};			        
 	    }
 
-	    protected ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
-	        string toolStripName, int maxWidth)
-	    {
+	protected ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
+		string toolStripName, int maxWidth)
+	{
 		    BigToolStripButton[] toolStripButtons = items
 	            .Select(item =>
 	            {
@@ -608,9 +590,9 @@ namespace Origam.Workbench.Editors
 	        return toolStrip;
 	    }
 
-	    private static void HideItemsToFitToMaxWidth(ToolStrip toolStrip,
-	        ToolStripMenuItem[] items, int maxWidth)
-	    {
+	private static void HideItemsToFitToMaxWidth(ToolStrip toolStrip,
+		ToolStripMenuItem[] items, int maxWidth)
+	{
 	        var itemsToHide = new List<ToolStripItem>();
 	        var dropDownButton = new BigArrowToolStripDropDownButton();
 	        for (int i = 0; i < 200; i++)
@@ -641,16 +623,15 @@ namespace Origam.Workbench.Editors
 	        }
 	    }
 
-	    public event EventHandler ToolStripsLoaded
-        {
-            add { }
-            remove { }
-        }
-        public event EventHandler AllToolStripsRemoved
-        {
-            add { }
-            remove { }
-        }
-        public event EventHandler ToolStripsNeedUpdate;
+	public event EventHandler ToolStripsLoaded
+	{
+		add { }
+		remove { }
 	}
+	public event EventHandler AllToolStripsRemoved
+	{
+		add { }
+		remove { }
+	}
+	public event EventHandler ToolStripsNeedUpdate;
 }

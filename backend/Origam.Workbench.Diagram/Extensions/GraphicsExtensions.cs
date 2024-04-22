@@ -17,17 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Origam.Workbench.Diagram.Extensions
+namespace Origam.Workbench.Diagram.Extensions;
+
+public static class GraphicsExtensions
 {
-    public static class GraphicsExtensions
+    public static void DrawUpSideDown(this Graphics graphics, Action<Graphics> drawAction, float yAxisCoordinate)
     {
-        public static void DrawUpSideDown(this Graphics graphics, Action<Graphics> drawAction, float yAxisCoordinate)
-        {
             using (Matrix m = graphics.Transform)
             {
                 using (Matrix saveM = m.Clone())
@@ -42,5 +43,4 @@ namespace Origam.Workbench.Diagram.Extensions
                 }
             }
         } 
-    }
 }

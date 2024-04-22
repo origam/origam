@@ -32,20 +32,20 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
 
-namespace Origam.DA.Service
-{
-    abstract class AbstractInstanceCreator
-    {
-        private readonly ParentFolders parentFolderIds;
+namespace Origam.DA.Service;
 
-        protected AbstractInstanceCreator(ParentFolders parentFolderIds)
-        {
+abstract class AbstractInstanceCreator
+{
+    private readonly ParentFolders parentFolderIds;
+
+    protected AbstractInstanceCreator(ParentFolders parentFolderIds)
+    {
             this.parentFolderIds = parentFolderIds;
         }
 
-        public IFilePersistent RetrieveInstance( Guid id,
-            IPersistenceProvider provider, Guid parentId)
-        {
+    public IFilePersistent RetrieveInstance( Guid id,
+        IPersistenceProvider provider, Guid parentId)
+    {
             IFilePersistent instance = Instantiate(id, provider, parentId);
             
             var namespaceMapping = PropertyToNamespaceMapping.Get(instance.GetType());
@@ -56,19 +56,19 @@ namespace Origam.DA.Service
             instance.UseObjectCache = false;
             return instance;
         }
-        protected abstract void SetValue(IFilePersistent instance, MemberAttributeInfo mi, object value, IPersistenceProvider provider);
+    protected abstract void SetValue(IFilePersistent instance, MemberAttributeInfo mi, object value, IPersistenceProvider provider);
 
-        protected abstract void SetXmlAttributes(IFilePersistent instance, IPersistenceProvider provider,PropertyToNamespaceMapping namespaceMapping);
+    protected abstract void SetXmlAttributes(IFilePersistent instance, IPersistenceProvider provider,PropertyToNamespaceMapping namespaceMapping);
 
-        protected abstract void NoteExternalReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
+    protected abstract void NoteExternalReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
 
-        protected abstract void SetReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
+    protected abstract void SetReferences(IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping);
 
-        protected abstract string GetTypeName();
+    protected abstract string GetTypeName();
 
-        private void SetParentAttributes(Guid parentId, IFilePersistent instance,
-            IPersistenceProvider provider)
-        {
+    private void SetParentAttributes(Guid parentId, IFilePersistent instance,
+        IPersistenceProvider provider)
+    {
             IList parentFolderReferences = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlParentAttribute));
             bool isTopFileElement = parentId == Guid.Empty;
@@ -84,9 +84,9 @@ namespace Origam.DA.Service
             }
         }
 
-        private IFilePersistent Instantiate( Guid id,
-            IPersistenceProvider provider, Guid parentId)
-        {
+    private IFilePersistent Instantiate( Guid id,
+        IPersistenceProvider provider, Guid parentId)
+    {
             if(provider == null) throw new ArgumentNullException("provider is null");
             string typeName = GetTypeName();
             string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
@@ -103,28 +103,28 @@ namespace Origam.DA.Service
             instance.FileParentId = parentId;
             return instance;
         }
-    }
+}
     
-    class InstanceCloner : AbstractInstanceCreator
+class InstanceCloner : AbstractInstanceCreator
+{
+
+    private readonly object source;
+
+    public InstanceCloner(object source, ParentFolders parentFolders)
+        : base(parentFolders)
     {
-
-        private readonly object source;
-
-        public InstanceCloner(object source, ParentFolders parentFolders)
-            : base(parentFolders)
-        {
             this.source = source;
         }
 
-        protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi, 
-            object value, IPersistenceProvider provider)
-        {
+    protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi, 
+        object value, IPersistenceProvider provider)
+    {
             Reflector.SetValue(mi.MemberInfo, instance, value);
         }
         
-        protected override void SetXmlAttributes(IFilePersistent instance,
-            IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void SetXmlAttributes(IFilePersistent instance,
+        IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
+    {
             IList members = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo mi in members)
@@ -134,15 +134,15 @@ namespace Origam.DA.Service
             }
         }
 
-        protected override void NoteExternalReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void NoteExternalReferences(IFilePersistent instance,
+        PropertyToNamespaceMapping namespaceMapping)
+    {
             // was done when InstanceCreator created the source, no need to repeat it here
         }
 
-        protected override void SetReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void SetReferences(IFilePersistent instance,
+        PropertyToNamespaceMapping namespaceMapping)
+    {
             IList references = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
@@ -157,32 +157,32 @@ namespace Origam.DA.Service
             }
         }
 
-        protected override string GetTypeName() 
-            => source.GetType().ToString();
-    }
+    protected override string GetTypeName() 
+        => source.GetType().ToString();
+}
     
-    class InstanceCreator: AbstractInstanceCreator
-    {
-        private readonly ExternalFileManager externalFileManger;
-        private readonly XmlReader reader;
-        private OrigamNameSpace[] currentFileNamespaces;
+class InstanceCreator: AbstractInstanceCreator
+{
+    private readonly ExternalFileManager externalFileManger;
+    private readonly XmlReader reader;
+    private OrigamNameSpace[] currentFileNamespaces;
 
-        public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
-            ExternalFileManager externalFileManger) : base(parentFolderIds)
-        {
+    public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
+        ExternalFileManager externalFileManger) : base(parentFolderIds)
+    {
             this.externalFileManger = externalFileManger;
             this.reader = reader;
         }
 
-        public OrigamNameSpace[] CurrentXmlFileNamespaces
-        {
-            get => currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
-            set => currentFileNamespaces = value;
-        }
+    public OrigamNameSpace[] CurrentXmlFileNamespaces
+    {
+        get => currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
+        set => currentFileNamespaces = value;
+    }
 
-        protected override void SetReferences(IFilePersistent instance, 
-            PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void SetReferences(IFilePersistent instance, 
+        PropertyToNamespaceMapping namespaceMapping)
+    {
             IList references = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
@@ -201,11 +201,11 @@ namespace Origam.DA.Service
             }
         }
 
-        protected override string GetTypeName() =>  XmlUtils.ReadType(reader);
+    protected override string GetTypeName() =>  XmlUtils.ReadType(reader);
 
-        protected override void NoteExternalReferences(IFilePersistent instance,
-            PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void NoteExternalReferences(IFilePersistent instance,
+        PropertyToNamespaceMapping namespaceMapping)
+    {
             IList externalFileReferences = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlExternalFileReference));
             foreach (MemberAttributeInfo mi in externalFileReferences)
@@ -219,9 +219,9 @@ namespace Origam.DA.Service
             }
         }
 
-        protected override void SetXmlAttributes( IFilePersistent instance,
-            IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
-        {
+    protected override void SetXmlAttributes( IFilePersistent instance,
+        IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
+    {
             IList members = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo mi in members)
@@ -238,9 +238,9 @@ namespace Origam.DA.Service
             }
         }
 
-        private OrigamNameSpace GetPropertyNamespace(
-            PropertyToNamespaceMapping namespaceMapping, MemberAttributeInfo mi)
-        {
+    private OrigamNameSpace GetPropertyNamespace(
+        PropertyToNamespaceMapping namespaceMapping, MemberAttributeInfo mi)
+    {
             var currentPropertyNamespace =
                 namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name);
             var matchingXmlFileNamespace = CurrentXmlFileNamespaces
@@ -266,9 +266,9 @@ namespace Origam.DA.Service
             return currentPropertyNamespace;
         }
 
-        protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi,
-            object value, IPersistenceProvider provider)
-        {
+    protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi,
+        object value, IPersistenceProvider provider)
+    {
             object correctlyTypedValue =  InstanceTools.GetCorrectlyTypedValue(mi.MemberInfo, value);
             if ( correctlyTypedValue is string strValue)
             {
@@ -277,5 +277,4 @@ namespace Origam.DA.Service
             }
             Reflector.SetValue(mi.MemberInfo, instance, correctlyTypedValue);
         }       
-    }
 }

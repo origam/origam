@@ -21,22 +21,21 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class LoginFailedException : Exception
 {
-    public class LoginFailedException : Exception
+    public LoginFailedException(Exception innerException)
+        : base(innerException.Message, innerException)
     {
-        public LoginFailedException(Exception innerException)
-            : base(innerException.Message, innerException)
-        {
         }
 
-        public LoginFailedException(string message) : base(message)
-        {
+    public LoginFailedException(string message) : base(message)
+    {
         }
 
-        public LoginFailedException(string message, Exception innerException)
-            : base(message, innerException)
-        {
+    public LoginFailedException(string message, Exception innerException)
+        : base(message, innerException)
+    {
         }
-    }
 }

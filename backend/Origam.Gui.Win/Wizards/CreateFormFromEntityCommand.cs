@@ -33,29 +33,29 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Gui.Win.Wizards
+namespace Origam.Gui.Win.Wizards;
+
+/// <summary>
+/// Summary description for CreateFormFromEntityCommand.
+/// </summary>
+public class CreateFormFromEntityCommand : AbstractMenuCommand
 {
-    /// <summary>
-    /// Summary description for CreateFormFromEntityCommand.
-    /// </summary>
-    public class CreateFormFromEntityCommand : AbstractMenuCommand
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	ScreenWizardForm screenwizardForm;
+	public override bool IsEnabled
 	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm screenwizardForm;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is IDataEntity;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
             List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
@@ -98,8 +98,8 @@ namespace Origam.Gui.Win.Wizards
             }
         }
 
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             string groupName = null;
             if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
 
@@ -110,12 +110,12 @@ namespace Origam.Gui.Win.Wizards
             FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
             GeneratedModelElements.Add(form);
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -125,26 +125,26 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(Environment.NewLine);
             ShowListItems(richTextBoxSummary,screenwizardForm.SelectedFieldNames);
         }
-    }
+}
 
-	public class CreateCompleteUICommand : AbstractMenuCommand
+public class CreateCompleteUICommand : AbstractMenuCommand
+{
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	ScreenWizardForm wizardForm;
+	public override bool IsEnabled
 	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm wizardForm;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is IDataEntity;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
             IDataEntity entity = Owner as IDataEntity;
             List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
 
@@ -195,8 +195,8 @@ namespace Origam.Gui.Win.Wizards
             }
 		}
 
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             string groupName = null;
             if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
@@ -216,13 +216,13 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
 
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Menu from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -239,26 +239,26 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(Environment.NewLine);
             ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
         }
-    }
+}
 
-	public class CreateFormFromPanelCommand : AbstractMenuCommand
+public class CreateFormFromPanelCommand : AbstractMenuCommand
+{
+	PanelWizardForm panelWizard;
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	public override bool IsEnabled
 	{
-        PanelWizardForm panelWizard;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is PanelControlSet;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
             PanelControlSet panel = Owner as PanelControlSet;
             DataStructure ds = new DataStructure();
             FormControlSet frmSet = new FormControlSet();
@@ -296,8 +296,8 @@ namespace Origam.Gui.Win.Wizards
 
         }
 
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             PanelControlSet panel = ((PanelControlSet)panelWizard.Entity);
             string groupName = null;
             if (panelWizard.Entity.Group != null) groupName = panelWizard.Entity.Group.Name;
@@ -309,12 +309,12 @@ namespace Origam.Gui.Win.Wizards
             edit.Owner = form;
             edit.Run();
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Screen from ScreenSection with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -325,26 +325,26 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText("Screen: \t\t");
             richTextBoxSummary.AppendText(panelWizard.NameOfEntity);
         }
-    }
+}
 
-        public class CreateMenuFromFormCommand : AbstractMenuCommand
+public class CreateMenuFromFormCommand : AbstractMenuCommand
+{
+	MenuFromForm menuFrom;
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	public override bool IsEnabled
 	{
-        MenuFromForm menuFrom;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is FormControlSet;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
             FormControlSet form = Owner as FormControlSet;
 
             ArrayList list = new ArrayList();
@@ -376,8 +376,8 @@ namespace Origam.Gui.Win.Wizards
             }
 		}
 
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             FormReferenceMenuItem menu = 
                      MenuHelper.CreateMenuItem(!string.IsNullOrEmpty(menuFrom.Caption)
                     ? menuFrom.Caption : menuFrom.Entity.Name, 
@@ -390,12 +390,12 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Menu for Screen with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -407,26 +407,26 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(menuFrom.Role);
             richTextBoxSummary.AppendText(Environment.NewLine);
         }
-    }
+}
 
-	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
+public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
+{
+	MenuFromForm menuFrom;
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	public override bool IsEnabled
 	{
-        MenuFromForm menuFrom;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is DataConstant;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			DataConstant constant = Owner as DataConstant;
 
             ArrayList list = new ArrayList();
@@ -458,8 +458,8 @@ namespace Origam.Gui.Win.Wizards
             }
 		}
 
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as DataConstant);
             GeneratedModelElements.Add(menu);
             bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
@@ -469,12 +469,12 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Menu for DataConstant with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -486,26 +486,26 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(menuFrom.Role);
             richTextBoxSummary.AppendText(Environment.NewLine);
         }
-    }
+}
 
-	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
+public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
+{
+	MenuFromForm menuFrom;
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	public override bool IsEnabled
 	{
-        MenuFromForm menuFrom;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
 				return Owner is Schema.WorkflowModel.Workflow;
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			Schema.WorkflowModel.Workflow wf = Owner as Schema.WorkflowModel.Workflow;
 
             ArrayList list = new ArrayList();
@@ -536,8 +536,8 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Clear();
             }
 		}
-        public override void Execute()
-        {
+	public override void Execute()
+	{
             WorkflowReferenceMenuItem menu = MenuHelper
                 .CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as Schema.WorkflowModel.Workflow);
             GeneratedModelElements.Add(menu);
@@ -548,12 +548,12 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-        public override int GetImageIndex(string icon)
-        {
+	public override int GetImageIndex(string icon)
+	{
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+	public override void SetSummaryText(object summary)
+	{
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Menu for Workflow with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -565,5 +565,4 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(menuFrom.Role);
             richTextBoxSummary.AppendText(Environment.NewLine);
         }
-    }
 }

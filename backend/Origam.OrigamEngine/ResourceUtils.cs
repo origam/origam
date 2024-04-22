@@ -22,16 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Resources;
 using System.Threading;
 
-namespace Origam.OrigamEngine
-{
-	public class ResourceUtils
-	{
-		private static readonly string BASENAME = "Origam.OrigamEngine.Strings";
+namespace Origam.OrigamEngine;
 
-		private static ResourceManager _rm = null;
+public class ResourceUtils
+{
+	private static readonly string BASENAME = "Origam.OrigamEngine.Strings";
+
+	private static ResourceManager _rm = null;
 		
-		public static string GetString(string key)
-		{
+	public static string GetString(string key)
+	{
 			if (_rm == null) 
 			{
 				_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
@@ -39,5 +39,4 @@ namespace Origam.OrigamEngine
 
 			return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
 		}
-	}
 }

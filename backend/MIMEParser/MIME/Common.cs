@@ -26,16 +26,14 @@
 *					1.Adding ImportanceType
 */
 
-namespace OpenPOP.MIMEParser
-{
-	/// <summary>
-	/// 3 message importance types defined by RFC
-	/// </summary>
-	/// <remarks>
-	/// </remarks>
-	public enum MessageImportanceType
-	{
-		HIGH=5,NORMAL=3,LOW=1
-	}
+namespace OpenPOP.MIMEParser;
 
+/// <summary>
+/// 3 message importance types defined by RFC
+/// </summary>
+/// <remarks>
+/// </remarks>
+public enum MessageImportanceType
+{
+	HIGH=5,NORMAL=3,LOW=1
 }

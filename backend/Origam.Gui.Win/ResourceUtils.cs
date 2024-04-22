@@ -23,16 +23,16 @@ using System.Resources;
 using System.Threading;
 
 
-namespace Origam.Gui.Win
-{
-	public class ResourceUtils
-	{
-		private static readonly string BASENAME = "Origam.Gui.Win.Strings";
+namespace Origam.Gui.Win;
 
-		private static ResourceManager _rm = null;
+public class ResourceUtils
+{
+	private static readonly string BASENAME = "Origam.Gui.Win.Strings";
+
+	private static ResourceManager _rm = null;
 		
-		public static string GetString(string key)
-		{
+	public static string GetString(string key)
+	{
 			if (_rm == null) 
 			{
 				_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
@@ -41,10 +41,9 @@ namespace Origam.Gui.Win
 			return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
 		}
 
-		public static string GetString(string key, params object[] args)
-		{
+	public static string GetString(string key, params object[] args)
+	{
 			string rawString = GetString(key);
 			return string.Format(rawString, args);
 		}
-	}
 }

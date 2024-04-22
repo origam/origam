@@ -26,36 +26,36 @@ using System.Windows.Forms;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for FilterPanel.
+/// </summary>
+public class FilterPanel : System.Windows.Forms.UserControl
 {
-	/// <summary>
-	/// Summary description for FilterPanel.
-	/// </summary>
-	public class FilterPanel : System.Windows.Forms.UserControl
+	public event DataViewQueryChanged QueryChanged;
+	private const int TOP = 16;
+	private const int CAPTION_TOP = 2;
+
+	private Hashtable _filterParts = new Hashtable();
+	private bool _ignoreQueryChange = false;
+	private string _query;
+	private DataGridTableStyle _lastTableStyle;
+	private int _lastOffset = 0;
+	private System.Windows.Forms.Timer keyboardTimer;
+	private System.ComponentModel.IContainer components;
+
+	public FilterPanel()
 	{
-		public event DataViewQueryChanged QueryChanged;
-		private const int TOP = 16;
-		private const int CAPTION_TOP = 2;
-
-		private Hashtable _filterParts = new Hashtable();
-		private bool _ignoreQueryChange = false;
-		private string _query;
-		private DataGridTableStyle _lastTableStyle;
-		private int _lastOffset = 0;
-		private System.Windows.Forms.Timer keyboardTimer;
-		private System.ComponentModel.IContainer components;
-
-		public FilterPanel()
-		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 		}
 
-		/// <summary> 
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary> 
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				_ignoreQueryChange = true;
@@ -89,68 +89,64 @@ namespace Origam.Gui.Win
 			base.Dispose( disposing );
 		}
 
-		#region Component Designer generated code
-		/// <summary> 
-		/// Required method for Designer support - do not modify 
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	#region Component Designer generated code
+	/// <summary> 
+	/// Required method for Designer support - do not modify 
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
 			this.components = new System.ComponentModel.Container();
 			this.keyboardTimer = new System.Windows.Forms.Timer(this.components);
-			// 
-			// keyboardTimer
-			// 
-			this.keyboardTimer.Interval = 400;
+			// 		// keyboardTimer
+			// 		this.keyboardTimer.Interval = 400;
 			this.keyboardTimer.Tick += new System.EventHandler(this.keyboardTimer_Tick);
-			// 
-			// FilterPanel
-			// 
-			this.Name = "FilterPanel";
+			// 		// FilterPanel
+			// 		this.Name = "FilterPanel";
 			this.Size = new System.Drawing.Size(656, 48);
 			this.Enter += new System.EventHandler(this.FilterPanel_Enter);
 			this.Leave += new System.EventHandler(this.FilterPanel_Leave);
 
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public string Query
+	#region Properties
+	public string Query
+	{
+		get
 		{
-			get
-			{
 				return _query;
 			}
-			set
-			{
+		set
+		{
                 if (_query != value)
                 {
                    _query = value;
                     OnQueryChanged(_query);
                 }
 			}
-		}
+	}
 
-		public bool FilterActive
+	public bool FilterActive
+	{
+		get
 		{
-			get
-			{
 				return _query != null & _query != "";
 			}
-		}
+	}
 
-		public int ScrollOffset
+	public int ScrollOffset
+	{
+		get
 		{
-			get
-			{
 				return _lastOffset;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Public Methods
-		public void AddFilterPart(FilterPart part)
-		{
+	#region Public Methods
+	public void AddFilterPart(FilterPart part)
+	{
 			if(! _filterParts.Contains(part.GridColumnName))
 			{
 				_filterParts.Add(part.GridColumnName, part);
@@ -161,8 +157,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void ClearQuery()
-		{
+	public void ClearQuery()
+	{
 			_ignoreQueryChange = true;
 
 			try
@@ -183,8 +179,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void SizeControls(DataGridTableStyle tableStyle, int offset)
-		{
+	public void SizeControls(DataGridTableStyle tableStyle, int offset)
+	{
 			if(tableStyle == null) return;
 
 			_lastTableStyle = tableStyle;
@@ -221,8 +217,8 @@ namespace Origam.Gui.Win
 			this.ResumeLayout(true);
 		}
 
-		public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
-		{
+	public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
+	{
 			if(filter == null)
 			{
 				ClearQuery();
@@ -252,8 +248,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void AddFilterDetails(OrigamPanelFilter filterDS, OrigamPanelFilter.PanelFilterRow filter, Guid profileId)
-		{
+	public void AddFilterDetails(OrigamPanelFilter filterDS, OrigamPanelFilter.PanelFilterRow filter, Guid profileId)
+	{
 			foreach(FilterPart part in _filterParts.Values)
 			{
 				if(part.Query != null)
@@ -262,11 +258,11 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-		#endregion
+	#endregion
 
-		#region Private Methods
-		private void PlotControls()
-		{
+	#region Private Methods
+	private void PlotControls()
+	{
 			this.SuspendLayout();
 
 			foreach(FilterPart part in _filterParts.Values)
@@ -277,8 +273,8 @@ namespace Origam.Gui.Win
 			this.ResumeLayout(true);
 		}
 
-		private void PlotControls(FilterPart part)
-		{
+	private void PlotControls(FilterPart part)
+	{
 
 			if(! this.Controls.Contains(part.LabelControl))
 			{
@@ -302,8 +298,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void HideControls(FilterPart part)
-		{
+	private void HideControls(FilterPart part)
+	{
 			part.LabelControl.Hide();
 			part.OperatorLabelControl.Hide();
 			foreach(Control c in part.FilterControls)
@@ -312,8 +308,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private int SizeControls(FilterPart part, int left, int width, int startingTabIndex, ref int height)
-		{
+	private int SizeControls(FilterPart part, int left, int width, int startingTabIndex, ref int height)
+	{
 			part.LabelControl.Visible = true;
 			part.LabelControl.Top = 2;
 			part.LabelControl.Left = left;
@@ -357,16 +353,16 @@ namespace Origam.Gui.Win
 			return startingTabIndex;
 		}
 
-		private void OnQueryChanged(string query)
-		{
+	private void OnQueryChanged(string query)
+	{
 			if(this.QueryChanged != null)
 			{
 				this.QueryChanged(this, query);
 			}
 		}
 
-		internal string GetQuery()
-		{
+	internal string GetQuery()
+	{
 			StringBuilder result = new StringBuilder();
 			foreach(FilterPart part in _filterParts.Values)
 			{
@@ -387,30 +383,30 @@ namespace Origam.Gui.Win
 
 			return result.ToString();
 		}
-		#endregion
+	#endregion
 
-		#region Event Handlers
-		private void part_QueryChanged(object sender, string query)
-		{
+	#region Event Handlers
+	private void part_QueryChanged(object sender, string query)
+	{
 			if(_ignoreQueryChange) return;
 
 			keyboardTimer.Enabled = false;
 			keyboardTimer.Enabled = true;
 		}
 
-		private void part_ControlsChanged(object sender, EventArgs e)
-		{
+	private void part_ControlsChanged(object sender, EventArgs e)
+	{
 			SizeControls(_lastTableStyle, _lastOffset);
 		}
 
-		private void keyboardTimer_Tick(object sender, System.EventArgs e)
-		{
+	private void keyboardTimer_Tick(object sender, System.EventArgs e)
+	{
 			this.Query = GetQuery();
 			keyboardTimer.Enabled = false;
 		}
 
-		private void FilterPanel_Enter(object sender, System.EventArgs e)
-		{
+	private void FilterPanel_Enter(object sender, System.EventArgs e)
+	{
 			this.BackColor = OrigamColorScheme.FilterPanelActiveBackColor;
             if (this.ActiveControl == null)
             {
@@ -433,8 +429,8 @@ namespace Origam.Gui.Win
             grid.EnhancedFocusControl = false;
         }
 
-		private void FilterPanel_Leave(object sender, System.EventArgs e)
-		{
+	private void FilterPanel_Leave(object sender, System.EventArgs e)
+	{
 			this.BackColor = OrigamColorScheme.FilterPanelInactiveBackColor;
             AsDataGrid grid = GetGrid();
             if (grid == null)
@@ -443,10 +439,10 @@ namespace Origam.Gui.Win
             }
             grid.EnhancedFocusControl = true;
         }
-		#endregion
+	#endregion
 
-		private void filterControl_Enter(object sender, EventArgs e)
-		{
+	private void filterControl_Enter(object sender, EventArgs e)
+	{
             AsDataGrid grid = GetGrid();
             if (grid == null)
             {
@@ -480,8 +476,8 @@ namespace Origam.Gui.Win
 			}	
 		}
 
-        private AsDataGrid GetGrid()
-        {
+	private AsDataGrid GetGrid()
+	{
             AsDataGrid grid;
             if (_lastTableStyle == null)
             {
@@ -493,5 +489,4 @@ namespace Origam.Gui.Win
             }
             return grid;
         }
-	}
 }

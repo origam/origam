@@ -24,26 +24,26 @@ using System.Collections.Generic;
 using Origam.Schema;
 using NUnit.Framework;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+
+internal class SchemaItemComparator
 {
-    internal class SchemaItemComparator
+    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromDataBaseDict
     {
-        public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromDataBaseDict
-        {
-            private get;
-            set;
-        }
+        private get;
+        set;
+    }
 
-        public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromXmlDict
-        {
-            private get;
-            set;
-        }
+    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromXmlDict
+    {
+        private get;
+        set;
+    }
 
-        private SchemaItemsToCompare nowComparing;
+    private SchemaItemsToCompare nowComparing;
 
-        public void CompareSchemaItems()
-        {
+    public void CompareSchemaItems()
+    {
             foreach (var itemsToCompare in FindMatchingIdItems())
             {
                 nowComparing = itemsToCompare;
@@ -51,8 +51,8 @@ namespace Origam.DA.Service_net2Tests
             }
         }
 
-        private IEnumerable<SchemaItemsToCompare> FindMatchingIdItems()
-        {
+    private IEnumerable<SchemaItemsToCompare> FindMatchingIdItems()
+    {
             foreach (var typeItemsPair in ItemsFromDataBaseDict)
             {
                 Type type = typeItemsPair.Key;
@@ -69,8 +69,8 @@ namespace Origam.DA.Service_net2Tests
             }
         }
 
-        private bool AreItemsIdentical(SchemaItemsToCompare items)
-        {
+    private bool AreItemsIdentical(SchemaItemsToCompare items)
+    {
             Dictionary<string, object> dbItemProperties
                 = items.FromDb.GetAllProperies();
             Dictionary<string, object> xmlItemProperties 
@@ -91,8 +91,8 @@ namespace Origam.DA.Service_net2Tests
             return true;
         }
 
-        private void FailTest(string propertyName, Type propertryType)
-        {
+    private void FailTest(string propertyName, Type propertryType)
+    {
             Console.WriteLine(Environment.NewLine);
             Console.WriteLine($"Comparing objects of type: \"{nowComparing.Type}\"");
             Console.WriteLine($"propertyName \"{propertyName}\" of type {propertryType} is not equal in objects retrieved form db and xml.");
@@ -100,5 +100,4 @@ namespace Origam.DA.Service_net2Tests
             Console.WriteLine(nowComparing);
             Assert.Fail();
         }
-    }
 }

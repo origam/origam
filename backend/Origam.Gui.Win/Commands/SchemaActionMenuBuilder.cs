@@ -37,28 +37,28 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+
+public class SchemaActionsMenuBuilder : ISubmenuBuilder
 {
-	public class SchemaActionsMenuBuilder : ISubmenuBuilder
+	WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+	object _owner = null;
+	#region ISubmenuBuilder Members
+	public bool LateBound
 	{
-		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        object _owner = null;
-        #region ISubmenuBuilder Members
-        public bool LateBound
-        {
-            get
-            {
+		get
+		{
                 return false;
             }
-        }
+	}
 
-        public bool HasItems()
-        {
+	public bool HasItems()
+	{
             return true;
         }
 
-		public AsMenuCommand[] BuildSubmenu(object owner)
-		{
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
             _owner = owner ?? _schemaService.ActiveNode;
 			var list = new List<AsMenuCommand>();
             //			CreateMenuItem(list, "Generate &Test Documentation", new Commands.GenerateTestDocumentation(), null);
@@ -105,10 +105,10 @@ namespace Origam.Gui.Win.Commands
             return list.ToArray(); 
 		}
 
-		#endregion
+	#endregion
 
-		private void MenuItemClick(object sender, EventArgs e)
-		{
+	private void MenuItemClick(object sender, EventArgs e)
+	{
 		    IPersistenceProvider persistenceProvider = 
 		        ServiceManager.Services.GetService<IPersistenceService>().SchemaProvider;
 		    try
@@ -156,8 +156,8 @@ namespace Origam.Gui.Win.Commands
 			}
 		}
 
-		private void CreateMenuItem(List<AsMenuCommand> list, string text, ICommand command, Image image)
-		{
+	private void CreateMenuItem(List<AsMenuCommand> list, string text, ICommand command, Image image)
+	{
 			AsMenuCommand menuItem = new AsMenuCommand(text, command);
             command.Owner = _owner;
 			
@@ -177,5 +177,4 @@ namespace Origam.Gui.Win.Commands
 				((IDisposable)menuItem).Dispose();
 			}
 		}
-	}
 }

@@ -27,60 +27,60 @@ using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 
-namespace Origam.OrigamEngine
+namespace Origam.OrigamEngine;
+
+public class FilePersistenceBuilder : IPersistenceBuilder
 {
-    public class FilePersistenceBuilder : IPersistenceBuilder
-    {
-        private static FilePersistenceService persistenceService;
+    private static FilePersistenceService persistenceService;
         
-        public IDocumentationService GetDocumentationService() =>
-            new FileStorageDocumentationService(
-                (IFilePersistenceProvider) persistenceService.SchemaProvider,
-                persistenceService.FileEventQueue);
+    public IDocumentationService GetDocumentationService() =>
+        new FileStorageDocumentationService(
+            (IFilePersistenceProvider) persistenceService.SchemaProvider,
+            persistenceService.FileEventQueue);
 
-        public IPersistenceService GetPersistenceService() => 
-            GetPersistenceService(watchFileChanges: true,
-                checkRules: true,useBinFile: true);
+    public IPersistenceService GetPersistenceService() => 
+        GetPersistenceService(watchFileChanges: true,
+            checkRules: true,useBinFile: true);
 
-        public IPersistenceService GetPersistenceService(bool watchFileChanges,
-            bool checkRules, bool useBinFile)
-        {
+    public IPersistenceService GetPersistenceService(bool watchFileChanges,
+        bool checkRules, bool useBinFile)
+    {
             persistenceService = CreateNewPersistenceService(watchFileChanges,
                 checkRules,useBinFile);
             return persistenceService;
         }
 
-        public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
-            bool checkRules,bool useBinFile)
+    public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
+        bool checkRules,bool useBinFile)
+    {
+        List<string> defaultFolders = new List<string>
         {
-            List<string> defaultFolders = new List<string>
-            {
-                CategoryFactory.Create(typeof(Package)),
-                CategoryFactory.Create(typeof(SchemaItemGroup))
-            };
+            CategoryFactory.Create(typeof(Package)),
+            CategoryFactory.Create(typeof(SchemaItemGroup))
+        };
 
-            var metaModelUpgradeService = ServiceManager.Services
-                .GetService<MetaModelUpgradeService>();
+        var metaModelUpgradeService = ServiceManager.Services
+            .GetService<MetaModelUpgradeService>();
             
             
 #if !ORIGAM_CLIENT
             MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
 #else
-            MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
+        MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
 #endif
-            string pathToRuntimeModelConfig = ConfigurationManager
-                .GetActiveConfiguration().PathToRuntimeModelConfig;
-            return new FilePersistenceService(
-                metaModelUpgradeService: metaModelUpgradeService,
-                defaultFolders: defaultFolders,
-                watchFileChanges: watchFileChanges,
-                checkRules: checkRules,useBinFile: useBinFile,
-                mode: mode,
-                pathToRuntimeModelConfig: pathToRuntimeModelConfig);
-        }
+        string pathToRuntimeModelConfig = ConfigurationManager
+            .GetActiveConfiguration().PathToRuntimeModelConfig;
+        return new FilePersistenceService(
+            metaModelUpgradeService: metaModelUpgradeService,
+            defaultFolders: defaultFolders,
+            watchFileChanges: watchFileChanges,
+            checkRules: checkRules,useBinFile: useBinFile,
+            mode: mode,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig);
+    }
 
-        public FilePersistenceService CreateNoBinFilePersistenceService()
-        {
+    public FilePersistenceService CreateNoBinFilePersistenceService()
+    {
             List<string> defaultFolders = new List<string>
             {
                 CategoryFactory.Create(typeof(Package)),
@@ -99,9 +99,8 @@ namespace Origam.OrigamEngine
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
-        public static void Clear()
-        {
+    public static void Clear()
+    {
             persistenceService = null;
         }
-    }
 }

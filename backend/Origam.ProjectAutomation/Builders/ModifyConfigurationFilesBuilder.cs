@@ -22,20 +22,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Antlr4.StringTemplate;
 using System.IO;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+
+public class ModifyConfigurationFilesBuilder : AbstractBuilder
 {
-    public class ModifyConfigurationFilesBuilder : AbstractBuilder
+    public override string Name
     {
-        public override string Name
+        get
         {
-            get
-            {
                 return "Modify Configuration Files";
             }
-        }
+    }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             DirectoryInfo dir = new DirectoryInfo(project.BinFolder);
             foreach (string filter in new string[] {"*.config", "Startup.cs"})
             {
@@ -50,8 +50,7 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
         }
-    }
 }

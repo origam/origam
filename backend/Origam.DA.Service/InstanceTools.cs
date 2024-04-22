@@ -23,12 +23,12 @@ using System;
 using System.Reflection;
 using System.Xml;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+static class InstanceTools
 {
-    static class InstanceTools
+    public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
     {
-        public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
-        {
             Type memberType;
             if (memberInfo is PropertyInfo)
                 memberType = (memberInfo as PropertyInfo).PropertyType;
@@ -71,5 +71,4 @@ namespace Origam.DA.Service
 
             return correctlyTypedValue;
         }       
-    }
 }

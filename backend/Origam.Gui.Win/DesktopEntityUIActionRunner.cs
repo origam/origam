@@ -24,17 +24,17 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench;
 using Origam.Gui;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+public class DesktopEntityUIActionRunner: EntityUIActionRunner
 {
-    public class DesktopEntityUIActionRunner: EntityUIActionRunner
+    public DesktopEntityUIActionRunner(
+        IEntityUIActionRunnerClient actionRunnerClient) : base(actionRunnerClient)
     {
-        public DesktopEntityUIActionRunner(
-            IEntityUIActionRunnerClient actionRunnerClient) : base(actionRunnerClient)
-        {
         }
 
-        protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
-        {
+    protected override void ExecuteOpenFormAction(ExecuteActionProcessData processData)
+    {
             object menuItem;
             switch (processData.Action)
             {
@@ -54,10 +54,9 @@ namespace Origam.Gui.Win
             WorkbenchSingleton.Workbench.OpenForm(menuItem,processData.Parameters);
         }
 
-        protected override void SetTransactionId(ExecuteActionProcessData processData,
-            string transactionId)
-        {
+    protected override void SetTransactionId(ExecuteActionProcessData processData,
+        string transactionId)
+    {
            
         }
-    }
 }

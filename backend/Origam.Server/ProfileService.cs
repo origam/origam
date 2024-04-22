@@ -7,21 +7,21 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class ProfileService : IProfileService
 {
-    public class ProfileService : IProfileService
-    {
-        private readonly IUserClaimsPrincipalFactory<IOrigamUser> _claimsFactory;
-        private readonly UserManager<IOrigamUser> _userManager;
+    private readonly IUserClaimsPrincipalFactory<IOrigamUser> _claimsFactory;
+    private readonly UserManager<IOrigamUser> _userManager;
  
-        public ProfileService(UserManager<IOrigamUser> userManager, IUserClaimsPrincipalFactory<IOrigamUser> claimsFactory)
-        {
+    public ProfileService(UserManager<IOrigamUser> userManager, IUserClaimsPrincipalFactory<IOrigamUser> claimsFactory)
+    {
             _userManager = userManager;
             _claimsFactory = claimsFactory;
         }
  
-        public async Task GetProfileDataAsync(ProfileDataRequestContext context)
-        {
+    public async Task GetProfileDataAsync(ProfileDataRequestContext context)
+    {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
             var principal = await _claimsFactory.CreateAsync(user);
@@ -35,11 +35,10 @@ namespace Origam.Server
             context.IssuedClaims = claims;
         }
  
-        public async Task IsActiveAsync(IsActiveContext context)
-        {
+    public async Task IsActiveAsync(IsActiveContext context)
+    {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
             context.IsActive = user != null;
         }
-    }
 }

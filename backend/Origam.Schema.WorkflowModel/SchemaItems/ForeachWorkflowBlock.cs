@@ -27,25 +27,25 @@ using Origam.DA.ObjectPersistence;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for ForeachWorkflowBlock.
+/// </summary>
+[SchemaItemDescription("(Block) For-each", "Tasks", "block-for-each.png")]
+[HelpTopic("For-Each+Block")]
+[ClassMetaVersion("6.0.0")]
+public class ForeachWorkflowBlock : AbstractWorkflowBlock
 {
-	/// <summary>
-	/// Summary description for ForeachWorkflowBlock.
-	/// </summary>
-	[SchemaItemDescription("(Block) For-each", "Tasks", "block-for-each.png")]
-    [HelpTopic("For-Each+Block")]
-    [ClassMetaVersion("6.0.0")]
-	public class ForeachWorkflowBlock : AbstractWorkflowBlock
+	public ForeachWorkflowBlock() : base() {}
+
+	public ForeachWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public ForeachWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractSchemaItem Members
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-		public ForeachWorkflowBlock() : base() {}
-
-		public ForeachWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ForeachWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.IteratorXPath);
 
 			dependencies.Add(this.SourceContextStore);
@@ -53,8 +53,8 @@ namespace Origam.Schema.WorkflowModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -69,25 +69,25 @@ namespace Origam.Schema.WorkflowModel
 
 			base.UpdateReferences ();
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public Guid ContextStoreId;
+	#region Properties
+	public Guid ContextStoreId;
 
-		[TypeConverter(typeof(ContextStoreConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("sourceContextStore", "ContextStoreId")]
-		public IContextStore SourceContextStore
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("sourceContextStore", "ContextStoreId")]
+	public IContextStore SourceContextStore
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.ContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.ContextStoreId = Guid.Empty;
@@ -97,38 +97,37 @@ namespace Origam.Schema.WorkflowModel
 					this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 
-		string _xpath;
-		[StringNotEmptyModelElementRule]
-        [XmlAttribute("iteratorXPath")]
-		public string IteratorXPath
+	string _xpath;
+	[StringNotEmptyModelElementRule]
+	[XmlAttribute("iteratorXPath")]
+	public string IteratorXPath
+	{
+		get
 		{
-			get
-			{
 				return _xpath;
 			}
-			set
-			{
+		set
+		{
 				_xpath = value;
 			}
-		}
+	}
 
-		bool _ignoreSourceContextChanges = false;
+	bool _ignoreSourceContextChanges = false;
 		
-		[DefaultValue(false)]
-        [XmlAttribute("ignoreSourceContextChanges")]
-		public bool IgnoreSourceContextChanges
+	[DefaultValue(false)]
+	[XmlAttribute("ignoreSourceContextChanges")]
+	public bool IgnoreSourceContextChanges
+	{
+		get
 		{
-			get
-			{
 				return _ignoreSourceContextChanges;
 			}
-			set
-			{
+		set
+		{
 				_ignoreSourceContextChanges = value;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }
