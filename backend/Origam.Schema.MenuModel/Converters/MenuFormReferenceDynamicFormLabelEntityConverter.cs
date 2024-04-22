@@ -23,28 +23,27 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
 {
-    public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
+	public override bool GetStandardValuesSupported(
+		ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(
-            ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(
-            ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(
+		ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			FormReferenceMenuItem currentItem 
                 = context.Instance as FormReferenceMenuItem;
             if(currentItem.Screen == null)
@@ -62,9 +61,9 @@ namespace Origam.Schema.MenuModel
 			return new StandardValuesCollection(entityArray);
 		}
 
-		public override bool CanConvertFrom(
-            ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(
+		ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if(sourceType == typeof(string))
             {
 				return true;
@@ -75,11 +74,11 @@ namespace Origam.Schema.MenuModel
             }
 		}
 
-		public override object ConvertFrom(
-            ITypeDescriptorContext context, 
-            System.Globalization.CultureInfo culture, 
-            object value)
-		{
+	public override object ConvertFrom(
+		ITypeDescriptorContext context, 
+		System.Globalization.CultureInfo culture, 
+		object value)
+	{
 			if(value.GetType() == typeof(string))
 			{
 				FormReferenceMenuItem currentItem 
@@ -103,5 +102,4 @@ namespace Origam.Schema.MenuModel
 				return base.ConvertFrom(context, culture, value);
             }
 		}
-	}
 }

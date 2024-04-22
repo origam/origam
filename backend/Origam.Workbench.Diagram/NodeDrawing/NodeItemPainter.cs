@@ -17,34 +17,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Drawing;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing
-{
-    class NodeItemPainter : INodeItemPainter
-    {
-        private readonly InternalPainter painter;
+namespace Origam.Workbench.Diagram.NodeDrawing;
 
-        public NodeItemPainter(InternalPainter internalPainter)
-        {
+class NodeItemPainter : INodeItemPainter
+{
+    private readonly InternalPainter painter;
+
+    public NodeItemPainter(InternalPainter internalPainter)
+    {
             painter = internalPainter;
         }
 
-        public ICurve GetBoundary(Node node)
-        {
+    public ICurve GetBoundary(Node node)
+    {
             INodeData nodeData = (INodeData) node.UserData;
             var borderSize = painter.CalculateMinHeaderBorder(node);
             return CurveFactory.CreateRectangle(borderSize.Width + nodeData.LeftMargin,
                 borderSize.Height, new Point());
         }
 
-        public bool Draw(Node node, object graphicsObj)
-        {
+    public bool Draw(Node node, object graphicsObj)
+    {
             INodeData nodeData = (INodeData) node.UserData;
             Graphics editorGraphics = (Graphics) graphicsObj;
             var image =  nodeData.PrimaryImage;
@@ -95,5 +96,4 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             return true;
         }
-    }
 }

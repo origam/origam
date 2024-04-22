@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 // Copyright 2004 Shouvik - https://www.codeproject.com/Articles/8103/Creating-some-cool-buttons-and-groupboxes
 #endregion
@@ -27,42 +28,42 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for ElongatedButton.
-	/// </summary>
-	public class ElongatedButton : System.Windows.Forms.ButtonBase,
-		IGradientButtonColor, System.Windows.Forms.IButtonControl  
-	{
-		
-		#region Enums
-		private enum ControlState
-		{
-			Normal,
-			Pressed,
-		}
-		#endregion
+namespace Origam.Gui.Win;
 
-		#region Private Data Members
-		private ControlState enmState = ControlState.Normal;
-		private EnmColorScheme mColorScheme = EnmColorScheme.Yellow;
-		private Color clrBackground1;
-		private Color clrBackground2;
-		private Color clrDisabledBackground1;
-		private Color clrDisabledBackground2;
-		private Color clrBorder1;
-		private Color clrBorder2;
-		private Color clrDefaultBorder;
-		private Color clrFontMouseUp;
-		private Color clrFontMouseDown;
-		private Color clrFontDisabled;
-		private DialogResult myDialogResult;
-		#region Private Properties
-		private Rectangle BorderRectangle
+/// <summary>
+/// Summary description for ElongatedButton.
+/// </summary>
+public class ElongatedButton : System.Windows.Forms.ButtonBase,
+	IGradientButtonColor, System.Windows.Forms.IButtonControl  
+{
+		
+	#region Enums
+	private enum ControlState
+	{
+		Normal,
+		Pressed,
+	}
+	#endregion
+
+	#region Private Data Members
+	private ControlState enmState = ControlState.Normal;
+	private EnmColorScheme mColorScheme = EnmColorScheme.Yellow;
+	private Color clrBackground1;
+	private Color clrBackground2;
+	private Color clrDisabledBackground1;
+	private Color clrDisabledBackground2;
+	private Color clrBorder1;
+	private Color clrBorder2;
+	private Color clrDefaultBorder;
+	private Color clrFontMouseUp;
+	private Color clrFontMouseDown;
+	private Color clrFontDisabled;
+	private DialogResult myDialogResult;
+	#region Private Properties
+	private Rectangle BorderRectangle
+	{
+		get
 		{
-			get
-			{
 				Rectangle rc = this.ClientRectangle;
 				if(rc.Height % 2 == 0)
 				{
@@ -73,217 +74,217 @@ namespace Origam.Gui.Win
 					return new Rectangle(1, 1, rc.Width - 3, rc.Height - 3);
 				}
 			}
-		}
-		#endregion
-		#endregion
+	}
+	#endregion
+	#endregion
         
-		#region Public Properties
-		public override Color BackColor
+	#region Public Properties
+	public override Color BackColor
+	{
+		get
 		{
-			get
-			{
 				return base.BackColor;
 			}
-			set
-			{
+		set
+		{
 				base.BackColor = Color.Transparent;
 			}
-		}
+	}
 
-			public new FlatStyle FlatStyle
-			{
-				get
-				{
+	public new FlatStyle FlatStyle
+	{
+		get
+		{
 					return base.FlatStyle;
 				}
-				set
-				{
+		set
+		{
 					base.FlatStyle = FlatStyle.Standard;
 				}
-			}
+	}
 		
-		public EnmColorScheme ColorScheme
+	public EnmColorScheme ColorScheme
+	{
+		get
 		{
-			get
-			{
 				return mColorScheme;
 			}
-			set
-			{
+		set
+		{
 				mColorScheme = value;
 				ColorScheme oColorScheme = new ColorScheme(mColorScheme);
 				oColorScheme.SetColorScheme(this);
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Interface Implementation
-		Color IGradientBackgroundColor.BackgroundBottomColor
+	#region Interface Implementation
+	Color IGradientBackgroundColor.BackgroundBottomColor
+	{
+		get
 		{
-			get
-			{
 				return clrBackground2;
 			}
-			set
-			{
+		set
+		{
 				clrBackground2 = value;
 				this.Invalidate();
 			}
-		}
+	}
 		
-		Color IGradientBackgroundColor.BackgroundTopColor
+	Color IGradientBackgroundColor.BackgroundTopColor
+	{
+		get
 		{
-			get
-			{
 				return clrBackground1;
 			}
-			set
-			{
+		set
+		{
 				clrBackground1 = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		Color IGradientBorderColor.BorderBottomColor
+	Color IGradientBorderColor.BorderBottomColor
+	{
+		get
 		{
-			get
-			{
 				return clrBorder1;
 			}
-			set
-			{
+		set
+		{
 				clrBorder1 = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		Color IGradientBorderColor.BorderTopColor
+	Color IGradientBorderColor.BorderTopColor
+	{
+		get
 		{
-			get
-			{
 				return clrBorder2;
 			}
-			set
-			{
+		set
+		{
 				clrBorder2 = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		Color IGradientDisabledColor.DisbaledBottomColor
+	Color IGradientDisabledColor.DisbaledBottomColor
+	{
+		get
 		{
-			get
-			{
 				return clrDisabledBackground2;
 			}
-			set
-			{
+		set
+		{
 				clrDisabledBackground2 = value;
 				this.Invalidate();
 			}
-		}
+	}
 		
-		Color IGradientDisabledColor.DisabledTopColor
+	Color IGradientDisabledColor.DisabledTopColor
+	{
+		get
 		{
-			get
-			{
 				return clrDisabledBackground1;
 			}
-			set
-			{
+		set
+		{
 				clrDisabledBackground1 = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		Color IFontColor.FontColor
+	Color IFontColor.FontColor
+	{
+		get
 		{
-			get
-			{
 				return clrFontMouseUp;
 			}
-			set
-			{
+		set
+		{
 				clrFontMouseUp = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		Color IGradientButtonColor.PressedFontColor
+	Color IGradientButtonColor.PressedFontColor
+	{
+		get
 		{
-			get
-			{
 				return clrFontMouseDown;
 			}
-			set
-			{
+		set
+		{
 				clrFontMouseDown = value;
 			}
-		}
-		Color IGradientDisabledColor.DisabledFontColor
+	}
+	Color IGradientDisabledColor.DisabledFontColor
+	{
+		get
 		{
-			get
-			{
 				return clrFontDisabled;
 			}
-			set
-			{
+		set
+		{
 				clrFontDisabled = value;
 				this.Invalidate();
 			}
-		}
+	}
         		
-		System.Drawing.Color IGradientButtonColor.DefaultBorderColor
+	System.Drawing.Color IGradientButtonColor.DefaultBorderColor
+	{
+		get
 		{
-			get
-			{
 				return clrDefaultBorder;
 			}
-			set
-			{
+		set
+		{
 				clrDefaultBorder = value;
 				this.Invalidate();
 			}
-		}
+	}
 
-		// Add implementation to the IButtonControl.DialogResult property.
-		public DialogResult DialogResult
+	// Add implementation to the IButtonControl.DialogResult property.
+	public DialogResult DialogResult
+	{
+		get
 		{
-			get
-			{
 				return this.myDialogResult;
 			}
 
-			set
-			{
+		set
+		{
 				if(Enum.IsDefined(typeof(DialogResult), value))                
 				{
 					this.myDialogResult = value;
 				}
 			}    
-		}
+	}
 
-		// Add implementation to the IButtonControl.NotifyDefault method.
-		public void NotifyDefault(bool value)
-		{
+	// Add implementation to the IButtonControl.NotifyDefault method.
+	public void NotifyDefault(bool value)
+	{
 			if(this.IsDefault != value)
 			{
 				this.IsDefault = value;
 			}
 		}
 
-		// Add implementation to the IButtonControl.PerformClick method.
-		public void PerformClick()
-		{
+	// Add implementation to the IButtonControl.PerformClick method.
+	public void PerformClick()
+	{
 			if(this.CanSelect)
 			{
 				this.OnClick(EventArgs.Empty);
 			}
 		}
-		#endregion
+	#endregion
 
-		public ElongatedButton():base()
-		{
+	public ElongatedButton():base()
+	{
 			this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
 			this.Height = 17;
 			this.Font = new Font("Tahoma", 8);
@@ -302,11 +303,11 @@ namespace Origam.Gui.Win
 			clrDisabledBackground1 = Color.FromArgb(241, 236, 212);
 			clrDisabledBackground2 = Color.FromArgb(216, 198, 159);
 		}
-		#region Private Methods
+	#region Private Methods
 		
-		//Gets the Shadow colors which are the alpha colors of the 
-		private Brush[] GetShadowBrushes()
-		{
+	//Gets the Shadow colors which are the alpha colors of the 
+	private Brush[] GetShadowBrushes()
+	{
 			int cintShadow = 2;
 			Brush[] arrBrushes = new Brush[cintShadow-1];
 			int intAlphaOffset = 35;
@@ -320,8 +321,8 @@ namespace Origam.Gui.Win
 			return arrBrushes;
 		}
 
-		private void OnDrawDefault(Graphics g)
-		{
+	private void OnDrawDefault(Graphics g)
+	{
 			Rectangle rcBorder = this.BorderRectangle;
 			GraphicsPath myPath = GetGraphicPath(rcBorder);
 			
@@ -355,8 +356,8 @@ namespace Origam.Gui.Win
 			DrawBorder(g, ps, rc);
 		}
 
-		private void OnDrawNormal(Graphics g)
-		{
+	private void OnDrawNormal(Graphics g)
+	{
 			Rectangle rcBorder = this.BorderRectangle;
 			GraphicsPath myPath = GetGraphicPath(rcBorder);
 			Region rgn = new Region(this.BorderRectangle);
@@ -381,9 +382,9 @@ namespace Origam.Gui.Win
 			DrawBorder(g, ps, this.BorderRectangle);
 		}
 
-        //Create Grahics Path for the elongated buttons
-		private GraphicsPath GetGraphicPath(Rectangle rc)
-		{
+	//Create Grahics Path for the elongated buttons
+	private GraphicsPath GetGraphicPath(Rectangle rc)
+	{
 			int adjust = rc.Height % 2 == 0 ? 0 : 1;
             
 			GraphicsPath Mypath = new GraphicsPath();
@@ -400,8 +401,8 @@ namespace Origam.Gui.Win
 			return Mypath;
 		}
         
-		private void DrawBorder(Graphics g, Pen p, Rectangle rc)
-		{
+	private void DrawBorder(Graphics g, Pen p, Rectangle rc)
+	{
 			int adjust = rc.Height % 2 == 0 ? 0 : 1;
             
 			g.DrawLine(p, rc.Left + (Single)(rc.Height / 2), rc.Top, rc.Right - (Single)(rc.Height / 2), rc.Top);
@@ -410,8 +411,8 @@ namespace Origam.Gui.Win
 			g.DrawArc(p, rc.Left, rc.Top, rc.Height, rc.Height, 90, 180);
 		}
 		
-		private void OnDrawDisabled(Graphics g)
-		{
+	private void OnDrawDisabled(Graphics g)
+	{
 			Rectangle rcBorder = this.BorderRectangle;
 			GraphicsPath myPath = GetGraphicPath(rcBorder);
             
@@ -432,8 +433,8 @@ namespace Origam.Gui.Win
 			DrawBorder(g, ps, this.BorderRectangle);
 		}
 		
-		private void OnDrawPressed(Graphics g)
-		{
+	private void OnDrawPressed(Graphics g)
+	{
 			Rectangle rcBorder = this.BorderRectangle;
 			GraphicsPath myPath = GetGraphicPath(rcBorder);
             
@@ -456,8 +457,8 @@ namespace Origam.Gui.Win
 			DrawBorder(g, ps, this.BorderRectangle);
 		}
         
-		private void OnDrawText(Graphics g)
-		{
+	private void OnDrawText(Graphics g)
+	{
 			SizeF sz = g.MeasureString(this.Text, this.Font);
 			Brush[] br = GetShadowBrushes();
 			RectangleF rcText = new RectangleF(this.BorderRectangle.Left + ((this.BorderRectangle.Width - sz.Width) / 2), this.BorderRectangle.Top + ((this.BorderRectangle.Height - sz.Height) / 2), sz.Width, sz.Height);
@@ -482,12 +483,12 @@ namespace Origam.Gui.Win
 				g.DrawString(this.Text, this.Font, new SolidBrush(clrFontMouseDown), rcText);
 			}
 		}
-		#endregion
+	#endregion
         
-		#region Overridden Methods
+	#region Overridden Methods
         
-		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
-		{
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
 			this.OnPaintBackground(e);
 			SmoothingMode oldSmothing = e.Graphics.SmoothingMode;
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -514,8 +515,7 @@ namespace Origam.Gui.Win
 					}
 					break;
 				case ControlState.Pressed:
-					//when the mouse is pressed over the button 
-					OnDrawPressed(e.Graphics);
+					//when the mouse is pressed over the button 		OnDrawPressed(e.Graphics);
 					break;
 			}
 			OnDrawText(e.Graphics);
@@ -525,15 +525,15 @@ namespace Origam.Gui.Win
 			e.Graphics.SmoothingMode = oldSmothing;
 		}
 		
-		//Redraw control when the button is resized
-		protected override void OnResize(EventArgs e)
-		{
+	//Redraw control when the button is resized
+	protected override void OnResize(EventArgs e)
+	{
 			this.Invalidate();
 		}
 		
-		//Change the state to pressed
-		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
-		{
+	//Change the state to pressed
+	protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
+	{
 			base.OnMouseDown(e);
 			if(e.Button == MouseButtons.Left && e.Clicks == 1)
 			{
@@ -542,13 +542,12 @@ namespace Origam.Gui.Win
 			}
 		}
 		
-		//Change the state to normal
-		protected override void OnClick(EventArgs e)
-		{
+	//Change the state to normal
+	protected override void OnClick(EventArgs e)
+	{
 			base.OnClick(e);
 			enmState = ControlState.Normal;
 			this.Invalidate();
 		}
-		#endregion
-	}
+	#endregion
 }

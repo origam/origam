@@ -21,58 +21,57 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 
-namespace Origam.Schema.EntityModel
-{
-	public enum ConstraintType
-	{
-		PrimaryKey,
-		ForeignKey,
-		Unique
-	}
+namespace Origam.Schema.EntityModel;
 
-	/// <summary>
-	/// Summary description for DataEntityConstraint.
-	/// </summary>
-	public class DataEntityConstraint
+public enum ConstraintType
+{
+	PrimaryKey,
+	ForeignKey,
+	Unique
+}
+
+/// <summary>
+/// Summary description for DataEntityConstraint.
+/// </summary>
+public class DataEntityConstraint
+{
+	public DataEntityConstraint(ConstraintType type)
 	{
-		public DataEntityConstraint(ConstraintType type)
-		{
 			this.Type = type;
 		}
 
-		private ConstraintType _type;
-		public ConstraintType Type
+	private ConstraintType _type;
+	public ConstraintType Type
+	{
+		get
 		{
-			get
-			{
 				return _type;
 			}
-			set
-			{
+		set
+		{
 				_type = value;
 			}
-		}
+	}
 
-		private IDataEntity _foreignEntity;
-		public IDataEntity ForeignEntity
+	private IDataEntity _foreignEntity;
+	public IDataEntity ForeignEntity
+	{
+		get
 		{
-			get
-			{
 				return _foreignEntity;
 			}
-			set
-			{
+		set
+		{
 				_foreignEntity = value;
 			}
-		}
+	}
 
-		private ArrayList _fields = new ArrayList();
-		public ArrayList Fields
+	private ArrayList _fields = new ArrayList();
+	public ArrayList Fields
+	{
+		get
 		{
-			get
-			{
 				return _fields;
 			}
-		}
 	}
 }

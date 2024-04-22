@@ -10,25 +10,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Origam.Server.IdentityServerGui.Home
-{
-    [SecurityHeaders]
-    [AllowAnonymous]
-    public class HomeController : Microsoft.AspNetCore.Mvc.Controller
-    {
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IWebHostEnvironment _environment;
-        private readonly ILogger _logger;
+namespace Origam.Server.IdentityServerGui.Home;
 
-        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment, ILogger<HomeController> logger)
-        {
+[SecurityHeaders]
+[AllowAnonymous]
+public class HomeController : Microsoft.AspNetCore.Mvc.Controller
+{
+    private readonly IIdentityServerInteractionService _interaction;
+    private readonly IWebHostEnvironment _environment;
+    private readonly ILogger _logger;
+
+    public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment, ILogger<HomeController> logger)
+    {
             _interaction = interaction;
             _environment = environment;
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
+    public IActionResult Index()
+    {
             if (_environment.IsDevelopment())
             {
                 // only show in development
@@ -39,11 +39,11 @@ namespace Origam.Server.IdentityServerGui.Home
             return NotFound();
         }
 
-        /// <summary>
-        /// Shows the error page
-        /// </summary>
-        public async Task<IActionResult> Error(string errorId)
-        {
+    /// <summary>
+    /// Shows the error page
+    /// </summary>
+    public async Task<IActionResult> Error(string errorId)
+    {
             var vm = new ErrorViewModel();
 
             // retrieve error details from identityserver
@@ -61,5 +61,4 @@ namespace Origam.Server.IdentityServerGui.Home
 
             return View("Error", vm);
         }
-    }
 }

@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.DA.ObjectPersistence
-{
+namespace Origam.DA.ObjectPersistence;
+
 //    public class PersistenceTools
 //    {
 //        public static XmlRootAttribute RootAttribute(Type type)
@@ -55,4 +55,3 @@ namespace Origam.DA.ObjectPersistence
 //            return nameSpace + category;
 //        }
 //    }
-}

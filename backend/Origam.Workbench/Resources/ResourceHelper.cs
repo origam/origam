@@ -23,27 +23,26 @@ using System.Drawing;
 using System.Reflection;
 using System.Resources;
 
-namespace Origam.Workbench
-{
-	internal class ResourceHelper
-	{
-		private static ResourceManager m_resourceManager;
+namespace Origam.Workbench;
 
-		static ResourceHelper()
-		{
+internal class ResourceHelper
+{
+	private static ResourceManager m_resourceManager;
+
+	static ResourceHelper()
+	{
 			m_resourceManager = new ResourceManager("Origam.Workbench.Strings", typeof(SchemaBrowser).Assembly);
 		}
 	
-		public static Bitmap LoadBitmap(string name)
-		{
+	public static Bitmap LoadBitmap(string name)
+	{
 			Assembly assembly = typeof(ResourceHelper).Assembly;
 			string fullNamePrefix = "Origam.Workbench.Resources.";
 			return new Bitmap(assembly.GetManifestResourceStream(fullNamePrefix + name));
 		}
 
-		public static string GetString(string name)
-		{
+	public static string GetString(string name)
+	{
 			return m_resourceManager.GetString(name);
 		}
-	}
 }

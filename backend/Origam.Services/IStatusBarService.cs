@@ -20,10 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+
+public interface IStatusBarService : IWorkbenchService
 {
-	public interface IStatusBarService : IWorkbenchService
-	{
-		void SetStatusText(string text);
-	}
+	void SetStatusText(string text);
 }

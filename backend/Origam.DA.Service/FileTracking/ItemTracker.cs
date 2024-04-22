@@ -29,44 +29,44 @@ using MoreLinq;
 using Origam.Extensions;
 using ProtoBuf;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public class ItemTracker
 {
-    public class ItemTracker
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
+    private readonly FileHashIndex fileHashIndex =
+        new FileHashIndex();
+
+    private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex =
+        new Dictionary<Guid, PersistedObjectInfo>();
+
+    private readonly ObjectInfoIndex<string> categoryIndex =
+        new ObjectInfoIndex<string>();
+
+    private readonly ObjectInfoIndex<Guid> treeIndex =
+        new ObjectInfoIndex<Guid>();
+
+    private readonly ObjectInfoIndex<string> folderIndex =
+        new ObjectInfoIndex<string>();
+
+    private readonly OrigamPathFactory pathFactory;
+
+    public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.OrigamFiles;
+    public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.AllFiles;
+
+    public IEnumerable<OrigamFile> PackegeFiles => fileHashIndex.PackageFiles;
+    public bool IsEmpty => !OrigamFiles.Any();
+
+    public ItemTracker(OrigamPathFactory pathFactory)
     {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
-
-        private readonly FileHashIndex fileHashIndex =
-            new FileHashIndex();
-
-        private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex =
-            new Dictionary<Guid, PersistedObjectInfo>();
-
-        private readonly ObjectInfoIndex<string> categoryIndex =
-            new ObjectInfoIndex<string>();
-
-        private readonly ObjectInfoIndex<Guid> treeIndex =
-            new ObjectInfoIndex<Guid>();
-
-        private readonly ObjectInfoIndex<string> folderIndex =
-            new ObjectInfoIndex<string>();
-
-        private readonly OrigamPathFactory pathFactory;
-
-        public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.OrigamFiles;
-        public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.AllFiles;
-
-        public IEnumerable<OrigamFile> PackegeFiles => fileHashIndex.PackageFiles;
-        public bool IsEmpty => !OrigamFiles.Any();
-
-        public ItemTracker(OrigamPathFactory pathFactory)
-        {
             this.pathFactory = pathFactory;
         }
 
-        internal void CleanUp()
-        {
+    internal void CleanUp()
+    {
             LogTreeIndexState("Cleaning up");
             categoryIndex.CleanUp();
             treeIndex.CleanUp();
@@ -74,16 +74,16 @@ namespace Origam.DA.Service
             LogTreeIndexState("Clean up finished");
         }
 
-        public void ClearCache()
-        {
+    public void ClearCache()
+    {
             foreach (OrigamFile origamFile in OrigamFiles)
             {
                 origamFile.ClearCache();
             }
         }
 
-        public void Clear()
-        {
+    public void Clear()
+    {
             LogTreeIndexState("Clearing ItemTracker");
             fileHashIndex.Clear();
             objectLocationIndex.Clear();
@@ -93,13 +93,13 @@ namespace Origam.DA.Service
             LogTreeIndexState("ItemTracker cleared");
         }
 
-        public void AddOrReplaceHash(ITrackeableFile origamFile)
-        {
+    public void AddOrReplaceHash(ITrackeableFile origamFile)
+    {
             fileHashIndex.AddOrReplace(origamFile);
         }
 
-        public void AddOrReplace(ITrackeableFile origamFile)
-        {
+    public void AddOrReplace(ITrackeableFile origamFile)
+    {
             foreach (var entry in origamFile.ContainedObjects)
             {
                 PersistedObjectInfo objectInfo = entry.Value;
@@ -107,8 +107,8 @@ namespace Origam.DA.Service
             }
         }
 
-        public void AddOrReplace(PersistedObjectInfo objectInfo)
-        {
+    public void AddOrReplace(PersistedObjectInfo objectInfo)
+    {
             LogTreeIndexState("Adding: " + objectInfo.Id + "objectInfo.ParentId: " + objectInfo.ParentId);
 
             objectLocationIndex[objectInfo.Id] = objectInfo;
@@ -126,8 +126,8 @@ namespace Origam.DA.Service
             LogTreeIndexState("Added: " + objectInfo.Id);
         }
 
-        public void Remove(PersistedObjectInfo objectInfo)
-        {
+    public void Remove(PersistedObjectInfo objectInfo)
+    {
             LogTreeIndexState("Removing: " + objectInfo.Id);
 
             objectLocationIndex.Remove(objectInfo.Id);
@@ -138,44 +138,44 @@ namespace Origam.DA.Service
             LogTreeIndexState("Removed: " + objectInfo.Id);
         }
 
-        private void LogTreeIndexState(string message)
-        {
+    private void LogTreeIndexState(string message)
+    {
             if (!log.IsDebugEnabled) return;
             log.Debug(message + ", treeIndex.Count: " + treeIndex?.Count);
         }
 
-        public bool ContainsFile(FileInfo file) =>
-            fileHashIndex.ContainsFile(file);
+    public bool ContainsFile(FileInfo file) =>
+        fileHashIndex.ContainsFile(file);
 
-        public PersistedObjectInfo GetById(Guid id)
-        {
+    public PersistedObjectInfo GetById(Guid id)
+    {
             return objectLocationIndex.ContainsKey(id) ? objectLocationIndex[id] : null;
         }
 
-        public IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId) =>
-            treeIndex[parentId];
+    public IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId) =>
+        treeIndex[parentId];
 
-        public IEnumerable<PersistedObjectInfo> GetByParentFolder
-            (string category, Guid folderId)
-        {
+    public IEnumerable<PersistedObjectInfo> GetByParentFolder
+        (string category, Guid folderId)
+    {
             string key = $"{category}{folderId}";
             return folderIndex[key];
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetByPackage(Guid packageId)
-        {
+    internal IEnumerable<PersistedObjectInfo> GetByPackage(Guid packageId)
+    {
             return OrigamFiles
                 .Where(x => x.ParentFolderIds.PackageId == packageId)
                 .SelectMany(x => x.ContainedObjects.Values);
         }
 
-        public IEnumerable<PersistedObjectInfo> GetListByCategory(string category)
-        {
+    public IEnumerable<PersistedObjectInfo> GetListByCategory(string category)
+    {
             return categoryIndex[category];
         }
 
-        public void KeepOnly(IEnumerable<FileInfo> filesToKeep)
-        {
+    public void KeepOnly(IEnumerable<FileInfo> filesToKeep)
+    {
             LogTreeIndexState("KeepOnly method running");
 
             HashSet<string> relativePathsToKeep = new HashSet<string>(filesToKeep
@@ -193,14 +193,14 @@ namespace Origam.DA.Service
             LogTreeIndexState("KeepOnly method finished");
         }
 
-        public bool HasFile(string relativePath)
-        {
+    public bool HasFile(string relativePath)
+    {
             return AllFiles
                 .Any(orFile => orFile.Path.Relative == relativePath);
         }
 
-        public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
-        {
+    public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
+    {
             AllFiles.ToList()
                 .Where(origamFile => dirToRename.IsOnPathOf(origamFile.Path.Directory))
                 .ForEach(origamFile =>
@@ -213,13 +213,13 @@ namespace Origam.DA.Service
                 });
         }
 
-        public void RemoveHash(ITrackeableFile origamFile)
-        {
+    public void RemoveHash(ITrackeableFile origamFile)
+    {
             fileHashIndex.Remove(origamFile);
         }
 
-        public void Remove(ITrackeableFile origamFile)
-        {
+    public void Remove(ITrackeableFile origamFile)
+    {
             LogTreeIndexState("Removing file: " + origamFile.Path.Relative);
 
             bool removeFilter(PersistedObjectInfo objInfo) =>
@@ -233,8 +233,8 @@ namespace Origam.DA.Service
             LogTreeIndexState("Removed file: " + origamFile.Path.Relative);
         }
 
-        public Dictionary<string, int> GetStats()
-        {
+    public Dictionary<string, int> GetStats()
+    {
             return new Dictionary<string, int>
             {
                 {"fileHashIndex count", fileHashIndex.Count},
@@ -245,32 +245,32 @@ namespace Origam.DA.Service
             };
         }
 
-        public string Print()
-        {
+    public string Print()
+    {
             //return treeIndex.Print();
             return folderIndex.Print();
         }
 
-        public OrigamFile GetByPath(string relativeFilePath)
-        {
+    public OrigamFile GetByPath(string relativeFilePath)
+    {
             return OrigamFiles
                 .FirstOrDefault(file => file.Path.RelativeEquals(relativeFilePath));
         }
 
-        public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)
-        {
+    public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)
+    {
             return OrigamFiles
                 .Select(x => x.GetExternalFile(externalFile))
                 .FirstOrDefault(maybeFile => maybeFile.HasValue);
         }
 
-        public string GetFileHash(FileInfo file)
-        {
+    public string GetFileHash(FileInfo file)
+    {
             return fileHashIndex.GetHash(file.FullName);
         }
 
-        public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
-        {
+    public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
+    {
             return AllFiles
                 //.Where(origamFile => new FileInfo(origamFile.Path.Absolute).IsOnPathOf(dir))
                 .Where(origamFile => dir.IsOnPathOf(origamFile.Path.Absolute))
@@ -285,25 +285,25 @@ namespace Origam.DA.Service
                     }
                 );
         }
-    }
+}
 
-    internal class FileHashIndex
-    {
-        private readonly IDictionary<string,string> hashFileDict =
-            new Dictionary<string, string>();
-        private readonly IDictionary<string, ITrackeableFile> pathDict =
-            new Dictionary<string, ITrackeableFile>();
+internal class FileHashIndex
+{
+    private readonly IDictionary<string,string> hashFileDict =
+        new Dictionary<string, string>();
+    private readonly IDictionary<string, ITrackeableFile> pathDict =
+        new Dictionary<string, ITrackeableFile>();
 
-        private IDictionary<string, OrigamFile> packageFiles =
-            new Dictionary<string, OrigamFile>();
+    private IDictionary<string, OrigamFile> packageFiles =
+        new Dictionary<string, OrigamFile>();
 
-        public ICollection<ITrackeableFile> AllFiles => pathDict.Values;
-        public IEnumerable<OrigamFile> OrigamFiles => AllFiles.OfType<OrigamFile>();
-        public IEnumerable<OrigamFile> PackageFiles => packageFiles.Values;
-        public int Count => hashFileDict.Count;
+    public ICollection<ITrackeableFile> AllFiles => pathDict.Values;
+    public IEnumerable<OrigamFile> OrigamFiles => AllFiles.OfType<OrigamFile>();
+    public IEnumerable<OrigamFile> PackageFiles => packageFiles.Values;
+    public int Count => hashFileDict.Count;
        
-        public void AddOrReplace(ITrackeableFile newTrackAble)
-        {
+    public void AddOrReplace(ITrackeableFile newTrackAble)
+    {
             if (newTrackAble.FileHash == null) return;
             pathDict[newTrackAble.Path.Relative] = newTrackAble;
             hashFileDict[newTrackAble.Path.Absolute.ToLower()] =  newTrackAble.FileHash;
@@ -315,16 +315,16 @@ namespace Origam.DA.Service
             System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
         }
 
-        public bool ContainsFile(FileInfo file)
-        {
+    public bool ContainsFile(FileInfo file)
+    {
             if (!hashFileDict.ContainsKey(file.FullName.ToLower())) return false;
 
             string registeredHash = hashFileDict[file.FullName.ToLower()];
             return registeredHash == file.GetFileBase64Hash();
         }
 
-        internal void RemoveValuesWhere(Func<ITrackeableFile, bool> func)
-        {
+    internal void RemoveValuesWhere(Func<ITrackeableFile, bool> func)
+    {
             List<KeyValuePair<string, ITrackeableFile>> removedPairs =
                 pathDict.RemoveByValueSelector(func);
             
@@ -336,15 +336,15 @@ namespace Origam.DA.Service
             }
         }
 
-        public void Clear()
-        {
+    public void Clear()
+    {
             hashFileDict.Clear();
             pathDict.Clear();
             packageFiles.Clear();
         }
 
-        public void Remove(ITrackeableFile orFileToRemove)
-        {
+    public void Remove(ITrackeableFile orFileToRemove)
+    {
             hashFileDict.RemoveByKeySelector(fullPath =>
                 fullPath == orFileToRemove.Path.Absolute.ToLower());
             pathDict.RemoveByKeySelector(relativePath =>
@@ -353,32 +353,32 @@ namespace Origam.DA.Service
             System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
         }
 
-        public string GetHash(string pathAbsolute)
-        {
+    public string GetHash(string pathAbsolute)
+    {
             hashFileDict.TryGetValue(pathAbsolute.ToLower(), out string hash);
             return hash;
         }
-    }
+}
     
-    [ProtoContract]
-    public class AutoIncrementedIntIndex<TValue>
+[ProtoContract]
+public class AutoIncrementedIntIndex<TValue>
+{
+    [ProtoMember(2)]
+    private int highestId;
+
+    [ProtoMember(1)]
+    public IDictionary<int, TValue> IdToValue { get; } 
+        = new Dictionary<int, TValue>();
+
+    public IDictionary<TValue, int> ValueToId { get; } =
+        new Dictionary<TValue, int>();
+
+    public AutoIncrementedIntIndex()
     {
-        [ProtoMember(2)]
-        private int highestId;
-
-        [ProtoMember(1)]
-        public IDictionary<int, TValue> IdToValue { get; } 
-            = new Dictionary<int, TValue>();
-
-        public IDictionary<TValue, int> ValueToId { get; } =
-            new Dictionary<TValue, int>();
-
-        public AutoIncrementedIntIndex()
-        {
         }
 
-        public int AddValueAndGetId(TValue category)
-        {
+    public int AddValueAndGetId(TValue category)
+    {
             if (ValueToId.ContainsKey(category))
             {
                 return ValueToId[category];
@@ -391,49 +391,49 @@ namespace Origam.DA.Service
                 return highestId;
             }
         }
-        public TValue this[int id] => IdToValue[id];
-        public int this[TValue value] => ValueToId[value];
+    public TValue this[int id] => IdToValue[id];
+    public int this[TValue value] => ValueToId[value];
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
            return "AutoIncrementedIntIndex:\n" +
                       "highestId: " + highestId + "\n" +
                       "IdToValue: " + IdToValue.Print()+
                       "ValueToId: " + ValueToId.Print();
 
         }
-    }
+}
 
-    internal class ObjectInfoIndex<T>
+internal class ObjectInfoIndex<T>
+{
+    private readonly IDictionary<T, IDictionary<Guid, PersistedObjectInfo>>
+        objectInfoIndex = new Dictionary<T, IDictionary<Guid, PersistedObjectInfo>>();
+    private readonly IDictionary<Guid,T> guidIndex= new Dictionary<Guid, T>();
+
+    public IEnumerable<PersistedObjectInfo> this[T key]=>
+        objectInfoIndex.ContainsKey(key) ?
+            objectInfoIndex[key].Values :
+            new List<PersistedObjectInfo>();
+        
+
+    public int Count => objectInfoIndex.Count(x => x.Value.Count!=0);
+        
+    public void AddOrReplace(T key, PersistedObjectInfo objInfo)
     {
-        private readonly IDictionary<T, IDictionary<Guid, PersistedObjectInfo>>
-            objectInfoIndex = new Dictionary<T, IDictionary<Guid, PersistedObjectInfo>>();
-        private readonly IDictionary<Guid,T> guidIndex= new Dictionary<Guid, T>();
-
-        public IEnumerable<PersistedObjectInfo> this[T key]=>
-             objectInfoIndex.ContainsKey(key) ?
-                    objectInfoIndex[key].Values :
-                    new List<PersistedObjectInfo>();
-        
-
-        public int Count => objectInfoIndex.Count(x => x.Value.Count!=0);
-        
-        public void AddOrReplace(T key, PersistedObjectInfo objInfo)
-        {
             RemoveObjInfoIfPresent(objInfo.Id);
             var idToObjInfoDictionary = GetIndexDict(key);
             idToObjInfoDictionary[objInfo.Id] = objInfo;
             guidIndex[objInfo.Id] = key;
         }
 
-        public void Remove(Guid id)
-        {
+    public void Remove(Guid id)
+    {
             RemoveObjInfoIfPresent(id);
             guidIndex.Remove(id);
         }
 
-        private void RemoveObjInfoIfPresent(Guid id)
-        {
+    private void RemoveObjInfoIfPresent(Guid id)
+    {
             if (guidIndex.ContainsKey(id))
             {
                 T oldKey = guidIndex[id];
@@ -441,16 +441,16 @@ namespace Origam.DA.Service
             }
         }
 
-        public void CleanUp()
-        {
+    public void CleanUp()
+    {
             objectInfoIndex
                 .Where(x=> objectInfoIndex[x.Key].Count == 0)
                 .ToList()
                 .ForEach(x=>objectInfoIndex.Remove(x));
         }
 
-        public void RemoveWhere(Func<PersistedObjectInfo, bool> removeFilter)
-        {
+    public void RemoveWhere(Func<PersistedObjectInfo, bool> removeFilter)
+    {
             foreach (var tDictPair in objectInfoIndex)
             {
                 var innerDict = tDictPair.Value;
@@ -459,8 +459,8 @@ namespace Origam.DA.Service
             objectInfoIndex.RemoveByValueSelector(innerDict => innerDict.Count == 0);
         }
 
-        public void KeepOnlyItemsOnPaths(IEnumerable<string> relativePathsToKeep)
-        {
+    public void KeepOnlyItemsOnPaths(IEnumerable<string> relativePathsToKeep)
+    {
             foreach (var keyInnerDictPair in objectInfoIndex)
             {
                 var innerDictionary = keyInnerDictPair.Value;
@@ -469,9 +469,9 @@ namespace Origam.DA.Service
             }
         }
 
-        private void RemoveObjInfosWhere(IDictionary<Guid, PersistedObjectInfo> dict, 
-            Func<PersistedObjectInfo, bool> selectorFunc)
-        {
+    private void RemoveObjInfosWhere(IDictionary<Guid, PersistedObjectInfo> dict, 
+        Func<PersistedObjectInfo, bool> selectorFunc)
+    {
             List<KeyValuePair<Guid, PersistedObjectInfo>> pairsToRemove = dict
                 .Where(entry => selectorFunc.Invoke(entry.Value))
                 .ToList();
@@ -484,8 +484,8 @@ namespace Origam.DA.Service
             }
         }
 
-        private IDictionary<Guid, PersistedObjectInfo> GetIndexDict(T key)
-        {
+    private IDictionary<Guid, PersistedObjectInfo> GetIndexDict(T key)
+    {
             if (!objectInfoIndex.ContainsKey(key))
             {
                 var list = new Dictionary<Guid, PersistedObjectInfo>();
@@ -495,14 +495,14 @@ namespace Origam.DA.Service
             return objectInfoIndex[key]; 
         }
 
-        public void Clear()
-        {
+    public void Clear()
+    {
             objectInfoIndex.Clear();
             guidIndex.Clear();
         }
 
-        public string Print()
-        {
+    public string Print()
+    {
             string str = "";
             var sortedKeys = objectInfoIndex.Keys.ToList();
             sortedKeys.Sort();
@@ -516,5 +516,4 @@ namespace Origam.DA.Service
             }
             return str;
         }
-    }
 }

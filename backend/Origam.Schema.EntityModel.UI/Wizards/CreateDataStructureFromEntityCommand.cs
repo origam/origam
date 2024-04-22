@@ -32,31 +32,31 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.UI.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards;
+
+/// <summary>
+/// Summary description for CreateDataStructureFromEntityCommand.
+/// </summary>
+public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 {
-    /// <summary>
-    /// Summary description for CreateDataStructureFromEntityCommand.
-    /// </summary>
-    public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
-	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        StructureForm structureForm;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    StructureForm structureForm;
        
 
-        public override bool IsEnabled
-		{
-			get
-			{
+    public override bool IsEnabled
+    {
+        get
+        {
 				return Owner is IDataEntity;
 			}
-			set
-			{
+        set
+        {
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
 
             IDataEntity entity = Owner as IDataEntity;
@@ -95,19 +95,19 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             }
 		}
 
-        public override void Execute()
-        {
+    public override void Execute()
+    {
             DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
             GeneratedModelElements.Add(ds);
         }
 
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
 
-        public override void SetSummaryText(object summary)
-        {
+    public override void SetSummaryText(object summary)
+    {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "";
             richTextBoxSummary.AppendText("");
@@ -116,5 +116,4 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             richTextBoxSummary.AppendText(structureForm.NameOfEntity);
             richTextBoxSummary.AppendText("");
         }
-    }
 }

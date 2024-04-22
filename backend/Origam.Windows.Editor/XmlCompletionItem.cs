@@ -21,67 +21,67 @@ using Origam.Windows.Editor.CodeCompletion;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace Origam.Windows.Editor
+namespace Origam.Windows.Editor;
+
+/// <summary>
+/// The type of text held in this object.
+/// </summary>
+public enum XmlCompletionItemType
 {
-    /// <summary>
-    /// The type of text held in this object.
-    /// </summary>
-    public enum XmlCompletionItemType
+    None = 0,
+    XmlElement = 1,
+    XmlAttribute = 2,
+    NamespaceUri = 3,
+    XmlAttributeValue = 4
+}
+
+/// <summary>
+/// Holds the text for  namespace, child element or attribute
+/// autocomplete (intellisense).
+/// </summary>
+public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletionItem>
+{
+    XmlCompletionItemType dataType = XmlCompletionItemType.XmlElement;
+    string description = String.Empty;
+
+    public XmlCompletionItem(string text)
+        : this(text, String.Empty, XmlCompletionItemType.XmlElement)
     {
-        None = 0,
-        XmlElement = 1,
-        XmlAttribute = 2,
-        NamespaceUri = 3,
-        XmlAttributeValue = 4
-    }
+        }
 
-    /// <summary>
-    /// Holds the text for  namespace, child element or attribute
-    /// autocomplete (intellisense).
-    /// </summary>
-    public class XmlCompletionItem : DefaultCompletionItem, IComparable<XmlCompletionItem>
+    public XmlCompletionItem(string text, string description)
+        : this(text, description, XmlCompletionItemType.XmlElement)
     {
-        XmlCompletionItemType dataType = XmlCompletionItemType.XmlElement;
-        string description = String.Empty;
-
-        public XmlCompletionItem(string text)
-            : this(text, String.Empty, XmlCompletionItemType.XmlElement)
-        {
         }
 
-        public XmlCompletionItem(string text, string description)
-            : this(text, description, XmlCompletionItemType.XmlElement)
-        {
+    public XmlCompletionItem(string text, XmlCompletionItemType dataType)
+        : this(text, String.Empty, dataType)
+    {
         }
 
-        public XmlCompletionItem(string text, XmlCompletionItemType dataType)
-            : this(text, String.Empty, dataType)
-        {
-        }
-
-        public XmlCompletionItem(string text, string description, XmlCompletionItemType dataType)
-            : base(text)
-        {
+    public XmlCompletionItem(string text, string description, XmlCompletionItemType dataType)
+        : base(text)
+    {
             this.description = description;
             this.dataType = dataType;
         }
 
-        /// <summary>
-        /// Returns the xml item's documentation as retrieved from
-        /// the xs:annotation/xs:documentation element.
-        /// </summary>
-        public override object Description
-        {
-            get { return description; }
-        }
+    /// <summary>
+    /// Returns the xml item's documentation as retrieved from
+    /// the xs:annotation/xs:documentation element.
+    /// </summary>
+    public override object Description
+    {
+        get { return description; }
+    }
 
-        public XmlCompletionItemType DataType
-        {
-            get { return dataType; }
-        }
+    public XmlCompletionItemType DataType
+    {
+        get { return dataType; }
+    }
 
-        public override void Complete(TextArea area, ISegment segment, EventArgs e)
-        {
+    public override void Complete(TextArea area, ISegment segment, EventArgs e)
+    {
             base.Complete(area, segment, e);
             int endOffset = segment.Offset + segment.Length;
 
@@ -95,18 +95,18 @@ namespace Origam.Windows.Editor
             }
         }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return "[" + Text + "]";
         }
 
-        public override int GetHashCode()
-        {
+    public override int GetHashCode()
+    {
             return dataType.GetHashCode() ^ Text.GetHashCode();
         }
 
-        public override bool Equals(object obj)
-        {
+    public override bool Equals(object obj)
+    {
             XmlCompletionItem item = obj as XmlCompletionItem;
             if (item != null)
             {
@@ -115,9 +115,8 @@ namespace Origam.Windows.Editor
             return false;
         }
 
-        public int CompareTo(XmlCompletionItem other)
-        {
+    public int CompareTo(XmlCompletionItem other)
+    {
             return Text.CompareTo(other.Text);
         }
-    }
 }

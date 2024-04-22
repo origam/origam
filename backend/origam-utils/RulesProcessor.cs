@@ -28,17 +28,17 @@ using System.Threading;
 using Origam.Rule;
 using Origam.OrigamEngine;
 
-namespace Origam.Utils
+namespace Origam.Utils;
+
+class RulesProcessor
 {
-    class RulesProcessor
-    {
                 
-        public RulesProcessor()
-        {
+    public RulesProcessor()
+    {
         }
 
-        internal int Run()
-        {
+    internal int Run()
+    {
             RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
             OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
@@ -72,5 +72,4 @@ namespace Origam.Utils
                 return 0;
             }
         }
-    }
 }

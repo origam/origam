@@ -27,18 +27,18 @@ using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Workbench.Services;
 
-namespace Origam.WorkbenchTests
-{
-    [TestFixture]
-    public class DeploymentSorterTests
-    {
-        private readonly Guid package1Id = new Guid("10000000-2867-4B99-8824-071FA8749EAD");
-        private readonly Guid package2Id = new Guid("20000000-6519-4393-B5D0-87931F9FD609");
-        private readonly Guid package3Id = new Guid("30000000-BFCC-45DB-940E-DE685AE821EF");
+namespace Origam.WorkbenchTests;
 
-        [Test]
-        public void ShouldOrderTwoUnrelatedPackagesByDependencies()
-        {
+[TestFixture]
+public class DeploymentSorterTests
+{
+    private readonly Guid package1Id = new Guid("10000000-2867-4B99-8824-071FA8749EAD");
+    private readonly Guid package2Id = new Guid("20000000-6519-4393-B5D0-87931F9FD609");
+    private readonly Guid package3Id = new Guid("30000000-BFCC-45DB-940E-DE685AE821EF");
+
+    [Test]
+    public void ShouldOrderTwoUnrelatedPackagesByDependencies()
+    {
             //  P1    p2
             //  1.0<--
             //   |    1.0
@@ -101,9 +101,9 @@ namespace Origam.WorkbenchTests
             Assert.That(sortedDeployments[4], Is.EqualTo(deployment5));
         }
         
-        [Test]
-        public void ShouldOrderTwoRelatedPackagesByDependencies()
-        {
+    [Test]
+    public void ShouldOrderTwoRelatedPackagesByDependencies()
+    {
             //  P1    p2
             //  1.0<--
             //   |   1.0
@@ -139,9 +139,9 @@ namespace Origam.WorkbenchTests
             CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
         }
          
-        [Test]
-        public void ShouldOrderThreeUnrelatedPackagesByDependencies()
-        {
+    [Test]
+    public void ShouldOrderThreeUnrelatedPackagesByDependencies()
+    {
             //  P1    p2   p3
             //  1.0<--
             //   |   1.0<--
@@ -178,9 +178,9 @@ namespace Origam.WorkbenchTests
         }
 
      
-        [Test]
-        public void ShouldOrderThreeRelatedPackagesByDependencies()
-        {
+    [Test]
+    public void ShouldOrderThreeRelatedPackagesByDependencies()
+    {
             //  P1    p2   p3
             //  1.0<--   <--
             //   |--->1.0<--
@@ -221,13 +221,12 @@ namespace Origam.WorkbenchTests
             CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
         }
 
-        [Test]
-        public void ShouldNotRunDeploymentBeforeAllDeploymentsReferencingItsParentWereAlsoExecuted()
-        {
+    [Test]
+    public void ShouldNotRunDeploymentBeforeAllDeploymentsReferencingItsParentWereAlsoExecuted()
+    {
             //   P1     p2    p3
             //               1.0
-            //      <-------- 
-            //   1.0<--1.0
+            //      <--------      //   1.0<--1.0
             //         1.1<--1.1
             //   1.1
             //
@@ -289,15 +288,13 @@ namespace Origam.WorkbenchTests
             Assert.That(sortedDeployments.Last(), Is.EqualTo(deployment2));
         }
 
-        [Test]
-        public void ShouldRecognizeDeadlock()
-        {
+    [Test]
+    public void ShouldRecognizeDeadlock()
+    {
             //   P1    p2   p3
             //              1.0
             //        1.0<--
-            //  1.0<--1.1  
-            //  1.1<--------1.1 
-            //
+            //  1.0<--1.1       //  1.1<--------1.1      //
             //  If all packages version 1.0 are deployed,
             //  no other deployment can run because:
             //  - P1 1.1 has to wait for P2 1.1 because it depends on P1 1.0
@@ -360,20 +357,18 @@ namespace Origam.WorkbenchTests
             Assert.That(sortedDeployments, Has.Count.EqualTo(0));
         }
 
-        [Test]
-        public void ShouldOrderTwoRelatedAndOneUnrelatedPackageByDependencies()
-        {
+    [Test]
+    public void ShouldOrderTwoRelatedAndOneUnrelatedPackageByDependencies()
+    {
             //   P1    p2   p3
             //  1.0
-            //  1.1<--   
-            //        1.0
+            //  1.1<--        //        1.0
             //     -->1.1<--
             //  1.2<--------
             //             1.0
             // P1 and P2 depend on each other, P3 depends on p2 1.1 only 
             
-            
-            var deployment1 = new MockDeploymentVersion(
+                 var deployment1 = new MockDeploymentVersion(
                 new PackageVersion("1.0"),
                 new List<DeploymentDependency>(),
                 package1Id);
@@ -457,12 +452,12 @@ namespace Origam.WorkbenchTests
             Assert.That(sortedDeployments[6], Is.EqualTo(deployment7));
         }
         
-        private static void CheckTheOrderIsCorrect(
-            MockDeploymentVersion deployment1,
-            MockDeploymentVersion deployment2,
-            MockDeploymentVersion deployment3,
-            MockDeploymentVersion deployment4)
-        {
+    private static void CheckTheOrderIsCorrect(
+        MockDeploymentVersion deployment1,
+        MockDeploymentVersion deployment2,
+        MockDeploymentVersion deployment3,
+        MockDeploymentVersion deployment4)
+    {
             var unsortedDeployments = new List<IDeploymentVersion>
             {
                 deployment3,
@@ -487,25 +482,25 @@ namespace Origam.WorkbenchTests
             Assert.That(sortedDeployments[3], Is.EqualTo(deployment4));
         }
 
-    }
+}
 
-    class MockDeploymentVersion : IDeploymentVersion
+class MockDeploymentVersion : IDeploymentVersion
+{
+    public PackageVersion Version { get; }
+    public List<DeploymentDependency> DeploymentDependencies { get; set; }
+    public bool HasDependencies => DeploymentDependencies.Count != 0;
+    public Guid SchemaExtensionId { get; }
+    public string PackageName { get; }
+
+    public MockDeploymentVersion(PackageVersion version, List<DeploymentDependency> deploymentDependencies, Guid schemaExtensionId)
     {
-        public PackageVersion Version { get; }
-        public List<DeploymentDependency> DeploymentDependencies { get; set; }
-        public bool HasDependencies => DeploymentDependencies.Count != 0;
-        public Guid SchemaExtensionId { get; }
-        public string PackageName { get; }
-
-        public MockDeploymentVersion(PackageVersion version, List<DeploymentDependency> deploymentDependencies, Guid schemaExtensionId)
-        {
             Version = version;
             DeploymentDependencies = deploymentDependencies;
             SchemaExtensionId = schemaExtensionId;
         }
 
-        public int CompareTo(object obj)
-        {
+    public int CompareTo(object obj)
+    {
             if (obj is IDeploymentVersion otherDeployment)  
             {
                 return Version.CompareTo(otherDeployment.Version);
@@ -516,6 +511,5 @@ namespace Origam.WorkbenchTests
             }
         }
 
-        public override string ToString() => SchemaExtensionId + " " + Version;
-    }
+    public override string ToString() => SchemaExtensionId + " " + Version;
 }

@@ -21,13 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.Model.User
+namespace Origam.Server.Model.User;
+
+public class LoginData
 {
-    public class LoginData
-    {
-        [Required]
-        public string UserName { get; set; }
-        [Required]
-        public string Password { get; set; }
-    }
+    [Required]
+    public string UserName { get; set; }
+    [Required]
+    public string Password { get; set; }
 }

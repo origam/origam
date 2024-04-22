@@ -24,29 +24,29 @@ using System.IO;
 using System.Xml;
 using Origam.DA.Common;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public class ObjectFileData
 {
-    public class ObjectFileData
-    {
-        public virtual ParentFolders ParentFolderIds { get; }
-        private readonly XmlFileData xmlFileData;
-        public Folder Folder { get;}
-        public FileInfo FileInfo => xmlFileData.FileInfo;
-        public virtual Folder FolderToDetermineParentGroup => Folder;
-        public virtual Folder FolderToDetermineReferenceGroup => Folder;
-        private readonly IOrigamFileFactory origamFileFactory;
+    public virtual ParentFolders ParentFolderIds { get; }
+    private readonly XmlFileData xmlFileData;
+    public Folder Folder { get;}
+    public FileInfo FileInfo => xmlFileData.FileInfo;
+    public virtual Folder FolderToDetermineParentGroup => Folder;
+    public virtual Folder FolderToDetermineReferenceGroup => Folder;
+    private readonly IOrigamFileFactory origamFileFactory;
         
-        public ObjectFileData(ParentFolders parentFolders, XmlFileData xmlFileData,
-            IOrigamFileFactory origamFileFactory)
-        {
+    public ObjectFileData(ParentFolders parentFolders, XmlFileData xmlFileData,
+        IOrigamFileFactory origamFileFactory)
+    {
             this.origamFileFactory = origamFileFactory;
             this.xmlFileData = xmlFileData
                                ?? throw new ArgumentNullException(nameof(xmlFileData));
             ParentFolderIds = parentFolders;
             Folder = new Folder(xmlFileData.FileInfo.DirectoryName);
         }
-        public ITrackeableFile Read()
-        {
+    public ITrackeableFile Read()
+    {
             ITrackeableFile origamFile = origamFileFactory.New(
                 fileInfo: xmlFileData.FileInfo,
                 parentFolderIds: ParentFolderIds,
@@ -57,9 +57,9 @@ namespace Origam.DA.Service
             return origamFile;
         }
 
-        private void RecursiveNodeRead(XmlNode currentNode, Guid parentNodeId,
-            ITrackeableFile origamFile )
-        {
+    private void RecursiveNodeRead(XmlNode currentNode, Guid parentNodeId,
+        ITrackeableFile origamFile )
+    {
             foreach (object nodeObj in currentNode.ChildNodes)
             {
                 var childNode = (XmlNode) nodeObj;
@@ -95,21 +95,20 @@ namespace Origam.DA.Service
             }
         }
 
-        private static bool ParseIsFolder(XmlNode childNode)
-        {
+    private static bool ParseIsFolder(XmlNode childNode)
+    {
             bool.TryParse(
                 childNode?.Attributes?[$"x:{OrigamFile.IsFolderAttribute}"]?.Value,
                 out bool isFolder);
             return isFolder;
         }
 
-        private static Guid ParseParentId(Guid parentNodeId, XmlNode childNode)
-        {
+    private static Guid ParseParentId(Guid parentNodeId, XmlNode childNode)
+    {
             XmlAttribute nodeAttribute = childNode?.Attributes?[$"x:{OrigamFile.ParentIdAttribute}"];
             Guid parentId = nodeAttribute != null
                 ? new Guid(nodeAttribute.Value)
                 : parentNodeId;
             return parentId;
         }
-    }
 }

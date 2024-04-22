@@ -23,27 +23,26 @@ using Origam.DA.Common;
 using System;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Date Widget", "icon_date-widget.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class DateDashboardWidget : AbstractSimpleDashboardWidget
-	{
-		public DateDashboardWidget() : base() {Init();}
-		public DateDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public DateDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Date Widget", "icon_date-widget.png")]
+[ClassMetaVersion("6.0.0")]
+public class DateDashboardWidget : AbstractSimpleDashboardWidget
+{
+	public DateDashboardWidget() : base() {Init();}
+	public DateDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public DateDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
+	{
 		}
 
-		public override OrigamDataType DataType
+	public override OrigamDataType DataType
+	{
+		get
 		{
-			get
-			{
 				return OrigamDataType.Date;
 			}
-		}
-
 	}
+
 }

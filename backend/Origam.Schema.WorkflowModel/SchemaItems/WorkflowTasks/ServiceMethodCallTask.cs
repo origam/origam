@@ -24,40 +24,40 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("(Task) Service Method Call", "Tasks", "task-service-method-call.png")]
+[HelpTopic("Service+Method+Call+Task")]
+[ClassMetaVersion("6.0.0")]
+public class ServiceMethodCallTask : WorkflowTask
 {
-	[SchemaItemDescription("(Task) Service Method Call", "Tasks", "task-service-method-call.png")]
-    [HelpTopic("Service+Method+Call+Task")]
-    [ClassMetaVersion("6.0.0")]
-	public class ServiceMethodCallTask : WorkflowTask
+	public ServiceMethodCallTask() {}
+
+	public ServiceMethodCallTask(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+
+	public ServiceMethodCallTask(Key primaryKey) : base(primaryKey) {}
+
+	#region Overriden AbstractSchemaItem members
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
 	{
-		public ServiceMethodCallTask() {}
-
-		public ServiceMethodCallTask(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public ServiceMethodCallTask(Key primaryKey) : base(primaryKey) {}
-
-		#region Overriden AbstractSchemaItem members
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(Service);
 			dependencies.Add(ServiceMethod);
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public Guid ServiceMethodId;	
+	#region Properties
+	public Guid ServiceMethodId;	
 
-		[TypeConverter(typeof(ServiceMethodConverter))]
-        [NotNullModelElementRule()]
-		[XmlReference("serviceMethod", "ServiceMethodId")]
-		public IServiceMethod ServiceMethod
+	[TypeConverter(typeof(ServiceMethodConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("serviceMethod", "ServiceMethodId")]
+	public IServiceMethod ServiceMethod
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = this.ServiceMethodId
@@ -65,8 +65,8 @@ namespace Origam.Schema.WorkflowModel
 				return (ServiceMethod)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				// We delete any current parameters
 				foreach(ISchemaItem child in ChildItems)
 				{
@@ -95,17 +95,17 @@ namespace Origam.Schema.WorkflowModel
 					}
 				}
 			}
-		}
+	}
 		
-		public Guid ServiceId;
+	public Guid ServiceId;
 
-		[TypeConverter(typeof(ServiceConverter))]
-        [NotNullModelElementRule()]
-		[XmlReference("service", "ServiceId")]
-		public IService Service
+	[TypeConverter(typeof(ServiceConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("service", "ServiceId")]
+	public IService Service
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = ServiceId
@@ -113,8 +113,8 @@ namespace Origam.Schema.WorkflowModel
 				return (IService)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					ServiceId = Guid.Empty;
@@ -126,20 +126,20 @@ namespace Origam.Schema.WorkflowModel
 				// Reset Method
 				ServiceMethod = null;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[] 
+	public override Type[] NewItemTypes => new[] 
 		{
 			typeof(WorkflowTaskDependency),
 			typeof(ServiceMethodCallParameter)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(WorkflowTaskDependency))
 			{
@@ -152,6 +152,5 @@ namespace Origam.Schema.WorkflowModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
-	}
+	#endregion
 }

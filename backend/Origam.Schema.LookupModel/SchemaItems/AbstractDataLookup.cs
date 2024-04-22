@@ -28,35 +28,35 @@ using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 {
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
-	{
-		public const string CategoryConst = "DataLookup";
+	public const string CategoryConst = "DataLookup";
 
-		public AbstractDataLookup() {}
+	public AbstractDataLookup() {}
 
-		public AbstractDataLookup(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
+	public AbstractDataLookup(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
 
-		public AbstractDataLookup(Key primaryKey) : base(primaryKey) {}
+	public AbstractDataLookup(Key primaryKey) : base(primaryKey) {}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override bool UseFolders => false;
+	public override bool UseFolders => false;
 
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetParameterReferences(
-			AbstractSchemaItem parentItem, Hashtable list)
-		{
+	public override void GetParameterReferences(
+		AbstractSchemaItem parentItem, Hashtable list)
+	{
 			base.GetParameterReferences(ListMethod, list);
 		}
 
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			dependencies.Add(ListDataStructure);
 			dependencies.Add(ValueDataStructure);
 			if(ListMethod != null)
@@ -77,80 +77,80 @@ namespace Origam.Schema.LookupModel
 			}
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
+	#region Properties
 
-		[Browsable(false)]
-		public ArrayList MenuBindings => ChildItemsByType(
-			DataLookupMenuBinding.CategoryConst);
+	[Browsable(false)]
+	public ArrayList MenuBindings => ChildItemsByType(
+		DataLookupMenuBinding.CategoryConst);
 
-		[Browsable(false)]
-		public bool HasTooltip
+	[Browsable(false)]
+	public bool HasTooltip
+	{
+		get
 		{
-			get
-			{
 				var tooltips = ChildItemsByType(
 					AbstractDataTooltip.CategoryConst);
 				return tooltips.Count > 0;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public ArrayList Tooltips => ChildItemsByType(
-			AbstractDataTooltip.CategoryConst);
+	[Browsable(false)]
+	public ArrayList Tooltips => ChildItemsByType(
+		AbstractDataTooltip.CategoryConst);
 
-		#region List
-		private string _listValueMember;
-		[Category("List")]
-		[NotNullModelElementRule()]
-        [XmlAttribute("listValueMember")]
-		public string ListValueMember
-		{
-			get => _listValueMember;
-			set => _listValueMember = value;
-		}
+	#region List
+	private string _listValueMember;
+	[Category("List")]
+	[NotNullModelElementRule()]
+	[XmlAttribute("listValueMember")]
+	public string ListValueMember
+	{
+		get => _listValueMember;
+		set => _listValueMember = value;
+	}
 
-		private string _listDisplayMember;
-		[Category("List")]
-		[NotNullModelElementRule()]
-        [XmlAttribute("listDisplayMember")]
-        public string ListDisplayMember
-		{
-			get => _listDisplayMember;
-			set => _listDisplayMember = value;
-		}
+	private string _listDisplayMember;
+	[Category("List")]
+	[NotNullModelElementRule()]
+	[XmlAttribute("listDisplayMember")]
+	public string ListDisplayMember
+	{
+		get => _listDisplayMember;
+		set => _listDisplayMember = value;
+	}
 
-		private bool _isTree;
-		[Category("List")]
-		[DefaultValue(false)]
-        [XmlAttribute("isTree")]
-        public bool IsTree
-		{
-			get => _isTree;
-			set => _isTree = value;
-		}
+	private bool _isTree;
+	[Category("List")]
+	[DefaultValue(false)]
+	[XmlAttribute("isTree")]
+	public bool IsTree
+	{
+		get => _isTree;
+		set => _isTree = value;
+	}
 
-		private string _treeParentMember = "";
-		[Category("List")]
-		[XmlAttribute("treeParentMember")]
-        public string TreeParentMember
-		{
-			get => _treeParentMember;
-			set => _treeParentMember = value;
-		}
+	private string _treeParentMember = "";
+	[Category("List")]
+	[XmlAttribute("treeParentMember")]
+	public string TreeParentMember
+	{
+		get => _treeParentMember;
+		set => _treeParentMember = value;
+	}
         
-		public Guid ListDataStructureId;
+	public Guid ListDataStructureId;
 
-		[Category("List")]
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("listDataStructure", "ListDataStructureId")]
-		public DataStructure ListDataStructure
+	[Category("List")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("listDataStructure", "ListDataStructureId")]
+	public DataStructure ListDataStructure
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = ListDataStructureId
@@ -158,208 +158,208 @@ namespace Origam.Schema.LookupModel
 				return (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key) as DataStructure;
 			}
-			set
-			{
+		set
+		{
 				ListDataStructureId = (Guid)value.PrimaryKey["Id"];
 				ListMethod = null;
 				ListSortSet = null;
 			}
-		}
+	}
 
-		private bool _suppressEmptyColumns;
-		[Category("List")]
-		[DefaultValue(false)]
-        [XmlAttribute("suppressEmptyColumns")]
-        public bool SuppressEmptyColumns
+	private bool _suppressEmptyColumns;
+	[Category("List")]
+	[DefaultValue(false)]
+	[XmlAttribute("suppressEmptyColumns")]
+	public bool SuppressEmptyColumns
+	{
+		get => _suppressEmptyColumns;
+		set => _suppressEmptyColumns = value;
+	}
+
+	private bool _alwaysAllowReturnToForm;
+	[Category("List")]
+	[DefaultValue(false)]
+	[XmlAttribute("alwaysAllowReturnToForm")]
+	public bool AlwaysAllowReturnToForm
+	{
+		get => _alwaysAllowReturnToForm;
+		set => _alwaysAllowReturnToForm = value;
+	}
+
+	private bool _isFilteredServerside;
+	[Category("List")]
+	[DefaultValue(false)]
+	[XmlAttribute("isFilteredServerside")]
+	public bool IsFilteredServerside
+	{
+		get => _isFilteredServerside;
+		set => _isFilteredServerside = value;
+	}
+
+	private string _serversideFilterParameter;
+	[Category("List")]
+	[LookupServerSideFilterModelElementRule()]
+	[XmlAttribute("serversideFilterParameter")]
+	public string ServersideFilterParameter
+	{
+		get => _serversideFilterParameter;
+		set => _serversideFilterParameter = value;
+	}
+
+	private bool _searchByFirstColumnOnly;
+	[Category("List")]
+	[DefaultValue(false)]
+	[XmlAttribute("searchByFirstColumnOnly")]
+	public bool SearchByFirstColumnOnly
+	{
+		get => _searchByFirstColumnOnly;
+		set => _searchByFirstColumnOnly = value;
+	}
+	#endregion
+
+	#region Value
+	private string _valueValueMember;
+	[Category("Value")]
+	[NotNullModelElementRule("ValueDataStructure")]
+	[XmlAttribute("valueValueMember")]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	public string ValueValueMember
+	{
+		get => _valueValueMember;
+		set => _valueValueMember = value;
+	}
+
+	private string _valueDisplayMember;
+	[Category("Value")]
+	[NotNullModelElementRule("ValueDataStructure")]
+	[XmlAttribute("valueDisplayMember")]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	public string ValueDisplayMember
+	{
+		get => _valueDisplayMember;
+		set => _valueDisplayMember = value;
+	}
+
+	public Guid ValueDataStructureId;
+
+	[Category("Value")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("valueDataStructure", "ValueDataStructureId")]
+	public DataStructure ValueDataStructure
+	{
+		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(ValueDataStructureId)) as DataStructure;
+		set
 		{
-			get => _suppressEmptyColumns;
-			set => _suppressEmptyColumns = value;
-		}
-
-		private bool _alwaysAllowReturnToForm;
-		[Category("List")]
-		[DefaultValue(false)]
-        [XmlAttribute("alwaysAllowReturnToForm")]
-        public bool AlwaysAllowReturnToForm
-		{
-			get => _alwaysAllowReturnToForm;
-			set => _alwaysAllowReturnToForm = value;
-		}
-
-		private bool _isFilteredServerside;
-		[Category("List")]
-		[DefaultValue(false)]
-        [XmlAttribute("isFilteredServerside")]
-        public bool IsFilteredServerside
-		{
-			get => _isFilteredServerside;
-			set => _isFilteredServerside = value;
-		}
-
-        private string _serversideFilterParameter;
-        [Category("List")]
-        [LookupServerSideFilterModelElementRule()]
-        [XmlAttribute("serversideFilterParameter")]
-        public string ServersideFilterParameter
-        {
-            get => _serversideFilterParameter;
-            set => _serversideFilterParameter = value;
-        }
-
-		private bool _searchByFirstColumnOnly;
-		[Category("List")]
-		[DefaultValue(false)]
-        [XmlAttribute("searchByFirstColumnOnly")]
-        public bool SearchByFirstColumnOnly
-		{
-			get => _searchByFirstColumnOnly;
-			set => _searchByFirstColumnOnly = value;
-		}
-		#endregion
-
-		#region Value
-		private string _valueValueMember;
-		[Category("Value")]
-		[NotNullModelElementRule("ValueDataStructure")]
-        [XmlAttribute("valueValueMember")]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        public string ValueValueMember
-		{
-			get => _valueValueMember;
-			set => _valueValueMember = value;
-		}
-
-		private string _valueDisplayMember;
-		[Category("Value")]
-		[NotNullModelElementRule("ValueDataStructure")]
-        [XmlAttribute("valueDisplayMember")]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        public string ValueDisplayMember
-		{
-			get => _valueDisplayMember;
-			set => _valueDisplayMember = value;
-		}
-
-		public Guid ValueDataStructureId;
-
-		[Category("Value")]
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("valueDataStructure", "ValueDataStructureId")]
-        public DataStructure ValueDataStructure
-		{
-			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(ValueDataStructureId)) as DataStructure;
-			set
-			{
 				ValueDataStructureId = (Guid)value.PrimaryKey["Id"];
 				ValueMethod = null;
 				ValueSortSet = null;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public DataStructureEntity ValueEntity => 
-			ValueDataStructure?.Entities[0] as DataStructureEntity;
+	[Browsable(false)]
+	public DataStructureEntity ValueEntity => 
+		ValueDataStructure?.Entities[0] as DataStructureEntity;
 
-		public DataStructureColumn ValueColumn => 
-			ValueEntity?.Column(ValueValueMember);
+	public DataStructureColumn ValueColumn => 
+		ValueEntity?.Column(ValueValueMember);
 
-		public DataStructureColumn ValueDisplayColumn =>
-			ValueEntity?.Column(ValueDisplayMember);
-		#endregion
+	public DataStructureColumn ValueDisplayColumn =>
+		ValueEntity?.Column(ValueDisplayMember);
+	#endregion
 
-		#region Filters
-		private string _roleFilterMember;
-		[Category("Filter")]
-		[XmlAttribute("roleFilterMember")]
-        public string RoleFilterMember
-		{
-			get => _roleFilterMember;
-			set => _roleFilterMember = value;
-		}
+	#region Filters
+	private string _roleFilterMember;
+	[Category("Filter")]
+	[XmlAttribute("roleFilterMember")]
+	public string RoleFilterMember
+	{
+		get => _roleFilterMember;
+		set => _roleFilterMember = value;
+	}
 
-		private string _featureFilterMember;
-		[Category("Filter")]
-		[XmlAttribute("featureFilterMember")]
-        public string FeatureFilterMember
-		{
-			get => _featureFilterMember;
-			set => _featureFilterMember = value;
-		}
-		#endregion
+	private string _featureFilterMember;
+	[Category("Filter")]
+	[XmlAttribute("featureFilterMember")]
+	public string FeatureFilterMember
+	{
+		get => _featureFilterMember;
+		set => _featureFilterMember = value;
+	}
+	#endregion
 		
-		public Guid ListDataStructureMethodId;
+	public Guid ListDataStructureMethodId;
 
-		[TypeConverter(typeof(DataServiceDataLookupListMethodConverter))]
-        [LookupServerSideFilterModelElementRule()]
-        [Category("List")]
-        [XmlReference("listMethod", "ListDataStructureMethodId")]
-        public DataStructureMethod ListMethod
-		{
-			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(ListDataStructureMethodId));
-			set => ListDataStructureMethodId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(DataServiceDataLookupListMethodConverter))]
+	[LookupServerSideFilterModelElementRule()]
+	[Category("List")]
+	[XmlReference("listMethod", "ListDataStructureMethodId")]
+	public DataStructureMethod ListMethod
+	{
+		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(ListDataStructureMethodId));
+		set => ListDataStructureMethodId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 
-		public Guid ValueDataStructureMethodId;
+	public Guid ValueDataStructureMethodId;
 
-		[TypeConverter(typeof(DataServiceDataLookupValueFilterConverter))]
-		[Category("Value")]
-        [XmlReference("valueMethod", "ValueDataStructureMethodId")]
-        public DataStructureMethod ValueMethod
-		{
-			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(ValueDataStructureMethodId));
-			set => ValueDataStructureMethodId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(DataServiceDataLookupValueFilterConverter))]
+	[Category("Value")]
+	[XmlReference("valueMethod", "ValueDataStructureMethodId")]
+	public DataStructureMethod ValueMethod
+	{
+		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(ValueDataStructureMethodId));
+		set => ValueDataStructureMethodId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 
-		public Guid ValueDataStructureSortSetId;
+	public Guid ValueDataStructureSortSetId;
 
-		[TypeConverter(typeof(DataServiceDataLookupValueSortSetConverter))]
-		[Category("Value")]
-        [XmlReference("valueSortSet", "ValueDataStructureSortSetId")]
-        public DataStructureSortSet ValueSortSet
-		{
-			get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(ValueDataStructureSortSetId));
-			set => ValueDataStructureSortSetId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(DataServiceDataLookupValueSortSetConverter))]
+	[Category("Value")]
+	[XmlReference("valueSortSet", "ValueDataStructureSortSetId")]
+	public DataStructureSortSet ValueSortSet
+	{
+		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(ValueDataStructureSortSetId));
+		set => ValueDataStructureSortSetId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 
-		public Guid ListDataStructureSortSetId;
+	public Guid ListDataStructureSortSetId;
 
-		[TypeConverter(typeof(DataServiceDataLookupListSortSetConverter))]
-		[Category("List")]
-        [XmlReference("listSortSet", "ListDataStructureSortSetId")]
-        public DataStructureSortSet ListSortSet
-		{
-			get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(ListDataStructureSortSetId));
-			set => ListDataStructureSortSetId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
-		#endregion
+	[TypeConverter(typeof(DataServiceDataLookupListSortSetConverter))]
+	[Category("List")]
+	[XmlReference("listSortSet", "ListDataStructureSortSetId")]
+	public DataStructureSortSet ListSortSet
+	{
+		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(ListDataStructureSortSetId));
+		set => ListDataStructureSortSetId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[] 
+	public override Type[] NewItemTypes => new[] 
 		{ 
 			typeof(DataLookupMenuBinding),
 			typeof(DataServiceDataTooltip),
 			typeof(NewRecordScreenBinding)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(DataLookupMenuBinding))
 			{
@@ -372,7 +372,6 @@ namespace Origam.Schema.LookupModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
+	#endregion
 
-	}
 }

@@ -31,37 +31,37 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 //using MoreLinq;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+internal class OrigamXmlManager
 {
-    internal class OrigamXmlManager
-    {
-        private readonly ExternalFileManager externalFileManger;
-        public OrigamXmlDocument OpenDocument { get; set; }
-        private readonly object Lock = new object();
+    private readonly ExternalFileManager externalFileManger;
+    public OrigamXmlDocument OpenDocument { get; set; }
+    private readonly object Lock = new object();
         
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
 
-        private LocalizedObjectCache loadedLocalizedObjects;
+    private LocalizedObjectCache loadedLocalizedObjects;
 
-        public OrigamPath Path { private get; set; }
+    public OrigamPath Path { private get; set; }
 
-        public IDictionary<Guid, PersistedObjectInfo> ContainedObjects{ get;} 
-            = new Dictionary<Guid, PersistedObjectInfo>();
-        public ParentFolders ParentFolderIds { get; }
+    public IDictionary<Guid, PersistedObjectInfo> ContainedObjects{ get;} 
+        = new Dictionary<Guid, PersistedObjectInfo>();
+    public ParentFolders ParentFolderIds { get; }
 
-        public OrigamXmlManager(OrigamPath path, ParentFolders parentFolderIds,
-            ExternalFileManager externalFileManger)
-        {
+    public OrigamXmlManager(OrigamPath path, ParentFolders parentFolderIds,
+        ExternalFileManager externalFileManger)
+    {
             Path = path;
             ParentFolderIds = parentFolderIds;
             this.externalFileManger = externalFileManger;
         }
 
-        public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider,
-            bool useCache)
-        {
+    public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider,
+        bool useCache)
+    {
             IFilePersistent cachedObject = GetCachedObject(id, provider, useCache);
             if (useCache)
             {
@@ -79,24 +79,24 @@ namespace Origam.DA.Service
             return loadedObj;
         }
         
-        public void InvalidateCache()
-        {
+    public void InvalidateCache()
+    {
             lock (Lock)
             {
                 loadedLocalizedObjects = null;
             }
         }
 
-        public void RemoveFromCache(Guid instanceId)
-        {
+    public void RemoveFromCache(Guid instanceId)
+    {
             lock (Lock)
             {
                 loadedLocalizedObjects?.Remove(instanceId);
             }
         }
 
-        private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider, bool useCache)
-        {
+    private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider, bool useCache)
+    {
             try
             {
                 lock (Lock)
@@ -130,8 +130,8 @@ namespace Origam.DA.Service
             }
         }
 
-        private void AddObjectsFromDisk(IPersistenceProvider provider, bool useCache)
-        {
+    private void AddObjectsFromDisk(IPersistenceProvider provider, bool useCache)
+    {
             lock (Lock)
             {
                 LoadAllObjectsFromDisk(provider, useCache)
@@ -140,8 +140,8 @@ namespace Origam.DA.Service
             }
         }
 
-        private IEnumerable<IFilePersistent> LoadAllObjectsFromDisk(IPersistenceProvider provider, bool useCache)
-        {
+    private IEnumerable<IFilePersistent> LoadAllObjectsFromDisk(IPersistenceProvider provider, bool useCache)
+    {
             ParentIdTracker parentIdTracker = new ParentIdTracker();
             using (XmlReader xmlReader = GetDocumentReader())
             {
@@ -184,8 +184,8 @@ namespace Origam.DA.Service
             }
         }
 
-        private XmlReader GetDocumentReader()
-        {
+    private XmlReader GetDocumentReader()
+    {
             if (OpenDocument == null)
             {
                 FileInfo fi = new FileInfo(Path.Absolute);
@@ -195,24 +195,24 @@ namespace Origam.DA.Service
             return new XmlNodeReader(OpenDocument);
         }
 
-        private class ParentIdTracker
-        {
-            readonly Dictionary<int, Guid> depthToParentDict = new Dictionary<int, Guid>();
+    private class ParentIdTracker
+    {
+        readonly Dictionary<int, Guid> depthToParentDict = new Dictionary<int, Guid>();
 
-            public void SetParent(Guid parentId, int depth)
-            {
+        public void SetParent(Guid parentId, int depth)
+        {
                 depthToParentDict[depth] = parentId;
             }
 
-            public Guid Get(int depth)
-            {
+        public Guid Get(int depth)
+        {
                 if(!depthToParentDict.ContainsKey(depth)) return Guid.Empty;
                 return depthToParentDict[depth];
             }
-        }
+    }
 
-        public void RemoveInstance(Guid id )
-        {
+    public void RemoveInstance(Guid id )
+    {
             XmlNode nodeToDelete = OpenDocument
                 .GetAllNodes()
                 .Where(node => XmlUtils.ReadId(node).HasValue)
@@ -234,8 +234,8 @@ namespace Origam.DA.Service
             ContainedObjects.Remove(id);
         }
 
-        public void WriteInstance(IFilePersistent instance)
-        {
+    public void WriteInstance(IFilePersistent instance)
+    {
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat("Retrieving file {0}", Path);
@@ -246,8 +246,8 @@ namespace Origam.DA.Service
             AddToLoadedObjects(instance);
         }
 
-        private void AddToLoadedObjects(IFilePersistent instance)
-        {
+    private void AddToLoadedObjects(IFilePersistent instance)
+    {
             lock (Lock)
             {
                 if (loadedLocalizedObjects == null)
@@ -258,5 +258,4 @@ namespace Origam.DA.Service
                 loadedLocalizedObjects[instance.Id] = instance;
             }
         }
-  }
 }

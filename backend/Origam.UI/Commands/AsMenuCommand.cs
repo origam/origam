@@ -27,41 +27,39 @@ using System.Reflection;
 using System.Windows.Forms;
 
 
-namespace Origam.UI
+namespace Origam.UI;
+
+public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
 {
+	private readonly object caller;
 
-
-	public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
+	public AsMenuCommand()
 	{
-		private readonly object caller;
-
-		public AsMenuCommand()
-		{
             DefaultImageScaling();
         }
 
-		public AsMenuCommand(string label) : base(label)
-		{
+	public AsMenuCommand(string label) : base(label)
+	{
 			this.Description = label;
             DefaultImageScaling();
         }
 
-		public AsMenuCommand(string label, object caller) : base(label)
-		{
+	public AsMenuCommand(string label, object caller) : base(label)
+	{
 			this.Description = label;
 			this.caller = caller;
             DefaultImageScaling();
         }
 
-		public AsMenuCommand(string label, ICommand menuCommand) : base(label)
-		{
+	public AsMenuCommand(string label, ICommand menuCommand) : base(label)
+	{
 			this.Description = label;
 			this.Command = menuCommand;
             DefaultImageScaling();
         }
 
-		public AsMenuCommand(AsMenuCommand other): base(other.Description)
-		{
+	public AsMenuCommand(AsMenuCommand other): base(other.Description)
+	{
 			this.Description = other.Description;
 			this.caller = other.caller;
 			this.Command = other.Command;
@@ -72,32 +70,32 @@ namespace Origam.UI
             ShareAllEventHandlers(other);
 		}
 
-        private void DefaultImageScaling()
-        {
+	private void DefaultImageScaling()
+	{
             this.ImageScaling = ToolStripItemImageScaling.None;
         }
-		// This method causes this AsMenuCommand to share event handlers with
-		// the other AsMenuCommand. When any handler is added or removed in this
-		// the same happens in the other and vice versa.
-		// https://stackoverflow.com/questions/6055038/how-to-clone-control-event-handlers-at-run-time
-		private void ShareAllEventHandlers(AsMenuCommand other)
-		{
+	// This method causes this AsMenuCommand to share event handlers with
+	// the other AsMenuCommand. When any handler is added or removed in this
+	// the same happens in the other and vice versa.
+	// https://stackoverflow.com/questions/6055038/how-to-clone-control-event-handlers-at-run-time
+	private void ShareAllEventHandlers(AsMenuCommand other)
+	{
 			var eventsField = typeof(Component).GetField("events",
 				BindingFlags.NonPublic | BindingFlags.Instance);
 			var eventHandlerList = eventsField.GetValue(other);
 			eventsField.SetValue(this, eventHandlerList);
 		}
 
-		public ArrayList SubItems { get; } = new ArrayList();
+	public ArrayList SubItems { get; } = new ArrayList();
 
-		public ICommand Command { get; set; }
+	public ICommand Command { get; set; }
 
-		public string Description { get; } = string.Empty;
+	public string Description { get; } = string.Empty;
 
-		public bool IsEnabled
+	public bool IsEnabled
+	{
+		get
 		{
-			get
-			{
 				bool isEnabled = true; 
 				if (Command is IMenuCommand command) 
 				{
@@ -105,13 +103,13 @@ namespace Origam.UI
 				}
 				return isEnabled;
 			}
-			set => this.Enabled = value;
-		}
+		set => this.Enabled = value;
+	}
 
-		#region IStatusUpdate Members
+	#region IStatusUpdate Members
 
-		public void UpdateItemsToDisplay()
-		{
+	public void UpdateItemsToDisplay()
+	{
 			this.Text = this.Description;
 
 			if (Command is IMenuCommand command) 
@@ -134,8 +132,8 @@ namespace Origam.UI
 			}
 		}
 
-        protected override void OnDropDownShow(EventArgs e)
-        {
+	protected override void OnDropDownShow(EventArgs e)
+	{
             if (DropDownItems.Count == 1)
             {
 	            if (DropDownItems[0] is SubmenuBuilderPlaceholder builderPlaceholder)
@@ -147,8 +145,8 @@ namespace Origam.UI
             base.OnDropDownShow(e);
         }
 
-        private void PopulateBuilder(ISubmenuBuilder builder)
-        {
+	private void PopulateBuilder(ISubmenuBuilder builder)
+	{
             ToolStripMenuItem[] submenu = builder.BuildSubmenu(caller);
             foreach (var subItem in submenu)
             {
@@ -156,8 +154,8 @@ namespace Origam.UI
             }
         }
 
-        public void PopulateMenu(object item)
-		{
+	public void PopulateMenu(object item)
+	{
 			if (item is ISubmenuBuilder submenuBuilder) 
 			{
                 if (submenuBuilder.LateBound)
@@ -182,15 +180,14 @@ namespace Origam.UI
 			}
 		}
 
-		#endregion
+	#endregion
 
-		#region IDisposable Members
+	#region IDisposable Members
 
-		void IDisposable.Dispose()
-		{
+	void IDisposable.Dispose()
+	{
 			(Command as IDisposable)?.Dispose();
 		}
 
-		#endregion
-	}
+	#endregion
 }

@@ -25,98 +25,98 @@ using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ControlSetItem  : AbstractSchemaItem 
 {
-   [SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class ControlSetItem  : AbstractSchemaItem 
+
+	public const string CategoryConst = "ControlSetItem";
+
+	public ControlSetItem() {}
+		
+	public ControlSetItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public ControlSetItem(Key primaryKey) : base(primaryKey) {}
+
+	#region Properties
+	public Guid ControlId;
+
+	[XmlReference("widget", "ControlId")]
+	public ControlItem ControlItem
 	{
-
-		public const string CategoryConst = "ControlSetItem";
-
-		public ControlSetItem() {}
+		get => (ControlItem)PersistenceProvider.RetrieveInstance(
+			typeof(ControlItem), new ModelElementKey(ControlId));
+		set => ControlId = (Guid)value.PrimaryKey["Id"];
+	}
 		
-		public ControlSetItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	private string _roles;
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get => _roles;
+		set => _roles = value;
+	}		
 
-		public ControlSetItem(Key primaryKey) : base(primaryKey) {}
+	private string _features;
+	[XmlAttribute("features")]
+	public string Features
+	{
+		get => _features;
+		set => _features = value;
+	}		
 
-		#region Properties
-		public Guid ControlId;
-
-        [XmlReference("widget", "ControlId")]
-		public ControlItem ControlItem
-		{
-			get => (ControlItem)PersistenceProvider.RetrieveInstance(
-				typeof(ControlItem), new ModelElementKey(ControlId));
-			set => ControlId = (Guid)value.PrimaryKey["Id"];
-		}
+	private Guid _multiColumnAdapterFieldCondition;
 		
-		private string _roles;
-		[XmlAttribute("roles")]
-		public string Roles
-		{
-			get => _roles;
-			set => _roles = value;
-		}		
+	[XmlAttribute("multiColumnAdapterFieldCondition")]
+	public Guid MultiColumnAdapterFieldCondition
+	{
+		get => _multiColumnAdapterFieldCondition;
+		set => _multiColumnAdapterFieldCondition = value;
+	}
 
-		private string _features;
-		[XmlAttribute("features")]
-		public string Features
-		{
-			get => _features;
-			set => _features = value;
-		}		
+	private bool _isAlternative = false;
 
-		private Guid _multiColumnAdapterFieldCondition;
+	[XmlAttribute("isAlternative")]
+	public bool IsAlternative
+	{
+		get => _isAlternative;
+		set => _isAlternative = value;
+	}
+
+	private bool _requestSaveAfterChange = false;
+
+	[XmlAttribute("requestSaveAfterChange")]
+	public bool RequestSaveAfterChange
+	{
+		get => _requestSaveAfterChange;
+		set => _requestSaveAfterChange = value;
+	}
+
+	private int _level = 100;
+
+	[XmlAttribute("level")]
+	public int Level
+	{
+		get => _level;
+		set => _level = value;
+	}
+	#endregion
 		
-        [XmlAttribute("multiColumnAdapterFieldCondition")]
-		public Guid MultiColumnAdapterFieldCondition
-		{
-			get => _multiColumnAdapterFieldCondition;
-			set => _multiColumnAdapterFieldCondition = value;
-		}
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType => CategoryConst;
 
-		private bool _isAlternative = false;
-
-        [XmlAttribute("isAlternative")]
-        public bool IsAlternative
-		{
-			get => _isAlternative;
-			set => _isAlternative = value;
-		}
-
-        private bool _requestSaveAfterChange = false;
-
-        [XmlAttribute("requestSaveAfterChange")]
-        public bool RequestSaveAfterChange
-        {
-            get => _requestSaveAfterChange;
-            set => _requestSaveAfterChange = value;
-        }
-
-		private int _level = 100;
-
-        [XmlAttribute("level")]
-        public int Level
-		{
-			get => _level;
-			set => _level = value;
-		}
-		#endregion
-		
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType => CategoryConst;
-
-		public override UI.BrowserNodeCollection ChildNodes()
-		{
+	public override UI.BrowserNodeCollection ChildNodes()
+	{
 			// return only the 1st level of items (alternative screen/panels) but not child widgets
 			return ParentItem.ParentItem == null 
 				? new UI.BrowserNodeCollection() : base.ChildNodes();
 		}
 
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			dependencies.Add(ControlItem);
 			if(ControlItem.PanelControlSet != null)
 			{
@@ -230,11 +230,11 @@ namespace Origam.Schema.GuiModel
 			}
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new []
+	public override Type[] NewItemTypes => new []
 		{
 			typeof(PropertyValueItem),
 			typeof(ControlSetItem),
@@ -242,9 +242,9 @@ namespace Origam.Schema.GuiModel
 			typeof(ColumnParameterMapping)
 		};
 		
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(PropertyValueItem))
 			{
@@ -265,15 +265,15 @@ namespace Origam.Schema.GuiModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
-	}
+	#endregion
+}
 
-	public class ControlSetItemComparer : IComparer
+public class ControlSetItemComparer : IComparer
+{
+	#region IComparer Members
+
+	public int Compare(object x, object y)
 	{
-		#region IComparer Members
-
-		public int Compare(object x, object y)
-		{
 			if(!(x is ControlSetItem xItem))
 			{
 				throw new ArgumentOutOfRangeException("x", x, 
@@ -293,10 +293,10 @@ namespace Origam.Schema.GuiModel
 			return tabX.CompareTo(tabY);
 		}
 
-		#endregion
+	#endregion
 
-		private int TabIndex(ControlSetItem control)
-		{
+	private int TabIndex(ControlSetItem control)
+	{
 			foreach(PropertyValueItem property in control.ChildItemsByType(
 				        PropertyValueItem.CategoryConst))
 			{
@@ -307,14 +307,14 @@ namespace Origam.Schema.GuiModel
 			}
 			return -1;
 		}
-	}
+}
 
-	public class AlternativeControlSetItemComparer : IComparer
+public class AlternativeControlSetItemComparer : IComparer
+{
+	#region IComparer Members
+
+	public int Compare(object x, object y)
 	{
-		#region IComparer Members
-
-		public int Compare(object x, object y)
-		{
 			if(!(x is ControlSetItem xItem))
 			{
 				throw new ArgumentOutOfRangeException ("x", x, 
@@ -327,6 +327,5 @@ namespace Origam.Schema.GuiModel
 			}
 			return xItem.Level.CompareTo (yItem.Level);
 		}
-		#endregion
-	}
+	#endregion
 }

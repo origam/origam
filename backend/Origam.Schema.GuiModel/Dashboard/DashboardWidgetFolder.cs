@@ -26,19 +26,19 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Folder", 68)]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DashboardWidgetFolder : AbstractDashboardWidget
-	{
-		public DashboardWidgetFolder() : base() {Init();}
-		public DashboardWidgetFolder(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public DashboardWidgetFolder(Key primaryKey) : base(primaryKey) {Init();}
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Folder", 68)]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DashboardWidgetFolder : AbstractDashboardWidget
+{
+	public DashboardWidgetFolder() : base() {Init();}
+	public DashboardWidgetFolder(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public DashboardWidgetFolder(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
+	{
 			this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
 			this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
 			this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
@@ -53,61 +53,59 @@ namespace Origam.Schema.GuiModel
 			this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
 		}
 		
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
 			return newNode is DashboardWidgetFolder || newNode is DashboardWidgetsSchemaItemProvider;
 		}
 
-		public override System.Collections.ArrayList Properties
+	public override System.Collections.ArrayList Properties
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-		}
+	}
 
 
-		#region Properties
-		public override string Icon
+	#region Properties
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "68";
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-
-		[Browsable(false)]
-		public new string Roles
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-			}
-		}
-
-		[Browsable(false)]
-		public new string Features
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-			}
-		}
-		#endregion			
 	}
-}
 
+	[Browsable(false)]
+	public new string Roles
+	{
+		get
+		{
+				return null;
+			}
+		set
+		{
+			}
+	}
+
+	[Browsable(false)]
+	public new string Features
+	{
+		get
+		{
+				return null;
+			}
+		set
+		{
+			}
+	}
+	#endregion			
+}

@@ -4,12 +4,12 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class DataSetExtensions
 {
-    public static class DataSetExtensions
+    public static XDocument ToXDocument(this DataSet dataSet)
     {
-        public static XDocument ToXDocument(this DataSet dataSet)
-        {
             using (var stream = new MemoryStream())
             {
                 using (var xmlTextWriter = new XmlTextWriter(stream, Encoding.UTF8)
@@ -25,8 +25,8 @@ namespace Origam.Extensions
             }
         }
         
-        public static void ReEnableNullConstraints(this DataSet data)
-        {
+    public static void ReEnableNullConstraints(this DataSet data)
+    {
             foreach (DataTable table in data.Tables)
             {
                 foreach (DataColumn col in table.Columns)
@@ -40,8 +40,8 @@ namespace Origam.Extensions
             }
         }      
         
-        public static void RemoveNullConstraints(this DataSet data)
-        {
+    public static void RemoveNullConstraints(this DataSet data)
+    {
             foreach (DataTable table in data.Tables)
             {
                 foreach (DataColumn col in table.Columns)
@@ -54,8 +54,8 @@ namespace Origam.Extensions
             }
         }
         
-        private static bool IsKey(DataColumn column)
-        {
+    private static bool IsKey(DataColumn column)
+    {
             // primary key
             bool found = IsInColumns(column, column.Table.PrimaryKey);
             if (found) return true;
@@ -68,8 +68,8 @@ namespace Origam.Extensions
             return IsInRelations(column, column.Table.ChildRelations);
         }
         
-        private static bool IsInRelations(DataColumn column, DataRelationCollection relations)
-        {
+    private static bool IsInRelations(DataColumn column, DataRelationCollection relations)
+    {
             foreach (DataRelation relation in relations)
             {
                 if (IsRelationKey(column, relation)) return true;
@@ -78,8 +78,8 @@ namespace Origam.Extensions
             return false;
         }
         
-        private static bool IsRelationKey(DataColumn column, DataRelation relation)
-        {
+    private static bool IsRelationKey(DataColumn column, DataRelation relation)
+    {
             // parent columns
             bool found = IsInColumns(column, relation.ParentColumns);
         
@@ -90,8 +90,8 @@ namespace Origam.Extensions
         }
         
         
-        private static bool IsInColumns(DataColumn searchedColumn, DataColumn[] columns)
-        {
+    private static bool IsInColumns(DataColumn searchedColumn, DataColumn[] columns)
+    {
             foreach (DataColumn col in columns)
             {
                 if (col.Equals(searchedColumn)) return true;
@@ -99,5 +99,4 @@ namespace Origam.Extensions
         
             return false;
         }
-    }
 }

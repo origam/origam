@@ -26,13 +26,13 @@ using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
 
-namespace Origam.DA.Service
-{
-    public class XmlFileDataFactory
-    {
+namespace Origam.DA.Service;
 
-        public Result<XmlFileData, XmlLoadError> Create(FileInfo fileInfo)
-        {
+public class XmlFileDataFactory
+{
+
+    public Result<XmlFileData, XmlLoadError> Create(FileInfo fileInfo)
+    {
             Result<OrigamXmlDocument> documentResult = LoadXmlDoc(fileInfo);
             if (documentResult.IsFailure)
             {
@@ -42,8 +42,8 @@ namespace Origam.DA.Service
             return Result.Ok<XmlFileData, XmlLoadError>(new XmlFileData(documentResult.Value, fileInfo));
         }
 
-        private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
-        {
+    private Result<OrigamXmlDocument> LoadXmlDoc(FileInfo fileInfo)
+    {
             OrigamXmlDocument xmlDocument = new OrigamXmlDocument();
             try
             {
@@ -55,5 +55,4 @@ namespace Origam.DA.Service
             }
             return Result.Ok(xmlDocument);
         }
-    }
 }

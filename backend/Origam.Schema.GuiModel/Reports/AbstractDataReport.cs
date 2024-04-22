@@ -27,121 +27,121 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for AbstractDataReport.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractDataReport : AbstractReport
 {
-    /// <summary>
-    /// Summary description for AbstractDataReport.
-    /// </summary>
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractDataReport : AbstractReport
+    public AbstractDataReport() : base() { }
+
+    public AbstractDataReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+
+    public AbstractDataReport(Key primaryKey) : base(primaryKey) { }
+
+    #region Properties
+
+    private string _reportFileName;
+
+    public Guid DataStructureId;
+
+    [TypeConverter(typeof(DataStructureConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [XmlReference("dataStructure", "DataStructureId")]
+    public DataStructure DataStructure
     {
-        public AbstractDataReport() : base() { }
-
-        public AbstractDataReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-
-        public AbstractDataReport(Key primaryKey) : base(primaryKey) { }
-
-        #region Properties
-
-        private string _reportFileName;
-
-        public Guid DataStructureId;
-
-        [TypeConverter(typeof(DataStructureConverter))]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("dataStructure", "DataStructureId")]
-        public DataStructure DataStructure
+        get
         {
-            get
-            {
                 return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
             }
-            set
-            {
+        set
+        {
                 this.Method = null;
                 this.SortSet = null;
                 this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
-        }
+    }
 
-        public Guid DataStructureMethodId;
+    public Guid DataStructureMethodId;
 
-        [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-        [XmlReference("method", "DataStructureMethodId")]
-        public DataStructureMethod Method
+    [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+    [XmlReference("method", "DataStructureMethodId")]
+    public DataStructureMethod Method
+    {
+        get
         {
-            get
-            {
                 return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
             }
-            set
-            {
+        set
+        {
                 this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
-        }
+    }
 
-        public Guid DataStructureSortSetId;
+    public Guid DataStructureSortSetId;
 
-        [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-        [XmlReference("sortSet", "DataStructureSortSetId")]
-        public DataStructureSortSet SortSet
+    [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+    [XmlReference("sortSet", "DataStructureSortSetId")]
+    public DataStructureSortSet SortSet
+    {
+        get
         {
-            get
-            {
                 return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
             }
-            set
-            {
+        set
+        {
                 this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
-        }
-        public Guid TransformationId;
+    }
+    public Guid TransformationId;
 
-        [TypeConverter(typeof(TransformationConverter))]
-        [XmlReference("transformation", "TransformationId")]
-        public AbstractTransformation Transformation
+    [TypeConverter(typeof(TransformationConverter))]
+    [XmlReference("transformation", "TransformationId")]
+    public AbstractTransformation Transformation
+    {
+        get
         {
-            get
-            {
                 return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TransformationId));
             }
-            set
-            {
+        set
+        {
                 this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
             }
-        }
+    }
 
-        [XmlAttribute("reportFileName")]
-        public string ReportFileName
+    [XmlAttribute("reportFileName")]
+    public string ReportFileName
+    {
+        get
         {
-            get
-            {
                 return _reportFileName;
             }
-            set
-            {
+        set
+        {
                 _reportFileName = value;
             }
-        }
+    }
 
-        string _localeXPath;
-        [Description("XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report.")]
-        [XmlAttribute("localeXPath")]
-        public string LocaleXPath
+    string _localeXPath;
+    [Description("XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report.")]
+    [XmlAttribute("localeXPath")]
+    public string LocaleXPath
+    {
+        get
         {
-            get
-            {
                 return _localeXPath;
             }
-            set
-            {
+        set
+        {
                 _localeXPath = value;
             }
-        }
-        #endregion
+    }
+    #endregion
 
-        public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-        {
+    public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+    {
             if (this.Method != null)
             {
                 base.GetParameterReferences(this.Method as AbstractSchemaItem, list);
@@ -152,8 +152,8 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-        {
+    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    {
             dependencies.Add(this.DataStructure);
             if (this.Method != null) dependencies.Add(this.Method);
             if (this.SortSet != null) dependencies.Add(this.SortSet);
@@ -161,5 +161,4 @@ namespace Origam.Schema.GuiModel
 
             base.GetExtraDependencies(dependencies);
         }
-    }
 }

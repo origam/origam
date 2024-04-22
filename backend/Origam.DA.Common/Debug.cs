@@ -23,21 +23,21 @@ using System;
 using System.Data;
 //using System.Windows.Forms;
 
-namespace Origam.DA
-{
-    /// <summary>
-    /// Summary description for Debug.
-    /// </summary>
-    public sealed class DebugClass
-    {
-        private const int MAX_ERRORS_PER_TABLE = 10;
+namespace Origam.DA;
 
-        private DebugClass()
-        {
+/// <summary>
+/// Summary description for Debug.
+/// </summary>
+public sealed class DebugClass
+{
+    private const int MAX_ERRORS_PER_TABLE = 10;
+
+    private DebugClass()
+    {
         }
 
-        public static string DataDebug(DataSet dataSet)
-        {
+    public static string DataDebug(DataSet dataSet)
+    {
             string result = "";
 
             result = result + "**********************************Begin**ListRowErrors**********************************************" + Environment.NewLine;
@@ -58,13 +58,13 @@ namespace Origam.DA
             return result;
         }
 
-        public static void Show(DataSet dataSe)
-        {
+    public static void Show(DataSet dataSe)
+    {
             throw new NotImplementedException();
         }
 
-        public static string ListRowErrors(DataSet dataSet)
-        {
+    public static string ListRowErrors(DataSet dataSet)
+    {
             string result = "";
             int errors = 0;
             foreach (DataTable table in dataSet.Tables)
@@ -91,8 +91,8 @@ namespace Origam.DA
             return result;
         }
 
-        public static string ListUniqueColumns(DataSet dataSet)
-        {
+    public static string ListUniqueColumns(DataSet dataSet)
+    {
             string result = "";
 
             foreach (DataTable table in dataSet.Tables)
@@ -114,8 +114,8 @@ namespace Origam.DA
         }
 
 
-        public static string ListConstraints(DataSet dataSet)
-        {
+    public static string ListConstraints(DataSet dataSet)
+    {
             string result = "";
 
             foreach (DataTable table in dataSet.Tables)
@@ -131,5 +131,4 @@ namespace Origam.DA
 
             return result;
         }
-    }
 }

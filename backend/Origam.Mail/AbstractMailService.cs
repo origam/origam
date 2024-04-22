@@ -31,22 +31,22 @@ using MimeKit;
 using Origam.Service.Core;
 
 
-namespace Origam.Mail
+namespace Origam.Mail;
+
+/// <summary>
+/// MailAgent sends mails based on AsMail.xsd schema
+/// </summary>
+public abstract class AbstractMailService: IMailService
 {
-    /// <summary>
-    /// MailAgent sends mails based on AsMail.xsd schema
-    /// </summary>
-    public abstract class AbstractMailService: IMailService
+    public AbstractMailService()
     {
-        public AbstractMailService()
-        {
         }
 
-        public static readonly Regex HrefRegex = new Regex(@"<A[^>]*?HREF\s*=\s*[""']?([^'"" >]+?)[ '""]?>", RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        public static readonly Regex URLRegex = new Regex(@"\b(http\://|https\://|ftp\://|mailto\:|www\.)([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]+)(\:[0-9]+)?([a-zA-Z0-9\.\,\?\'\\/\+&%\$#\=~_\-@]*)*\b", RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    public static readonly Regex HrefRegex = new Regex(@"<A[^>]*?HREF\s*=\s*[""']?([^'"" >]+?)[ '""]?>", RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    public static readonly Regex URLRegex = new Regex(@"\b(http\://|https\://|ftp\://|mailto\:|www\.)([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]+)(\:[0-9]+)?([a-zA-Z0-9\.\,\?\'\\/\+&%\$#\=~_\-@]*)*\b", RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        static string CapHref(Match m)
-        {
+    static string CapHref(Match m)
+    {
             // Get the matched string.
             string x = m.ToString();
 
@@ -55,8 +55,8 @@ namespace Origam.Mail
             return "(" + url.ToString() + ") ";
         }
 
-        public static string HtmlToText(string source)
-        {
+    public static string HtmlToText(string source)
+    {
             string result;
             // Remove HTML Development formatting
             // Replace line breaks with space
@@ -89,10 +89,8 @@ namespace Origam.Mail
             result = System.Text.RegularExpressions.Regex.Replace(result,
                 @"(<( )*(/)( )*script( )*>)", "</script>",
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            //result = System.Text.RegularExpressions.Regex.Replace(result, 
-            //         @"(<script>)([^(<script>\.</script>)])*(</script>)",
-            //         string.Empty, 
-            //         System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            //result = System.Text.RegularExpressions.Regex.Replace(result,      //         @"(<script>)([^(<script>\.</script>)])*(</script>)",
+            //         string.Empty,      //         System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             result = System.Text.RegularExpressions.Regex.Replace(result,
                 @"(<script>).*(</script>)", string.Empty,
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase);
@@ -185,16 +183,13 @@ namespace Origam.Mail
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
             // for testng
-            //System.Text.RegularExpressions.Regex.Replace(result, 
-            //       this.txtRegex.Text,string.Empty, 
-            //       System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            //System.Text.RegularExpressions.Regex.Replace(result,      //       this.txtRegex.Text,string.Empty,      //       System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
             // make line breaking consistent
             result = result.Replace("\n", "\r");
 
             // Remove extra line breaks and tabs:
-            // replace over 2 breaks with 2 and over 4 tabs with 4. 
-            // Prepare first to remove any whitespaces inbetween
+            // replace over 2 breaks with 2 and over 4 tabs with 4.      // Prepare first to remove any whitespaces inbetween
             // the escaped characters and remove redundant tabs inbetween linebreaks
             result = System.Text.RegularExpressions.Regex.Replace(result,
                 "(\r)( )+(\r)", "\r\r",
@@ -235,8 +230,8 @@ namespace Origam.Mail
             return result;
         }
 
-        public static IDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
-        {
+    public static IDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
+    {
             Pop3Client popClient = new Pop3Client();
             MailData mailData = new MailData();
 
@@ -270,8 +265,8 @@ namespace Origam.Mail
             return DataDocumentFactory.New(mailData);
         }
 
-        public static void RetrieveMailNext(MailData mailData, Pop3Client popClient, bool delete)
-        {
+    public static void RetrieveMailNext(MailData mailData, Pop3Client popClient, bool delete)
+    {
             int? mayBeIndex = getNextMessageIndex(popClient);
             if (mayBeIndex.HasValue)
             {
@@ -279,8 +274,8 @@ namespace Origam.Mail
             }
         }
 
-        public static void RetrieveMail(MailData mailData, Pop3Client popClient, int messageNumber, bool delete)
-        {
+    public static void RetrieveMail(MailData mailData, Pop3Client popClient, int messageNumber, bool delete)
+    {
             if (popClient.Count == 0) return;
             MimeMessage message = popClient.GetMessage(messageNumber);
 
@@ -318,8 +313,8 @@ namespace Origam.Mail
             }
         }
 
-        private static string GetMessageBody(MimeMessage message)
-        {
+    private static string GetMessageBody(MimeMessage message)
+    {
             string body = null;
             if (message.TextBody == null)
             {
@@ -344,8 +339,8 @@ namespace Origam.Mail
             return body;
         }
 
-        private static int? getNextMessageIndex(Pop3Client popClient)
-        {
+    private static int? getNextMessageIndex(Pop3Client popClient)
+    {
             for (int i = 0; i < popClient.Count; i++)
             {
                 var message = GetMessageByIndex(popClient, i);
@@ -354,8 +349,8 @@ namespace Origam.Mail
             return null;
         }
 
-        private static MimeMessage GetMessageByIndex(Pop3Client popClient, int index)
-        {
+    private static MimeMessage GetMessageByIndex(Pop3Client popClient, int index)
+    {
             try
             {
                 return popClient.GetMessage(index);
@@ -366,8 +361,8 @@ namespace Origam.Mail
             }
         }
 
-        private static byte[] GetAttachmentData(MimeEntity attachment)
-        {
+    private static byte[] GetAttachmentData(MimeEntity attachment)
+    {
             using (MemoryStream stream = new MemoryStream())
             {
                 if (attachment is MessagePart)
@@ -385,8 +380,8 @@ namespace Origam.Mail
         }
 
         
-        public int SendMail(IXmlContainer mailDocument, string server, int port)
-        {
+    public int SendMail(IXmlContainer mailDocument, string server, int port)
+    {
             if (mailDocument is IDataDocument)
             {
                 MailData mailData = new MailData();
@@ -399,16 +394,16 @@ namespace Origam.Mail
                 return SendMail1(mailDocument, server, port);
             }
         }
-        public abstract int SendMail1(IXmlContainer mailDocument, string server, int port);
+    public abstract int SendMail1(IXmlContainer mailDocument, string server, int port);
         
-        public abstract int SendMail2(MailData mailData, string server, int port);
-        public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
-        {
+    public abstract int SendMail2(MailData mailData, string server, int port);
+    public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
+    {
             return mailRoot.SelectSingleNode(where, nsmgr).InnerXml;
         }
 
-        private static Maybe<Pop3Client> TryFindInActiveClient(string connString, string transactionId)
-        {
+    private static Maybe<Pop3Client> TryFindInActiveClient(string connString, string transactionId)
+    {
             if (transactionId == null) return null;
             Pop3Transaction pop3Transaction =
                 ResourceMonitor.GetTransaction(transactionId, connString) as
@@ -416,8 +411,8 @@ namespace Origam.Mail
             return Maybe<Pop3Client>.From(pop3Transaction?.PopClient);
         }
 
-        public static Pop3Client GetPopClient(string mailServer, int port, string userName, string password, string transactionId, bool useSsl)
-        {
+    public static Pop3Client GetPopClient(string mailServer, int port, string userName, string password, string transactionId, bool useSsl)
+    {
             string connString = "Server=" + mailServer + "; Port=" + port + "; UserName=" + userName + "; Password=" + password;
 
             Maybe<Pop3Client> maybeClient =
@@ -434,9 +429,9 @@ namespace Origam.Mail
             return popClient;
         }
 
-        private static void TryConnect(string mailServer, int port, string userName,
-            string password, Pop3Client popClient, bool useSsl)
-        {
+    private static void TryConnect(string mailServer, int port, string userName,
+        string password, Pop3Client popClient, bool useSsl)
+    {
             try
             {
                 popClient.Connect(mailServer, port, useSsl);
@@ -461,5 +456,4 @@ namespace Origam.Mail
                 throw ex;
             }
         }
-    }
 }

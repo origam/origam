@@ -26,19 +26,19 @@ using System.Xml;
 using Origam.Service.Core;
 using static Origam.NewProjectEnums;
 
-namespace Origam.Git
-{
-    public class WebGitXmlParser
-    {
-        // "https://api.bitbucket.org/2.0/repositories/cistic/?fields=values.name,values.links.clone,values.links.avatar
-        private readonly string baseUrl = "https://api.bitbucket.org/2.0/repositories/";
-        private readonly string readmeSubLink = "/filehistory/master/README.md?fields=values.path,values.commit.date,values.links.self";
-        private readonly string fieldsLink = "/?fields=values.name,values.links.clone,values.links.avatar";
-        private readonly string gitUserLink = "cistic";
-        private List<WebGitData> RepositoryList = new List<WebGitData>();
+namespace Origam.Git;
 
-        public List<WebGitData> GetList()
-        {
+public class WebGitXmlParser
+{
+    // "https://api.bitbucket.org/2.0/repositories/cistic/?fields=values.name,values.links.clone,values.links.avatar
+    private readonly string baseUrl = "https://api.bitbucket.org/2.0/repositories/";
+    private readonly string readmeSubLink = "/filehistory/master/README.md?fields=values.path,values.commit.date,values.links.self";
+    private readonly string fieldsLink = "/?fields=values.name,values.links.clone,values.links.avatar";
+    private readonly string gitUserLink = "cistic";
+    private List<WebGitData> RepositoryList = new List<WebGitData>();
+
+    public List<WebGitData> GetList()
+    {
                 string url = BuildUrl(null);
                 XmlDocument templatesJson = ((XmlContainer)GetData(url)).Xml;
                 XmlNodeList nodeList = templatesJson.SelectNodes("/ROOT/values");
@@ -63,17 +63,17 @@ namespace Origam.Git
             return RepositoryList;
         }
 
-        public Boolean IsLoaded { get; set; } = false;
+    public Boolean IsLoaded { get; set; } = false;
 
-        private object GetData(string url)
-        {
+    private object GetData(string url)
+    {
             return HttpTools.Instance.SendRequest(
                     new Request(url: url, method: "GET")
                 ).Content;
         }
 
-        private string BuildUrl(string name)
-        {
+    private string BuildUrl(string name)
+    {
             if (!string.IsNullOrEmpty(name))
             {
                 //readme Link
@@ -82,5 +82,4 @@ namespace Origam.Git
             //list of repository
             return string.Format("{0}{1}{2}", baseUrl, gitUserLink, fieldsLink);
         }
-    }
 }

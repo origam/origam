@@ -30,29 +30,29 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for AsTabControl.
-	/// </summary>
-	public class AsTabControl : System.Windows.Forms.TabControl
-	{
+namespace Origam.Gui.Win;
 
-		#region "    Variables "
-		private TabControlDisplayManager _DisplayManager = TabControlDisplayManager.Framework;
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		#endregion
+/// <summary>
+/// Summary description for AsTabControl.
+/// </summary>
+public class AsTabControl : System.Windows.Forms.TabControl
+{
+
+	#region "    Variables "
+	private TabControlDisplayManager _DisplayManager = TabControlDisplayManager.Framework;
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	#endregion
 		
-		#region "    Properties "
-		[System.ComponentModel.DefaultValue(typeof(TabControlDisplayManager), "Framework"), System.ComponentModel.Category("Appearance")]
-		public TabControlDisplayManager DisplayManager 
+	#region "    Properties "
+	[System.ComponentModel.DefaultValue(typeof(TabControlDisplayManager), "Framework"), System.ComponentModel.Category("Appearance")]
+	public TabControlDisplayManager DisplayManager 
+	{
+		get 
 		{
-			get 
-			{
 				return _DisplayManager;
 			}
-			set 
-			{
+		set 
+		{
 				_DisplayManager = value;
 				if (this._DisplayManager.Equals(TabControlDisplayManager.Framework))
 				{
@@ -67,12 +67,12 @@ namespace Origam.Gui.Win
 					this.SetStyle(ControlStyles.UserPaint, false);
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 		
-		#region "    Constructor "
-		public AsTabControl() : base()
-		{
+	#region "    Constructor "
+	public AsTabControl() : base()
+	{
 			if (this._DisplayManager.Equals(TabControlDisplayManager.Framework))
 			{
 				this.SetStyle(ControlStyles.UserPaint, true);
@@ -84,11 +84,11 @@ namespace Origam.Gui.Win
 			this.SetStyle(ControlStyles.ResizeRedraw, true);
 			this.ResizeRedraw = true;
 		}
-		#endregion
+	#endregion
 		
-		#region "    Private Methods "
-		private System.Drawing.Drawing2D.GraphicsPath GetPath(int index)
-		{
+	#region "    Private Methods "
+	private System.Drawing.Drawing2D.GraphicsPath GetPath(int index)
+	{
 			System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
 			path.Reset();
 			Rectangle rect = this.GetTabRect(index);
@@ -118,8 +118,8 @@ namespace Origam.Gui.Win
 			return path;
 		}
 
-		private System.Drawing.Drawing2D.GraphicsPath GetActiveHeaderPath(int index)
-		{
+	private System.Drawing.Drawing2D.GraphicsPath GetActiveHeaderPath(int index)
+	{
 			System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
 			path.Reset();
 			Rectangle rect = this.GetTabRect(index);
@@ -136,8 +136,8 @@ namespace Origam.Gui.Win
 			return path;
 		}
 
-		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
-		{
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
 			//   Paint the Background
 			this.PaintTransparentBackground(e.Graphics, this.ClientRectangle);
 			//   Paint all the tabs
@@ -177,8 +177,8 @@ namespace Origam.Gui.Win
 					break;
 			}
 		}
-		protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs pevent)
-		{
+	protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs pevent)
+	{
 			if (this.DesignMode)
 			{
 				System.Drawing.Drawing2D.LinearGradientBrush backBrush = new System.Drawing.Drawing2D.LinearGradientBrush(this.Bounds, SystemColors.ControlLightLight, SystemColors.ControlLight, LinearGradientMode.Vertical);
@@ -191,8 +191,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected void PaintTransparentBackground(System.Drawing.Graphics g, Rectangle clipRect)
-		{
+	protected void PaintTransparentBackground(System.Drawing.Graphics g, Rectangle clipRect)
+	{
 			if ((this.Parent != null))
 			{
 				clipRect.Offset(this.Location);
@@ -219,8 +219,8 @@ namespace Origam.Gui.Win
 			}
 		}
 		
-		private void PaintTab(System.Windows.Forms.PaintEventArgs e, int index)
-		{
+	private void PaintTab(System.Windows.Forms.PaintEventArgs e, int index)
+	{
 			System.Drawing.Drawing2D.GraphicsPath path = this.GetPath(index);
 			this.PaintTabBackground(e.Graphics, index, path);
 			this.PaintTabBorder(e.Graphics, index, path);
@@ -228,8 +228,8 @@ namespace Origam.Gui.Win
 			this.PaintTabImage(e.Graphics, index);
 		}
 		
-		private void PaintTabBackground(System.Drawing.Graphics graph, int index, System.Drawing.Drawing2D.GraphicsPath path)
-		{
+	private void PaintTabBackground(System.Drawing.Graphics graph, int index, System.Drawing.Drawing2D.GraphicsPath path)
+	{
 			Rectangle rect = this.GetTabRect(index);
 			if (rect.Height > 1 && rect.Width > 1)
 			{
@@ -255,8 +255,8 @@ namespace Origam.Gui.Win
 //				}
 			}
 		}
-		private void PaintTabBorder(System.Drawing.Graphics graph, int index, System.Drawing.Drawing2D.GraphicsPath path)
-		{
+	private void PaintTabBorder(System.Drawing.Graphics graph, int index, System.Drawing.Drawing2D.GraphicsPath path)
+	{
 			Pen borderPen = new Pen(SystemColors.ControlDark);
 			if (index == this.SelectedIndex)
 			{
@@ -265,8 +265,8 @@ namespace Origam.Gui.Win
 			graph.DrawPath(borderPen, path);
 			borderPen.Dispose();
 		}
-		private void PaintTabImage(System.Drawing.Graphics graph, int index)
-		{
+	private void PaintTabImage(System.Drawing.Graphics graph, int index)
+	{
 			Image tabImage = null;
 			if (this.TabPages[index].ImageIndex > -1 && this.ImageList != null)
 			{
@@ -282,8 +282,8 @@ namespace Origam.Gui.Win
 				graph.DrawImage(tabImage, rect.Right - rect.Height - 4, 4, rect.Height - 2, rect.Height - 2);
 			}
 		}
-		private void PaintTabText(System.Drawing.Graphics graph, int index)
-		{
+	private void PaintTabText(System.Drawing.Graphics graph, int index)
+	{
 			Rectangle rect = this.GetTabRect(index);
 			Rectangle rect2 = new Rectangle(rect.Left + 8, rect.Top + 1, rect.Width - 6, rect.Height);
 			if (index == 0) rect2 = new Rectangle(rect.Left + rect.Height, rect.Top + 1, rect.Width - rect.Height, rect.Height); 
@@ -310,20 +310,20 @@ namespace Origam.Gui.Win
 					rect2 = new Rectangle(rect.Left + rect.Height, rect.Top + 1, rect.Width - rect.Height + 5, rect.Height);
 				}
 
-				// pøidìláno
+				// pÃ¸idÃ¬lÃ¡no
 				forebrush = new SolidBrush(OrigamColorScheme.TabActiveForeColor);
 			}
 			graph.DrawString(tabtext, tabFont, forebrush, rect2, format);
 		}
-		#endregion
-		public enum TabControlDisplayManager : int
-		{
-			Default,
-			Framework
-		}
+	#endregion
+	public enum TabControlDisplayManager : int
+	{
+		Default,
+		Framework
+	}
 		
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
 			if(this.TabCount > 0)
 			{
 				if(keyData == (Keys.Tab | Keys.Control))
@@ -360,8 +360,8 @@ namespace Origam.Gui.Win
 			return base.ProcessCmdKey (ref msg, keyData);
 		}
 
-		protected override void OnSelectedIndexChanged(EventArgs e)
-		{
+	protected override void OnSelectedIndexChanged(EventArgs e)
+	{
 			try
 			{
 				base.OnSelectedIndexChanged (e);
@@ -371,79 +371,79 @@ namespace Origam.Gui.Win
 			Invalidate();
 		}
 
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
 		{
-			get
-			{
 				return _styleId;
 			}
-			set
-			{
+		set
+		{
 				_styleId = value;
 			}
-		}
-
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
-		{
-			get
-			{
-				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-			}
-			set
-			{
-				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
 	}
 
-	public class ThemedColors
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
 	{
-		#region "    Variables and Constants "
-		private const string NormalColor = "NormalColor";
-		private const string HomeStead = "HomeStead";
-		private const string Metallic = "Metallic";
-		private const string NoTheme = "NoTheme";
-		private static Color[] _toolBorder;
-		#endregion
-		#region "    Properties "
-		public static int CurrentThemeIndex 
+		get
 		{
-			get 
-			{
+				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
+			}
+		set
+		{
+				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+			}
+	}
+}
+
+public class ThemedColors
+{
+	#region "    Variables and Constants "
+	private const string NormalColor = "NormalColor";
+	private const string HomeStead = "HomeStead";
+	private const string Metallic = "Metallic";
+	private const string NoTheme = "NoTheme";
+	private static Color[] _toolBorder;
+	#endregion
+	#region "    Properties "
+	public static int CurrentThemeIndex 
+	{
+		get 
+		{
 				return ThemedColors.GetCurrentThemeIndex();
 			}
-		}
-		public static string CurrentThemeName 
+	}
+	public static string CurrentThemeName 
+	{
+		get 
 		{
-			get 
-			{
 				return ThemedColors.GetCurrentThemeName();
 			}
-		}
-		public static Color ToolBorder 
+	}
+	public static Color ToolBorder 
+	{
+		get 
 		{
-			get 
-			{
 				return ThemedColors._toolBorder[ThemedColors.CurrentThemeIndex];
 			}
+	}
+	#endregion
+	#region "    Constructors "
+	private ThemedColors()
+	{
 		}
-		#endregion
-		#region "    Constructors "
-		private ThemedColors()
-		{
-		}
-		static ThemedColors()
-		{
+	static ThemedColors()
+	{
 			Color[] colorArray1;
 			colorArray1 = new Color[] {Color.FromArgb(127, 157, 185), Color.FromArgb(164, 185, 127), Color.FromArgb(165, 172, 178), Color.FromArgb(132, 130, 132)};
 			ThemedColors._toolBorder = colorArray1;
 		}
-		#endregion
-		private static int GetCurrentThemeIndex()
-		{
+	#endregion
+	private static int GetCurrentThemeIndex()
+	{
 			int theme = (int)ColorScheme.NoTheme;
 //			if (VisualStyleInformation.IsSupportedByOS && VisualStyleInformation.IsEnabledByUser && Application.RenderWithVisualStyles)
 //			{
@@ -465,8 +465,8 @@ namespace Origam.Gui.Win
 //			}
 			return theme;
 		}
-		private static string GetCurrentThemeName()
-		{
+	private static string GetCurrentThemeName()
+	{
 			string theme = NoTheme;
 //			if (VisualStyleInformation.IsSupportedByOS && VisualStyleInformation.IsEnabledByUser && Application.RenderWithVisualStyles)
 //			{
@@ -474,12 +474,11 @@ namespace Origam.Gui.Win
 //			}
 			return theme;
 		}
-		public enum ColorScheme
-		{
-			NormalColor = 0,
-			HomeStead = 1,
-			Metallic = 2,
-			NoTheme = 3
-		}
+	public enum ColorScheme
+	{
+		NormalColor = 0,
+		HomeStead = 1,
+		Metallic = 2,
+		NoTheme = 3
 	}
 }

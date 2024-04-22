@@ -30,52 +30,52 @@ using Origam.DA.ObjectPersistence;
 using Origam.Rule.XsltFunctions;
 using Origam.Service.Core;
 
-namespace Origam.Rule.Xslt
-{
-    class OldXsltEngine : MicrosoftXsltEngine
-    {
-#region Constructors
+namespace Origam.Rule.Xslt;
 
-        public OldXsltEngine()
-        {
+class OldXsltEngine : MicrosoftXsltEngine
+{
+    #region Constructors
+
+    public OldXsltEngine()
+    {
         }
 
-public OldXsltEngine(IEnumerable<XsltFunctionsDefinition> xsltFunctionDefinitions) : 
-            base (xsltFunctionDefinitions)
-		{
+    public OldXsltEngine(IEnumerable<XsltFunctionsDefinition> xsltFunctionDefinitions) : 
+        base (xsltFunctionDefinitions)
+    {
 		}
 
-        public OldXsltEngine(IPersistenceProvider persistence=null) : base (persistence)
-		{
+    public OldXsltEngine(IPersistenceProvider persistence=null) : base (persistence)
+    {
 		}
-#endregion
+    #endregion
 
-        internal override object GetTransform(IXmlContainer xslt)
-        {
-            XslTransform engine = new XslTransform();
+    internal override object GetTransform(IXmlContainer xslt)
+    {
+        XslTransform engine = new XslTransform();
 #if NETSTANDARD
             engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver());
 #else
-            engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+        engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
 #endif
-            return engine;
-        }
+        return engine;
+    }
 
-        internal override object GetTransform(string xsl)
-        {
-            XslTransform engine = new XslTransform();
-            StringReader xslReader = new StringReader(xsl);
-            XPathDocument xslDoc = new XPathDocument(xslReader);
+    internal override object GetTransform(string xsl)
+    {
+        XslTransform engine = new XslTransform();
+        StringReader xslReader = new StringReader(xsl);
+        XPathDocument xslDoc = new XPathDocument(xslReader);
 #if NETSTANDARD
             engine.Load(xslDoc, new ModelXmlResolver());
 #else
-            engine.Load(xslDoc, new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+        engine.Load(xslDoc, new ModelXmlResolver(), this.GetType().Assembly.Evidence);
 #endif
-            return engine;
-        }
+        return engine;
+    }
 
-        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc)
-        {
+    public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc)
+    {
             XslTransform xslt = engine as XslTransform;
             XmlReader reader = xslt.Transform(sourceXpathDoc, xslArg, (XmlResolver)null);
             try
@@ -95,35 +95,34 @@ public OldXsltEngine(IEnumerable<XsltFunctionsDefinition> xsltFunctionDefinition
             }
         }
 
-        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)
-        {
+    public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)
+    {
             XslTransform xslt = engine as XslTransform;
             xslt.Transform(sourceXpathDoc, xslArg, xwr, null);
         }
 
-        public override void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output)
-        {
+    public override void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output)
+    {
             XslTransform xslt = engine as XslTransform;
             xslt.Transform(input, xslArg, output);
         }
-#region Transformation Cache
-        private static Hashtable _transformationCache = new Hashtable();
-        protected override bool IsTransformationCached(Guid transformationId)
-        {
+    #region Transformation Cache
+    private static Hashtable _transformationCache = new Hashtable();
+    protected override bool IsTransformationCached(Guid transformationId)
+    {
             return _transformationCache.ContainsKey(transformationId);
         }
 
-        protected override object GetCachedTransformation(Guid tranformationId)
-        {
+    protected override object GetCachedTransformation(Guid tranformationId)
+    {
             return _transformationCache[tranformationId];
         }
 
-        protected override void PutTransformationToCache(
-            Guid transformationId, object transformation)
-        {
+    protected override void PutTransformationToCache(
+        Guid transformationId, object transformation)
+    {
             _transformationCache[transformationId] = transformation;
         }
-#endregion
+    #endregion
 
-    }
 }

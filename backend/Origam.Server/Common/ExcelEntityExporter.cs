@@ -35,31 +35,31 @@ using Origam.Excel;
 using Origam.Workbench.Services;
 using Origam.Extensions;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class ExcelEntityExporter
 {
-    public class ExcelEntityExporter
+    private static readonly int characterCellLimit = 32767;
+    private ICellStyle dateCellStyle;
+    readonly IDataLookupService lookupService = ServiceManager.Services.GetService(
+        typeof(IDataLookupService)) as IDataLookupService;
+
+    private readonly IDictionary<string, IDictionary<object, object>> lookupCache
+        = new Dictionary<string, IDictionary<object, object>>();
+
+    readonly OrigamSettings settings
+        = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+
+    readonly bool isExportUnlimited = SecurityManager.GetAuthorizationProvider()
+        .Authorize(SecurityManager.CurrentPrincipal,
+            "SYS_ExcelExport_Unlimited");
+
+    public ExcelFormat ExportFormat => settings.GUIExcelExportFormat == "XLSX"
+        ? ExcelFormat.XLSX
+        : ExcelFormat.XLS;
+
+    public IWorkbook FillWorkBook(EntityExportInfo info, List<string> columns, IEnumerable<IEnumerable<object>> rows)
     {
-        private static readonly int characterCellLimit = 32767;
-        private ICellStyle dateCellStyle;
-        readonly IDataLookupService lookupService = ServiceManager.Services.GetService(
-            typeof(IDataLookupService)) as IDataLookupService;
-
-        private readonly IDictionary<string, IDictionary<object, object>> lookupCache
-            = new Dictionary<string, IDictionary<object, object>>();
-
-        readonly OrigamSettings settings
-            = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-
-        readonly bool isExportUnlimited = SecurityManager.GetAuthorizationProvider()
-            .Authorize(SecurityManager.CurrentPrincipal,
-                "SYS_ExcelExport_Unlimited");
-
-        public ExcelFormat ExportFormat => settings.GUIExcelExportFormat == "XLSX"
-            ? ExcelFormat.XLSX
-            : ExcelFormat.XLS;
-
-        public IWorkbook FillWorkBook(EntityExportInfo info, List<string> columns, IEnumerable<IEnumerable<object>> rows)
-        {
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
             ISheet sheet = workbook.CreateSheet("Data");
@@ -80,8 +80,8 @@ namespace Origam.Server
             return workbook;
         }
 
-        public IWorkbook FillWorkBook(EntityExportInfo info)
-        {
+    public IWorkbook FillWorkBook(EntityExportInfo info)
+    {
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
             ISheet sheet = workbook.CreateSheet("Data");
@@ -107,8 +107,8 @@ namespace Origam.Server
             return workbook;
         }
 
-        private IWorkbook CreateWorkbook()
-        {
+    private IWorkbook CreateWorkbook()
+    {
             if (ExportFormat == ExcelFormat.XLS)
             {
                 return new HSSFWorkbook();
@@ -119,10 +119,10 @@ namespace Origam.Server
             }
         }
 
-        private void AddRowToSheet(
-            EntityExportInfo info, IWorkbook workbook, ISheet sheet,
-            int rowNumber, List<string> columns, List<object> row)
-        {
+    private void AddRowToSheet(
+        EntityExportInfo info, IWorkbook workbook, ISheet sheet,
+        int rowNumber, List<string> columns, List<object> row)
+    {
             if (ExportFormat == ExcelFormat.XLS && rowNumber >= 65536)
             {
                 throw new Exception("Cannot export more than 65536 lines into a .xls file. Try changing output format to .xlsx");
@@ -135,10 +135,10 @@ namespace Origam.Server
             }
         }
         
-        private void AddCellToRow(
-            EntityExportInfo info, IWorkbook workbook, IRow excelRow,
-            int columnIndex, List<string> columns, List<object> row)
-        {
+    private void AddCellToRow(
+        EntityExportInfo info, IWorkbook workbook, IRow excelRow,
+        int columnIndex, List<string> columns, List<object> row)
+    {
             EntityExportField field = info.Fields[columnIndex];
             ICell cell = excelRow.CreateCell(columnIndex);
             object val = GetValue(field, columns, row);
@@ -146,8 +146,8 @@ namespace Origam.Server
         }
 
 
-        private object GetValue(EntityExportField field, List<string> columns, List<object> row)
-        {
+    private object GetValue(EntityExportField field, List<string> columns, List<object> row)
+    {
             int index = columns.FindIndex(column => column == field.FieldName);
             object val = row[index];
             //object val = row.First(pair => pair.Key == field.FieldName).Value;
@@ -167,10 +167,10 @@ namespace Origam.Server
             return val;
         }
 
-        private void AddRowToSheet(
-            EntityExportInfo info, IWorkbook workbook, ISheet sheet,
-            int rowNumber, DataRow row)
-        {
+    private void AddRowToSheet(
+        EntityExportInfo info, IWorkbook workbook, ISheet sheet,
+        int rowNumber, DataRow row)
+    {
             IRow excelRow = sheet.CreateRow(rowNumber);
             for (int i = 0; i < info.Fields.Count; i++)
             {
@@ -178,10 +178,10 @@ namespace Origam.Server
             }
         }
 
-        private void AddCellToRow(
-            EntityExportInfo info, IWorkbook workbook, IRow excelRow,
-            int columnIndex, DataRow row)
-        {
+    private void AddCellToRow(
+        EntityExportInfo info, IWorkbook workbook, IRow excelRow,
+        int columnIndex, DataRow row)
+    {
             EntityExportField field = info.Fields[columnIndex];
             ICell cell = excelRow.CreateCell(columnIndex);
             object val;
@@ -197,8 +197,8 @@ namespace Origam.Server
             SetCellValue(workbook, val, cell);
         }
 
-        private object GetNonArrayColumnValue(EntityExportField field, DataRow row)
-        {
+    private object GetNonArrayColumnValue(EntityExportField field, DataRow row)
+    {
             // normal (non-array) column
             if ((field.LookupId != null) && (field.LookupId != ""))
             {
@@ -227,9 +227,9 @@ namespace Origam.Server
             }
         }
 
-        private object GetArrayColumnValue(
-            EntityExportInfo info, EntityExportField field, DataRow row)
-        {
+    private object GetArrayColumnValue(
+        EntityExportInfo info, EntityExportField field, DataRow row)
+    {
             // returns list of array elements
             ArrayList arrayElements =
                 SessionStore.GetRowColumnArrayValue(row,
@@ -262,17 +262,17 @@ namespace Origam.Server
             }
         }
 
-        private void FillExportLimitExceeded(
-            IWorkbook workbook, ISheet sheet, int rowNumber)
-        {
+    private void FillExportLimitExceeded(
+        IWorkbook workbook, ISheet sheet, int rowNumber)
+    {
             IRow excelRow = sheet.CreateRow(rowNumber);
             ICell cell = excelRow.CreateCell(0);
             SetCellValue(
                 workbook, Resources.ExportLimitExceeded, cell);
         }
 
-        private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
-        {
+    private void SetupSheetHeader(ISheet sheet, EntityExportInfo info)
+    {
             IRow headerRow = sheet.CreateRow(0);
             for (int i = 0; i < info.Fields.Count; i++)
             {
@@ -281,16 +281,16 @@ namespace Origam.Server
             }
         }
 
-        private void SetupDateCellStyle(IWorkbook workbook)
-        {
+    private void SetupDateCellStyle(IWorkbook workbook)
+    {
             dateCellStyle = workbook.CreateCellStyle();
             dateCellStyle.DataFormat
                 = workbook.CreateDataFormat().GetFormat("m/d/yy h:mm");
         }
 
-        private DataRow GetDataRow(
-            EntityExportInfo info, int rowNumber, bool isPkGuid)
-        {
+    private DataRow GetDataRow(
+        EntityExportInfo info, int rowNumber, bool isPkGuid)
+    {
             object pk = info.RowIds[rowNumber - 1];
             if (isPkGuid && (pk is string))
             {
@@ -307,8 +307,8 @@ namespace Origam.Server
             return row;
         }
 
-        private Object GetLookupValue(object key, string lookupId)
-        {
+    private Object GetLookupValue(object key, string lookupId)
+    {
             if (!lookupCache.ContainsKey(lookupId))
             {
                 lookupCache.Add(lookupId, new Dictionary<object, object>());
@@ -324,8 +324,8 @@ namespace Origam.Server
             return cache[key];
         }
 
-        private void SetCellValue(IWorkbook workbook, object val, ICell cell)
-        {
+    private void SetCellValue(IWorkbook workbook, object val, ICell cell)
+    {
             if (val is IEnumerable enumerable && !(val is string))
             {
                 String delimiter = ",";
@@ -348,9 +348,9 @@ namespace Origam.Server
             }
         }
 
-        private void SetScalarCellValue(
-            IWorkbook workbook, object val, ICell cell)
-        {
+    private void SetScalarCellValue(
+        IWorkbook workbook, object val, ICell cell)
+    {
             if (val == null)
             {
                 return;
@@ -382,5 +382,4 @@ namespace Origam.Server
                 }
             }
         }
-    }
 }

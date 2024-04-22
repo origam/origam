@@ -17,37 +17,37 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace Schedule
+namespace Schedule;
+
+/// <summary>
+/// Timer job groups a schedule, syncronization data, a result filter, method information and an enabled state so that multiple jobs
+/// can be managed by the same timer.  Each one operating independently of the others with different syncronization and recovery settings.
+/// </summary>
+public class TimerJob
 {
-	/// <summary>
-	/// Timer job groups a schedule, syncronization data, a result filter, method information and an enabled state so that multiple jobs
-	/// can be managed by the same timer.  Each one operating independently of the others with different syncronization and recovery settings.
-	/// </summary>
-	public class TimerJob
+	public TimerJob(IScheduledItem schedule, IMethodCall method)
 	{
-		public TimerJob(IScheduledItem schedule, IMethodCall method)
-		{
 			Schedule = schedule;
 			Method = method;
 			_ExecuteHandler = new ExecuteHandler(ExecuteInternal);
 		}
-		public IScheduledItem Schedule;
-		public bool SyncronizedEvent = true;
-		public IResultFilter Filter;
-		public IMethodCall Method;
-		//		public IJobLog Log;
-		public bool Enabled = true;
-		private DateTime LastTime = DateTime.Now;
+	public IScheduledItem Schedule;
+	public bool SyncronizedEvent = true;
+	public IResultFilter Filter;
+	public IMethodCall Method;
+	//		public IJobLog Log;
+	public bool Enabled = true;
+	private DateTime LastTime = DateTime.Now;
 
-		public DateTime NextRunTime(DateTime time, bool IncludeStartTime)
-		{
+	public DateTime NextRunTime(DateTime time, bool IncludeStartTime)
+	{
 			if (Enabled == false)
 				return DateTime.MaxValue;
 			return Schedule.NextRunTime(time, IncludeStartTime);
 		}
 
-		public void Execute(object sender, DateTime Begin, DateTime End, ExceptionEventHandler Error)
-		{
+	public void Execute(object sender, DateTime Begin, DateTime End, ExceptionEventHandler Error)
+	{
 			if (Enabled == false)
 				return;
 
@@ -81,8 +81,8 @@ namespace Schedule
 			}
 		}
 
-		private void ExecuteInternal(object sender, DateTime EventTime, ExceptionEventHandler Error)
-		{
+	private void ExecuteInternal(object sender, DateTime EventTime, ExceptionEventHandler Error)
+	{
 			try 
 			{
 				TimerParameterSetter Setter = new TimerParameterSetter(EventTime, sender);
@@ -96,47 +96,47 @@ namespace Schedule
 			}
 		}
 
-		private delegate void ExecuteHandler(object sender, DateTime EventTime, ExceptionEventHandler Error);
+	private delegate void ExecuteHandler(object sender, DateTime EventTime, ExceptionEventHandler Error);
 
-		private ExecuteHandler _ExecuteHandler;
-	}
+	private ExecuteHandler _ExecuteHandler;
+}
 
-	/// <summary>
-	/// Timer job manages a group of timer jobs.
-	/// </summary>
-	public class TimerJobList
+/// <summary>
+/// Timer job manages a group of timer jobs.
+/// </summary>
+public class TimerJobList
+{
+	public TimerJobList()
 	{
-		public TimerJobList()
-		{
 			_List = new ArrayList();
 		}
 
-		public void Add(TimerJob Event)
-		{
+	public void Add(TimerJob Event)
+	{
 			lock (_List)
 				_List.Add(Event);
 		}
 
-		public void Clear()
-		{
+	public void Clear()
+	{
 			lock (_List)
 				_List.Clear();
 		}
 
-		public void RemoveJob(TimerJob job)
-		{
+	public void RemoveJob(TimerJob job)
+	{
 			lock (_List)
 				_List.Remove(job);
 		}
 
-		/// <summary>
-		/// Gets the next time any of the jobs in the list will run.  Allows matching the exact start time.  If no matches are found the return
-		/// is DateTime.MaxValue;
-		/// </summary>
-		/// <param name="time">The starting time for the interval being queried.  This time is included in the interval</param>
-		/// <returns>The first absolute date one of the jobs will execute on.  If none of the jobs needs to run DateTime.MaxValue is returned.</returns>
-		public DateTime NextRunTime(DateTime time)
-		{
+	/// <summary>
+	/// Gets the next time any of the jobs in the list will run.  Allows matching the exact start time.  If no matches are found the return
+	/// is DateTime.MaxValue;
+	/// </summary>
+	/// <param name="time">The starting time for the interval being queried.  This time is included in the interval</param>
+	/// <returns>The first absolute date one of the jobs will execute on.  If none of the jobs needs to run DateTime.MaxValue is returned.</returns>
+	public DateTime NextRunTime(DateTime time)
+	{
 			DateTime next = DateTime.MaxValue;
 			//Get minimum datetime from the list.
 			int i = 0;
@@ -179,41 +179,41 @@ namespace Schedule
 			return next;
 		}
 
-		public TimerJob[] Jobs
+	public TimerJob[] Jobs
+	{
+		get 
 		{
-			get 
-			{
 				lock (_List)
 					return (TimerJob[])_List.ToArray(typeof(TimerJob)); 
 			}
-		}
-
-		private ArrayList _List;
 	}
 
+	private ArrayList _List;
+}
+
+/// <summary>
+/// The timer job allows delegates to be specified with unbound parameters.  This ParameterSetter assigns all unbound datetime parameters
+/// with the specified time and all unbound object parameters with the calling object.
+/// </summary>
+public class TimerParameterSetter : IParameterSetter
+{
 	/// <summary>
-	/// The timer job allows delegates to be specified with unbound parameters.  This ParameterSetter assigns all unbound datetime parameters
-	/// with the specified time and all unbound object parameters with the calling object.
+	/// Initalize the ParameterSetter with the time to pass to unbound time parameters and object to pass to unbound object parameters.
 	/// </summary>
-	public class TimerParameterSetter : IParameterSetter
+	/// <param name="time">The time to pass to the unbound DateTime parameters</param>
+	/// <param name="sender">The object to pass to the unbound object parameters</param>
+	public TimerParameterSetter(DateTime time, object sender)
 	{
-		/// <summary>
-		/// Initalize the ParameterSetter with the time to pass to unbound time parameters and object to pass to unbound object parameters.
-		/// </summary>
-		/// <param name="time">The time to pass to the unbound DateTime parameters</param>
-		/// <param name="sender">The object to pass to the unbound object parameters</param>
-		public TimerParameterSetter(DateTime time, object sender)
-		{
 			_time = time;
 			_sender = sender;
 		}
 
-		public void reset()
-		{
+	public void reset()
+	{
 		}
 
-		public bool GetParameterValue(ParameterInfo pi, int ParameterLoc, ref object parameter)
-		{
+	public bool GetParameterValue(ParameterInfo pi, int ParameterLoc, ref object parameter)
+	{
 			switch(pi.ParameterType.Name.ToLower())
 			{
 				case "datetime":
@@ -231,7 +231,6 @@ namespace Schedule
 			}
 			return false;
 		}
-		DateTime _time;
-		object _sender;
-	}
+	DateTime _time;
+	object _sender;
 }

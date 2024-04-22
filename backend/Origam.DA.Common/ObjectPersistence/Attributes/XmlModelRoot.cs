@@ -22,12 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml.Serialization;
 using Origam.OrigamEngine;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+
+public class XmlModelRoot: XmlRootAttribute
 {
-    public class XmlModelRoot: XmlRootAttribute
+    public XmlModelRoot(string category) : base(category)
     {
-        public XmlModelRoot(string category) : base(category)
-        {
         }
-    }
 }

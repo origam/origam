@@ -26,24 +26,24 @@ using Origam.DA;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 
-namespace Origam.Security
+namespace Origam.Security;
+
+public class OrigamTenantProfileProvider : AbstractProfileProvider
 {
-	public class OrigamTenantProfileProvider : AbstractProfileProvider
+	static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID =
+		new Guid("24d35dbd-f113-4925-99d4-d3136aa43ae6");
+
+	static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET =
+		new Guid("79fe3ab3-4313-4e22-80f0-679c94322b84");
+
+	#region IProfileProvider Members
+	public override void AddUser(string name, string userName)
 	{
-		static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID_GUID =
-			new Guid("24d35dbd-f113-4925-99d4-d3136aa43ae6");
-
-		static readonly Guid CURRENT_ORGANIZATION_BUSINESS_PARTNER_ID__NOT_SET_YET =
-			new Guid("79fe3ab3-4313-4e22-80f0-679c94322b84");
-
-		#region IProfileProvider Members
-		public override void AddUser(string name, string userName)
-        {
             throw new NotImplementedException();
         }
 
-		override public object GetProfile(string userName)
-		{
+	override public object GetProfile(string userName)
+	{
 			Hashtable profileCacheByIdentity = GetCacheByName();
 			if(profileCacheByIdentity.Contains(userName))
 			{
@@ -63,8 +63,7 @@ namespace Origam.Security
 							new Guid("fbbcda00-5df4-425c-8d2e-d3b6ae73caa0"));
 						query.Parameters.Add(new QueryParameter(
 							"BusinessPartner_parUserName", userName));
-						// if data service would try to get identity, 
-						//we would get into recursion
+						// if data service would try to get identity, 		//we would get into recursion
 						query.LoadByIdentity = false;
 						IServiceAgent dataServiceAgent = GetAgent();
 						dataServiceAgent.MethodName = "LoadDataByQuery";
@@ -165,6 +164,5 @@ namespace Origam.Security
 				}
 			}
 		}
-		#endregion
-	}
+	#endregion
 }

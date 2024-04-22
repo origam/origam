@@ -28,62 +28,62 @@ using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+
+/// <summary>
+/// Summary description for AbstractRule.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractRule : AbstractSchemaItem, IRule
 {
-    /// <summary>
-    /// Summary description for AbstractRule.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractRule : AbstractSchemaItem, IRule
-	{
-		public const string CategoryConst = "Rule";
+	public const string CategoryConst = "Rule";
 
-		public AbstractRule() : base() {}
+	public AbstractRule() : base() {}
 
-		public AbstractRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public AbstractRule(Key primaryKey) : base(primaryKey)	{}
+	public AbstractRule(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			if(this.Structure != null) dependencies.Add(this.Structure);
 
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		[Category("Rule")]
-		[XmlAttribute ("dataType")]
-		public OrigamDataType DataType { get; set; }
+	#region Properties
+	[Category("Rule")]
+	[XmlAttribute ("dataType")]
+	public OrigamDataType DataType { get; set; }
 
-		public Guid DataStructureId;
+	public Guid DataStructureId;
 
-		[Category("Rule")]
-		[TypeConverter(typeof(DataStructureConverter))]
-        [XmlReference("dataStructure", "DataStructureId")]
-		public IDataStructure Structure
+	[Category("Rule")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	[XmlReference("dataStructure", "DataStructureId")]
+	public IDataStructure Structure
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataStructureId;
 
 				return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.DataStructureId = Guid.Empty;
@@ -93,21 +93,20 @@ namespace Origam.Schema.RuleModel
 					this.DataStructureId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-
-		public abstract bool IsPathRelative{get;set;}
-		
-		[DefaultValue(Trace.InheritFromParent)]
-		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[RuntimeConfigurable ("traceLevel")]
-		[DisplayName("Trace Level")]
-		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
-
-		[Category("Tracing")]
-   
-		public Trace Trace => TraceLevel;
-
-		#endregion
-
 	}
+
+	public abstract bool IsPathRelative{get;set;}
+		
+	[DefaultValue(Trace.InheritFromParent)]
+	[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
+	[RuntimeConfigurable ("traceLevel")]
+	[DisplayName("Trace Level")]
+	public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
+
+	[Category("Tracing")]
+   
+	public Trace Trace => TraceLevel;
+
+	#endregion
+
 }

@@ -176,9 +176,6 @@
     <Compile Include="impls\DictionaryServiceImpl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="impls\MenuCommandServiceImpl.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="impls\ModelToolboxItem.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -210,6 +207,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="KeystrokeMessageFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MenuCommandServiceImpl.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MultiColumnAdapterFieldExtenderProvider.cs">

@@ -26,53 +26,53 @@ using System.IO;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
-{
-    public class Project
-    {
-        private string _name;
-        private string _dataDatabaseName;
-        private string _modelDatabaseName;
-        private string _databaseServerName;
-        private string _databaseUserName;
-        private string _databasePassword;
-        private bool _databaseIntegratedAuthentication;
-        private string _webRootName;
-        private string _url;
-        private string _binFolder;
-        private string _dataConnectionString;
-        private string _modelConnectionString;
-        private string _builderDataConnectionString;
-        private string _builderModelConnectionString;
-        private string _architectUserName;
-        private string _newPackageId;
-        private string _sourcesFolder;
-        private string _baseUrl;
-        private bool _gitrepo;
-        private string _gitusername;
-        private string _gitemail;
-        private string _modelSourceFolder;
-        public string Gitusername { get => _gitusername; set => _gitusername = value; }
-        public string Gitemail { get => _gitemail; set => _gitemail = value; }
-        public DatabaseType DatabaseType { get; set; }
-        public int Port { get; set; }
-        public string ConnectionDatabasePassword { get; internal set; }
-        public string ConnectionDatabaseUser { get; internal set; }
-        public string UserPassword { get; } = CreatePassword();
+namespace Origam.ProjectAutomation;
 
-        public static string CreatePassword()
-        {
+public class Project
+{
+    private string _name;
+    private string _dataDatabaseName;
+    private string _modelDatabaseName;
+    private string _databaseServerName;
+    private string _databaseUserName;
+    private string _databasePassword;
+    private bool _databaseIntegratedAuthentication;
+    private string _webRootName;
+    private string _url;
+    private string _binFolder;
+    private string _dataConnectionString;
+    private string _modelConnectionString;
+    private string _builderDataConnectionString;
+    private string _builderModelConnectionString;
+    private string _architectUserName;
+    private string _newPackageId;
+    private string _sourcesFolder;
+    private string _baseUrl;
+    private bool _gitrepo;
+    private string _gitusername;
+    private string _gitemail;
+    private string _modelSourceFolder;
+    public string Gitusername { get => _gitusername; set => _gitusername = value; }
+    public string Gitemail { get => _gitemail; set => _gitemail = value; }
+    public DatabaseType DatabaseType { get; set; }
+    public int Port { get; set; }
+    public string ConnectionDatabasePassword { get; internal set; }
+    public string ConnectionDatabaseUser { get; internal set; }
+    public string UserPassword { get; } = CreatePassword();
+
+    public static string CreatePassword()
+    {
             return Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
         }
 
-        // Root Menu package
-        private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
+    // Root Menu package
+    private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
 
        
-        public string GetDataDataService
+    public string GetDataDataService
+    {
+        get
         {
-            get
-            {
                 switch (DatabaseType)
                 {
                     case DatabaseType.MsSql:
@@ -83,281 +83,280 @@ namespace Origam.ProjectAutomation
                         throw new ArgumentOutOfRangeException("DatabaseType");
                 }
             }
-        }
+    }
 
-        #region Properties
-        public string Name
+    #region Properties
+    public string Name
+    {
+        get
         {
-            get
-            {
                 return _name;
             }
-            set
-            {
+        set
+        {
                 _name = value;
             }
-        }
+    }
 
-        public string ModelSourceFolder
+    public string ModelSourceFolder
+    {
+        get
         {
-            get
-            {
                 return _modelSourceFolder;
             }
-            set
-            {
+        set
+        {
                 _modelSourceFolder = value;
             }
-        }
+    }
 
-        public string DataDatabaseName
+    public string DataDatabaseName
+    {
+        get
         {
-            get
-            {
                 return _dataDatabaseName;
             }
-            set
-            {
+        set
+        {
                 _dataDatabaseName = value;
             }
-        }
+    }
 
-        public string ModelDatabaseName
+    public string ModelDatabaseName
+    {
+        get
         {
-            get
-            {
                 return _modelDatabaseName;
             }
-            set
-            {
+        set
+        {
                 _modelDatabaseName = value;
             }
-        }
+    }
 
-        public string DatabaseServerName
+    public string DatabaseServerName
+    {
+        get
         {
-            get
-            {
                 return _databaseServerName;
             }
-            set
-            {
+        set
+        {
                 _databaseServerName = value;
             }
-        }
+    }
 
-        public string DatabaseUserName
+    public string DatabaseUserName
+    {
+        get
         {
-            get
-            {
                 return _databaseUserName;
             }
-            set
-            {
+        set
+        {
                 _databaseUserName = value;
             }
-        }
+    }
 
-        public string DatabasePassword
+    public string DatabasePassword
+    {
+        get
         {
-            get
-            {
                 return _databasePassword;
             }
-            set
-            {
+        set
+        {
                 _databasePassword = value;
             }
-        }
+    }
 
-        public bool DatabaseIntegratedAuthentication
+    public bool DatabaseIntegratedAuthentication
+    {
+        get
         {
-            get
-            {
                 return _databaseIntegratedAuthentication;
             }
-            set
-            {
+        set
+        {
                 _databaseIntegratedAuthentication = value;
             }
-        }
+    }
 
-        public bool GitRepository
-        {
-            get => _gitrepo;
-            set => _gitrepo = value;
-        }
+    public bool GitRepository
+    {
+        get => _gitrepo;
+        set => _gitrepo = value;
+    }
 
-        public string WebRootName
+    public string WebRootName
+    {
+        get
         {
-            get
-            {
                 return _webRootName;
             }
-            set
-            {
+        set
+        {
                 _webRootName = value;
             }
-        }
+    }
 
-        public string Url
+    public string Url
+    {
+        get
         {
-            get
-            {
                 return _url;
             }
-            set
-            {
+        set
+        {
                 _url = value;
             }
-        }
+    }
 
-        public string BinFolder
+    public string BinFolder
+    {
+        get
         {
-            get
-            {
                 return _binFolder;
             }
-            set
-            {
+        set
+        {
                 _binFolder = value;
             }
-        }
+    }
 
-        public string DataConnectionString
+    public string DataConnectionString
+    {
+        get
         {
-            get
-            {
                 return _dataConnectionString;
             }
-            set
-            {
+        set
+        {
                 _dataConnectionString = value;
             }
-        }
+    }
 
-        public string ModelConnectionString
+    public string ModelConnectionString
+    {
+        get
         {
-            get
-            {
                 return _modelConnectionString;
             }
-            set
-            {
+        set
+        {
                 _modelConnectionString = value;
             }
-        }
+    }
 
-        public string BuilderDataConnectionString
+    public string BuilderDataConnectionString
+    {
+        get
         {
-            get
-            {
                 return _builderDataConnectionString;
             }
-            set
-            {
+        set
+        {
                 _builderDataConnectionString = value;
             }
-        }
+    }
 
-        public string BasePackageId
+    public string BasePackageId
+    {
+        get
         {
-            get
-            {
                 return _basePackageId;
             }
-            set
-            {
+        set
+        {
                 _basePackageId = value;
             }
-        }
+    }
 
-        public string NewPackageId
+    public string NewPackageId
+    {
+        get
         {
-            get
-            {
                 return _newPackageId;
             }
-            set
-            {
+        set
+        {
                 _newPackageId = value;
             }
-        }
+    }
 
-        public string ArchitectUserName
+    public string ArchitectUserName
+    {
+        get
         {
-            get
-            {
                 return _architectUserName;
             }
-            set
-            {
+        set
+        {
                 _architectUserName = value;
             }
-        }
+    }
 
-        public string DefaultModelPath { get; set; }
+    public string DefaultModelPath { get; set; }
 
-        public string SourcesFolder
+    public string SourcesFolder
+    {
+        get
         {
-            get
-            {
                 return _sourcesFolder;
             }
-            set
-            {
+        set
+        {
                 _sourcesFolder = value;
             }
-        }
+    }
 
-        public string BaseUrl
+    public string BaseUrl
+    {
+        get
         {
-            get
-            {
                 return _baseUrl;
             }
-            set
-            {
+        set
+        {
                 _baseUrl = value;
             }
-        }
+    }
 
-        public string GitRepositoryLink { get; set; }
+    public string GitRepositoryLink { get; set; }
 
-        public TypeTemplate TypeTemplate { get; set; }
+    public TypeTemplate TypeTemplate { get; set; }
 
-        public TypeDoTemplate TypeDoTemplate { get; set; }
-        public string RepositoryUsername { get; set; }
-        public string RepositoryPassword { get; set; }
-        public DeploymentType Deployment { get;  set; }
-        public string RootSourceFolder { get; set; }
-        public int DockerPort { get; set; }
-        public string WebUserName { get; set; }
-        public string WebUserPassword { get; set; }
-        public string WebFirstName { get;  set; }
-        public string WebSurname { get;  set; }
-        public string WebEmail { get;  set; }
-        public int ActiveConfigurationIndex { get; set; }
-        public string DockerEnvPath { get; internal set; }
-        public string DockerApiAddress { get; set; }
-        public string DockerSourcePath { get; set; }
+    public TypeDoTemplate TypeDoTemplate { get; set; }
+    public string RepositoryUsername { get; set; }
+    public string RepositoryPassword { get; set; }
+    public DeploymentType Deployment { get;  set; }
+    public string RootSourceFolder { get; set; }
+    public int DockerPort { get; set; }
+    public string WebUserName { get; set; }
+    public string WebUserPassword { get; set; }
+    public string WebFirstName { get;  set; }
+    public string WebSurname { get;  set; }
+    public string WebEmail { get;  set; }
+    public int ActiveConfigurationIndex { get; set; }
+    public string DockerEnvPath { get; internal set; }
+    public string DockerApiAddress { get; set; }
+    public string DockerSourcePath { get; set; }
 
-        private string _DatabaseAdminPassword = CreatePassword();
-        public string DatabaseAdminPassword 
-        { 
-            get
-            {
+    private string _DatabaseAdminPassword = CreatePassword();
+    public string DatabaseAdminPassword 
+    { 
+        get
+        {
                 return _DatabaseAdminPassword;
             }
-        } 
-        public Docker.OperatingSystem DockerOs { get; set; }
-        #endregion
-    }
-    public enum DeploymentType
-    {
-        Local,
-        Azure,
-        Docker,
-        DockerPostgres
-    }
+    } 
+    public Docker.OperatingSystem DockerOs { get; set; }
+    #endregion
+}
+public enum DeploymentType
+{
+    Local,
+    Azure,
+    Docker,
+    DockerPostgres
 }

@@ -29,29 +29,29 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Origam.Extensions
-{
-    public static class StringExtensions
-    {
-        private static readonly Graphics graphics = Graphics.FromImage(new Bitmap(1, 1));
+namespace Origam.Extensions;
 
-        public static int Width(this string text, Font font)
-        {
+public static class StringExtensions
+{
+    private static readonly Graphics graphics = Graphics.FromImage(new Bitmap(1, 1));
+
+    public static int Width(this string text, Font font)
+    {
             return (int)graphics
                 .MeasureString(text, font)
                 .Width;
         }
 
-        public static int Height(this string text, Font font)
-        {
+    public static int Height(this string text, Font font)
+    {
             return (int)graphics
                 .MeasureString(text, font)
                 .Height;
         }
 
-        public static string Wrap(this String text, int widthInPixels,
-            Font font)
-        {
+    public static string Wrap(this String text, int widthInPixels,
+        Font font)
+    {
             var unwrapedTextWidth = text.Width(font);
 
             if (unwrapedTextWidth > widthInPixels)
@@ -70,9 +70,9 @@ namespace Origam.Extensions
             return text;
         }
 
-        private static int WidthToIndex(string text, int targetPosition,
-            Font font)
-        {
+    private static int WidthToIndex(string text, int targetPosition,
+        Font font)
+    {
             int indexEstimation = text.Length / 2;
             int i = indexEstimation;
 
@@ -102,8 +102,8 @@ namespace Origam.Extensions
                 "Could not convert pixels to index in suplied string.");
         }
 
-        private static int GetIndexOfNearestSpace(string text, int pivotIndex)
-        {
+    private static int GetIndexOfNearestSpace(string text, int pivotIndex)
+    {
             var canBeSplit = text.Contains(' ');
 
             if (!canBeSplit)
@@ -116,8 +116,8 @@ namespace Origam.Extensions
                 .FirstOrDefault();
         }
 
-        private static List<int> FindAllSpaceIndices(string text)
-        {
+    private static List<int> FindAllSpaceIndices(string text)
+    {
             var indicesOfSpaces = new List<int>();
             for (int i = 0; i < text.Length; i++)
             {
@@ -129,8 +129,8 @@ namespace Origam.Extensions
             return indicesOfSpaces;
         }
 
-        public static string FirstToUpper(this string input)
-        {
+    public static string FirstToUpper(this string input)
+    {
             switch (input)
             {
                 case null: throw new ArgumentNullException(nameof(input));
@@ -139,12 +139,12 @@ namespace Origam.Extensions
                                 input.Substring(1).ToLower();
             }
         }
-        public static string[] Split(this string str, string splitWith) =>
-            str.Split(new[] { splitWith }, StringSplitOptions.None);
+    public static string[] Split(this string str, string splitWith) =>
+        str.Split(new[] { splitWith }, StringSplitOptions.None);
 
-        public static string ReplaceInvalidFileCharacters(
-            this string fileNameCandidate, string replaceWith)
-        {
+    public static string ReplaceInvalidFileCharacters(
+        this string fileNameCandidate, string replaceWith)
+    {
             string regex = String.Format("[{0}]",
                 Regex.Escape(new string(Path.GetInvalidFileNameChars())));
             Regex removeInvalidChars = new Regex(regex,
@@ -153,16 +153,16 @@ namespace Origam.Extensions
             return removeInvalidChars.Replace(fileNameCandidate, replaceWith);
         }
 
-        public static string GetBase64Hash(this string str)
-        {
+    public static string GetBase64Hash(this string str)
+    {
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             using (MD5 md5 = MD5.Create())
             {
                 return Convert.ToBase64String(md5.ComputeHash(new MemoryStream(bytes)));
             }
         }
-        public static string GetAssemblyVersion(this string tag)
-        {
+    public static string GetAssemblyVersion(this string tag)
+    {
             var currentVersion = Assembly.GetExecutingAssembly().
                 GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
             Console.WriteLine(string.Format("Current version is {0}", currentVersion));
@@ -173,8 +173,8 @@ namespace Origam.Extensions
             }
             return tag;
         }
-        public static string Truncate(this string input, int maxLength)
-        {
+    public static string Truncate(this string input, int maxLength)
+    {
             if (input is null)
             {
                 return null;
@@ -193,5 +193,4 @@ namespace Origam.Extensions
             }
             return input.Substring(0, maxLength);
         }
-    }
 }

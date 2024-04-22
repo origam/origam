@@ -18,72 +18,71 @@
 
 using ICSharpCode.AvalonEdit;
 
-namespace Origam.Windows.Editor.CodeCompletion
+namespace Origam.Windows.Editor.CodeCompletion;
+
+/// <summary>
+/// Interface that gives backend bindings the possibility to control what characters and
+/// keywords invoke code completion.
+/// </summary>
+public interface ICodeCompletionBinding
 {
     /// <summary>
-    /// Interface that gives backend bindings the possibility to control what characters and
-    /// keywords invoke code completion.
+    /// This method is called when typing a character in the editor, immediately before
+    /// the character is inserted into the document.
     /// </summary>
-    public interface ICodeCompletionBinding
-    {
-        /// <summary>
-        /// This method is called when typing a character in the editor, immediately before
-        /// the character is inserted into the document.
-        /// </summary>
-        /// <param name="editor">The editor</param>
-        /// <param name="ch">The character being inserted.</param>
-        /// <returns>Returns whether the completion binding has shown code completion.</returns>
-        CodeCompletionKeyPressResult HandleKeyPress(TextEditor editor, char ch);
-
-        /// <summary>
-        /// This method is called after typing a character in the editor,
-        /// after character is inserted into the document.
-        /// </summary>
-        /// <param name="editor">The editor</param>
-        /// <param name="ch">The character that was inserted.</param>
-        /// <returns>Returns whether the completion binding has shown code completion.</returns>
-        bool HandleKeyPressed(TextEditor editor, char ch);
-
-        /// <summary>
-        /// Invokes ctrl-space completion.
-        /// </summary>
-        /// <returns>Returns whether the completion binding has shown code completion.</returns>
-        bool CtrlSpace(TextEditor editor);
-    }
-
-    public interface IInsightCodeCompletionBinding
-    {
-        /// <summary>
-        /// Invokes ctrl-shift-space code insight.
-        /// </summary>
-        /// <returns>Returns whether the completion binding has shown code insight.</returns>
-        bool CtrlShiftSpace(TextEditor editor);
-    }
+    /// <param name="editor">The editor</param>
+    /// <param name="ch">The character being inserted.</param>
+    /// <returns>Returns whether the completion binding has shown code completion.</returns>
+    CodeCompletionKeyPressResult HandleKeyPress(TextEditor editor, char ch);
 
     /// <summary>
-    /// The result of <see cref="ICodeCompletionBinding.HandleKeyPress"/>.
+    /// This method is called after typing a character in the editor,
+    /// after character is inserted into the document.
     /// </summary>
-    public enum CodeCompletionKeyPressResult
-    {
-        /// <summary>
-        /// The binding did not run code completion. The pressed key will be handled normally.
-        /// </summary>
-        None,
-        /// <summary>
-        /// The binding handled code completion, the pressed key will be handled normally.
-        /// The pressed key will not be included in the completion expression, but will be
-        /// in front of it (this is usually used when the key is '.').
-        /// </summary>
-        Completed,
-        /// <summary>
-        /// The binding handled code completion, the pressed key will be handled normally.
-        /// The pressed key will be included in the completion expression.
-        /// This is used when starting to type any character starts code completion.
-        /// </summary>
-        CompletedIncludeKeyInCompletion,
-        /// <summary>
-        /// The binding handled code completion, and the key will not be handled by the text editor.
-        /// </summary>
-        EatKey
-    }
+    /// <param name="editor">The editor</param>
+    /// <param name="ch">The character that was inserted.</param>
+    /// <returns>Returns whether the completion binding has shown code completion.</returns>
+    bool HandleKeyPressed(TextEditor editor, char ch);
+
+    /// <summary>
+    /// Invokes ctrl-space completion.
+    /// </summary>
+    /// <returns>Returns whether the completion binding has shown code completion.</returns>
+    bool CtrlSpace(TextEditor editor);
+}
+
+public interface IInsightCodeCompletionBinding
+{
+    /// <summary>
+    /// Invokes ctrl-shift-space code insight.
+    /// </summary>
+    /// <returns>Returns whether the completion binding has shown code insight.</returns>
+    bool CtrlShiftSpace(TextEditor editor);
+}
+
+/// <summary>
+/// The result of <see cref="ICodeCompletionBinding.HandleKeyPress"/>.
+/// </summary>
+public enum CodeCompletionKeyPressResult
+{
+    /// <summary>
+    /// The binding did not run code completion. The pressed key will be handled normally.
+    /// </summary>
+    None,
+    /// <summary>
+    /// The binding handled code completion, the pressed key will be handled normally.
+    /// The pressed key will not be included in the completion expression, but will be
+    /// in front of it (this is usually used when the key is '.').
+    /// </summary>
+    Completed,
+    /// <summary>
+    /// The binding handled code completion, the pressed key will be handled normally.
+    /// The pressed key will be included in the completion expression.
+    /// This is used when starting to type any character starts code completion.
+    /// </summary>
+    CompletedIncludeKeyInCompletion,
+    /// <summary>
+    /// The binding handled code completion, and the key will not be handled by the text editor.
+    /// </summary>
+    EatKey
 }

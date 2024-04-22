@@ -40,36 +40,35 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
-{
-    public class FormNotification
-    {
-        private string _icon;
-        private string _text;
+namespace Origam.Server;
 
-        public string Icon { 
-            get
-            {
+public class FormNotification
+{
+    private string _icon;
+    private string _text;
+
+    public string Icon { 
+        get
+        {
                 return _icon;
             }
 
-            set 
-            {
+        set 
+        {
                 _icon = value;
             }
-        }
+    }
 
-        public string Text
+    public string Text
+    {
+        get
         {
-            get
-            {
                 return _text;
             }
 
-            set
-            {
+        set
+        {
                 _text = value;
             }
-        }
     }
 }

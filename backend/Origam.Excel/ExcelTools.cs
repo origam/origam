@@ -29,12 +29,12 @@ using System;
 using System.Data;
 using System.IO;
 
-namespace Origam.Excel
+namespace Origam.Excel;
+
+public class ExcelTools
 {
-    public class ExcelTools
+    public static ExcelFormat StringToExcelFormat(string input)
     {
-        public static ExcelFormat StringToExcelFormat(string input)
-        {
             if(input.ToUpper() == "XLSX")
             {
                 return ExcelFormat.XLSX;
@@ -45,8 +45,8 @@ namespace Origam.Excel
             }
         }
 
-        public static IWorkbook GetWorkbook(ExcelFormat excelFormat)
-        {
+    public static IWorkbook GetWorkbook(ExcelFormat excelFormat)
+    {
             if(excelFormat == ExcelFormat.XLSX)
             {
                 return new XSSFWorkbook();
@@ -56,9 +56,9 @@ namespace Origam.Excel
                 return new HSSFWorkbook();
             }
         }
-        public static IWorkbook GetWorkbook(
-            ExcelFormat excelFormat, Stream stream)
-        {
+    public static IWorkbook GetWorkbook(
+        ExcelFormat excelFormat, Stream stream)
+    {
             if(excelFormat == ExcelFormat.XLSX)
             {
                 return new XSSFWorkbook(stream);
@@ -69,9 +69,9 @@ namespace Origam.Excel
             }
         }
 
-        public static void SetWorkbookSubject(
-            IWorkbook workbook, string subject)
-        {
+    public static void SetWorkbookSubject(
+        IWorkbook workbook, string subject)
+    {
             if(workbook is HSSFWorkbook)
             {
                 SetHSSFWorkbookSubject(workbook as HSSFWorkbook, subject);
@@ -82,29 +82,29 @@ namespace Origam.Excel
             }
         }
 
-        private static void SetHSSFWorkbookSubject(
-            HSSFWorkbook workbook, string subject)
-        {
+    private static void SetHSSFWorkbookSubject(
+        HSSFWorkbook workbook, string subject)
+    {
             SummaryInformation si
                 = PropertySetFactory.CreateSummaryInformation();
             si.Subject = subject;
             workbook.SummaryInformation = si;
         }
 
-        private static void SetXSSFWorkbookSubject(
-            XSSFWorkbook workbook, string subject)
-        {
+    private static void SetXSSFWorkbookSubject(
+        XSSFWorkbook workbook, string subject)
+    {
             POIXMLProperties xmlProps = workbook.GetProperties();
             CoreProperties coreProps = xmlProps.CoreProperties;
             coreProps.Subject = subject;
         }
-        public static ISheet[] Sheets(IWorkbook wb)
-        {
+    public static ISheet[] Sheets(IWorkbook wb)
+    {
             return Sheets(null, wb);
         }
 
-        public static ISheet[] Sheets(string sheetName, IWorkbook wb)
-        {
+    public static ISheet[] Sheets(string sheetName, IWorkbook wb)
+    {
             ISheet[] sheets;
             if(sheetName == null)
             {
@@ -130,9 +130,9 @@ namespace Origam.Excel
             return sheets;
         }
 
-        public static IWorkbook LoadFile(
-            string fileName, ExcelFormat excelFormat = ExcelFormat.XLS)
-        {
+    public static IWorkbook LoadFile(
+        string fileName, ExcelFormat excelFormat = ExcelFormat.XLS)
+    {
             IWorkbook wb;
             // read from disk
             FileInfo fi = new FileInfo(fileName);
@@ -157,8 +157,8 @@ namespace Origam.Excel
             return wb;
         }
 
-        public static void ReadValue(TextReaderOptions options, DataRow row, ICell cell, DataColumn col)
-        {
+    public static void ReadValue(TextReaderOptions options, DataRow row, ICell cell, DataColumn col)
+    {
             TextReaderOptionsField fieldOptions = options.GetFieldOption(col.ColumnName);
             CellType cellType = cell.CellType ==
                 CellType.Formula ? cell.CachedFormulaResultType : cell.CellType;
@@ -216,9 +216,9 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadLongValue(TextReaderOptionsField fieldOptions,
-            DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadLongValue(TextReaderOptionsField fieldOptions,
+        DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Numeric)
             {
                 row[col] = cell.NumericCellValue;
@@ -233,9 +233,9 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadDecimalValue(TextReaderOptionsField fieldOptions,
-            DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadDecimalValue(TextReaderOptionsField fieldOptions,
+        DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Numeric)
             {
                 row[col] = cell.NumericCellValue;
@@ -250,8 +250,8 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadIntValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadIntValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Numeric)
             {
                 row[col] = cell.NumericCellValue;
@@ -262,8 +262,8 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadBoolValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadBoolValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Boolean)
             {
                 row[col] = cell.BooleanCellValue;
@@ -274,16 +274,16 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadGuidValue(DataRow row, ICell cell, DataColumn col)
-        {
+    private static void ReadGuidValue(DataRow row, ICell cell, DataColumn col)
+    {
             if(cell.StringCellValue != "")
             {
                 row[col] = new Guid(cell.StringCellValue);
             }
         }
 
-        private static void ReadDateValue(TextReaderOptionsField fieldOptions, DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadDateValue(TextReaderOptionsField fieldOptions, DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Numeric)
             {
                 row[col] = cell.DateCellValue;
@@ -297,8 +297,8 @@ namespace Origam.Excel
             }
         }
 
-        private static void ReadStringValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
-        {
+    private static void ReadStringValue(DataRow row, CellType cellType, ICell cell, DataColumn col)
+    {
             if(cellType == CellType.Numeric)
             {
                 row[col] = cell.NumericCellValue.ToString();
@@ -308,8 +308,8 @@ namespace Origam.Excel
                 row[col] = cell.StringCellValue;
             }
         }
-        public static void SaveWorkbook(IWorkbook wb, FileInfo fi)
-        {
+    public static void SaveWorkbook(IWorkbook wb, FileInfo fi)
+    {
             FileStream stream = null;
             if(fi.Exists)
             {
@@ -328,8 +328,8 @@ namespace Origam.Excel
             stream.Close();
         }
 
-        public static ISheet CreateOrEmptySheet(string sheetName, IWorkbook wb)
-        {
+    public static ISheet CreateOrEmptySheet(string sheetName, IWorkbook wb)
+    {
             ISheet sheet = wb.GetSheet(sheetName);
             if(sheet == null)
             {
@@ -344,9 +344,9 @@ namespace Origam.Excel
             return sheet;
         }
 
-        public static IWorkbook OpenOrCreateWorkbook(
-            FileInfo fi, ExcelFormat excelFormat)
-        {
+    public static IWorkbook OpenOrCreateWorkbook(
+        FileInfo fi, ExcelFormat excelFormat)
+    {
             IWorkbook wb;
             if(fi.Exists)
             {
@@ -375,8 +375,8 @@ namespace Origam.Excel
             return wb;
         }
 
-        private static void EmptySheet(ISheet sheet)
-        {
+    private static void EmptySheet(ISheet sheet)
+    {
             for(int i = 0; i < sheet.PhysicalNumberOfRows; i++)
             {
                 IRow xlRow = sheet.GetRow(i);
@@ -387,10 +387,10 @@ namespace Origam.Excel
             }
         }
 
-        public static ICell SetCellValue(
-            IRow excelRow, int i, TextReaderOptionsField fieldOptions,
-            object val, ICellStyle dateCellStyle)
-        {
+    public static ICell SetCellValue(
+        IRow excelRow, int i, TextReaderOptionsField fieldOptions,
+        object val, ICellStyle dateCellStyle)
+    {
             ICell cell = excelRow.CreateCell(i);
             if(val is DateTime)
             {
@@ -432,5 +432,4 @@ namespace Origam.Excel
             return cell;
         }
 
-    }
 }

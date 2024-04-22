@@ -21,93 +21,92 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
+namespace Origam;
+
+/// <summary>
+/// Summary description for UserProfile.
+/// </summary>
+public class UserProfile
 {
-	/// <summary>
-	/// Summary description for UserProfile.
-	/// </summary>
-	public class UserProfile
+	public UserProfile()
 	{
-		public UserProfile()
-		{
 		}
 
-		private Guid _id;
-		public Guid Id
+	private Guid _id;
+	public Guid Id
+	{
+		get
 		{
-			get
-			{
 				return _id;
 			}
-			set
-			{
+		set
+		{
 				_id = value;
 			}
-		}
+	}
 
-		private Guid _resourceId;
-		public Guid ResourceId
+	private Guid _resourceId;
+	public Guid ResourceId
+	{
+		get
 		{
-			get
-			{
 				return _resourceId;
 			}
-			set
-			{
+		set
+		{
 				_resourceId = value;
 			}
-		}
+	}
 
-		private Guid _businessUnitId;
-		public Guid BusinessUnitId
+	private Guid _businessUnitId;
+	public Guid BusinessUnitId
+	{
+		get
 		{
-			get
-			{
 				return _businessUnitId;
 			}
-			set
-			{
+		set
+		{
 				_businessUnitId = value;
 			}
-		}
+	}
 
-		private Guid _organizationId;
-		public Guid OrganizationId
+	private Guid _organizationId;
+	public Guid OrganizationId
+	{
+		get
 		{
-			get
-			{
 				return _organizationId;
 			}
-			set
-			{
+		set
+		{
 				_organizationId = value;
 			}
-		}
+	}
 
-		private string _fullName;
-		public string FullName
+	private string _fullName;
+	public string FullName
+	{
+		get
 		{
-			get
-			{
 				return _fullName;
 			}
-			set
-			{
+		set
+		{
 				_fullName = value;
 			}
-		}
+	}
 
-        private string _email;
-        public string Email
-        {
-            get
-            {
+	private string _email;
+	public string Email
+	{
+		get
+		{
                 return _email;
             }
-            set
-            {
+		set
+		{
                 _email = value;
             }
-        }
-    }
+	}
 }

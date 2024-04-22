@@ -27,33 +27,33 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Report Page", "report-page.png")]
-    [HelpTopic("Report+Page")]
-    [ClassMetaVersion("6.0.0")]
-	public class ReportPage : AbstractPage
-	{
-		public ReportPage() : base() { Init(); }
-		public ReportPage(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-		public ReportPage(Key primaryKey) : base(primaryKey) { Init(); }
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Report Page", "report-page.png")]
+[HelpTopic("Report+Page")]
+[ClassMetaVersion("6.0.0")]
+public class ReportPage : AbstractPage
+{
+	public ReportPage() : base() { Init(); }
+	public ReportPage(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+	public ReportPage(Key primaryKey) : base(primaryKey) { Init(); }
+
+	private void Init()
+	{
 			this.ChildItemTypes.Add(typeof(PageParameterMapping));
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Report);
 
 			base.GetExtraDependencies(dependencies);
 		}
 
-		public override IList<string> NewTypeNames
+	public override IList<string> NewTypeNames
+	{
+		get
 		{
-			get
-			{
 				try
 				{
 					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
@@ -65,41 +65,40 @@ namespace Origam.Schema.GuiModel
 					return new string[] { };
 				}
 			}
-		}		
+	}		
 
-		#region Properties
-		public Guid ReportId;
+	#region Properties
+	public Guid ReportId;
 
-		[Category("Report")]
-		[TypeConverter(typeof(ReportConverter))]
-        [XmlReference("report", "ReportId")]
-		public AbstractReport Report
+	[Category("Report")]
+	[TypeConverter(typeof(ReportConverter))]
+	[XmlReference("report", "ReportId")]
+	public AbstractReport Report
+	{
+		get
 		{
-			get
-			{
 				return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
 			}
-			set
-			{
+		set
+		{
 				this.ReportId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		private DataReportExportFormatType _exportFormatType;
-		[Category("Data Report")]
-		[Description("Export Format Type")]
-        [XmlAttribute("exportFormatType")]
-		public DataReportExportFormatType ExportFormatType
+	private DataReportExportFormatType _exportFormatType;
+	[Category("Data Report")]
+	[Description("Export Format Type")]
+	[XmlAttribute("exportFormatType")]
+	public DataReportExportFormatType ExportFormatType
+	{
+		get
 		{
-			get
-			{
 				return _exportFormatType;
 			}
-			set
-			{
+		set
+		{
 				_exportFormatType = value;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

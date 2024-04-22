@@ -25,55 +25,54 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for RedirectWorkflowPageAction.
+/// </summary>
+[SchemaItemDescription("Redirect", "Actions", "redirect.png")]
+[HelpTopic("Redirect+Action")]
+[ClassMetaVersion("6.0.0")]
+public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
 {
-	/// <summary>
-	/// Summary description for RedirectWorkflowPageAction.
-	/// </summary>
-	[SchemaItemDescription("Redirect", "Actions", "redirect.png")]
-    [HelpTopic("Redirect+Action")]
-    [ClassMetaVersion("6.0.0")]
-	public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
+	public RedirectWorkflowPageAction() : base() {}
+
+	public RedirectWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public RedirectWorkflowPageAction(Key primaryKey) : base(primaryKey)	{}
+
+	#region Properties
+	private string _xpath;
+	[Category("Result")]
+	[Description("An XPath expression from the context of the data returned by the workflow. The result will be used as the URL.")]
+	[XmlAttribute("xPath")]
+	public string XPath
 	{
-		public RedirectWorkflowPageAction() : base() {}
-
-		public RedirectWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public RedirectWorkflowPageAction(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		private string _xpath;
-		[Category("Result")]
-		[Description("An XPath expression from the context of the data returned by the workflow. The result will be used as the URL.")]
-		[XmlAttribute("xPath")]
-		public string XPath
+		get
 		{
-			get
-			{
 				return _xpath;
 			}
-			set
-			{
+		set
+		{
 				_xpath = value;
 			}
-		}
+	}
 
-		private bool _isUrlEscaped;
-		[Category("Result")]
-		[Description("Indicates if the result is already a complete URL that needs no escaping.")]
-		[XmlAttribute("escapeUrl")]
-		public bool IsUrlEscaped
+	private bool _isUrlEscaped;
+	[Category("Result")]
+	[Description("Indicates if the result is already a complete URL that needs no escaping.")]
+	[XmlAttribute("escapeUrl")]
+	public bool IsUrlEscaped
+	{
+		get
 		{
-			get
-			{
 				return _isUrlEscaped;
 			}
-			set
-			{
+		set
+		{
 				_isUrlEscaped = value;
 			}
-		}
-		#endregion
-
 	}
+	#endregion
+
 }

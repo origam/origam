@@ -30,26 +30,26 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Data;
 
-namespace Origam.Workflow.WorkQueue
-{
-   public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
-    {
-        private static readonly ILog log = LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-        private string transactionId;
-        private bool isLocalTransaction = false;
-        private string path = null;
-        private string indexFile = null;
-        private string searchPattern = null;
-        private bool compressedArchivesAsSubfolders = false;
-        private readonly List<string> filesToProcess = new List<string>();
-        private int position = 0;
+namespace Origam.Workflow.WorkQueue;
 
-        public override void Connect(
-            IWorkQueueService service, Guid queueId, string workQueueClass,
-            string connection, string userName, string password,
-            string transactionId)
-        {
+public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
+{
+    private static readonly ILog log = LogManager.GetLogger(
+        MethodBase.GetCurrentMethod().DeclaringType);
+    private string transactionId;
+    private bool isLocalTransaction = false;
+    private string path = null;
+    private string indexFile = null;
+    private string searchPattern = null;
+    private bool compressedArchivesAsSubfolders = false;
+    private readonly List<string> filesToProcess = new List<string>();
+    private int position = 0;
+
+    public override void Connect(
+        IWorkQueueService service, Guid queueId, string workQueueClass,
+        string connection, string userName, string password,
+        string transactionId)
+    {
             if (log.IsInfoEnabled)
             {
                 log.Info("Connecting " + connection);
@@ -59,16 +59,16 @@ namespace Origam.Workflow.WorkQueue
             SetupTransaction(transactionId, connection);
         }
 
-        public override void Disconnect()
-        {
+    public override void Disconnect()
+    {
             if(isLocalTransaction)
             {
                 ResourceMonitor.Commit(transactionId);
             }
         }
 
-        public override WorkQueueAdapterResult GetItem(string lastState)
-        {
+    public override WorkQueueAdapterResult GetItem(string lastState)
+    {
             if(filesToProcess.Count == position)
             {
                 return null;
@@ -84,8 +84,8 @@ namespace Origam.Workflow.WorkQueue
                 DataDocumentFactory.New(dataTable.DataSet));
         }
 
-        private string GetFileContent(string filename)
-        {
+    private string GetFileContent(string filename)
+    {
             string[] filenameSegments = filename.Split('|');
             if(filenameSegments.Length == 1)
             {
@@ -98,9 +98,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private string GetContentFromZipArchive(
-            string archiveName, string filename)
-        {
+    private string GetContentFromZipArchive(
+        string archiveName, string filename)
+    {
             using(FileStream fileStream = new FileStream(
                 archiveName, FileMode.Open))
             using(ZipArchive archive = new ZipArchive(fileStream))
@@ -110,8 +110,8 @@ namespace Origam.Workflow.WorkQueue
                 return streamReader.ReadToEnd();
             }
         }
-        private void SetupTransaction(string transactionId, string connection)
-        {
+    private void SetupTransaction(string transactionId, string connection)
+    {
             this.transactionId = transactionId;
             if (this.transactionId == null)
             {
@@ -127,8 +127,8 @@ namespace Origam.Workflow.WorkQueue
                     new HashIndexFileTransaction(indexFile, filesToProcess));
 			}
         }
-        private void ParseParameters(string connection)
-        {
+    private void ParseParameters(string connection)
+    {
             string[] cnParts = connection.Split(";".ToCharArray());
             foreach (string part in cnParts)
             {
@@ -175,8 +175,8 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void InitializeFileList()
-        {
+    private void InitializeFileList()
+    {
             using (HashIndexFile hashIndexFile = new HashIndexFile(indexFile))    
             {
                 if (compressedArchivesAsSubfolders)
@@ -187,8 +187,8 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void AddUnprocessedFilesToFileList(HashIndexFile hashIndexFile)
-        {
+    private void AddUnprocessedFilesToFileList(HashIndexFile hashIndexFile)
+    {
 			string[] filenames = Directory.GetFiles(path, searchPattern);
             foreach(string filename in filenames)
             {
@@ -199,8 +199,8 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void AddUnprocessedZipArchivesToFileList( HashIndexFile hashIndexFile)
-        {
+    private void AddUnprocessedZipArchivesToFileList( HashIndexFile hashIndexFile)
+    {
 			string[] filenames = Directory.GetFiles(path, "*.zip");
             foreach(string filename in filenames)
             {
@@ -222,8 +222,8 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private bool FitsMask(string filename)
-        {
+    private bool FitsMask(string filename)
+    {
             Regex mask = new Regex(
                 '^' +
                 searchPattern
@@ -234,17 +234,15 @@ namespace Origam.Workflow.WorkQueue
                 RegexOptions.IgnoreCase);
             return mask.IsMatch(filename);
         }
-        private DataTable CreateFileDataset()
-        {
+    private DataTable CreateFileDataset()
+    {
             DataSet dataSet = new DataSet("ROOT");
             DataTable dataTable = dataSet.Tables.Add("File");
             dataTable.Columns.Add("Name", typeof(string));
             dataTable.Columns.Add("Data", typeof(string));
-            // Add file metadata (times)			
-            dataTable.Columns.Add("CreationTime", typeof(DateTime));
+            // Add file metadata (times)			     dataTable.Columns.Add("CreationTime", typeof(DateTime));
             dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
             dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
             return dataTable;
         }
-    }
 }

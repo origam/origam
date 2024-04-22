@@ -24,129 +24,128 @@ using System;
 using Origam.Schema;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.DA
+namespace Origam.DA;
+
+public enum DbCompareResultType
 {
-	public enum DbCompareResultType
-	{
-		MissingInDatabase = 0,
-		MissingInSchema = 1,
-		ExistingButDifferent = 2
+	MissingInDatabase = 0,
+	MissingInSchema = 1,
+	ExistingButDifferent = 2
 }
 
-	/// <summary>
-	/// Summary description for SchemaCompareResult.
-	/// </summary>
-	public class SchemaDbCompareResult
+/// <summary>
+/// Summary description for SchemaCompareResult.
+/// </summary>
+public class SchemaDbCompareResult
+{
+	public SchemaDbCompareResult()
 	{
-		public SchemaDbCompareResult()
-		{
 		}
 
-		#region Properties
-		private ISchemaItem _schemaItem;
-		public ISchemaItem SchemaItem
+	#region Properties
+	private ISchemaItem _schemaItem;
+	public ISchemaItem SchemaItem
+	{
+		get
 		{
-			get
-			{
 				return _schemaItem;
 			}
-			set
-			{
+		set
+		{
 				_schemaItem = value;
 			}
-		}
+	}
 
-		private Type _schemaItemType;
-		public Type SchemaItemType
+	private Type _schemaItemType;
+	public Type SchemaItemType
+	{
+		get
 		{
-			get
-			{
 				return _schemaItemType;
 			}
-			set
-			{
+		set
+		{
 				_schemaItemType = value;
 			}
-		}
+	}
 
-		private object _parentSchemaItem;
-		public object ParentSchemaItem
+	private object _parentSchemaItem;
+	public object ParentSchemaItem
+	{
+		get
 		{
-			get
-			{
 				return _parentSchemaItem;
 			}
-			set
-			{
+		set
+		{
 				_parentSchemaItem = value;
 			}
-		}
+	}
 
-		private DbCompareResultType _resultType;
-		public DbCompareResultType ResultType
+	private DbCompareResultType _resultType;
+	public DbCompareResultType ResultType
+	{
+		get
 		{
-			get
-			{
 				return _resultType;
 			}
-			set
-			{
+		set
+		{
 				_resultType = value;
 			}
-		}
+	}
 
-		private string _itemName;
-		public string ItemName
+	private string _itemName;
+	public string ItemName
+	{
+		get
 		{
-			get
-			{
 				return _itemName;
 			}
-			set
-			{
+		set
+		{
 				_itemName = value;
 			}
-		}
+	}
 
-		private string _remark = "";
-		public string Remark
+	private string _remark = "";
+	public string Remark
+	{
+		get
 		{
-			get
-			{
 				return _remark;
 			}
-			set
-			{
+		set
+		{
 				_remark = value;
 			}
-		}
+	}
 
-		private string _script = "";
-		public string Script
+	private string _script = "";
+	public string Script
+	{
+		get
 		{
-			get
-			{
 				return _script;
 			}
-			set
-			{
+		set
+		{
 				_script = value;
 			}
-		}
+	}
 
-		private string _script2 = "";
-		public string Script2
+	private string _script2 = "";
+	public string Script2
+	{
+		get
 		{
-			get
-			{
 				return _script2;
 			}
-			set
-			{
+		set
+		{
 				_script2 = value;
 			}
-		}
-        public Platform Platform { get; set; }
-        #endregion
-    }
+	}
+	public Platform Platform { get; set; }
+	#endregion
 }

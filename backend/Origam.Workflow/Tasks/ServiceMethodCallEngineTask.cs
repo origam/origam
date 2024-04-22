@@ -26,21 +26,21 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+
+/// <summary>
+/// Summary description for ServiceMethodCallTask.
+/// </summary>
+public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for ServiceMethodCallTask.
-	/// </summary>
-	public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
+	private IServiceAgent serviceAgent;
+	private IServiceAgent ServiceAgent
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
-		private IServiceAgent serviceAgent;
-		private IServiceAgent ServiceAgent
+		get
 		{
-			get
-			{
 				if (serviceAgent == null)
 				{
 					ServiceMethodCallTask task = Step as ServiceMethodCallTask;
@@ -52,14 +52,14 @@ namespace Origam.Workflow.Tasks
 
 				return serviceAgent;
 			}
-		}
+	}
 		
-		public ServiceMethodCallEngineTask() : base()
-		{
+	public ServiceMethodCallEngineTask() : base()
+	{
 		}
 
-		public override void Execute()
-		{
+	public override void Execute()
+	{
 			Exception exception = null;
 
 			if (ServiceAgent is IAsyncAgent asyncAgent)
@@ -93,8 +93,8 @@ namespace Origam.Workflow.Tasks
 				disposableServiceAgent.Dispose();
 			}
 		}
-		private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
-		{
+	private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
+	{
 			if (ServiceAgent is IAsyncAgent asyncAgent)
 			{
 				asyncAgent.AsyncCallFinished -= OnAsyncAgentOnAsyncCallFinished;
@@ -103,8 +103,8 @@ namespace Origam.Workflow.Tasks
 			OnFinished(new WorkflowEngineTaskEventArgs(args.Exception));
 		}
 
-		protected override void OnExecute()
-		{
+	protected override void OnExecute()
+	{
 			ServiceMethodCallTask task = Step as ServiceMethodCallTask;
 			IServiceAgent agent = ServiceAgent;
 			
@@ -224,5 +224,4 @@ namespace Origam.Workflow.Tasks
 
 			this.Result = agent.Result;
 		}
-	}
 }

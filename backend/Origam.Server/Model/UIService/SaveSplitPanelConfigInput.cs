@@ -21,11 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class SaveSplitPanelConfigInput
 {
-    public class SaveSplitPanelConfigInput
-    {
-        public Guid InstanceId { get; set; }
-        public int Position { get; set; }
-    }
+    public Guid InstanceId { get; set; }
+    public int Position { get; set; }
 }

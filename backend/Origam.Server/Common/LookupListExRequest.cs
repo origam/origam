@@ -42,19 +42,18 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class LookupListExRequest
 {
-    public class LookupListExRequest
-    {
-        public string SessionFormIdentifier; 
-        public string Entity; 
-        public string Property; 
-        public object Id; 
-        public string LookupId; 
-        public IDictionary<string, object> Parameters; 
-        public bool ShowUniqueValues;
-        public string SearchText;
-        public int PageSize = -1;
-        public int PageNumber = -1;
-    }
+    public string SessionFormIdentifier; 
+    public string Entity; 
+    public string Property; 
+    public object Id; 
+    public string LookupId; 
+    public IDictionary<string, object> Parameters; 
+    public bool ShowUniqueValues;
+    public string SearchText;
+    public int PageSize = -1;
+    public int PageNumber = -1;
 }

@@ -22,24 +22,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation
-{
-    public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
-    {
-        string _loginName;
-        bool _integratedAuthentication = false;
-        DatabaseType _databaseType;
+namespace Origam.ProjectAutomation;
 
-        public override string Name
+public class ApplyDatabasePermissionsBuilder : AbstractDatabaseBuilder
+{
+    string _loginName;
+    bool _integratedAuthentication = false;
+    DatabaseType _databaseType;
+
+    public override string Name
+    {
+        get
         {
-            get
-            {
                 return "Apply Database Permissions";
             }
-        }
+    }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             _databaseType = project.DatabaseType;
             DataService(_databaseType).DbUser = project.Name;
             _loginName = DataService(_databaseType).DbUser;
@@ -54,16 +54,15 @@ namespace Origam.ProjectAutomation
                 );
         }
 
-        private string BuildConnectionString(Project project)
-        {
+    private string BuildConnectionString(Project project)
+    {
             return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
             project.DataDatabaseName, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
             DataService(_databaseType).DeleteUser(_loginName, _integratedAuthentication);
         }
-    }
 }

@@ -29,43 +29,43 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration
-{
-    public enum AuthenticationType
-    {
-        Email,
-        Username
-    }   
-    
-    public enum AuthenticationMethod
-    {
-        Cookie,
-        Token
-    }
-    
-    public static class IdentityServerDefaults
-    {
-        public const string AzureAdScheme = "AzureAd";
-        public const string WindowsAdScheme = "Windows";
-    }
-    
-    public class IdentityServerConfig
-    {
-        public string PathToJwtCertificate { get; }
-        public string PasswordForJwtCertificate { get; }
-        public GoogleLogin GoogleLogin { get; }
-        public MicrosoftLogin MicrosoftLogin { get; }
-        public AzureAdLogin AzureAdLogin {get;}
-        public WebClient WebClient { get; }
-        public MobileClient MobileClient { get; }
-        public ServerClient ServerClient { get; }
-        public bool CookieSlidingExpiration { get; } 
-        public int CookieExpirationMinutes { get; }
-        public string AuthenticationPostProcessor { get; }
-        public AuthenticationMethod PrivateApiAuthentication { get; }
+namespace Origam.Server.Configuration;
 
-        public IdentityServerConfig(IConfiguration configuration)
-        {
+public enum AuthenticationType
+{
+    Email,
+    Username
+}   
+    
+public enum AuthenticationMethod
+{
+    Cookie,
+    Token
+}
+    
+public static class IdentityServerDefaults
+{
+    public const string AzureAdScheme = "AzureAd";
+    public const string WindowsAdScheme = "Windows";
+}
+    
+public class IdentityServerConfig
+{
+    public string PathToJwtCertificate { get; }
+    public string PasswordForJwtCertificate { get; }
+    public GoogleLogin GoogleLogin { get; }
+    public MicrosoftLogin MicrosoftLogin { get; }
+    public AzureAdLogin AzureAdLogin {get;}
+    public WebClient WebClient { get; }
+    public MobileClient MobileClient { get; }
+    public ServerClient ServerClient { get; }
+    public bool CookieSlidingExpiration { get; } 
+    public int CookieExpirationMinutes { get; }
+    public string AuthenticationPostProcessor { get; }
+    public AuthenticationMethod PrivateApiAuthentication { get; }
+
+    public IdentityServerConfig(IConfiguration configuration)
+    {
             var identityServerSection = configuration
                 .GetSectionOrThrow("IdentityServerConfig");
             PathToJwtCertificate = identityServerSection
@@ -88,9 +88,9 @@ namespace Origam.Server.Configuration
                 "AuthenticationPostProcessor", "");
         }
 
-        private ServerClient ConfigureServerClient(
-            IConfigurationSection identityServerSection)
-        {
+    private ServerClient ConfigureServerClient(
+        IConfigurationSection identityServerSection)
+    {
             var serverClientSection = identityServerSection
                 .GetSection("ServerClient");
             if (serverClientSection.Exists())
@@ -103,9 +103,9 @@ namespace Origam.Server.Configuration
             return null;
         }
 
-        private MobileClient ConfigureMobileClient(
-            IConfigurationSection identityServerSection)
-        {
+    private MobileClient ConfigureMobileClient(
+        IConfigurationSection identityServerSection)
+    {
             var mobileClientSection = identityServerSection
                 .GetSection("MobileClient");
             if (mobileClientSection.GetChildren().Any())
@@ -123,9 +123,9 @@ namespace Origam.Server.Configuration
             return null;
         }
 
-        private WebClient ConfigureWebClient(
-            IConfigurationSection identityServerSection)
-        {
+    private WebClient ConfigureWebClient(
+        IConfigurationSection identityServerSection)
+    {
             var webClientSection = identityServerSection
                 .GetSection("WebClient");
             if (webClientSection.GetChildren().Any())
@@ -146,9 +146,9 @@ namespace Origam.Server.Configuration
             return null;
         }
 
-        private GoogleLogin ConfigureGoogleLogin(
-            IConfigurationSection identityServerSection)
-        {
+    private GoogleLogin ConfigureGoogleLogin(
+        IConfigurationSection identityServerSection)
+    {
             var googleLoginSection = identityServerSection
                 .GetSection("GoogleLogin");
             if (googleLoginSection.GetChildren().Any())
@@ -164,9 +164,9 @@ namespace Origam.Server.Configuration
             return null;
         }
         
-        private MicrosoftLogin ConfigureMicrosoftLogin(
-            IConfigurationSection identityServerSection)
-        {
+    private MicrosoftLogin ConfigureMicrosoftLogin(
+        IConfigurationSection identityServerSection)
+    {
             var microsoftLoginSection = identityServerSection
                 .GetSection("MicrosoftLogin");
             if (microsoftLoginSection.GetChildren().Any())
@@ -182,9 +182,9 @@ namespace Origam.Server.Configuration
             return null;
         }
         
-        private AzureAdLogin ConfigureAzureAdLogin(
-            IConfigurationSection identityServerSection)
-        {
+    private AzureAdLogin ConfigureAzureAdLogin(
+        IConfigurationSection identityServerSection)
+    {
             var azureAdLoginSection = identityServerSection
                 .GetSection("AzureAdLogin");
             if (azureAdLoginSection.GetChildren().Any())
@@ -198,9 +198,9 @@ namespace Origam.Server.Configuration
             return null;
         }
 
-        public ExternalCallbackProcessingInfo GetExternalCallbackProcessingInfo(
-            string authenticationScheme)
-        {
+    public ExternalCallbackProcessingInfo GetExternalCallbackProcessingInfo(
+        string authenticationScheme)
+    {
             switch(authenticationScheme)
             {
                 case GoogleDefaults.AuthenticationScheme:
@@ -217,89 +217,88 @@ namespace Origam.Server.Configuration
                         $@"Invalid authentication scheme {authenticationScheme}");
             }
         }
-    }
+}
 
-    public class ServerClient
-    {
-        public string ClientSecret { get; set; }
-    }
+public class ServerClient
+{
+    public string ClientSecret { get; set; }
+}
 
-    public class WebClient
-    {
-        public string[] RedirectUris { get; set; }
-        public string[] PostLogoutRedirectUris { get; set; }
-        public string[] AllowedCorsOrigins { get; set; }  
-    }
+public class WebClient
+{
+    public string[] RedirectUris { get; set; }
+    public string[] PostLogoutRedirectUris { get; set; }
+    public string[] AllowedCorsOrigins { get; set; }  
+}
     
-    public class MobileClient
-    {
-        public string[] RedirectUris { get; set; }
-        public string[] PostLogoutRedirectUris { get; set; }
-    }
+public class MobileClient
+{
+    public string[] RedirectUris { get; set; }
+    public string[] PostLogoutRedirectUris { get; set; }
+}
 
-    public abstract class ExternalCallbackProcessingInfo
-    {
-        public AuthenticationType AuthenticationType { get; set; }
-        public string ClaimType { get; set; }
+public abstract class ExternalCallbackProcessingInfo
+{
+    public AuthenticationType AuthenticationType { get; set; }
+    public string ClaimType { get; set; }
 
-        protected ExternalCallbackProcessingInfo(
-            IConfigurationSection configurationSection)
-        {
+    protected ExternalCallbackProcessingInfo(
+        IConfigurationSection configurationSection)
+    {
             AuthenticationType = configurationSection.GetValue(
                 "AuthenticationType", AuthenticationType.Email);
             ClaimType = configurationSection.GetValue(
                 "ClaimType", ClaimTypes.Email);
         }
 
-        protected ExternalCallbackProcessingInfo()
-        {
+    protected ExternalCallbackProcessingInfo()
+    {
         }
-    }
+}
     
-    public class GoogleLogin : ExternalCallbackProcessingInfo
+public class GoogleLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
+
+    public GoogleLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-
-        public GoogleLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
         }
-    }
+}
 
-    public class MicrosoftLogin : ExternalCallbackProcessingInfo
+public class MicrosoftLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
+
+    public MicrosoftLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-
-        public MicrosoftLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
         }
-    }
+}
     
-    public class AzureAdLogin : ExternalCallbackProcessingInfo
+public class AzureAdLogin : ExternalCallbackProcessingInfo
+{
+    public string ClientId { get; set; }
+    public string TenantId { get; set; }
+
+    public AzureAdLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
     {
-        public string ClientId { get; set; }
-        public string TenantId { get; set; }
-
-        public AzureAdLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
         }
-    }
+}
 
-    public class WindowsLogin : ExternalCallbackProcessingInfo
+public class WindowsLogin : ExternalCallbackProcessingInfo
+{
+    public WindowsLogin(IConfigurationSection configurationSection) 
+        : base(configurationSection)
     {
-        public WindowsLogin(IConfigurationSection configurationSection) 
-            : base(configurationSection)
-        {
         }
 
-        public WindowsLogin()
-        {
+    public WindowsLogin()
+    {
             AuthenticationType = AuthenticationType.Username;
             ClaimType = "name";
         }
-    }
 }

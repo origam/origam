@@ -25,34 +25,34 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace Origam.DA
-{
-	public class ByteArrayConverter
-	{
-		public const int MaxByteFileLenghtToStore=50000000;
+namespace Origam.DA;
 
-		public static bool SaveToDataSet (string fullFileName, DataTable table,int RowIndex, string columnName)
-		{
+public class ByteArrayConverter
+{
+	public const int MaxByteFileLenghtToStore=50000000;
+
+	public static bool SaveToDataSet (string fullFileName, DataTable table,int RowIndex, string columnName)
+	{
 			if ( table == null || table.Rows.Count < 1 || (table.Rows.Count + 1) < RowIndex )
 				return false;
 
 			return SaveToDataSet (fullFileName, table.Rows[RowIndex], columnName);
 		}
 
-		public static bool SaveToDataSet (string fullFileName, DataRow dataRow, string columnName)
-		{
+	public static bool SaveToDataSet (string fullFileName, DataRow dataRow, string columnName)
+	{
 			return SaveToDataSet(fullFileName, dataRow, columnName, false);
 		}
 			
-		public static bool SaveToDataSet (string fullFileName, DataRow dataRow, string columnName, bool compress)
-		{
+	public static bool SaveToDataSet (string fullFileName, DataRow dataRow, string columnName, bool compress)
+	{
 			dataRow[columnName] = GetByteArrayFromFile(fullFileName, compress);
 			return true;
 		}
 
 
-		private static byte[] GetByteArrayFromFile(string filePath, bool compress)
-		{
+	private static byte[] GetByteArrayFromFile(string filePath, bool compress)
+	{
 			FileStream fs = null;
 			try
 			{				
@@ -90,8 +90,8 @@ namespace Origam.DA
 			}
 		}
 
-		public static void SaveFromDataSet (string fullFileName, DataRow dataRow, string columnName, bool compressed)
-		{
+	public static void SaveFromDataSet (string fullFileName, DataRow dataRow, string columnName, bool compressed)
+	{
 			byte[] bytes = (byte[])dataRow[columnName];
 
 			if(bytes == null) return;
@@ -104,8 +104,8 @@ namespace Origam.DA
 			ByteArrayToFile(fullFileName, bytes, compressed);
 		}
 
-		public static void ByteArrayToFile (string fileName, byte[] bytes, bool compressed)
-		{
+	public static void ByteArrayToFile (string fileName, byte[] bytes, bool compressed)
+	{
 			if(compressed)
 			{
 				Unzip(bytes, fileName);
@@ -125,8 +125,8 @@ namespace Origam.DA
 			}
 		}
 
-		private static byte[] Zip(Stream input, string fileName, DateTime dateCreated)
-		{
+	private static byte[] Zip(Stream input, string fileName, DateTime dateCreated)
+	{
 			Crc32 crc = new Crc32();
 			MemoryStream stream = new MemoryStream();
 			ZipOutputStream zipStream = new ZipOutputStream(stream);
@@ -174,8 +174,8 @@ namespace Origam.DA
 			return byteArray;
 		}
 
-		private static void Unzip(byte[] input, string fileName)
-		{
+	private static void Unzip(byte[] input, string fileName)
+	{
 			MemoryStream ms = new MemoryStream(input);
 			ZipInputStream s = new ZipInputStream(ms); 
 
@@ -202,5 +202,4 @@ namespace Origam.DA
 
 			File.SetCreationTime(fileName, entry.DateTime);
 		}
-	}
 }

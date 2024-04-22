@@ -25,85 +25,84 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
+[HelpTopic("Database+Data+Type")]
+[DefaultProperty("DataType")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public  class DatabaseDataType : AbstractSchemaItem
 {
-	[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
-    [HelpTopic("Database+Data+Type")]
-    [DefaultProperty("DataType")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public  class DatabaseDataType : AbstractSchemaItem
+	public const string CategoryConst = "DatabaseDataType";
+
+	public DatabaseDataType() : base() {}
+
+	public DatabaseDataType(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public DatabaseDataType(Key primaryKey) : base(primaryKey)	{}
+
+	#region Properties
+	OrigamDataType _dataType = OrigamDataType.String;
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[Category("Mapping")]
+	[DisplayName("Data Type")]
+	[Description("Base ORIGAM data type to which the mapping is assigned.")]
+	[XmlAttribute("dataType")]
+	public OrigamDataType DataType
 	{
-		public const string CategoryConst = "DatabaseDataType";
-
-		public DatabaseDataType() : base() {}
-
-		public DatabaseDataType(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DatabaseDataType(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		OrigamDataType _dataType = OrigamDataType.String;
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[Category("Mapping")]
-        [DisplayName("Data Type")]
-        [Description("Base ORIGAM data type to which the mapping is assigned.")]
-        [XmlAttribute("dataType")]
-		public OrigamDataType DataType
+		get
 		{
-			get
-			{
 				return _dataType;
 			}
-			set
-			{
+		set
+		{
 				_dataType = value;
 			}
-		}
+	}
 
-        string _mappedDatabaseTypeName = "";
-        [Category("Mapping")]
-        [Description("Name of the data type as used by the current database engine.")]
-        [DisplayName("Database Specific Data Type")]
-        [TypeConverter(typeof(DataTypeMappingAvailableTypesConverter))]
-        [NotNullModelElementRule()]
-        [XmlAttribute("mappedDatabaseTypeName")]
-        public string MappedDatabaseTypeName
+	string _mappedDatabaseTypeName = "";
+	[Category("Mapping")]
+	[Description("Name of the data type as used by the current database engine.")]
+	[DisplayName("Database Specific Data Type")]
+	[TypeConverter(typeof(DataTypeMappingAvailableTypesConverter))]
+	[NotNullModelElementRule()]
+	[XmlAttribute("mappedDatabaseTypeName")]
+	public string MappedDatabaseTypeName
+	{
+		get
 		{
-			get
-			{
 				return _mappedDatabaseTypeName;
 			}
-			set
-			{
+		set
+		{
                 _mappedDatabaseTypeName = value;
                 if (value != null)
                 {
                     this.Name = value;
                 }
 			}
-		}
-        #endregion
+	}
+	#endregion
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
-
 	}
+	#endregion
+
 }

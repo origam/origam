@@ -17,13 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+
+public class HtmlClientConfig
 {
-    public class HtmlClientConfig
-    {
-        public bool ShowToolTipsForMemoFieldsOnly { get; set; }
-        public int RowStatesDebouncingDelayMilliseconds { get; set; }
-        public int DropDownTypingDebouncingDelayMilliseconds { get; set; } = 300;
-        public int GetLookupLabelExDebouncingDelayMilliseconds { get; set; } = 667;
-    }
+    public bool ShowToolTipsForMemoFieldsOnly { get; set; }
+    public int RowStatesDebouncingDelayMilliseconds { get; set; }
+    public int DropDownTypingDebouncingDelayMilliseconds { get; set; } = 300;
+    public int GetLookupLabelExDebouncingDelayMilliseconds { get; set; } = 667;
 }

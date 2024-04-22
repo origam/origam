@@ -22,40 +22,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 
-namespace Origam.DA.ObjectPersistence
-{
-    
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-    public class XmlExternalFileReference: Attribute
-    {
-        public ExternalFileExtension Extension { get; }
-        public string ContainerName { get; }
+namespace Origam.DA.ObjectPersistence;
 
-        public XmlExternalFileReference( string containerName,
-            ExternalFileExtension extension = ExternalFileExtension.Xml)
-        {
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+public class XmlExternalFileReference: Attribute
+{
+    public ExternalFileExtension Extension { get; }
+    public string ContainerName { get; }
+
+    public XmlExternalFileReference( string containerName,
+        ExternalFileExtension extension = ExternalFileExtension.Xml)
+    {
             Extension = extension;
             ContainerName = containerName;
         }
-    }
+}
     
-    /// <summary>
-    /// Edit IsSearchable if you want your newly defined ExternalFileExtension to be
-    /// marked as searchable.
-    /// </summary>
-    public enum ExternalFileExtension
-    {
-        Xml,
-        Png,
-        Xslt,
-        Bin,
-        Txt
-    }
+/// <summary>
+/// Edit IsSearchable if you want your newly defined ExternalFileExtension to be
+/// marked as searchable.
+/// </summary>
+public enum ExternalFileExtension
+{
+    Xml,
+    Png,
+    Xslt,
+    Bin,
+    Txt
+}
 
-    public static class ExternalFileExtensionTools
+public static class ExternalFileExtensionTools
+{
+    public static bool IsSearchable(this ExternalFileExtension extension)
     {
-        public static bool IsSearchable(this ExternalFileExtension extension)
-        {
             switch (extension)
             {
                 case ExternalFileExtension.Xml:
@@ -73,17 +72,17 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
-        public static bool TryParse(FileInfo fileinfo, out ExternalFileExtension value) => 
-            TryParsePrivate(fileinfo.Extension, out value);
+    public static bool TryParse(FileInfo fileinfo, out ExternalFileExtension value) => 
+        TryParsePrivate(fileinfo.Extension, out value);
 
-        public static bool TryParse(string filePath, out ExternalFileExtension value)
-        {
+    public static bool TryParse(string filePath, out ExternalFileExtension value)
+    {
             string extension = Path.GetExtension(filePath);
             return TryParsePrivate(extension, out value);
         }
 
-        private static bool TryParsePrivate(string extension, out ExternalFileExtension ext)
-        {
+    private static bool TryParsePrivate(string extension, out ExternalFileExtension ext)
+    {
             if (extension == "")
             {
                 ext = ExternalFileExtension.Bin;
@@ -97,5 +96,4 @@ namespace Origam.DA.ObjectPersistence
             ext = parsedExt;
             return parseSucess;
         }
-    }  
 }

@@ -26,95 +26,94 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public enum DataEntityIndexSortOrder
 {
-	public enum DataEntityIndexSortOrder
+	Ascending,
+	Descending
+}
+
+[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
+[HelpTopic("Indexes")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DataEntityIndex : AbstractSchemaItem
+{
+	public DataEntityIndex() {}
+		
+	public DataEntityIndex(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public DataEntityIndex(Key primaryKey) : base(primaryKey)	{}
+
+	public const string CategoryConst = "DataEntityIndex";
+
+	#region Properties
+	private bool _isUnique = false;
+
+	[DefaultValue(false)]
+	[XmlAttribute("unique")]
+	public bool IsUnique
 	{
-		Ascending,
-		Descending
+		get => _isUnique;
+		set => _isUnique = value;
 	}
 
-	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
-    [HelpTopic("Indexes")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DataEntityIndex : AbstractSchemaItem
+	private bool _generateDeploymentScript = true;
+	[Category("Mapping"), DefaultValue(true)]
+	[Description("Indicates if deployment script will be generated for this index. If set to false, this index will be skipped from the deployment scripts generator.")]
+	[XmlAttribute("generateDeploymentScript")]
+	public bool GenerateDeploymentScript
 	{
-		public DataEntityIndex() {}
-		
-		public DataEntityIndex(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataEntityIndex(Key primaryKey) : base(primaryKey)	{}
-
-		public const string CategoryConst = "DataEntityIndex";
-
-		#region Properties
-		private bool _isUnique = false;
-
-		[DefaultValue(false)]
-        [XmlAttribute("unique")]
-        public bool IsUnique
+		get
 		{
-			get => _isUnique;
-			set => _isUnique = value;
-		}
-
-		private bool _generateDeploymentScript = true;
-		[Category("Mapping"), DefaultValue(true)]
-		[Description("Indicates if deployment script will be generated for this index. If set to false, this index will be skipped from the deployment scripts generator.")]
-        [XmlAttribute("generateDeploymentScript")]
-        public bool GenerateDeploymentScript
-		{
-			get
-			{
 				return _generateDeploymentScript;
 			}
-			set
-			{
+		set
+		{
 				_generateDeploymentScript = value;
 			}
-		}
-		#endregion
-		#region Overriden AbstractSchemaItem Members
-		public override bool UseFolders
+	}
+	#endregion
+	#region Overriden AbstractSchemaItem Members
+	public override bool UseFolders
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[]
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataEntityIndexField)
 		};
 
-		public override SchemaItemGroup NewGroup(
-			Guid schemaExtensionId, string groupName)
-		{
+	public override SchemaItemGroup NewGroup(
+		Guid schemaExtensionId, string groupName)
+	{
 			return null;
 		}
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(DataEntityIndexField) ?
 					Name + "Field" + (ChildItems.Count + 1) : null);
 		}
 
-		#endregion
-	}
+	#endregion
 }

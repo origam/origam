@@ -26,39 +26,39 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for ContextStore.
+/// </summary>
+[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 {
-	/// <summary>
-	/// Summary description for ContextStore.
-	/// </summary>
-	[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
-	{
-		public const string CategoryConst = "WorkQueueClassEntityMapping";
+	public const string CategoryConst = "WorkQueueClassEntityMapping";
 
-		public WorkQueueClassEntityMapping() : base() {}
-		public WorkQueueClassEntityMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-		public WorkQueueClassEntityMapping(Key primaryKey) : base(primaryKey)	{}
+	public WorkQueueClassEntityMapping() : base() {}
+	public WorkQueueClassEntityMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public WorkQueueClassEntityMapping(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode.GetType().Equals(this.ParentItem.GetType());
-		#endregion
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode.GetType().Equals(this.ParentItem.GetType());
+	#endregion
 
-		#region Properties
+	#region Properties
 //		public Guid FieldId;
 //
 //		[TypeConverter(typeof(WorkQueueClassEntityMappingFieldConverter))]
@@ -75,20 +75,20 @@ namespace Origam.Schema.WorkflowModel
 //			}
 //		}
 
-		[XmlAttribute ("xPath")]
-		public string XPath { get; set; }
+	[XmlAttribute ("xPath")]
+	public string XPath { get; set; }
 		
-		[XmlAttribute ("formatPattern")]
-		public string FormatPattern { get; set; }
+	[XmlAttribute ("formatPattern")]
+	public string FormatPattern { get; set; }
 
-		[Category("GUI")]
-		[XmlAttribute ("sortOrder")]
-		public int SortOrder { get; set; }
-		#endregion
+	[Category("GUI")]
+	[XmlAttribute ("sortOrder")]
+	public int SortOrder { get; set; }
+	#endregion
 
-		#region IComparable Members
-		public override int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
 			WorkQueueClassEntityMapping compareItem = obj as WorkQueueClassEntityMapping;
 			if(compareItem == null)
             {
@@ -99,6 +99,5 @@ namespace Origam.Schema.WorkflowModel
                 return this.SortOrder.CompareTo(compareItem.SortOrder);
             }
 		}
-		#endregion
-	}
+	#endregion
 }

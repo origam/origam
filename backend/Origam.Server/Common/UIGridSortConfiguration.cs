@@ -40,39 +40,38 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
-{
-    public class UIGridSortConfiguration
-    {
-        private string _field;
-        private string _direction;
+namespace Origam.Server;
 
-        public UIGridSortConfiguration(string field, string direction)
-        {
+public class UIGridSortConfiguration
+{
+    private string _field;
+    private string _direction;
+
+    public UIGridSortConfiguration(string field, string direction)
+    {
             this.Field = field;
             this.Direction = direction;
         }
 
-        public string Field {
-            get
-            {
+    public string Field {
+        get
+        {
                 return _field;
             }
-            set
-            {
+        set
+        {
                 _field = value;
             }
-        }
+    }
 
-        public string Direction {
-            get
-            {
+    public string Direction {
+        get
+        {
                 return _direction;
             }
-            set
-            {
+        set
+        {
                 _direction = value;
             }
-        }
     }
 }

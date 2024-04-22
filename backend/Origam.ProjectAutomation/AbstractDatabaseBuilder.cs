@@ -23,20 +23,20 @@ using Origam.DA.Service;
 using System;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation
-{
-    public abstract class AbstractDatabaseBuilder : AbstractBuilder
-    {
-        AbstractSqlDataService _dataService = null;
+namespace Origam.ProjectAutomation;
 
-        internal AbstractSqlDataService DataService()
-        {
+public abstract class AbstractDatabaseBuilder : AbstractBuilder
+{
+    AbstractSqlDataService _dataService = null;
+
+    internal AbstractSqlDataService DataService()
+    {
             _dataService = null;
             return _dataService;
         }
 
-        internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
-        {
+    internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
+    {
            
                 if (_dataService == null)
                 {
@@ -46,8 +46,8 @@ namespace Origam.ProjectAutomation
             
         }
 
-        internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
-        {
+    internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
+    {
             if (DatabaseType == DatabaseType.MsSql)
             {
                 return new MsSqlDataService();
@@ -59,5 +59,4 @@ namespace Origam.ProjectAutomation
             throw new ArgumentOutOfRangeException("DatabaseType is wrong ",
                             DatabaseType.ToString());
         }
-    }
 }

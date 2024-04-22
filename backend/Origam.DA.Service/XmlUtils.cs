@@ -25,27 +25,27 @@ using System.Xml;
 using Origam.DA.Common;
 using Origam.Schema;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public static class XmlUtils
 {
-    public static class XmlUtils
+    public static Guid? ReadId(XmlNode node)
     {
-        public static Guid? ReadId(XmlNode node)
-        {
             return ReadGuid(node, OrigamFile.IdAttribute);
         }
         
-        public static Guid? ReadParenId(XmlNode node)
-        {
+    public static Guid? ReadParenId(XmlNode node)
+    {
             return ReadGuid(node, OrigamFile.ParentIdAttribute);
         }
         
-        public static Guid? ReadId(XmlReader xmlReader) =>
-            ReadGuid(xmlReader,
-                OrigamFile.IdAttribute,
-                OrigamFile.ModelPersistenceUri);
+    public static Guid? ReadId(XmlReader xmlReader) =>
+        ReadGuid(xmlReader,
+            OrigamFile.IdAttribute,
+            OrigamFile.ModelPersistenceUri);
 
-        public static string ReadNewModelId(XmlFileData xmlFileData)
-        {
+    public static string ReadNewModelId(XmlFileData xmlFileData)
+    {
             return xmlFileData
                                ?.XmlDocument
                                ?.SelectSingleNode("//p:package", xmlFileData.NamespaceManager)
@@ -53,8 +53,8 @@ namespace Origam.DA.Service
                                ?.Value;
         }
 
-        public static string ReadId(XmlFileData xmlFileData)
-        {
+    public static string ReadId(XmlFileData xmlFileData)
+    {
             return xmlFileData
                                ?.XmlDocument
                                ?.SelectSingleNode("package", xmlFileData.NamespaceManager)
@@ -62,9 +62,9 @@ namespace Origam.DA.Service
                                ?.Value;
         }
 
-        private static Guid? ReadGuid(XmlReader xmlReader, 
-            string attrName, string attrNamespace)
-        {
+    private static Guid? ReadGuid(XmlReader xmlReader, 
+        string attrName, string attrNamespace)
+    {
             string result = xmlReader.GetAttribute(
                 attrName,
                 attrNamespace);
@@ -78,8 +78,8 @@ namespace Origam.DA.Service
             }
         }
         
-        private static Guid? ReadGuid(XmlNode node, string attrName)
-        {
+    private static Guid? ReadGuid(XmlNode node, string attrName)
+    {
             if (node?.Attributes == null)  return null;
             XmlAttribute idAtt = 
                 node.Attributes[attrName, OrigamFile.ModelPersistenceUri];
@@ -92,17 +92,16 @@ namespace Origam.DA.Service
             return id;
         }
 
-        public static string ReadType(XmlReader xmlReader)
-        {
+    public static string ReadType(XmlReader xmlReader)
+    {
             return xmlReader.NamespaceURI.Split('/')[3];
         }
 
-        public static OrigamNameSpace[] ReadNamespaces(XmlReader xmlReader)
-        {
+    public static OrigamNameSpace[] ReadNamespaces(XmlReader xmlReader)
+    {
             return Enumerable.Range(0, xmlReader.AttributeCount)
                 .Select(xmlReader.GetAttribute)
                 .Select(OrigamNameSpace.CreateOrGet)
                 .ToArray();
         }
-    }
 }

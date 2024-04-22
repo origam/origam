@@ -45,48 +45,48 @@ using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Service.Core;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for FormGenerator.
+/// </summary>
+/// 
+public class FormGenerator : IDisposable
 {
-	/// <summary>
-	/// Summary description for FormGenerator.
-	/// </summary>
-	/// 
-	public class FormGenerator : IDisposable
+	private enum ProcessPropertyValueOperation {Save, Load}
+
+	private RuleEngine _formRuleEngine = RuleEngine.Create(new Hashtable(), null);
+	private BindingContext _bindContext = new BindingContext();
+	private Hashtable _propertyCache = new Hashtable();
+	private Hashtable _bindings = new Hashtable();
+	private Hashtable _dataConsumers = new Hashtable();
+	private Guid _listDataStructureId = Guid.Empty;
+	private Guid _listDataStructureMethodId = Guid.Empty;
+	private string _listDataMember;
+	private Key _formKey;
+	private Guid _mainDataStructureId;
+	private Guid _mainDataStructureMethodId;
+	private Guid _mainDataStructureDefaultSetId;
+	private Guid _mainDataStructureSortSetId;
+	private FlowLayoutPanel _toolStripContainer;
+
+	private DataStructureSortSet _mainDataStructureSortSet;
+
+	private IDataLookupService _lookupManager;
+	private IServiceAgent _dataServiceAgent;
+	private IDocumentationService _documentationService;
+	private ToolTip _toolTip;
+	private ToolBar _selectionDialogToolbar;
+	private Button _selectionDialogOKButton;
+	private Button _selectionDialogCancelButton;
+	private IEndRule _selectionDialogEndRule;
+	private Hashtable _loadedPieces = new Hashtable();
+	private DatasetRuleHandler _ruleHandler = new DatasetRuleHandler();
+	private readonly IControlsLookUpService _controlsLookupService;
+
+	#region Constructors
+	public FormGenerator()
 	{
-		private enum ProcessPropertyValueOperation {Save, Load}
-
-		private RuleEngine _formRuleEngine = RuleEngine.Create(new Hashtable(), null);
-		private BindingContext _bindContext = new BindingContext();
-		private Hashtable _propertyCache = new Hashtable();
-		private Hashtable _bindings = new Hashtable();
-		private Hashtable _dataConsumers = new Hashtable();
-		private Guid _listDataStructureId = Guid.Empty;
-		private Guid _listDataStructureMethodId = Guid.Empty;
-		private string _listDataMember;
-		private Key _formKey;
-		private Guid _mainDataStructureId;
-		private Guid _mainDataStructureMethodId;
-		private Guid _mainDataStructureDefaultSetId;
-		private Guid _mainDataStructureSortSetId;
-        private FlowLayoutPanel _toolStripContainer;
-
-		private DataStructureSortSet _mainDataStructureSortSet;
-
-		private IDataLookupService _lookupManager;
-		private IServiceAgent _dataServiceAgent;
-		private IDocumentationService _documentationService;
-		private ToolTip _toolTip;
-		private ToolBar _selectionDialogToolbar;
-		private Button _selectionDialogOKButton;
-		private Button _selectionDialogCancelButton;
-        private IEndRule _selectionDialogEndRule;
-		private Hashtable _loadedPieces = new Hashtable();
-		private DatasetRuleHandler _ruleHandler = new DatasetRuleHandler();
-        private readonly IControlsLookUpService _controlsLookupService;
-
-        #region Constructors
-        public FormGenerator()
-		{
 			_lookupManager = ServiceManager.Services.GetService<IDataLookupService>();
             _controlsLookupService  = ServiceManager.Services.GetService<IControlsLookUpService>();
             _documentationService = ServiceManager.Services.GetService<IDocumentationService>() ;
@@ -94,189 +94,189 @@ namespace Origam.Gui.Win
 			    .GetService<IBusinessServicesService>()
 			    .GetAgent("DataService", null, null);
         }
-		#endregion
+	#endregion
 
-		#region Properties
-		public RuleEngine FormRuleEngine
+	#region Properties
+	public RuleEngine FormRuleEngine
+	{
+		get
 		{
-			get
-			{
 				return _formRuleEngine;
 			}
-		}
+	}
 
-		DataSet _mainFormData = null;
-		public DataSet DataSet
+	DataSet _mainFormData = null;
+	public DataSet DataSet
+	{
+		get
 		{
-			get
-			{
 				return _mainFormData;
 			}
-			set
-			{
+		set
+		{
 				_mainFormData = value;
 			}
-		}
-        public IDataDocument XmlData { get; set; } = null;
+	}
+	public IDataDocument XmlData { get; set; } = null;
 
-        public Hashtable ControlBindings
+	public Hashtable ControlBindings
+	{
+		get
 		{
-			get
-			{
 				return _bindings;
 			}
-		}
+	}
 
-		public Hashtable DataConsumers
+	public Hashtable DataConsumers
+	{
+		get
 		{
-			get
-			{
 				return _dataConsumers;
 			}
-		}
+	}
 
-		public BindingContext BindingContext
+	public BindingContext BindingContext
+	{
+		get
 		{
-			get
-			{
 				return _bindContext;
 			}
-		}
+	}
 
-		public Key FormKey
+	public Key FormKey
+	{
+		get
 		{
-			get
-			{
 				return _formKey;
 			}
-		}
+	}
 
-		private bool _ignoreDataChanges = false;
-		public bool IgnoreDataChanges
+	private bool _ignoreDataChanges = false;
+	public bool IgnoreDataChanges
+	{
+		get
 		{
-			get
-			{
 				return _ignoreDataChanges;
 			}
-			set
-			{
+		set
+		{
 				_ignoreDataChanges = value;
 			}
-		}
+	}
 
-		private DataStructureTemplateSet _templateSet;
-		public DataStructureTemplateSet TemplateSet
+	private DataStructureTemplateSet _templateSet;
+	public DataStructureTemplateSet TemplateSet
+	{
+		get
 		{
-			get
-			{
 				return _templateSet;
 			}
-			set
-			{
+		set
+		{
 				_templateSet = value;
 			}
-		}
+	}
 
-		private DataStructureTemplate _defaultTemplate;
-		public DataStructureTemplate DefaultTemplate
+	private DataStructureTemplate _defaultTemplate;
+	public DataStructureTemplate DefaultTemplate
+	{
+		get
 		{
-			get
-			{
 				return _defaultTemplate;
 			}
-			set
-			{
+		set
+		{
 				_defaultTemplate = value;
 			}
-		}
+	}
 
-		private DataStructureRuleSet _ruleSet;
-		public DataStructureRuleSet RuleSet
+	private DataStructureRuleSet _ruleSet;
+	public DataStructureRuleSet RuleSet
+	{
+		get
 		{
-			get
-			{
 				return _ruleSet;
 			}
-			set
-			{
+		set
+		{
 				_ruleSet = value;
 			}
-		}
+	}
 
-		private AsForm _form = null;
-		public AsForm Form
+	private AsForm _form = null;
+	public AsForm Form
+	{
+		get
 		{
-			get
-			{
 				return _form;
 			}
-			set
-			{
+		set
+		{
 				_form = value;
 			}
-		}
+	}
 
-		public Guid MainFormDataStructureId
+	public Guid MainFormDataStructureId
+	{
+		get
 		{
-			get
-			{
 				return _mainDataStructureId;
 			}
-			set
-			{
+		set
+		{
 				_mainDataStructureId = value;
 			}
-		}
+	}
 
-		public Guid MainFormMethodId
+	public Guid MainFormMethodId
+	{
+		get
 		{
-			get
-			{
 				return _mainDataStructureMethodId;
 			}
-			set
-			{
+		set
+		{
 				_mainDataStructureMethodId = value;
 			}
-		}
+	}
 
-		public Guid MainFormSortSetId
+	public Guid MainFormSortSetId
+	{
+		get
 		{
-			get
-			{
 				return _mainDataStructureSortSetId;
 			}
-			set
-			{
+		set
+		{
 				_mainDataStructureSortSetId = value;
 			}
-		}
+	}
 
-	    Hashtable _selectionParameters = new Hashtable();
-		public Hashtable SelectionParameters
+	Hashtable _selectionParameters = new Hashtable();
+	public Hashtable SelectionParameters
+	{
+		get
 		{
-			get
-			{
 				return _selectionParameters;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Public Static Methods
+	#region Public Static Methods
 
 		
-		public static void SavePropertyValue(Control control, PropertyInfo property, PropertyValueItem propertyValueItem)
-		{
+	public static void SavePropertyValue(Control control, PropertyInfo property, PropertyValueItem propertyValueItem)
+	{
 			ProcessPropertyValue(control, property, propertyValueItem,ProcessPropertyValueOperation.Save);
 		}
 
-		public static void LoadPropertyValue(Control control, PropertyInfo property, PropertyValueItem propertyValueItem)
-		{
+	public static void LoadPropertyValue(Control control, PropertyInfo property, PropertyValueItem propertyValueItem)
+	{
 			ProcessPropertyValue(control, property, propertyValueItem, ProcessPropertyValueOperation.Load);
 		}
 		
-		public static string DataMemberFromTable(DataTable table)
-		{
+	public static string DataMemberFromTable(DataTable table)
+	{
 			string result = table.TableName;
 			while(table.ParentRelations.Count > 0)
 			{
@@ -289,8 +289,8 @@ namespace Origam.Gui.Win
 
 		
 
-		public static string FindTableByDisplayMember(DataSet ds, string member)
-		{
+	public static string FindTableByDisplayMember(DataSet ds, string member)
+	{
 			string tableName="";
 
 			if(member.IndexOf(".") > 0)
@@ -310,8 +310,8 @@ namespace Origam.Gui.Win
 
 		}
 
-		public static string GetColumnNameFromDisplayMember (string member)
-		{
+	public static string GetColumnNameFromDisplayMember (string member)
+	{
 			string columnName="";
 			if(member.IndexOf(".") > 0)
 			{
@@ -326,8 +326,8 @@ namespace Origam.Gui.Win
 			return columnName;
 		}
 
-        public static bool DisplayRuleException(IWin32Window window, RuleException ruleEx)
-        {
+	public static bool DisplayRuleException(IWin32Window window, RuleException ruleEx)
+	{
             bool shouldReturn = false;
             if (ruleEx.IsSeverityHigh)
             {
@@ -348,14 +348,14 @@ namespace Origam.Gui.Win
             }
             return shouldReturn;
         }
-        #endregion
+	#endregion
 
-		#region Private Static Methods
-		private static void ProcessPropertyValue(Control control, 
-			PropertyInfo property, 
-			PropertyValueItem propertyValueItem,
-			ProcessPropertyValueOperation action)
-		{
+	#region Private Static Methods
+	private static void ProcessPropertyValue(Control control, 
+		PropertyInfo property, 
+		PropertyValueItem propertyValueItem,
+		ProcessPropertyValueOperation action)
+	{
 			object valueToSet=null;
 
 			//property which are used only for binding (not for saving values from designer) we ignore
@@ -427,40 +427,40 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private static string SerializeValue(object itemPropertyValue, Type type)
-		{
+	private static string SerializeValue(object itemPropertyValue, Type type)
+	{
 			System.Xml.Serialization.XmlSerializer ser  = new System.Xml.Serialization.XmlSerializer(type);
 			System.IO.StringWriter writer = new System.IO.StringWriter();
 			ser.Serialize(writer, itemPropertyValue );
 			return writer.ToString();
 		}
 
-		private static object DeserializeValue(string value, Type type)
-		{
+	private static object DeserializeValue(string value, Type type)
+	{
 			if (string.IsNullOrEmpty(value))
 				return null;
 			System.Xml.Serialization.XmlSerializer ser  = new System.Xml.Serialization.XmlSerializer(type);
 			System.IO.StringReader reader = new System.IO.StringReader(value);
 			return ser.Deserialize(reader);
 		}
-		#endregion
+	#endregion
 
-		#region Public Methods
-        private IDictionary<DataGridColumnStyle, string> _gridTooltips = new Dictionary<DataGridColumnStyle, string>();
-        private IList<Control> _tooltipControls = new List<Control>();
+	#region Public Methods
+	private IDictionary<DataGridColumnStyle, string> _gridTooltips = new Dictionary<DataGridColumnStyle, string>();
+	private IList<Control> _tooltipControls = new List<Control>();
 
-        public void SetTooltip(DataGridColumnStyle style, string tipText)
-        {
+	public void SetTooltip(DataGridColumnStyle style, string tipText)
+	{
             _gridTooltips[style] = tipText;
         }
 
-        public string GetTooltip(DataGridColumnStyle style)
-        {
+	public string GetTooltip(DataGridColumnStyle style)
+	{
             return _gridTooltips[style];
         }
 
-		public void SetTooltip(Control component, string text)
-		{
+	public void SetTooltip(Control component, string text)
+	{
             if (_toolTip == null)
             {
                 return;
@@ -481,8 +481,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        void _toolTip_Popup(object sender, PopupEventArgs e)
-        {
+	void _toolTip_Popup(object sender, PopupEventArgs e)
+	{
             System.Diagnostics.Debug.WriteLine(e.AssociatedControl, "Tooltip");
             IAsCaptionControl captionControl = FindCaptionControl(e.AssociatedControl);
             if (captionControl == null)
@@ -497,8 +497,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        private static IAsCaptionControl FindCaptionControl(Control control)
-        {
+	private static IAsCaptionControl FindCaptionControl(Control control)
+	{
             while (control != null)
             {
                 IAsCaptionControl captionControl = control as IAsCaptionControl;
@@ -511,8 +511,8 @@ namespace Origam.Gui.Win
             return null;
         }
 
-		public void SaveData()
-		{
+	public void SaveData()
+	{
 			if(_mainFormData == null)
 			{
 				return;
@@ -558,8 +558,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void RefreshMainData()
-		{
+	public void RefreshMainData()
+	{
 			ShowProgress(null, ProgressPosition.TopRight, this.Form.NameLabel);
 			try
 			{
@@ -583,8 +583,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void RefreshData()
-		{
+	private void RefreshData()
+	{
             Unbind();
             try
             {
@@ -605,29 +605,28 @@ namespace Origam.Gui.Win
             }
             finally
             {
-                // on lazy loaded form the previously loaded records keep being dirty 
-                // for some reason
+                // on lazy loaded form the previously loaded records keep being dirty 	 // for some reason
                 _mainFormData.AcceptChanges();
                 Bind();
             }
 		}
 
-        private void Bind()
-        {
+	private void Bind()
+	{
             BindControls(_bindings);
             SetDataSourceToConsumers(_dataConsumers);
             SubscribeDataTableEvents();
         }
 
-        private void Unbind()
-        {
+	private void Unbind()
+	{
             UnSubscribeDataTableEvents();
             RemoveDataBindings(_bindings);
             RemoveDataSourcesFromConsumers(_dataConsumers);
         }
 
-		private void ResetTempColumns()
-		{
+	private void ResetTempColumns()
+	{
 			// reset temporary columns
 			foreach(DataTable table in _mainFormData.Tables)
 			{
@@ -641,8 +640,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Control LoadFormWithData(AsForm form, DataSet formData, IDataDocument xmlData, FormControlSet formControlSet)
-		{
+	public Control LoadFormWithData(AsForm form, DataSet formData, IDataDocument xmlData, FormControlSet formControlSet)
+	{
 			this.Form = form;
 
 			Control result = LoadFormWithData(formData, xmlData, formControlSet, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, null);
@@ -650,22 +649,22 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		public AsForm AsyncForm;
-		public FormControlSet AsyncFormControlSet;
-		public Guid AsyncMethodId;
-		public Guid AsyncSortSetId;
-		public Guid AsyncDefaultSetId;
-		public Guid AsyncListDataStructureId;
-		public Guid AsyncListMethodId;
-		public string AsyncListDataMember;
+	public AsForm AsyncForm;
+	public FormControlSet AsyncFormControlSet;
+	public Guid AsyncMethodId;
+	public Guid AsyncSortSetId;
+	public Guid AsyncDefaultSetId;
+	public Guid AsyncListDataStructureId;
+	public Guid AsyncListMethodId;
+	public string AsyncListDataMember;
 
-		public void LoadFormAsync()
-		{
+	public void LoadFormAsync()
+	{
 			this.LoadForm(AsyncForm, AsyncFormControlSet, AsyncMethodId, AsyncSortSetId, AsyncDefaultSetId, AsyncListDataStructureId, AsyncListMethodId, AsyncListDataMember);
 		}
 
-		public void LoadForm(AsForm form, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
-		{
+	public void LoadForm(AsForm form, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
+	{
 			this.Form = form;
 
 			LoadFormWithData(formControlSet, methodId, sortSetId, defaultSetId, listDataStructureId, listMethodId, listDataMember);
@@ -673,8 +672,8 @@ namespace Origam.Gui.Win
 
 		
 
-		public Control LoadSelectionDialog(IDataDocument xmlData, PanelControlSet panelDefinition, IEndRule endRule)
-		{
+	public Control LoadSelectionDialog(IDataDocument xmlData, PanelControlSet panelDefinition, IEndRule endRule)
+	{
 			AsForm sd = new AsForm(this);
 			sd.KeyPreview = true;
 			sd.ShowInTaskbar = false;
@@ -747,8 +746,8 @@ namespace Origam.Gui.Win
             return sd;
 		}
 
-		public Control LoadFormWithData(DataSet formData, IDataDocument xmlData, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
-		{
+	public Control LoadFormWithData(DataSet formData, IDataDocument xmlData, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
+	{
 			if(this.Form != null)
 			{
 				this.Form.SuspendLayout();
@@ -825,14 +824,14 @@ namespace Origam.Gui.Win
 			return control;
 		}
 
-        private void AddToolStripContainer(Control control)
-        {
+	private void AddToolStripContainer(Control control)
+	{
             control.Controls.Add(_toolStripContainer);
             (control as AsForm).ToolStripContainer = _toolStripContainer;
         }
 
-        private void CreateToolStripContainer()
-        {
+	private void CreateToolStripContainer()
+	{
             _toolStripContainer = new FlowLayoutPanel();
             _toolStripContainer.AutoSize = true;
             _toolStripContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -841,8 +840,8 @@ namespace Origam.Gui.Win
             _toolStripContainer.WrapContents = true;
         }
 
-        private void CreateFormLabel(Control control)
-        {
+	private void CreateFormLabel(Control control)
+	{
             Label nameLabel = new Label();
             nameLabel.Left = 0;
             nameLabel.Top = 0;
@@ -858,8 +857,8 @@ namespace Origam.Gui.Win
             (control as AsForm).NameLabel = nameLabel;
         }
 
-        private void CreateNotificationBox(Control control)
-        {
+	private void CreateNotificationBox(Control control)
+	{
             NotificationList notificationBox = new NotificationList();
             notificationBox.Left = 0;
             notificationBox.Top = 0;
@@ -883,15 +882,15 @@ namespace Origam.Gui.Win
             }
         }
 
-		private enum ProgressPosition
-		{
-			TopRight,
-			Center
-		}
+	private enum ProgressPosition
+	{
+		TopRight,
+		Center
+	}
 
-		MRG.Controls.UI.LoadingCircle circ = new MRG.Controls.UI.LoadingCircle();
-		private void ShowProgress(string text, ProgressPosition position, Control parent)
-		{
+	MRG.Controls.UI.LoadingCircle circ = new MRG.Controls.UI.LoadingCircle();
+	private void ShowProgress(string text, ProgressPosition position, Control parent)
+	{
 			if(parent == null) return;
 
 			int top = 0;
@@ -927,8 +926,8 @@ namespace Origam.Gui.Win
 			circ.Active = true;
 		}
 
-		private void HideProgress()
-		{
+	private void HideProgress()
+	{
 			if(! circ.Active) return;
 
 			if(this.Form.ProgressText != "")
@@ -942,8 +941,8 @@ namespace Origam.Gui.Win
 			circ.ParentControl = null;
 		}
 
-		public Control LoadFormWithData(FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
-		{
+	public Control LoadFormWithData(FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
+	{
 			ShowProgress(ResourceUtils.GetString("LoadingData"), ProgressPosition.Center, this.Form);
 
 			_mainDataStructureId = formControlSet.DataSourceId;
@@ -969,8 +968,8 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		public Control LoadControl(ControlSetItem cntrlSet)
-		{
+	public Control LoadControl(ControlSetItem cntrlSet)
+	{
 			UnloadForm(false);
 			Control control;
 
@@ -999,9 +998,9 @@ namespace Origam.Gui.Win
 			return control;
 		}
 		
-		private bool _unloadingForm = false;
-		public void UnloadForm(bool showCurtain)
-		{
+	private bool _unloadingForm = false;
+	public void UnloadForm(bool showCurtain)
+	{
 			//CurtainForm curtain = null;
 			
 			if(showCurtain)
@@ -1034,26 +1033,26 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public DataSet NewRecord(IXmlContainer dataSource)
-		{
+	public DataSet NewRecord(IXmlContainer dataSource)
+	{
 			if(DefaultTemplate == null) return null;
 
 			return TemplateTools.NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
 		}
 
-		public object[] AddTemplateRecord(DataRow parentRow, string dataMember, Guid dataStructureId, DataSet formData)
-		{
+	public object[] AddTemplateRecord(DataRow parentRow, string dataMember, Guid dataStructureId, DataSet formData)
+	{
 			if(this.DefaultTemplate == null) return null;
 
 			return TemplateTools.AddTemplateRecord(parentRow, this.DefaultTemplate, dataMember, dataStructureId, formData);
 		}
 
 
-		#endregion
+	#endregion
 
-		#region Private Methods
-		public static ToolTip InitializeTooltip()
-		{
+	#region Private Methods
+	public static ToolTip InitializeTooltip()
+	{
             ToolTip tooltip = new ToolTip();
             tooltip.UseAnimation = false;
             tooltip.AutoPopDelay = 10000;
@@ -1065,8 +1064,8 @@ namespace Origam.Gui.Win
             return tooltip;
 		}
 
-		private string GetDataMember(DataTable table)
-		{
+	private string GetDataMember(DataTable table)
+	{
 			DataTable parentTable = table;
 			string result = "";
 
@@ -1089,8 +1088,8 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		private void EndInitialization(Control control)
-		{
+	private void EndInitialization(Control control)
+	{
 			foreach(Control child in control.Controls)
 			{
 				EndInitialization(child);
@@ -1102,8 +1101,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void ClearControls(Control control)
-		{
+	private void ClearControls(Control control)
+	{
 			if(control is BaseDropDownControl || control.GetType().FullName == "CrystalDecisions.Windows.Forms.CrystalReportViewer") return;
 
 			ArrayList controls = new ArrayList(control.Controls);
@@ -1152,8 +1151,8 @@ namespace Origam.Gui.Win
 			controls.Clear();
 		}
 
-		private void RemoveDataBindings(Hashtable bindings)
-		{
+	private void RemoveDataBindings(Hashtable bindings)
+	{
 			// remove all bindings
 			foreach(DictionaryEntry entry in bindings)
 			{
@@ -1167,14 +1166,14 @@ namespace Origam.Gui.Win
 			}
 		}
 
-        public static void RemoveBinding(Control control, Binding binding)
-        {
+	public static void RemoveBinding(Control control, Binding binding)
+	{
 			if (control.DataBindings.Count == 0) return;
 			control.DataBindings.Remove(binding); 
         }
 
-		private void RemoveDataSourcesFromConsumers(Hashtable dataConsumers)
-		{
+	private void RemoveDataSourcesFromConsumers(Hashtable dataConsumers)
+	{
 			// remove all references to data sources
 			foreach(DictionaryEntry entry in dataConsumers)
 			{
@@ -1182,13 +1181,13 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void SetDataSourceToConsumers()
-		{
+	public void SetDataSourceToConsumers()
+	{
 			SetDataSourceToConsumers(_dataConsumers);
 		}
 
-		private void SetDataSourceToConsumers(Hashtable dataConsumers)
-		{
+	private void SetDataSourceToConsumers(Hashtable dataConsumers)
+	{
 			this.IgnoreDataChanges = true;
 
 			ArrayList sortedPanels = new ArrayList();
@@ -1266,15 +1265,14 @@ namespace Origam.Gui.Win
 			}
 		}
 		
-		private void ConfigureAsTextBox(AsTextBox textBox, DataColumn column, ErrorProvider errProvider)
-		{
+	private void ConfigureAsTextBox(AsTextBox textBox, DataColumn column, ErrorProvider errProvider)
+	{
 			textBox.Text ="";
 
 			textBox.DataType = column.DataType;
 			//textBox.ErrorInfo.BeepOnError=true;
 			//textBox.ErrorInfo.ErrorAction = ErrorActionEnum.ResetValue;
-			//						
-			//			textBox.NullText = "(Prazdn})";
+			//								//			textBox.NullText = "(Prazdn})";
 			//textBox.AllowDbNull = column.AllowDBNull;
 
 			textBox.TextAlign = HorizontalAlignment.Right;
@@ -1331,20 +1329,20 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void Initialize(Guid version)
-		{
+	private void Initialize(Guid version)
+	{
 			if(version == Guid.Empty)
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorVersionEmpty"));
 		}
 
 
-		public void BindControls()
-		{
+	public void BindControls()
+	{
 			this.BindControls(_bindings);
 		}
 
-        public void BindControls(Control parent)
-        {
+	public void BindControls(Control parent)
+	{
             Hashtable bindings = new Hashtable();
             foreach (DictionaryEntry entry in _bindings)
             {
@@ -1357,8 +1355,8 @@ namespace Origam.Gui.Win
             this.BindControls(bindings);
         }
         
-        private void BindControls(Hashtable bindings)
-		{
+	private void BindControls(Hashtable bindings)
+	{
 			foreach(DictionaryEntry entry in bindings)
 			{
 				if((entry.Key as Control).DataBindings[(entry.Value as Binding).PropertyName] == null)
@@ -1368,8 +1366,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-        public static bool IsChildControl(Control parent, Control control)
-        {
+	public static bool IsChildControl(Control parent, Control control)
+	{
             while (control != null)
             {
                 if (control.Parent == parent)
@@ -1381,9 +1379,9 @@ namespace Origam.Gui.Win
             return false;
         }
 
-		private Control LoadControl(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
-			Hashtable dataConsumers, Control parentControl, bool ignoreTabPages, bool readOnly)
-		{
+	private Control LoadControl(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
+		Hashtable dataConsumers, Control parentControl, bool ignoreTabPages, bool readOnly)
+	{
 			if (!FormTools.IsValid(cntrlSet.Features, cntrlSet.Roles)) return null;
 			readOnly = FormTools.GetReadOnlyStatus(cntrlSet, readOnly);
 
@@ -1433,10 +1431,10 @@ namespace Origam.Gui.Win
 			return cntrl;
 		}
 
-		private void BuildChildItem(
-            string dataMember, Hashtable bindings, Hashtable dataConsumers, 
-            bool readOnly, Control cntrl, ControlSetItem childItem)
-		{
+	private void BuildChildItem(
+		string dataMember, Hashtable bindings, Hashtable dataConsumers, 
+		bool readOnly, Control cntrl, ControlSetItem childItem)
+	{
 			Control addingControl = LoadControl(childItem, dataMember, 
                 bindings, dataConsumers, cntrl, true, readOnly);
 			if (addingControl != null)
@@ -1478,8 +1476,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-	    private void ShowToolStrip(AsPanel panel, string table, ControlSetItem childItem)
-	    {
+	private void ShowToolStrip(AsPanel panel, string table, ControlSetItem childItem)
+	{
 	        ArrayList validActions = new ArrayList();
 	        Guid entityId = new Guid(_mainFormData.Tables[table]
 	            .ExtendedProperties["EntityId"].ToString());
@@ -1496,8 +1494,8 @@ namespace Origam.Gui.Win
 	        }
 	    }
 
-	    private void ShowNavigationPanel(AsPanel panel, string table)
-	    {
+	private void ShowNavigationPanel(AsPanel panel, string table)
+	{
 	        AttachmentHandle(panel);
 
 	        if (_mainDataStructureSortSet != null)
@@ -1516,8 +1514,8 @@ namespace Origam.Gui.Win
 	        }
 	    }
 
-	    private IEnumerable<EntityUIAction> GetChildActions(EntityDropdownAction dropDownAction)
-		{
+	private IEnumerable<EntityUIAction> GetChildActions(EntityDropdownAction dropDownAction)
+	{
 			foreach (var item in dropDownAction.ChildItems)
 			{
 				if (item is EntityUIAction action)
@@ -1527,8 +1525,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void CreatePanelToolStrip(AsPanel panel, ArrayList actions)
-		{
+	private void CreatePanelToolStrip(AsPanel panel, ArrayList actions)
+	{
 			AsForm parentForm = AsyncForm ?? Form;
 			var toolStrip = new LabeledToolStrip(parentForm);
 			toolStrip.Text = panel.PanelTitle;
@@ -1561,8 +1559,8 @@ namespace Origam.Gui.Win
             panel.BindActionButtons();
         }
 
-		private ToolStripItem GetActionButtonInstance(EntityUIAction action)
-		{
+	private ToolStripItem GetActionButtonInstance(EntityUIAction action)
+	{
 			if (action is EntityDropdownAction dropDownAction)
 			{
 				return new ToolStripActionDropDownButton(dropDownAction);
@@ -1570,8 +1568,8 @@ namespace Origam.Gui.Win
 			return new ToolStripActionButton(action);
 		}
 
-		private bool ShouldDockControl(Control c)
-		{
+	private bool ShouldDockControl(Control c)
+	{
 			if(c is AsPanel || c is SplitPanel 
                 || c is TabControl ||  c.GetType().Name == "AsReportPanel"
                 || c is TreeView)
@@ -1582,8 +1580,8 @@ namespace Origam.Gui.Win
 			return false;
 		}
 
-		private void LoadControlDataBindings(Control cntrl, ControlSetItem cntrSetItem, string dataMember, object dataSource, Hashtable bindings, Hashtable dataConsumers)
-		{
+	private void LoadControlDataBindings(Control cntrl, ControlSetItem cntrSetItem, string dataMember, object dataSource, Hashtable bindings, Hashtable dataConsumers)
+	{
 			if(dataMember == null || dataMember.Length < 1)	return;
 
 			DataTable table;
@@ -1646,99 +1644,99 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private Control CreateInstance(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
-			Hashtable dataConsumers, bool readOnly)
+	private Control CreateInstance(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
+		Hashtable dataConsumers, bool readOnly)
+	{
+		Control result = null;
+		string itemDataMember = "";
+
+		if(cntrlSet.ControlItem.IsComplexType)
 		{
-			Control result = null;
-			string itemDataMember = "";
-
-			if(cntrlSet.ControlItem.IsComplexType)
-			{
-				#region complex control
-				PanelControlSet panel = cntrlSet.ControlItem.PanelControlSet;
+			#region complex control
+			PanelControlSet panel = cntrlSet.ControlItem.PanelControlSet;
 				
-				if(panel != null)
-				{
-					itemDataMember = "";
+			if(panel != null)
+			{
+				itemDataMember = "";
 					
-					foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.CategoryConst))
+				foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.CategoryConst))
+				{
+					if(item.ControlPropertyItem.Name == "DataMember")
 					{
-						if(item.ControlPropertyItem.Name == "DataMember")
-						{
-							itemDataMember=item.Value;
-						}
-
-						if(itemDataMember == null)
-						{
-							throw new NullReferenceException(ResourceUtils.GetString("ErrorDataMemberNull", cntrlSet.Name));
-						}
+						itemDataMember=item.Value;
 					}
 
-					//found datamember provide to controlcreation
-					result = LoadControl(FormTools.GetItemFromControlSet(panel), itemDataMember, bindings, dataConsumers, null, true, readOnly);
-					result.Tag = cntrlSet;
-					SetControlProperties(result, readOnly);
-					return result;
+					if(itemDataMember == null)
+					{
+						throw new NullReferenceException(ResourceUtils.GetString("ErrorDataMemberNull", cntrlSet.Name));
+					}
 				}
-				#endregion
+
+				//found datamember provide to controlcreation
+				result = LoadControl(FormTools.GetItemFromControlSet(panel), itemDataMember, bindings, dataConsumers, null, true, readOnly);
+				result.Tag = cntrlSet;
+				SetControlProperties(result, readOnly);
+				return result;
 			}
+			#endregion
+		}
 			
-			if( cntrlSet == null || 
-				cntrlSet.ControlItem == null || 
-				cntrlSet.ControlItem.ControlType == null ||
-				cntrlSet.ControlItem.ControlNamespace == null)
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorParameterNull"), "cntrlSet");
-			}
-
-			if(cntrlSet.ControlItem.ControlType == typeof(AsForm).ToString() && (this.Form != null) )
-			{
-				result = this.Form; 
-			}
-			else
-			{
-				result = Origam.Reflector.InvokeObject(
-					cntrlSet.ControlItem.ControlType,
-					cntrlSet.ControlItem.ControlNamespace) as Control;
-			}
-			
-			if(result == null)
-				throw new NullReferenceException(ResourceUtils.GetString("ErrorUnsupportedType", cntrlSet.ControlItem.ControlType));
-
-			AsPanel panelResult = result as AsPanel;
-			AsForm formResult = result as AsForm;
-
-			if(formResult != null)
-			{
-				formResult.FormGenerator = this;
-			}
-			else if(panelResult != null)
-			{
-				panelResult.Generator = this;
-			}
-            			
-			(result as Control).Tag=cntrlSet;
-
-			//TEST
-			if(result is AsDateBox)
-			{
-				(result as AsDateBox).Format = DateTimePickerFormat.Custom;
-				(result as AsDateBox).CustomFormat = "dd.MMMM yyyy";
-
-			}
-
-			SetControlProperties(result as Control, readOnly);
-
-			if(result is TabControl)
-			{
-				(result as TabControl).SelectedIndexChanged += new EventHandler(FormGenerator_TabPageSelectedIndexChanged);
-			}
-
-			return (result as Control);
+		if( cntrlSet == null || 
+		    cntrlSet.ControlItem == null || 
+		    cntrlSet.ControlItem.ControlType == null ||
+		    cntrlSet.ControlItem.ControlNamespace == null)
+		{
+			throw new ArgumentException(ResourceUtils.GetString("ErrorParameterNull"), "cntrlSet");
 		}
 
-		private PropertyInfo GetPropertyInfo(Type controlType, string propertyName)
+		if(cntrlSet.ControlItem.ControlType == typeof(AsForm).ToString() && (this.Form != null) )
 		{
+			result = this.Form; 
+		}
+		else
+		{
+			result = Origam.Reflector.InvokeObject(
+				cntrlSet.ControlItem.ControlType,
+				cntrlSet.ControlItem.ControlNamespace) as Control;
+		}
+			
+		if(result == null)
+			throw new NullReferenceException(ResourceUtils.GetString("ErrorUnsupportedType", cntrlSet.ControlItem.ControlType));
+
+		AsPanel panelResult = result as AsPanel;
+		AsForm formResult = result as AsForm;
+
+		if(formResult != null)
+		{
+			formResult.FormGenerator = this;
+		}
+		else if(panelResult != null)
+		{
+			panelResult.Generator = this;
+		}
+            			
+		(result as Control).Tag=cntrlSet;
+
+		//TEST
+		if(result is AsDateBox)
+		{
+			(result as AsDateBox).Format = DateTimePickerFormat.Custom;
+			(result as AsDateBox).CustomFormat = "dd.MMMM yyyy";
+
+		}
+
+		SetControlProperties(result as Control, readOnly);
+
+		if(result is TabControl)
+		{
+			(result as TabControl).SelectedIndexChanged += new EventHandler(FormGenerator_TabPageSelectedIndexChanged);
+		}
+
+		return (result as Control);
+	}
+
+	private PropertyInfo GetPropertyInfo(Type controlType, string propertyName)
+	{
 			PropertyInfo result=null;
 			object[] key=new object[2] {controlType, propertyName};
 
@@ -1756,15 +1754,15 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		private void AttachmentHandle(AsPanel panel)
-		{
+	private void AttachmentHandle(AsPanel panel)
+	{
 			if (panel == null) return;
 			
 			panel.ShowAttachmentsChanged += new EventHandler(this.Form.PanelAttachementStateHandler);
 		}
 
-		private void SetControlProperties(Control cntrl, bool readOnly)
-		{
+	private void SetControlProperties(Control cntrl, bool readOnly)
+	{
 //			if(cntrl is ISupportInitialize)
 //			{
 //				(cntrl as ISupportInitialize).BeginInit();
@@ -1856,8 +1854,8 @@ namespace Origam.Gui.Win
 //			}
 		}		
 
-		private PropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind)
-		{
+	private PropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind)
+	{
 			PropertyValueItem result=null;
 			foreach(PropertyValueItem item in controlSetItem.ChildItemsByType("PropertyValueItem"))
 			{
@@ -1870,27 +1868,27 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		private void LoadMainData()
+	private void LoadMainData()
+	{
+		Guid dsId = (_listDataStructureId == Guid.Empty ? _mainDataStructureId : _listDataStructureId);
+		Guid filterId = (_listDataStructureId == Guid.Empty ? _mainDataStructureMethodId : _listDataStructureMethodId);
+		Guid defaultId = (_listDataStructureId == Guid.Empty ? _mainDataStructureDefaultSetId : Guid.Empty);
+		Guid sortSetId = (_listDataStructureId == Guid.Empty ? _mainDataStructureSortSetId : Guid.Empty);
+
+		DataStructureQuery query = new DataStructureQuery(dsId, filterId, defaultId, sortSetId);
+
+		_dataServiceAgent.MethodName = "LoadDataByQuery";
+		_dataServiceAgent.Parameters.Clear();
+		_dataServiceAgent.Parameters.Add("Query", query);
+		// for lazily-loaded initial screen load the list data directly into 
+		// our dataset (without any merge)
+		if (_listDataStructureId != Guid.Empty)
 		{
-			Guid dsId = (_listDataStructureId == Guid.Empty ? _mainDataStructureId : _listDataStructureId);
-			Guid filterId = (_listDataStructureId == Guid.Empty ? _mainDataStructureMethodId : _listDataStructureMethodId);
-			Guid defaultId = (_listDataStructureId == Guid.Empty ? _mainDataStructureDefaultSetId : Guid.Empty);
-			Guid sortSetId = (_listDataStructureId == Guid.Empty ? _mainDataStructureSortSetId : Guid.Empty);
+			SetEmptyData();
+			_dataServiceAgent.Parameters.Add("Data", _mainFormData);
+		}
 
-			DataStructureQuery query = new DataStructureQuery(dsId, filterId, defaultId, sortSetId);
-
-			_dataServiceAgent.MethodName = "LoadDataByQuery";
-			_dataServiceAgent.Parameters.Clear();
-			_dataServiceAgent.Parameters.Add("Query", query);
-			// for lazily-loaded initial screen load the list data directly into 
-			// our dataset (without any merge)
-			if (_listDataStructureId != Guid.Empty)
-			{
-				SetEmptyData();
-				_dataServiceAgent.Parameters.Add("Data", _mainFormData);
-			}
-
-			AddQueryParameters(query);
+		AddQueryParameters(query);
 #if ASYNC
 			SetEmptyData();
 			
@@ -1899,55 +1897,55 @@ namespace Origam.Gui.Win
 			thread.IsBackground = true;
 			thread.Start();
 #else
-			LoadData();
+		LoadData();
 #endif
-		}
+	}
 
-		private void LoadData()
-		{
-			_dataServiceAgent.Run();
+	private void LoadData()
+	{
+		_dataServiceAgent.Run();
 
-			DataSet result = _dataServiceAgent.Result as DataSet;
+		DataSet result = _dataServiceAgent.Result as DataSet;
 
 #if ASYNC
 			UnSubscribeDataTableEvents();
 			_mainFormData.Merge(result);
 			SubscribeDataTableEvents();
 #else
-			if(_listDataStructureId == Guid.Empty)
+		if(_listDataStructureId == Guid.Empty)
+		{
+			_mainFormData = result;
+
+			bool selfJoinExists = false;
+			foreach(DataRelation r in result.Relations)
 			{
-				_mainFormData = result;
-
-				bool selfJoinExists = false;
-				foreach(DataRelation r in result.Relations)
+				if(r.ParentTable.Equals(r.ChildTable))
 				{
-					if(r.ParentTable.Equals(r.ChildTable))
-					{
-						selfJoinExists = true;
-						break;
-					}
-				}
-
-				if(! selfJoinExists)
-				{
-					// no XML for self joins (incompatible with XmlDataDocument)
-					XmlData = DatasetToXml(result);
-				}
-				else
-				{
-					// but sort columns must be here, even though there is no xml
-					DatasetTools.AddSortColumns(result);
+					selfJoinExists = true;
+					break;
 				}
 			}
+
+			if(! selfJoinExists)
+			{
+				// no XML for self joins (incompatible with XmlDataDocument)
+				XmlData = DatasetToXml(result);
+			}
+			else
+			{
+				// but sort columns must be here, even though there is no xml
+				DatasetTools.AddSortColumns(result);
+			}
+		}
 #endif
 
-			DatasetGenerator.ApplyDynamicDefaults(_mainFormData, this.SelectionParameters);
+		DatasetGenerator.ApplyDynamicDefaults(_mainFormData, this.SelectionParameters);
 
-			_loadedPieces.Clear();
-		}
+		_loadedPieces.Clear();
+	}
 
-		private void SetEmptyData()
-		{
+	private void SetEmptyData()
+	{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			DataStructure ds = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(_mainDataStructureId)) as DataStructure;
 			DataStructureDefaultSet defaultSet = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructureDefaultSet), new ModelElementKey(_mainDataStructureDefaultSetId)) as DataStructureDefaultSet;
@@ -1957,23 +1955,23 @@ namespace Origam.Gui.Win
 			XmlData = DatasetToXml(data);
 		}
 
-		public static IDataDocument DatasetToXml(DataSet data)
-		{
+	public static IDataDocument DatasetToXml(DataSet data)
+	{
 			DatasetTools.AddSortColumns(data);
 
 			return DataDocumentFactory.New(data);
 		}
 
-		private void AddQueryParameters(DataStructureQuery query)
-		{
+	private void AddQueryParameters(DataStructureQuery query)
+	{
 			foreach(DictionaryEntry entry in this.SelectionParameters)
 			{
 				query.Parameters.Add(new QueryParameter((string)entry.Key, entry.Value));
 			}
 		}
 
-		private void SubscribeDataTableEvents()
-		{
+	private void SubscribeDataTableEvents()
+	{
 			foreach(DataTable table in _mainFormData.Tables)
 			{
 				table.RowChanged -= new DataRowChangeEventHandler(table_RowChanged);
@@ -1985,8 +1983,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void UnSubscribeDataTableEvents()
-		{
+	private void UnSubscribeDataTableEvents()
+	{
 			if(_mainFormData != null)
 			{
 				foreach(DataTable table in _mainFormData.Tables)
@@ -1997,23 +1995,23 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-	    private void RemoveNullConstraints()
-	    {
+	private void RemoveNullConstraints()
+	{
 	        _mainFormData.RemoveNullConstraints();
 	    }
        
 	
-		#endregion
+	#endregion
 
-		#region Event Handlers
-		/// <summary>
-		/// Delayed control loading. After tab page is displayed for the first time,
-		/// its child controls get loaded on the form.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void FormGenerator_TabPageSelectedIndexChanged(object sender, EventArgs e)
-		{
+	#region Event Handlers
+	/// <summary>
+	/// Delayed control loading. After tab page is displayed for the first time,
+	/// its child controls get loaded on the form.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void FormGenerator_TabPageSelectedIndexChanged(object sender, EventArgs e)
+	{
 			if(_disposing | _unloadingForm) return;
 
 			TabPage page = (sender as TabControl).SelectedTab;
@@ -2022,8 +2020,8 @@ namespace Origam.Gui.Win
 			page.SelectNextControl(page, true, true, true, true);
 		}
 
-		internal void table_rowCopied(DataRow row, IDataDocument document)
-		{
+	internal void table_rowCopied(DataRow row, IDataDocument document)
+	{
 			try
 			{
 				_ruleHandler.OnRowCopied(row, document, this.RuleSet, _formRuleEngine);
@@ -2034,8 +2032,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		internal void table_RowChanged(object sender, DataRowChangeEventArgs e)
-		{
+	internal void table_RowChanged(object sender, DataRowChangeEventArgs e)
+	{
 			if (this.IgnoreDataChanges || !ValidateChanges(e))
 			{
                 return;
@@ -2051,16 +2049,16 @@ namespace Origam.Gui.Win
 			}
 		}
 
-        private bool ValidateChanges(DataRowChangeEventArgs e)
-        {
+	private bool ValidateChanges(DataRowChangeEventArgs e)
+	{
             OrigamDataRow row = e.Row as OrigamDataRow;
             bool retVal = row.HasColumnWithValidChange();
             row.ResetColumnsWithValidChange();
             return retVal;
         }
 
-		internal void table_RowDeleted(DataRow[] parentRows, DataRow deletedRow)
-		{
+	internal void table_RowDeleted(DataRow[] parentRows, DataRow deletedRow)
+	{
 			if(this.IgnoreDataChanges) return;
 
 			this.Form.IsDirty = true;	
@@ -2075,18 +2073,18 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void table_ColumnChanging(
-            object sender, DataColumnChangeEventArgs e)
-		{
+	private void table_ColumnChanging(
+		object sender, DataColumnChangeEventArgs e)
+	{
 		    if (!IgnoreDataChanges && !e.Row[e.Column].Equals(e.ProposedValue))
 		    {
 		        (e.Row as OrigamDataRow).AddColumnWithValidChange(e.Column);
 		    }
 		}
 
-		private void table_ColumnChanged(
-            object sender, DataColumnChangeEventArgs e)
-		{
+	private void table_ColumnChanged(
+		object sender, DataColumnChangeEventArgs e)
+	{
             if (this.IgnoreDataChanges
             || !(e.Row as OrigamDataRow).IsColumnWithValidChange(e.Column))
             {
@@ -2106,14 +2104,14 @@ namespace Origam.Gui.Win
                     + "'", ex);
 			}
 		}
-		#endregion
+	#endregion
 
-		#region IDisposable Members
+	#region IDisposable Members
 
-		private bool _disposing = false;
+	private bool _disposing = false;
 
-	    public void Dispose()
-		{
+	public void Dispose()
+	{
 			_disposing = true;
 			if(_selectionDialogToolbar != null)
 			{
@@ -2162,10 +2160,10 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		#endregion
+	#endregion
 
-		private void selectionDialogToolbar_Click(object sender, ToolBarButtonClickEventArgs e)
-		{
+	private void selectionDialogToolbar_Click(object sender, ToolBarButtonClickEventArgs e)
+	{
 			switch(e.Button.Tag.ToString())
 			{
 				case "OK":
@@ -2177,8 +2175,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void selectionDialogOKButton_Click(object sender, EventArgs e)
-		{
+	private void selectionDialogOKButton_Click(object sender, EventArgs e)
+	{
             this.Form.EndCurrentEdit();
             if (_selectionDialogEndRule != null)
             {
@@ -2205,14 +2203,14 @@ namespace Origam.Gui.Win
 			this.Form.Close();
 		}
 
-		private void selectionDialogCancelButton_Click(object sender, EventArgs e)
-		{
+	private void selectionDialogCancelButton_Click(object sender, EventArgs e)
+	{
 			this.Form.DialogResult = DialogResult.Cancel;
 			this.Form.Close();
 		}
 
-		public bool LoadDataPiece(object id, string dataMember)
-		{
+	public bool LoadDataPiece(object id, string dataMember)
+	{
 			if(dataMember == _listDataMember && id != null && !(id is Guid && (Guid)id == Guid.Empty))
 			{
 				if(_loadedPieces.Contains(id)) return false;
@@ -2224,8 +2222,7 @@ namespace Origam.Gui.Win
 				{
                     UnSubscribeDataTableEvents();
                     // unbinding completely makes grid not completing navigation
-                    // e.g. when clicking on keyboard cursor down arrow it loads next 
-                    // record but fails navigating there
+                    // e.g. when clicking on keyboard cursor down arrow it loads next 	 // record but fails navigating there
 
 					DataStructureQuery query = new DataStructureQuery(_mainDataStructureId, _mainDataStructureMethodId);
 
@@ -2312,6 +2309,4 @@ namespace Origam.Gui.Win
 				return false;
 			}
 		}
-	}
 }
-

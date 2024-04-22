@@ -26,33 +26,32 @@ using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public class ExecuteActionProcessData
 {
-    public class ExecuteActionProcessData
-    {
-        public string SessionFormIdentifier { get; set; }
+    public string SessionFormIdentifier { get; set; }
 
-        public string RequestingGrid { get; set; }
+    public string RequestingGrid { get; set; }
 
-        public string ActionId { get; set; }
+    public string ActionId { get; set; }
 
-        public string Entity { get; set; }
+    public string Entity { get; set; }
 
-        public List<string> SelectedIds { get; set; }
+    public List<string> SelectedIds { get; set; }
 
-        public PanelActionType Type { get; set; }
+    public PanelActionType Type { get; set; }
 
-        public UserProfile Profile { get; } = new UserProfile();
+    public UserProfile Profile { get; } = new UserProfile();
 
-        public DataTable DataTable { get; set; }
+    public DataTable DataTable { get; set; }
 
-        public IList<DataRow> SelectedRows { get; set; }
+    public IList<DataRow> SelectedRows { get; set; }
 
-        public IParameterService ParameterService { get; set; }
+    public IParameterService ParameterService { get; set; }
 
-        public EntityUIAction Action { get; set; } = null;
+    public EntityUIAction Action { get; set; } = null;
 
-        public Hashtable Parameters { get; set; } = new Hashtable();
-        public bool IsModalDialog { get; set; }
-    }
+    public Hashtable Parameters { get; set; } = new Hashtable();
+    public bool IsModalDialog { get; set; }
 }

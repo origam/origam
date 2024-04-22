@@ -25,15 +25,15 @@ using System.Net.Mail;
 using System.Text;
 using Origam.Extensions;
 
-namespace Origam.Mail
+namespace Origam.Mail;
+
+public static class MailLogUtils
 {
-    public static class MailLogUtils
-    {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
-        public static void SendMessageAndLog(SmtpClient client, MailMessage message)
-        {
+    public static void SendMessageAndLog(SmtpClient client, MailMessage message)
+    {
             if (log.IsDebugEnabled)
             {
                 log.RunHandled(() =>
@@ -47,8 +47,8 @@ namespace Origam.Mail
             log.Debug("Mail sent");
         }
 
-        public static string ToLogString(SmtpClient client)
-        {
+    public static string ToLogString(SmtpClient client)
+    {
             StringBuilder builder = new StringBuilder();
             builder.Append($"System.Net.Mail.SmtpClient:\n");
             builder.Append($"\tHost: {client.Host}\n");
@@ -68,8 +68,8 @@ namespace Origam.Mail
             return builder.ToString();
         }
         
-        public static string ToLogString(MailMessage message)
-        {
+    public static string ToLogString(MailMessage message)
+    {
             StringBuilder builder = new StringBuilder();
             builder.Append($"System.Net.Mail.MailMessage:\n");
             builder.Append($"\tSubject: {message.Subject}\n");
@@ -93,19 +93,18 @@ namespace Origam.Mail
             return builder.ToString();
         }
 
-        private static string HeadersToString(NameValueCollection headers)
-        {
+    private static string HeadersToString(NameValueCollection headers)
+    {
             return $"Headers: [{string.Join(", ", headers.AllKeys.Select(key=> key+": "+headers[key]))}]";
         }
 
-        private static string AddressesToString(MailAddressCollection mails)
-        {
+    private static string AddressesToString(MailAddressCollection mails)
+    {
             return $"[{string.Join(", ", mails.Select(x => x.Address))}]";
         }
 
-        private static string AddIndents(string message)
-        {
+    private static string AddIndents(string message)
+    {
             return string.Join("\n", message.Split('\n').Select(x=>"\t\t"+x));
         }
-    }
 }

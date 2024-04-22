@@ -24,75 +24,71 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ColumnParameterMapping : AbstractSchemaItem
 {
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class ColumnParameterMapping : AbstractSchemaItem
+	public const string CategoryConst = "ColumnParameterMapping";
+
+	public ColumnParameterMapping() : base() {}
+		
+	public ColumnParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public ColumnParameterMapping(Key primaryKey) : base(primaryKey) {}
+
+	#region Properties
+
+	private string _columnName;
+		
+	[XmlAttribute("field")]
+	public string ColumnName
 	{
-		public const string CategoryConst = "ColumnParameterMapping";
-
-		public ColumnParameterMapping() : base() {}
-		
-		public ColumnParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ColumnParameterMapping(Key primaryKey) : base(primaryKey) {}
-
-		#region Properties
-
-		private string _columnName;
-		
-        [XmlAttribute("field")]
-		public string ColumnName
+		get
 		{
-			get
-			{
 				return _columnName;
 			}
-			set
-			{
+		set
+		{
 				_columnName = value;
                 				
 			}
-		}
+	}
 
-		//Schema item Name stores ParameterName
+	//Schema item Name stores ParameterName
 
 		
 
 
-		#endregion
+	#endregion
            
 
-		#region Overriden AbstractSchemaItem Members
-		public override string Icon
+	#region Overriden AbstractSchemaItem Members
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "3";
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return ColumnParameterMapping.CategoryConst;
 			}
-		}
+	}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion			
+	}
+	#endregion			
 	
 
-	}
 }
-
-    
-

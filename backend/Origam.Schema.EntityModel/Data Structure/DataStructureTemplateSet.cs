@@ -25,34 +25,34 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+[SchemaItemDescription("Template Set", "Template Sets", 
+	"icon_template-set.png")]
+[HelpTopic("Template+Sets")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DataStructureTemplateSet : AbstractSchemaItem
 {
-	[SchemaItemDescription("Template Set", "Template Sets", 
-        "icon_template-set.png")]
-    [HelpTopic("Template+Sets")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DataStructureTemplateSet : AbstractSchemaItem
-	{
-		public const string CategoryConst = "DataStructureTemplateSet";
+	public const string CategoryConst = "DataStructureTemplateSet";
 
-		public DataStructureTemplateSet() {}
+	public DataStructureTemplateSet() {}
 
-		public DataStructureTemplateSet(Key primaryKey) 
-			: base(primaryKey)	{}
+	public DataStructureTemplateSet(Key primaryKey) 
+		: base(primaryKey)	{}
 
-		public DataStructureTemplateSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataStructureTemplateSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	
-		#region Properties
-		[Browsable(false)]
-		public ArrayList Templates => ChildItemsByType(
-			DataStructureTemplate.CategoryConst);
+	#region Properties
+	[Browsable(false)]
+	public ArrayList Templates => ChildItemsByType(
+		DataStructureTemplate.CategoryConst);
 
-		#endregion
+	#endregion
 
-		#region Public Methods
-		public ArrayList TemplatesByDataMember(string dataMember)
-		{
+	#region Public Methods
+	public ArrayList TemplatesByDataMember(string dataMember)
+	{
 			var result = new ArrayList();
 			foreach(DataStructureTemplate template in Templates)
 			{
@@ -63,31 +63,30 @@ namespace Origam.Schema.EntityModel
 			}
 			return result;
 		}
-		#endregion
+	#endregion
 
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override bool UseFolders => false;
+	public override bool UseFolders => false;
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataStructureTransformationTemplate)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(DataStructureTransformationTemplate) ?
 				"NewTransformationTemplate" : null);
 		}
 
-		#endregion
-	}
+	#endregion
 }

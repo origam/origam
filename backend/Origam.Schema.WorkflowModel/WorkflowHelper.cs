@@ -27,16 +27,16 @@ using Origam.Schema.EntityModel;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+public static class WorkflowHelper
 {
-	public static class WorkflowHelper
+	public static ServiceMethodCallTask CreateServiceMethodCallTask(
+		ContextStore contextStore, 
+		string serviceName, 
+		string methodName, 
+		bool persist)
 	{
-		public static ServiceMethodCallTask CreateServiceMethodCallTask(
-			ContextStore contextStore, 
-			string serviceName, 
-			string methodName, 
-			bool persist)
-		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var serviceSchemaItemProvider 
@@ -69,12 +69,12 @@ namespace Origam.Schema.WorkflowModel
 			return serviceMethodCallTask;
 		}
 
-		public static ContextReference CreateContextReference(
-			AbstractSchemaItem parentItem, 
-			ContextStore contextStore, 
-			string xpath, 
-			bool persist)
-		{
+	public static ContextReference CreateContextReference(
+		AbstractSchemaItem parentItem, 
+		ContextStore contextStore, 
+		string xpath, 
+		bool persist)
+	{
 			var schemaService = ServiceManager.Services
 				.GetService<ISchemaService>();
 			var contextReference = parentItem.NewItem<ContextReference>(
@@ -88,11 +88,11 @@ namespace Origam.Schema.WorkflowModel
 			return contextReference;
 		}
 
-		public static WorkflowTaskDependency CreateTaskDependency(
-			IWorkflowStep step, 
-			IWorkflowStep dependencyStep, 
-			bool persist)
-		{
+	public static WorkflowTaskDependency CreateTaskDependency(
+		IWorkflowStep step, 
+		IWorkflowStep dependencyStep, 
+		bool persist)
+	{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var workflowTaskDependency = step.NewItem<WorkflowTaskDependency>(
@@ -105,9 +105,9 @@ namespace Origam.Schema.WorkflowModel
 			return workflowTaskDependency;
 		}
 
-		public static ServiceMethodCallTask CreateDataServiceLoadDataTask(
-			ContextStore contextStore, bool persist)
-		{
+	public static ServiceMethodCallTask CreateDataServiceLoadDataTask(
+		ContextStore contextStore, bool persist)
+	{
 			if(!(contextStore.Structure is DataStructure dataStructure))
 			{
 				throw new ArgumentOutOfRangeException(@"Structure", 
@@ -126,9 +126,9 @@ namespace Origam.Schema.WorkflowModel
 			return serviceMethodCallTask;
 		}
 
-		public static ServiceMethodCallTask CreateDataServiceStoreDataTask(
-			ContextStore contextStore, bool persist)
-		{
+	public static ServiceMethodCallTask CreateDataServiceStoreDataTask(
+		ContextStore contextStore, bool persist)
+	{
 			if(!(contextStore.Structure is DataStructure structure))
 			{
 				throw new ArgumentOutOfRangeException(
@@ -158,10 +158,10 @@ namespace Origam.Schema.WorkflowModel
 			return serviceMethodCallTask;
 		}
 
-		public static ServiceMethodCallTask 
-			CreateDataTransformationServiceTransformTask(
-				ContextStore contextStore, bool persist)
-		{
+	public static ServiceMethodCallTask 
+		CreateDataTransformationServiceTransformTask(
+			ContextStore contextStore, bool persist)
+	{
 			var serviceMethodCallTask = CreateServiceMethodCallTask(
 				contextStore, "DataTransformationService", "Transform", 
 				persist);
@@ -179,11 +179,11 @@ namespace Origam.Schema.WorkflowModel
 			return serviceMethodCallTask;
 		}
 
-		public static WorkQueueClass CreateWorkQueueClass(
-            IDataEntity entity, 
-            ICollection fields, 
-            IList<AbstractSchemaItem> generatedElements)
-		{
+	public static WorkQueueClass CreateWorkQueueClass(
+		IDataEntity entity, 
+		ICollection fields, 
+		IList<AbstractSchemaItem> generatedElements)
+	{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var workQueueProvider = schemaService
@@ -286,8 +286,8 @@ namespace Origam.Schema.WorkflowModel
             return workQueueClass;
 		}
 
-		private static string DecodeWorkQueueFieldName(OrigamDataType dataType)
-		{
+	private static string DecodeWorkQueueFieldName(OrigamDataType dataType)
+	{
 			switch(dataType)
 			{
 				case OrigamDataType.Blob:
@@ -315,9 +315,9 @@ namespace Origam.Schema.WorkflowModel
 				ResourceUtils.GetString("ErrorWorkQueueWizardUnknownType"));
 		}
 
-		public static void GenerateWorkQueueClassEntityMappings(
-			WorkQueueClass workQueueClass)
-		{
+	public static void GenerateWorkQueueClassEntityMappings(
+		WorkQueueClass workQueueClass)
+	{
 			var schemaService = ServiceManager.Services
 				.GetService<ISchemaService>();
 			foreach(WorkQueueClassEntityMapping workQueueClassEntityMapping 
@@ -373,5 +373,4 @@ namespace Origam.Schema.WorkflowModel
 
 			}
 		}
-	}
 }

@@ -23,15 +23,15 @@ using System;
 using System.Xml;
 using System.Globalization;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for DateBoxBuilder.
+/// </summary>
+public class DateBoxBuilder
 {
-	/// <summary>
-	/// Summary description for DateBoxBuilder.
-	/// </summary>
-	public class DateBoxBuilder
+	public static void Build(XmlElement propertyElement, string format, string customFormat)
 	{
-		public static void Build(XmlElement propertyElement, string format, string customFormat)
-		{
 			string pattern;
 			CultureInfo culture = CultureInfo.CurrentCulture;
 
@@ -85,8 +85,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			propertyElement.SetAttribute("FormatterPattern", pattern);
 		}
 
-		private static string AddDayName(string netPattern)
-		{
+	private static string AddDayName(string netPattern)
+	{
 			if(netPattern.IndexOf("ddd") == -1)
 			{
 				return "ddd " + netPattern;
@@ -94,5 +94,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			return netPattern;
 		}
-	}
 }

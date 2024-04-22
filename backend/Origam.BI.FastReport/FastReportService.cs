@@ -28,13 +28,13 @@ using FastReport.Export.PdfSimple;
 using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 
-namespace Origam.BI.FastReport
+namespace Origam.BI.FastReport;
+
+public class FastReportService : IReportService
 {
-    public class FastReportService : IReportService
+    public object GetReport(Guid reportId, IXmlContainer data, 
+        string format, Hashtable parameters, string dbTransaction)
     {
-        public object GetReport(Guid reportId, IXmlContainer data, 
-            string format, Hashtable parameters, string dbTransaction)
-        {
             var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
             IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
                 report, data, parameters, dbTransaction);
@@ -89,20 +89,19 @@ namespace Origam.BI.FastReport
             }
         }
 
-        public string PrepareExternalReportViewer(Guid reportId,
-            IXmlContainer data, string format, Hashtable parameters,
-            string dbTransaction)
-        {
+    public string PrepareExternalReportViewer(Guid reportId,
+        IXmlContainer data, string format, Hashtable parameters,
+        string dbTransaction)
+    {
             throw new NotImplementedException();
         }
 
-        public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
-        {
+    public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+    {
             throw new NotImplementedException();
         }
 
-        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-        {
+    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+    {
         }
-    }
 }

@@ -24,38 +24,37 @@ using System;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
-	{
-		public HorizontalContainerDashboardWidget() : base() {Init();}
-		public HorizontalContainerDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public HorizontalContainerDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+namespace Origam.Schema.GuiModel;
 
-		private void Init()
-		{
+[SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
+[ClassMetaVersion("6.0.0")]
+public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
+{
+	public HorizontalContainerDashboardWidget() : base() {Init();}
+	public HorizontalContainerDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public HorizontalContainerDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
+	{
 		}
 		
-		public override System.Collections.ArrayList Properties
+	public override System.Collections.ArrayList Properties
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-		}
+	}
 
 
-		#region Properties
-		public override string ItemType
+	#region Properties
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-
-		#endregion			
 	}
+
+	#endregion			
 }

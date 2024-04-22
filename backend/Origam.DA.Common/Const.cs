@@ -19,38 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA
+namespace Origam.DA;
+
+/// <summary>
+/// Summary description for Const.
+/// </summary>
+public class Const
 {
-	/// <summary>
-	/// Summary description for Const.
-	/// </summary>
-	public class Const
-	{
 
-		public static string DefaultLookupIdAttribute = "DefaultLookupId";
-		public static string EntityAuditingAttribute = "IsAuditingEnabled";
-		public static string IsDatabaseField = "IsDatabaseField";
-        public static string AuditingSecondReferenceKeyColumnAttribute = "AuditingSecondReferenceKeyColumn";
-		public static string TemporaryColumnAttribute = "TemporaryColumn";
-		public static string TemporaryColumnInitializedAttribute = "TemporaryColumnInitialized";
-		public static string IsAddittionalFieldAttribute = "IsAddittionalField";
-		//		public static string TemporaryColumnLookupAttribute = "TemporaryColumnLookupId";
-		public static string DataRefreshedAttribute = "DataRefrehsed";
+	public static string DefaultLookupIdAttribute = "DefaultLookupId";
+	public static string EntityAuditingAttribute = "IsAuditingEnabled";
+	public static string IsDatabaseField = "IsDatabaseField";
+	public static string AuditingSecondReferenceKeyColumnAttribute = "AuditingSecondReferenceKeyColumn";
+	public static string TemporaryColumnAttribute = "TemporaryColumn";
+	public static string TemporaryColumnInitializedAttribute = "TemporaryColumnInitialized";
+	public static string IsAddittionalFieldAttribute = "IsAddittionalField";
+	//		public static string TemporaryColumnLookupAttribute = "TemporaryColumnLookupId";
+	public static string DataRefreshedAttribute = "DataRefrehsed";
 		
-		public static string ValuelistIdField	= "Id";
-		public static string ValuelistTextField	= "Text";
+	public static string ValuelistIdField	= "Id";
+	public static string ValuelistTextField	= "Text";
 
-		public static string OriginalLookupIdAttribute = "OriginalLookupId";
-		public static string OriginalFieldId = "OriginalFieldId";
+	public static string OriginalLookupIdAttribute = "OriginalLookupId";
+	public static string OriginalFieldId = "OriginalFieldId";
         
-		public static string ArrayRelation = "ArrayRelation";
-		public static string ArrayRelationField = "ArrayRelationField";
-		public static string OrigamDataType = "OrigamDataType";
-		public static string FieldId = "FieldId";
-		public static string DescribingField = "DescribingField";
-		public static string IsWriteOnlyAttribute = "IsWriteOnly";
-        public static string HasAggregation = "HasAggregation";
-        public Const(){}
+	public static string ArrayRelation = "ArrayRelation";
+	public static string ArrayRelationField = "ArrayRelationField";
+	public static string OrigamDataType = "OrigamDataType";
+	public static string FieldId = "FieldId";
+	public static string DescribingField = "DescribingField";
+	public static string IsWriteOnlyAttribute = "IsWriteOnly";
+	public static string HasAggregation = "HasAggregation";
+	public Const(){}
 		
-	}
 }

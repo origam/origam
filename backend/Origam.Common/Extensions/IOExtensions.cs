@@ -26,12 +26,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class IOExtensions
 {
-    public static class IOExtensions
+    public static byte[] GetFileHash(this FileInfo fileInfo)
     {
-        public static byte[] GetFileHash(this FileInfo fileInfo)
-        {
             using (MD5 md5 = MD5.Create())
             {
                 Exception lastException = null;
@@ -58,19 +58,19 @@ namespace Origam.Extensions
             }
         }
 
-        public static bool ExistsNow(this FileInfo file)
-        {
+    public static bool ExistsNow(this FileInfo file)
+    {
             return File.Exists(file.FullName);
         }
 
-        public static string GetFileBase64Hash(this FileInfo fileInfo)
-        {
+    public static string GetFileBase64Hash(this FileInfo fileInfo)
+    {
             return Convert.ToBase64String(GetFileHash(fileInfo));
         }
 
-        public static IEnumerable<DirectoryInfo> GetAllSubDirectories(
-            this DirectoryInfo directory)
-        {
+    public static IEnumerable<DirectoryInfo> GetAllSubDirectories(
+        this DirectoryInfo directory)
+    {
             foreach (DirectoryInfo directoryInfo in directory.GetDirectories())
             {
                 yield return directoryInfo;
@@ -82,27 +82,27 @@ namespace Origam.Extensions
             }
         }
 
-        public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
-        {
+    public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
+    {
             return !directory.Contains(fileName);
         }
 
-        public static bool Contains(this DirectoryInfo directory, string fileName)
-        {
+    public static bool Contains(this DirectoryInfo directory, string fileName)
+    {
             return directory.Contains(file => file.Name == fileName);
         }
 
 
-        public static bool Contains(this DirectoryInfo directory, Func<FileInfo,bool> predicate)
-        {
+    public static bool Contains(this DirectoryInfo directory, Func<FileInfo,bool> predicate)
+    {
             return directory
                 .GetFiles()
                 .Any(predicate);
         }
 
-        public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(
-            this DirectoryInfo directory)
-        {
+    public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(
+        this DirectoryInfo directory)
+    {
             foreach (FileInfo fileInfo in directory.GetFiles())
             {
                 yield return fileInfo;
@@ -117,21 +117,21 @@ namespace Origam.Extensions
             }
         }
 
-        public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
-            DirectoryInfo other)
-        {
+    public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
+        DirectoryInfo other)
+    {
             return IsOnPathOf(thisDirInfo.FullName, other.FullName);
         }
 
-        public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
-            string otherPath)
-        {
+    public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
+        string otherPath)
+    {
             return IsOnPathOf(thisDirInfo.FullName, otherPath);
         }
 
-        private static bool IsOnPathOf(string path,
-            string otherPath)
-        {
+    private static bool IsOnPathOf(string path,
+        string otherPath)
+    {
             string[] otherDirNames =
                 otherPath.Split(Path.DirectorySeparatorChar);
 
@@ -145,8 +145,8 @@ namespace Origam.Extensions
                 .Any();
         }
 
-        public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
-        {
+    public static void DeleteAllIncludingReadOnly(this DirectoryInfo dir)
+    {
             if (!dir.Exists) return;
             foreach (FileInfo file in dir.GetAllFilesInSubDirectories())
             {
@@ -157,13 +157,12 @@ namespace Origam.Extensions
             dir.Delete(true);
         }
 
-        public static FileInfo MakeNew( this FileInfo file, string newExtension)
-        {
+    public static FileInfo MakeNew( this FileInfo file, string newExtension)
+    {
             int extensionLength = file.Extension.Length;
             int fullNameLength = file.FullName.Length;
             string baseName = file.FullName.Substring(0,
                 fullNameLength - extensionLength);
             return new FileInfo(baseName + "." + newExtension);  
         }
-    }
 }

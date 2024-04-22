@@ -30,40 +30,40 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
-{
-    /// <summary>
-    /// Summary description for AbstractWorkflowStep.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.2")]
-    public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
-	{															
-		public const string CategoryConst = "WorkflowTask";
+namespace Origam.Schema.WorkflowModel;
 
-		public AbstractWorkflowStep() : base() {Init();}
+/// <summary>
+/// Summary description for AbstractWorkflowStep.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.2")]
+public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
+{															
+	public const string CategoryConst = "WorkflowTask";
 
-		public AbstractWorkflowStep(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public AbstractWorkflowStep() : base() {Init();}
 
-		public AbstractWorkflowStep(Key primaryKey) : base(primaryKey)	{Init();}
+	public AbstractWorkflowStep(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 
-		private void Init()
-		{
+	public AbstractWorkflowStep(Key primaryKey) : base(primaryKey)	{Init();}
+
+	private void Init()
+	{
 			this.ChildItemTypes.Add(typeof(WorkflowTaskDependency));
 		}
 
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public override bool CanMove(UI.IBrowserNode2 destinationNode)
-		{
+	[Browsable(false)] 
+	public override bool CanMove(UI.IBrowserNode2 destinationNode)
+	{
             if (!(destinationNode is ISchemaItem destinationSchemaItem) ||
                 destinationSchemaItem.RootItem == null ||
                 this.RootItem != destinationSchemaItem.RootItem ||
@@ -75,8 +75,8 @@ namespace Origam.Schema.WorkflowModel
             return true;
         }
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			if(this.StartConditionRule != null) dependencies.Add(this.StartConditionRule);
 			if(this.StartConditionRuleContextStore != null) dependencies.Add(this.StartConditionRuleContextStore);
 			if(this.ValidationRule != null) dependencies.Add(this.ValidationRule);
@@ -85,8 +85,8 @@ namespace Origam.Schema.WorkflowModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -105,35 +105,35 @@ namespace Origam.Schema.WorkflowModel
 			base.UpdateReferences ();
 		}
 
-		#endregion
+	#endregion
 
-		#region IWorkflowStep Members
-        [Browsable(false)]
-		public ArrayList Dependencies
+	#region IWorkflowStep Members
+	[Browsable(false)]
+	public ArrayList Dependencies
+	{
+		get
 		{
-			get
-			{
 				return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
 			}
-		}
-		[Category("Error Handling")]
-		[XmlAttribute("onFailure")]
-		[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]
-		public StepFailureMode OnFailure { set; get; }
+	}
+	[Category("Error Handling")]
+	[XmlAttribute("onFailure")]
+	[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]
+	public StepFailureMode OnFailure { set; get; }
 
-		[DefaultValue(Trace.InheritFromParent)]
-		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[RuntimeConfigurable("traceLevel")]
-		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
+	[DefaultValue(Trace.InheritFromParent)]
+	[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
+	[RuntimeConfigurable("traceLevel")]
+	public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
-		[Category("Tracing")]
-        public Trace Trace => 
-	        TraceLevel == Trace.InheritFromParent 
-		        ? GetValueOfFirstNonInheritParent() 
-		        : TraceLevel;
+	[Category("Tracing")]
+	public Trace Trace => 
+		TraceLevel == Trace.InheritFromParent 
+			? GetValueOfFirstNonInheritParent() 
+			: TraceLevel;
 
-        private Trace GetValueOfFirstNonInheritParent()
-        {
+	private Trace GetValueOfFirstNonInheritParent()
+	{
 	        IWorkflowStep parentStep = ParentItem as IWorkflowStep;
 	        while(parentStep != null)
 	        {
@@ -147,23 +147,23 @@ namespace Origam.Schema.WorkflowModel
 	        return Trace.InheritFromParent;
         }
         
-		public Guid StartRuleId;
+	public Guid StartRuleId;
 
-		[Category("Rules")]
-		[TypeConverter(typeof(StartRuleConverter))]
-        [NotNullModelElementRule("StartConditionRuleContextStore")]
-		[XmlReference("startConditionRule", "StartRuleId")]
-		public StartRule StartConditionRule
+	[Category("Rules")]
+	[TypeConverter(typeof(StartRuleConverter))]
+	[NotNullModelElementRule("StartConditionRuleContextStore")]
+	[XmlReference("startConditionRule", "StartRuleId")]
+	public StartRule StartConditionRule
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.StartRuleId;
 
 				return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.StartRuleId = Guid.Empty;
@@ -173,25 +173,25 @@ namespace Origam.Schema.WorkflowModel
 					this.StartRuleId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 		
-		public Guid StartRuleContextStoreId;
+	public Guid StartRuleContextStoreId;
 
-		[Category("Rules")]
-		[TypeConverter(typeof(ContextStoreConverter))]
-        [NotNullModelElementRule("StartConditionRule")]
-		[XmlReference("startConditionRuleContextStore", "StartRuleContextStoreId")]
-		public IContextStore StartConditionRuleContextStore
+	[Category("Rules")]
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[NotNullModelElementRule("StartConditionRule")]
+	[XmlReference("startConditionRuleContextStore", "StartRuleContextStoreId")]
+	public IContextStore StartConditionRuleContextStore
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.StartRuleContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.StartRuleContextStoreId = Guid.Empty;
@@ -201,25 +201,25 @@ namespace Origam.Schema.WorkflowModel
 					this.StartRuleContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 		
-		public Guid ValidationRuleId;
+	public Guid ValidationRuleId;
 
-		[Category("Rules")]
-		[TypeConverter(typeof(EndRuleConverter))]
-        [NotNullModelElementRule("ValidationRuleContextStore")]
-		[XmlReference("validationRule", "ValidationRuleId")]
-		public IEndRule ValidationRule
+	[Category("Rules")]
+	[TypeConverter(typeof(EndRuleConverter))]
+	[NotNullModelElementRule("ValidationRuleContextStore")]
+	[XmlReference("validationRule", "ValidationRuleId")]
+	public IEndRule ValidationRule
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.ValidationRuleId;
 
 				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.ValidationRuleId = Guid.Empty;
@@ -229,25 +229,25 @@ namespace Origam.Schema.WorkflowModel
 					this.ValidationRuleId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 		
-		public Guid ValidationRuleContextStoreId;
+	public Guid ValidationRuleContextStoreId;
 
-		[Category("Rules")]
-		[TypeConverter(typeof(ContextStoreConverter))]
-        [NotNullModelElementRule("ValidationRule")]
-		[XmlReference("validationRuleContextStore", "ValidationRuleContextStoreId")]
-        public IContextStore ValidationRuleContextStore
+	[Category("Rules")]
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[NotNullModelElementRule("ValidationRule")]
+	[XmlReference("validationRuleContextStore", "ValidationRuleContextStoreId")]
+	public IContextStore ValidationRuleContextStore
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.ValidationRuleContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.ValidationRuleContextStoreId = Guid.Empty;
@@ -257,16 +257,15 @@ namespace Origam.Schema.WorkflowModel
 					this.ValidationRuleContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-        
-		[Category("Rules")]
-		[XmlAttribute ("roles")]
-		public string Roles { get; set; } = "*";
-
-		[Category("Rules")]
-		[XmlAttribute ("features")]
-		public string Features { get; set; }
-		#endregion
-
 	}
+        
+	[Category("Rules")]
+	[XmlAttribute ("roles")]
+	public string Roles { get; set; } = "*";
+
+	[Category("Rules")]
+	[XmlAttribute ("features")]
+	public string Features { get; set; }
+	#endregion
+
 }

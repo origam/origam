@@ -22,19 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+/// <summary>
+/// Summary description for Submenu.
+/// </summary>
+[SchemaItemDescription("Dashboard", "icon_dashboard.png")]
+[ClassMetaVersion("6.0.0")]
+public class DashboardMenuItem : AbstractMenuItem, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Submenu.
-	/// </summary>
-	[SchemaItemDescription("Dashboard", "icon_dashboard.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class DashboardMenuItem : AbstractMenuItem, ISchemaItemFactory
-	{
-		public DashboardMenuItem() : base() {}
+	public DashboardMenuItem() : base() {}
 
-		public DashboardMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DashboardMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public DashboardMenuItem(Key primaryKey) : base(primaryKey)	{}
-	}
+	public DashboardMenuItem(Key primaryKey) : base(primaryKey)	{}
 }

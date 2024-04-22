@@ -43,54 +43,54 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Data;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class EntityExportInfo
 {
-    public class EntityExportInfo
-    {
-        private string _entity;
-        private List<EntityExportField> _fields = new List<EntityExportField>();
-        private List<object> _rowIds = new List<object>();
-        private string _sessionFormIdentifier;
-        private SessionStore _ss;
+    private string _entity;
+    private List<EntityExportField> _fields = new List<EntityExportField>();
+    private List<object> _rowIds = new List<object>();
+    private string _sessionFormIdentifier;
+    private SessionStore _ss;
 
-        public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
+    public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
         
-        public string Entity
-        {
-            get { return _entity; }
-            set { _entity = value; }
-        }
+    public string Entity
+    {
+        get { return _entity; }
+        set { _entity = value; }
+    }
 
-        public List<EntityExportField> Fields
-        {
-            get { return _fields; }
-            set { _fields = value; }
-        }
+    public List<EntityExportField> Fields
+    {
+        get { return _fields; }
+        set { _fields = value; }
+    }
 
-        public List<object> RowIds
-        {
-            get { return _rowIds; }
-            set { _rowIds = value; }
-        }
+    public List<object> RowIds
+    {
+        get { return _rowIds; }
+        set { _rowIds = value; }
+    }
 
-        public string SessionFormIdentifier
-        {
-            get { return _sessionFormIdentifier; }
-            set { _sessionFormIdentifier = value; }
-        }
+    public string SessionFormIdentifier
+    {
+        get { return _sessionFormIdentifier; }
+        set { _sessionFormIdentifier = value; }
+    }
 
-        public DataTable Table
+    public DataTable Table
+    {
+        get 
         {
-            get 
-            {
                 return Store.GetTable(Entity, DataSource);
             }
-        }
+    }
 
-        public DataSet DataSource
+    public DataSet DataSource
+    {
+        get
         {
-            get
-            {
                 if (Store.IsPagedLoading 
 					&& Store.DataListEntity == Entity)
                 {
@@ -101,12 +101,11 @@ namespace Origam.Server
                     return Store.Data;
                 }
             }
-        }
+    }
 
-        public SessionStore Store
-        {
-            get { return _ss; }
-            set { _ss = value; }
-        }
+    public SessionStore Store
+    {
+        get { return _ss; }
+        set { _ss = value; }
     }
 }

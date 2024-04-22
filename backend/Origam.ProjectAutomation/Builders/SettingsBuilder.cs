@@ -24,32 +24,32 @@ using System;
 using System.IO;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
-{
-    public class SettingsBuilder : AbstractBuilder
-    {
-        private int _settingsIndex;
-        OrigamSettingsCollection _settings;
-        OrigamSettings _setting;
+namespace Origam.ProjectAutomation;
 
-        public OrigamSettings Setting
+public class SettingsBuilder : AbstractBuilder
+{
+    private int _settingsIndex;
+    OrigamSettingsCollection _settings;
+    OrigamSettings _setting;
+
+    public OrigamSettings Setting
+    {
+        get
         {
-            get
-            {
                 return _setting;
             }
-        }
+    }
 
-        public override string Name
+    public override string Name
+    {
+        get
         {
-            get
-            {
                 return "Add Settings";
             }
-        }
+    }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             _settings = GetSettings();
             _setting = new OrigamSettings();
             _setting.Name = project.Name;
@@ -74,8 +74,8 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        private string GetModelSourceLocation(Project project)
-        {
+    private string GetModelSourceLocation(Project project)
+    {
             switch (project.TypeTemplate)
             {
                 case TypeTemplate.Default:
@@ -89,19 +89,18 @@ namespace Origam.ProjectAutomation
             
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
             _settings.RemoveAt(_settingsIndex);
             SaveSettings(_settings);
             ConfigurationManager.SetActiveConfiguration(null);
         }
 
-        public static OrigamSettingsCollection GetSettings() => 
-            ConfigurationManager.GetAllUserHomeConfigurations();
+    public static OrigamSettingsCollection GetSettings() => 
+        ConfigurationManager.GetAllUserHomeConfigurations();
 
-        public static void SaveSettings(OrigamSettingsCollection settings)
-        {
+    public static void SaveSettings(OrigamSettingsCollection settings)
+    {
             ConfigurationManager.WriteConfiguration(settings);
         }
-    }
 }

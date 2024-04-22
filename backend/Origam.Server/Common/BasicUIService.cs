@@ -24,19 +24,18 @@ using System.Collections;
 using Origam.Schema.GuiModel;
 using Origam.Server;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class BasicUIService: IBasicUIService
 {
-    public class BasicUIService: IBasicUIService
+    public string GetReportStandalone(string reportId, Hashtable parameters,
+        DataReportExportFormatType dataReportExportFormatType)
     {
-        public string GetReportStandalone(string reportId, Hashtable parameters,
-            DataReportExportFormatType dataReportExportFormatType)
-        {
             return "";
         }
 
-        public UIResult InitUI(UIRequest request)
-        {
+    public UIResult InitUI(UIRequest request)
+    {
             throw new NotImplementedException();
         }
-    }
 }

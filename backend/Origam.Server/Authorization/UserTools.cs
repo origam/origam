@@ -30,16 +30,16 @@ using Origam.Security.Common;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Authorization
+namespace Origam.Server.Authorization;
+
+public static class UserTools
 {
-    public static class UserTools
-    {
-        private const string INITIAL_SETUP_PARAMETERNAME = "InitialUserCreated";
-        public static readonly Guid CREATE_USER_WORKFLOW 
-            = new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54");
+    private const string INITIAL_SETUP_PARAMETERNAME = "InitialUserCreated";
+    public static readonly Guid CREATE_USER_WORKFLOW 
+        = new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54");
         
-        public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
-        {
+    public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
+    {
             if(origamUserRow == null && businessPartnerRow == null)
             {
                 return null;
@@ -73,13 +73,13 @@ namespace Origam.Server.Authorization
 
             return user;
         }
-        private static string GetStringRow(object obj)
-        {
+    private static string GetStringRow(object obj)
+    {
             return obj is DBNull ? string.Empty : (string)obj;
         }
 
-        public static void AddToOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
-        {
+    public static void AddToOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
+    {
             origamUserRow["Id"] = Guid.NewGuid();
             origamUserRow["UserName"] = user.UserName;
             origamUserRow["refBusinessPartnerId"] = user.ProviderUserKey;
@@ -96,8 +96,8 @@ namespace Origam.Server.Authorization
         }
         
 
-        public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
-        {
+    public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
+    {
             origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
             origamUserRow["SecurityStamp"] = user.SecurityStamp;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
@@ -110,8 +110,8 @@ namespace Origam.Server.Authorization
             origamUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
         }
 
-        private static void SetDate(DataRow row,string columnName, DateTime dateTime)
-        {
+    private static void SetDate(DataRow row,string columnName, DateTime dateTime)
+    {
             if (dateTime == DateTime.MinValue)
             {
                 row[columnName] = DBNull.Value;
@@ -122,8 +122,8 @@ namespace Origam.Server.Authorization
             }
         } 
         
-        private static void SetDate(DataRow row,string columnName, DateTime? dateTime)
-        {
+    private static void SetDate(DataRow row,string columnName, DateTime? dateTime)
+    {
             if (!dateTime.HasValue)
             {
                 row[columnName] = DBNull.Value;
@@ -134,16 +134,16 @@ namespace Origam.Server.Authorization
             }
         }
 
-        private static DateTime GetDate(DataRow row, string propertyName)
-        {
+    private static DateTime GetDate(DataRow row, string propertyName)
+    {
             var value = row[propertyName];
             return value is DBNull 
                 ? new DateTime(1900,1,1) 
                 : (DateTime)value;
         }
 
-        public static IdentityResult RunCreateUserWorkFlow(string password, IOrigamUser user)
-        {
+    public static IdentityResult RunCreateUserWorkFlow(string password, IOrigamUser user)
+    {
             try
             {
                 var claims = new List<Claim>
@@ -181,19 +181,18 @@ namespace Origam.Server.Authorization
         }
         
                 
-        public static void SetInitialSetupComplete()
-        {
+    public static void SetInitialSetupComplete()
+    {
             ServiceManager.Services
                 .GetService<IParameterService>()
                 .SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true,
                     Guid.Empty, 0, null, true, 0, 0, null);
         }
-        public static bool IsInitialSetupNeeded()
-        {
+    public static bool IsInitialSetupNeeded()
+    {
             return !(bool)ServiceManager.Services
                 .GetService<IParameterService>()
                 .GetParameterValue(INITIAL_SETUP_PARAMETERNAME);
         }
 
-    }
 }

@@ -24,13 +24,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class XExtensions
 {
-    public static class XExtensions
+    public static void RenameAttribute(this XElement element,
+        string oldLocalName, string newLocalName)
     {
-        public static void RenameAttribute(this XElement element,
-            string oldLocalName, string newLocalName)
-        {
             var attribute = element.Attributes()
                 .FirstOrDefault(attr => attr.Name.LocalName == oldLocalName);
             if (attribute == null) return;
@@ -41,5 +41,4 @@ namespace Origam.Extensions
                     
             element.SetAttributeValue(nameSpace.GetName(newLocalName), value);
         }
-    }
 }

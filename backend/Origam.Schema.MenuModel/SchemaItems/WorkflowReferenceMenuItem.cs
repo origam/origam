@@ -32,66 +32,66 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
+[HelpTopic("Sequential+Workflow+Menu+Item")]
+[ClassMetaVersion("6.0.0")]
+public class WorkflowReferenceMenuItem : AbstractMenuItem
 {
-	[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
-    [HelpTopic("Sequential+Workflow+Menu+Item")]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkflowReferenceMenuItem : AbstractMenuItem
+	private ISchemaService _schemaService 
+		= ServiceManager.Services.GetService<ISchemaService>();
+
+	public WorkflowReferenceMenuItem() {}
+
+	public WorkflowReferenceMenuItem(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+
+	public WorkflowReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
+
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
 	{
-		private ISchemaService _schemaService 
-			= ServiceManager.Services.GetService<ISchemaService>();
-
-		public WorkflowReferenceMenuItem() {}
-
-		public WorkflowReferenceMenuItem(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public WorkflowReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(Workflow);
 			base.GetExtraDependencies(dependencies);
 		}
 
-		public override UI.BrowserNodeCollection ChildNodes()
-		{
+	public override UI.BrowserNodeCollection ChildNodes()
+	{
 #if ORIGAM_CLIENT
-			return new Origam.UI.BrowserNodeCollection();
+		return new Origam.UI.BrowserNodeCollection();
 #else
 			return base.ChildNodes ();
 #endif
-		}
+	}
 
-		#region Properties
-		[Browsable(false)]
-		public bool IsRepeatable
+	#region Properties
+	[Browsable(false)]
+	public bool IsRepeatable
+	{
+		get => true;
+		set
 		{
-			get => true;
-			set
-			{
 			}
-		}
+	}
 
-		public Guid WorkflowId;
+	public Guid WorkflowId;
 
-		[TypeConverter(typeof(WorkflowConverter))]
-		[NotNullModelElementRule()]
-		[XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
-		{
-			get => (IWorkflow)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(WorkflowId));
-			set => WorkflowId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
-		#endregion
+	[TypeConverter(typeof(WorkflowConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
+	{
+		get => (IWorkflow)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), new ModelElementKey(WorkflowId));
+		set => WorkflowId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+	#endregion
 
-		#region Private Methods
-		private DataSet LoadData(DataStructureQuery query)
-		{
+	#region Private Methods
+	private DataSet LoadData(DataStructureQuery query)
+	{
 			var dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>().GetAgent(
 					"DataService", null, null);
@@ -102,8 +102,8 @@ namespace Origam.Schema.MenuModel
 			return dataServiceAgent.Result as DataSet;
 		}
 
-		private void SaveData(DataStructureQuery query, DataSet data)
-		{
+	private void SaveData(DataStructureQuery query, DataSet data)
+	{
 			var dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>().GetAgent(
 					"DataService", null, null);
@@ -113,21 +113,21 @@ namespace Origam.Schema.MenuModel
 			dataServiceAgent.Parameters.Add("Data", data);
 			dataServiceAgent.Run();
 		}
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		[Browsable(false)]
-		public override Type[] NewItemTypes => new[] 
+	[Browsable(false)]
+	public override Type[] NewItemTypes => new[] 
 		{
 			typeof(DataConstantReference),
 			typeof(SystemFunctionCall),
 			typeof(ReportReference)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(DataConstantReference))
 			{
@@ -144,10 +144,10 @@ namespace Origam.Schema.MenuModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		public override IList<string> NewTypeNames
+	public override IList<string> NewTypeNames
+	{
+		get
 		{
-			get
-			{
 				try
 				{
 					var businessServicesService = ServiceManager.Services
@@ -164,8 +164,7 @@ namespace Origam.Schema.MenuModel
 					return new string[] {};
 				}
 			}
-		}
-		#endregion
-
 	}
+	#endregion
+
 }

@@ -25,24 +25,24 @@ using System.Linq;
 using System.Xml.Linq;
 using Origam.DA.Service.NamespaceMapping;
 
-namespace Origam.DA.Service.MetaModelUpgrade
-{
-    public class Version6Upgrader
-    {
-        private readonly ScriptContainerLocator scriptLocator;
-        private readonly OrigamXDocument document;
-        private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
-        private static XNamespace newPersistenceNamespace = OrigamFile.ModelPersistenceUri;
+namespace Origam.DA.Service.MetaModelUpgrade;
 
-        public Version6Upgrader(ScriptContainerLocator scriptLocator,
-            OrigamXDocument document)
-        {
+public class Version6Upgrader
+{
+    private readonly ScriptContainerLocator scriptLocator;
+    private readonly OrigamXDocument document;
+    private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
+    private static XNamespace newPersistenceNamespace = OrigamFile.ModelPersistenceUri;
+
+    public Version6Upgrader(ScriptContainerLocator scriptLocator,
+        OrigamXDocument document)
+    {
             this.scriptLocator = scriptLocator;
             this.document = document;
         }
 
-        public void Run()
-        {
+    public void Run()
+    {
             RemoveOldDocumentNamespaces();
 
             foreach (XElement node in document.ClassNodes)
@@ -58,8 +58,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private void UpgradeGroupReferenceNodeNode(XElement node)
-        {
+    private void UpgradeGroupReferenceNodeNode(XElement node)
+    {
             var typeAttribute = node.Attribute(oldPersistenceNamespace.GetName("type"));
             string category;
             switch (typeAttribute.Value)
@@ -83,8 +83,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             node.Name = newPersistenceNamespace.GetName(node.Name.LocalName);
         }
 
-        private void UpgradeNode(XElement node)
-        {
+    private void UpgradeNode(XElement node)
+    {
             IPropertyToNamespaceMapping namespaceMapping = GetNamespaceMapping(node);
             namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(document);
 
@@ -93,9 +93,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             CopyAttributes(node, namespaceMapping);
         }
         
-        private static void CopyAttributes(XElement node,
-            IPropertyToNamespaceMapping namespaceMapping)
-        {
+    private static void CopyAttributes(XElement node,
+        IPropertyToNamespaceMapping namespaceMapping)
+    {
             List<XAttribute> atList = node
                 .Attributes()
                 .Where(attr => attr.Name.LocalName != "xmlns")
@@ -110,8 +110,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private IPropertyToNamespaceMapping GetNamespaceMapping(XElement node)
-        {
+    private IPropertyToNamespaceMapping GetNamespaceMapping(XElement node)
+    {
             XName name = oldPersistenceNamespace.GetName("type");
             XAttribute typeAttribute = node?.Attribute(name);
             if (string.IsNullOrWhiteSpace(typeAttribute?.Value))
@@ -141,15 +141,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 .DeepCopy() ;
         }  
         
-        private void RemoveTypeAttribute(XElement node)
-        {
+    private void RemoveTypeAttribute(XElement node)
+    {
             XName name = oldPersistenceNamespace.GetName("type");
             XAttribute typeAttribute = node?.Attribute(name);
             typeAttribute?.Remove();
         }
 
-        private void RemoveOldDocumentNamespaces()
-        {
+    private void RemoveOldDocumentNamespaces()
+    {
             document.FileElement
                 .Attributes()
                 .Where(
@@ -160,5 +160,4 @@ namespace Origam.DA.Service.MetaModelUpgrade
             document.FileElement.Name = newPersistenceNamespace.GetName(document.FileElement.Name.LocalName);
             document.FileElement.Attribute(XNamespace.Xmlns + "x").Value = newPersistenceNamespace.ToString();
         }
-    }
 }

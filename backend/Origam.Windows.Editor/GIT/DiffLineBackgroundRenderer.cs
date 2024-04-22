@@ -4,18 +4,18 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Rendering;
 using Origam.UI;
 
-namespace Origam.Windows.Editor.GIT
+namespace Origam.Windows.Editor.GIT;
+
+public class DiffLineBackgroundRenderer : IBackgroundRenderer
 {
-    public class DiffLineBackgroundRenderer : IBackgroundRenderer
+    static readonly Brush AddedBackground;
+    static readonly Brush DeletedBackground;
+    static readonly Brush BlankBackground;
+
+    static readonly Pen BorderlessPen;
+
+    static DiffLineBackgroundRenderer()
     {
-        static readonly Brush AddedBackground;
-        static readonly Brush DeletedBackground;
-        static readonly Brush BlankBackground;
-
-        static readonly Pen BorderlessPen;
-
-        static DiffLineBackgroundRenderer()
-        {
             AddedBackground = new SolidColorBrush(Color.FromRgb(0x6e, 0xff, 0x6e));
             AddedBackground.Opacity = 0.5;
             AddedBackground.Freeze();
@@ -37,8 +37,8 @@ namespace Origam.Windows.Editor.GIT
             BorderlessPen.Freeze();
         }
 
-        public void Draw(TextView textView, System.Windows.Media.DrawingContext drawingContext)
-        {
+    public void Draw(TextView textView, System.Windows.Media.DrawingContext drawingContext)
+    {
             if (Lines == null) return;
 
             foreach (var v in textView.VisualLines)
@@ -74,7 +74,6 @@ namespace Origam.Windows.Editor.GIT
 
         }
 
-        public KnownLayer Layer { get { return KnownLayer.Background; } }
-        public List<DiffLineViewModel> Lines { get; set; }
-    }
+    public KnownLayer Layer { get { return KnownLayer.Background; } }
+    public List<DiffLineViewModel> Lines { get; set; }
 }

@@ -21,15 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.Search
+namespace Origam.Server.Model.Search;
+
+public class SearchResult
 {
-    public class SearchResult
-    {
-        public string Group { get; set; }
-        public Guid DataSourceId { get; set; }
-        public string Label { get; set; }
-        public string Description { get; set; }
-        public Guid DataSourceLookupId { get; set; }
-        public string ReferenceId { get; set; }
-    }
+    public string Group { get; set; }
+    public Guid DataSourceId { get; set; }
+    public string Label { get; set; }
+    public string Description { get; set; }
+    public Guid DataSourceLookupId { get; set; }
+    public string ReferenceId { get; set; }
 }

@@ -25,31 +25,31 @@ using System.Collections;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Security
-{
-	/// <summary>
-	/// Summary description for WindowsGroupsAuthorizationProvider.
-	/// </summary>
-	public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
-	{
-		private class Credential
-		{
-			public string RoleName;
-			public bool IsReadOnly;
+namespace Origam.Security;
 
-			public Credential(string roleName, bool isReadOnly)
-			{
+/// <summary>
+/// Summary description for WindowsGroupsAuthorizationProvider.
+/// </summary>
+public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
+{
+	private class Credential
+	{
+		public string RoleName;
+		public bool IsReadOnly;
+
+		public Credential(string roleName, bool isReadOnly)
+		{
 				RoleName = roleName;
 				IsReadOnly = isReadOnly;
 			}
+	}
+
+	public WindowsGroupsAuthorizationProvider()
+	{
 		}
 
-		public WindowsGroupsAuthorizationProvider()
-		{
-		}
-
-		private Hashtable GetCache()
-		{
+	private Hashtable GetCache()
+	{
 			string cacheName = "WindowsGroupsAuthorizationProviderCache";
 			Hashtable context = OrigamUserContext.Context;
 
@@ -61,10 +61,10 @@ namespace Origam.Security
 			return (Hashtable)OrigamUserContext.Context[cacheName];
 		}
 
-		#region IAuthorizationProvider Members
+	#region IAuthorizationProvider Members
 
-		public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
-		{
+	public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
+	{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			
 			//			System.Windows.Forms.MessageBox.Show("Authorizing identity: '" + principal.Identity.Name + "'");
@@ -151,11 +151,11 @@ namespace Origam.Security
 			return false;
 		}
 
-		#endregion
+	#endregion
 
-		#region private methods
-		Credential[] CredentialList(string applicationRole)
-		{
+	#region private methods
+	Credential[] CredentialList(string applicationRole)
+	{
 			Hashtable cache = GetCache();
 
 			if(cache.Contains(applicationRole))
@@ -223,6 +223,5 @@ namespace Origam.Security
 
 			return array;
 		}
-		#endregion
-	}
+	#endregion
 }

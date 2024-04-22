@@ -24,58 +24,58 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Origam.DA
-{
-	public enum QueryDataSourceType
-	{
-		DataStructure = 0,
-		DataStructureEntity = 1
-	}
+namespace Origam.DA;
 
-	/// <summary>
-	/// This class is used to reference data structure with filters when asking IDataService for data.
-	/// </summary>
-	public class DataStructureQuery
+public enum QueryDataSourceType
+{
+	DataStructure = 0,
+	DataStructureEntity = 1
+}
+
+/// <summary>
+/// This class is used to reference data structure with filters when asking IDataService for data.
+/// </summary>
+public class DataStructureQuery
+{
+	public DataStructureQuery()
 	{
-		public DataStructureQuery()
-		{
 		}
 
-		public DataStructureQuery(Guid dataStructureId)
-		{
+	public DataStructureQuery(Guid dataStructureId)
+	{
 			DataSourceId = dataStructureId;
 		}
 
-		public DataStructureQuery(Guid dataStructureId, Guid methodId)
-		{
+	public DataStructureQuery(Guid dataStructureId, Guid methodId)
+	{
 			DataSourceId = dataStructureId;
 			MethodId = methodId;
 		}
 
-		public DataStructureQuery(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId)
-		{
+	public DataStructureQuery(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId)
+	{
 			DataSourceId = dataStructureId;
 			MethodId = methodId;
 			DefaultSetId = defaultSetId;
 			SortSetId = sortSetId;
 		}
 
-	    public int RowLimit { get; set; }
-	    public int RowOffset { get; set; }
-	    public Guid DataSourceId;
-		public Guid MethodId;
-		public Guid DefaultSetId;
-		public Guid SortSetId;
-		public QueryParameterCollection Parameters = new QueryParameterCollection();
-		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
+	public int RowLimit { get; set; }
+	public int RowOffset { get; set; }
+	public Guid DataSourceId;
+	public Guid MethodId;
+	public Guid DefaultSetId;
+	public Guid SortSetId;
+	public QueryParameterCollection Parameters = new QueryParameterCollection();
+	public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public CustomOrderings CustomOrderings { get; set; }
-	    public CustomFilters CustomFilters { get; set; }
+	public CustomOrderings CustomOrderings { get; set; }
+	public CustomFilters CustomFilters { get; set; }
 
-	    public bool Paging
+	public bool Paging
+	{
+		get
 		{
-			get
-			{
 				bool pageSizeFound = false;
 				bool pageNumberFound = false;
 				foreach(QueryParameter param in Parameters)
@@ -92,29 +92,29 @@ namespace Origam.DA
 
 				return pageSizeFound && pageNumberFound;
 			}
-		}
+	}
 
-	    public QueryDataSourceType DataSourceType { get; set; } = QueryDataSourceType.DataStructure;
+	public QueryDataSourceType DataSourceType { get; set; } = QueryDataSourceType.DataStructure;
 
-	    public bool LoadActualValuesAfterUpdate { get; set; } = false;
+	public bool LoadActualValuesAfterUpdate { get; set; } = false;
 
-	    public bool LoadByIdentity { get; set; } = true;
+	public bool LoadByIdentity { get; set; } = true;
 
-	    public bool FireStateMachineEvents { get; set; } = true;
+	public bool FireStateMachineEvents { get; set; } = true;
 
-	    public bool SynchronizeAttachmentsOnDelete { get; set; } = true;
+	public bool SynchronizeAttachmentsOnDelete { get; set; } = true;
 
-	    public bool EnforceConstraints { get; set; } = true;
+	public bool EnforceConstraints { get; set; } = true;
 	    
-	    public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
-	    public bool Distinct { get; set; }
-	    public string Entity { get; set; }
-	    public bool ForceDatabaseCalculation { get; set; }
-	    public Grouping CustomGrouping { get; set; }
-	    public List<Aggregation> AggregatedColumns { get; set; }
+	public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
+	public bool Distinct { get; set; }
+	public string Entity { get; set; }
+	public bool ForceDatabaseCalculation { get; set; }
+	public Grouping CustomGrouping { get; set; }
+	public List<Aggregation> AggregatedColumns { get; set; }
 	    
-	    public List<ColumnData> GetAllQueryColumns()
-	    {
+	public List<ColumnData> GetAllQueryColumns()
+	{
 		    var aggregationColData =
 			    (AggregatedColumns ?? new List<Aggregation>())
 			    .Select(x => new ColumnData(x.SqlQueryColumnName));
@@ -122,30 +122,30 @@ namespace Origam.DA
 			    .Concat(aggregationColData)
 			    .ToList();
 	    }
+}
+
+public class CustomFilters
+{
+	private string filters = "";
+
+	public string Filters
+	{
+		get => filters;
+		set => filters = string.IsNullOrWhiteSpace(value) ? "" : value;
 	}
 
-	public class CustomFilters
+	public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
+	public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
+	public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
+}
+
+public class CustomOrderings
+{
+	public List<Ordering> Orderings { get; }
+
+	public bool IsEmpty => Orderings == null || Orderings.Count == 0;
+	public CustomOrderings(List<Ordering> orderings)
 	{
-		private string filters = "";
-
-		public string Filters
-		{
-			get => filters;
-			set => filters = string.IsNullOrWhiteSpace(value) ? "" : value;
-		}
-
-		public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
-		public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
-		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
-	}
-
-	public class CustomOrderings
-	{
-		public List<Ordering> Orderings { get; }
-
-		public bool IsEmpty => Orderings == null || Orderings.Count == 0;
-		public CustomOrderings(List<Ordering> orderings)
-		{
 			Orderings = orderings;
 			FilterLookups = orderings == null 
 				? new Dictionary<string, Guid>() 
@@ -156,8 +156,7 @@ namespace Origam.DA
 						ordering => ordering.LookupId);
 		}
 
-		public Dictionary<string, Guid> FilterLookups { get; } = new Dictionary<string, Guid>();
+	public Dictionary<string, Guid> FilterLookups { get; } = new Dictionary<string, Guid>();
 		
-		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
-	}
+	public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
 }

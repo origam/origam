@@ -27,31 +27,31 @@ using Origam.DA;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for WorkQueueServiceAgent.
+/// </summary>
+public class WorkQueueServiceAgent : AbstractServiceAgent
 {
-	/// <summary>
-	/// Summary description for WorkQueueServiceAgent.
-	/// </summary>
-	public class WorkQueueServiceAgent : AbstractServiceAgent
-	{
-		public WorkQueueServiceAgent()
-		{
+    public WorkQueueServiceAgent()
+    {
 		}
 
-        private object _result;
-        public override object Result
+    private object _result;
+    public override object Result
+    {
+        get
         {
-            get
-            {
                 object temp = _result;
                 _result = null;
                 return temp;
             }
-        }
+    }
 
 
-		public override void Run()
-		{
+    public override void Run()
+    {
             IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
             switch (this.MethodName)
 			{
@@ -76,8 +76,8 @@ namespace Origam.Workflow
 			}
 		}
 
-        private void GetNextItem(IWorkQueueService wqs)
-        {
+    private void GetNextItem(IWorkQueueService wqs)
+    {
             string queueName = Parameters["QueueName"] as string;
             if (queueName == null)
             {
@@ -90,8 +90,8 @@ namespace Origam.Workflow
             }
         }
 
-        private void GenerateNotificationMessage(IWorkQueueService wqs)
-        {
+    private void GenerateNotificationMessage(IWorkQueueService wqs)
+    {
             // check input parameters
             if (!(this.Parameters["NotificationTemplateId"] is Guid))
                 throw new InvalidCastException(ResourceUtils.GetString("ErrorNotificationTemplateIdNotGuid"));
@@ -114,8 +114,8 @@ namespace Origam.Workflow
                 this.TransactionId);
         }
 
-        private void Get(IWorkQueueService wqs)
-        {
+    private void Get(IWorkQueueService wqs)
+    {
             // Check input parameters
             if (this.Parameters["MessageId"] == null)
                 throw new InvalidCastException("MessageId must not be null.");
@@ -123,8 +123,8 @@ namespace Origam.Workflow
             _result = wqs.WorkQueueGetMessage((Guid)this.Parameters["MessageId"], this.TransactionId);
         }
 
-        private void Remove(IWorkQueueService wqs)
-        {
+    private void Remove(IWorkQueueService wqs)
+    {
             // Check input parameters
             if (this.Parameters["MessageId"] == null)
                 throw new InvalidCastException("MessageId must not be null.");
@@ -134,8 +134,8 @@ namespace Origam.Workflow
             wqs.WorkQueueRemove((Guid)this.Parameters["QueueId"], this.Parameters["MessageId"], this.TransactionId);
         }
 
-        private void TraceLog(string parameter)
-        {
+    private void TraceLog(string parameter)
+    {
             ITracingService trace = ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
             if (this.Trace && this.OutputMethod == ServiceOutputMethod.Ignore && ((Origam.Schema.AbstractSchemaItem)this.OutputStructure)?.Path == "_any")
             {
@@ -143,8 +143,8 @@ namespace Origam.Workflow
                     Workflow.WorkflowEngine.ContextData(this.Parameters[parameter]), "", null);
             }
         }
-        private void Add(IWorkQueueService wqs)
-        {
+    private void Add(IWorkQueueService wqs)
+    {
             // Check input parameters
             if (!(this.Parameters["Data"] is IXmlContainer))
                 throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
@@ -176,5 +176,4 @@ namespace Origam.Workflow
             wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IXmlContainer, attachments, this.TransactionId);
             _result = null;
         }
-    }
 }

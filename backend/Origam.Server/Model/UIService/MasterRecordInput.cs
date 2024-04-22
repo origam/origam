@@ -23,14 +23,13 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class MasterRecordInput
 {
-    public class MasterRecordInput
-    {
-        [RequiredNonDefault]
-        public Guid SessionFormIdentifier { get; set; }
-        [Required]
-        public string Entity { get; set; }
-        public object RowId { get; set; }
-    }
+    [RequiredNonDefault]
+    public Guid SessionFormIdentifier { get; set; }
+    [Required]
+    public string Entity { get; set; }
+    public object RowId { get; set; }
 }

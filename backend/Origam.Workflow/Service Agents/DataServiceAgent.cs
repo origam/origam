@@ -38,35 +38,35 @@ using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workflow
-{
-	/// <summary>
-	/// Summary description for DataService.
-	/// </summary>
-	public class DataServiceAgent : AbstractServiceAgent
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private IDataService _dataService = null;
+namespace Origam.Workflow;
 
-		public DataServiceAgent()
-		{
+/// <summary>
+/// Summary description for DataService.
+/// </summary>
+public class DataServiceAgent : AbstractServiceAgent
+{
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	private IDataService _dataService = null;
+
+	public DataServiceAgent()
+	{
             _dataService = core.DataServiceFactory.GetDataService();
 		}
 
-		public IDataService DataService
+	public IDataService DataService
+	{
+		get
 		{
-			get
-			{
 				return _dataService;
 			}
-		}
+	}
 
-        public  override void SetDataService(IDataService dataService)
-        {
+	public  override void SetDataService(IDataService dataService)
+	{
             _dataService = dataService;
         }
-		private IDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
-		{
+	private IDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
+	{
 			// (_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
 
 			DataStructureQuery query = new DataStructureQuery(dataStructureId, methodId, Guid.Empty, sortSetId);
@@ -82,13 +82,13 @@ namespace Origam.Workflow
 			return DataDocumentFactory.New(LoadData(query, null));
 		}
 
-		private DataSet LoadData(DataStructureQuery query)
-		{
+	private DataSet LoadData(DataStructureQuery query)
+	{
 			return LoadData(query, null);
 		}
 
-		private DataSet LoadData(DataStructureQuery query, DataSet data)
-		{
+	private DataSet LoadData(DataStructureQuery query, DataSet data)
+	{
 			DataStructureMethod method;
 			method = this.PersistenceProvider.RetrieveInstance(typeof(DataStructureMethod), new ModelElementKey(query.MethodId)) as DataStructureMethod;
 			if (method == null || method is DataStructureFilterSet)
@@ -152,8 +152,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		private object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo)
-		{
+	private object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo)
+	{
 			DataStructureMethod method;
 			method = this.PersistenceProvider.RetrieveInstance(typeof(DataStructureMethod), new ModelElementKey(query.MethodId)) as DataStructureMethod;
 			if (method == null || method is DataStructureFilterSet)
@@ -191,8 +191,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		private IDataDocument ExecuteProcedure(string name, Hashtable parameters, string entityOrder)
-		{
+	private IDataDocument ExecuteProcedure(string name, Hashtable parameters, string entityOrder)
+	{
 			DataStructureQuery query = new DataStructureQuery();
 			if(this.OutputStructure != null)
 			{
@@ -218,10 +218,10 @@ namespace Origam.Workflow
 			}
 		}
 
-		private IDataDocument SaveData(
-            Guid dataStructureId, Guid methodId, Guid sortSetId, 
-            IDataDocument data, bool forceBulkInsert)
-		{
+	private IDataDocument SaveData(
+		Guid dataStructureId, Guid methodId, Guid sortSetId, 
+		IDataDocument data, bool forceBulkInsert)
+	{
 			DataSet dataset = data.DataSet;
 
 			//			(_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
@@ -251,9 +251,9 @@ namespace Origam.Workflow
 			return data;
 		}
 
-		private DataSet SaveData(
-            DataStructureQuery query, DataSet data)
-		{
+	private DataSet SaveData(
+		DataStructureQuery query, DataSet data)
+	{
 			try
 			{
                 IPrincipal principal = null;
@@ -273,8 +273,8 @@ namespace Origam.Workflow
 			return data;
 		}
 		
-		private int UpdateReferences(Guid entityId, object oldValue, object newValue)
-		{
+	private int UpdateReferences(Guid entityId, object oldValue, object newValue)
+	{
 			TableMappingItem originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey(entityId)) as TableMappingItem;
 
 			if(originalEntity == null)
@@ -364,8 +364,8 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		private int ReferenceCount(Guid entityId, object value)
-		{
+	private int ReferenceCount(Guid entityId, object value)
+	{
 			TableMappingItem originalEntity = this.PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey(entityId)) as TableMappingItem;
 
 			if(originalEntity == null)
@@ -421,8 +421,8 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		private string PrintStream(System.IO.Stream s)
-		{
+	private string PrintStream(System.IO.Stream s)
+	{
 			string result = "";
 			//set position to beginning of the stream
 			s.Position = 0;
@@ -436,37 +436,37 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		#region IServiceAgent Members
-		public override string Info
+	#region IServiceAgent Members
+	public override string Info
+	{
+		get
 		{
-			get
-			{
 				string result = "Adapter Assembly: " + this.GetType().ToString() + Environment.NewLine;
 				result += "Data Service Assembly: " + _dataService.GetType().ToString() + Environment.NewLine;
 				return result + _dataService.Info;
 			}
-		}
+	}
 
 
-		private object _result;
-		public override object Result
+	private object _result;
+	public override object Result
+	{
+		get
 		{
-			get
-			{
 					object temp = _result;
 				_result = null;
 				
 				return temp;
 			}
-		}
+	}
 
-		public override string ExecuteUpdate(string command, string transactionId)
-		{
+	public override string ExecuteUpdate(string command, string transactionId)
+	{
 			return _dataService.ExecuteUpdate(command, transactionId);
 		}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			DataStructureReference dsRef;
 
 			switch(this.MethodName)
@@ -611,8 +611,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
-		{
+	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	{
 			var result = new List<string>();
 			ServiceMethodCallTask call = item as ServiceMethodCallTask;
 			XsltDataPage dataPage = item as XsltDataPage;
@@ -652,8 +652,7 @@ namespace Origam.Workflow
 				{
 					ResolveFilterLookup(filterLookup, out ds, out dsMethod);
 					// add "lookup" prefix to all parameters because as sub-queries they will
-					// be prefixed 
-					prefix = "lookup";
+					// be prefixed 		prefix = "lookup";
 				}
 				else if(abstractDataLookup != null)
 				{
@@ -702,11 +701,11 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		#endregion
+	#endregion
 
-		private void ResolveServiceMethodCallTask(ServiceMethodCallTask task,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveServiceMethodCallTask(ServiceMethodCallTask task,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			AbstractSchemaItem dsParam = task.GetChildByName("DataStructure");
 			if(dsParam.ChildItems.Count == 1)
 			{
@@ -723,30 +722,30 @@ namespace Origam.Workflow
 			method = null;
 		}
 
-		private void ResolveXsltDataPage(XsltDataPage page,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveXsltDataPage(XsltDataPage page,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			ds = page.DataStructure;
 			method = page.Method;
 		}
 
-		private void ResolveFileDownloadPage(FileDownloadPage page,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveFileDownloadPage(FileDownloadPage page,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			ds = page.DataStructure;
 			method = page.Method;
 		}
 
-		private void ResolveFormReferenceMenuItem(FormReferenceMenuItem menu,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveFormReferenceMenuItem(FormReferenceMenuItem menu,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			ds = menu.ListDataStructure ?? menu.Screen?.DataStructure;
 			method = menu.ListMethod ?? menu.Method;
 		}
 
-		private void ResolveFilterLookup(EntityFilterLookupReference reference,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveFilterLookup(EntityFilterLookupReference reference,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			ds = reference.Lookup.ListDataStructure;
 			method = null;
 			DataServiceDataLookup dl = reference.Lookup as DataServiceDataLookup;
@@ -756,9 +755,9 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void ResolveLookup(AbstractDataLookup reference,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveLookup(AbstractDataLookup reference,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			ds = reference.ListDataStructure;
 			method = null;
 			DataServiceDataLookup dl = reference as DataServiceDataLookup;
@@ -768,9 +767,9 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void ResolveReport(AbstractReport report,
-			out DataStructure ds, out DataStructureMethod method)
-		{
+	private void ResolveReport(AbstractReport report,
+		out DataStructure ds, out DataStructureMethod method)
+	{
 			AbstractDataReport dr = report as AbstractDataReport;
 			if(dr != null)
 			{
@@ -781,5 +780,4 @@ namespace Origam.Workflow
 			ds = null;
 			method = null;
 		}
-	}
 }

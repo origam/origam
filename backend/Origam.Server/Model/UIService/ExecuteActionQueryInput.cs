@@ -23,16 +23,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class ExecuteActionQueryInput
 {
-    public class ExecuteActionQueryInput
-    {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        public string ActionType { get; set; }
-        public string ActionId { get; set; }
-        public Hashtable ParameterMappings { get; set; }
-        public List<string> SelectedIds { get; set; }
-        public Hashtable InputParameters { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; }
+    public string Entity { get; set; }
+    public string ActionType { get; set; }
+    public string ActionId { get; set; }
+    public Hashtable ParameterMappings { get; set; }
+    public List<string> SelectedIds { get; set; }
+    public Hashtable InputParameters { get; set; }
 }

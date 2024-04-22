@@ -28,20 +28,20 @@ using Origam.Schema.WorkflowModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for WorkflowServiceAgent.
+/// </summary>
+public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 {
-	/// <summary>
-	/// Summary description for WorkflowServiceAgent.
-	/// </summary>
-	public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
+	public event EventHandler<AsyncReturnValues> AsyncCallFinished;
+	public WorkflowServiceAgent()
 	{
-		public event EventHandler<AsyncReturnValues> AsyncCallFinished;
-		public WorkflowServiceAgent()
-		{
 		}
-		#region Private Methods
-		private object ExecuteWorkflow(Guid workflowId, Hashtable parameters)
-		{
+	#region Private Methods
+	private object ExecuteWorkflow(Guid workflowId, Hashtable parameters)
+	{
 			bool invalidWorkflowDefinition = false;
 
 			IWorkflow wf = null;
@@ -105,15 +105,15 @@ namespace Origam.Workflow
 			return engine.ReturnValue;
 		}
 		
-		private WorkflowHost GetHost()
-		{
+	private WorkflowHost GetHost()
+	{
 			return WorkflowEngine != null 
 				? (WorkflowEngine as WorkflowEngine).Host 
 				: WorkflowHost.DefaultHost;
 		}
 
-		private void OnHostOnWorkflowFinished(object sender, WorkflowHostEventArgs e)
-		{
+	private void OnHostOnWorkflowFinished(object sender, WorkflowHostEventArgs e)
+	{
 			if (e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
 			{
 				UnsubscribeEvents();
@@ -125,8 +125,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-		{
+	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+	{
 			if(e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
 			{
 				if(e.Exception != null)
@@ -139,29 +139,29 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void UnsubscribeEvents()
-		{
+	private void UnsubscribeEvents()
+	{
 			var host = GetHost();
 			host.WorkflowFinished -= OnHostOnWorkflowFinished;
 			host.WorkflowMessage -= Host_WorkflowMessage;
 		}
 
-		#endregion
+	#endregion
 
-		#region IServiceAgent Members
-		private object _result;
-		private Guid workflowUniqueId;
+	#region IServiceAgent Members
+	private object _result;
+	private Guid workflowUniqueId;
 
-		public override object Result
+	public override object Result
+	{
+		get
 		{
-			get
-			{
 				return _result;
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			switch(this.MethodName)
 			{
 				case "ExecuteWorkflow":
@@ -182,8 +182,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
-		{
+	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	{
 			var result = new List<string>();
 			IWorkflow wf = item as IWorkflow;
 			ServiceMethodCallTask task = item as ServiceMethodCallTask;
@@ -202,8 +202,8 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		private IWorkflow ResolveServiceMethodCallTask(ServiceMethodCallTask task)
-		{
+	private IWorkflow ResolveServiceMethodCallTask(ServiceMethodCallTask task)
+	{
 			AbstractSchemaItem wfParam = task.GetChildByName("Workflow");
 			if(wfParam.ChildItems.Count == 1)
 			{
@@ -215,6 +215,5 @@ namespace Origam.Workflow
 			}
 			return null;
 		}
-		#endregion
-	}
+	#endregion
 }

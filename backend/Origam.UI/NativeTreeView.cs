@@ -28,22 +28,22 @@ using System.Threading;
 using System.Windows.Forms;
 using MoreLinq;
 
-namespace Origam.UI
-{
-	/// <summary>
-	/// Summary description for NativeTreeView.
-	/// </summary>
-	public class NativeTreeView : System.Windows.Forms.TreeView
-	{
-		[DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
-		private extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName,
-			string pszSubIdList);
-		
-		HashSet<string> expandedPaths = new HashSet<string>();
+namespace Origam.UI;
 
-		public TreeNode RootNode {
-			get
-			{
+/// <summary>
+/// Summary description for NativeTreeView.
+/// </summary>
+public class NativeTreeView : System.Windows.Forms.TreeView
+{
+	[DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
+	private extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName,
+		string pszSubIdList);
+		
+	HashSet<string> expandedPaths = new HashSet<string>();
+
+	public TreeNode RootNode {
+		get
+		{
 				if (TopNode == null) return null;
 				TreeNode node = TopNode;
 				while (node.Parent != null)
@@ -52,10 +52,10 @@ namespace Origam.UI
 				}
 				return node;
 			}
-		}
+	}
 		
-		protected override void CreateHandle()
-		{
+	protected override void CreateHandle()
+	{
 			if(! this.IsDisposed)
 			{
 				base.CreateHandle();
@@ -63,29 +63,29 @@ namespace Origam.UI
 			}
 		}
 		
-		public void ReExpand()
-		{
+	public void ReExpand()
+	{
 			StoreExpansionState();
 			CollapseAllNodes();
 			RestoreExpansionState();
 		}
 
-		private void CollapseAllNodes()
-		{
+	private void CollapseAllNodes()
+	{
 			RootNode?.Collapse();
 		}
 
-		private IEnumerable<TreeNode> GetAllNodes() => GetAllNodes(Nodes);
+	private IEnumerable<TreeNode> GetAllNodes() => GetAllNodes(Nodes);
 
-		public void RestoreExpansionState()
-		{
+	public void RestoreExpansionState()
+	{
 			GetAllNodes()
 				.Where(node => expandedPaths.Contains(node.FullPath))
 				.ForEach(node => node.Expand());
 		}
 
-		public void StoreExpansionState()
-		{
+	public void StoreExpansionState()
+	{
 			expandedPaths.Clear();
 			GetAllNodes()
 				.Where(node => node.IsExpanded)
@@ -93,8 +93,8 @@ namespace Origam.UI
 				.ForEach(treePath => expandedPaths.Add(treePath));
 		}
 			
-		private IEnumerable<TreeNode> GetAllNodes(TreeNodeCollection nodes)
-		{
+	private IEnumerable<TreeNode> GetAllNodes(TreeNodeCollection nodes)
+	{
 			foreach (object nodeObj in nodes)
 			{
 				TreeNode node =(TreeNode) nodeObj;
@@ -105,5 +105,4 @@ namespace Origam.UI
 				}
 			}
 		}
-	}
 }

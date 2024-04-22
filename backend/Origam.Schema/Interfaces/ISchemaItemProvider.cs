@@ -24,47 +24,46 @@ using System.Collections.Generic;
 using Origam.UI;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+
+/// <summary>
+/// Root of different types of schema items (e.g. Form provider, Entity provider, Roles provider).
+/// </summary>
+public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
 {
-	/// <summary>
-	/// Root of different types of schema items (e.g. Form provider, Entity provider, Roles provider).
-	/// </summary>
-	public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
-	{
 //		event EventHandler SchemaItemDeleted;
 
 //		event EventHandler SchemaItemChanged;
 
-		/// <summary>
-		/// Persistence provider used to retrieve data.
-		/// </summary>
-		IPersistenceProvider PersistenceProvider{get; set;}
+	/// <summary>
+	/// Persistence provider used to retrieve data.
+	/// </summary>
+	IPersistenceProvider PersistenceProvider{get; set;}
 
-		/// <summary>
-		/// Gets all schema items.
-		/// </summary>
-		SchemaItemCollection ChildItems{get;}
-		ArrayList ChildItemTypes{get;}
-		AbstractSchemaItem GetChildByName(string name, string itemType);
+	/// <summary>
+	/// Gets all schema items.
+	/// </summary>
+	SchemaItemCollection ChildItems{get;}
+	ArrayList ChildItemTypes{get;}
+	AbstractSchemaItem GetChildByName(string name, string itemType);
 
-		ArrayList ChildItemsRecursive{get;}
+	ArrayList ChildItemsRecursive{get;}
 
-		ArrayList ChildItemsByType(string itemType);
+	ArrayList ChildItemsByType(string itemType);
 
-		ArrayList ChildItemsByGroup(SchemaItemGroup group);
+	ArrayList ChildItemsByGroup(SchemaItemGroup group);
 
-		bool HasChildItems{get;}
+	bool HasChildItems{get;}
 
-		bool HasChildItemsByType(string itemType);
+	bool HasChildItemsByType(string itemType);
 
-		bool HasChildItemsByGroup(SchemaItemGroup group);
+	bool HasChildItemsByGroup(SchemaItemGroup group);
 
-		List<SchemaItemGroup> ChildGroups{get;}
+	List<SchemaItemGroup> ChildGroups{get;}
 
-		ISchemaItemProvider RootProvider{get; set;}
+	ISchemaItemProvider RootProvider{get; set;}
 
-		bool AutoCreateFolder{get;}
+	bool AutoCreateFolder{get;}
 
-        void ClearCache();
-	}
+	void ClearCache();
 }

@@ -29,24 +29,24 @@ using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.NodeDrawing;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Diagram.InternalEditor
-{
-    public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
-    {
-        private readonly IPersistenceProvider persistenceProvider;
+namespace Origam.Workbench.Diagram.InternalEditor;
 
-        public GeneralDiagramEditor(GViewer gViewer, T schemaItem,
-            IDiagramFactory<T, Graph> factory,
-            IPersistenceProvider persistenceProvider)
-        {
+public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
+{
+    private readonly IPersistenceProvider persistenceProvider;
+
+    public GeneralDiagramEditor(GViewer gViewer, T schemaItem,
+        IDiagramFactory<T, Graph> factory,
+        IPersistenceProvider persistenceProvider)
+    {
             this.persistenceProvider = persistenceProvider;
             gViewer.Graph = factory.Draw(schemaItem);
             gViewer.EdgeInsertButtonVisible = false;
             gViewer.DoubleClick += GViewerOnDoubleClick;
         }
 
-        private void GViewerOnDoubleClick(object sender, EventArgs e)
-        {
+    private void GViewerOnDoubleClick(object sender, EventArgs e)
+    {
             GViewer viewer = sender as GViewer;
             if (viewer.SelectedObject is DrawingNode node)
             {
@@ -67,13 +67,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
             }
         }
         
-        public void Dispose()
-        {
+    public void Dispose()
+    {
         }
 
-        public void ReDrawAndKeepFocus()
-        {
+    public void ReDrawAndKeepFocus()
+    {
             
         }
-    }
 }

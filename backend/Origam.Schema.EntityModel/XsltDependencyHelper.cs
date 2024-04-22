@@ -24,161 +24,160 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for XsltDependencyHelper.
+/// </summary>
+public class XsltDependencyHelper
 {
-	/// <summary>
-	/// Summary description for XsltDependencyHelper.
-	/// </summary>
-	public class XsltDependencyHelper
+	public static void GetDependencies(AbstractSchemaItem item, ArrayList dependencies, string text)
 	{
-		public static void GetDependencies(AbstractSchemaItem item, ArrayList dependencies, string text)
+		if(text == null) return;
+
+		IPersistenceProvider persistenceprovider = item.PersistenceProvider;
+		// references
+		int found = 0;
+
+		ArrayList references = new ArrayList();
+
+		for (int i = 0; i < text.Length; i++) 
 		{
-			if(text == null) return;
+			found = text.IndexOf("model://", i);
 
-            IPersistenceProvider persistenceprovider = item.PersistenceProvider;
-			// references
-			int found = 0;
-
-			ArrayList references = new ArrayList();
-
-			for (int i = 0; i < text.Length; i++) 
+			if (found > 0) 
 			{
-				found = text.IndexOf("model://", i);
-
-				if (found > 0) 
+				string id = text.Substring(found + 8, 36);
+				try
 				{
-					string id = text.Substring(found + 8, 36);
-                    try
-                    {
-                        AbstractSchemaItem reference = persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
+					AbstractSchemaItem reference = persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
 
-                        dependencies.Add(reference);
-                    }
-                    catch (System.FormatException)
-                    {
-                        // don't follow invalid (non-guid) references (e.g. in comment)
-                    }
-					i = found;
+					dependencies.Add(reference);
 				}
-				else
-					break;
-			}
-
-			// constants
-			found = 0;
-			ArrayList constants = new ArrayList();
-
-			for (int i = 0; i < text.Length; i++) 
-			{
-				found = text.IndexOf(":GetConstant('", i);
-
-				if (found > 0) 
+				catch (System.FormatException)
 				{
-					constants.Add(text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14));
-					i = found;
+					// don't follow invalid (non-guid) references (e.g. in comment)
 				}
-				else
-					break;
+				i = found;
 			}
+			else
+				break;
+		}
 
-            List<DataConstant> listDataconstant = persistenceprovider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst);
+		// constants
+		found = 0;
+		ArrayList constants = new ArrayList();
 
-            foreach (string c in constants)
+		for (int i = 0; i < text.Length; i++) 
+		{
+			found = text.IndexOf(":GetConstant('", i);
+
+			if (found > 0) 
 			{
-                foreach (DataConstant child in listDataconstant)
-                {
-                    if (child.Name == c)
-                    {
-                        dependencies.Add(child);
-                        break;
-                    }
-                }
-                if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name));
-            }
+				constants.Add(text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14));
+				i = found;
+			}
+			else
+				break;
+		}
+
+		List<DataConstant> listDataconstant = persistenceprovider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst);
+
+		foreach (string c in constants)
+		{
+			foreach (DataConstant child in listDataconstant)
+			{
+				if (child.Name == c)
+				{
+					dependencies.Add(child);
+					break;
+				}
+			}
+			if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name));
+		}
 
             
 
-            // strings
-            found = 0;
-			ArrayList strings = new ArrayList();
+		// strings
+		found = 0;
+		ArrayList strings = new ArrayList();
 
-			for (int i = 0; i < text.Length; i++) 
+		for (int i = 0; i < text.Length; i++) 
+		{
+			found = text.IndexOf(":GetString('", i);
+
+			if (found > 0) 
 			{
-				found = text.IndexOf(":GetString('", i);
+				strings.Add(text.Substring(found + 12, text.IndexOf("'", found + 12) - found - 12));
+				i = found;
+			}
+			else
+				break;
+		}
 
-				if (found > 0) 
+		List<StringItem> listStringItem = persistenceprovider.RetrieveListByCategory<StringItem>(StringItem.CategoryConst);
+		foreach (string s in strings)
+		{
+			foreach (StringItem child in listStringItem)
+			{
+				if (child.Name == s)
 				{
-					strings.Add(text.Substring(found + 12, text.IndexOf("'", found + 12) - found - 12));
-					i = found;
-				}
-				else
+					dependencies.Add(child);
 					break;
-			}
-
-            List<StringItem> listStringItem = persistenceprovider.RetrieveListByCategory<StringItem>(StringItem.CategoryConst);
-            foreach (string s in strings)
-			{
-                foreach (StringItem child in listStringItem)
-                {
-                    if (child.Name == s)
-                    {
-                        dependencies.Add(child);
-                        break;
-                    }
 				}
-
-				if(dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorStringNotFound", s, item.ItemType, item.Name));
 			}
 
-			// lookups
-			found = 0;
-			ArrayList lookups = new ArrayList();
+			if(dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorStringNotFound", s, item.ItemType, item.Name));
+		}
 
-			for (int i = 0; i < text.Length; i++) 
+		// lookups
+		found = 0;
+		ArrayList lookups = new ArrayList();
+
+		for (int i = 0; i < text.Length; i++) 
+		{
+			found = text.IndexOf(":LookupValue('", i);
+
+			if (found > 0) 
 			{
-				found = text.IndexOf(":LookupValue('", i);
-
-				if (found > 0) 
+				try {
+					lookups.Add(new Guid(text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14)));
+				} catch (System.FormatException)
 				{
-                    try {
-                        lookups.Add(new Guid(text.Substring(found + 14, text.IndexOf("'", found + 14) - found - 14)));
-                    } catch (System.FormatException)
-                    {
-                        // we shouldn't bother when someone adds something
-                        // invalid after LookupValue() - e.g. could be in a comment 
-                    }
-					i = found;
+					// we shouldn't bother when someone adds something
+					// invalid after LookupValue() - e.g. could be in a comment 
 				}
-				else
-					break;
+				i = found;
 			}
+			else
+				break;
+		}
 
-			for (int i = 0; i < text.Length; i++) 
+		for (int i = 0; i < text.Length; i++) 
+		{
+			found = text.IndexOf(":LookupValueEx('", i);
+
+			if (found > 0) 
 			{
-				found = text.IndexOf(":LookupValueEx('", i);
-
-				if (found > 0) 
+				try
 				{
-                    try
-                    {
-                        lookups.Add(new Guid(text.Substring(found + 16, text.IndexOf("'", found + 16) - found - 16)));
-                    } catch (System.FormatException)
-                    { }
-					i = found;
-				}
-				else
-					break;
+					lookups.Add(new Guid(text.Substring(found + 16, text.IndexOf("'", found + 16) - found - 16)));
+				} catch (System.FormatException)
+				{ }
+				i = found;
 			}
+			else
+				break;
+		}
 
-            foreach (Guid l in lookups)
+		foreach (Guid l in lookups)
+		{
+			if (persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(l)) is AbstractSchemaItem lookup)
 			{
-                if (persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(l)) is AbstractSchemaItem lookup)
-                {
-                    dependencies.Add(lookup);
-                }
-
-                if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name));
+				dependencies.Add(lookup);
 			}
+
+			if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name));
 		}
 	}
 }

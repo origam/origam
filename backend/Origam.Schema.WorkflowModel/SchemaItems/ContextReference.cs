@@ -27,40 +27,40 @@ using Origam.DA.ObjectPersistence;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for ContextReference.
+/// </summary>
+[SchemaItemDescription("Context Store Reference", "Parameters", "context-store-reference.png")]
+[HelpTopic("Context+Store+Reference")]
+[DefaultProperty("ContextStore")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ContextReference : AbstractSchemaItem, IContextReference
 {
-	/// <summary>
-	/// Summary description for ContextReference.
-	/// </summary>
-	[SchemaItemDescription("Context Store Reference", "Parameters", "context-store-reference.png")]
-    [HelpTopic("Context+Store+Reference")]
-    [DefaultProperty("ContextStore")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class ContextReference : AbstractSchemaItem, IContextReference
-	{
-		public const string CategoryConst = "WorkflowContextReference";
+	public const string CategoryConst = "WorkflowContextReference";
 
-		public ContextReference() : base() {}
+	public ContextReference() : base() {}
 
-		public ContextReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public ContextReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public ContextReference(Key primaryKey) : base(primaryKey)	{}
+	public ContextReference(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 			dependencies.Add(this.ContextStore);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -76,28 +76,28 @@ namespace Origam.Schema.WorkflowModel
 			base.UpdateReferences ();
 		}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode == this.ParentItem;
-		#endregion
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode == this.ParentItem;
+	#endregion
 
-		#region IContextReference Members
+	#region IContextReference Members
 		
-		public Guid ContextStoreId;
+	public Guid ContextStoreId;
 
-		[TypeConverter(typeof(ContextStoreConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[XmlReference("contextStore", "ContextStoreId")]
-		public IContextStore ContextStore
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("contextStore", "ContextStoreId")]
+	public IContextStore ContextStore
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.ContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.ContextStoreId = Guid.Empty;
@@ -113,17 +113,16 @@ namespace Origam.Schema.WorkflowModel
 					}
 				}
 			}
-		}
-		
-		[NotNullModelElementRule()]
-		[DefaultValue("/")]
-		[XmlAttribute ("xPath")]
-		public string XPath { get; set; } = "/";
-		
-		[DefaultValue(OrigamDataType.String)]
-		[Description("Select a data type which will be used to convert a value to. Very handy to use e.g. when called service accepts an array.")]
-		[XmlAttribute ("castToDataType")]
-		public OrigamDataType CastToDataType { get; set; } = OrigamDataType.String;
-		#endregion
 	}
+		
+	[NotNullModelElementRule()]
+	[DefaultValue("/")]
+	[XmlAttribute ("xPath")]
+	public string XPath { get; set; } = "/";
+		
+	[DefaultValue(OrigamDataType.String)]
+	[Description("Select a data type which will be used to convert a value to. Very handy to use e.g. when called service accepts an array.")]
+	[XmlAttribute ("castToDataType")]
+	public OrigamDataType CastToDataType { get; set; } = OrigamDataType.String;
+	#endregion
 }

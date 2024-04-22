@@ -28,19 +28,19 @@ using System.Xml.Linq;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
-{
-    class EntityUIActionScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = typeof(EntityUIAction).FullName;
-        public override List<string> OldFullTypeNames { get; }
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 
-        public override string[] OldPropertyXmlNames { get; } =
-            {"screen", "screenSection"};
+class EntityUIActionScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = typeof(EntityUIAction).FullName;
+    public override List<string> OldFullTypeNames { get; }
+
+    public override string[] OldPropertyXmlNames { get; } =
+        {"screen", "screenSection"};
             
 
-        public EntityUIActionScriptContainer()
-        {
+    public EntityUIActionScriptContainer()
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"),
                 new Version("6.1.0"),
@@ -48,8 +48,8 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
             AddEmptyUpgrade("6.1.0", "6.2.0");
         }
 
-        private Action<XElement, OrigamXDocument> UpgradeTo610()
-        {
+    private Action<XElement, OrigamXDocument> UpgradeTo610()
+    {
             return (node, doc) =>
             {
                 XNamespace persistenceNamespace = GetPersistenceNamespace(node);
@@ -92,5 +92,4 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                 }
             };
         }
-    }
 }

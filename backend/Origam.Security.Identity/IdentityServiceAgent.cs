@@ -29,18 +29,18 @@ using Origam.Security.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Origam.Service.Core;
 
-namespace Origam.Security.Identity
-{
-    // class is sealed because of a simplified IDisposable pattern implementation
-    public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
-    {
-		protected static readonly ILog log
-			= LogManager.GetLogger(typeof(IdentityServiceAgent));
-        private IManager userManager;
-        private IServiceScope serviceScope;
+namespace Origam.Security.Identity;
 
-        public IdentityServiceAgent()
-        {
+// class is sealed because of a simplified IDisposable pattern implementation
+public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
+{
+    protected static readonly ILog log
+        = LogManager.GetLogger(typeof(IdentityServiceAgent));
+    private IManager userManager;
+    private IServiceScope serviceScope;
+
+    public IdentityServiceAgent()
+    {
             // according to
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
             // we can get scoped RequestServices collection from HttpContext
@@ -54,20 +54,20 @@ namespace Origam.Security.Identity
             }
         }
 
-        private object result;
+    private object result;
 
-        public override object Result
+    public override object Result
+    {
+        get
         {
-            get
-            {
                 object temp = result;
                 result = null;
                 return temp;
             }
-        }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             switch (this.MethodName)
             {
                 case "GetUserData":
@@ -135,8 +135,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void GetUserData()
-        {
+    private void GetUserData()
+    {
             if (!(Parameters["Username"] is string))
             {
                 throw new InvalidCastException(
@@ -154,8 +154,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void ChangeUserPasswordQuestionAndAnswer()
-        {
+    private void ChangeUserPasswordQuestionAndAnswer()
+    {
             if (!(Parameters["Username"] is string))
             {
                 throw new InvalidCastException(
@@ -191,8 +191,8 @@ namespace Origam.Security.Identity
             }
         }
         
-        private void IsLockedOut()
-        {
+    private void IsLockedOut()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -210,8 +210,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void Is2FAEnforced()
-        {
+    private void Is2FAEnforced()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -229,8 +229,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void Set2FAEnforcement()
-        {
+    private void Set2FAEnforcement()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -253,8 +253,8 @@ namespace Origam.Security.Identity
             }
         }
         
-        private void IsEmailConfirmed()
-        {
+    private void IsEmailConfirmed()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -272,8 +272,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void UnlockUser()
-        {
+    private void UnlockUser()
+    {
             if (!(Parameters["Username"] is string))
             {
                 throw new InvalidCastException(
@@ -291,8 +291,8 @@ namespace Origam.Security.Identity
             }
         }
         
-        private void ForceConfirmEmail()
-        {
+    private void ForceConfirmEmail()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -330,8 +330,8 @@ namespace Origam.Security.Identity
             }
         }
         
-        private void ConfirmEmail()
-        {
+    private void ConfirmEmail()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -376,8 +376,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void ChangePassword()
-        {
+    private void ChangePassword()
+    {
             if (!(Parameters["Username"] is string))
             {
                 throw new InvalidCastException(
@@ -412,8 +412,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private IOrigamUser FindUser()
-        {
+    private IOrigamUser FindUser()
+    {
             IOrigamUser user = null;
             Task<IOrigamUser> taskFindUser = userManager.FindByNameAsync(
                 Parameters["Username"].ToString(),TransactionId);
@@ -433,8 +433,8 @@ namespace Origam.Security.Identity
             return user;
         }
 
-        private void ResetPassword()
-        {
+    private void ResetPassword()
+    {
             if (!(Parameters["UserName"] is String))
             {
                 throw new InvalidCastException(
@@ -475,8 +475,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void DeleteUser()
-        {
+    private void DeleteUser()
+    {
             if (!(Parameters["Username"] is string))
             {
                 throw new InvalidCastException(
@@ -496,8 +496,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void UpdateUser()
-        {
+    private void UpdateUser()
+    {
             // Check input parameters
             if (!(Parameters["Username"] is string))
             {
@@ -533,8 +533,8 @@ namespace Origam.Security.Identity
             }
         }
 
-		private void SendEmailConfirmationToken()
-		{
+    private void SendEmailConfirmationToken()
+    {
 			// Check input parameters
 			if (!(Parameters["Username"] is string))
 			{
@@ -564,8 +564,8 @@ namespace Origam.Security.Identity
 			result = true;
 		}
 
-		private void CreateUser()
-        {
+    private void CreateUser()
+    {
             // Check input parameters
             if (!(Parameters["Username"] is string))
             {
@@ -645,8 +645,8 @@ namespace Origam.Security.Identity
 			result = user.UserName;            
         }
 
-        private void GetEmailConfirmationToken()
-        {
+    private void GetEmailConfirmationToken()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -665,8 +665,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void GetPasswordResetTokenFromEmail()
-        {
+    private void GetPasswordResetTokenFromEmail()
+    {
             if (!(Parameters["Email"] is System.String))
             {
                 throw new InvalidCastException(
@@ -708,8 +708,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void GetPasswordResetToken()
-        {
+    private void GetPasswordResetToken()
+    {
             if (!(Parameters["UserId"] is System.Guid))
             {
                 throw new InvalidCastException(
@@ -728,8 +728,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private void GetPasswordAttributes()
-        {
+    private void GetPasswordAttributes()
+    {
             Task<XmlDocument> task = userManager.GetPasswordAttributesAsync();
             if (task.IsFaulted)
             {
@@ -741,8 +741,8 @@ namespace Origam.Security.Identity
             }
         }
 
-        private XmlDocument GetUserDataXml(IOrigamUser user)
-        {
+    private XmlDocument GetUserDataXml(IOrigamUser user)
+    {
             XmlDocument xmlDoc = new System.Xml.XmlDocument();
             XmlNode root = xmlDoc.CreateElement("ROOT");
             XmlNode userData = xmlDoc.CreateElement("UserData");
@@ -783,7 +783,5 @@ namespace Origam.Security.Identity
             return xmlDoc;
         }
 
-        public void Dispose() => serviceScope?.Dispose();        
-    }
-
+    public void Dispose() => serviceScope?.Dispose();        
 }

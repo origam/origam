@@ -26,12 +26,12 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 
-namespace Origam
+namespace Origam;
+
+public static class ImageResizer
 {
-    public static class ImageResizer
+    private static byte[] FixedSizeBytes(Image img, int width, int height)
     {
-        private static byte[] FixedSizeBytes(Image img, int width, int height)
-        {
             using (Image thumbnail = FixedSize(img, width, height))
             {
                 MemoryStream ms = new MemoryStream();
@@ -48,16 +48,16 @@ namespace Origam
             }
         }
 
-        public static Image Resize(Image image, int width)
-        {
+    public static Image Resize(Image image, int width)
+    {
             if (image.Width == width) return image;
             return Resize(image, width, width, true);
         }
 
-        private static byte[] ResizeBytes(Image img, int width, int height
-            , bool keepAspectRatio
-            , System.Drawing.Imaging.ImageFormat outFormat)
-        {
+    private static byte[] ResizeBytes(Image img, int width, int height
+        , bool keepAspectRatio
+        , System.Drawing.Imaging.ImageFormat outFormat)
+    {
             using (Image resized = Resize(img, width, height, keepAspectRatio))
             {
                 MemoryStream ms = new MemoryStream();
@@ -73,9 +73,9 @@ namespace Origam
             }
         }
 
-        public static byte[] ResizeBytesInBytesOut(byte[] imgBytes, int width, int height,
-            bool keepAspectRatio, string outFormat)
-        {
+    public static byte[] ResizeBytesInBytesOut(byte[] imgBytes, int width, int height,
+        bool keepAspectRatio, string outFormat)
+    {
             System.Drawing.Imaging.ImageFormat format;
             switch (outFormat.ToLower())
             {
@@ -102,22 +102,22 @@ namespace Origam
                 keepAspectRatio, format);
         }
 
-        public static byte[] FixedSizeBytesInBytesOut(byte[] imgBytes, int width, int height)
-        {
+    public static byte[] FixedSizeBytesInBytesOut(byte[] imgBytes, int width, int height)
+    {
             MemoryStream ms = new MemoryStream(imgBytes);
             Image img = Image.FromStream(ms);
             return FixedSizeBytes(img, width, height);
         }
 
-        public static int[] GetImageDimensions(byte[] imgBytes)
-        {
+    public static int[] GetImageDimensions(byte[] imgBytes)
+    {
             MemoryStream ms = new MemoryStream(imgBytes);
             Image img = Image.FromStream(ms);
             return new int[2] { img.Width, img.Height };
         }
 
-        public static Image FixedSize(Image imgPhoto, int Width, int Height)
-        {
+    public static Image FixedSize(Image imgPhoto, int Width, int Height)
+    {
             int sourceWidth = imgPhoto.Width;
             int sourceHeight = imgPhoto.Height;
             int sourceX = 0;
@@ -167,8 +167,8 @@ namespace Origam
             return bmPhoto;
         }
 
-        private static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
-        {
+    private static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
+    {
             // fix iphone rotation
             if (imgPhoto.PropertyIdList.Contains(0x0112))
             {
@@ -242,5 +242,4 @@ namespace Origam
             grPhoto.Dispose();
             return bmPhoto;
         }
-    }
 }

@@ -28,36 +28,36 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Origam.Docker
+namespace Origam.Docker;
+
+public class DockerManager
 {
-    public class DockerManager
+    private readonly DockerClient client;
+    private readonly string prefix = "";
+    private readonly string tag;
+    private readonly string repository = "origam/server";
+    private string Imagename
     {
-        private readonly DockerClient client;
-        private readonly string prefix = "";
-        private readonly string tag;
-        private readonly string repository = "origam/server";
-        private string Imagename
+        get
         {
-            get
-            {
                 //"origam/server:pg_master-latest"
                 return string.Format("{0}:{1}{2}",repository,prefix,tag);
             }
-        }
+    }
 
-        public DockerManager(string tag,string dockeradress)
-        {
+    public DockerManager(string tag,string dockeradress)
+    {
                 client = new DockerClientConfiguration(
                     new Uri(dockeradress)).CreateClient();
             this.tag = tag;
         }
 
-        public async Task<VersionResponse> IsDockerInstaledAsync()
-        {
+    public async Task<VersionResponse> IsDockerInstaledAsync()
+    {
             return await client.System.GetVersionAsync();
         }
-        public bool CreateVolume(string name)
-        {
+    public bool CreateVolume(string name)
+    {
             VolumesCreateParameters volumesCreateParameters = new VolumesCreateParameters
             {
                 Name = name
@@ -75,13 +75,13 @@ namespace Origam.Docker
             }
             return true;
         }
-        public async Task<VolumesListResponse> DockerVolumeExistsAsync()
-        {
+    public async Task<VolumesListResponse> DockerVolumeExistsAsync()
+    {
                return await client.Volumes.ListAsync();
         }
 
-        public bool PullImage()
-        { 
+    public bool PullImage()
+    { 
             var progress = new Progress<JSONMessage>();
             client.Images.CreateImageAsync(
                     new ImagesCreateParameters()
@@ -93,8 +93,8 @@ namespace Origam.Docker
             return true;
         }
 
-        public async Task RemoveContainerAsync(string containerID)
-        {
+    public async Task RemoveContainerAsync(string containerID)
+    {
                     await client.Containers.RemoveContainerAsync(containerID,
                         new ContainerRemoveParameters 
                         { 
@@ -103,13 +103,13 @@ namespace Origam.Docker
                         });
         }
 
-        public async Task<Stream> GetDockerLogsAsync(string id)
-        {
+    public async Task<Stream> GetDockerLogsAsync(string id)
+    {
             ContainerLogsParameters logparams = new ContainerLogsParameters { ShowStdout=true};
            return await client.Containers.GetContainerLogsAsync(id, logparams);
         }
-        public async Task<CreateContainerResponse> StartDockerContainerAsync(DockerContainerParameter containerParameter)
-        {
+    public async Task<CreateContainerResponse> StartDockerContainerAsync(DockerContainerParameter containerParameter)
+    {
             if (!IsImageAlreadyPulled())
             {
                 throw new Exception(
@@ -172,8 +172,8 @@ namespace Origam.Docker
             return containerTask;
         }
 
-        private  bool IsImageAlreadyPulled()
-        {
+    private  bool IsImageAlreadyPulled()
+    {
             long dockerdateTime = DateTime.Now.AddSeconds(60).Ticks;
             while (DateTime.Now.Ticks < dockerdateTime)
             {
@@ -186,8 +186,8 @@ namespace Origam.Docker
             return false;
         }
 
-        private bool DoesImageExist()
-        {
+    private bool DoesImageExist()
+    {
             try
             {
                 var inspectImageTask = Task.Run(async () =>
@@ -200,5 +200,4 @@ namespace Origam.Docker
             }
             return true;
         }
-    }
 }

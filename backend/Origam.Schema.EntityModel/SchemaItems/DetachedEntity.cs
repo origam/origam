@@ -22,21 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Maps physical table to an entity.
+/// </summary>
+[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
+[HelpTopic("Entities")]
+[ClassMetaVersion("6.0.0")]
+public class DetachedEntity : AbstractDataEntity
 {
-	/// <summary>
-	/// Maps physical table to an entity.
-	/// </summary>
-	[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
-    [HelpTopic("Entities")]
-    [ClassMetaVersion("6.0.0")]
-	public class DetachedEntity : AbstractDataEntity
-	{
-		public DetachedEntity() : base() {}
+	public DetachedEntity() : base() {}
 
-		public DetachedEntity(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DetachedEntity(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public DetachedEntity(Key primaryKey) : base(primaryKey)	{}
+	public DetachedEntity(Key primaryKey) : base(primaryKey)	{}
 
 //		public override bool CanConvertTo(Type type)
 //		{
@@ -79,5 +79,4 @@ namespace Origam.Schema.EntityModel
 //				return base.ConvertTo(type);
 //			}
 //		}
-	}
 }

@@ -21,54 +21,53 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public class DataConstantSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class DataConstantSchemaItemProvider : AbstractSchemaItemProvider
+	public DataConstantSchemaItemProvider() {}
+
+	#region ISchemaItemProvider Members
+	public override string RootItemType => DataConstant.CategoryConst;
+
+	public override bool AutoCreateFolder => true;
+
+	public override string Group => "DATA";
+
+	#endregion
+
+	#region IBrowserNode Members
+
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_06_constants.png";
+
+	public override string NodeText
 	{
-		public DataConstantSchemaItemProvider() {}
+		get => "Constants";
+		set => base.NodeText = value;
+	}
 
-		#region ISchemaItemProvider Members
-		public override string RootItemType => DataConstant.CategoryConst;
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		null;
 
-		public override bool AutoCreateFolder => true;
+	#endregion
 
-		public override string Group => "DATA";
+	#region ISchemaItemFactory Members
 
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_06_constants.png";
-
-		public override string NodeText
-		{
-			get => "Constants";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(DataConstant)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(DataConstant) ?
 				"NewDataConstant" : null);
 		}
 
-		#endregion
-	}
+	#endregion
 }

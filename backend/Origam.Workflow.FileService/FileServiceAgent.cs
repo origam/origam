@@ -33,15 +33,15 @@ using Extender;
 using Origam.Extensions;
 using Origam.Service.Core;
 
-namespace Origam.Workflow.FileService
-{
-    public class FileServiceAgent  : AbstractServiceAgent
-    {
-        private object _result;
-        private static readonly log4net.ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+namespace Origam.Workflow.FileService;
 
-        private IXmlContainer ReadDelimitedFile(TextReader reader, XmlContainer optionsXml, string entity)
-        {
+public class FileServiceAgent  : AbstractServiceAgent
+{
+    private object _result;
+    private static readonly log4net.ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    private IXmlContainer ReadDelimitedFile(TextReader reader, XmlContainer optionsXml, string entity)
+    {
             DataSet data = CreateEmptyOutputData();
             DataTable dt = data.Tables[entity];
             TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml.Xml);
@@ -168,14 +168,14 @@ namespace Origam.Workflow.FileService
             return DataDocumentFactory.New(data);
         }
 
-        void dt_TableNewRow(object sender, DataTableNewRowEventArgs e)
-        {
+    void dt_TableNewRow(object sender, DataTableNewRowEventArgs e)
+    {
             DatasetTools.ApplyPrimaryKey(e.Row);
         }
 
-        private IXmlContainer ReadFile(string fileName, XmlContainer optionsXml, 
-            string entity, object file, string encodingName)
-        {
+    private IXmlContainer ReadFile(string fileName, XmlContainer optionsXml, 
+        string entity, object file, string encodingName)
+    {
             string stringFile = file as string;
             byte[] blobFile = file as byte[];
             Encoding encoding = FileSystemServiceAgent.GetEncoding(encodingName);
@@ -203,8 +203,8 @@ namespace Origam.Workflow.FileService
             }
         }
 
-        private Type ConvertType(Type t)
-        {
+    private Type ConvertType(Type t)
+    {
             if (t == typeof(int))
             {
                 return typeof(int?);
@@ -227,13 +227,13 @@ namespace Origam.Workflow.FileService
             }
         }
 
-        public override object Result
-        {
-            get { return _result; }
-        }
+    public override object Result
+    {
+        get { return _result; }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             if (log.IsDebugEnabled)
             {
                 log.RunHandled(() =>
@@ -279,5 +279,4 @@ namespace Origam.Workflow.FileService
                     break;
             }
         }
-    }
 }

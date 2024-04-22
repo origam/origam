@@ -26,31 +26,31 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for WorkflowTask.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, IWorkflowTask
 {
-	/// <summary>
-	/// Summary description for WorkflowTask.
-	/// </summary>
-	[ClassMetaVersion("6.0.0")]
-	public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, IWorkflowTask
+
+	public WorkflowTask() : base() {}
+
+	public WorkflowTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public WorkflowTask(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractSchemaItem Members
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-
-		public WorkflowTask() : base() {}
-
-		public WorkflowTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WorkflowTask(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(this.OutputContextStore);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -66,26 +66,26 @@ namespace Origam.Schema.WorkflowModel
 			base.UpdateReferences ();
 		}
 
-		#endregion
+	#endregion
 
-		#region IWorkflowTask Members
+	#region IWorkflowTask Members
 		
-		public Guid OutputContextStoreId;
+	public Guid OutputContextStoreId;
 
-		[TypeConverter(typeof(ContextStoreConverter))]
-		[NotNullModelElementRule()]
-		[XmlReference("outputContextStore", "OutputContextStoreId")]
-		public IContextStore OutputContextStore
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("outputContextStore", "OutputContextStoreId")]
+	public IContextStore OutputContextStore
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.OutputContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.OutputContextStoreId = Guid.Empty;
@@ -95,11 +95,10 @@ namespace Origam.Schema.WorkflowModel
 					this.OutputContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-
-		[DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
-		[XmlAttribute ("outputMethod")]
-		public virtual ServiceOutputMethod OutputMethod { get; set; } = ServiceOutputMethod.AppendMergeExisting;
-		#endregion
 	}
+
+	[DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
+	[XmlAttribute ("outputMethod")]
+	public virtual ServiceOutputMethod OutputMethod { get; set; } = ServiceOutputMethod.AppendMergeExisting;
+	#endregion
 }

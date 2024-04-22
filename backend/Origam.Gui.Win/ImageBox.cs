@@ -24,55 +24,55 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for ImageBox.
-	/// </summary>
-	public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
-	{
-		private ImageBoxSourceType _sourceType = ImageBoxSourceType.Blob;
+namespace Origam.Gui.Win;
 
-		public ImageBox() : base()
-		{
+/// <summary>
+/// Summary description for ImageBox.
+/// </summary>
+public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
+{
+	private ImageBoxSourceType _sourceType = ImageBoxSourceType.Blob;
+
+	public ImageBox() : base()
+	{
 		}
 
-		[Browsable(true)]
-		public new int TabIndex
+	[Browsable(true)]
+	public new int TabIndex
+	{
+		get
 		{
-			get
-			{
 				return base.TabIndex;
 			}
-			set
-			{
+		set
+		{
 				base.TabIndex = value;
 			}
-		}
+	}
 
-		[Browsable(true)]
-		public ImageBoxSourceType SourceType
+	[Browsable(true)]
+	public ImageBoxSourceType SourceType
+	{
+		get
 		{
-			get
-			{
 				return _sourceType;
 			}
-			set
-			{
+		set
+		{
 				_sourceType = value;
 			}
-		}
+	}
 
 
-		private byte[] _imageData;
-		public object ImageData
+	private byte[] _imageData;
+	public object ImageData
+	{
+		get
 		{
-			get
-			{
 				return _imageData;
 			}
-			set
-			{
+		set
+		{
 				if(value == DBNull.Value)
 				{
 					_imageData = null;
@@ -145,113 +145,113 @@ namespace Origam.Gui.Win
 
 				OnImageDataChanged(EventArgs.Empty);
 			}
-		}
+	}
 
-		#region Events
-		public event System.EventHandler imageDataChanged;
-		protected virtual void OnImageDataChanged(EventArgs e)
-		{
+	#region Events
+	public event System.EventHandler imageDataChanged;
+	protected virtual void OnImageDataChanged(EventArgs e)
+	{
 			if (this.imageDataChanged != null)
 			{
 				this.imageDataChanged(this, e);
 			}
 		}
-		#endregion
+	#endregion
 
-		#region IAsControl Members
+	#region IAsControl Members
 
-		public string DefaultBindableProperty
+	public string DefaultBindableProperty
+	{
+		get
 		{
-			get
-			{
 				return "ImageData";
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region IAsCaptionControl Members
+	#region IAsCaptionControl Members
 
-		int _gridColumnWidth;
-		[Category("(ORIGAM)")]
-		[DefaultValue(100)]
-		[Description(CaptionDoc.GridColumnWidthDescription)]
-		public int GridColumnWidth
+	int _gridColumnWidth;
+	[Category("(ORIGAM)")]
+	[DefaultValue(100)]
+	[Description(CaptionDoc.GridColumnWidthDescription)]
+	public int GridColumnWidth
+	{
+		get
 		{
-			get
-			{
 				return _gridColumnWidth;
 			}
-			set
-			{
+		set
+		{
 				_gridColumnWidth = value;
 			}
-		}
+	}
 
 
-		string _gridColumnCaption = "";
-		[Category("(ORIGAM)")]
-		public string GridColumnCaption
+	string _gridColumnCaption = "";
+	[Category("(ORIGAM)")]
+	public string GridColumnCaption
+	{
+		get
 		{
-			get
-			{
 				return _gridColumnCaption;
 			}
-			set
-			{
+		set
+		{
 				_gridColumnCaption = value;
 			}
-		}
+	}
 
 
-		string _caption = "";
-		public string Caption
+	string _caption = "";
+	public string Caption
+	{
+		get
 		{
-			get
-			{
 				return _caption;
 			}
-			set
-			{
+		set
+		{
 				_caption = value;
 			}
-		}
+	}
 
-		CaptionPosition _captionPosition = CaptionPosition.Left;
-		public CaptionPosition CaptionPosition
+	CaptionPosition _captionPosition = CaptionPosition.Left;
+	public CaptionPosition CaptionPosition
+	{
+		get
 		{
-			get
-			{
 				return _captionPosition;
 			}
-			set
-			{
+		set
+		{
 				_captionPosition = value;
 			}
-		}
-		private int _captionLength = 100;
-		[Category("(ORIGAM)")]
-		public int CaptionLength
+	}
+	private int _captionLength = 100;
+	[Category("(ORIGAM)")]
+	public int CaptionLength
+	{
+		get
 		{
-			get
-			{
 				return _captionLength;
 			}
-			set
-			{
+		set
+		{
 				_captionLength = value;
 			}
-		}
+	}
 
-		private bool _hideOnForm = false;
-		public bool HideOnForm
+	private bool _hideOnForm = false;
+	public bool HideOnForm
+	{
+		get
 		{
-			get
-			{
 				return _hideOnForm;
 			}
-			set
-			{
+		set
+		{
 				_hideOnForm = value;
 
 				if (value && !this.DesignMode)
@@ -259,7 +259,6 @@ namespace Origam.Gui.Win
 					this.Hide();
 				}
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

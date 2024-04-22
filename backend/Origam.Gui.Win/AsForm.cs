@@ -34,41 +34,41 @@ using Origam.Schema.MenuModel;
 using Origam.Gui.UI;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for AsForm.
+/// </summary>
+public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
+	IOrigamForm, IToolStripContainer
 {
-	/// <summary>
-	/// Summary description for AsForm.
-	/// </summary>
-	public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
-		IOrigamForm, IToolStripContainer
-	{
-		#region AttachmentSolution
-		//Handle this event for getting right Id as attachment filter
-		//(when you get null sender and emty Id clear Attachments table == no panel is selected for handling attchments)
-		public event RecordReferencesChangedHandler RecordReferenceChanged;
+	#region AttachmentSolution
+	//Handle this event for getting right Id as attachment filter
+	//(when you get null sender and emty Id clear Attachments table == no panel is selected for handling attchments)
+	public event RecordReferencesChangedHandler RecordReferenceChanged;
 
-		private AsPanel _currentHandledPanel;
+	private AsPanel _currentHandledPanel;
 		
-		public event EventHandler ToolStripsLoaded;
-		public event EventHandler AllToolStripsRemoved;
-		public event EventHandler ToolStripsNeedUpdate
-		{
-			add { }
-			remove { }
-		}
+	public event EventHandler ToolStripsLoaded;
+	public event EventHandler AllToolStripsRemoved;
+	public event EventHandler ToolStripsNeedUpdate
+	{
+		add { }
+		remove { }
+	}
 
-		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
-	    {
+	public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+	{
 	        return Panels.Select(x => x.ToolStrip).ToList();
 	    }
 
-		/// <summary>
-		/// Recursively goes through all child records and finds all the record Id's
-		/// </summary>
-		/// <param name="row"></param>
-		/// <param name="references"></param>
-		internal void RetrieveChildReferences(DataRow row, Hashtable references)
-		{
+	/// <summary>
+	/// Recursively goes through all child records and finds all the record Id's
+	/// </summary>
+	/// <param name="row"></param>
+	/// <param name="references"></param>
+	internal void RetrieveChildReferences(DataRow row, Hashtable references)
+	{
 			foreach(DataRelation relation in row.Table.DataSet.Relations)
 			{
 				if(relation.ParentTable == row.Table)				// we find all the child relations of our row's table
@@ -93,8 +93,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public void panel_RecordIdChanged (object sender, EventArgs e)
-		{
+	public void panel_RecordIdChanged (object sender, EventArgs e)
+	{
 			if(this.PanelBindingSuspendedTemporarily) return;
 
 			AsPanel panel = sender as AsPanel;
@@ -128,13 +128,13 @@ namespace Origam.Gui.Win
 			OnRecordReferenceChanged();
 		}
 
-		private void OnRecordReferenceChanged()
-		{
+	private void OnRecordReferenceChanged()
+	{
 			RecordReferenceChanged?.Invoke(this, this.MainEntityId, this.MainRecordId, this.ChildRecordReferences);
 		}
 
-		public void PanelAttachementStateHandler (object sender, EventArgs e)
-		{
+	public void PanelAttachementStateHandler (object sender, EventArgs e)
+	{
 			if( !(sender is AsPanel) )
 				return;
 
@@ -165,10 +165,10 @@ namespace Origam.Gui.Win
 			_currentHandledPanel.RecordIdChanged += panel_RecordIdChanged;
 
 		}
-		#endregion
+	#endregion
 
-        public AsForm()
-		{
+	public AsForm()
+	{
 			InitializeComponent();
 			SetStyle(ControlStyles.DoubleBuffer, true);
 
@@ -177,48 +177,48 @@ namespace Origam.Gui.Win
 			this.Paint += AsForm_Paint;
 		}
 
-		public AsForm(FormGenerator generator) : this()
-		{
+	public AsForm(FormGenerator generator) : this()
+	{
 			FormGenerator = generator;
 		}
 
-		public FormGenerator FormGenerator { get; set; }
+	public FormGenerator FormGenerator { get; set; }
 
-		public Label NameLabel { get; set; }
+	public Label NameLabel { get; set; }
 
-		public FlowLayoutPanel ToolStripContainer
+	public FlowLayoutPanel ToolStripContainer
+	{
+		get => toolStripContainer;
+		set
 		{
-			get => toolStripContainer;
-			set
-			{
 				ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
 				toolStripContainer = value;
 			}
-		}
+	}
 
 
-		public string NotificationText { get; set; } = "";
+	public string NotificationText { get; set; } = "";
 
-		private string _progressText = "";
-		public string ProgressText
+	private string _progressText = "";
+	public string ProgressText
+	{
+		get => _progressText;
+		set
 		{
-			get => _progressText;
-			set
-			{
 				_progressText = value;
 				this.Invalidate();
 				Application.DoEvents();
 			}
-		}
+	}
 
-        public string HelpTopic => "";
+	public string HelpTopic => "";
 
-		private ComponentBindingCollection _componentBindings = new ComponentBindingCollection();
-		bool _bindingsInitialized = false;
-		public ComponentBindingCollection ComponentBindings
+	private ComponentBindingCollection _componentBindings = new ComponentBindingCollection();
+	bool _bindingsInitialized = false;
+	public ComponentBindingCollection ComponentBindings
+	{
+		get
 		{
-			get
-			{
 				if(! _bindingsInitialized && _extraControlBindings != "")
 				{
 					System.Xml.Serialization.XmlSerializer xsr = new System.Xml.Serialization.XmlSerializer(typeof(ComponentBindingCollection));
@@ -229,14 +229,14 @@ namespace Origam.Gui.Win
 
 				return _componentBindings;
 			}
-		}
+	}
 
-		private string _extraControlBindings = "";
-		[Browsable(false)]
-		public string ExtraControlBindings
+	private string _extraControlBindings = "";
+	[Browsable(false)]
+	public string ExtraControlBindings
+	{
+		get
 		{
-			get
-			{
 				if(_bindingsInitialized)
 				{
 					System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -249,24 +249,24 @@ namespace Origam.Gui.Win
 
 				return _extraControlBindings;
 			}
-		}
+	}
 
 
-		public bool SingleRecordEditing = false;
+	public bool SingleRecordEditing = false;
 
-		public bool PanelBindingSuspendedTemporarily = false;
+	public bool PanelBindingSuspendedTemporarily = false;
 
 
-		#region IViewContent Members
+	#region IViewContent Members
 
-		bool _canRefresh = true;
-		private Timer timer;
-		private IContainer components;
+	bool _canRefresh = true;
+	private Timer timer;
+	private IContainer components;
 		
-		public bool CanRefreshContent
+	public bool CanRefreshContent
+	{
+		get 
 		{
-			get 
-			{
 				if(IsSaving)
 				{
 					return false;
@@ -276,25 +276,25 @@ namespace Origam.Gui.Win
 					return _canRefresh;
 				}
 			}
-			set => _canRefresh = value;
-		}
+		set => _canRefresh = value;
+	}
 
-		private string _autoAddNewEntity;
-		public string AutoAddNewEntity
+	private string _autoAddNewEntity;
+	public string AutoAddNewEntity
+	{
+		get => _autoAddNewEntity;
+		set
 		{
-			get => _autoAddNewEntity;
-			set
-			{
 				_autoAddNewEntity = value;
 
 				if(value != null) timer.Start();
 			}
-		}
+	}
 
-		public object EnteringGrid { get; set; }
+	public object EnteringGrid { get; set; }
 
-		public void RefreshContent()
-		{
+	public void RefreshContent()
+	{
 			if(SaveData()) 
 			{
 				this.FormGenerator.RefreshMainData();
@@ -302,11 +302,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private bool _isReadOnly = false;
-		public bool IsReadOnly
+	private bool _isReadOnly = false;
+	public bool IsReadOnly
+	{
+		get
 		{
-			get
-			{
 				if(IsSaving)
 				{
 					return true;
@@ -316,23 +316,23 @@ namespace Origam.Gui.Win
 					return _isReadOnly;
 				}
 			}
-			set => _isReadOnly = value;
-		}
+		set => _isReadOnly = value;
+	}
 
-		public bool SaveOnClose { get; set; } = true;
+	public bool SaveOnClose { get; set; } = true;
 
-		public event SaveEventHandler Saved
+	public event SaveEventHandler Saved
+	{
+		add { }
+		remove { }
+	}
+
+	string _titleName = "";
+	public string TitleName
+	{
+		get => _titleName;
+		set
 		{
-			add { }
-			remove { }
-		}
-
-		string _titleName = "";
-		public string TitleName
-		{
-			get => _titleName;
-			set
-			{
 				_titleName = value;
 				this.Text = value;
 
@@ -343,38 +343,38 @@ namespace Origam.Gui.Win
 				
 				OnTitleNameChanged(EventArgs.Empty);
 			}
-		}
+	}
 
-		private string _statusText = "";
-		public string StatusText
+	private string _statusText = "";
+	public string StatusText
+	{
+		get => _statusText;
+		set
 		{
-			get => _statusText;
-			set
-			{
 				_statusText = value;
 				OnStatusTextChanged(EventArgs.Empty);
 			}
-		}
+	}
 
-		public event EventHandler StatusTextChanged;
-		void OnStatusTextChanged(EventArgs e)
-		{
+	public event EventHandler StatusTextChanged;
+	void OnStatusTextChanged(EventArgs e)
+	{
 			StatusTextChanged?.Invoke(this, e);
 		}
 
-		public event EventHandler DirtyChanged;
+	public event EventHandler DirtyChanged;
 
-		public event EventHandler TitleNameChanged;
+	public event EventHandler TitleNameChanged;
 
-		public void SaveObject()
-		{
+	public void SaveObject()
+	{
 			this.EndCurrentEdit();
 			if(HasErrors(true)) return;
 			FormGenerator.SaveData();
 		}
 
-		private bool HasErrors(bool throwException)
-		{
+	private bool HasErrors(bool throwException)
+	{
 			if(FormGenerator.DataSet.HasErrors)
 			{
 				if(throwException) throw new Exception(ResourceUtils.GetString("ErrorsInForm", Environment.NewLine + Environment.NewLine + DatasetTools.GetDatasetErrors(FormGenerator.DataSet)));
@@ -387,19 +387,19 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Guid DisplayedItemId { get; set; } 
+	public Guid DisplayedItemId { get; set; } 
 
-		public bool IsUntitled => false;
+	public bool IsUntitled => false;
 
-		/// <summary>
-		/// Holds workflow Id, in case, that this form is used for workflow display.
-		/// </summary>
-		public Guid WorkflowId { get; set; } = Guid.Empty;
+	/// <summary>
+	/// Holds workflow Id, in case, that this form is used for workflow display.
+	/// </summary>
+	public Guid WorkflowId { get; set; } = Guid.Empty;
 
-		public object LoadedObject { get; private set; }
+	public object LoadedObject { get; private set; }
 
-		public void LoadObject(object objectToLoad)
-		{
+	public void LoadObject(object objectToLoad)
+	{
 			LoadedObject = objectToLoad;
 			FormControlSet form;
 			Guid methodId = Guid.Empty;
@@ -469,8 +469,8 @@ namespace Origam.Gui.Win
 			ToolStripsLoaded?.Invoke(null, EventArgs.Empty);
 		}
 		
-		private void LoadFormAsync()
-		{
+	private void LoadFormAsync()
+	{
             this.FormGenerator.LoadFormAsync();
 			this.EndCurrentEdit();
 			if(SingleRecordEditing)
@@ -486,31 +486,31 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event EventHandler Saving
-		{
-			add { }
-			remove { }
-		}
+	public event EventHandler Saving
+	{
+		add { }
+		remove { }
+	}
 
-		public string UntitledName
+	public string UntitledName
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add AsForm.UntitledName getter implementation
 				return null;
 			}
-			set
-			{
+		set
+		{
 				// TODO:  Add AsForm.UntitledName setter implementation
 			}
-		}
+	}
 
-		private bool _isDirty;
+	private bool _isDirty;
 
-		public virtual bool IsDirty
+	public virtual bool IsDirty
+	{
+		get
 		{
-			get
-			{
 				if(this.IsViewOnly)
 				{
 					return false;
@@ -520,94 +520,91 @@ namespace Origam.Gui.Win
 					return _isDirty;
 				}
 			}
-			set
-			{
+		set
+		{
 				if(!this.IsViewOnly)
 				{
 					_isDirty=value;
 					OnDirtyChanged(EventArgs.Empty);
 				}
 			}
-		}
+	}
 
-		public bool IsSaving { get; set; }
+	public bool IsSaving { get; set; }
 
-		public virtual bool IsViewOnly { get; } = false;
+	public virtual bool IsViewOnly { get; } = false;
 
-		public string AddingDataMember { get; set; } = "";
+	public string AddingDataMember { get; set; } = "";
 
-		public bool IsFiltering = false;
+	public bool IsFiltering = false;
 
-		public bool CreateAsSubViewContent
+	public bool CreateAsSubViewContent
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add AsForm.CreateAsSubViewContent getter implementation
 				return false;
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region IBaseViewContent Members
+	#region IBaseViewContent Members
 
-		public void Deselected()
-		{
+	public void Deselected()
+	{
 			// TODO:  Add AsForm.Deselected implementation
 		}
 
-		public void SwitchedTo()
-		{
+	public void SwitchedTo()
+	{
 			// TODO:  Add AsForm.SwitchedTo implementation
 		}
 
-		public void Selected()
-		{
+	public void Selected()
+	{
 			// TODO:  Add AsForm.Selected implementation
 		}
 
-		public IWorkbenchWindow WorkbenchWindow
+	public IWorkbenchWindow WorkbenchWindow
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add AsForm.WorkbenchWindow getter implementation
 				return null;
 			}
-			set
-			{
+		set
+		{
 				// TODO:  Add AsForm.WorkbenchWindow setter implementation
 			}
-		}
+	}
 
-		public string TabPageText
+	public string TabPageText
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add AsForm.TabPageText getter implementation
 				return null;
 			}
-		}
+	}
 
-		public void RedrawContent()
-		{
+	public void RedrawContent()
+	{
 			// TODO:  Add AsForm.RedrawContent implementation
 		}
 
-		#endregion
+	#endregion
 
-		private void InitializeComponent()
-		{
+	private void InitializeComponent()
+	{
 			this.components = new Container();
             this.timer = new Timer(this.components);
             //
 			// timer
-			// 
-			this.timer.Interval = 300;
+			// 		this.timer.Interval = 300;
 			this.timer.Tick += this.timer_Tick;
-            // 
-			// AsForm
-			// 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 		// AsForm
+			// 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.AutoScroll = true;
 			this.BackColor = System.Drawing.Color.FloralWhite;
 			this.ClientSize = new System.Drawing.Size(320, 285);
@@ -616,23 +613,23 @@ namespace Origam.Gui.Win
 			this.Closing += this.AsForm_Closing;
 		}
 
-		protected virtual void OnDirtyChanged(EventArgs e)
-		{
+	protected virtual void OnDirtyChanged(EventArgs e)
+	{
 			OnTitleNameChanged(EventArgs.Empty);
 
 			DirtyChanged?.Invoke(this, e);
 		}
 
-		protected virtual void OnTitleNameChanged(EventArgs e)
-		{	
+	protected virtual void OnTitleNameChanged(EventArgs e)
+	{	
 			this.Text = (IsDirty ? "*" : "") + this.TitleName;
 			//this.TabText = this.TitleName;
 
 			TitleNameChanged?.Invoke(this, e);
 		}
 
-		public string Test()
-		{	
+	public string Test()
+	{	
 			Control focused = FindFocused(this);
 
 			if(focused == null)
@@ -644,8 +641,8 @@ namespace Origam.Gui.Win
 					+ "TabIndex: " + focused.TabIndex;
 		}
 
-		public void EndCurrentEdit()
-		{
+	public void EndCurrentEdit()
+	{
             try
             {
                 this.IsFiltering = true;
@@ -660,20 +657,20 @@ namespace Origam.Gui.Win
             }
 		}
 
-		public AsPanel[] Panels
+	public AsPanel[] Panels
+	{
+		get
 		{
-			get
-			{
 				ArrayList list = new ArrayList();
 
 				AddPanels(this, list);
 
 				return (AsPanel[])list.ToArray(typeof(AsPanel));
 			}
-		}
+	}
 
-		private void AddPanels(Control parentControl, ArrayList list)
-		{
+	private void AddPanels(Control parentControl, ArrayList list)
+	{
 			foreach(Control control in parentControl.Controls)
 			{
 				if(control is AsPanel)
@@ -685,8 +682,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public AsPanel FindPanel(string dataMember)
-		{
+	public AsPanel FindPanel(string dataMember)
+	{
 			foreach(AsPanel panel in this.Panels)
 			{
 				if(panel.DataMember == dataMember) return panel;
@@ -695,8 +692,8 @@ namespace Origam.Gui.Win
 			return null;
 		}
 
-		private Control FindFocused(Control parent)
-		{
+	private Control FindFocused(Control parent)
+	{
 			if(parent.Focused)
 				return parent;
 
@@ -711,8 +708,8 @@ namespace Origam.Gui.Win
 			return null;
 		}
 
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
 			if(keyData == (Keys.F6 | Keys.Shift))
 			{
 				this.SelectNextControl(this.ActiveControl, false, true, true, true);
@@ -728,8 +725,8 @@ namespace Origam.Gui.Win
 		}
 
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				if(_currentHandledPanel != null)
@@ -748,8 +745,8 @@ namespace Origam.Gui.Win
 			base.Dispose (disposing);
 		}
 
-		private bool SaveData()
-		{
+	private bool SaveData()
+	{
 			if(FormGenerator == null) return false;
 
 			try
@@ -811,8 +808,8 @@ namespace Origam.Gui.Win
 			return true;
 		}
 
-		private void AsForm_Closing(object sender, CancelEventArgs e)
-		{
+	private void AsForm_Closing(object sender, CancelEventArgs e)
+	{
 			if(this.DialogResult != DialogResult.Cancel)
 			{
 				if(! SaveData())
@@ -824,14 +821,14 @@ namespace Origam.Gui.Win
 			timer.Stop();
 		}
 
-		#region IRecordReferenceProvider Members
+	#region IRecordReferenceProvider Members
 
-		public Guid MainEntityId { get; private set; } = Guid.Empty;
+	public Guid MainEntityId { get; private set; } = Guid.Empty;
 
-		public Guid MainRecordId { get; private set; } = Guid.Empty;
+	public Guid MainRecordId { get; private set; } = Guid.Empty;
 
-		private void SetMainRecordId(object id)
-		{
+	private void SetMainRecordId(object id)
+	{
 			if(id is Guid)
 			{
 				MainRecordId = (Guid)id;
@@ -842,15 +839,15 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private bool IsManagerBinding(CurrencyManager cm)
-		{
+	private bool IsManagerBinding(CurrencyManager cm)
+	{
 			if(cm == null) return false;
 
 			return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
 		}
 
-		private void timer_Tick(object sender, EventArgs e)
-		{
+	private void timer_Tick(object sender, EventArgs e)
+	{
 			if(this.AutoAddNewEntity != null)
 			{
 				BindingManagerBase b = this.Controls[0].BindingContext[this.FormGenerator.DataSet, this.AutoAddNewEntity];
@@ -870,13 +867,13 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Hashtable ChildRecordReferences { get; } = new Hashtable();
+	public Hashtable ChildRecordReferences { get; } = new Hashtable();
 
-		private ArrayList _disabledControls = null;
-		private FlowLayoutPanel toolStripContainer;
+	private ArrayList _disabledControls = null;
+	private FlowLayoutPanel toolStripContainer;
 
-		public void BeginDisable()
-		{
+	public void BeginDisable()
+	{
 			_disabledControls = new ArrayList();
 
 			foreach(Control child in this.Controls)
@@ -888,8 +885,8 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-		public void EndDisable()
-		{
+	public void EndDisable()
+	{
 			if(_disabledControls == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorEndDisable"));
 
 			foreach(Control control in _disabledControls)
@@ -899,11 +896,11 @@ namespace Origam.Gui.Win
 
 			_disabledControls = null;
 		}
-		#endregion
+	#endregion
 
-		#region IOrigamForm Members
-		public bool SetPosition(object[] key)
-		{
+	#region IOrigamForm Members
+	public bool SetPosition(object[] key)
+	{
 			// take the first root panel and try to set the position
 			foreach(AsPanel panel in this.Panels)
 			{
@@ -918,12 +915,12 @@ namespace Origam.Gui.Win
 			return false;
 		}
 
-		public Key PrimaryKey => this.FormGenerator.FormKey;
+	public Key PrimaryKey => this.FormGenerator.FormKey;
 
-		#endregion
+	#endregion
 
-		private void AsForm_Paint(object sender, PaintEventArgs e)
-		{
+	private void AsForm_Paint(object sender, PaintEventArgs e)
+	{
 			try
 			{
 				System.Drawing.Graphics g = e.Graphics;
@@ -938,10 +935,8 @@ namespace Origam.Gui.Win
 			catch{}
 		}
 
-		protected void InvokeToolStripsRemoved()
-		{
+	protected void InvokeToolStripsRemoved()
+	{
 			AllToolStripsRemoved(this,EventArgs.Empty);
 		}
-	}
 }
-

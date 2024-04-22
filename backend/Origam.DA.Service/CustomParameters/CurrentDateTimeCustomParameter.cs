@@ -21,25 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.Service.CustomParameters
+namespace Origam.DA.Service.CustomParameters;
+
+/// <summary>
+/// Returns current date including time
+/// </summary>
+public class CurrentDateTimeCustomParameter : ICustomParameter
 {
-	/// <summary>
-	/// Returns current date including time
-	/// </summary>
-	public class CurrentDateTimeCustomParameter : ICustomParameter
+	public string Name
 	{
-		public string Name
+		get
 		{
-			get
-			{
 				return "parCurrentDateTime";
 			}
-		}
+	}
 
-		public object Evaluate(UserProfile profile)
-		{
+	public object Evaluate(UserProfile profile)
+	{
 			return DateTime.Now;
 		}
 
-	}
 }

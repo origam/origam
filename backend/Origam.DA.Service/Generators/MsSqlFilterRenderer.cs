@@ -19,20 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Service.Generators
-{
-    public class MsSqlFilterRenderer : AbstractFilterRenderer
-    {
-        public override string StringConcatenationChar => "+";
+namespace Origam.DA.Service.Generators;
 
-        protected override string LikeOperator()
-        {
+public class MsSqlFilterRenderer : AbstractFilterRenderer
+{
+    public override string StringConcatenationChar => "+";
+
+    protected override string LikeOperator()
+    {
             return "LIKE";
         }
 
-        protected override string ColumnArray(string columnName, string operand, string[] rightValues)
-        {
+    protected override string ColumnArray(string columnName, string operand, string[] rightValues)
+    {
             return "\0" + columnName + " " + operand + " (" + string.Join(", ", rightValues) + ")\0";
         }
-    }
 }

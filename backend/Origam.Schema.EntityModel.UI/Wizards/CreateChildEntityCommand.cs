@@ -28,30 +28,30 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.UI.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards;
+
+/// <summary>
+/// Summary description for CreateNtoNEntityCommand.
+/// </summary>
+public class CreateChildEntityCommand : AbstractMenuCommand
 {
-	/// <summary>
-	/// Summary description for CreateNtoNEntityCommand.
-	/// </summary>
-	public class CreateChildEntityCommand : AbstractMenuCommand
-	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ChildEntityForm childEntityForm;
-		public override bool IsEnabled
-		{
-			get
-			{
+    WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    ChildEntityForm childEntityForm;
+    public override bool IsEnabled
+    {
+        get
+        {
 				return Owner is IDataEntity;
 			}
-			set
-			{
+        set
+        {
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-		}
+    }
 
-		public override void Run()
-		{
+    public override void Run()
+    {
 			IDataEntity entity = Owner as IDataEntity;
 
             ArrayList list = new ArrayList();
@@ -90,8 +90,8 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             }
 		}
 
-        public override void Execute()
-        {
+    public override void Execute()
+    {
             IDataEntity entity1 = childEntityForm.Entity1;
             // 1. Create N:N Entity with reference to both entities
             TableMappingItem newEntity = EntityHelper.CreateTable(childEntityForm.EntityName, childEntityForm.Entity1.Group, false);
@@ -142,12 +142,12 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             newEntity.Persist();
             (entity1 as AbstractSchemaItem).Persist();
         }
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+    public override void SetSummaryText(object summary)
+    {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = ResourceUtils.GetString("CreateChildEntityWizardDescription") + " with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -155,5 +155,4 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             richTextBoxSummary.AppendText("Child Entity: \t");
             richTextBoxSummary.AppendText(childEntityForm.EntityName);
         }
-    }
 }

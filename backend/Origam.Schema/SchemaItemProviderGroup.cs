@@ -22,153 +22,153 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI;
 
-namespace Origam.Schema
-{
-	/// <summary>
-	/// Summary description for SchemaItemProviderGroup.
-	/// </summary>
-	public class SchemaItemProviderGroup : IBrowserNode2, IComparable
-	{
-		private string _id;
-		private string _icon;
-		private string _text;	
-		private BrowserNodeCollection _children = new BrowserNodeCollection();
-		private int _order;
+namespace Origam.Schema;
 
-		public SchemaItemProviderGroup(string id, string text, string icon, int order)
-		{
+/// <summary>
+/// Summary description for SchemaItemProviderGroup.
+/// </summary>
+public class SchemaItemProviderGroup : IBrowserNode2, IComparable
+{
+	private string _id;
+	private string _icon;
+	private string _text;	
+	private BrowserNodeCollection _children = new BrowserNodeCollection();
+	private int _order;
+
+	public SchemaItemProviderGroup(string id, string text, string icon, int order)
+	{
 			_id = id;
 			_text = text;
 			_icon = icon;
 			_order = order;
 		}
-		#region IBrowserNode2 Members
+	#region IBrowserNode2 Members
 
-		public bool CanMove(IBrowserNode2 newNode)
-		{
+	public bool CanMove(IBrowserNode2 newNode)
+	{
 			return false;
 		}
 
-		public IBrowserNode2 ParentNode
+	public IBrowserNode2 ParentNode
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-			set
-			{
+		set
+		{
 				// TODO:  Add SchemaItemProviderGroup.ParentNode setter implementation
 			}
-		}
+	}
 
-		public string NodeId
+	public string NodeId
+	{
+		get
 		{
-			get
-			{
 				return _id;
 			}
-		}
+	}
 
-		public byte[] NodeImage
+	public byte[] NodeImage
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-		}
+	}
 
-		public bool CanDelete
+	public bool CanDelete
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 
-		public void Delete()
-		{
+	public void Delete()
+	{
 			throw new InvalidOperationException();
 		}
 
-		public bool Hide
+	public bool Hide
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add SchemaItemProviderGroup.Hide getter implementation
 				return false;
 			}
-			set
-			{
+		set
+		{
 				// TODO:  Add SchemaItemProviderGroup.Hide setter implementation
 			}
-		}
+	}
 
-        public virtual string FontStyle
-        {
-            get
-            {
+	public virtual string FontStyle
+	{
+		get
+		{
                 return "Regular";
             }
-        }
-        #endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public bool HasChildNodes
+	public bool HasChildNodes
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
+	}
 
-		public bool CanRename
+	public bool CanRename
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
+	}
 
-		public BrowserNodeCollection ChildNodes()
-		{
+	public BrowserNodeCollection ChildNodes()
+	{
 			return _children;
 		}
 
-		public string NodeText
+	public string NodeText
+	{
+		get
 		{
-			get
-			{
 				return _text;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException();
 			}
-		}
+	}
 
-		public string Icon
+	public string Icon
+	{
+		get
 		{
-			get
-			{
 				return _icon;
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region IComparable Members
+	#region IComparable Members
 
-		public int Order
+	public int Order
+	{
+		get
 		{
-			get
-			{
 				return _order;
 			}
-		}
+	}
 
-		public int CompareTo(object obj)
-		{
+	public int CompareTo(object obj)
+	{
 			SchemaItemProviderGroup group = obj as SchemaItemProviderGroup;
 			if(group != null)
 			{
@@ -180,6 +180,5 @@ namespace Origam.Schema
 			}
 		}
 
-		#endregion
-	}
+	#endregion
 }

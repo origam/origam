@@ -35,26 +35,26 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Git;
 using Origam.OrigamEngine;
 
-namespace Origam.Workbench.Services
-{
-    public class FilePersistenceService : IPersistenceService
-    {
-        private readonly FilePersistenceProvider schemaProvider;
-        private readonly IMetaModelUpgradeService metaModelUpgradeService;
-        private readonly IList<string> defaultFolders;
-        private readonly string pathToRuntimeModelConfig;
+namespace Origam.Workbench.Services;
 
-        public FileEventQueue FileEventQueue { get; }
-        public IPersistenceProvider SchemaProvider => schemaProvider;
-        public IPersistenceProvider SchemaListProvider { get; }
+public class FilePersistenceService : IPersistenceService
+{
+    private readonly FilePersistenceProvider schemaProvider;
+    private readonly IMetaModelUpgradeService metaModelUpgradeService;
+    private readonly IList<string> defaultFolders;
+    private readonly string pathToRuntimeModelConfig;
+
+    public FileEventQueue FileEventQueue { get; }
+    public IPersistenceProvider SchemaProvider => schemaProvider;
+    public IPersistenceProvider SchemaListProvider { get; }
         
-        public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
+    public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
-        public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, 
-            IList<string> defaultFolders, string pathToRuntimeModelConfig,
-            string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
-            bool checkRules = true, MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore)
-        {
+    public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, 
+        IList<string> defaultFolders, string pathToRuntimeModelConfig,
+        string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
+        bool checkRules = true, MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore)
+    {
             this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
             DirectoryInfo topDirectory = GetTopDirectory(basePath);
@@ -122,9 +122,9 @@ namespace Origam.Workbench.Services
             SchemaListProvider = schemaProvider;
         }
 
-        private string CheckRuntimeModelConfigPathAndUpdateGitIgnore(string pathCandidate,
-            DirectoryInfo topDirectory)
-        {
+    private string CheckRuntimeModelConfigPathAndUpdateGitIgnore(string pathCandidate,
+        DirectoryInfo topDirectory)
+    {
             if (string.IsNullOrWhiteSpace(pathCandidate))
             {
                 string configFileName = "RuntimeModelConfiguration.json";
@@ -140,8 +140,8 @@ namespace Origam.Workbench.Services
         }
 
 
-        private static DirectoryInfo GetTopDirectory(string basePath)
-        {
+    private static DirectoryInfo GetTopDirectory(string basePath)
+    {
             if (basePath == null)
             {
                 basePath = ConfigurationManager.GetActiveConfiguration().ModelSourceControlLocation;
@@ -155,14 +155,14 @@ namespace Origam.Workbench.Services
             return new DirectoryInfo(basePath);
         }
 
-        private void OnReloadNeeded(object sender, FileSystemChangeEventArgs args)
-        {
+    private void OnReloadNeeded(object sender, FileSystemChangeEventArgs args)
+    {
             ReloadNeeded?.Invoke(this, args);
         }
 
-        private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
-            bool watchFileChanges, FileFilter ignoredFileFilter)
-        {
+    private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
+        bool watchFileChanges, FileFilter ignoredFileFilter)
+    {
             if (!watchFileChanges)
             {
                 return new NullWatchDog();
@@ -170,11 +170,11 @@ namespace Origam.Workbench.Services
             return new FileChangesWatchDog(topDir, ignoredFileFilter);
         }
 
-        public Maybe<XmlLoadError> Reload() => 
-            schemaProvider.ReloadFiles();
+    public Maybe<XmlLoadError> Reload() => 
+        schemaProvider.ReloadFiles();
         
-        public Package LoadSchema(Guid schemaExtensionId)
-        {
+    public Package LoadSchema(Guid schemaExtensionId)
+    {
             schemaProvider.FlushCache();
             var loadedSchema = schemaProvider
                     .RetrieveInstance(typeof(Package), new ModelElementKey(schemaExtensionId))
@@ -190,12 +190,12 @@ namespace Origam.Workbench.Services
             return loadedSchema;
         }
         
-        public void InitializeService()
-        {
+    public void InitializeService()
+    {
         }
 
-        public void UnloadService()
-        {
+    public void UnloadService()
+    {
             try
             {
                 schemaProvider.PersistIndex(true);
@@ -206,23 +206,22 @@ namespace Origam.Workbench.Services
             }
         }
 
-        public object Clone()
-        {
+    public object Clone()
+    {
             return new FilePersistenceService(metaModelUpgradeService, defaultFolders,
                 mode: MetaModelUpgradeMode.Ignore, 
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
-        public void InitializeRepository()
-        {
+    public void InitializeRepository()
+    {
         }
 
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             schemaProvider?.Dispose();
             FileEventQueue.ReloadNeeded -= OnReloadNeeded;
             FileEventQueue?.Dispose();
             SchemaListProvider?.Dispose();
         }
-    }
 }

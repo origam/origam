@@ -25,26 +25,26 @@ using System.Net;
 using System.Windows.Forms;
 using Origam.Extensions;
 
-namespace Origam.Workbench.Pads
+namespace Origam.Workbench.Pads;
+
+/// <summary>
+/// Summary description for LogPad.
+/// </summary>
+public class ServerLogPad : OutputPad
 {
-	/// <summary>
-	/// Summary description for LogPad.
-	/// </summary>
-	public class ServerLogPad : OutputPad
-	{
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private Timer timer;
-        private System.ComponentModel.IContainer components;
-        private int _lastPosition = 0;
-        private CheckBox pauseCheckbox;
-        private Label lblLogSize;
-        private bool _isFirst = true;
-        private const int INTERVAL = 500;
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private Timer timer;
+    private System.ComponentModel.IContainer components;
+    private int _lastPosition = 0;
+    private CheckBox pauseCheckbox;
+    private Label lblLogSize;
+    private bool _isFirst = true;
+    private const int INTERVAL = 500;
     
-        public ServerLogPad()
-            : base()
-		{
+    public ServerLogPad()
+        : base()
+    {
             InitializeComponent();
 
             this.timer.Interval = INTERVAL;
@@ -54,8 +54,8 @@ namespace Origam.Workbench.Pads
             toolBar.Show();
         }
 
-        void pauseCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
+    void pauseCheckbox_CheckedChanged(object sender, EventArgs e)
+    {
             if (pauseCheckbox.Checked)
             {
                 timer.Stop();
@@ -70,8 +70,8 @@ namespace Origam.Workbench.Pads
             }
         }
 
-        private void InitializeComponent()
-        {
+    private void InitializeComponent()
+    {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerLogPad));
             this.timer = new System.Windows.Forms.Timer(this.components);
@@ -79,37 +79,27 @@ namespace Origam.Workbench.Pads
             this.lblLogSize = new System.Windows.Forms.Label();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolBar
-            // 
-            this.toolBar.Controls.Add(this.lblLogSize);
+            //      // toolBar
+            //      this.toolBar.Controls.Add(this.lblLogSize);
             this.toolBar.Controls.Add(this.pauseCheckbox);
             this.toolBar.Size = new System.Drawing.Size(292, 27);
-            // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // pauseCheckbox
-            // 
-            this.pauseCheckbox.Location = new System.Drawing.Point(13, 6);
+            //      // timer
+            //      this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            //      // pauseCheckbox
+            //      this.pauseCheckbox.Location = new System.Drawing.Point(13, 6);
             this.pauseCheckbox.Name = "pauseCheckbox";
             this.pauseCheckbox.Size = new System.Drawing.Size(56, 17);
             this.pauseCheckbox.TabIndex = 0;
             this.pauseCheckbox.Text = "Pause";
             this.pauseCheckbox.CheckedChanged += new System.EventHandler(this.pauseCheckbox_CheckedChanged);
-            // 
-            // lblLogSize
-            // 
-            this.lblLogSize.AutoSize = true;
+            //      // lblLogSize
+            //      this.lblLogSize.AutoSize = true;
             this.lblLogSize.Location = new System.Drawing.Point(85, 7);
             this.lblLogSize.Name = "lblLogSize";
             this.lblLogSize.Size = new System.Drawing.Size(0, 13);
             this.lblLogSize.TabIndex = 1;
-            // 
-            // ServerLogPad
-            // 
-            this.ClientSize = new System.Drawing.Size(292, 271);
+            //      // ServerLogPad
+            //      this.ClientSize = new System.Drawing.Size(292, 271);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ServerLogPad";
             this.toolBar.ResumeLayout(false);
@@ -119,8 +109,8 @@ namespace Origam.Workbench.Pads
 
         }
 
-        private void timer_Tick(object sender, EventArgs e)
-        {
+    private void timer_Tick(object sender, EventArgs e)
+    {
             try
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
@@ -184,8 +174,8 @@ namespace Origam.Workbench.Pads
             }
         }
 
-        private void RetrieveLogFromServer(HttpWebRequest request)
-        {
+    private void RetrieveLogFromServer(HttpWebRequest request)
+    {
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 using (Stream responseStream = response.GetResponseStream())
@@ -205,8 +195,8 @@ namespace Origam.Workbench.Pads
             }
         }
 
-        private static int GetInitialSize(string url)
-        {
+    private static int GetInitialSize(string url)
+    {
             int initSize = 10240;
             int size = GetFileSize(url);
             if (size < initSize)
@@ -219,8 +209,8 @@ namespace Origam.Workbench.Pads
             }
         }
 
-        private static int GetFileSize(string url)
-        {
+    private static int GetFileSize(string url)
+    {
             ServicePointManager.SecurityProtocol =
                 SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11
                 | SecurityProtocolType.Tls;
@@ -236,5 +226,4 @@ namespace Origam.Workbench.Pads
             }
             return size;
         }
-	}
 }

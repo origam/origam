@@ -23,24 +23,24 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Origam.DA
-{
-	/// <summary>
-	/// Summary description for OrigamDbTransaction.
-	/// </summary>
-	public class OrigamDbTransaction : OrigamTransaction
-	{
-		IDbTransaction _transaction;
-        IDbConnection _connection;
+namespace Origam.DA;
 
-		public OrigamDbTransaction(IDbTransaction transaction)
-		{
+/// <summary>
+/// Summary description for OrigamDbTransaction.
+/// </summary>
+public class OrigamDbTransaction : OrigamTransaction
+{
+	IDbTransaction _transaction;
+	IDbConnection _connection;
+
+	public OrigamDbTransaction(IDbTransaction transaction)
+	{
 			_transaction = transaction;
             _connection = transaction.Connection;
 		}
 
-		public override void Commit()
-		{
+	public override void Commit()
+	{
 			IDbConnection connection = _transaction.Connection;
 
 			_transaction.Commit();
@@ -50,8 +50,8 @@ namespace Origam.DA
 			connection.Dispose();
 		}
 
-		public override void Rollback()
-		{
+	public override void Rollback()
+	{
 			_transaction.Rollback();
             _transaction.Dispose();
 
@@ -59,8 +59,8 @@ namespace Origam.DA
             _connection.Dispose();
 		}
 
-		public override void Rollback(string savePointName)
-		{
+	public override void Rollback(string savePointName)
+	{
 			SqlTransaction tran = _transaction as SqlTransaction;
 
 			if(tran == null)
@@ -74,8 +74,8 @@ namespace Origam.DA
 		}
 
 
-		public override void Save(string savePointName)
-		{
+	public override void Save(string savePointName)
+	{
 			SqlTransaction tran = _transaction as SqlTransaction;
 
 			if(tran == null)
@@ -89,12 +89,11 @@ namespace Origam.DA
 		}
 
 
-		public IDbTransaction Transaction
+	public IDbTransaction Transaction
+	{
+		get
 		{
-			get
-			{
 				return _transaction;
 			}
-		}
 	}
 }

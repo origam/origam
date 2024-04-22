@@ -30,61 +30,61 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+
+public interface IDeploymentVersion: IComparable
 {
-	public interface IDeploymentVersion: IComparable
+	PackageVersion Version { get; }
+	List<DeploymentDependency> DeploymentDependencies { get; set; }
+	bool HasDependencies { get; }
+	Guid SchemaExtensionId { get; }
+	string PackageName { get; }
+}
+
+[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
+[HelpTopic("Deployment+Version")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+[DebuggerDisplay("{PackageName} {ToString()}")]
+public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
+{
+	private IPersistenceService persistenceService 
+		= ServiceManager.Services.GetService<IPersistenceService>();
+
+	private ISchemaService schemaService 
+		= ServiceManager.Services.GetService<ISchemaService>();
+
+	public const string CategoryConst = "DeploymentVersion";
+
+	public DeploymentVersion() {}
+
+	public DeploymentVersion(Guid schemaExtensionId,
+		List<Package> packagesToDependOn) : base(schemaExtensionId)
 	{
-		PackageVersion Version { get; }
-		List<DeploymentDependency> DeploymentDependencies { get; set; }
-		bool HasDependencies { get; }
-		Guid SchemaExtensionId { get; }
-		string PackageName { get; }
-	}
-
-	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
-    [HelpTopic("Deployment+Version")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	[DebuggerDisplay("{PackageName} {ToString()}")]
-	public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
-	{
-		private IPersistenceService persistenceService 
-			= ServiceManager.Services.GetService<IPersistenceService>();
-
-		private ISchemaService schemaService 
-			= ServiceManager.Services.GetService<ISchemaService>();
-
-		public const string CategoryConst = "DeploymentVersion";
-
-		public DeploymentVersion() {}
-
-		public DeploymentVersion(Guid schemaExtensionId,
-			List<Package> packagesToDependOn) : base(schemaExtensionId)
-		{
 			deploymentDependencies = 
 				DeploymentDependency.FromPackages(packagesToDependOn);
 			DeploymentDependenciesCsv =
 				DeploymentDependency.ToCsv(deploymentDependencies);
 		}
 
-		public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
+	public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
-		public override bool IsDeleted
+	#region Overriden AbstractSchemaItem Members
+	public override bool IsDeleted
+	{
+		get => base.IsDeleted;
+		set
 		{
-			get => base.IsDeleted;
-			set
-			{
 				if(value & IsCurrentVersion)
 				{
 					throw new InvalidOperationException("Cannot delete current version.");
 				}
 				base.IsDeleted = value;
 			}
-		}
+	}
 
-		public override string ToString()
-		{
+	public override string ToString()
+	{
 			if(IsCurrentVersion)
 			{
 				return Name + ResourceUtils.GetString("Current");
@@ -92,38 +92,38 @@ namespace Origam.Schema.DeploymentModel
 			return Name;
 		}
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override string Icon => IsCurrentVersion 
-			? "icon_deployment-version-active.png" 
-			: "icon_deployment-version.png";
+	public override string Icon => IsCurrentVersion 
+		? "icon_deployment-version-active.png" 
+		: "icon_deployment-version.png";
 
-		#endregion
+	#endregion
 
-		#region Properties
-		[Browsable(false)]
-		public override bool UseFolders => false;
+	#region Properties
+	[Browsable(false)]
+	public override bool UseFolders => false;
 
-		[Browsable(false)]
-		public bool IsCurrentVersion
+	[Browsable(false)]
+	public bool IsCurrentVersion
+	{
+		get
 		{
-			get
-			{
 				var package = persistenceService.SchemaListProvider
 					.RetrieveInstance(typeof(Package), Package.PrimaryKey) 
 					as Package;
 				return package.VersionString == VersionString;
 			}
-		}
+	}
 
-		private string versionString;
-		[Category("Version Information")]
-		[XmlAttribute("version")]
-		public string VersionString
+	private string versionString;
+	[Category("Version Information")]
+	[XmlAttribute("version")]
+	public string VersionString
+	{
+		get => versionString;
+		set
 		{
-			get => versionString;
-			set
-			{
 				if((versionString != null) && (versionString != value) 
 				&& IsCurrentVersion)
 				{
@@ -133,32 +133,32 @@ namespace Origam.Schema.DeploymentModel
 				versionString = value;
 				Version = new PackageVersion(versionString);
 			}
-		}
+	}
 
-        [Browsable(false)]
-        public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
-			ChildItems
-				.ToGeneric()
-				.OrderBy(activity => 
-					((AbstractUpdateScriptActivity)activity).ActivityOrder)
-				.Cast<AbstractUpdateScriptActivity>();
+	[Browsable(false)]
+	public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
+		ChildItems
+			.ToGeneric()
+			.OrderBy(activity => 
+				((AbstractUpdateScriptActivity)activity).ActivityOrder)
+			.Cast<AbstractUpdateScriptActivity>();
 
-        [Browsable(false)]
-        public PackageVersion Version { get; private set; }
+	[Browsable(false)]
+	public PackageVersion Version { get; private set; }
         
-		[XmlAttribute("deploymentDependenciesCsv")]
-		public string DeploymentDependenciesCsv;
+	[XmlAttribute("deploymentDependenciesCsv")]
+	public string DeploymentDependenciesCsv;
 
-		private List<DeploymentDependency> deploymentDependencies;
+	private List<DeploymentDependency> deploymentDependencies;
 
-        [Browsable(false)]
-        public List<DeploymentDependency> DeploymentDependencies
+	[Browsable(false)]
+	public List<DeploymentDependency> DeploymentDependencies
+	{
+		get =>
+			deploymentDependencies ?? (deploymentDependencies =
+				DeploymentDependency.FromCsv(DeploymentDependenciesCsv));
+		set
 		{
-			get =>
-				deploymentDependencies ?? (deploymentDependencies =
-					DeploymentDependency.FromCsv(DeploymentDependenciesCsv));
-			set
-			{
 				if(!string.IsNullOrEmpty(DeploymentDependenciesCsv))
 				{
 					throw new Exception(
@@ -166,18 +166,18 @@ namespace Origam.Schema.DeploymentModel
 				}
 				deploymentDependencies = value;
 			}
-		}
+	}
 
-        [Browsable(false)]
-        public bool HasDependencies => DeploymentDependencies.Count != 0;
-		#endregion
+	[Browsable(false)]
+	public bool HasDependencies => DeploymentDependencies.Count != 0;
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+	public override Type[] NewItemTypes
+	{
+		get
 		{
-			get
-			{
 				if(schemaService.ActiveExtension.PrimaryKey.Equals(
 					   Package.PrimaryKey))
 				{
@@ -189,11 +189,11 @@ namespace Origam.Schema.DeploymentModel
 				}
 				return new Type[] {};
 			}
-		}
+	}
 
-        public override T NewItem<T>(
-	        Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			var order = MaxOrder() + 10;
 			var itemName = order.ToString("00000") + "_";;
 			var item = base.NewItem<T>(schemaExtensionId, group, itemName);
@@ -201,10 +201,10 @@ namespace Origam.Schema.DeploymentModel
 			return item;
 		}
 
-		#endregion
+	#endregion
 
-		private int MaxOrder()
-		{
+	private int MaxOrder()
+	{
 			var max = 0;
 			foreach(AbstractUpdateScriptActivity activity 
 			        in ChildItemsByType(
@@ -218,30 +218,30 @@ namespace Origam.Schema.DeploymentModel
 			return max;
 		}
 
-        public override int CompareTo(object obj)
-        {
+	public override int CompareTo(object obj)
+	{
 	        if(obj is DeploymentVersion otherDeploymentVersion)
             {
                 return Version.CompareTo(otherDeploymentVersion.Version);
             }
 	        return base.CompareTo(obj);
         }
-	}
+}
 
-	public class DeploymentDependency
+public class DeploymentDependency
+{
+	public Guid PackageId { get; }
+	public PackageVersion PackageVersion { get; }
+
+	/// <summary></summary>
+	/// <param name="dependenciesInCsvFormat"> example:
+	/// 147FA70D-6519-4393-B5D0-87931F9FD609, 5.0
+	/// 6CB854A9-8A7F-4283-AF88-E4CA72919144, 5.0
+	/// </param>
+	/// <returns></returns>
+	public static List<DeploymentDependency> FromCsv(
+		string dependenciesInCsvFormat)
 	{
-		public Guid PackageId { get; }
-		public PackageVersion PackageVersion { get; }
-
-		/// <summary></summary>
-		/// <param name="dependenciesInCsvFormat"> example:
-		/// 147FA70D-6519-4393-B5D0-87931F9FD609, 5.0
-		/// 6CB854A9-8A7F-4283-AF88-E4CA72919144, 5.0
-		/// </param>
-		/// <returns></returns>
-		public static List<DeploymentDependency> FromCsv(
-			string dependenciesInCsvFormat)
-		{
 			if (string.IsNullOrEmpty(dependenciesInCsvFormat))
 			{
 				return new List<DeploymentDependency>();
@@ -254,24 +254,24 @@ namespace Origam.Schema.DeploymentModel
 				.ToList();
 		}
 		
-		public static List<DeploymentDependency> FromPackages(
-			List<Package> packagesToDependOn)
-		{
+	public static List<DeploymentDependency> FromPackages(
+		List<Package> packagesToDependOn)
+	{
 			return packagesToDependOn
 				.Select(package =>new DeploymentDependency(
 					package.Id, package.Version))
 				.ToList();
 		}
 		
-		public static string ToCsv(List<DeploymentDependency> dependencies)
-		{
+	public static string ToCsv(List<DeploymentDependency> dependencies)
+	{
 			return dependencies
 				.Select(dep => dep.PackageId + ", " + dep.PackageVersion)
 				.Aggregate("", (csv, line) => csv + Environment.NewLine + line);
 		}
 
-		private static DeploymentDependency ParseFromCsvLine(string csvLine)
-		{
+	private static DeploymentDependency ParseFromCsvLine(string csvLine)
+	{
 			var packageIdAndVersion = csvLine.Split(',');
 			if(!Guid.TryParse(packageIdAndVersion[0], out var packageId))
 			{
@@ -287,11 +287,10 @@ namespace Origam.Schema.DeploymentModel
 			return new DeploymentDependency(packageId, version);
 		}
 
-		public DeploymentDependency(
-			Guid packageId, PackageVersion packageVersion)
-		{
+	public DeploymentDependency(
+		Guid packageId, PackageVersion packageVersion)
+	{
 			PackageId = packageId;
 			PackageVersion = packageVersion;
 		}
-	}
 }

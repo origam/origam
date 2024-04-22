@@ -21,18 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for TextBoxBuilder.
+/// </summary>
+public class FormLabelBuilder
 {
-	/// <summary>
-	/// Summary description for TextBoxBuilder.
-	/// </summary>
-	public class FormLabelBuilder
+	public static void Build(XmlElement parentNode, string text)
 	{
-		public static void Build(XmlElement parentNode, string text)
-		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "Label");
 			parentNode.SetAttribute("Name", text);
 		}
-	}
 }

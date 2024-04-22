@@ -38,32 +38,32 @@ using Origam.Workbench.Services;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Node = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Diagram
-{
-	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
-	{
-		private readonly INodeSelector nodeSelector;
-		private readonly GViewer gViewer;
-		private readonly WorkbenchSchemaService schemaService;
-		private List<string> expandedSubgraphNodeIds = new List<string>();
-		private WorkFlowGraph graph;
-		private  NodeFactory nodeFactory;
+namespace Origam.Workbench.Diagram;
 
-		public WorkFlowDiagramFactory(INodeSelector nodeSelector,
-			GViewer gViewer, WorkbenchSchemaService schemaService)
-		{
+public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
+{
+	private readonly INodeSelector nodeSelector;
+	private readonly GViewer gViewer;
+	private readonly WorkbenchSchemaService schemaService;
+	private List<string> expandedSubgraphNodeIds = new List<string>();
+	private WorkFlowGraph graph;
+	private  NodeFactory nodeFactory;
+
+	public WorkFlowDiagramFactory(INodeSelector nodeSelector,
+		GViewer gViewer, WorkbenchSchemaService schemaService)
+	{
 			this.nodeSelector = nodeSelector;
 			this.gViewer = gViewer;
 			this.schemaService = schemaService;
 		}
 
-		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
-		{
+	public WorkFlowGraph Draw(IWorkflowBlock graphParent)
+	{
 			return Draw(graphParent, new List<string>());
 		}
 
-		public WorkFlowGraph Draw(IWorkflowBlock graphParent, List<string> expandedSubgraphNodeIds)
-		{
+	public WorkFlowGraph Draw(IWorkflowBlock graphParent, List<string> expandedSubgraphNodeIds)
+	{
 			this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
 			graph = new WorkFlowGraph();
 			nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph);
@@ -81,8 +81,8 @@ namespace Origam.Workbench.Diagram
 			return graph;
 		}
 
-		private void AddContextStores(IWorkflowBlock block, BlockSubGraph blockSubGraph)
-		{
+	private void AddContextStores(IWorkflowBlock block, BlockSubGraph blockSubGraph)
+	{
 			foreach (var childItem in block.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
@@ -93,8 +93,8 @@ namespace Origam.Workbench.Diagram
 			}
 		}
 
-		private Subgraph AddSubgraphNode(IWorkflowStep step, Subgraph subGraph)
-		{
+	private Subgraph AddSubgraphNode(IWorkflowStep step, Subgraph subGraph)
+	{
 			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
 			if (expandedSubgraphNodeIds.Contains(subgraphNode.Id))
             {
@@ -113,8 +113,8 @@ namespace Origam.Workbench.Diagram
             return subgraphNode;
 		}
 
-		private void AddActionNodes(IWorkflowStep step, Subgraph subgraphNode)
-		{
+	private void AddActionNodes(IWorkflowStep step, Subgraph subgraphNode)
+	{
 			if (!(step is UIFormTask formTask)) return;
 			
 			foreach (DataStructureEntity entity in formTask.Screen.DataStructure
@@ -133,9 +133,9 @@ namespace Origam.Workbench.Diagram
 			AddNodeItem(subgraphNode, new NodeItemLabel("", 5));
 		}
 
-		private EntityUIAction[] GetActions(DataStructureEntity entity,
-			Guid screenId)
-		{
+	private EntityUIAction[] GetActions(DataStructureEntity entity,
+		Guid screenId)
+	{
 			var actions = entity.Entity.ChildItems
 				.ToGeneric()
 				.OfType<EntityUIAction>()
@@ -161,13 +161,13 @@ namespace Origam.Workbench.Diagram
 			return actions;
 		}
 
-		private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
-		{
+	private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
+	{
 			return !action.ScreenIds.Any()|| action.ScreenIds.Contains(screenId);
 		}
 
-		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
-		{
+	private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
+	{
 			step.ChildItems.ToGeneric()
 				.Where(x => !(x is WorkflowTaskDependency))
 				.OrderByDescending(x => x.Name)
@@ -183,28 +183,28 @@ namespace Origam.Workbench.Diagram
 				});
 		}
 
-		private void AddNodeItem(ISchemaItem item, Subgraph subGraph, int leftMargin)
-		{
+	private void AddNodeItem(ISchemaItem item, Subgraph subGraph, int leftMargin)
+	{
 			var nodeData = new NodeItemData(item, leftMargin, schemaService);
 			Node node = nodeFactory.AddNodeItem(nodeData);
 			subGraph.AddNode(node);
 		}
 		
-		private void AddNodeItem(Subgraph subGraph, INodeData nodeData)
-		{
+	private void AddNodeItem(Subgraph subGraph, INodeData nodeData)
+	{
 			Node node = nodeFactory.AddNodeItem(nodeData);
 			subGraph.AddNode(node);
 		}
 
-		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
-		{
+	private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
+	{
 			BlockSubGraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
 			AddContextStores(workFlowBlock, subgraph);
 			return AddToSubgraph(workFlowBlock, subgraph);
 		}
 
-		private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
-		{
+	private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
+	{
 			IDictionary<Key, Node> nodes = new Dictionary<Key, Node>();
 
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
@@ -240,8 +240,8 @@ namespace Origam.Workbench.Diagram
 			return subgraph;
 		}
 
-		private void AddBalloons()
-		{
+	private void AddBalloons()
+	{
 			foreach (var subgraph in graph.MainDrawingSubgraf.Subgraphs)
 			{
 				if (!subgraph.InEdges.Any())
@@ -258,5 +258,4 @@ namespace Origam.Workbench.Diagram
 				}
 			}
 		}
-	}
 }

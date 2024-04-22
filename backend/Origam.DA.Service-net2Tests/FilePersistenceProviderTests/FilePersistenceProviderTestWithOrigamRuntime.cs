@@ -24,21 +24,21 @@ using System.IO;
 using NUnit.Framework;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+
+/// <summary>
+/// This test reads data from database, saves them to xml, reads them back
+/// and compares the result to the original data. Edit OrigamSettings.config
+/// to change data to work with.
+/// </summary>
+[TestFixture]
+public class FilePersistenceProviderTestWithOrigamRuntime: AbstractFileTestClass
 {
-    /// <summary>
-    /// This test reads data from database, saves them to xml, reads them back
-    /// and compares the result to the original data. Edit OrigamSettings.config
-    /// to change data to work with.
-    /// </summary>
-    [TestFixture]
-    public class FilePersistenceProviderTestWithOrigamRuntime: AbstractFileTestClass
-    {
-        protected override TestContext TestContext =>
-            TestContext.CurrentContext;
+    protected override TestContext TestContext =>
+        TestContext.CurrentContext;
 //        [Test]
-        public void ShouldReadDataFromDataBaseAndOverwriteExistingXmls()
-        {           
+    public void ShouldReadDataFromDataBaseAndOverwriteExistingXmls()
+    {           
             OrigamEngine.OrigamEngine.ConnectRuntime(
                 "Data for Xml serialization Test");
             Console.WriteLine("OrigamEngine connected");
@@ -52,8 +52,8 @@ namespace Origam.DA.Service_net2Tests
             Console.WriteLine("DONE"); 
         }
 
-        private static void ClearTestDir(OrigamSettings settings)
-        {
+    private static void ClearTestDir(OrigamSettings settings)
+    {
             foreach (string dir in Directory.EnumerateDirectories(settings
                 .ModelSourceControlLocation))
             {
@@ -82,6 +82,5 @@ namespace Origam.DA.Service_net2Tests
 //            Console.WriteLine("DONE");
 //        }
 
-        protected override string DirName => "FilePersistenceProviderTests";
-    }
+    protected override string DirName => "FilePersistenceProviderTests";
 }

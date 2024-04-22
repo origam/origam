@@ -27,25 +27,25 @@ using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
-{
-	/// <summary>
-	/// Summary description for DatasetRuleHandler.
-	/// </summary>
-	public class DatasetRuleHandler
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private bool _inRowChanging = false;
-		private DataStructureRuleSet _ruleSet = null;
-		private IDataDocument _currentRuleDocument = null;
-		private RuleEngine _ruleEngine = null;
+namespace Origam.Rule;
 
-		public DatasetRuleHandler()
-		{
+/// <summary>
+/// Summary description for DatasetRuleHandler.
+/// </summary>
+public class DatasetRuleHandler
+{
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	private bool _inRowChanging = false;
+	private DataStructureRuleSet _ruleSet = null;
+	private IDataDocument _currentRuleDocument = null;
+	private RuleEngine _ruleEngine = null;
+
+	public DatasetRuleHandler()
+	{
 		}
 
-		public void RegisterDatasetEvents(IDataDocument xmlData, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
-		{
+	public void RegisterDatasetEvents(IDataDocument xmlData, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+	{
 			_ruleSet = ruleSet;
 			_currentRuleDocument = xmlData;
 			_ruleEngine = ruleEngine;
@@ -56,8 +56,8 @@ namespace Origam.Rule
 			}
 		}
 
-		public void UnregisterDatasetEvents(IDataDocument xmlData)
-		{
+	public void UnregisterDatasetEvents(IDataDocument xmlData)
+	{
 			_ruleSet = null;
 			_currentRuleDocument = null;
 			_ruleEngine = null;
@@ -68,20 +68,20 @@ namespace Origam.Rule
 			}
 		}
 
-		private void RegisterTableEvents(DataTable table)
-		{
+	private void RegisterTableEvents(DataTable table)
+	{
 			table.RowChanged += new DataRowChangeEventHandler(table_RowChanged);
 			table.ColumnChanged += new DataColumnChangeEventHandler(table_ColumnChanged);
 		}
 
-		private void UnregisterTableEvents(DataTable table)
-		{
+	private void UnregisterTableEvents(DataTable table)
+	{
 			table.RowChanged -= new DataRowChangeEventHandler(table_RowChanged);
 			table.ColumnChanged -= new DataColumnChangeEventHandler(table_ColumnChanged);
 		}
 
-		public void OnRowChanged(DataRowChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
-		{
+	public void OnRowChanged(DataRowChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+	{
 			if(_inRowChanging) return;
 
                         if (e.Row.RowState == DataRowState.Detached) return;
@@ -145,70 +145,70 @@ namespace Origam.Rule
 		}
 
 
-		public void OnColumnChanged(DataColumnChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
-		{
-            OrigamDataRow row = e.Row as OrigamDataRow;
+	public void OnColumnChanged(DataColumnChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+	{
+		OrigamDataRow row = e.Row as OrigamDataRow;
 #if ! ORIGAM_SERVER
             if (!row.IsColumnWithValidChange(e.Column)) return;
 #endif
-			try
+		try
+		{
+			// check for self-join recursion
+			foreach(DataRelation rel in e.Row.Table.ParentRelations)
 			{
-				// check for self-join recursion
-				foreach(DataRelation rel in e.Row.Table.ParentRelations)
+				// only self-join relations
+				if(rel.ParentTable.Equals(rel.ChildTable))
 				{
-					// only self-join relations
-					if(rel.ParentTable.Equals(rel.ChildTable))
+					bool isFkChanging = false;
+					// only if the changed column is the fk
+					foreach(DataColumn childCol in rel.ChildColumns)
 					{
-						bool isFkChanging = false;
-						// only if the changed column is the fk
-						foreach(DataColumn childCol in rel.ChildColumns)
+						if(e.Column.Equals(childCol))
 						{
-							if(e.Column.Equals(childCol))
-							{
-								isFkChanging = true;
-							}
-						}
-
-						if(isFkChanging)
-						{
-							// go up
-							while(row.GetParentRows(rel).Length != 0)
-							{
-								foreach(DataRow parentRow in row.GetParentRows(rel))
-								{
-									if(parentRow.Equals(e.Row))
-									{
-										e.Row.SetParentRow(null);
-										throw new Exception(ResourceUtils.GetString("ErrorRecursion"));
-									}
-									row = parentRow as OrigamDataRow;
-								}
-							}	
+							isFkChanging = true;
 						}
 					}
-				}
 
-				if(log.IsDebugEnabled)
-				{
-					log.Debug("Column '" + e.Row?.Table.TableName + "." +
-					          e.Column?.ColumnName + "' changed to value: " +
-					          e.ProposedValue);
+					if(isFkChanging)
+					{
+						// go up
+						while(row.GetParentRows(rel).Length != 0)
+						{
+							foreach(DataRow parentRow in row.GetParentRows(rel))
+							{
+								if(parentRow.Equals(e.Row))
+								{
+									e.Row.SetParentRow(null);
+									throw new Exception(ResourceUtils.GetString("ErrorRecursion"));
+								}
+								row = parentRow as OrigamDataRow;
+							}
+						}	
+					}
 				}
-				ruleEngine.ProcessRules(e.Row, data, e.Column, ruleSet);
 			}
-			catch(OrigamRuleException)
+
+			if(log.IsDebugEnabled)
 			{
-				throw;
+				log.Debug("Column '" + e.Row?.Table.TableName + "." +
+				          e.Column?.ColumnName + "' changed to value: " +
+				          e.ProposedValue);
 			}
-			catch(Exception ex)
-			{
-				throw new OrigamRuleException(ResourceUtils.GetString("ErrorRuleFailureColumn", e.Column.Caption, e.Row.Table.DisplayExpression), ex, e.Row);
-			}
+			ruleEngine.ProcessRules(e.Row, data, e.Column, ruleSet);
 		}
-
-
-		public void OnRowDeleted(DataRow[] parentRows, DataRow deletedRow, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		catch(OrigamRuleException)
 		{
+			throw;
+		}
+		catch(Exception ex)
+		{
+			throw new OrigamRuleException(ResourceUtils.GetString("ErrorRuleFailureColumn", e.Column.Caption, e.Row.Table.DisplayExpression), ex, e.Row);
+		}
+	}
+
+
+	public void OnRowDeleted(DataRow[] parentRows, DataRow deletedRow, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+	{
 			try
 			{
 				if(parentRows.Length > 0) 
@@ -222,8 +222,7 @@ namespace Origam.Rule
 					{
 						try
 						{
-							// we pass all the columns from the deleted row so if some parent rules 
-							// depended on some of these fields, they will be fired
+							// we pass all the columns from the deleted row so if some parent rules 		// depended on some of these fields, they will be fired
 							//ruleEngine.ProcessRules(row, data, deletedRow.Table.Columns, ruleSet);
 							DatasetTools.CheckRowErrorRecursive(DatasetTools.RootRow(row), null, false);
 						}
@@ -241,8 +240,8 @@ namespace Origam.Rule
 		}
 
 		
-		public void OnRowCopied(DataRow row, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
-		{
+	public void OnRowCopied(DataRow row, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+	{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Starting rules after '" + row?.Table?.TableName + "' was copied.");
@@ -263,17 +262,16 @@ namespace Origam.Rule
 			}
 		}
 
-		private void table_RowChanged(object sender, DataRowChangeEventArgs e)
-		{
+	private void table_RowChanged(object sender, DataRowChangeEventArgs e)
+	{
 			if (e.Action != DataRowAction.Nothing && e.Action != DataRowAction.Commit)
 			{
 				OnRowChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
 			}
 		}
 
-		private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
-		{
+	private void table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+	{
 			OnColumnChanged(e, _currentRuleDocument, _ruleSet, _ruleEngine);
 		}
-	}
 }

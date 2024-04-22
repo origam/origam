@@ -19,26 +19,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+public enum DataReportExportFormatType
 {
+    PDF = 0
+    , MSExcel = 1
+    , RTF = 2
+    , MSWord = 3
+    , HTML = 4
+    , CSV = 5
+    , TEXT = 6
+    , XML = 7
+    , RPT = 8
+    , ExternalViewer = 9
+}
 
-    public enum DataReportExportFormatType
-    {
-        PDF = 0
-        , MSExcel = 1
-        , RTF = 2
-        , MSWord = 3
-        , HTML = 4
-        , CSV = 5
-        , TEXT = 6
-        , XML = 7
-        , RPT = 8
-        , ExternalViewer = 9
-    }
-
-    public static class DataReportExportFormatTypeExtensions
-    {
-        private static readonly string[] contentTypes =
+public static class DataReportExportFormatTypeExtensions
+{
+    private static readonly string[] contentTypes =
         {
             "application/pdf"
             , "application/vnd.ms-excel"
@@ -52,7 +51,7 @@ namespace Origam.Schema.GuiModel
             , null
         };
 
-        private static readonly string[] extensions =
+    private static readonly string[] extensions =
         {
             "pdf"
             , "xls"
@@ -66,25 +65,24 @@ namespace Origam.Schema.GuiModel
             , null
         };
 
-        public static string GetString(this DataReportExportFormatType value)
-        {
+    public static string GetString(this DataReportExportFormatType value)
+    {
             return value.ToString();
         }
 
-        public static string GetContentType(this DataReportExportFormatType value)
-        {
+    public static string GetContentType(this DataReportExportFormatType value)
+    {
             return contentTypes[(int)value] == null ? throw new
                 OrigamException("There isn't a content type" +
                 " defined for the DataReportExportFormatType")
                 : contentTypes[(int)value];
         }
 
-        public static string GetExtension(this DataReportExportFormatType value)
-        {
+    public static string GetExtension(this DataReportExportFormatType value)
+    {
             return extensions[(int)value] == null ? throw new
                 OrigamException("There isn't a file extension" +
                 " defined for the DataReportExportFormatType")
                 : extensions[(int)value];
         }
-    }
 }

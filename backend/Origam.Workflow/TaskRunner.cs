@@ -26,28 +26,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Origam.Extensions;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class TaskRunner
 {
-    public class TaskRunner
-    {
-        private static readonly log4net.ILog log 
-            = log4net.LogManager
-                .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log 
+        = log4net.LogManager
+            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
-        private readonly List<Task> tasks = new List<Task>();
-        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private readonly Action<CancellationToken> funcToRun;
-        private readonly int workerCount;
+    private readonly List<Task> tasks = new List<Task>();
+    private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
+    private readonly Action<CancellationToken> funcToRun;
+    private readonly int workerCount;
 
 
-        public TaskRunner(Action<CancellationToken> funcToRun, int workerCount)
-        {
+    public TaskRunner(Action<CancellationToken> funcToRun, int workerCount)
+    {
             this.funcToRun = funcToRun;
             this.workerCount = workerCount;
         }
 
-        public void Run()
-        {
+    public void Run()
+    {
             var cancToken = tokenSource.Token;
 
             for (int i = 0; i < workerCount; i++)
@@ -59,8 +59,8 @@ namespace Origam.Workflow
             }
         }
 
-        public void CleanUp()
-        {
+    public void CleanUp()
+    {
             tasks
                 .Where(t => t.Exception != null)
                 .Select(t => t.Exception)
@@ -70,18 +70,18 @@ namespace Origam.Workflow
                 .ForEach(LogTaskException);
         }
 
-        public void Cancel()
-        {
+    public void Cancel()
+    {
             tokenSource.Cancel();
         }
 
-        public bool AllTasksFinished()
-        {
+    public bool AllTasksFinished()
+    {
             return tasks.All(task => task.IsCompleted || task.IsCanceled );
         }
 
-        public void Wait()
-        {
+    public void Wait()
+    {
             try
             {
                 Task.WaitAll(tasks.ToArray());
@@ -96,12 +96,11 @@ namespace Origam.Workflow
             }
         }
 
-        private void LogTaskException(Exception ex)
-        {
+    private void LogTaskException(Exception ex)
+    {
             log.Error("THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");
             log.Error(ex);
             log.Error(ex.Message);
             log.Error("---------------------------------------");
         }
-    }
 }

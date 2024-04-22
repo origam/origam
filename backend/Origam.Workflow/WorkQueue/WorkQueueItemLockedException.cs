@@ -21,24 +21,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+
+/// <summary>
+/// Summary description for WorkQueueItemLockedException.
+/// </summary>
+public class WorkQueueItemLockedException : Exception
 {
-	/// <summary>
-	/// Summary description for WorkQueueItemLockedException.
-	/// </summary>
-	public class WorkQueueItemLockedException : Exception
+	public WorkQueueItemLockedException()
 	{
-		public WorkQueueItemLockedException()
-		{
 		}
 
-		public override string Message
+	public override string Message
+	{
+		get
 		{
-			get
-			{
 				return ResourceUtils.GetString("ErrorRecordsLockedAlready");
 			}
-		}
-
 	}
+
 }

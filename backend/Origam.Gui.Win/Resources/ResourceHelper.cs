@@ -23,27 +23,26 @@ using System.Drawing;
 using System.Reflection;
 using System.Resources;
 
-namespace Origam.Gui.Win
-{
-	internal class ResourceHelper
-	{
-		private static ResourceManager m_resourceManager;
+namespace Origam.Gui.Win;
 
-		static ResourceHelper()
-		{
+internal class ResourceHelper
+{
+	private static ResourceManager m_resourceManager;
+
+	static ResourceHelper()
+	{
 			m_resourceManager = new ResourceManager("Origam.Gui.Win.Strings", typeof(AsTextBox).Assembly);
 		}
 	
-		public static Bitmap LoadBitmap(string name)
-		{
+	public static Bitmap LoadBitmap(string name)
+	{
 			Assembly assembly = typeof(ResourceHelper).Assembly;
 			string fullNamePrefix = "Origam.Gui.Win.Resources.";
 			return new Bitmap(assembly.GetManifestResourceStream(fullNamePrefix + name));
 		}
 
-		public static string GetString(string name)
-		{
+	public static string GetString(string name)
+	{
 			return m_resourceManager.GetString(name);
 		}
-	}
 }

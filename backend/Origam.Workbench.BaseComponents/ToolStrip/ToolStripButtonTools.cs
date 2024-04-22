@@ -25,17 +25,17 @@ using Origam.Extensions;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.BaseComponents;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+
+internal static class ToolStripButtonTools
 {
-    internal static class ToolStripButtonTools
+    private const int ImageTextGap = 0;
+    public static readonly Size BUTTON_SIZE = new Size(24,95);
+    private static readonly int defaultImageHeight = 24;
+
+
+    public static void InitBigButton(ToolStripItem actionButton)
     {
-        private const int ImageTextGap = 0;
-        public static readonly Size BUTTON_SIZE = new Size(24,95);
-        private static readonly int defaultImageHeight = 24;
-
-
-        public static void InitBigButton(ToolStripItem actionButton)
-        {
             actionButton.TextAlign = ContentAlignment.BottomCenter;
             actionButton.ImageAlign = ContentAlignment.MiddleCenter;
             actionButton.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -50,16 +50,16 @@ namespace Origam.Gui.UI
             
         }
 
-        public static void InitActionButton(ToolStripItem actionButton
-            ,EntityUIAction action)
-        {
+    public static void InitActionButton(ToolStripItem actionButton
+        ,EntityUIAction action)
+    {
             actionButton.Text = action.Caption;
             actionButton.Image = action.NodeImage.ToBitmap();
         }
 
-        public static void PaintText(this ToolStripItem actionButton,
-            PaintEventArgs e)
-        {
+    public static void PaintText(this ToolStripItem actionButton,
+        PaintEventArgs e)
+    {
             if (actionButton.Owner == null)
                 return;
             
@@ -82,9 +82,9 @@ namespace Origam.Gui.UI
                 );
             }
         }
-        public static void PaintImage(ToolStripItem actionButton,
-            PaintEventArgs e)
-        {
+    public static void PaintImage(ToolStripItem actionButton,
+        PaintEventArgs e)
+    {
             if (actionButton.Owner == null)
                 return;
             
@@ -105,13 +105,13 @@ namespace Origam.Gui.UI
             }
         }
 
-        private static Image GetImage(ToolStripItem actionButton)
-        {
+    private static Image GetImage(ToolStripItem actionButton)
+    {
             return actionButton.Image ?? ImageRes.UnknownIcon;
         }
 
-        public static Rectangle GetImageRectangle(ToolStripItem actionButton)
-        {
+    public static Rectangle GetImageRectangle(ToolStripItem actionButton)
+    {
             Image image = GetImage(actionButton);
             var xCoord = (actionButton.Width - image.Size.Width) / 2;
             var yCoord = actionButton.Margin.Top + (defaultImageHeight - image.Height) / 2; 
@@ -120,8 +120,8 @@ namespace Origam.Gui.UI
                 image.Size);
         }
 
-        private static Rectangle GetTextRectangle(this ToolStripItem actionButton)
-        {
+    private static Rectangle GetTextRectangle(this ToolStripItem actionButton)
+    {
             var textHeight = actionButton.Text.Height(actionButton.Font);
             var textWidth = actionButton.Text.Width(actionButton.Font);
             
@@ -131,5 +131,4 @@ namespace Origam.Gui.UI
 
             return new Rectangle(xCoord, yCoord, textWidth, textHeight);
         }
-    }
 }

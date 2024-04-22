@@ -26,48 +26,47 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractChart : AbstractSchemaItem
 {
-	[XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("6.0.0")]
-    public abstract class AbstractChart : AbstractSchemaItem
+	public const string CategoryConst = "Chart";
+
+	public AbstractChart() : base() {Init();}
+	public AbstractChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public AbstractChart(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
 	{
-		public const string CategoryConst = "Chart";
-
-		public AbstractChart() : base() {Init();}
-		public AbstractChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public AbstractChart(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
 			this.ChildItemTypes.Add(typeof(ChartFormMapping));
 		}
 
-		#region Properties
-		private string _caption = "";
-		[Category("User Interface")]
-		[StringNotEmptyModelElementRule()]
-		[Localizable(true)]
-        [XmlAttribute("label")]
-		public string Caption
+	#region Properties
+	private string _caption = "";
+	[Category("User Interface")]
+	[StringNotEmptyModelElementRule()]
+	[Localizable(true)]
+	[XmlAttribute("label")]
+	public string Caption
+	{
+		get
 		{
-			get
-			{
 				return _caption;
 			}
-			set
-			{
+		set
+		{
 				_caption = value;
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

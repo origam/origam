@@ -27,26 +27,25 @@ using Origam.Services;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+public class ContextStoreConverter : System.ComponentModel.TypeConverter
 {
-	public class ContextStoreConverter : System.ComponentModel.TypeConverter
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList contextArray = new ArrayList();
 			AbstractSchemaItem item = (context.Instance as AbstractSchemaItem);
 
@@ -71,16 +70,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(contextArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				AbstractSchemaItem item = (context.Instance as AbstractSchemaItem);
@@ -105,26 +104,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
+public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return false;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			UpdateContextTask updateContextTask = context.Instance as UpdateContextTask;
 			if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
 			{
@@ -142,16 +140,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(entityArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				UpdateContextTask updateContextTask = context.Instance as UpdateContextTask;
@@ -172,27 +170,26 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
 
-	public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.TypeConverter
+public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList contextArray;
 			ArrayList contexts;
 			
@@ -220,16 +217,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(contextArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList contexts;
@@ -255,26 +252,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineEventParameterMappingContextStoreConverter : System.ComponentModel.TypeConverter
+public class StateMachineEventParameterMappingContextStoreConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList contextArray;
 			ArrayList contexts;
 			
@@ -309,16 +305,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(contextArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList contexts;
@@ -344,27 +340,26 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
 
-	public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
+public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList fields;
 			ArrayList fieldArray;
 			
@@ -384,16 +379,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(fieldArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -411,26 +406,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkflowStepConverter : System.ComponentModel.TypeConverter
+public class WorkflowStepConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList stepArray;
 			ArrayList steps;
 
@@ -465,16 +459,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(stepArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList tasks;
@@ -508,26 +502,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
+public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList stepArray;
 			ArrayList steps;
 
@@ -566,16 +559,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(stepArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList tasks;
@@ -609,28 +602,27 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class ServiceConverter : System.ComponentModel.TypeConverter
+public class ServiceConverter : System.ComponentModel.TypeConverter
+{
+	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ServiceSchemaItemProvider services = _schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
 
 			ArrayList columnArray = new ArrayList(services.ChildItems.Count);
@@ -644,16 +636,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(columnArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ServiceSchemaItemProvider services = _schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
@@ -672,26 +664,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 	
-	public class ServiceMethodConverter : System.ComponentModel.TypeConverter
+public class ServiceMethodConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList methodArray;
 			SchemaItemCollection methods;
 			IService service = (context.Instance as ServiceMethodCallTask).Service as IService;
@@ -717,16 +708,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(methodArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				SchemaItemCollection methods;
@@ -751,26 +742,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConverter
+public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList fields;
 			IDataEntity entity = (context.Instance as StateMachine).Entity;
 
@@ -789,16 +779,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(fields);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -823,26 +813,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
+public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
 
 			states.Sort();
@@ -850,16 +839,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(states);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
@@ -874,26 +863,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineStateConverter : System.ComponentModel.TypeConverter
+public class StateMachineStateConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList states = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).AllStates();
 
 			states.Sort();
@@ -901,16 +889,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(states);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList states = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).AllStates();
@@ -925,26 +913,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConverter
+public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList mappedFields = new ArrayList();
 			ArrayList fields = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).Entity.EntityColumns;
 			foreach(IDataEntityColumn col in fields)
@@ -960,16 +947,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(mappedFields);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList mappedFields = new ArrayList();
@@ -992,28 +979,27 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
+public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
+{
+	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ScheduleTimeSchemaItemProvider times = _schema.GetProvider(typeof(ScheduleTimeSchemaItemProvider)) as ScheduleTimeSchemaItemProvider;
 
 			ArrayList itemArray = new ArrayList(times.ChildItems.Count);
@@ -1027,16 +1013,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(itemArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ScheduleTimeSchemaItemProvider times = _schema.GetProvider(typeof(ScheduleTimeSchemaItemProvider)) as ScheduleTimeSchemaItemProvider;
@@ -1051,28 +1037,27 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkflowConverter : System.ComponentModel.TypeConverter
+public class WorkflowConverter : System.ComponentModel.TypeConverter
+{
+	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkflowSchemaItemProvider workflows = _schema.GetProvider(typeof(WorkflowSchemaItemProvider)) as WorkflowSchemaItemProvider;
 
 			ArrayList itemArray = new ArrayList(workflows.ChildItems.Count);
@@ -1086,16 +1071,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(itemArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkflowSchemaItemProvider workflows = _schema.GetProvider(typeof(WorkflowSchemaItemProvider)) as WorkflowSchemaItemProvider;
@@ -1110,34 +1095,33 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class StateMachineStateLookupReaderConverter : System.ComponentModel.TypeConverter
+public class StateMachineStateLookupReaderConverter : System.ComponentModel.TypeConverter
+{
+	IDataLookupService _lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+	DataView _currentList;
+	IDataLookup _currentLookup;
+
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		IDataLookupService _lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-		DataView _currentList;
-		IDataLookup _currentLookup;
-
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return false;
 		}
 
-		private void InitList(Guid id)
-		{
+	private void InitList(Guid id)
+	{
 			_currentList = _lookupManager.GetList(id, null);
 		}
 
-		private void InitLookup(IDataLookup lookup)
-		{
+	private void InitLookup(IDataLookup lookup)
+	{
 			if(lookup != _currentLookup)
 			{
 				_currentLookup = lookup;
@@ -1145,9 +1129,9 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			IDataLookup lookup = ((context.Instance as StateMachineState).RootItem as StateMachine).Field.DefaultLookup;
 			InitLookup(lookup);
 
@@ -1166,16 +1150,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(list);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			IDataLookup lookup = ((context.Instance as StateMachineState).RootItem as StateMachine).Field.DefaultLookup;
 
 			if(lookup == null | value == null)
@@ -1196,8 +1180,8 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-		{
+	public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+	{
 			if(value == null) return null;
 			if(context == null) return value.ToString();
 
@@ -1222,26 +1206,25 @@ namespace Origam.Schema.WorkflowModel
 				return base.ConvertTo (context, culture, value, destinationType);
 			}
 		}
-	}
+}
 
-	public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
+public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
 
@@ -1260,16 +1243,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ContextStore currentItem = context.Instance as ContextStore;
@@ -1287,26 +1270,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConverter
+public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
 
@@ -1325,16 +1307,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ContextStore currentItem = context.Instance as ContextStore;
@@ -1352,26 +1334,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.Entity == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1390,16 +1371,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1417,26 +1398,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkQueueClassEntityStructureFilterConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassEntityStructureFilterConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.EntityStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1455,16 +1435,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1482,26 +1462,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkQueueClassNotificationStructureFilterConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassNotificationStructureFilterConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.NotificationStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1520,16 +1499,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1547,26 +1526,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1585,16 +1563,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1612,26 +1590,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 	
-	public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1650,16 +1627,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(array);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1677,26 +1654,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 	
-	public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.TypeConverter
+public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			ArrayList fields;
 			IDataEntity entity = ((context.Instance as WorkQueueClassEntityMapping).ParentItem as WorkQueueClass).Entity;
 
@@ -1714,16 +1690,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(fields);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -1748,26 +1724,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
+public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			UIFormTask reference = context.Instance as UIFormTask;
 			
 			if(reference.RefreshDataStructure == null) return null;
@@ -1786,16 +1761,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(methodArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				UIFormTask reference = context.Instance as UIFormTask;
@@ -1814,26 +1789,25 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
+}
 
-	public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
+public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
+{
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			UIFormTask reference = context.Instance as UIFormTask;
 			
 			if(reference.RefreshDataStructure == null) return null;
@@ -1852,16 +1826,16 @@ namespace Origam.Schema.WorkflowModel
 			return new StandardValuesCollection(sortSetArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				UIFormTask reference = context.Instance as UIFormTask;
@@ -1880,6 +1854,4 @@ namespace Origam.Schema.WorkflowModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
-
 }

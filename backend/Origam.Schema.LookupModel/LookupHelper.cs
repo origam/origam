@@ -23,23 +23,23 @@ using Origam.Services;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+
+public class LookupHelper
 {
-	public class LookupHelper
+	public static DataServiceDataLookup CreateDataServiceLookup(
+		string name, 
+		SchemaItemGroup group, 
+		DataStructure listDataStructure, 
+		DataStructureFilterSet listFilterSet, 
+		string listValueMember, 
+		string listDisplayMember, 
+		DataStructure valueDataStructure, 
+		DataStructureFilterSet valueFilterSet, 
+		string valueValueMember, 
+		string valueDisplayMember, 
+		bool persist)
 	{
-		public static DataServiceDataLookup CreateDataServiceLookup(
-			string name, 
-			SchemaItemGroup group, 
-			DataStructure listDataStructure, 
-			DataStructureFilterSet listFilterSet, 
-			string listValueMember, 
-			string listDisplayMember, 
-			DataStructure valueDataStructure, 
-			DataStructureFilterSet valueFilterSet, 
-			string valueValueMember, 
-			string valueDisplayMember, 
-			bool persist)
-		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var dataLookupSchemaItemProvider 
@@ -64,16 +64,16 @@ namespace Origam.Schema.LookupModel
 			return dataServiceDataLookup;
 		}
 
-		public static DataServiceDataLookup CreateDataServiceLookup(
-			string name, 
-            IDataEntity fromEntity, 
-			IDataEntityColumn idField, 
-            IDataEntityColumn nameField, 
-			IDataEntityColumn codeField, 
-            EntityFilter idFilter, 
-			EntityFilter listFilter, 
-            string listDisplayMember)
-		{
+	public static DataServiceDataLookup CreateDataServiceLookup(
+		string name, 
+		IDataEntity fromEntity, 
+		IDataEntityColumn idField, 
+		IDataEntityColumn nameField, 
+		IDataEntityColumn codeField, 
+		EntityFilter idFilter, 
+		EntityFilter listFilter, 
+		string listDisplayMember)
+	{
 			var dataStructure = EntityHelper.CreateDataStructure(
                 fromEntity, "Lookup" + name, true);
 			var dataStructureEntity 
@@ -125,5 +125,4 @@ namespace Origam.Schema.LookupModel
                 nameColumn.Name, true);
 			return dataServiceLookup;
 		}
-	}
 }

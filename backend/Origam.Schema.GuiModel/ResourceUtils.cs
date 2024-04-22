@@ -23,18 +23,18 @@ using System.Drawing;
 using System.Resources;
 using System.Threading;
 
-namespace Origam.Schema.GuiModel
-{
-	public class ResourceUtils
-	{
-		private static readonly string StringBaseName = "Origam.Schema.GuiModel.Strings";
-		private static readonly string ImageBaseName = "Origam.Schema.GuiModel.Images";
+namespace Origam.Schema.GuiModel;
 
-		private static ResourceManager stringResmanager;
-		private static ResourceManager imageResmanager;
+public class ResourceUtils
+{
+	private static readonly string StringBaseName = "Origam.Schema.GuiModel.Strings";
+	private static readonly string ImageBaseName = "Origam.Schema.GuiModel.Images";
+
+	private static ResourceManager stringResmanager;
+	private static ResourceManager imageResmanager;
 		
-		public static string GetString(string key)
-		{
+	public static string GetString(string key)
+	{
 			if (stringResmanager == null) 
 			{
 				stringResmanager = new ResourceManager(StringBaseName, typeof(ResourceUtils).Assembly);
@@ -43,14 +43,14 @@ namespace Origam.Schema.GuiModel
 			return stringResmanager.GetString(key, Thread.CurrentThread.CurrentCulture);
 		}
 
-		public static string GetString(string key, params object[] args)
-		{
+	public static string GetString(string key, params object[] args)
+	{
 			string rawString = GetString(key);
 			return string.Format(rawString, args);
 		}
 
-		public static Image GetImage(string key)
-		{
+	public static Image GetImage(string key)
+	{
 			if (imageResmanager == null) 
 			{
 				imageResmanager = new ResourceManager(ImageBaseName, typeof(ResourceUtils).Assembly);
@@ -58,5 +58,4 @@ namespace Origam.Schema.GuiModel
 
 			return (Image)imageResmanager.GetObject(key);
 		}
-	}
 }

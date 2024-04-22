@@ -37,12 +37,12 @@ using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public static class FormTools
 {
-    public static class FormTools
+    public static bool IsFormMenuReadOnly(FormReferenceMenuItem formRef)
     {
-        public static bool IsFormMenuReadOnly(FormReferenceMenuItem formRef)
-        {
             bool result = formRef.ReadOnlyAccess;
 
             if (!result)
@@ -57,8 +57,8 @@ namespace Origam.Gui
             return result;
         }        
         
-        public static bool IsFormMenuInitialScreen(AbstractMenuItem menuItem)
-        {
+    public static bool IsFormMenuInitialScreen(AbstractMenuItem menuItem)
+    {
             if (menuItem.AuthorizationContext == "*")
             {
                 return false;
@@ -71,8 +71,8 @@ namespace Origam.Gui
                 .Authorize(SecurityManager.CurrentPrincipal, authContext);
         }
 
-        public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
-        {
+    public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
+    {
             ArrayList children = new ArrayList(controlSet.Alternatives);
             children.Sort(new AlternativeControlSetItemComparer());
 
@@ -87,12 +87,11 @@ namespace Origam.Gui
             return controlSet.MainItem;
         }
 
-        public static bool IsValid(string features, string roles)
-        {
+    public static bool IsValid(string features, string roles)
+    {
             // if we're running architect in desconnected mode, we consider
             // everything valid
-            // there's even question, wheter this validation is necessary 
-            // when designing in architect
+            // there's even question, wheter this validation is necessary      // when designing in architect
             if ((WorkbenchSingleton.Workbench != null) 
             && WorkbenchSingleton.Workbench.ApplicationDataDisconnectedMode)
             {
@@ -110,16 +109,16 @@ namespace Origam.Gui
             return true;
         }
 
-        /// <summary>
-        /// Get read only status.
-        /// If parent was read only, it will be re-examined here. That means, that when there is a menu item with ReadOnly
-        /// set to "true" and there exist some fields or complete panels/groups/tabs inside that form that have a "Roles" property
-        /// set, these might get not-read-only, unless they are also set ReadOnly in the user's security settings.
-        /// </summary>
-        /// <param name="cntrlSet"></param>
-        /// <returns></returns>
-        public static bool GetReadOnlyStatus(ControlSetItem cntrlSet, bool currentReadOnlyStatus)
-        {
+    /// <summary>
+    /// Get read only status.
+    /// If parent was read only, it will be re-examined here. That means, that when there is a menu item with ReadOnly
+    /// set to "true" and there exist some fields or complete panels/groups/tabs inside that form that have a "Roles" property
+    /// set, these might get not-read-only, unless they are also set ReadOnly in the user's security settings.
+    /// </summary>
+    /// <param name="cntrlSet"></param>
+    /// <returns></returns>
+    public static bool GetReadOnlyStatus(ControlSetItem cntrlSet, bool currentReadOnlyStatus)
+    {
             if (cntrlSet.Roles != "" && cntrlSet.Roles != null)
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
@@ -134,8 +133,8 @@ namespace Origam.Gui
             return currentReadOnlyStatus;
         }
 
-        public static string FindTableByDataMember(DataSet ds, string member)
-        {
+    public static string FindTableByDataMember(DataSet ds, string member)
+    {
             if (member == null) return "";
             if (ds == null) return "";
 
@@ -178,13 +177,13 @@ namespace Origam.Gui
 
         }
 
-        public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId)
-        {
+    public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId)
+    {
             return GetSelectionDialogData(entityId, transformationBeforeId, createEmptyRow, profileId, new Hashtable());
         }
 
-        public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId, Hashtable parameters)
-        {
+    public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId, Hashtable parameters)
+    {
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 
@@ -218,8 +217,8 @@ namespace Origam.Gui
             return sdData;
         }
         
-        public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
-        {
+    public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
+    {
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 
@@ -251,5 +250,4 @@ namespace Origam.Gui
             return dataDoc.DataSet.Tables[0].Rows[0];
         }
 
-    }
 }

@@ -25,68 +25,68 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public enum PermissionType
 {
-	public enum PermissionType
-	{
-		Permit = 0,
-		Deny = 1
-	}
+	Permit = 0,
+	Deny = 1
+}
 
-	public enum CredentialType
-	{
-		Create = 0,
-		Read = 1,
-		Update = 2,
-		Delete = 3
-	}
+public enum CredentialType
+{
+	Create = 0,
+	Read = 1,
+	Update = 2,
+	Delete = 3
+}
 
-	public enum CredentialValueType
-	{
-		SavedValue = 0,
-		ActualValue = 1
-	}
+public enum CredentialValueType
+{
+	SavedValue = 0,
+	ActualValue = 1
+}
 
-    /// <summary>
-    /// Summary description for EntitySecurityRule.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
-	{
-		public const string CategoryConst = "EntitySecurityRule";
+/// <summary>
+/// Summary description for EntitySecurityRule.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
+{
+	public const string CategoryConst = "EntitySecurityRule";
 
-		public AbstractEntitySecurityRule() : base() {}
+	public AbstractEntitySecurityRule() : base() {}
 
-		public AbstractEntitySecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractEntitySecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public AbstractEntitySecurityRule(Key primaryKey) : base(primaryKey)	{}
+	public AbstractEntitySecurityRule(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Rule != null)
 				base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Rule);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null && this.Rule != null)
@@ -102,24 +102,24 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
+	}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
 			return (this.ParentItem.GetType()).Equals(newNode.GetType());
 		}
 
-		#endregion
+	#endregion
 
-		#region Functions
-		private void UpdateName()
-		{
+	#region Functions
+	private void UpdateName()
+	{
 			string name = Level.ToString() + "_" + this.Type.ToString() + "_" + CredentialsShortcut;
 
 			if(ValueType == CredentialValueType.ActualValue)
@@ -139,111 +139,111 @@ namespace Origam.Schema.EntityModel
 			
 			this.Name = name;
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		internal abstract string CredentialsShortcut{get;}
-		internal void CredentialsChanged()
-		{
+	#region Properties
+	internal abstract string CredentialsShortcut{get;}
+	internal void CredentialsChanged()
+	{
 			UpdateName();
 		}
 
-		private string _roles = "";
-		[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("roles")]
-		public string Roles
+	private string _roles = "";
+	[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 
 				UpdateName();
 			}
-		}
+	}
 
-		private PermissionType _permissionType;
-		[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[XmlAttribute("type")]
-        public PermissionType Type
+	private PermissionType _permissionType;
+	[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlAttribute("type")]
+	public PermissionType Type
+	{
+		get
 		{
-			get
-			{
 				return _permissionType;
 			}
-			set
-			{
+		set
+		{
 				_permissionType = value;
 
 				UpdateName();
 			}
-		}
+	}
 
-		private int _level = 100;
-		[Category("Security"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[XmlAttribute("level")]
-        public int Level
+	private int _level = 100;
+	[Category("Security"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlAttribute("level")]
+	public int Level
+	{
+		get
 		{
-			get
-			{
 				return _level;
 			}
-			set
-			{
+		set
+		{
 				_level = value;
 
 				UpdateName();
 			}
-		}
+	}
 
-		private CredentialValueType _valueType = CredentialValueType.SavedValue;
-		[Category("Security"), DefaultValue(CredentialValueType.SavedValue), RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlAttribute("valueType")]
-        public CredentialValueType ValueType
+	private CredentialValueType _valueType = CredentialValueType.SavedValue;
+	[Category("Security"), DefaultValue(CredentialValueType.SavedValue), RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlAttribute("valueType")]
+	public CredentialValueType ValueType
+	{
+		get
 		{
-			get
-			{
 				return _valueType;
 			}
-			set
-			{
+		set
+		{
 				_valueType = value;
 
 				UpdateName();
 			}
-		}
+	}
         
-		public Guid RuleId;
+	public Guid RuleId;
 
-		[TypeConverter(typeof(EntityRuleConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[Category("Security")]
-        [XmlReference("rule", "RuleId")]
-		public IEntityRule Rule
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[Category("Security")]
+	[XmlReference("rule", "RuleId")]
+	public IEntityRule Rule
+	{
+		get
 		{
-			get
-			{
 				return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
 			}
-			set
-			{
+		set
+		{
 				this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			
 				UpdateName();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IComparable Members
-		public override int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
 			AbstractEntitySecurityRule compared = obj as AbstractEntitySecurityRule;
 
 			if(compared != null)
@@ -267,6 +267,5 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		#endregion
-	}
+	#endregion
 }

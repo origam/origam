@@ -23,29 +23,29 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 
-namespace Origam
+namespace Origam;
+
+/// <summary>
+/// This class represents a collection of column names/values that make a unique key of an entity.
+/// </summary>
+public class Key : Hashtable
 {
-    /// <summary>
-    /// This class represents a collection of column names/values that make a unique key of an entity.
-    /// </summary>
-    public class Key : Hashtable
+
+    public Key()
     {
-
-        public Key()
-        {
         }
 
-        public Key(string id) : this(new Guid(id))
-        {
+    public Key(string id) : this(new Guid(id))
+    {
         }
 
-        public Key(Guid id)
-        {
+    public Key(Guid id)
+    {
             this["Id"] = id;
         }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             string keyString = "";
 
             foreach (DictionaryEntry entry in this)
@@ -56,33 +56,33 @@ namespace Origam
             return keyString;
         }
 
-        public object[] ValueArray
+    public object[] ValueArray
+    {
+        get
         {
-            get
-            {
                 object[] ret = new object[this.Values.Count];
 
                 this.Values.CopyTo(ret, 0);
 
                 return ret;
             }
-        }
+    }
 
-        public object[] KeyArray
+    public object[] KeyArray
+    {
+        get
         {
-            get
-            {
                 object[] ret = new object[this.Values.Count];
 
                 this.Keys.CopyTo(ret, 0);
 
                 return ret;
             }
-        }
+    }
 
 
-         public override bool Equals(object obj)
-         {
+    public override bool Equals(object obj)
+    {
         	if (ReferenceEquals(null, obj)) return false;
         	if (ReferenceEquals(this, obj)) return true;
         	if (!(obj is Key)) return false;
@@ -106,8 +106,8 @@ namespace Origam
         }
 
 
-        public override int GetHashCode()
-        {
+    public override int GetHashCode()
+    {
             if (Count == 1 && Contains("Id")) return this["Id"].GetHashCode();
             int hashCode = 0;
 
@@ -118,5 +118,4 @@ namespace Origam
 
             return hashCode;
         }
-    }
 }

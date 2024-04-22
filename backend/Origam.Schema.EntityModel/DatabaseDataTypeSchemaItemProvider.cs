@@ -19,21 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for DataConstantItemProvider.
+/// </summary>
+public class DatabaseDataTypeSchemaItemProvider : AbstractSchemaItemProvider, 
+	ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for DataConstantItemProvider.
-	/// </summary>
-	public class DatabaseDataTypeSchemaItemProvider : AbstractSchemaItemProvider, 
-        ISchemaItemFactory
+	public DatabaseDataTypeSchemaItemProvider()
 	{
-		public DatabaseDataTypeSchemaItemProvider()
-		{
             this.ChildItemTypes.Add(typeof(DatabaseDataType));
 		}
 
-        public DatabaseDataType FindDataType(string name)
-        {
+	public DatabaseDataType FindDataType(string name)
+	{
             foreach (DatabaseDataType item in ChildItems)
             {
                 if (string.Compare(name, 
@@ -45,62 +45,61 @@ namespace Origam.Schema.EntityModel
             return null;
         }
 
-		#region ISchemaItemProvider Members
-		public override string RootItemType
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
 		{
-			get
-			{
 				return DatabaseDataType.CategoryConst;
 			}
-		}
-		public override bool AutoCreateFolder
+	}
+	public override bool AutoCreateFolder
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
-		public override string Group
+	}
+	public override string Group
+	{
+		get
 		{
-			get
-			{
 				return "DATA";
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_08_database-data-types.png";
 			}
-		}
+	}
 
-		public override string NodeText
+	public override string NodeText
+	{
+		get
 		{
-			get
-			{
 				return "Database Data Types";
 			}
-			set
-			{
+		set
+		{
 				base.NodeText = value;
 			}
-		}
+	}
 
-		public override string NodeToolTipText
+	public override string NodeToolTipText
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
-		}
-
-		#endregion
 	}
+
+	#endregion
 }

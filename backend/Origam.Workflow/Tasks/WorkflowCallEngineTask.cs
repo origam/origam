@@ -24,21 +24,21 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
-{
-	/// <summary>
-	/// Summary description for WorkflowCallEngineTask.
-	/// </summary>
-	public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
-	{
-		WorkflowEngine _call;
+namespace Origam.Workflow.Tasks;
 
-		public WorkflowCallEngineTask() : base()
-		{
+/// <summary>
+/// Summary description for WorkflowCallEngineTask.
+/// </summary>
+public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
+{
+	WorkflowEngine _call;
+
+	public WorkflowCallEngineTask() : base()
+	{
 		}
 
-		public override void Execute()
-		{
+	public override void Execute()
+	{
 			Exception exception = null;
 			try
 			{
@@ -53,8 +53,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-        private void SetWorkflowTrace()
-        {
+	private void SetWorkflowTrace()
+	{
             WorkflowCallTask task = this.Step as WorkflowCallTask;
             switch (task.Trace)
             {
@@ -69,8 +69,8 @@ namespace Origam.Workflow.Tasks
             }
         }
 
-        protected override void MeasuredExecution()
-		{
+	protected override void MeasuredExecution()
+	{
             WorkflowCallTask task = this.Step as WorkflowCallTask;
 
             _call = this.Engine.GetSubEngine(task.Workflow, task.Workflow.TransactionBehavior);
@@ -86,8 +86,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		protected override void OnExecute()
-		{
+	protected override void OnExecute()
+	{
 			this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
 			this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
 
@@ -121,8 +121,8 @@ namespace Origam.Workflow.Tasks
 			Engine.ExecuteSubEngineWorkflow(_call);
 		}
 
-		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-		{
+	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+	{
 			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 			{
 				UnsubscribeEvents();
@@ -173,8 +173,8 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-		{
+	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+	{
 			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 			{
 				if(e.Exception != null)
@@ -185,10 +185,9 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		private void UnsubscribeEvents()
-		{
+	private void UnsubscribeEvents()
+	{
 			this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
 			this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
 		}
-	}
 }

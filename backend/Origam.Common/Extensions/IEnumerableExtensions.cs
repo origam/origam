@@ -24,12 +24,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class IEnumerableExtensions
 {
-    public static class IEnumerableExtensions
+    public static ArrayList ToArrayList(this IEnumerable iEnum)
     {
-        public static ArrayList ToArrayList(this IEnumerable iEnum)
-        {
             var arrayList = new ArrayList();
             foreach (object obj in iEnum)
             {
@@ -38,16 +38,16 @@ namespace Origam.Extensions
             return arrayList;
         }
 
-        public static List<T> ToList<T>(this IEnumerable iEnum) => 
-            iEnum.Cast<T>().ToList();
+    public static List<T> ToList<T>(this IEnumerable iEnum) => 
+        iEnum.Cast<T>().ToList();
             
-        public static T[] ToArray<T>(this IEnumerable iEnum) => 
-            iEnum.Cast<T>().ToArray();
+    public static T[] ToArray<T>(this IEnumerable iEnum) => 
+        iEnum.Cast<T>().ToArray();
         
-        public static IEnumerable<T> Peek<T>(this IEnumerable<T> source,
-            Action<T>
-                action)
-        {
+    public static IEnumerable<T> Peek<T>(this IEnumerable<T> source,
+        Action<T>
+            action)
+    {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (action == null) throw new ArgumentNullException(nameof(action));
 
@@ -62,5 +62,4 @@ namespace Origam.Extensions
                 }
             }
         }
-    }
 }

@@ -28,180 +28,180 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// An instance of UIElementRenderData holds necessary information for generating of AsPanel's XML.
+/// </summary>
+public class UIElementRenderData
 {
-	/// <summary>
-	/// An instance of UIElementRenderData holds necessary information for generating of AsPanel's XML.
-	/// </summary>
-	public class UIElementRenderData
-	{
-		public string DataMember = "";
+	public string DataMember = "";
 
-		public bool IsGridVisible = false;
+	public bool IsGridVisible = false;
 
-		public bool HideNavigationPanel = false;
+	public bool HideNavigationPanel = false;
 
-		public bool DisableActionButtons = false;
+	public bool DisableActionButtons = false;
 
-		public string PanelTitle = "";
+	public string PanelTitle = "";
 
-		public string Text = "";
+	public string Text = "";
 
-		public bool ShowNewButton = false;
+	public bool ShowNewButton = false;
 
-		public bool HideCopyButton = false;
+	public bool HideCopyButton = false;
 
-		public bool ShowDeleteButton = false;
+	public bool ShowDeleteButton = false;
 
-		public string IdColumn = "";
+	public string IdColumn = "";
 
-		public string ParentIdColumn = "";
+	public string ParentIdColumn = "";
 
-		public string NameColumn = "";
+	public string NameColumn = "";
 
-		public bool FixedSize = false;
+	public bool FixedSize = false;
 
-		public int Top = 0;
+	public int Top = 0;
 
-		public int Left = 0;
+	public int Left = 0;
 
-		public int Width = 0;
+	public int Width = 0;
 
-		public int Height = 0;
+	public int Height = 0;
 
-		public int TabIndex = 0;
+	public int TabIndex = 0;
 
-		public bool ButtonsOnly = false;
+	public bool ButtonsOnly = false;
 
-		public string ReportId = "";
+	public string ReportId = "";
 
-		public string WorkflowId = "";
+	public string WorkflowId = "";
 
-		public string SelectionMember = "";
+	public string SelectionMember = "";
 
-		public string CalendarDateDueMember = "";
+	public string CalendarDateDueMember = "";
 
-		public string CalendarDateFromMember = "";
+	public string CalendarDateFromMember = "";
 
-		public string CalendarDateToMember = "";
+	public string CalendarDateToMember = "";
 
-		public string CalendarNameMember = "";
+	public string CalendarNameMember = "";
 
-		public string CalendarDescriptionMember = "";
+	public string CalendarDescriptionMember = "";
 
-		public string CalendarIsFinishedMember = "";
+	public string CalendarIsFinishedMember = "";
 
-		public string CalendarResourceIdMember = "";
+	public string CalendarResourceIdMember = "";
 
-		public string CalendarResourceNameLookupField = "";
+	public string CalendarResourceNameLookupField = "";
 
-		public bool IsCalendarSupported = false;
+	public bool IsCalendarSupported = false;
 
-		public bool IsCalendarVisible = false;
+	public bool IsCalendarVisible = false;
 
-		public int DefaultCalendarView = 0;
+	public int DefaultCalendarView = 0;
 
-		public int Orientation = 0;
+	public int Orientation = 0;
 
-		public string PipelineNameMember = "";
+	public string PipelineNameMember = "";
 
-		public string PipelineDateMember = "";
+	public string PipelineDateMember = "";
 
-		public string PipelinePriceMember = "";
+	public string PipelinePriceMember = "";
 
-		public string PipelineStateMember = "";
+	public string PipelineStateMember = "";
 
-		public Guid PipelineStateLoookup  = Guid.Empty;
+	public Guid PipelineStateLoookup  = Guid.Empty;
 
-		public bool IsPipelineSupported = false;
+	public bool IsPipelineSupported = false;
 
-		public bool IsPipelineVisible = false;
+	public bool IsPipelineVisible = false;
 
-		public int IndentLevel = 0;
+	public int IndentLevel = 0;
 
-		public bool IsHeightFixed = false;
+	public bool IsHeightFixed = false;
 
-		public bool IsOpen = false;
+	public bool IsOpen = false;
 
-		public bool IsGridHeightDynamic = false;
+	public bool IsGridHeightDynamic = false;
 
-		public int MaxDynamicGridHeight = 0;
+	public int MaxDynamicGridHeight = 0;
 
-		public Guid IndependentDataSourceId = Guid.Empty;
+	public Guid IndependentDataSourceId = Guid.Empty;
 
-		public Guid IndependentDataSourceFilterId = Guid.Empty;
+	public Guid IndependentDataSourceFilterId = Guid.Empty;
 
-		public Guid IndependentDataSourceSortId = Guid.Empty;
+	public Guid IndependentDataSourceSortId = Guid.Empty;
 
-		public Guid TreeId = Guid.Empty;
+	public Guid TreeId = Guid.Empty;
 
-		public int TopCell = 0;
+	public int TopCell = 0;
 
-		public int LeftCell = 0;
+	public int LeftCell = 0;
 
-		public int HeightCells = 0;
+	public int HeightCells = 0;
 
-		public int WidthCells = 0;
+	public int WidthCells = 0;
 
-		public bool IsMapSupported = false;
+	public bool IsMapSupported = false;
 
-		public bool IsMapVisible = false;
+	public bool IsMapVisible = false;
 
-		public string MapLocationMember = "";
+	public string MapLocationMember = "";
 
-		public string MapAzimuthMember = "";
+	public string MapAzimuthMember = "";
 
-		public string MapColorMember = "";
+	public string MapColorMember = "";
 
-		public string MapIconMember = "";
+	public string MapIconMember = "";
 
-		public string MapTextMember = "";
+	public string MapTextMember = "";
 
-		public string MapTextColorMember = "";
+	public string MapTextColorMember = "";
 
-		public string MapTextLocationMember = "";
+	public string MapTextLocationMember = "";
 
-		public string MapTextRotationMember = "";
+	public string MapTextRotationMember = "";
 
-		public string MapLayers = "";
+	public string MapLayers = "";
 
-		public string FormParameterName = "";
+	public string FormParameterName = "";
 
-		public string DefaultConfiguration = "";
+	public string DefaultConfiguration = "";
 
-		public bool NewRecordInDetailView = false;
+	public bool NewRecordInDetailView = false;
 
-		public string ImplicitFilter = null;
+	public string ImplicitFilter = null;
 
-		public string CalendarCustomSortMember = "";
+	public string CalendarCustomSortMember = "";
 
-		public Guid CalendarRowHeightConstantId = Guid.Empty;
+	public Guid CalendarRowHeightConstantId = Guid.Empty;
 		
-		public bool IsDraggingEnabled = false;
+	public bool IsDraggingEnabled = false;
 
-		public string DraggingLabelMember = "";
+	public string DraggingLabelMember = "";
 
-		public bool CalendarShowAllResources = false;
+	public bool CalendarShowAllResources = false;
 
-		public bool IsVisualEditorSupported = false;
+	public bool IsVisualEditorSupported = false;
 
-		public bool IsVisualEditorVisible = false;
+	public bool IsVisualEditorVisible = false;
 
-		public WorkflowExecutionType ActionType = WorkflowExecutionType.NoFormMerge;
+	public WorkflowExecutionType ActionType = WorkflowExecutionType.NoFormMerge;
 
-		public string OrderMember = "";
+	public string OrderMember = "";
 
-        public UIStyle Style = null;
+	public UIStyle Style = null;
 
-        public UIStyle CalendarViewStyle = null;
+	public UIStyle CalendarViewStyle = null;
 
-        public bool AllowNavigation { get; set; }
+	public bool AllowNavigation { get; set; }
 
-        public Dictionary<string, string> DynamicProperties =
-	        new Dictionary<string, string>();
+	public Dictionary<string, string> DynamicProperties =
+		new Dictionary<string, string>();
         
-        public static UIElementRenderData GetRenderData(ControlSetItem control, bool forceReadOnly)
-		{
+	public static UIElementRenderData GetRenderData(ControlSetItem control, bool forceReadOnly)
+	{
 			UIElementRenderData renderData = new UIElementRenderData();
 			foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
@@ -470,12 +470,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return renderData;
 		}
 
-        private static UIStyle GetStyle(PropertyValueItem property)
-        {
+	private static UIStyle GetStyle(PropertyValueItem property)
+	{
             IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
             return persistence.SchemaProvider.RetrieveInstance(
                 typeof(UIStyle), new ModelElementKey(property.GuidValue)) as UIStyle;
         }
-	}
 }

@@ -31,16 +31,16 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.Service_net2Tests
-{
-    internal class PersitHelper
-    {
-        private readonly IPersistenceService persistenceService;
+namespace Origam.DA.Service_net2Tests;
 
-        public IList<string> DefaultFolders { get; }
+internal class PersitHelper
+{
+    private readonly IPersistenceService persistenceService;
+
+    public IList<string> DefaultFolders { get; }
         
-        public PersitHelper(string testFolderPath)
-        {
+    public PersitHelper(string testFolderPath)
+    {
             DefaultFolders = new List<string>
             {
                 CategoryFactory.Create(typeof(Package)),
@@ -53,12 +53,12 @@ namespace Origam.DA.Service_net2Tests
                 pathToRuntimeModelConfig: "runtimeConfig.json" ,
                 basePath: testFolderPath);
         }
-        public IPersistenceProvider GetPersistenceProvider()
-        {
+    public IPersistenceProvider GetPersistenceProvider()
+    {
             return persistenceService.SchemaProvider;
         }
-        public void PersistAll()
-        {
+    public void PersistAll()
+    {
             PersistFolders<Package>();
             PersistFolders<SchemaItemGroup>();
 
@@ -73,14 +73,14 @@ namespace Origam.DA.Service_net2Tests
             filePresProvider.PersistIndex();
         }
 
-        public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
-        {
+    public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
+    {
             return (IFilePersistent)persistenceService.SchemaProvider
                 .RetrieveInstance(type, primaryKey);
         }
 
-        public List<AbstractSchemaItem> RetrieveAll()
-        {
+    public List<AbstractSchemaItem> RetrieveAll()
+    {
             List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
                 .Select(TypeTools.GetAllItems)
                 .SelectMany(itemCollection => itemCollection.ToGeneric())
@@ -89,8 +89,8 @@ namespace Origam.DA.Service_net2Tests
             return abstractSchemaItems;
         }
     
-        private void PersistFolders<T>()
-        {
+    private void PersistFolders<T>()
+    {
             IPersistenceService dbSvc = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
             var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(null);
@@ -101,8 +101,8 @@ namespace Origam.DA.Service_net2Tests
             }
         }
 
-        private void PersistAllProviderItems(Type providerType)
-        {
+    private void PersistAllProviderItems(Type providerType)
+    {
             var allItems = TypeTools.GetAllItems(providerType); 
             foreach (AbstractSchemaItem item in allItems)
             {
@@ -114,8 +114,8 @@ namespace Origam.DA.Service_net2Tests
             Console.WriteLine("ProviderType:" + providerType +", items: "+allItems.Count);
         }
 
-        public void Persist(List<IFilePersistent> items)
-        {
+    public void Persist(List<IFilePersistent> items)
+    {
             persistenceService.SchemaProvider.BeginTransaction();
             foreach (var item in items)
             {
@@ -124,15 +124,15 @@ namespace Origam.DA.Service_net2Tests
             persistenceService.SchemaProvider.EndTransaction();
         }
         
-        public void PersistSingle(IFilePersistent item)
-        {
+    public void PersistSingle(IFilePersistent item)
+    {
             persistenceService.SchemaProvider.BeginTransaction();
             persistenceService.SchemaProvider.Persist(item); 
             persistenceService.SchemaProvider.EndTransaction();
         }
 
-        private void Persist( AbstractSchemaItem item)
-        {
+    private void Persist( AbstractSchemaItem item)
+    {
             persistenceService.SchemaProvider.Persist(item);
             foreach (var ancestor in item.Ancestors)
             {
@@ -146,5 +146,4 @@ namespace Origam.DA.Service_net2Tests
                 }
             }
         }
-    }
 }

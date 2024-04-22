@@ -22,19 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 
-namespace Origam.UI
+namespace Origam.UI;
+
+public delegate void RecordReferencesChangedHandler (object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences);
+
+/// <summary>
+/// Summary description for IAttachmentParentReferenceProvider.
+/// </summary>
+public interface IRecordReferenceProvider
 {
-	public delegate void RecordReferencesChangedHandler (object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences);
+	event RecordReferencesChangedHandler RecordReferenceChanged;
 
-	/// <summary>
-	/// Summary description for IAttachmentParentReferenceProvider.
-	/// </summary>
-	public interface IRecordReferenceProvider
-	{
-		event RecordReferencesChangedHandler RecordReferenceChanged;
-
-		Hashtable ChildRecordReferences{get;}
-		Guid MainEntityId{get;}
-		Guid MainRecordId{get;}
-	}
+	Hashtable ChildRecordReferences{get;}
+	Guid MainEntityId{get;}
+	Guid MainRecordId{get;}
 }

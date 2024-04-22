@@ -30,14 +30,14 @@ using Origam.Schema.WorkflowModel.WorkQueue;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.OrigamEngine
-{
-    public class  OrigamProviderBuilder
-    {
-        private List<AbstractSchemaItemProvider> providers = new List<AbstractSchemaItemProvider>();
+namespace Origam.OrigamEngine;
 
-        public OrigamProviderBuilder()
-        {
+public class  OrigamProviderBuilder
+{
+    private List<AbstractSchemaItemProvider> providers = new List<AbstractSchemaItemProvider>();
+
+    public OrigamProviderBuilder()
+    {
                     providers.Add(new StringSchemaItemProvider());
                     providers.Add(new FeatureSchemaItemProvider());
                     providers.Add(new EntityModelSchemaItemProvider());
@@ -74,13 +74,13 @@ namespace Origam.OrigamEngine
                     providers.Add(new DeepLinkCategorySchemaItemProvider());
                     providers.Add(new XsltFunctionSchemaItemProvider());
         }
-        public List<AbstractSchemaItemProvider> GetAll()
-        {
+    public List<AbstractSchemaItemProvider> GetAll()
+    {
             return providers;
         }
 
-        public OrigamProviderBuilder SetSchemaProvider(IPersistenceProvider schemaProvider)
-        {
+    public OrigamProviderBuilder SetSchemaProvider(IPersistenceProvider schemaProvider)
+    {
             foreach (var provider in providers)
             {
                 provider.PersistenceProvider = schemaProvider;
@@ -88,5 +88,4 @@ namespace Origam.OrigamEngine
 
             return this;
         }
-    }
 }

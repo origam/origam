@@ -24,33 +24,33 @@ using System.Xml;
 using Origam.Mail;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for DataService.
+/// </summary>
+public class MailServiceAgent : AbstractServiceAgent
 {
-	/// <summary>
-	/// Summary description for DataService.
-	/// </summary>
-	public class MailServiceAgent : AbstractServiceAgent
+	public MailServiceAgent()
 	{
-		public MailServiceAgent()
-		{
 		}
 
-		#region IServiceAgent Members
+	#region IServiceAgent Members
 
-		private object _result;
-		public override object Result
+	private object _result;
+	public override object Result
+	{
+		get
 		{
-			get
-			{
 					object temp = _result;
 				_result = null;
 				
 				return temp;
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			switch(this.MethodName)
 			{
 				case "SendMail":
@@ -101,6 +101,5 @@ namespace Origam.Workflow
 			}
 		}
 
-		#endregion
-	}
+	#endregion
 }

@@ -24,28 +24,28 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Origam.Windows.Editor
-{
-    public class XmlCodeCompletionBinding
-    {
-        XmlSchemaCompletionCollection schemas;
+namespace Origam.Windows.Editor;
 
-        public XmlCodeCompletionBinding(XmlSchemaCompletionCollection schemas)
-        {
+public class XmlCodeCompletionBinding
+{
+    XmlSchemaCompletionCollection schemas;
+
+    public XmlCodeCompletionBinding(XmlSchemaCompletionCollection schemas)
+    {
             this.schemas = schemas;
         }
 
-        char[] ignoredChars = new[] { '\\', '/', '"', '\'', '=', '>', '!', '?' };
+    char[] ignoredChars = new[] { '\\', '/', '"', '\'', '=', '>', '!', '?' };
 
-        public string DefaultSchema { get; set; }
+    public string DefaultSchema { get; set; }
 
-        public CodeCompletionKeyPressResult HandleKeyPress(TextEditor editor, char ch)
-        {
+    public CodeCompletionKeyPressResult HandleKeyPress(TextEditor editor, char ch)
+    {
             return CodeCompletionKeyPressResult.None;
         }
 
-        XmlCompletionItemCollection GetCompletionItems(TextEditor editor, XmlSchemaCompletion defaultSchema)
-        {
+    XmlCompletionItemCollection GetCompletionItems(TextEditor editor, XmlSchemaCompletion defaultSchema)
+    {
             int offset = editor.TextArea.Caret.Offset;
             string textUpToCursor = editor.Document.GetText(0, offset);
 
@@ -65,8 +65,8 @@ namespace Origam.Windows.Editor
             return items;
         }
 
-        void SetCompletionWindowWidth(CompletionWindow completionWindow, XmlCompletionItemCollection completionItems)
-        {
+    void SetCompletionWindowWidth(CompletionWindow completionWindow, XmlCompletionItemCollection completionItems)
+    {
             XmlCompletionItem firstListItem = completionItems[0];
             if (firstListItem.DataType == XmlCompletionItemType.NamespaceUri)
             {
@@ -74,8 +74,8 @@ namespace Origam.Windows.Editor
             }
         }
 
-        public bool CtrlSpace(OrigamTextEditor editor, char ch)
-        {
+    public bool CtrlSpace(OrigamTextEditor editor, char ch)
+    {
             int elementStartIndex = XmlParser.GetActiveElementStartIndex(editor.Document.Text, editor.TextArea.Caret.Offset);
             if (elementStartIndex <= -1)
                 return false;
@@ -114,14 +114,14 @@ namespace Origam.Windows.Editor
             return false;
         }
 
-        bool ElementStartsWith(string text, int elementStartIndex, ITextSource document)
-        {
+    bool ElementStartsWith(string text, int elementStartIndex, ITextSource document)
+    {
             int textLength = Math.Min(text.Length, document.TextLength - elementStartIndex);
             return document.GetText(elementStartIndex, textLength).Equals(text, StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool HandleKeyPressed(OrigamTextEditor editor, char ch)
-        {
+    public bool HandleKeyPressed(OrigamTextEditor editor, char ch)
+    {
             //if (char.IsWhiteSpace(ch) || editor.SelectionLength > 0)
             //    return false;
             if (ignoredChars.Contains(ch))
@@ -130,5 +130,4 @@ namespace Origam.Windows.Editor
                 return false;
             return CtrlSpace(editor, ch);
         }
-    }
 }

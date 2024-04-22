@@ -31,19 +31,19 @@ using Origam.Rule;
 using Origam.Service.Core;
 
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+
+/// <summary>
+/// Summary description for UpdateContextEngineTask.
+/// </summary>
+public class UpdateContextEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for UpdateContextEngineTask.
-	/// </summary>
-	public class UpdateContextEngineTask : AbstractWorkflowEngineTask
+	public UpdateContextEngineTask() : base()
 	{
-		public UpdateContextEngineTask() : base()
-		{
 		}
 
-		protected override void OnExecute()
-		{
+	protected override void OnExecute()
+	{
 			bool changed = false;
 			ITracingService tracingService = ServiceManager.Services.GetService(typeof (ITracingService)) as ITracingService;
 			UpdateContextTask updateTask = this.Step as UpdateContextTask;
@@ -154,5 +154,4 @@ namespace Origam.Workflow.Tasks
 				}
 			}
 		}
-	}
 }

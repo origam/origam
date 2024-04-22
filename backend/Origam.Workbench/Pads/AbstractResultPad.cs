@@ -24,12 +24,12 @@ using Origam.Workbench.Services;
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Workbench.Pads
+namespace Origam.Workbench.Pads;
+
+public class AbstractResultPad : AbstractPadContent
 {
-    public class AbstractResultPad : AbstractPadContent
+    public bool OpenParentPackage(Guid SchemaExtensionId)
     {
-        public bool OpenParentPackage(Guid SchemaExtensionId)
-        {
             Guid SchemaExtensionIdItem = SchemaExtensionId;
             TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
             if (treenode != null)
@@ -51,8 +51,8 @@ namespace Origam.Workbench.Pads
             return true;
         }
 
-        private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
-        {
+    private void LoadSchema(TreeNode treenode, Guid SchemaExtensionIdItem)
+    {
             SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
             if (treenode != null)
             {
@@ -71,5 +71,4 @@ namespace Origam.Workbench.Pads
                 }
             }
         }
-    }
 }

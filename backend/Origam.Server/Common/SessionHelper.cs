@@ -46,19 +46,19 @@ using System.Collections.Generic;
 using Origam.Schema.MenuModel;
 using Origam.Gui;
 
-namespace Origam.Server
-{
-    public class SessionHelper
-    {
-        private readonly SessionManager sessionManager;
+namespace Origam.Server;
 
-        public SessionHelper(SessionManager sessionManager)
-        {
+public class SessionHelper
+{
+    private readonly SessionManager sessionManager;
+
+    public SessionHelper(SessionManager sessionManager)
+    {
             this.sessionManager = sessionManager;
         }
 
-        public void DeleteSession(Guid sessionFormIdentifier)
-        {
+    public void DeleteSession(Guid sessionFormIdentifier)
+    {
             SessionStore ss = null;
 
             // if session not found, we just remove it from the list of sessions
@@ -125,5 +125,4 @@ namespace Origam.Server
                 }
             }
         }
-    }
 }

@@ -31,27 +31,27 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
-namespace Origam.DA.Service
-{
-    public class OrigamXmlLoader
-    {
-        private readonly ObjectFileDataFactory objectFileDataFactory;
-        private readonly DirectoryInfo topDirectory;
-        private readonly XmlFileDataFactory xmlFileDataFactory;
-        private readonly IMetaModelUpgradeService metaModelUpgradeService;
+namespace Origam.DA.Service;
 
-        public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory,
-            DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory,
-            IMetaModelUpgradeService metaModelUpgradeService)
-        {
+public class OrigamXmlLoader
+{
+    private readonly ObjectFileDataFactory objectFileDataFactory;
+    private readonly DirectoryInfo topDirectory;
+    private readonly XmlFileDataFactory xmlFileDataFactory;
+    private readonly IMetaModelUpgradeService metaModelUpgradeService;
+
+    public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory,
+        DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory,
+        IMetaModelUpgradeService metaModelUpgradeService)
+    {
             this.objectFileDataFactory = objectFileDataFactory;
             this.topDirectory = topDirectory;
             this.xmlFileDataFactory = xmlFileDataFactory;
             this.metaModelUpgradeService = metaModelUpgradeService;
         }
 
-        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, MetaModelUpgradeMode mode)
-        {
+    public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, MetaModelUpgradeMode mode)
+    {
             PropertyToNamespaceMapping.Init();
             Result<List<XmlFileData>, XmlLoadError> result = FindMissingFiles(itemTracker);
 
@@ -68,9 +68,9 @@ namespace Origam.DA.Service
             return Maybe<XmlLoadError>.None;
         }
 
-        private void AddOrigamFiles(ItemTracker itemTracker,
-            List<XmlFileData> filesToLoad)
-        {
+    private void AddOrigamFiles(ItemTracker itemTracker,
+        List<XmlFileData> filesToLoad)
+    {
             GetNamespaceFinder(filesToLoad)
                 .FileDataWithNamespacesAssigned
                 .AsParallel()
@@ -82,9 +82,9 @@ namespace Origam.DA.Service
                 });
         }
 
-        private Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(
-            ItemTracker itemTracker)
-        {
+    private Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(
+        ItemTracker itemTracker)
+    {
             List<Result<XmlFileData, XmlLoadError>> results = topDirectory
                 .GetAllFilesInSubDirectories()
                 .AsParallel()
@@ -105,15 +105,15 @@ namespace Origam.DA.Service
                 : Result.Fail<List<XmlFileData>, XmlLoadError>(errors[0].Error);
         }
         
-        private void RemoveOrigamFilesThatNoLongerExist(ItemTracker itemTracker)
-        {
+    private void RemoveOrigamFilesThatNoLongerExist(ItemTracker itemTracker)
+    {
             IEnumerable<FileInfo> allFilesInSubDirectories
                 = topDirectory.GetAllFilesInSubDirectories();
             itemTracker.KeepOnly(allFilesInSubDirectories);
         }
 
-        private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad)
-        {
+    private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad)
+    {
             if (filesToLoad.Count == 0)
             {
                 return new NullNamespaceFinder();
@@ -122,5 +122,4 @@ namespace Origam.DA.Service
                 filesToLoad,
                 objectFileDataFactory);
         }
-    }
 }

@@ -29,43 +29,43 @@ using Origam.Server.Authorization;
 using Origam.Server.Configuration;
 using Origam.Server.IdentityServerGui.Home;
 
-namespace Origam.Server.IdentityServerGui.Account
-{
-    [SecurityHeaders]
-    [AllowAnonymous]
-    [Route("/account/[action]")]
-    public class AccountController : Microsoft.AspNetCore.Mvc.Controller
-    {
-        private readonly UserManager<IOrigamUser> _userManager;
-        private readonly SignInManager<IOrigamUser> _signInManager;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IEventService _events;
-        private readonly IMailService _mailService;
-        private readonly UserConfig _userConfig;
-        private readonly IStringLocalizer<SharedResources> _localizer;
-        private readonly IPersistedGrantStore _persistedGrantStore;
-        private readonly SessionObjects _sessionObjects;
-        private readonly ILogger<UserManager<IOrigamUser>> _logger;
-        private readonly IdentityGuiConfig _configOptions;
-        private readonly RequestLocalizationOptions _requestLocalizationOptions;
-        private readonly ResourceManager resourceManager = new ResourceManager("Origam.Server.SharedResources", Assembly.GetExecutingAssembly());
+namespace Origam.Server.IdentityServerGui.Account;
 
-        public AccountController(
-            UserManager<IOrigamUser> userManager,
-            SignInManager<IOrigamUser> signInManager,
-            IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
-            IAuthenticationSchemeProvider schemeProvider,
-            IEventService events,
-            IMailService mailService,
-            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
-            IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
-            IOptions<RequestLocalizationOptions> requestLocalizationOptions,
-            IOptions<IdentityGuiConfig> configOptions,
-            ILogger<UserManager<IOrigamUser>> logger)
-        {
+[SecurityHeaders]
+[AllowAnonymous]
+[Route("/account/[action]")]
+public class AccountController : Microsoft.AspNetCore.Mvc.Controller
+{
+    private readonly UserManager<IOrigamUser> _userManager;
+    private readonly SignInManager<IOrigamUser> _signInManager;
+    private readonly IIdentityServerInteractionService _interaction;
+    private readonly IClientStore _clientStore;
+    private readonly IAuthenticationSchemeProvider _schemeProvider;
+    private readonly IEventService _events;
+    private readonly IMailService _mailService;
+    private readonly UserConfig _userConfig;
+    private readonly IStringLocalizer<SharedResources> _localizer;
+    private readonly IPersistedGrantStore _persistedGrantStore;
+    private readonly SessionObjects _sessionObjects;
+    private readonly ILogger<UserManager<IOrigamUser>> _logger;
+    private readonly IdentityGuiConfig _configOptions;
+    private readonly RequestLocalizationOptions _requestLocalizationOptions;
+    private readonly ResourceManager resourceManager = new ResourceManager("Origam.Server.SharedResources", Assembly.GetExecutingAssembly());
+
+    public AccountController(
+        UserManager<IOrigamUser> userManager,
+        SignInManager<IOrigamUser> signInManager,
+        IIdentityServerInteractionService interaction,
+        IClientStore clientStore,
+        IAuthenticationSchemeProvider schemeProvider,
+        IEventService events,
+        IMailService mailService,
+        IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
+        IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
+        IOptions<RequestLocalizationOptions> requestLocalizationOptions,
+        IOptions<IdentityGuiConfig> configOptions,
+        ILogger<UserManager<IOrigamUser>> logger)
+    {
             _userManager = userManager;
             _signInManager = signInManager;
             _interaction = interaction;
@@ -82,12 +82,12 @@ namespace Origam.Server.IdentityServerGui.Account
             _requestLocalizationOptions = requestLocalizationOptions.Value;
         }
 
-        /// <summary>
-        /// Entry point into the login workflow
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl)
-        {
+    /// <summary>
+    /// Entry point into the login workflow
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> Login(string returnUrl)
+    {
             // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
 
@@ -100,10 +100,10 @@ namespace Origam.Server.IdentityServerGui.Account
             return View(vm);
         }       
         
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ForgotPassword()
-        {
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword()
+    {
             if (!_configOptions.AllowPasswordReset)
             {
                 return RedirectToAction(nameof(Login), "Account");
@@ -111,12 +111,12 @@ namespace Origam.Server.IdentityServerGui.Account
             return View();
         }
         
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
+    // POST: /Account/ForgotPassword
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
             if (!_configOptions.AllowPasswordReset)
             {
                 return RedirectToAction(nameof(Login), "Account");
@@ -144,12 +144,12 @@ namespace Origam.Server.IdentityServerGui.Account
             return View(model);
         }
         
-        //
-        // GET: /Account/Register
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
-        {
+    //
+    // GET: /Account/Register
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register(string returnUrl = null)
+    {
             if (!_userConfig.UserRegistrationAllowed)
             {
                 return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
@@ -159,13 +159,13 @@ namespace Origam.Server.IdentityServerGui.Account
             return View();
         }
 
-        //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
+    //
+    // POST: /Account/Register
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
             if (!_userConfig.UserRegistrationAllowed)
             {
                 return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
@@ -193,12 +193,12 @@ namespace Origam.Server.IdentityServerGui.Account
             return View(model);
         } 
         
-        //
-        // GET: /Account/RegisterInitialUser
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult RegisterInitialUser()
-        {
+    //
+    // GET: /Account/RegisterInitialUser
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult RegisterInitialUser()
+    {
             if (!UserTools.IsInitialSetupNeeded())
             {
                 return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
@@ -206,13 +206,13 @@ namespace Origam.Server.IdentityServerGui.Account
             return View();
         }
 
-        //
-        // POST: /Account/RegisterInitialUser
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterInitialUser(RegisterViewModel model)
-        {
+    //
+    // POST: /Account/RegisterInitialUser
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegisterInitialUser(RegisterViewModel model)
+    {
             if (!UserTools.IsInitialSetupNeeded())
             {
                 return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
@@ -245,11 +245,11 @@ namespace Origam.Server.IdentityServerGui.Account
         }
 
         
-        // GET: /Account/ConfirmEmail
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
-        {
+    // GET: /Account/ConfirmEmail
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    {
             if (!_userConfig.UserRegistrationAllowed)
             {
                 return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
@@ -280,19 +280,19 @@ namespace Origam.Server.IdentityServerGui.Account
         }
 
                 
-        // GET: /Account/RegisterConfirmation
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult RegisterConfirmation()
-        {
+    // GET: /Account/RegisterConfirmation
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult RegisterConfirmation()
+    {
             return View();
         }
         
-        // GET: /Account/ResetPassword
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null, string mail = null)
-        {
+    // GET: /Account/ResetPassword
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPassword(string code = null, string mail = null)
+    {
             if (!_configOptions.AllowPasswordReset)
             {
                 return RedirectToAction(nameof(Login), "Account");
@@ -318,12 +318,12 @@ namespace Origam.Server.IdentityServerGui.Account
             }
         }
         
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
+    // POST: /Account/ResetPassword
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
             if (!_configOptions.AllowPasswordReset)
             {
                 return RedirectToAction(nameof(Login), "Account");
@@ -348,22 +348,22 @@ namespace Origam.Server.IdentityServerGui.Account
             return View();
         }
         
-        // GET: /Account/ResetPasswordConfirmation
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPasswordConfirmation()
-        {
+    // GET: /Account/ResetPasswordConfirmation
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPasswordConfirmation()
+    {
             return View();
         }
 
         
-        /// <summary>
-        /// Handle postback from username/password login
-        /// </summary>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginInputModel model, string button)
-        {
+    /// <summary>
+    /// Handle postback from username/password login
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginInputModel model, string button)
+    {
             // check if we are in the context of an authorization request
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
@@ -372,8 +372,7 @@ namespace Origam.Server.IdentityServerGui.Account
             {
                 if (context != null)
                 {
-                    // if the user cancels, send a result back into IdentityServer as if they 
-                    // denied the consent (even if this client does not require consent).
+                    // if the user cancels, send a result back into IdentityServer as if they      // denied the consent (even if this client does not require consent).
                     // this will send back an access denied OIDC error response to the client.
                     await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
 
@@ -456,9 +455,9 @@ namespace Origam.Server.IdentityServerGui.Account
             return View(vm);
         }
         
-        [HttpGet]
-        public async Task<IActionResult> LoginTwoStep(string userName, bool rememberLogin, string returnUrl = null)
-        {
+    [HttpGet]
+    public async Task<IActionResult> LoginTwoStep(string userName, bool rememberLogin, string returnUrl = null)
+    {
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
@@ -484,10 +483,10 @@ namespace Origam.Server.IdentityServerGui.Account
         }
 
         
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginTwoStep(TwoStepModel twoStepModel)
-        {
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LoginTwoStep(TwoStepModel twoStepModel)
+    {
             if (!ModelState.IsValid)
             {
                 return View(twoStepModel);
@@ -526,12 +525,12 @@ namespace Origam.Server.IdentityServerGui.Account
         }
 
         
-        /// <summary>
-        /// Show logout page
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> Logout(string logoutId)
-        {
+    /// <summary>
+    /// Show logout page
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> Logout(string logoutId)
+    {
             // build a model so the logout page knows what to display
             var vm = await BuildLogoutViewModelAsync(logoutId);
 
@@ -545,13 +544,13 @@ namespace Origam.Server.IdentityServerGui.Account
             return View(vm);
         }
 
-        /// <summary>
-        /// Handle logout page postback
-        /// </summary>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(LogoutInputModel model)
-        {
+    /// <summary>
+    /// Handle logout page postback
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout(LogoutInputModel model)
+    {
             // build a model so the logged out page knows what to display
             var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
@@ -588,18 +587,18 @@ namespace Origam.Server.IdentityServerGui.Account
             return View("LoggedOut", vm);
         }
 
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
             return View();
         }
 
 
-        /*****************************************/
-        /* helper APIs for the AccountController */
-        /*****************************************/
-        private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
-        {
+    /*****************************************/
+    /* helper APIs for the AccountController */
+    /*****************************************/
+    private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
+    {
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
@@ -658,16 +657,16 @@ namespace Origam.Server.IdentityServerGui.Account
             };
         }
 
-        private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
-        {
+    private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
+    {
             var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
             vm.Username = model.Username;
             vm.RememberLogin = model.RememberLogin;
             return vm;
         }
 
-        private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
-        {
+    private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
+    {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
             if (User?.Identity.IsAuthenticated != true)
@@ -690,8 +689,8 @@ namespace Origam.Server.IdentityServerGui.Account
             return vm;
         }
 
-        private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
-        {
+    private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
+    {
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
 
@@ -728,17 +727,17 @@ namespace Origam.Server.IdentityServerGui.Account
             return vm;
         }
         
-        private void AddErrors(IdentityResult result)
-        {
+    private void AddErrors(IdentityResult result)
+    {
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
         
-        [HttpPost]
-        public IActionResult SetLanguage(string culture, string returnUrl)
-        {
+    [HttpPost]
+    public IActionResult SetLanguage(string culture, string returnUrl)
+    {
             var cultureProvider = _requestLocalizationOptions.RequestCultureProviders
                 .OfType<OrigamCookieRequestCultureProvider>().First();
             Response.Cookies.Append(
@@ -749,5 +748,4 @@ namespace Origam.Server.IdentityServerGui.Account
 
             return LocalRedirect(returnUrl);
         }
-    }
 }

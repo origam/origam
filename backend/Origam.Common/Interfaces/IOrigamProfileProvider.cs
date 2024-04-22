@@ -22,13 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Security.Principal;
 
-namespace Origam
-{
+namespace Origam;
 
-	public interface IOrigamProfileProvider { 
-	    object GetProfile(IIdentity identity);
-        object GetProfile(Guid profileId);
-		object GetProfile(string userName);
-        void AddUser(string name, string userName);
-	}
+public interface IOrigamProfileProvider { 
+	object GetProfile(IIdentity identity);
+	object GetProfile(Guid profileId);
+	object GetProfile(string userName);
+	void AddUser(string name, string userName);
 }

@@ -23,45 +23,44 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.TestModel
+namespace Origam.Schema.TestModel;
+
+[SchemaItemDescription("Alternative", "Alternatives", 27)]
+[ClassMetaVersion("6.0.0")]
+public class TestCaseAlternative : AbstractSchemaItem
 {
-	[SchemaItemDescription("Alternative", "Alternatives", 27)]
-    [ClassMetaVersion("6.0.0")]
-	public class TestCaseAlternative : AbstractSchemaItem
-	{
-		public const string CategoryConst = "TestCaseAlternative";
+	public const string CategoryConst = "TestCaseAlternative";
 
-		public TestCaseAlternative() {}
+	public TestCaseAlternative() {}
 
-		public TestCaseAlternative(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TestCaseAlternative(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public TestCaseAlternative(Key primaryKey) : base(primaryKey) {}
+	public TestCaseAlternative(Key primaryKey) : base(primaryKey) {}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override string Icon => "27";
+	public override string Icon => "27";
 
-		public override bool UseFolders => false;
+	public override bool UseFolders => false;
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(TestCaseStep)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			return base.NewItem<T>(schemaExtensionId, group,
 				typeof(T) == typeof(TestCaseStep)
 					? "NewTestCaseStep" : null);
 		}
 
-		#endregion
-	}
+	#endregion
 }

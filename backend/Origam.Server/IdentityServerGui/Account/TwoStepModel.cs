@@ -23,14 +23,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.IdentityServerGui.Account
+namespace Origam.Server.IdentityServerGui.Account;
+
+public class TwoStepModel
 {
-    public class TwoStepModel
-    {
-        [Required(ErrorMessage = "TwoFactorCodeRequired")]
-        [DataType(DataType.Text)]
-        public string TwoFactorCode { get; set; }
-        public bool RememberLogin { get; set; }
-        public string ReturnUrl { get; set; }
-    }
+    [Required(ErrorMessage = "TwoFactorCodeRequired")]
+    [DataType(DataType.Text)]
+    public string TwoFactorCode { get; set; }
+    public bool RememberLogin { get; set; }
+    public string ReturnUrl { get; set; }
 }

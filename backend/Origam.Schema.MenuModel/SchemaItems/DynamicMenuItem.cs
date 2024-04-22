@@ -25,48 +25,47 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+/// <summary>
+/// Summary description for Submenu.
+/// </summary>
+[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
+[HelpTopic("Dynamic+Menu")]
+[ClassMetaVersion("6.0.0")]
+public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Submenu.
-	/// </summary>
-	[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
-    [HelpTopic("Dynamic+Menu")]
-    [ClassMetaVersion("6.0.0")]
-	public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
+	public DynamicMenu() : base() {}
+
+	public DynamicMenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public DynamicMenu(Key primaryKey) : base(primaryKey)	{}
+
+	[Browsable(false)]
+	public override string Roles
 	{
-		public DynamicMenu() : base() {}
-
-		public DynamicMenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DynamicMenu(Key primaryKey) : base(primaryKey)	{}
-
-		[Browsable(false)]
-		public override string Roles
+		get
 		{
-			get
-			{
                 return "*";
 			}
-			set
-			{
+		set
+		{
                 throw new InvalidOperationException();
 			}
-		}
+	}
 
-		string _classPath;
+	string _classPath;
 
-        [XmlAttribute("classPath")]
-		public string ClassPath
+	[XmlAttribute("classPath")]
+	public string ClassPath
+	{
+		get
 		{
-			get
-			{
 				return _classPath;
 			}
-			set
-			{
+		set
+		{
                 _classPath = value;
 			}
-		}
 	}
 }

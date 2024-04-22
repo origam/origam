@@ -26,14 +26,14 @@ using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+
+[TestFixture]
+class OrigamDocumentSorterTests : AbstractFileTestClass
 {
-    [TestFixture]
-    class OrigamDocumentSorterTests : AbstractFileTestClass
+    [Test]
+    public void ShouldSortAttributes()
     {
-        [Test]
-        public void ShouldSortAttributes()
-        {
             var doc = new OrigamXmlDocument();
             string unsortedXmlPath = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
             string unsortedXml = File.ReadAllText(unsortedXmlPath);
@@ -55,7 +55,6 @@ namespace Origam.DA.Service_net2Tests
             Assert.That(sortedXml, Is.EqualTo(expectedXml));
         } 
         
-        protected override TestContext TestContext => TestContext.CurrentContext;
-        protected override string DirName => "OrigamDocumentSorter";
-    }
+    protected override TestContext TestContext => TestContext.CurrentContext;
+    protected override string DirName => "OrigamDocumentSorter";
 }

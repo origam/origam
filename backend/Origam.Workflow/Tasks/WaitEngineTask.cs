@@ -23,19 +23,19 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+
+/// <summary>
+/// Summary description for SetWorkflowPropertyEngineTask.
+/// </summary>
+public class WaitEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for SetWorkflowPropertyEngineTask.
-	/// </summary>
-	public class WaitEngineTask : AbstractWorkflowEngineTask
+	public WaitEngineTask() : base()
 	{
-		public WaitEngineTask() : base()
-		{
 		}
 
-		protected override void OnExecute()
-		{
+	protected override void OnExecute()
+	{
 			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			WaitTask wait = this.Step as WaitTask;
 
@@ -43,5 +43,4 @@ namespace Origam.Workflow.Tasks
 
 			System.Threading.Thread.Sleep(waitTime);
 		}
-	}
 }

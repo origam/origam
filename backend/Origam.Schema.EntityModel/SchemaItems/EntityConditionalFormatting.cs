@@ -27,44 +27,44 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for EntitySecurityRule.
+/// </summary>
+[SchemaItemDescription("Conditional Formatting Rule", 
+	"Conditional Formatting", 
+	"icon_conditional-formatting-rule.png")]
+[HelpTopic("Conditional+Formatting+Rules")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 {
-	/// <summary>
-	/// Summary description for EntitySecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Conditional Formatting Rule", 
-        "Conditional Formatting", 
-        "icon_conditional-formatting-rule.png")]
-    [HelpTopic("Conditional+Formatting+Rules")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
-	{
-		public const string CategoryConst = "EntityConditionalFormatting";
+	public const string CategoryConst = "EntityConditionalFormatting";
 
-		public EntityConditionalFormatting() : base() {}
+	public EntityConditionalFormatting() : base() {}
 
-		public EntityConditionalFormatting(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityConditionalFormatting(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityConditionalFormatting(Key primaryKey) : base(primaryKey)	{}
+	public EntityConditionalFormatting(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Rule != null) base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Rule);
 
 			if(this.ForegroundColorLookup != null) dependencies.Add(this.ForegroundColorLookup);
@@ -74,8 +74,8 @@ namespace Origam.Schema.EntityModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -91,18 +91,18 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Functions
-		private void UpdateName()
-		{
+	#region Functions
+	private void UpdateName()
+	{
 			string name = Level.ToString() + "_" + this.BackgroundColor.ToString();
 
 			if(this.Rule != null)
@@ -114,163 +114,163 @@ namespace Origam.Schema.EntityModel
 
 			this.Name = name;
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		internal void CredentialsChanged()
-		{
+	#region Properties
+	internal void CredentialsChanged()
+	{
 			UpdateName();
 		}
 
-		private string _roles = "";
-		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("roles")]
-        public string Roles
+	private string _roles = "";
+	[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 
 				UpdateName();
 			}
-		}
+	}
         
-		[Browsable(false)]
-        [XmlAttribute("backgroundColor")]
-        public int _backColorInt;
+	[Browsable(false)]
+	[XmlAttribute("backgroundColor")]
+	public int _backColorInt;
 
-		[Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
-		public Color BackgroundColor
+	[Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
+	public Color BackgroundColor
+	{
+		get
 		{
-			get
-			{
 				return Color.FromArgb(_backColorInt);
 			}
-			set
-			{
+		set
+		{
 				_backColorInt = value.ToArgb();
 
 				UpdateName();
 			}
-		}
+	}
 		
-		[Browsable(false)]
-        [XmlAttribute("foregroundColor")]
-        public int _foreColorInt;
+	[Browsable(false)]
+	[XmlAttribute("foregroundColor")]
+	public int _foreColorInt;
 
-		[Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
-		public Color ForegroundColor
+	[Category("Formatting"), RefreshProperties(RefreshProperties.Repaint)]
+	public Color ForegroundColor
+	{
+		get
 		{
-			get
-			{
 				return Color.FromArgb(_foreColorInt);
 			}
-			set
-			{
+		set
+		{
 				_foreColorInt = value.ToArgb();
 
 				UpdateName();
 			}
-		}
+	}
 
-		private int _level = 100;
-		[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("level")]
-        public int Level
+	private int _level = 100;
+	[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("level")]
+	public int Level
+	{
+		get
 		{
-			get
-			{
 				return _level;
 			}
-			set
-			{
+		set
+		{
 				_level = value;
 
 				UpdateName();
 			}
-		}
+	}
 
-		public Guid RuleId;
+	public Guid RuleId;
 
-		[TypeConverter(typeof(EntityRuleConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[Category("Condition")]
-        [XmlReference("rule", "RuleId")]
-        public IEntityRule Rule
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[Category("Condition")]
+	[XmlReference("rule", "RuleId")]
+	public IEntityRule Rule
+	{
+		get
 		{
-			get
-			{
                 return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
 			}
-			set
-			{
+		set
+		{
 				this.RuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			
 				UpdateName();
 			}
-		}
+	}
         
-		public Guid ForeColorLookupId;
+	public Guid ForeColorLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[Category("Dynamic Color")]
-        [XmlReference("foregroundColorLookup", "ForeColorLookupId")]
-        public IDataLookup ForegroundColorLookup
+	[TypeConverter(typeof(DataLookupConverter))]
+	[Category("Dynamic Color")]
+	[XmlReference("foregroundColorLookup", "ForeColorLookupId")]
+	public IDataLookup ForegroundColorLookup
+	{
+		get
 		{
-			get
-			{
 				return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ForeColorLookupId));
 			}
-			set
-			{
+		set
+		{
 				this.ForeColorLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
         
-		public Guid BackColorLookupId;
+	public Guid BackColorLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[Category("Dynamic Color")]
-        [XmlReference("backgroundColorLookup", "BackColorLookupId")]
-        public IDataLookup BackgroundColorLookup
+	[TypeConverter(typeof(DataLookupConverter))]
+	[Category("Dynamic Color")]
+	[XmlReference("backgroundColorLookup", "BackColorLookupId")]
+	public IDataLookup BackgroundColorLookup
+	{
+		get
 		{
-			get
-			{
 				return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.BackColorLookupId));
 			}
-			set
-			{
+		set
+		{
 				this.BackColorLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		public Guid DynamicColorLookupFieldId;
+	public Guid DynamicColorLookupFieldId;
 
-		[TypeConverter(typeof(EntityColumnReferenceConverter))]
-		[NotNullModelElementRule("ForegroundColorLookup", "BackgroundColorLookup")]
-		[Category("Dynamic Color")]
-        [XmlReference("dynamicColorLookupField", "DynamicColorLookupFieldId")]
-        public IDataEntityColumn DynamicColorLookupField
+	[TypeConverter(typeof(EntityColumnReferenceConverter))]
+	[NotNullModelElementRule("ForegroundColorLookup", "BackgroundColorLookup")]
+	[Category("Dynamic Color")]
+	[XmlReference("dynamicColorLookupField", "DynamicColorLookupFieldId")]
+	public IDataEntityColumn DynamicColorLookupField
+	{
+		get
 		{
-			get
-			{
 				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DynamicColorLookupFieldId));
 			}
-			set
-			{
+		set
+		{
 				this.DynamicColorLookupFieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IComparable Members
-		public override int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
 			EntityConditionalFormatting compared = obj as EntityConditionalFormatting;
 
 			if(compared != null)
@@ -283,57 +283,56 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		#endregion
-	}
+	#endregion
+}
 
-	public class EntityFormatting
+public class EntityFormatting
+{
+	public EntityFormatting(Color foreColor, Color backColor)
 	{
-		public EntityFormatting(Color foreColor, Color backColor)
-		{
 			_foreColor = foreColor;
 			_backColor = backColor;
 		}
 
-		private Color _foreColor;
-		public Color ForeColor
+	private Color _foreColor;
+	public Color ForeColor
+	{
+		get
 		{
-			get
-			{
 				return _foreColor;
 			}
-			set
-			{
+		set
+		{
 				_foreColor = value;
 			}
-		}
+	}
 
-		private Color _backColor;
-		public Color BackColor
+	private Color _backColor;
+	public Color BackColor
+	{
+		get
 		{
-			get
-			{
 				return _backColor;
 			}
-			set
-			{
+		set
+		{
 				_backColor = value;
 			}
-		}
+	}
 
-		public bool UseDefaultForeColor
+	public bool UseDefaultForeColor
+	{
+		get
 		{
-			get
-			{
 				return this.ForeColor.Equals(Color.FromArgb(0,0,0,0));
 			}
-		}
+	}
 
-		public bool UseDefaultBackColor
+	public bool UseDefaultBackColor
+	{
+		get
 		{
-			get
-			{
 				return this.BackColor.Equals(Color.FromArgb(0,0,0,0));
 			}
-		}
 	}
 }

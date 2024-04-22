@@ -28,24 +28,24 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Origam.ProjectAutomation.Builders
+namespace Origam.ProjectAutomation.Builders;
+
+public class DockerCreator : AbstractBuilder
 {
-    public class DockerCreator : AbstractBuilder
+    public override string Name => "Start Docker Container";
+
+    private bool IsNewVolume { get; set; } = false;
+    public string ContainerID { get; private set; }
+
+    private readonly DockerManager dockerManager;
+
+    public DockerCreator(string tag,string dockerApiAdress)
     {
-        public override string Name => "Start Docker Container";
-
-        private bool IsNewVolume { get; set; } = false;
-        public string ContainerID { get; private set; }
-
-        private readonly DockerManager dockerManager;
-
-        public DockerCreator(string tag,string dockerApiAdress)
-        {
             this.dockerManager = new DockerManager(tag, dockerApiAdress);
         }
 
-        public override void Execute(Project project)
-        {
+    public override void Execute(Project project)
+    {
             Task<Docker.OperatingSystem> task = Task.Run(() =>
             {
                 return new Docker.OperatingSystem(dockerManager.IsDockerInstaledAsync());
@@ -75,8 +75,8 @@ namespace Origam.ProjectAutomation.Builders
             }
         }
 
-        private bool DockerVolumeExists(string volumeName)
-        {
+    private bool DockerVolumeExists(string volumeName)
+    {
             Task<VolumesListResponse> task = Task.Run(() =>
             {
                 return dockerManager.DockerVolumeExistsAsync();
@@ -86,8 +86,8 @@ namespace Origam.ProjectAutomation.Builders
             return vol.Volumes.Where(volumelist => volumelist.Name == volumeName).Any();
         }
 
-        private bool IsContainerPrepared(string containerId)
-        {
+    private bool IsContainerPrepared(string containerId)
+    {
             long dockerdateTime = DateTime.Now.AddSeconds(60).Ticks;
             while (DateTime.Now.Ticks < dockerdateTime)
             {
@@ -99,8 +99,8 @@ namespace Origam.ProjectAutomation.Builders
             }
             return false;
         }
-        private string StartDockerContainer(string databaseAdminPassword, Project project)
-        {
+    private string StartDockerContainer(string databaseAdminPassword, Project project)
+    {
             DockerContainerParameter containerParameters = new DockerContainerParameter
             {
                 DockerEnvPath = project.DockerEnvPath,
@@ -123,8 +123,8 @@ namespace Origam.ProjectAutomation.Builders
                 ID;
             return ContainerID;
         }
-        private bool IsContainerRunningProperly(string containerId)
-        {
+    private bool IsContainerRunningProperly(string containerId)
+    {
 
             string output = GetDockerLogsAsync(containerId);
             if (output.Contains("Press [CTRL+C] to stop"))
@@ -138,8 +138,8 @@ namespace Origam.ProjectAutomation.Builders
             return false;
         }
 
-        private string GetDockerLogsAsync(string containerId)
-        {
+    private string GetDockerLogsAsync(string containerId)
+    {
             string output;
             Task<Stream> task = Task.Run(() =>
             {
@@ -157,8 +157,8 @@ namespace Origam.ProjectAutomation.Builders
             return output;
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
            if(IsNewVolume)
             {
                 Task.Run(() =>
@@ -170,5 +170,4 @@ namespace Origam.ProjectAutomation.Builders
                     GetResult();
             }
         }
-    }
 }

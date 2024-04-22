@@ -27,29 +27,29 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class PropertyValueItem : AbstractPropertyValueItem
 {
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class PropertyValueItem : AbstractPropertyValueItem
-	{
-		public const string CategoryConst = "PropertyValueItem";
+	public const string CategoryConst = "PropertyValueItem";
 
-		public PropertyValueItem() : base(){}
+	public PropertyValueItem() : base(){}
 		
-		public PropertyValueItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public PropertyValueItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public PropertyValueItem(Key primaryKey) : base(primaryKey)	{}
+	public PropertyValueItem(Key primaryKey) : base(primaryKey)	{}
 
-        string _xmlPersistedValue;
+	string _xmlPersistedValue;
 
-        [XmlAttribute("value")]
-        [Localizable(true)]
-        [Browsable(false)]
-        public string Value
-        {
-            get
-            {
+	[XmlAttribute("value")]
+	[Localizable(true)]
+	[Browsable(false)]
+	public string Value
+	{
+		get
+		{
 	            if (ControlPropertyItem == null)
 	            {
 		            return null;
@@ -70,15 +70,15 @@ namespace Origam.Schema.GuiModel
                         throw new ArgumentOutOfRangeException("PropertyType");
                 }
             }
-            set
-            {
+		set
+		{
                 _xmlPersistedValue = value;
                 UseXmlPersistedValue();
             }
-        }
+	}
 
-        public override void AfterControlPropertySet()
-        {
+	public override void AfterControlPropertySet()
+	{
             // while building schema from XML, we don't know in what order
             // the parsed xml attributes are comming, so it's possible,
             // that attribute property type comes after the actual value
@@ -90,8 +90,8 @@ namespace Origam.Schema.GuiModel
             UseXmlPersistedValue();
         }
 
-        private void UseXmlPersistedValue()
-        {
+	private void UseXmlPersistedValue()
+	{
             if (ControlPropertyItem != null && _xmlPersistedValue != null)
             {
                 switch (ControlPropertyItem.PropertyType)
@@ -115,70 +115,70 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-		private int _intValue = 0;
+	private int _intValue = 0;
 
-		#region Properties
-		public int IntValue
+	#region Properties
+	public int IntValue
+	{
+		get
 		{
-			get
-			{
 				return _intValue;
 			}
-			set
-			{
+		set
+		{
 				_intValue=value;
 			}
 
-		}
+	}
 
-		private bool _boolValue = false;
+	private bool _boolValue = false;
 
-        public bool BoolValue
+	public bool BoolValue
+	{
+		get
 		{
-			get
-			{
 				return _boolValue;
 			}
-			set
-			{
+		set
+		{
 				_boolValue=value;
 			}
 
-		}
+	}
 
-		private Guid _guidValue;
+	private Guid _guidValue;
 
-        public Guid GuidValue
+	public Guid GuidValue
+	{
+		get
 		{
-			get
-			{
 				return _guidValue;
 			}
-			set
-			{
+		set
+		{
 				_guidValue=value;
 			}
 
-		}
+	}
 
-        private string _stringValue;
+	private string _stringValue;
 
-        public string StringValue
-        {
-            get
-            {
+	public string StringValue
+	{
+		get
+		{
                 if (_stringValue == null) return null;
 
                 return _stringValue.Trim();
             }
-            set
-            {
+		set
+		{
                 _stringValue = value;
             }
-        }
+	}
 
-        public void SetValue(object value)
-		{
+	public void SetValue(object value)
+	{
 			if(value == null)
 			{
 				this.Value = null;
@@ -208,49 +208,49 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		#endregion
+	#endregion
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return PropertyValueItem.CategoryConst;
 			}
-		}
 	}
+}
 
-	[ClassMetaVersion("6.0.0")]
-    public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLocalizable
-	{
-		public AbstractPropertyValueItem() : base(){}
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLocalizable
+{
+	public AbstractPropertyValueItem() : base(){}
 		
-		public AbstractPropertyValueItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractPropertyValueItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public AbstractPropertyValueItem(Key primaryKey) : base(primaryKey)	{}
+	public AbstractPropertyValueItem(Key primaryKey) : base(primaryKey)	{}
 
-        #region Properties
+	#region Properties
 
-        private Guid _controlPropertyId;
+	private Guid _controlPropertyId;
 
-        [XmlAttribute("propertyId")]
-		public Guid ControlPropertyId
-        {
-            get
-            {
+	[XmlAttribute("propertyId")]
+	public Guid ControlPropertyId
+	{
+		get
+		{
                 return _controlPropertyId;
             }
-            set
-            {
+		set
+		{
                 _controlPropertyId = value;
                 AfterControlPropertySet();
             }
-        }
+	}
 
-		private ControlPropertyItem _property = null;
-        public ControlPropertyItem ControlPropertyItem
+	private ControlPropertyItem _property = null;
+	public ControlPropertyItem ControlPropertyItem
+	{
+		get
 		{
-			get
-			{
 				if(_property == null)
 				{
 					ModelElementKey key = new ModelElementKey();
@@ -261,48 +261,48 @@ namespace Origam.Schema.GuiModel
 
 				return _property;
 			}
-			set
-			{
+		set
+		{
 				this.ControlPropertyId = (Guid)value.PrimaryKey["Id"];
 				_property = value;
 			}
-		}
+	}
 
-        public virtual void AfterControlPropertySet()
-        {
+	public virtual void AfterControlPropertySet()
+	{
 
         }
-		#endregion
+	#endregion
 		
-		#region Overriden AbstractSchemaItem Members
-		public override string Icon
+	#region Overriden AbstractSchemaItem Members
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "7";
 			}
-		}		
+	}		
 		
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.ControlPropertyItem);
 
 			base.GetExtraDependencies (dependencies);
 		}
 		
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IQueryLocalizable Members
+	#region IQueryLocalizable Members
 
-		public bool IsLocalizable(string member)
-		{
+	public bool IsLocalizable(string member)
+	{
 			if(member == "Value")
 			{
 				return this.ControlPropertyItem.IsLocalizable;
@@ -311,6 +311,5 @@ namespace Origam.Schema.GuiModel
 			return true;
 		}
 
-		#endregion
-	}
+	#endregion
 }

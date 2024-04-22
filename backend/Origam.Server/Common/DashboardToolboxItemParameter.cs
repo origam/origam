@@ -44,85 +44,84 @@ using System;
 using Origam.Schema;
 using System.Xml;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class DashboardToolboxItemParameter
 {
-    public class DashboardToolboxItemParameter
+    public DashboardToolboxItemParameter()
     {
-        public DashboardToolboxItemParameter()
-        {
         }
 
-        public DashboardToolboxItemParameter(string name, string caption, OrigamDataType dataType, Guid lookupId)
-        {
+    public DashboardToolboxItemParameter(string name, string caption, OrigamDataType dataType, Guid lookupId)
+    {
             _name = name;
             _caption = caption;
             _dataType = dataType;
             _lookupId = lookupId;
         }
 
-        private string _name;
-        public string Name
+    private string _name;
+    public string Name
+    {
+        get
         {
-            get
-            {
                 return _name;
             }
-            set
-            {
+        set
+        {
                 _name = value;
             }
-        }
+    }
 
-        private string _caption;
-        public string Caption
+    private string _caption;
+    public string Caption
+    {
+        get
         {
-            get
-            {
                 return _caption;
             }
-            set
-            {
+        set
+        {
                 _caption = value;
             }
-        }
+    }
 
-        private Guid _lookupId;
-        public Guid LookupId
+    private Guid _lookupId;
+    public Guid LookupId
+    {
+        get
         {
-            get
-            {
                 return _lookupId;
             }
-            set
-            {
+        set
+        {
                 _lookupId = value;
             }
-        }
+    }
 
-        private OrigamDataType _dataType;
-        public OrigamDataType DataType
+    private OrigamDataType _dataType;
+    public OrigamDataType DataType
+    {
+        get
         {
-            get
-            {
                 return _dataType;
             }
-            set
-            {
+        set
+        {
                 _dataType = value;
             }
-        }
+    }
 
-        private XmlDocument _controlDefinition;
-        public XmlDocument ControlDefinition
+    private XmlDocument _controlDefinition;
+    public XmlDocument ControlDefinition
+    {
+        get
         {
-            get
-            {
                 return _controlDefinition;
             }
-            set
-            {
+        set
+        {
                 _controlDefinition = value;
             }
-        }
     }
 }

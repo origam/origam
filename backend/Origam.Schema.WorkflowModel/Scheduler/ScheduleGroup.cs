@@ -23,23 +23,23 @@ using Origam.DA.Common;
 using System;
 using Schedule;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("Schedule Group", "schedule-group.png")]
+[ClassMetaVersion("6.0.0")]
+public class ScheduleGroup : AbstractScheduleTime
 {
-	[SchemaItemDescription("Schedule Group", "schedule-group.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class ScheduleGroup : AbstractScheduleTime
+	public ScheduleGroup() {}
+
+	public ScheduleGroup(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public ScheduleGroup(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden Members
+	public override bool UseFolders => false;
+
+	public override IScheduledItem GetScheduledTime()
 	{
-		public ScheduleGroup() {}
-
-		public ScheduleGroup(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ScheduleGroup(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden Members
-		public override bool UseFolders => false;
-
-		public override IScheduledItem GetScheduledTime()
-		{
 			var eventQueue = new EventQueue();
 			foreach(AbstractScheduleTime abstractScheduleTime in ChildItems)
 			{
@@ -47,18 +47,18 @@ namespace Origam.Schema.WorkflowModel
 			}
 			return eventQueue;
 		}
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
-		public override Type[] NewItemTypes => new[] 
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[] 
 		{
 			typeof(SimpleScheduleTime),
 			typeof(ScheduleGroup)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(SimpleScheduleTime))
 			{
@@ -71,6 +71,5 @@ namespace Origam.Schema.WorkflowModel
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-		#endregion
-	}
+	#endregion
 }
