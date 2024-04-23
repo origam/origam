@@ -85,6 +85,7 @@ export class TablePanelView implements ITablePanelView {
 
   expandEditorAfterMounting = false;
   @observable isEditing: boolean = false;
+  @observable isAnyRowCellFocused: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
@@ -430,7 +431,7 @@ export class TablePanelView implements ITablePanelView {
     const _this = this;
     flow(function*() {
       if (_this.isEditing) {
-        if(!_this.isScrollByKeyboard) {
+        if(!_this.isScrollByKeyboard && !_this.isAnyRowCellFocused) {
           _this.setEditing(false);
         }
         yield*flushCurrentRowData(_this)();

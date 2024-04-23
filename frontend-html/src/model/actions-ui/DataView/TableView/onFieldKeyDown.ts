@@ -99,7 +99,8 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Enter": {
-          let isLastRow = getDataTable(ctx).getLastRow() === getSelectedRow(ctx);
+          const dataTable = getDataTable(ctx);
+          let isLastRow = dataTable.getLastRow() === getSelectedRow(ctx);
           event.persist?.();
           event.preventDefault();
 
@@ -118,7 +119,8 @@ export function onFieldKeyDown(ctx: any) {
           yield*dataView.lifecycle.runRecordChangedReaction();
 
           tablePanelView.scrollToCurrentCell();
-          tablePanelView.setEditing(!isLastRow);
+          tablePanelView.isAnyRowCellFocused = !isLastRow;
+          tablePanelView.setEditing(tablePanelView.isAnyRowCellFocused);
           break;
         }
         case "F2": {

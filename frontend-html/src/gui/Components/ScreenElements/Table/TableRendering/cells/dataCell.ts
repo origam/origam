@@ -141,6 +141,7 @@ function registerClickHandler(columnId: string) {
 
   const property = currentProperty();
 
+  getTablePanelView(ctx).isAnyRowCellFocused = false;
   const cellClickableArea = getCellClickableArea();
   if (property.column === "CheckBox") {
     const checkboxClickableArea = getCheckboxClickableArea();

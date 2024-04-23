@@ -51,6 +51,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
   isEditing: boolean;
+  isAnyRowCellFocused: boolean;
   expandEditorAfterMounting: boolean;
   fixedColumnCount: number;
   configurationManager: IConfigurationManager;
