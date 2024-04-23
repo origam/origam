@@ -178,6 +178,7 @@ export interface IScrollerProps {
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onFocus: () => void;
+  canFocus: () => boolean;
 }
 
 export interface IScrolleeProps {

@@ -51,6 +51,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import cx from 'classnames';
+import {getGridFocusManager} from "../../../../model/entities/GridFocusManager";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -433,6 +434,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     && this.tablePanelView.currentTooltipText !== undefined;
   }
 
+  canFocus(){
+    return getGridFocusManager(this.context.tablePanelView).canFocusTable;
+  }
+
   render() {
     const editorCellRectangle =
       this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
@@ -541,6 +546,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         onMouseLeave={(event) => this.onMouseLeaveTooltipEnabledArea(event)}
                         onKeyDown={this.props.onKeyDown}
                         onFocus={this.props.onFocus}
+                        canFocus={()=>this.canFocus()}
                       />
                     </>
                   </div>
