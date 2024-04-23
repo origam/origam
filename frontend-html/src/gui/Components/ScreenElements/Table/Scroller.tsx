@@ -106,7 +106,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         console.warn("Focus was requested on an invisible table. This should not happen.");
         return;
       }
-      if (this.props.canFocus()){
+      if (this.props.canFocus()) {
         requestFocus(this.elmScrollerDiv);
       }
     });
