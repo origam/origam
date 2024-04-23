@@ -27,19 +27,19 @@ using Origam.DA;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 
-namespace Origam.Security
+namespace Origam.Security;
+
+/// <summary>
+/// Summary description for OrigamProfileProvider.
+/// </summary>
+public class OrigamProfileProvider : AbstractProfileProvider
 {
-	/// <summary>
-	/// Summary description for OrigamProfileProvider.
-	/// </summary>
-	public class OrigamProfileProvider : AbstractProfileProvider
+	private const string PROFILE_DATA_STRUCTURE = "8e628d99-986a-4b46-9e78-01a2a91ee85a";
+	private const string NEW_PROFILE_DATA_STRUCTURE = "37aa9baa-ac4d-4252-8450-4034c1c36e3e";
+	private const string PROFILE_METHOD = "0ce6f260-6401-401a-a70c-7beaf8564075";
+	#region IProfileProvider Members
+	override public void AddUser(string name, string userName)
 	{
-        private const string PROFILE_DATA_STRUCTURE = "8e628d99-986a-4b46-9e78-01a2a91ee85a";
-        private const string NEW_PROFILE_DATA_STRUCTURE = "37aa9baa-ac4d-4252-8450-4034c1c36e3e";
-        private const string PROFILE_METHOD = "0ce6f260-6401-401a-a70c-7beaf8564075";
-        #region IProfileProvider Members
-        override public void AddUser(string name, string userName)
-        {
             // load existing
             DataSet data = GetProfileData(userName);
             DataTable table = data.Tables["BusinessPartner"];
@@ -52,8 +52,7 @@ namespace Origam.Security
             // store
             DataStructureQuery query = new DataStructureQuery(
                 new Guid(NEW_PROFILE_DATA_STRUCTURE));
-            // if data service would try to get identity, 
-            // we would get into recursion
+            // if data service would try to get identity, 	 // we would get into recursion
             query.LoadByIdentity = false;
             query.FireStateMachineEvents = false;
             IServiceAgent dataServiceAgent = GetAgent();
@@ -64,8 +63,8 @@ namespace Origam.Security
             dataServiceAgent.Run();
         }
 
-		override public object GetProfile(string userName)
-		{
+	override public object GetProfile(string userName)
+	{
 			Hashtable profileCacheByIdentity = GetCacheByName();
 			if(profileCacheByIdentity.Contains(userName))
 			{
@@ -137,8 +136,8 @@ namespace Origam.Security
 			}
 		}
 
-        private static DataSet GetProfileData(string userName)
-        {
+	private static DataSet GetProfileData(string userName)
+	{
             DataStructureQuery query = GetProfileQuery();
             query.Parameters.Add(
                 new QueryParameter("BusinessPartner_parUserName",
@@ -152,16 +151,14 @@ namespace Origam.Security
             return result;
         }
 
-        private static DataStructureQuery GetProfileQuery()
-        {
+	private static DataStructureQuery GetProfileQuery()
+	{
             DataStructureQuery query = new DataStructureQuery(
                 new Guid(PROFILE_DATA_STRUCTURE),
                 new Guid(PROFILE_METHOD));
-            // if data service would try to get identity, 
-            // we would get into recursion
+            // if data service would try to get identity, 	 // we would get into recursion
             query.LoadByIdentity = false;
             return query;
         }
-		#endregion
-	}
+	#endregion
 }

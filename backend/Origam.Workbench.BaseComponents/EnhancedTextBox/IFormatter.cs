@@ -22,13 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+
+internal interface IFormatter
 {
-    internal interface IFormatter
-    {
-        void OnKeyDown(object sender, KeyEventArgs e);
-        void OnKeyPress(object sender, KeyPressEventArgs e);
-        void OnLeave(object sender, EventArgs e);
-        object GetValue();
-    }
+    void OnKeyDown(object sender, KeyEventArgs e);
+    void OnKeyPress(object sender, KeyPressEventArgs e);
+    void OnLeave(object sender, EventArgs e);
+    object GetValue();
 }

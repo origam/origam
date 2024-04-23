@@ -7,16 +7,16 @@ using Origam.DA.Common;
 using Origam.DA.ServiceTests;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.MetaModelUpgrade
-{
-    class TestPersistedClassScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+namespace Origam.DA.Service.MetaModelUpgrade;
 
-        public TestPersistedClassScriptContainer() 
-        {
+class TestPersistedClassScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+
+    public TestPersistedClassScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -32,16 +32,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     AddAttribute(node, "newProperty2", "");
                 }));
         }
-    }     
+}     
     
-    class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
-        public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
-        public override string[] OldPropertyXmlNames { get; }
+class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
+    public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestTestRenamedClassScriptContainer() 
-        {
+    public TestTestRenamedClassScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -58,16 +58,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     doc.FileElement.Add(new XAttribute(trcNamespace + "trc", trcNamespace));
                 }));
         }
-    }    
+}    
     
-    class TestDeadClassScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+class TestDeadClassScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestDeadClassScriptContainer() 
-        {
+    public TestDeadClassScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -94,16 +94,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     
                 }));
         }
-    }        
+}        
     
-    class TestDeadClass2ScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+class TestDeadClass2ScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestDeadClass2ScriptContainer() 
-        {
+    public TestDeadClass2ScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -119,15 +119,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     node.Remove();
                 }));
         }
-    }       
-    class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+}       
+class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestTestDeadBaseClassScriptContainer() 
-        {
+    public TestTestDeadBaseClassScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -144,16 +144,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     node.Attribute(deadNamespace.GetName("deadClassProperty")).Remove();
                 }));
         }
-    }   
+}   
     
-    class TestBaseClassScriptContainer : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestBaseClass";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+class TestBaseClassScriptContainer : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestBaseClass";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestBaseClassScriptContainer() 
-        {
+    public TestBaseClassScriptContainer() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -162,16 +162,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     AddAttribute(node, "TestBaseClassProperty", "");
                 }));
         }
-    }
+}
     
-    class TestPersistedClassScriptContainer2 : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass2";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+class TestPersistedClassScriptContainer2 : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass2";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestPersistedClassScriptContainer2() 
-        {
+    public TestPersistedClassScriptContainer2() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -194,16 +194,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     AddAttribute(node, "newProperty4", "");
                 }));
         }
-    } 
+} 
     
-    class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
-    {
-        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
+class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
+{
+    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
         
-        public TestPersistedClassScriptContainer4() 
-        {
+    public TestPersistedClassScriptContainer4() 
+    {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -212,5 +212,4 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     AddAttribute(node, "newProperty1", "");
                 }));
         }
-    }
 }

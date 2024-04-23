@@ -25,48 +25,48 @@ using System.Data;
 using Origam;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
-{
-    public class PortalSessionStore
-    {
-        private DateTime? sessionStart;
-        private object _profileId;
-        private IList<SessionStore> _formSessions = new List<SessionStore>();
-        private bool _isExclusiveScreenOpen = false;
+namespace Origam.Server;
 
-        public PortalSessionStore(object profileId)
-        {
+public class PortalSessionStore
+{
+    private DateTime? sessionStart;
+    private object _profileId;
+    private IList<SessionStore> _formSessions = new List<SessionStore>();
+    private bool _isExclusiveScreenOpen = false;
+
+    public PortalSessionStore(object profileId)
+    {
             _profileId = profileId;
             sessionStart = DateTime.Now;
         }
 
-        public object ProfileId
-        {
-            get { return _profileId; }
-            set { _profileId = value; }
-        }
+    public object ProfileId
+    {
+        get { return _profileId; }
+        set { _profileId = value; }
+    }
 
-        public IList<SessionStore> FormSessions
-        {
-            get { return _formSessions; }
-        }
+    public IList<SessionStore> FormSessions
+    {
+        get { return _formSessions; }
+    }
 
-        public bool IsExclusiveScreenOpen
+    public bool IsExclusiveScreenOpen
+    {
+        get
         {
-            get
-            {
                 return _isExclusiveScreenOpen;
             }
-            set
-            {
+        set
+        {
                 _isExclusiveScreenOpen = value;
             }
-        }
+    }
 
-        public SessionStore ExclusiveSession
+    public SessionStore ExclusiveSession
+    {
+        get
         {
-            get
-            {
                 if (IsExclusiveScreenOpen)
                 {
                     foreach (var item in FormSessions)
@@ -83,10 +83,10 @@ namespace Origam.Server
                     return null;
                 }
             }
-        }
+    }
 
-        public bool ShouldBeCleared()
-        {
+    public bool ShouldBeCleared()
+    {
             DataSet data = core.DataService.Instance.LoadData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
@@ -108,9 +108,8 @@ namespace Origam.Server
             }
         }
 
-        public void ResetSessionStart()
-        {
+    public void ResetSessionStart()
+    {
             sessionStart = DateTime.Now;
         }
-    }
 }

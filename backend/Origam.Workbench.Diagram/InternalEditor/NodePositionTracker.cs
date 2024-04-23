@@ -25,25 +25,25 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Workbench.Diagram.Extensions;
 
-namespace Origam.Workbench.Diagram.InternalEditor
+namespace Origam.Workbench.Diagram.InternalEditor;
+
+class NodePositionTracker
 {
-    class NodePositionTracker
-    {
-        private readonly GViewer gViewer;
-        private readonly PlaneTransformation originalTransformation;
-        private readonly string nodeId;
-        private readonly Point pointOnScreen;
-        private readonly Node originalNode;
-        private Node updatedNode;
+    private readonly GViewer gViewer;
+    private readonly PlaneTransformation originalTransformation;
+    private readonly string nodeId;
+    private readonly Point pointOnScreen;
+    private readonly Node originalNode;
+    private Node updatedNode;
 
-        private Point CurrentSourcePoint => updatedNode.GeometryNode.Center;
+    private Point CurrentSourcePoint => updatedNode.GeometryNode.Center;
 
-        public bool NodeExists => !string.IsNullOrWhiteSpace(nodeId) && updatedNode != null;
+    public bool NodeExists => !string.IsNullOrWhiteSpace(nodeId) && updatedNode != null;
         
-        public PlaneTransformation UpdatedTransformation
+    public PlaneTransformation UpdatedTransformation
+    {
+        get
         {
-            get
-            {
                 if (originalTransformation == null) return null;
                 return new PlaneTransformation(
                     originalTransformation[0, 0],
@@ -55,10 +55,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
                     pointOnScreen.Y + CurrentSourcePoint.Y *
                     originalTransformation[0, 0]);
             }
-        }
+    }
 
-        public NodePositionTracker( GViewer gViewer, string nodeId)
-        {
+    public NodePositionTracker( GViewer gViewer, string nodeId)
+    {
             this.gViewer = gViewer;
             this.nodeId = nodeId;
             originalNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
@@ -69,9 +69,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         }
 			
 
-        public void LoadUpdatedState()
-        {
+    public void LoadUpdatedState()
+    {
             updatedNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
         }
-    }
 }

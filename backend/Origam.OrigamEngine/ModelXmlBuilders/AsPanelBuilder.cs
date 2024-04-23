@@ -31,18 +31,18 @@ using Origam.DA;
 using Origam.Gui;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for AsPanelBuilder.
+/// </summary>
+public class AsPanelBuilder
 {
-	/// <summary>
-	/// Summary description for AsPanelBuilder.
-	/// </summary>
-	public class AsPanelBuilder
+	public static void Build(XmlElement parentNode, UIElementRenderData renderData, string modelId, 
+		string controlId, DataTable table, Hashtable dataSources, 
+		string primaryKeyColumnName, bool showSelectionCheckboxes,
+		Guid formId, bool isIndependent)
 	{
-		public static void Build(XmlElement parentNode, UIElementRenderData renderData, string modelId, 
-			string controlId, DataTable table, Hashtable dataSources, 
-			string primaryKeyColumnName, bool showSelectionCheckboxes,
-			Guid formId, bool isIndependent)
-		{
 			parentNode.SetAttribute("Name", renderData.PanelTitle);
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "Grid");
 			parentNode.SetAttribute("Type", "Grid");
@@ -269,19 +269,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
         }
 
-		public static XmlElement FormRootElement(XmlElement panelNode)
-		{
+	public static XmlElement FormRootElement(XmlElement panelNode)
+	{
 			return panelNode.SelectSingleNode("FormRoot") as XmlElement;
 		}
 
-		public static XmlElement PropertiesElement(XmlElement panelNode)
-		{
+	public static XmlElement PropertiesElement(XmlElement panelNode)
+	{
 			return panelNode.SelectSingleNode("Properties") as XmlElement;
 		}
 
-		public static XmlElement ActionsElement(XmlElement panelNode)
-		{
+	public static XmlElement ActionsElement(XmlElement panelNode)
+	{
 			return panelNode.SelectSingleNode("Actions") as XmlElement;
 		}
-	}
 }

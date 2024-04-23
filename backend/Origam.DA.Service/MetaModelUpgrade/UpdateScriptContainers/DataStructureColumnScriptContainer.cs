@@ -23,18 +23,18 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+
+public class DataStructureColumnScriptContainer : UpgradeScriptContainer
 {
-    public class DataStructureColumnScriptContainer : UpgradeScriptContainer
+    public override string FullTypeName { get; } =
+        typeof(Origam.Schema.EntityModel.DataStructureColumn).FullName;
+
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+
+    public DataStructureColumnScriptContainer()
     {
-        public override string FullTypeName { get; } =
-            typeof(Origam.Schema.EntityModel.DataStructureColumn).FullName;
-
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
-
-        public DataStructureColumnScriptContainer()
-        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"),
                 new Version("6.0.1"),
@@ -51,5 +51,4 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                 }
             ));
         }
-    }
 }

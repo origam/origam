@@ -22,64 +22,64 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for DataGridColumnStyleHolder.
+/// </summary>
+public class DataGridColumnStyleHolder : IComparable
 {
-	/// <summary>
-	/// Summary description for DataGridColumnStyleHolder.
-	/// </summary>
-	public class DataGridColumnStyleHolder : IComparable
+	public DataGridColumnStyleHolder(DataGridColumnStyle style, int index, bool hidden)
 	{
-		public DataGridColumnStyleHolder(DataGridColumnStyle style, int index, bool hidden)
-		{
 			_index = index;
 			_style = style;
 			_hidden = hidden;
 		}
 
-		public override string ToString()
-		{
+	public override string ToString()
+	{
 			return this.Index.ToString();
 		}
 
-		private int _index;
-		public int Index
+	private int _index;
+	public int Index
+	{
+		get
 		{
-			get
-			{
 				return _index;
 			}
-			set
-			{
+		set
+		{
 				_index = value;
 			}
-		}
+	}
 
-		private bool _hidden = false;
-		public bool Hidden
+	private bool _hidden = false;
+	public bool Hidden
+	{
+		get
 		{
-			get
-			{
 				return _hidden;
 			}
-			set
-			{
+		set
+		{
 				_hidden = value;
 			}
-		}
+	}
 
-		private DataGridColumnStyle _style;
-		public DataGridColumnStyle Style
+	private DataGridColumnStyle _style;
+	public DataGridColumnStyle Style
+	{
+		get
 		{
-			get
-			{
 				return _style;
 			}
-		}
+	}
 
-		#region IComparable Members
+	#region IComparable Members
 
-		public int CompareTo(object obj)
-		{
+	public int CompareTo(object obj)
+	{
 			if(obj is DataGridColumnStyleHolder)
 			{
 				return _index.CompareTo((obj as DataGridColumnStyleHolder).Index) ;
@@ -88,6 +88,5 @@ namespace Origam.Gui.Win
 			throw new ArgumentException(ResourceUtils.GetString("ErrorNotColumnStyleHolder"));
 		}
 
-		#endregion
-	}
+	#endregion
 }

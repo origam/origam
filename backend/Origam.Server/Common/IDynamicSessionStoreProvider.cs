@@ -42,10 +42,9 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using Origam.Server;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public interface IDynamicSessionStoreProvider
 {
-    public interface IDynamicSessionStoreProvider
-    {
-        SessionStore GetSessionStore(IBasicUIService service, UIRequest request);
-    }
+    SessionStore GetSessionStore(IBasicUIService service, UIRequest request);
 }

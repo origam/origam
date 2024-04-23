@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Drawing;
 using Microsoft.Msagl.Core.Geometry.Curves;
@@ -27,22 +28,22 @@ using Origam.Workbench.Diagram.Graphs;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing
-{
-    internal class SubgraphPainter : INodeItemPainter
-    {
-        private readonly InternalPainter painter;
-        private readonly int emptySubgraphWidth = 200;
-        private readonly int emptySubgraphHeight = 80;
-        private readonly int imageGap = 10;
+namespace Origam.Workbench.Diagram.NodeDrawing;
 
-        public SubgraphPainter(InternalPainter internalPainter)
-        {
+internal class SubgraphPainter : INodeItemPainter
+{
+    private readonly InternalPainter painter;
+    private readonly int emptySubgraphWidth = 200;
+    private readonly int emptySubgraphHeight = 80;
+    private readonly int imageGap = 10;
+
+    public SubgraphPainter(InternalPainter internalPainter)
+    {
             painter = internalPainter;
         }
         
-        public ICurve GetBoundary(Node node) 
-        {
+    public ICurve GetBoundary(Node node) 
+    {
             if (((BlockSubGraph) node).IsEmpty)
             {
                 return CurveFactory.CreateRectangle(emptySubgraphWidth, emptySubgraphHeight, new Point());
@@ -60,8 +61,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
         
-        public bool Draw(Node node, object graphicsObj)
-        {
+    public bool Draw(Node node, object graphicsObj)
+    {
             INodeData nodeData = (INodeData)node.UserData;
             var borderSize = new Size(
                 (int)node.BoundingBox.Width,
@@ -119,8 +120,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return true;
         }
         
-        private Tuple<PointF, string> GetEmptyNodeMessage(Node node)
-        {
+    private Tuple<PointF, string> GetEmptyNodeMessage(Node node)
+    {
             double centerX = node.GeometryNode.Center.X;
             double centerY = node.GeometryNode.Center.Y;
 			
@@ -137,5 +138,4 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 			
             return new Tuple<PointF, string>(emptyMessagePoint, emptyGraphMessage);
         }
-    }
 }

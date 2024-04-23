@@ -25,44 +25,43 @@ using System.Data;
 using System.Data.Common;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+/// <summary>
+/// Summary description for DbDataAdapterFactory.
+/// </summary>
+public interface IDbDataAdapterFactory : ICloneable, IDisposable
 {
-	/// <summary>
-	/// Summary description for DbDataAdapterFactory.
-	/// </summary>
-	public interface IDbDataAdapterFactory : ICloneable, IDisposable
-	{
-		bool UserDefinedParameters{get; set;}
-		bool ResolveAllFilters{get; set;}
-        bool PrettyFormat { get; set; }
-		DbDataAdapter CreateDataAdapter(SelectParameters adParameters,
-            bool forceDatabaseCalculation);
-		DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
-            IDbConnection connection, IDbTransaction transaction);
-		DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
-			DataStructureFilterSet filterSet, ColumnsInfo columnsInfo,
-            bool forceDatabaseCalculation);
-		IDbCommand ScalarValueCommand(DataStructure ds,  DataStructureFilterSet filter, 
-            DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable parameters);
-		IDbCommand UpdateFieldCommand(TableMappingItem entity,  FieldMappingItem field);
-		IDbCommand GetCommand(string cmdText, IDbConnection connection);
-		IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction);
-		IDbCommand GetCommand(string cmdText);
-		IDbDataParameter GetParameter();
-		IDbDataParameter GetParameter(string name, Type type);
-		DbDataAdapter CreateUpdateFieldDataAdapter(TableMappingItem table, FieldMappingItem field);
-		IDbCommand SelectReferenceCountCommand(TableMappingItem table, FieldMappingItem field);
-		DbDataAdapter GetAdapter();
-		DbDataAdapter GetAdapter(IDbCommand command);
-		DbDataAdapter CloneAdapter(DbDataAdapter adapter);
-		IDbCommand CloneCommand(IDbCommand command);
-		ArrayList Parameters(DataStructure ds, DataStructureEntity entity, 
-            DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
-            string columnName);
-        string TableDefinitionDdl(TableMappingItem table);
-        string AddColumnDdl(FieldMappingItem field);
-        string AlterColumnDdl(FieldMappingItem field);
-        string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint);
-		string ParameterDeclarationChar { get; }
-    }
+	bool UserDefinedParameters{get; set;}
+	bool ResolveAllFilters{get; set;}
+	bool PrettyFormat { get; set; }
+	DbDataAdapter CreateDataAdapter(SelectParameters adParameters,
+		bool forceDatabaseCalculation);
+	DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
+		IDbConnection connection, IDbTransaction transaction);
+	DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
+		DataStructureFilterSet filterSet, ColumnsInfo columnsInfo,
+		bool forceDatabaseCalculation);
+	IDbCommand ScalarValueCommand(DataStructure ds,  DataStructureFilterSet filter, 
+		DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable parameters);
+	IDbCommand UpdateFieldCommand(TableMappingItem entity,  FieldMappingItem field);
+	IDbCommand GetCommand(string cmdText, IDbConnection connection);
+	IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction);
+	IDbCommand GetCommand(string cmdText);
+	IDbDataParameter GetParameter();
+	IDbDataParameter GetParameter(string name, Type type);
+	DbDataAdapter CreateUpdateFieldDataAdapter(TableMappingItem table, FieldMappingItem field);
+	IDbCommand SelectReferenceCountCommand(TableMappingItem table, FieldMappingItem field);
+	DbDataAdapter GetAdapter();
+	DbDataAdapter GetAdapter(IDbCommand command);
+	DbDataAdapter CloneAdapter(DbDataAdapter adapter);
+	IDbCommand CloneCommand(IDbCommand command);
+	ArrayList Parameters(DataStructure ds, DataStructureEntity entity, 
+		DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
+		string columnName);
+	string TableDefinitionDdl(TableMappingItem table);
+	string AddColumnDdl(FieldMappingItem field);
+	string AlterColumnDdl(FieldMappingItem field);
+	string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint);
+	string ParameterDeclarationChar { get; }
 }

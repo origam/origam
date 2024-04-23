@@ -27,76 +27,75 @@ using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+
+/// <summary>
+/// Summary description for XslRule.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public class XslRule : AbstractRule
 {
-	/// <summary>
-	/// Summary description for XslRule.
-	/// </summary>
-    [ClassMetaVersion("6.0.0")]
-	public class XslRule : AbstractRule
+	public XslRule() : base()
 	{
-		public XslRule() : base()
-        {
             InitializeProperyContainers();
         }
 
-        public XslRule(Guid schemaExtensionId) : base(schemaExtensionId)
-        {
+	public XslRule(Guid schemaExtensionId) : base(schemaExtensionId)
+	{
             InitializeProperyContainers();
         }
 
-        public XslRule(Key primaryKey) : base(primaryKey)
-        {
+	public XslRule(Key primaryKey) : base(primaryKey)
+	{
             InitializeProperyContainers();
         }
 
-        private void InitializeProperyContainers()
-        {
+	private void InitializeProperyContainers()
+	{
             xsl = new PropertyContainer<string>(
                 containerName: nameof(xsl),
                 containingObject: this);
         }
 
-        #region Overriden AbstractSchemaItem members
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	#region Overriden AbstractSchemaItem members
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.Xsl);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		internal PropertyContainer<string> xsl;
+	#region Properties
+	internal PropertyContainer<string> xsl;
 		
-        [XmlExternalFileReference(containerName: nameof(xsl),
-            extension: ExternalFileExtension.Xslt)]
-        public string Xsl
-		{
-            get => xsl.Get();
-            set => xsl.Set(value);
-        }
+	[XmlExternalFileReference(containerName: nameof(xsl),
+		extension: ExternalFileExtension.Xslt)]
+	public string Xsl
+	{
+		get => xsl.Get();
+		set => xsl.Set(value);
+	}
 
-        [Browsable(false)] 
-		public override bool IsPathRelative
+	[Browsable(false)] 
+	public override bool IsPathRelative
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-			set
-			{
+		set
+		{
 				
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

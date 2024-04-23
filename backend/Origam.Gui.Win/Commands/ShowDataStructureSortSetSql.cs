@@ -29,28 +29,28 @@ using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Gui.Win.Commands
-{
-    public class ShowDataStructureSortSetSql : AbstractMenuCommand
-    {
-        private WorkbenchSchemaService _schema =
-            ServiceManager.Services.GetService(
-                typeof(SchemaService)) as WorkbenchSchemaService;
+namespace Origam.Gui.Win.Commands;
 
-        public override bool IsEnabled
+public class ShowDataStructureSortSetSql : AbstractMenuCommand
+{
+    private WorkbenchSchemaService _schema =
+        ServiceManager.Services.GetService(
+            typeof(SchemaService)) as WorkbenchSchemaService;
+
+    public override bool IsEnabled
+    {
+        get
         {
-            get
-            {
                 return Owner is DataStructureSortSet;
             }
-            set
-            {
+        set
+        {
                 base.IsEnabled = value;
             }
-        }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             StringBuilder builder = new StringBuilder();
             AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
@@ -91,5 +91,4 @@ namespace Origam.Gui.Win.Commands
             builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
             new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
         }
-    }
 }

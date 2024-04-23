@@ -34,35 +34,35 @@ using ICSharpCode.AvalonEdit.Rendering;
 using UserControl = System.Windows.Forms.UserControl;
 using Origam.UI;
 
-namespace Origam.Windows.Editor
-{
-    public partial class XmlEditor : UserControl
-    {
-        XmlFormattingStrategy _formattingStrategy = new XmlFormattingStrategy();
-        XmlSchemaCompletionCollection _schemas = new XmlSchemaCompletionCollection();
-        XmlCodeCompletionBinding _codeCompletion;
-        DataSet _data = new DataSet("ROOT");
-        XmlFoldingStrategy _foldingStrategy;
-        FoldingManager _foldingManager;
-        public delegate void ChangedEventHandler(object sender, EventArgs e);
+namespace Origam.Windows.Editor;
 
-        public AbstractMargin LeftMargin
+public partial class XmlEditor : UserControl
+{
+    XmlFormattingStrategy _formattingStrategy = new XmlFormattingStrategy();
+    XmlSchemaCompletionCollection _schemas = new XmlSchemaCompletionCollection();
+    XmlCodeCompletionBinding _codeCompletion;
+    DataSet _data = new DataSet("ROOT");
+    XmlFoldingStrategy _foldingStrategy;
+    FoldingManager _foldingManager;
+    public delegate void ChangedEventHandler(object sender, EventArgs e);
+
+    public AbstractMargin LeftMargin
+    {
+        set
         {
-            set
-            {
                 editor.ShowLineNumbers = false;
                 editor.TextArea.LeftMargins.Add(value);
             }
-        }
+    }
 
-        public IBackgroundRenderer BackgroundRenderer
-        {
-            set => editor.TextArea.TextView.BackgroundRenderers.Add(value);
-        }
+    public IBackgroundRenderer BackgroundRenderer
+    {
+        set => editor.TextArea.TextView.BackgroundRenderers.Add(value);
+    }
 
 
-        public XmlEditor()
-        {
+    public XmlEditor()
+    {
             _codeCompletion = new XmlCodeCompletionBinding(_schemas);
             InitializeComponent();
             editor.FontFamily = new System.Windows.Media.FontFamily("Courier New");
@@ -127,69 +127,69 @@ namespace Origam.Windows.Editor
             editor.TextArea.Document.TextChanged += Document_TextChanged;
         }
 
-        public event ChangedEventHandler ContentChanged;
+    public event ChangedEventHandler ContentChanged;
 
-        // Invoke the Changed event; called whenever list changes
-        protected virtual void OnContentChanged(EventArgs e)
-        {
+    // Invoke the Changed event; called whenever list changes
+    protected virtual void OnContentChanged(EventArgs e)
+    {
             if (ContentChanged != null)
             {
                 ContentChanged(this, e);
             }
         }
 
-        private void Document_TextChanged(object sender, System.EventArgs e)
-        {
+    private void Document_TextChanged(object sender, System.EventArgs e)
+    {
             foldingTimer.Enabled = false;
             foldingTimer.Enabled = true;
             OnContentChanged(EventArgs.Empty);
         }
 
-        public string ResultSchema
+    public string ResultSchema
+    {
+        get
         {
-            get
-            {
                 return _codeCompletion.DefaultSchema;
             }
-            set
-            {
+        set
+        {
                 _codeCompletion.DefaultSchema = value;
             }
-        }
+    }
 
-        public new string Text
+    public new string Text
+    {
+        get
         {
-            get
-            {
                 return editor.Document.Text;
             }
-            set
-            {
+        set
+        {
                 editor.Document.Text = value ?? "";
                 editor.Document.UndoStack.ClearAll();
             }
-        }
+    }
 
-        public bool IsReadOnly
+    public bool IsReadOnly
+    {
+        get
         {
-            get
-            {
                 return editor.IsReadOnly;
             }
-            set
-            {
+        set
+        {
                 editor.IsReadOnly = value;
             }
-        }
+    }
 
-        public void DisableScrolling() 
-        {
+    public void DisableScrolling() 
+    {
             editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
             editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;     
         }
 
-        private void AddInternalSchema(string schemaName)
-        {
+    private void AddInternalSchema(string schemaName)
+    {
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "Origam.Windows.Editor." + schemaName;
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
@@ -199,8 +199,8 @@ namespace Origam.Windows.Editor
             }
         }
 
-        private void TextArea_TextEntered(object sender, System.Windows.Input.TextCompositionEventArgs e)
-        {
+    private void TextArea_TextEntered(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
             if (e.Text.Length > 0 && !e.Handled)
             {
                 char c = e.Text[0];
@@ -229,8 +229,8 @@ namespace Origam.Windows.Editor
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
             if (keyData == (Keys.H | Keys.Control))
             {
                 FindReplaceForm frm = new FindReplaceForm();
@@ -243,11 +243,9 @@ namespace Origam.Windows.Editor
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void foldingTimer_Tick(object sender, System.EventArgs e)
-        {
+    private void foldingTimer_Tick(object sender, System.EventArgs e)
+    {
             _foldingStrategy.UpdateFoldings(_foldingManager, editor.Document);
             foldingTimer.Enabled = false;
         }
-    }
 }
-

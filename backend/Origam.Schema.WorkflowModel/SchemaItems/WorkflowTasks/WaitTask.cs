@@ -25,50 +25,49 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for WorkflowCallTask.
+/// </summary>
+[SchemaItemDescription("(Task) Wait", "Tasks", "task-wait-2.png")]
+[HelpTopic("Wait+Task")]
+[ClassMetaVersion("6.0.0")]
+public class WaitTask : AbstractWorkflowStep
 {
-	/// <summary>
-	/// Summary description for WorkflowCallTask.
-	/// </summary>
-	[SchemaItemDescription("(Task) Wait", "Tasks", "task-wait-2.png")]
-    [HelpTopic("Wait+Task")]
-    [ClassMetaVersion("6.0.0")]
-	public class WaitTask : AbstractWorkflowStep
+	public WaitTask() : base() {}
+
+	public WaitTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public WaitTask(Key primaryKey) : base(primaryKey)	{}
+
+	public override string Icon
 	{
-		public WaitTask() : base() {}
-
-		public WaitTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WaitTask(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
+		get
 		{
-			get
-			{
 				return "16";
 			}
-		}
+	}
 
-		#region Properties
-		public Guid WaitTimeDataConstantId;
+	#region Properties
+	public Guid WaitTimeDataConstantId;
 
-		[Category("Reference")]
-		[TypeConverter(typeof(DataConstantConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-		[Description("Number of milliseconds to wait.")]
-        [XmlReference("waitTime", "WaitTimeDataConstantId")]
-		public DataConstant WaitTime
+	[Category("Reference")]
+	[TypeConverter(typeof(DataConstantConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[Description("Number of milliseconds to wait.")]
+	[XmlReference("waitTime", "WaitTimeDataConstantId")]
+	public DataConstant WaitTime
+	{
+		get
 		{
-			get
-			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WaitTimeDataConstantId)) as DataConstant;
 			}
-			set
-			{
+		set
+		{
 				this.WaitTimeDataConstantId = (Guid)value.PrimaryKey["Id"];
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

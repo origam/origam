@@ -24,28 +24,27 @@ using System.Collections;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.TestModel
-{
-	public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
-	{
-		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+namespace Origam.Schema.TestModel;
 
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-		{
+public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
+{
+	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	{
 			//true means show a combobox
 			return true;
 		}
 
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+			//true will limit to list. false will show the list, 		//but allow free-form entry
 			return true;
 		}
 
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
-		{
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
 			TestChecklistRuleSchemaItemProvider rules = _schema.GetProvider(typeof(TestChecklistRuleSchemaItemProvider)) as TestChecklistRuleSchemaItemProvider;
 
 			ArrayList osArray = new ArrayList(rules.ChildItems.Count);
@@ -59,16 +58,16 @@ namespace Origam.Schema.TestModel
 			return new StandardValuesCollection(osArray);
 		}
 
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
 			if( value.GetType() == typeof(string) )
 			{
 				TestChecklistRuleSchemaItemProvider rules = _schema.GetProvider(typeof(TestChecklistRuleSchemaItemProvider)) as TestChecklistRuleSchemaItemProvider;
@@ -83,5 +82,4 @@ namespace Origam.Schema.TestModel
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-	}
 }

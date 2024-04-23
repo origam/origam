@@ -28,30 +28,30 @@ using Origam.DA;
 using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+
+/// <summary>
+/// Summary description for AttachmentService.
+/// </summary>
+public class AttachmentService : IWorkbenchService, IAttachmentService
 {
-	/// <summary>
-	/// Summary description for AttachmentService.
-	/// </summary>
-	public class AttachmentService : IWorkbenchService, IAttachmentService
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	public AttachmentService()
 	{
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public AttachmentService()
-		{
 		}
 
-		#region IWorkbenchService Members
+	#region IWorkbenchService Members
 
-		public void UnloadService()
-		{
+	public void UnloadService()
+	{
 		}
 
-		public void InitializeService()
-		{
+	public void InitializeService()
+	{
 		}
 
-		public void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId)
-		{
+	public void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId)
+	{
 			DatasetGenerator dsg = new DatasetGenerator(true);
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f")));
@@ -71,8 +71,8 @@ namespace Origam.Workbench.Services
 			core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), data, false, transactionId);
 		}
 
-        public void RemoveAttachment(Guid recordId, string transactionId)
-        {
+	public void RemoveAttachment(Guid recordId, string transactionId)
+	{
             DatasetGenerator dsg = new DatasetGenerator(true);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
@@ -85,8 +85,7 @@ namespace Origam.Workbench.Services
                 // nothing to delete
                 return;
             }
-            // delete the record           
-            attachmentDataSet.Tables[0].Rows[0].Delete();
+            // delete the record           	 attachmentDataSet.Tables[0].Rows[0].Delete();
             core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), attachmentDataSet, false, transactionId);
             if (log.IsDebugEnabled)
             {
@@ -94,6 +93,5 @@ namespace Origam.Workbench.Services
                     recordId));
             }
         }
-		#endregion
-	}
+	#endregion
 }

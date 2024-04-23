@@ -22,13 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 
-namespace Origam.Server.Model.Blob
+namespace Origam.Server.Model.Blob;
+
+public class BlobUploadTokenInput : AmbiguousInput
 {
-    public class BlobUploadTokenInput : AmbiguousInput
-    {
-        public string Property { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateLastModified { get; set; }
-        public IDictionary Parameters { get; set; }
-    }
+    public string Property { get; set; }
+    public DateTime DateCreated { get; set; }
+    public DateTime DateLastModified { get; set; }
+    public IDictionary Parameters { get; set; }
 }

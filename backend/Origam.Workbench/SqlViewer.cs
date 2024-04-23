@@ -25,47 +25,47 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using core = Origam.Workbench.Services.CoreServices;
-namespace Origam.Workbench
+namespace Origam.Workbench;
+
+public partial class SqlViewer : AbstractViewContent, IToolStripContainer
 {
-    public partial class SqlViewer : AbstractViewContent, IToolStripContainer
+    public SqlViewer(Platform platform)
     {
-        public SqlViewer(Platform platform)
-        {
             InitializeComponent();
             Platform = platform;
         }
 
-        public override object Content
+    public override object Content
+    {
+        get
         {
-            get
-            {
                 return editor.Text; ;
             }
 
-            set
-            {
+        set
+        {
                 editor.Text = value as string;
             }
-        }
+    }
 
-        public event EventHandler ToolStripsLoaded
-        {
-            add { }
-            remove { }
-        }
-        public event EventHandler AllToolStripsRemoved
-        {
-            add { }
-            remove { }
-        }
-        public event EventHandler ToolStripsNeedUpdate
-        {
-            add { }
-            remove { }
-        }
+    public event EventHandler ToolStripsLoaded
+    {
+        add { }
+        remove { }
+    }
+    public event EventHandler AllToolStripsRemoved
+    {
+        add { }
+        remove { }
+    }
+    public event EventHandler ToolStripsNeedUpdate
+    {
+        add { }
+        remove { }
+    }
 
-        private void btnExecuteSql_Click(object sender, EventArgs e)
-        {
+    private void btnExecuteSql_Click(object sender, EventArgs e)
+    {
             if (string.IsNullOrWhiteSpace(editor.Text))
             {
                 return;
@@ -79,29 +79,28 @@ namespace Origam.Workbench
             editor.Focus();
         }
 
-        protected override void ViewSpecificLoad(object objectToLoad)
-        {
+    protected override void ViewSpecificLoad(object objectToLoad)
+    {
             this.Content = objectToLoad;
         }
 
-        public override bool IsViewOnly
+    public override bool IsViewOnly
+    {
+        get
         {
-            get
-            {
                 return true;
             }
 
-            set
-            {
+        set
+        {
                 base.IsViewOnly = value;
             }
-        }
+    }
 
-        public Platform Platform { get; }
+    public Platform Platform { get; }
 
-        public List<ToolStrip> GetToolStrips(int maxWidth = -1)
-        {
+    public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+    {
             return new List<ToolStrip> { toolStrip1 };
         }
-    }
 }

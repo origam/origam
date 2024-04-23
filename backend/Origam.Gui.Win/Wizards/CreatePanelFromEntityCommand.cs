@@ -34,31 +34,31 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Commands;
 
-namespace Origam.Gui.Win.Wizards
-{
-	/// <summary>
-	/// Summary description for CreatePanelFromEntityCommand.
-	/// </summary>
-	public class CreatePanelFromEntityCommand : AbstractMenuCommand
-	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm screenwizardForm;
-        PanelControlSet panel;
+namespace Origam.Gui.Win.Wizards;
 
-        public override bool IsEnabled
-		{
-			get
-			{
+/// <summary>
+/// Summary description for CreatePanelFromEntityCommand.
+/// </summary>
+public class CreatePanelFromEntityCommand : AbstractMenuCommand
+{
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    ScreenWizardForm screenwizardForm;
+    PanelControlSet panel;
+
+    public override bool IsEnabled
+    {
+        get
+        {
 				return Owner is IDataEntity;
 			}
-			set
-			{
+        set
+        {
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+    }
 
-		public override void Run()
-		{
+    public override void Run()
+    {
             List<string> listdsName = GetListDatastructure(PanelControlSet.CategoryConst);
 
             ArrayList list = new ArrayList();
@@ -107,20 +107,20 @@ namespace Origam.Gui.Win.Wizards
             }
         }
 
-        public override void Execute()
-        {
+    public override void Execute()
+    {
             string groupName = null;
             if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
 
             panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames,screenwizardForm.NameOfEntity);
             GeneratedModelElements.Add(panel);
         }
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
-        public override void SetSummaryText(object summary)
-        {
+    public override void SetSummaryText(object summary)
+    {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -130,5 +130,4 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText(Environment.NewLine);
             ShowListItems(richTextBoxSummary, screenwizardForm.SelectedFieldNames);
         }
-    }
 }

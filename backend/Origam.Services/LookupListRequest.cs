@@ -23,18 +23,17 @@ using System;
 using System.Collections;
 using System.Data;
 
-namespace Origam.Services
+namespace Origam.Services;
+
+public class LookupListRequest
 {
-	public class LookupListRequest
-	{
-		public Guid LookupId = Guid.Empty; 
-		public string FieldName = null;
-		public Hashtable ParameterMappings = new Hashtable(); 
-		public DataRow CurrentRow = null; 
-		public bool ShowUniqueValues = false; 
-		public string SearchText = null; 
-		public string TransactionId = null;
-		public int PageSize = -1;
-		public int PageNumber = -1;
-	}
+	public Guid LookupId = Guid.Empty; 
+	public string FieldName = null;
+	public Hashtable ParameterMappings = new Hashtable(); 
+	public DataRow CurrentRow = null; 
+	public bool ShowUniqueValues = false; 
+	public string SearchText = null; 
+	public string TransactionId = null;
+	public int PageSize = -1;
+	public int PageNumber = -1;
 }

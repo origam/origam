@@ -22,144 +22,143 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
-{
-	/// <summary>
-	/// Summary description for DashboardConfigurationItem.
-	/// </summary>
-	[Serializable()]
-	public class DashboardConfigurationItem
-	{
-		private string _label;
-		private Guid _id;
-		private Guid _componentId;
-		private int _left;
-		private int _top;
-		private int _colSpan;
-		private int _rowSpan;
-		private DashboardConfigurationItemParameter[] _parameters;
-		private DashboardConfigurationItem[] _items;
+namespace Origam.Schema.GuiModel;
 
-		public DashboardConfigurationItem()
-		{
+/// <summary>
+/// Summary description for DashboardConfigurationItem.
+/// </summary>
+[Serializable()]
+public class DashboardConfigurationItem
+{
+	private string _label;
+	private Guid _id;
+	private Guid _componentId;
+	private int _left;
+	private int _top;
+	private int _colSpan;
+	private int _rowSpan;
+	private DashboardConfigurationItemParameter[] _parameters;
+	private DashboardConfigurationItem[] _items;
+
+	public DashboardConfigurationItem()
+	{
 		}
 
-		[XmlAttribute("label")]
-		public string Label
+	[XmlAttribute("label")]
+	public string Label
+	{
+		get
 		{
-			get
-			{
 				return _label;
 			}
-			set
-			{
+		set
+		{
 				_label = value;
 			}
-		}
+	}
 
-		[XmlAttribute("id")]
-		public Guid Id
+	[XmlAttribute("id")]
+	public Guid Id
+	{
+		get
 		{
-			get
-			{
 				return _id;
 			}
-			set
-			{
+		set
+		{
 				_id = value;
 			}
-		}
+	}
 
-		[XmlAttribute("componentId")]
-		public Guid ComponentId
+	[XmlAttribute("componentId")]
+	public Guid ComponentId
+	{
+		get
 		{
-			get
-			{
 				return _componentId;
 			}
-			set
-			{
+		set
+		{
 				_componentId = value;
 			}
-		}
+	}
 
-		[XmlAttribute("left")]
-		public int Left
+	[XmlAttribute("left")]
+	public int Left
+	{
+		get
 		{
-			get
-			{
 				return _left;
 			}
-			set
-			{
+		set
+		{
 				_left = value;
 			}
-		}
+	}
 
-		[XmlAttribute("top")]
-		public int Top
+	[XmlAttribute("top")]
+	public int Top
+	{
+		get
 		{
-			get
-			{
 				return _top;
 			}
-			set
-			{
+		set
+		{
 				_top = value;
 			}
-		}
+	}
 	
-		[XmlAttribute("colSpan")]
-		public int ColSpan
+	[XmlAttribute("colSpan")]
+	public int ColSpan
+	{
+		get
 		{
-			get
-			{
 				return _colSpan;
 			}
-			set
-			{
+		set
+		{
 				_colSpan = value;
 			}
-		}
+	}
 	
-		[XmlAttribute("rowSpan")]
-		public int RowSpan
+	[XmlAttribute("rowSpan")]
+	public int RowSpan
+	{
+		get
 		{
-			get
-			{
 				return _rowSpan;
 			}
-			set
-			{
+		set
+		{
 				_rowSpan = value;
 			}
-		}
+	}
 
-		[XmlElement("parameter", typeof(DashboardConfigurationItemParameter))]
-		public DashboardConfigurationItemParameter[] Parameters
+	[XmlElement("parameter", typeof(DashboardConfigurationItemParameter))]
+	public DashboardConfigurationItemParameter[] Parameters
+	{
+		get
 		{
-			get
-			{
 				return _parameters;
 			}
-			set
-			{
+		set
+		{
 				_parameters = value;
 			}
-		}
+	}
 
-		[XmlArray("children")]
-		[XmlArrayItem("item", typeof(DashboardConfigurationItem))]
-		public DashboardConfigurationItem[] Items
+	[XmlArray("children")]
+	[XmlArrayItem("item", typeof(DashboardConfigurationItem))]
+	public DashboardConfigurationItem[] Items
+	{
+		get
 		{
-			get
-			{
 				return _items;
 			}
-			set
-			{
+		set
+		{
 				_items = value;
 			}
-		}
 	}
 }

@@ -24,39 +24,39 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
+[HelpTopic("Workflow+Call+Task")]
+[ClassMetaVersion("6.0.0")]
+public class WorkflowCallTask : WorkflowTask
 {
-	[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
-    [HelpTopic("Workflow+Call+Task")]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkflowCallTask : WorkflowTask
+	public WorkflowCallTask() {}
+
+	public WorkflowCallTask(Guid schemaExtensionId) 
+		: base(schemaExtensionId) {}
+
+	public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
+
+	#region Override AbstractSchemaItem Members
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
 	{
-		public WorkflowCallTask() {}
-
-		public WorkflowCallTask(Guid schemaExtensionId) 
-			: base(schemaExtensionId) {}
-
-		public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
-
-		#region Override AbstractSchemaItem Members
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(Workflow);
 			base.GetExtraDependencies(dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		public Guid WorkflowId;
+	#region Properties
+	public Guid WorkflowId;
 
-		[TypeConverter(typeof(WorkflowConverter))]
-        [NotNullModelElementRule()]
-		[XmlReference("workflow", "WorkflowId")]
-		public IWorkflow Workflow
+	[TypeConverter(typeof(WorkflowConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("workflow", "WorkflowId")]
+	public IWorkflow Workflow
+	{
+		get
 		{
-			get
-			{
 				var key = new ModelElementKey
 				{
 					Id = WorkflowId
@@ -64,8 +64,8 @@ namespace Origam.Schema.WorkflowModel
 				return (IWorkflow)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				// We delete any current parameters
 				foreach(ISchemaItem child in ChildItems)
 				{
@@ -84,19 +84,19 @@ namespace Origam.Schema.WorkflowModel
 					WorkflowId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
+	public override Type[] NewItemTypes => new[]
 		{
 			typeof(WorkflowTaskDependency), typeof(ContextStoreLink)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(WorkflowTaskDependency))
 			{
@@ -108,7 +108,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
-		#endregion
+	#endregion
 
-	}
 }

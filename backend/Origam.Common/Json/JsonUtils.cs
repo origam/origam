@@ -25,18 +25,18 @@ using Newtonsoft.Json.Converters;
 using System.Data;
 using System.IO;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+
+public class JsonUtils
 {
-    public class JsonUtils
+	public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
 	{
-		public static void SerializeToJson(TextWriter textWriter, object value, bool omitRootElement)
-		{
             SerializeToJson(textWriter, value, omitRootElement, false);
         }
 
-        public static void SerializeToJson(TextWriter textWriter, object value,
-           bool omitRootElement, bool omitMainElement)
-        {
+	public static void SerializeToJson(TextWriter textWriter, object value,
+		bool omitRootElement, bool omitMainElement)
+	{
             JsonSerializer serializer = new JsonSerializer();
             // remove standard DataSet and XML converters
             RemoveJsonConverter(serializer, typeof(DataSetConverter));
@@ -64,8 +64,8 @@ namespace Origam.JSON
             serializer.Serialize(writer, value);
         }
 
-        public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
-		{
+	public static void RemoveJsonConverter(JsonSerializer serializer, Type type)
+	{
 			JsonConverter converter = GetJsonConverter(serializer, type);
 			if (converter != null)
 			{
@@ -73,8 +73,8 @@ namespace Origam.JSON
 			}
 		}
 
-		public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
-		{
+	public static JsonConverter GetJsonConverter(JsonSerializer serializer, Type type)
+	{
 			JsonConverter result = null;
 			foreach (JsonConverter converter in serializer.Converters)
 			{
@@ -88,5 +88,4 @@ namespace Origam.JSON
 			return result;
 		}
 
-	}
 }

@@ -22,26 +22,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Diagnostics;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class PrintServiceAgent : AbstractServiceAgent
 {
-    public class PrintServiceAgent : AbstractServiceAgent
-    {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        #region IServiceAgent Members
-        private object _result;
-        public override object Result
+    #region IServiceAgent Members
+    private object _result;
+    public override object Result
+    {
+        get
         {
-            get
-            {
                 return _result;
             }
-        }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             switch (this.MethodName)
             {
                 case "PrintPDF":
@@ -69,12 +69,12 @@ namespace Origam.Workflow
                     break;
             }
         }
-        #endregion
+    #endregion
 
-        private void PrintPDF(
-            string filename, string printer,
-            int copies, string paperSource, int timeout)
-        {
+    private void PrintPDF(
+        string filename, string printer,
+        int copies, string paperSource, int timeout)
+    {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             string gsPath = settings.GsPath;
 
@@ -119,5 +119,4 @@ namespace Origam.Workflow
             }
             _result = true;
         }
-    }
 }

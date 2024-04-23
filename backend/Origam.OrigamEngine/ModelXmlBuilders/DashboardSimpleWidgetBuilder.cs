@@ -25,17 +25,17 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for DashboardSimpleWidgetBuilder.
+/// </summary>
+public class DashboardSimpleWidgetBuilder
 {
-	/// <summary>
-	/// Summary description for DashboardSimpleWidgetBuilder.
-	/// </summary>
-	public class DashboardSimpleWidgetBuilder
+	public static void Build(XmlDocument doc, AbstractSimpleDashboardWidget simpleWidget,
+		Guid dashboardItemId, string caption, XmlElement itemChildren,
+		XmlElement dataSourcesElement)
 	{
-		public static void Build(XmlDocument doc, AbstractSimpleDashboardWidget simpleWidget,
-			Guid dashboardItemId, string caption, XmlElement itemChildren,
-			XmlElement dataSourcesElement)
-		{
 			string modelInstanceId = dashboardItemId.ToString();
 			XmlElement element = itemChildren.AppendChild(doc.CreateElement("UIElement")) as XmlElement;
 
@@ -86,5 +86,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Id", 0));
 			newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Value", 1));
 		}
-	}
 }

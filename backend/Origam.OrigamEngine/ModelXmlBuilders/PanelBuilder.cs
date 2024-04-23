@@ -22,17 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for PanelBuilder.
+/// </summary>
+public class PanelBuilder
 {
-	/// <summary>
-	/// Summary description for PanelBuilder.
-	/// </summary>
-	public class PanelBuilder
+	public static void Build(XmlElement parentNode)
 	{
-		public static void Build(XmlElement parentNode)
-		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "VBox");
 		}
-	}
 }

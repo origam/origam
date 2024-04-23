@@ -30,12 +30,12 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public static class TemplateTools
 {
-    public static class TemplateTools
+    public static object[] AddTemplateRecord(DataRow parentRow, DataStructureTemplate template, string dataMember, Guid dataStructureId, DataSet formData)
     {
-        public static object[] AddTemplateRecord(DataRow parentRow, DataStructureTemplate template, string dataMember, Guid dataStructureId, DataSet formData)
-        {
             object[] templatePosition = null;
             IXmlContainer doc;
 
@@ -72,8 +72,8 @@ namespace Origam.Gui
             return templatePosition;
         }
 
-        private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId, DataSet formData)
-        {
+    private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId, DataSet formData)
+    {
             if (template == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoTemplate"));
             if (dataMember != template.Entity.Name)
             {
@@ -86,8 +86,8 @@ namespace Origam.Gui
             return DatasetTools.PrimaryKey(newData.Tables[template.Entity.Name].Rows[0]);
         }
 
-        public static DataSet NewRecord(DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId)
-        {
+    public static DataSet NewRecord(DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId)
+    {
             XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
             IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
 
@@ -103,8 +103,8 @@ namespace Origam.Gui
             throw new Exception(ResourceUtils.GetString("ErrorResultNotSupported", result.GetType().ToString()));
         }
 
-        private static string GetDataMember(DataStructureEntity entity)
-        {
+    private static string GetDataMember(DataStructureEntity entity)
+    {
             DataStructureEntity parentEntity = entity;
             string result = "";
 
@@ -127,5 +127,4 @@ namespace Origam.Gui
             return result;
         }
 
-    }
 }

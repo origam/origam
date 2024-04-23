@@ -22,23 +22,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.DA
-{
-    public class ColumnsInfo
-    {
-        public static readonly ColumnsInfo Empty = new ColumnsInfo();
-        public bool RenderSqlForDetachedFields { get; }
+namespace Origam.DA;
 
-        private ColumnsInfo()
-        {
+public class ColumnsInfo
+{
+    public static readonly ColumnsInfo Empty = new ColumnsInfo();
+    public bool RenderSqlForDetachedFields { get; }
+
+    private ColumnsInfo()
+    {
         }
         
-        public ColumnsInfo(string columnName): this(columnName, false)
-        {
+    public ColumnsInfo(string columnName): this(columnName, false)
+    {
         }
         
-        public ColumnsInfo(string columnName, bool renderSqlForDetachedFields)
-        {
+    public ColumnsInfo(string columnName, bool renderSqlForDetachedFields)
+    {
             RenderSqlForDetachedFields = renderSqlForDetachedFields;
             if (columnName == null)
             {
@@ -53,54 +53,53 @@ namespace Origam.DA
                 .ToList();
         }
 
-        public ColumnsInfo(List<ColumnData> columns, bool renderSqlForDetachedFields)
-        {
+    public ColumnsInfo(List<ColumnData> columns, bool renderSqlForDetachedFields)
+    {
             Columns = columns.ToList();
             RenderSqlForDetachedFields = renderSqlForDetachedFields;
         }
         
 
-        public List<ColumnData> Columns { get; } = new List<ColumnData>();
+    public List<ColumnData> Columns { get; } = new List<ColumnData>();
 
-        public int Count => Columns.Count;
-        public bool IsEmpty => Count == 0;
-        public List<string> ColumnNames => Columns.Select(x => x.Name).ToList();
+    public int Count => Columns.Count;
+    public bool IsEmpty => Count == 0;
+    public List<string> ColumnNames => Columns.Select(x => x.Name).ToList();
 
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return string.Join(";", ColumnNames);
         }
-    }
+}
     
-    public class ColumnData
-    {
-        public string Name { get;}
-        public bool IsVirtual { get;  }
-        public object DefaultValue { get; }
-        public bool HasRelation { get;}
+public class ColumnData
+{
+    public string Name { get;}
+    public bool IsVirtual { get;  }
+    public object DefaultValue { get; }
+    public bool HasRelation { get;}
 
-        public static readonly ColumnData
-            GroupByCountColumn = new ColumnData("groupCount");        
-        public static readonly ColumnData
-            GroupByCaptionColumn = new ColumnData("groupCaption");
+    public static readonly ColumnData
+        GroupByCountColumn = new ColumnData("groupCount");        
+    public static readonly ColumnData
+        GroupByCaptionColumn = new ColumnData("groupCaption");
         
-        public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
-        {
+    public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
+    {
             Name = name;
             IsVirtual = isVirtual;
             DefaultValue = defaultValue;
             HasRelation = hasRelation;
         }
 
-        public ColumnData(string name)
-        {
+    public ColumnData(string name)
+    {
             Name = name;
         }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return Name;
         }
-    }
 }

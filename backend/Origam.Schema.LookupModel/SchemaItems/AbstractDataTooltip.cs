@@ -27,37 +27,37 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+
+/// <summary>
+/// Summary description for AbstractDataTooltip.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 {
-    /// <summary>
-    /// Summary description for AbstractDataTooltip.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class AbstractDataTooltip : AbstractSchemaItem, IComparable
+	public const string CategoryConst = "DataTooltip";
+
+	public AbstractDataTooltip() : base() {}
+	public AbstractDataTooltip(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractDataTooltip(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
 	{
-		public const string CategoryConst = "DataTooltip";
-
-		public AbstractDataTooltip() : base() {}
-		public AbstractDataTooltip(Guid schemaExtensionId) : base(schemaExtensionId) {}
-		public AbstractDataTooltip(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-        public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-        {
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
             base.GetParameterReferences(this.TooltipLoadMethod, list);
         }
         
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.TooltipDataStructure);
             dependencies.Add(this.TooltipLoadMethod);
             dependencies.Add(this.TooltipTransformation);
@@ -65,84 +65,84 @@ namespace Origam.Schema.LookupModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
+	}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
 			return newNode is AbstractDataLookup;
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		public Guid TooltipDataStructureId;
+	#region Properties
+	public Guid TooltipDataStructureId;
 
-		[Category("Tooltip")]
-		[TypeConverter(typeof(DataStructureConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("looltipDataStructure", "TooltipDataStructureId")]
-        public DataStructure TooltipDataStructure
+	[Category("Tooltip")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("looltipDataStructure", "TooltipDataStructureId")]
+	public DataStructure TooltipDataStructure
+	{
+		get
 		{
-			get
-			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TooltipDataStructureId)) as DataStructure;
 			}
-			set
-			{
+		set
+		{
 				this.TooltipDataStructureId = (Guid)value.PrimaryKey["Id"];
                 this.TooltipLoadMethod = null;
 			}
-		}
+	}
         
-        public Guid TooltipDataStructureMethodId;
+	public Guid TooltipDataStructureMethodId;
 
-        [TypeConverter(typeof(DataServiceDataTooltipFilterConverter))]
-        [Category("Tooltip")]
-        [NotNullModelElementRule("TooltipDataStructure")]
-        [XmlReference("tooltipLoadMethod", "TooltipDataStructureMethodId")]
-        public DataStructureMethod TooltipLoadMethod
-        {
-            get
-            {
+	[TypeConverter(typeof(DataServiceDataTooltipFilterConverter))]
+	[Category("Tooltip")]
+	[NotNullModelElementRule("TooltipDataStructure")]
+	[XmlReference("tooltipLoadMethod", "TooltipDataStructureMethodId")]
+	public DataStructureMethod TooltipLoadMethod
+	{
+		get
+		{
                 return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TooltipDataStructureMethodId));
             }
-            set
-            {
+		set
+		{
                 this.TooltipDataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
-        }
+	}
 
-		public Guid TooltipTransformationId;
+	public Guid TooltipTransformationId;
 
-		[Category("Tooltip")]
-		[TypeConverter(typeof(TransformationConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("tooltipTransformation", "TooltipTransformationId")]
-        public ITransformation TooltipTransformation
+	[Category("Tooltip")]
+	[TypeConverter(typeof(TransformationConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("tooltipTransformation", "TooltipTransformationId")]
+	public ITransformation TooltipTransformation
+	{
+		get
 		{
-			get
-			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TooltipTransformationId)) as ITransformation;
 			}
-			set
-			{
+		set
+		{
 				this.TooltipTransformationId = (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		private string _roles = "*";
-		[Category("Condition"), DefaultValue("*")]
-		[XmlAttribute("roles")]
-		public virtual string Roles
+	private string _roles = "*";
+	[Category("Condition"), DefaultValue("*")]
+	[XmlAttribute("roles")]
+	public virtual string Roles
+	{
+		get
 		{
-			get
-			{
 				if(_roles == null)
 				{
 					return "*";
@@ -152,46 +152,46 @@ namespace Origam.Schema.LookupModel
 					return _roles;
 				}
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
+	}
 
-		private string _features;
-		[Category("Condition")]
-		[XmlAttribute("features")]
-        public virtual string Features
+	private string _features;
+	[Category("Condition")]
+	[XmlAttribute("features")]
+	public virtual string Features
+	{
+		get
 		{
-			get
-			{
 				return _features;
 			}
-			set
-			{
+		set
+		{
 				_features = value;
 			}
-		}
+	}
 
-		private int _level = 100;
-		[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("level")]
-        public int Level
+	private int _level = 100;
+	[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("level")]
+	public int Level
+	{
+		get
 		{
-			get
-			{
 				return _level;
 			}
-			set
-			{
+		set
+		{
 				_level = value;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IComparable Members
-		public override int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
 			EntityFieldDynamicLabel compared = obj as EntityFieldDynamicLabel;
 
 			if(compared != null)
@@ -203,6 +203,5 @@ namespace Origam.Schema.LookupModel
 				return base.CompareTo(obj);
 			}
 		}
-		#endregion
-	}
+	#endregion
 }

@@ -24,20 +24,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+
+public static class DictionaryExtensions
 {
-    public static class DictionaryExtensions
+    /// <summary>
+    /// Will fail if source dictionary contains duplicate values!
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static Dictionary<TValue, TKey> Invert<TKey, TValue>(this IDictionary<TKey, TValue> source)
     {
-        /// <summary>
-        /// Will fail if source dictionary contains duplicate values!
-        /// </summary>
-        /// <param name="source"></param>
-        /// <typeparam name="TKey"></typeparam>
-        /// <typeparam name="TValue"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static Dictionary<TValue, TKey> Invert<TKey, TValue>(this IDictionary<TKey, TValue> source)
-        {
             bool duplicatevaluesExist =
                  source.Values.Distinct().Count() != source.Values.Count;
 
@@ -54,9 +54,9 @@ namespace Origam.Extensions
             return invertedDict;
         }
 
-        public static List<KeyValuePair<K, V>> RemoveByValueSelector<K, V>(this IDictionary<K, V> dict,
-            Func<V, bool> valueSelectorFunc) where V : class
-        {
+    public static List<KeyValuePair<K, V>> RemoveByValueSelector<K, V>(this IDictionary<K, V> dict,
+        Func<V, bool> valueSelectorFunc) where V : class
+    {
             List<KeyValuePair<K, V>> entriesToRemove = dict
                 .Where(entry => valueSelectorFunc.Invoke(entry.Value))
                 .ToList();
@@ -65,9 +65,9 @@ namespace Origam.Extensions
                 .ForEach(entryToRemove => dict.Remove(entryToRemove));
             return entriesToRemove;
         }
-        public static List<KeyValuePair<K, V>> RemoveByKeySelector<K, V>(this IDictionary<K, V> dict,
-            Func<K, bool> keySelectorFunc) where V : class
-        {
+    public static List<KeyValuePair<K, V>> RemoveByKeySelector<K, V>(this IDictionary<K, V> dict,
+        Func<K, bool> keySelectorFunc) where V : class
+    {
             List<KeyValuePair<K, V>> entriesToRemove = dict
                 .Where(entry => keySelectorFunc.Invoke(entry.Key))
                 .ToList();
@@ -77,17 +77,17 @@ namespace Origam.Extensions
             return entriesToRemove;
         }
 
-        public static void RemoveIfPresent<K, V>(
-            this IDictionary<K, V> dict, K key)
-        {
+    public static void RemoveIfPresent<K, V>(
+        this IDictionary<K, V> dict, K key)
+    {
             if (dict.ContainsKey(key))
             {
                 dict.Remove(key);
             }
         }
 
-        public static void AddOrReplace<K,V>(this Dictionary<K,V> dict, K key, V value )
-        {
+    public static void AddOrReplace<K,V>(this Dictionary<K,V> dict, K key, V value )
+    {
             if (dict.ContainsKey(key))
             {
                 dict[key] = value;
@@ -98,9 +98,9 @@ namespace Origam.Extensions
             }
         }
 
-        public static void AddOrReplaceRange<K, V>(this IDictionary<K, V> dict,
-            IDictionary<K, V> otherDict)
-        {
+    public static void AddOrReplaceRange<K, V>(this IDictionary<K, V> dict,
+        IDictionary<K, V> otherDict)
+    {
             if (otherDict == null)
             {
                 return;
@@ -112,8 +112,8 @@ namespace Origam.Extensions
             }
         }
 
-        public static string Print<K, V>(this IDictionary<K, V> dict, bool inLine = false)
-        {
+    public static string Print<K, V>(this IDictionary<K, V> dict, bool inLine = false)
+    {
             if (inLine)
             {
                 return dict
@@ -125,6 +125,4 @@ namespace Origam.Extensions
                 .Select(x => x.Key + ": " + x.Value)
                 .Aggregate("\t\t", (x, y) => $"{x}\n\t\t{y}")+"\n";
         }
-    }
-    
 }

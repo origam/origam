@@ -21,15 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+
+/// <summary>
+/// Summary description for WorkQueueAdapterFactory.
+/// </summary>
+public class WorkQueueAdapterFactory
 {
-	/// <summary>
-	/// Summary description for WorkQueueAdapterFactory.
-	/// </summary>
-	public class WorkQueueAdapterFactory
+	public static WorkQueueLoaderAdapter GetAdapter(string adapterId)
 	{
-		public static WorkQueueLoaderAdapter GetAdapter(string adapterId)
-		{
 			switch(adapterId)
 			{
 				case "57bed127-45cc-46f1-b29b-53c635f665b3":	// IMAP
@@ -52,5 +52,4 @@ namespace Origam.Workflow.WorkQueue
 					throw new ArgumentOutOfRangeException("refWorkQueueExternalSourceTypeId", adapterId, ResourceUtils.GetString("ErrorUnknownWorkQueueAdapter"));
 			}
 		}
-	}
 }

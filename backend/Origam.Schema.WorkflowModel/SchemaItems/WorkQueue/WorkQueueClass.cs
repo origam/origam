@@ -28,24 +28,24 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Summary description for AbstractService.
+/// </summary>
+[SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for AbstractService.
-	/// </summary>
-	[SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
+	public const string CategoryConst = "WorkQueueClass";
+
+	public WorkQueueClass() : base() {Init();}
+	public WorkQueueClass(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public WorkQueueClass(Key primaryKey) : base(primaryKey)	{Init();}
+
+	public WorkQueueWorkflowCommand GetCommand(string name)
 	{
-		public const string CategoryConst = "WorkQueueClass";
-
-		public WorkQueueClass() : base() {Init();}
-		public WorkQueueClass(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public WorkQueueClass(Key primaryKey) : base(primaryKey)	{Init();}
-
-		public WorkQueueWorkflowCommand GetCommand(string name)
-		{
 			WorkQueueWorkflowCommand cmd = this.GetChildByName(name, WorkQueueWorkflowCommand.CategoryConst) as WorkQueueWorkflowCommand;
 
 			if(cmd == null) throw new ArgumentOutOfRangeException("name", name, ResourceUtils.GetString("ErrorUknownWorkQueueCommand"));
@@ -53,8 +53,8 @@ namespace Origam.Schema.WorkflowModel
 			return cmd;
 		}
 
-		public WorkqueueLoader GetLoader(string name)
-		{
+	public WorkqueueLoader GetLoader(string name)
+	{
 			WorkqueueLoader loader = this.GetChildByName(name, WorkqueueLoader.CategoryConst) as WorkqueueLoader;
 
 			if(loader == null) throw new ArgumentOutOfRangeException("name", name, ResourceUtils.GetString("ErrorUknownWorkQueueLoader"));
@@ -62,19 +62,19 @@ namespace Origam.Schema.WorkflowModel
 			return loader;
 		}
 
-		private void Init()
-		{
+	private void Init()
+	{
 			this.ChildItemTypes.Add(typeof(WorkQueueClassEntityMapping));
 			this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommand));
 			this.ChildItemTypes.Add(typeof(WorkqueueLoader));
 		}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			if(this.EntityStructure != null) dependencies.Add(this.EntityStructure);
 			if(this.EntityStructurePrimaryKeyMethod != null) dependencies.Add(this.EntityStructurePrimaryKeyMethod);
 			if(this.Entity != null)	dependencies.Add(this.Entity);
@@ -95,277 +95,277 @@ namespace Origam.Schema.WorkflowModel
 
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		[Browsable(false)]
-		public ArrayList EntityMappings => 
-			this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
+	#region Properties
+	[Browsable(false)]
+	public ArrayList EntityMappings => 
+		this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 
-		public Guid EntityId;
+	public Guid EntityId;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("entity", "EntityId")]
-		public IDataEntity Entity
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("entity", "EntityId")]
+	public IDataEntity Entity
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
-			set
-			{
 				this.EntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
                 this.ConditionFilter = null;
 			}
-		}
+	}
  
-		public Guid EntityConditionFilterId;
+	public Guid EntityConditionFilterId;
 
-		[TypeConverter(typeof(WorkQueueClassFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("conditionFilter", "EntityConditionFilterId")]
-		public EntityFilter ConditionFilter
+	[TypeConverter(typeof(WorkQueueClassFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("conditionFilter", "EntityConditionFilterId")]
+	public EntityFilter ConditionFilter
+	{
+		get => (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityConditionFilterId));
+		set
 		{
-			get => (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityConditionFilterId));
-			set
-			{
 				this.EntityConditionFilterId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		public Guid WorkQueueStructureId;
+	public Guid WorkQueueStructureId;
 
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule()]
-		[StructureMustHaveGetByIdFilterRule]
-		[XmlReference("workQueueStructure", "WorkQueueStructureId")]
-        public DataStructure WorkQueueStructure
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[StructureMustHaveGetByIdFilterRule]
+	[XmlReference("workQueueStructure", "WorkQueueStructureId")]
+	public DataStructure WorkQueueStructure
+	{
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureId));
+		set
 		{
-			get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureId));
-			set
-			{
 				this.WorkQueueStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 				this.WorkQueueStructureSortSet = null;
 				this.WorkQueueStructureUserListMethod = null;
 			}
-		}
+	}
         
-		public Guid RelatedEntity1Id;
+	public Guid RelatedEntity1Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity1", "RelatedEntity1Id")]
-		public IDataEntity RelatedEntity1
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity1", "RelatedEntity1Id")]
+	public IDataEntity RelatedEntity1
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity1Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity1Id));
-			set
-			{
 				this.RelatedEntity1Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid RelatedEntity2Id;
+	public Guid RelatedEntity2Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity2", "RelatedEntity2Id")]
-		public IDataEntity RelatedEntity2
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity2", "RelatedEntity2Id")]
+	public IDataEntity RelatedEntity2
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity2Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity2Id));
-			set
-			{
 				this.RelatedEntity2Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		public Guid RelatedEntity3Id;
+	public Guid RelatedEntity3Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity3", "RelatedEntity3Id")]
-		public IDataEntity RelatedEntity3
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity3", "RelatedEntity3Id")]
+	public IDataEntity RelatedEntity3
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity3Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity3Id));
-			set
-			{
 				this.RelatedEntity3Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		public Guid RelatedEntity4Id;
+	public Guid RelatedEntity4Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity4", "RelatedEntity4Id")]
-		public IDataEntity RelatedEntity4
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity4", "RelatedEntity4Id")]
+	public IDataEntity RelatedEntity4
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity4Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity4Id));
-			set
-			{
 				this.RelatedEntity4Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid RelatedEntity5Id;
+	public Guid RelatedEntity5Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity5", "RelatedEntity5Id")]
-		public IDataEntity RelatedEntity5
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity5", "RelatedEntity5Id")]
+	public IDataEntity RelatedEntity5
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity5Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity5Id));
-			set
-			{
 				this.RelatedEntity5Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid RelatedEntity6Id;
+	public Guid RelatedEntity6Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity6", "RelatedEntity6Id")]
-		public IDataEntity RelatedEntity6
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity6", "RelatedEntity6Id")]
+	public IDataEntity RelatedEntity6
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity6Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity6Id));
-			set
-			{
 				this.RelatedEntity6Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid RelatedEntity7Id;
+	public Guid RelatedEntity7Id;
 
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("relatedEntity7", "RelatedEntity7Id")]
-		public IDataEntity RelatedEntity7
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("relatedEntity7", "RelatedEntity7Id")]
+	public IDataEntity RelatedEntity7
+	{
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity7Id));
+		set
 		{
-			get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity7Id));
-			set
-			{
 				this.RelatedEntity7Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid EntityStructureId;
+	public Guid EntityStructureId;
 
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule("Entity")]
-		[XmlReference("entityStructure", "EntityStructureId")]
-        public DataStructure EntityStructure
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule("Entity")]
+	[XmlReference("entityStructure", "EntityStructureId")]
+	public DataStructure EntityStructure
+	{
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructureId));
+		set
 		{
-			get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructureId));
-			set
-			{
 				this.EntityStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
                 this.EntityStructurePrimaryKeyMethod = null;
 			}
-		}
+	}
         
-		public Guid EntityStructurePkMethodId;
+	public Guid EntityStructurePkMethodId;
 
-		[TypeConverter(typeof(WorkQueueClassEntityStructureFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule("EntityStructure")]
-		[XmlReference("entityStructurePrimaryKeyMethod", "EntityStructurePkMethodId")]
-        public DataStructureMethod EntityStructurePrimaryKeyMethod
+	[TypeConverter(typeof(WorkQueueClassEntityStructureFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule("EntityStructure")]
+	[XmlReference("entityStructurePrimaryKeyMethod", "EntityStructurePkMethodId")]
+	public DataStructureMethod EntityStructurePrimaryKeyMethod
+	{
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructurePkMethodId));
+		set
 		{
-			get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructurePkMethodId));
-			set
-			{
 				this.EntityStructurePkMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
         
-		public Guid WorkQueueStructureUserListMethodId;
+	public Guid WorkQueueStructureUserListMethodId;
 
-		[TypeConverter(typeof(WorkQueueClassWQDataStructureFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("workQueueStructureUserListMethod", "WorkQueueStructureUserListMethodId")]
-		public DataStructureMethod WorkQueueStructureUserListMethod
+	[TypeConverter(typeof(WorkQueueClassWQDataStructureFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("workQueueStructureUserListMethod", "WorkQueueStructureUserListMethodId")]
+	public DataStructureMethod WorkQueueStructureUserListMethod
+	{
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureUserListMethodId));
+		set
 		{
-			get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureUserListMethodId));
-			set
-			{
 				this.WorkQueueStructureUserListMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid WorkQueueStructureSortSetId;
+	public Guid WorkQueueStructureSortSetId;
 
-		[TypeConverter(typeof(WorkQueueClassWQDataStructureSortSetConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule]
-		[XmlReference("workQueueStructureSortSet", "WorkQueueStructureSortSetId")]
-		public DataStructureSortSet WorkQueueStructureSortSet
+	[TypeConverter(typeof(WorkQueueClassWQDataStructureSortSetConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule]
+	[XmlReference("workQueueStructureSortSet", "WorkQueueStructureSortSetId")]
+	public DataStructureSortSet WorkQueueStructureSortSet
+	{
+		get => (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureSortSetId));
+		set
 		{
-			get => (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureSortSetId));
-			set
-			{
 				this.WorkQueueStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 		
-		public Guid WorkQueueItemCountLookupId;
+	public Guid WorkQueueItemCountLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule()]
-		[XmlReference("workQueueItemCountLookup", "WorkQueueItemCountLookupId")]
-        public IDataLookup WorkQueueItemCountLookup
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("workQueueItemCountLookup", "WorkQueueItemCountLookupId")]
+	public IDataLookup WorkQueueItemCountLookup
+	{
+		get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueItemCountLookupId));
+		set
 		{
-			get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueItemCountLookupId));
-			set
-			{
 				this.WorkQueueItemCountLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
         
-		public Guid NotificationStructureId;
+	public Guid NotificationStructureId;
 
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint), Category("Notification")]
-		[XmlReference("notificationStructure", "NotificationStructureId")]
-		public DataStructure NotificationStructure
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint), Category("Notification")]
+	[XmlReference("notificationStructure", "NotificationStructureId")]
+	public DataStructure NotificationStructure
+	{
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationStructureId));
+		set
 		{
-			get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationStructureId));
-			set
-			{
 				this.NotificationStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
                 this.NotificationLoadMethod = null;
 			}
-		}
+	}
 		
-		public Guid NotificationLoadMethodId;
+	public Guid NotificationLoadMethodId;
 
-		[TypeConverter(typeof(WorkQueueClassNotificationStructureFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint), Category("Notification")]
-		[XmlReference("notificationLoadMethod", "NotificationLoadMethodId")]
-		public DataStructureMethod NotificationLoadMethod
+	[TypeConverter(typeof(WorkQueueClassNotificationStructureFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint), Category("Notification")]
+	[XmlReference("notificationLoadMethod", "NotificationLoadMethodId")]
+	public DataStructureMethod NotificationLoadMethod
+	{
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationLoadMethodId));
+		set
 		{
-			get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationLoadMethodId));
-			set
-			{
 				this.NotificationLoadMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
-		
-		[Category("Notification")]
-		[XmlAttribute ("notificationFilterPkParameter")]
-		public string NotificationFilterPkParameter { get; set; } = "";
-		
-		[Category("UI")]
-		[XmlAttribute ("defaultPanelConfiguration")]
-		public string DefaultPanelConfiguration { get; set; } = "";
-		#endregion
 	}
+		
+	[Category("Notification")]
+	[XmlAttribute ("notificationFilterPkParameter")]
+	public string NotificationFilterPkParameter { get; set; } = "";
+		
+	[Category("UI")]
+	[XmlAttribute ("defaultPanelConfiguration")]
+	public string DefaultPanelConfiguration { get; set; } = "";
+	#endregion
+}
 	
-	[AttributeUsage(AttributeTargets.Property)]
-	public class StructureMustHaveGetByIdFilterRule : AbstractModelElementRuleAttribute 
+[AttributeUsage(AttributeTargets.Property)]
+public class StructureMustHaveGetByIdFilterRule : AbstractModelElementRuleAttribute 
+{
+	public override Exception CheckRule(object instance)
 	{
-		public override Exception CheckRule(object instance)
-		{
 			if (!(instance is WorkQueueClass workQueueClass))
 			{
 				throw new Exception(
@@ -388,9 +388,8 @@ namespace Origam.Schema.WorkflowModel
 				: null;
 		}
 		
-		public override Exception CheckRule(object instance, string memberName)
-		{
+	public override Exception CheckRule(object instance, string memberName)
+	{
 			return CheckRule(instance);
 		}
-	}
 }

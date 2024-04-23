@@ -24,19 +24,19 @@ using System.Collections;
 
 using Origam.DA;
 
-namespace Origam.Workbench.Services.CoreServices
+namespace Origam.Workbench.Services.CoreServices;
+
+/// <summary>
+/// Summary description for WorkflowService.
+/// </summary>
+public class WorkflowService
 {
-	/// <summary>
-	/// Summary description for WorkflowService.
-	/// </summary>
-	public class WorkflowService
+	public WorkflowService()
 	{
-		public WorkflowService()
-		{
 		}
 
-		public static object ExecuteWorkflow(Guid workflowId, QueryParameterCollection parameters, string transactionId)
-		{
+	public static object ExecuteWorkflow(Guid workflowId, QueryParameterCollection parameters, string transactionId)
+	{
 			IServiceAgent workflowServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("WorkflowService", null, null);
 
 			Hashtable ht = new Hashtable(parameters.Count);
@@ -57,9 +57,8 @@ namespace Origam.Workbench.Services.CoreServices
 			return workflowServiceAgent.Result;
 		}
 
-		public static object ExecuteWorkflow(Guid workflowId)
-		{
+	public static object ExecuteWorkflow(Guid workflowId)
+	{
 			return ExecuteWorkflow(workflowId, new QueryParameterCollection(), null);
 		}
-	}
 }

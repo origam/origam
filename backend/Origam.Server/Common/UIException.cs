@@ -23,12 +23,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class UIException: Exception
 {
-    public class UIException: Exception
+    public UIException(string message) : base(message)
     {
-        public UIException(string message) : base(message)
-        {
         }
-    }
 }

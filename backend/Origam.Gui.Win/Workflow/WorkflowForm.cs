@@ -30,32 +30,30 @@ using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
-{
-	/// <summary>
-	/// Summary description for WorkflowForm.
-	/// </summary>
-	public class WorkflowForm : AsForm
-	{
-		private Guid _taskId;
-	    private static readonly string messageSeparator = "------------------------------------------------";
+namespace Origam.Workflow;
 
-		public WorkflowForm(WorkflowHost host)
-		{
+/// <summary>
+/// Summary description for WorkflowForm.
+/// </summary>
+public class WorkflowForm : AsForm
+{
+	private Guid _taskId;
+	private static readonly string messageSeparator = "------------------------------------------------";
+
+	public WorkflowForm(WorkflowHost host)
+	{
 			InitializeComponent();
 
 			this.CanRefreshContent = false;
 			this.Host = host;
 		}
 
-		#region Windows Forms Generated Code
-		private void InitializeComponent()
-		{
+	#region Windows Forms Generated Code
+	private void InitializeComponent()
+	{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(WorkflowForm));
-			// 
-			// WorkflowForm
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 		// WorkflowForm
+			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(648, 373);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.CloseButton = false;
@@ -63,14 +61,14 @@ namespace Origam.Workflow
 			this.Closing += this.WorkflowForm_Closing;
 
 		}
-		#endregion
+	#endregion
 
-		private WorkflowHost _host;
-		public WorkflowHost Host
+	private WorkflowHost _host;
+	public WorkflowHost Host
+	{
+		get => _host;
+		set
 		{
-			get => _host;
-		    set
-			{
 				if(_host != null)
 				{
 					this.Host.FormRequested -= Host_FormRequested;
@@ -87,34 +85,34 @@ namespace Origam.Workflow
 					this.Host.WorkflowMessage += Host_WorkflowMessage;
 				}
 			}
-		}
+	}
 
-		private bool _canFinishTask;
-		public bool CanFinishTask
+	private bool _canFinishTask;
+	public bool CanFinishTask
+	{
+		get => _canFinishTask;
+		set
 		{
-			get => _canFinishTask;
-		    set
-			{
 				_canFinishTask = value;
 				Workbench.WorkbenchSingleton.Workbench.UpdateToolbar();
 			}
-		}
+	}
 
-	    public WorkflowEngine WorkflowEngine { get; set; } = null;
+	public WorkflowEngine WorkflowEngine { get; set; } = null;
 
-	    internal bool TaskFinished { get; set; } = false;
+	internal bool TaskFinished { get; set; } = false;
 
-	    internal IEndRule EndRule { get; set; }
+	internal IEndRule EndRule { get; set; }
 
-	    private void AbortTask()
-		{
+	private void AbortTask()
+	{
 			this.FormGenerator.UnloadForm(true);
 			this.Host.AbortWorkflowForm(_taskId);
 			InvokeToolStripsRemoved();
 		}
 
-		public void FinishTask()
-		{
+	public void FinishTask()
+	{
 			if(this.CanFinishTask == false) return;
 
 			try
@@ -172,31 +170,31 @@ namespace Origam.Workflow
 			this.Host.FinishWorkflowForm(_taskId, this.NextData);
 		}
 
-        /// <summary>
-		/// Never get dirty.
-		/// </summary>
-		public override bool IsDirty
+	/// <summary>
+	/// Never get dirty.
+	/// </summary>
+	public override bool IsDirty
+	{
+		get => false;
+		set
 		{
-			get => false;
-            set
-			{
 			}
-		}
+	}
 
-		public override bool IsViewOnly => true;
+	public override bool IsViewOnly => true;
 
-	    internal IDataDocument NextData { get; set; }
+	internal IDataDocument NextData { get; set; }
 
-        internal FormControlSet NextForm { get; set; }
+	internal FormControlSet NextForm { get; set; }
 
-	    internal string NextDescription { get; set; }
+	internal string NextDescription { get; set; }
 
-	    internal bool CanAbort { get; set; }
+	internal bool CanAbort { get; set; }
 
-	    bool _finishScreen = false;
+	bool _finishScreen = false;
 
-		internal void ShowFinishScreen()
-		{
+	internal void ShowFinishScreen()
+	{
 			this.FormGenerator.UnloadForm(true);
 
 			this.DockPadding.All = 5;
@@ -290,8 +288,8 @@ namespace Origam.Workflow
 			_finishScreen = true;
 		}
 
-		internal void ShowWorkflowUI()
-		{
+	internal void ShowWorkflowUI()
+	{
 			try
 			{
 				this.StatusText = ResourceUtils.GetString("FormLoading");
@@ -314,9 +312,9 @@ namespace Origam.Workflow
 			}
 		}
 
-        delegate void ShowMessageDelegate(string message, Exception exception);
-        internal void ShowMessage(string message, Exception ex)
-        {
+	delegate void ShowMessageDelegate(string message, Exception exception);
+	internal void ShowMessage(string message, Exception ex)
+	{
             if (this.InvokeRequired)
             {
                 ShowMessageDelegate showMessage = ShowMessage;
@@ -339,37 +337,37 @@ namespace Origam.Workflow
             }
         }
 
-		internal void SetWorkflowDescription(string description)
-		{
+	internal void SetWorkflowDescription(string description)
+	{
 			this.StatusText = description;
 			
 			AppendProcessLog(description);
 			Application.DoEvents();
 		}
 
-		private void btnFinishTask_Click(object sender, System.EventArgs e)
-		{
+	private void btnFinishTask_Click(object sender, System.EventArgs e)
+	{
 			this.FinishTask();
 		}
 
-		private void WorkflowForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
+	private void WorkflowForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+	{
 			if(_finishScreen) return;
 			AbortTask();
 			e.Cancel = true;
 		}
 
-		#region Events
-		public event EventHandler StatusChanged;
-		void OnStatusChanged(EventArgs e)
-		{
+	#region Events
+	public event EventHandler StatusChanged;
+	void OnStatusChanged(EventArgs e)
+	{
 		    StatusChanged?.Invoke(this, e);
 		}
-		#endregion
+	#endregion
 
-		private string _processLog = "";
-		private void AppendProcessLog(string text)
-		{
+	private string _processLog = "";
+	private void AppendProcessLog(string text)
+	{
 			if(_processLog != "")
 			{
 				_processLog += Environment.NewLine;
@@ -378,8 +376,8 @@ namespace Origam.Workflow
 			_processLog += DateTime.Now + ": " + text;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				this.Host = null;
@@ -392,13 +390,13 @@ namespace Origam.Workflow
 			base.Dispose (disposing);
 		}
 
-		private void btnClose_Click(object sender, EventArgs e)
-		{
+	private void btnClose_Click(object sender, EventArgs e)
+	{
 			this.Close();
 		}
 
-		private void btnRepeat_Click(object sender, EventArgs e)
-		{
+	private void btnRepeat_Click(object sender, EventArgs e)
+	{
 			Button btn = sender as Button;
 			btn.Click -= btnClose_Click;
 			this.Controls.Remove(btn);
@@ -415,8 +413,8 @@ namespace Origam.Workflow
 			WorkflowHost.DefaultHost.ExecuteWorkflow(this.WorkflowEngine);
 		}
 
-		private void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)
-		{
+	private void Host_FormRequested(object sender, WorkflowHostFormEventArgs e)
+	{
 			if(e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
 			{
 				this.WorkflowEngine = e.Engine;
@@ -432,8 +430,8 @@ namespace Origam.Workflow
 			}
 		}
 
-        private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-		{
+	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+	{
 			if(e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
 			{
 				if(e.Engine.CallingWorkflow == null)
@@ -451,8 +449,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-		{
+	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+	{
 			if(e.Engine.WorkflowInstanceId.Equals(this.WorkflowEngine.WorkflowInstanceId))
 			{
 				if(e.Popup)
@@ -465,5 +463,4 @@ namespace Origam.Workflow
 				}
 			}
 		}
-	}
 }

@@ -26,20 +26,20 @@ using Origam.Workbench.Diagram.Extensions;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing
-{
-    internal class ActionSubgraphPainter: INodeItemPainter
-    {
-        private readonly InternalPainter painter;
-        private readonly double labelLeftMargin = 10;
+namespace Origam.Workbench.Diagram.NodeDrawing;
 
-        public ActionSubgraphPainter(InternalPainter internalPainter)
-        {
+internal class ActionSubgraphPainter: INodeItemPainter
+{
+    private readonly InternalPainter painter;
+    private readonly double labelLeftMargin = 10;
+
+    public ActionSubgraphPainter(InternalPainter internalPainter)
+    {
             painter = internalPainter;
         }
 
-        public ICurve GetBoundary(Node node) 
-        {
+    public ICurve GetBoundary(Node node) 
+    {
             var clusterBoundary = ((Cluster) node.GeometryNode).RectangularBoundary;
 
             var height = clusterBoundary.TopMargin;
@@ -52,8 +52,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
 
-        public bool Draw(Node node, object graphicsObj)
-        {
+    public bool Draw(Node node, object graphicsObj)
+    {
             INodeData nodeData = (INodeData)node.UserData;
             var borderSize = new Size(
                 (int)node.BoundingBox.Width,
@@ -78,5 +78,4 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             return true;
         }
-    }
 }

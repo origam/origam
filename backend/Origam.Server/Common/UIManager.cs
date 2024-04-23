@@ -45,32 +45,30 @@ using Origam.Workflow;
 using core = Origam.Workbench.Services.CoreServices;
 using Debug = System.Diagnostics.Debug;
 
-namespace Origam.Server
-{
-    public class UIManager
-    {
-        internal static readonly log4net.ILog log 
-            = log4net.LogManager.GetLogger(System.Reflection.MethodBase
-                .GetCurrentMethod().DeclaringType);
-        private readonly int initialPageNumberOfRecords;
-        private readonly SessionManager sessionManager;
-        private readonly Analytics analytics;
+namespace Origam.Server;
 
-        public UIManager(int initialPageNumberOfRecords,
-            SessionManager sessionManager, Analytics analytics)
-        {
+public class UIManager
+{
+    internal static readonly log4net.ILog log 
+        = log4net.LogManager.GetLogger(System.Reflection.MethodBase
+            .GetCurrentMethod().DeclaringType);
+    private readonly int initialPageNumberOfRecords;
+    private readonly SessionManager sessionManager;
+    private readonly Analytics analytics;
+
+    public UIManager(int initialPageNumberOfRecords,
+        SessionManager sessionManager, Analytics analytics)
+    {
             this.analytics = analytics;
             this.initialPageNumberOfRecords = initialPageNumberOfRecords;
             this.sessionManager = sessionManager;
         }
 
-        public UIResult InitUI(UIRequest request, bool addChildSession, 
-            SessionStore parentSession, IBasicUIService basicUIService)
-        {
+    public UIResult InitUI(UIRequest request, bool addChildSession, 
+        SessionStore parentSession, IBasicUIService basicUIService)
+    {
             Task getFormXmlTask = null;
-            // Stack can't handle resending DataDocumentFx, 
-            // it needs to be converted to XmlDocument 
-            // and then converted back to DataDocumentFx
+            // Stack can't handle resending DataDocumentFx,      // it needs to be converted to XmlDocument      // and then converted back to DataDocumentFx
             foreach (object key in request.Parameters.Keys.ToList<object>())
             {
                 object value = request.Parameters[key];
@@ -237,9 +235,9 @@ namespace Origam.Server
             return result;
         }
 
-        private static void SetFormXml(UIResult result, UserProfile profile,
-            SessionStore ss)
-        {
+    private static void SetFormXml(UIResult result, UserProfile profile,
+        SessionStore ss)
+    {
             XmlDocument formXml;
             WorkflowSessionStore wss = ss as WorkflowSessionStore;
             formXml = ss.GetFormXml();
@@ -255,17 +253,17 @@ namespace Origam.Server
             System.Diagnostics.Debug.Assert(result.FormDefinition != null);
         }
 
-        private static bool IsFormXmlNotCachedOnClient(UIRequest request,
-            SessionStore ss)
-        {
+    private static bool IsFormXmlNotCachedOnClient(UIRequest request,
+        SessionStore ss)
+    {
             return !(request.IsDataOnly ||
                      request.CachedFormIds.Contains(ss.FormId.ToString()));
         }
 
-        private static void FormXmlPostProcessing(UIResult result, DataSet data,
-            XmlDocument formXml, UserProfile profile, Guid workflowId,
-            DataStructureSortSet sortSet)
-        {
+    private static void FormXmlPostProcessing(UIResult result, DataSet data,
+        XmlDocument formXml, UserProfile profile, Guid workflowId,
+        DataStructureSortSet sortSet)
+    {
             result.FormDefinition = formXml.OuterXml;
             
             XmlNodeList configurableNodes = formXml.SelectNodes("//*[@HasPanelConfiguration='true']"); 
@@ -354,13 +352,13 @@ namespace Origam.Server
             }
         }
 
-        private UIResult InitDashboardView(UIRequest request)
-        {
+    private UIResult InitDashboardView(UIRequest request)
+    {
             return InitDashboardView(request.ObjectId, null);
         }
 
-        private UIResult InitDashboardView(string objectId, string viewId)
-        {
+    private UIResult InitDashboardView(string objectId, string viewId)
+    {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
             UIResult result = new UIResult(Guid.Empty, null, null, false);
@@ -408,9 +406,9 @@ namespace Origam.Server
             return result;
         }
 
-        private static UIPanelConfig GetPanelConfig(Guid workflowId,
-            UserProfile profile, DataSet data, UIPanel panel, XmlElement grid)
-        {
+    private static UIPanelConfig GetPanelConfig(Guid workflowId,
+        UserProfile profile, DataSet data, UIPanel panel, XmlElement grid)
+    {
             UIPanelConfig panelConfig = new UIPanelConfig();
             panelConfig.Panel = panel;
 
@@ -476,9 +474,9 @@ namespace Origam.Server
             return panelConfig;
         }
 
-        private static IList<UIGridFilterConfiguration> GetFilters(Guid panelId,
-            DataSet data, string entity)
-        {
+    private static IList<UIGridFilterConfiguration> GetFilters(Guid panelId,
+        DataSet data, string entity)
+    {
             List<UIGridFilterConfiguration> result =
                 new List<UIGridFilterConfiguration>();
 
@@ -492,9 +490,9 @@ namespace Origam.Server
             return result;
         }
 
-        private static UIGridFilterConfiguration GetFilter(
-            OrigamPanelFilter.PanelFilterRow pfr, DataSet data, string entity)
-        {
+    private static UIGridFilterConfiguration GetFilter(
+        OrigamPanelFilter.PanelFilterRow pfr, DataSet data, string entity)
+    {
             UIGridFilterConfiguration uigfc =
                 new UIGridFilterConfiguration(pfr.Id, pfr.Name, pfr.IsGlobal);
             if (data.Tables.Contains(entity))
@@ -528,8 +526,8 @@ namespace Origam.Server
             return uigfc;
         }
 
-        private static string DashboardViewConfig(string viewId)
-        {
+    private static string DashboardViewConfig(string viewId)
+    {
             IDataLookupService ls =
                 ServiceManager.Services.GetService(typeof(IDataLookupService))
                     as IDataLookupService;
@@ -540,8 +538,8 @@ namespace Origam.Server
                     false, false, null).ToString();
         }
 
-        private static XmlDocument DashboardViews(string menuId)
-        {
+    private static XmlDocument DashboardViews(string menuId)
+    {
             XmlDocument doc = new XmlDocument();
 
             XmlElement rootElement = doc.CreateElement("dashboardViews");
@@ -572,5 +570,4 @@ namespace Origam.Server
             }
             return doc;
         }
-    }
 }

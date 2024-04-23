@@ -25,24 +25,24 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Origam.Extensions
-{
-    public static class TypeExtensions
-    {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
+namespace Origam.Extensions;
 
-        public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
-        {
+public static class TypeExtensions
+{
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
+    public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
+    {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => !assembly.IsDynamic)
                 .SelectMany(GetExportedTypes)
                 .Where(baseType.IsAssignableFrom);
         }
         
-        public static object GetValue(this MemberInfo memberInfo, object forObject)
-        {
+    public static object GetValue(this MemberInfo memberInfo, object forObject)
+    {
             switch (memberInfo.MemberType)
             {
                 case MemberTypes.Field:
@@ -54,8 +54,8 @@ namespace Origam.Extensions
             }
         } 
         
-        public static IEnumerable<Type> GetAllBaseTypes(this Type type)
-        {
+    public static IEnumerable<Type> GetAllBaseTypes(this Type type)
+    {
             Type baseType = type.BaseType;
             while (baseType != typeof(object))
             {
@@ -64,8 +64,8 @@ namespace Origam.Extensions
             }
         }
 
-        private static IEnumerable<Type> GetExportedTypes(Assembly assembly)
-        {
+    private static IEnumerable<Type> GetExportedTypes(Assembly assembly)
+    {
             try
             {
                 return assembly.GetExportedTypes();
@@ -80,5 +80,4 @@ namespace Origam.Extensions
                 return new List<Type>();
             }
         }
-    }
 }

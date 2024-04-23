@@ -28,37 +28,37 @@ using System.Threading;
 using Origam.Schema.GuiModel;
 using System.Globalization;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+class UrlApiPageCache
 {
-    class UrlApiPageCache
+    class PageCacheForOneCulture
     {
-        class PageCacheForOneCulture
+        public Dictionary<string, AbstractPage> parameterlessPages;
+        public List<AbstractPage> parameterPages;
+        public PageCacheForOneCulture()
         {
-            public Dictionary<string, AbstractPage> parameterlessPages;
-            public List<AbstractPage> parameterPages;
-            public PageCacheForOneCulture()
-            {
                 parameterlessPages = new Dictionary<string, AbstractPage>();
                 parameterPages = new List<AbstractPage>();
             }
-        }
+    }
 
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<string, PageCacheForOneCulture> pageCachesForPerCultures = null;
-        private PagesSchemaItemProvider pageProvider = null;
-        private readonly Mutex lck = new Mutex();
+    private Dictionary<string, PageCacheForOneCulture> pageCachesForPerCultures = null;
+    private PagesSchemaItemProvider pageProvider = null;
+    private readonly Mutex lck = new Mutex();
 
-        public UrlApiPageCache(PagesSchemaItemProvider _pageProvider)
-        {
+    public UrlApiPageCache(PagesSchemaItemProvider _pageProvider)
+    {
             pageProvider = _pageProvider;
             pageCachesForPerCultures = new Dictionary<string, PageCacheForOneCulture>();
         }
 
-        public AbstractPage GetParameterlessPage(string incommingPath)
-        {
+    public AbstractPage GetParameterlessPage(string incommingPath)
+    {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentUICulture;
             lck.WaitOne();
             if (!pageCachesForPerCultures.ContainsKey(currentCulture.Name))
@@ -74,8 +74,8 @@ namespace Origam.Server
             return ret;            
         }
 
-        public List<AbstractPage> GetParameterPages()
-        {
+    public List<AbstractPage> GetParameterPages()
+    {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentUICulture;
             lck.WaitOne();            
             if (!pageCachesForPerCultures.ContainsKey(currentCulture.Name))
@@ -88,8 +88,8 @@ namespace Origam.Server
             return ret;
         }
 
-        private void BuildCacheForCurrentCulture(CultureInfo currentCulture)
-        {
+    private void BuildCacheForCurrentCulture(CultureInfo currentCulture)
+    {
             PageCacheForOneCulture newCulture = new PageCacheForOneCulture();
             foreach (AbstractPage page in pageProvider.ChildItems.ToList())
             {
@@ -115,5 +115,4 @@ namespace Origam.Server
                 log.DebugFormat("parameterless URL Api resolver initialised for culture {0}.", currentCulture);
             }
         }
-    }
 }

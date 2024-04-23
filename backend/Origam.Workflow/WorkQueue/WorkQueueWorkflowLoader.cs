@@ -31,32 +31,32 @@ using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 using core=Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+
+/// <summary>
+/// Connection string:
+/// name - name of the workflowLoader defined at the WorkQueueClass. The worklow called must implement
+///		   IWorkQueueLoder workflow defined in the OrigamRoot model.
+/// anything else - input workflow parameters - constant text values as defined in the connection string
+/// </summary>
+public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
 {
-	/// <summary>
-	/// Connection string:
-	/// name - name of the workflowLoader defined at the WorkQueueClass. The worklow called must implement
-	///		   IWorkQueueLoder workflow defined in the OrigamRoot model.
-	/// anything else - input workflow parameters - constant text values as defined in the connection string
-	/// </summary>
-	public class WorkQueueWorkflowLoader : WorkQueueLoaderAdapter
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+	Hashtable _inputParameters = new Hashtable();
+	IWorkflow _workflow;
+	bool _executed = false;
+	string _resultState;
+	IDataDocument _attachmentSource;
+	WorkQueueClass _wqc;
+	XPathNodeIterator _resultIterator;
+
+	public WorkQueueWorkflowLoader()
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		Hashtable _inputParameters = new Hashtable();
-		IWorkflow _workflow;
-		bool _executed = false;
-		string _resultState;
-	    IDataDocument _attachmentSource;
-		WorkQueueClass _wqc;
-		XPathNodeIterator _resultIterator;
-
-		public WorkQueueWorkflowLoader()
-		{
 		}
 
-		public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
-		{
+	public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
+	{
 			if(log.IsInfoEnabled)
 			{
 				log.Info("Connecting " + connection);
@@ -90,14 +90,14 @@ namespace Origam.Workflow.WorkQueue
 			_workflow = loader.Workflow;
 		}
 
-		public override void Disconnect()
-		{
+	public override void Disconnect()
+	{
 			_inputParameters.Clear();
 			_workflow = null;
 		}
 
-		public override WorkQueueAdapterResult GetItem(string lastState)
-		{
+	public override WorkQueueAdapterResult GetItem(string lastState)
+	{
 			if(!_executed)
 			{
 				if(LoadData(lastState))
@@ -144,8 +144,8 @@ namespace Origam.Workflow.WorkQueue
 			}
 		}
 
-		private bool LoadData(string lastState)
-		{
+	private bool LoadData(string lastState)
+	{
 			_inputParameters["lastState"] = lastState;
 			WorkflowHost host = WorkflowHost.DefaultHost;
 			WorkflowEngine workflowEngine = WorkflowEngine.PrepareWorkflow(_workflow, _inputParameters, false, _workflow.Name);
@@ -218,5 +218,4 @@ namespace Origam.Workflow.WorkQueue
 			_resultIterator = nav.Select(xpath);
 			return true;
 		}
-	}
 }

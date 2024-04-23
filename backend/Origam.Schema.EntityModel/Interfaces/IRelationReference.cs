@@ -19,13 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for IRelationReference.
+/// </summary>
+public interface IRelationReference
 {
-	/// <summary>
-	/// Summary description for IRelationReference.
-	/// </summary>
-	public interface IRelationReference
-	{
-		 IAssociation Relation {get; set;}
-	}
+	IAssociation Relation {get; set;}
 }

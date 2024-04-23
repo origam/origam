@@ -25,15 +25,15 @@ using System.Windows.Forms;
 using Origam.UI;
 using Origam.Workbench.PropertyGrid;
 
-namespace Origam.Workbench.Editors
-{
-	public class PropertyGridEditor : AbstractEditor
-    {
-	    private readonly bool closeOnLinkClick;
-	    private PropertyGridEx propertyGrid1;
+namespace Origam.Workbench.Editors;
 
-        private void InitializeComponent()
-		{
+public class PropertyGridEditor : AbstractEditor
+{
+	private readonly bool closeOnLinkClick;
+	private PropertyGridEx propertyGrid1;
+
+	private void InitializeComponent()
+	{
             this.propertyGrid1 = new PropertyGridEx();
             propertyGrid1.LinkClicked += (sender, args) =>
             {
@@ -43,20 +43,16 @@ namespace Origam.Workbench.Editors
 	            }
             };
             this.SuspendLayout();
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 	 // propertyGrid1
+            // 	 this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.HelpBackColor = System.Drawing.Color.LightYellow;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 40);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(687, 526);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
-            // 
-            // TestEditor
-            // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 	 // TestEditor
+            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(766, 566);
             this.Controls.Add(this.propertyGrid1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -70,8 +66,8 @@ namespace Origam.Workbench.Editors
 
 		}
 
-        public PropertyGridEditor(bool closeOnLinkClick)
-		{
+	public PropertyGridEditor(bool closeOnLinkClick)
+	{
 			this.closeOnLinkClick = closeOnLinkClick;
 			InitializeComponent();
             this.ContentLoaded += new EventHandler(PropertyGridEditor_ContentLoaded);
@@ -84,27 +80,27 @@ namespace Origam.Workbench.Editors
             this.Shown += new EventHandler(PropertyGridEditor_Shown);
         }
 
-        private void PropertyGridEditor_Shown(object sender, EventArgs e)
-        {
+	private void PropertyGridEditor_Shown(object sender, EventArgs e)
+	{
             propertyGrid1.SetSplitter();
         }
 
-        /// <summary>
-        /// If another editor opens while in dialog mode, we close the dialog.
-        /// This happens when user double clicks on a model element link.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Workbench_ViewOpened(object sender, ViewContentEventArgs e)
-        {
+	/// <summary>
+	/// If another editor opens while in dialog mode, we close the dialog.
+	/// This happens when user double clicks on a model element link.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void Workbench_ViewOpened(object sender, ViewContentEventArgs e)
+	{
             if (!IsDirty && Modal)
             {
                 Close();
             }
         }
 
-        private void propertyGrid1_PropertyValueChanged(object s, System.Windows.Forms.PropertyValueChangedEventArgs e)
-		{
+	private void propertyGrid1_PropertyValueChanged(object s, System.Windows.Forms.PropertyValueChangedEventArgs e)
+	{
 			if(this.IsReadOnly)
 			{
 				e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid1.SelectedObject, e.OldValue);
@@ -117,16 +113,15 @@ namespace Origam.Workbench.Editors
             }
         }
 
-		private void PropertyGridEditor_ContentLoaded(object sender, EventArgs e)
-		{
+	private void PropertyGridEditor_ContentLoaded(object sender, EventArgs e)
+	{
 			this.propertyGrid1.SelectedObject = ModelContent;
             propertyGrid1.Select();
         }
 
-        public override void SaveObject()
-		{
+	public override void SaveObject()
+	{
 			propertyGrid1.Refresh();
 			base.SaveObject();
         }
-    }
 }

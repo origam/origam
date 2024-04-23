@@ -17,57 +17,56 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Origam.Gui.Win
-{
-	public class AsGradientLabel : System.Windows.Forms.Label
-	{
-		// declare two color for linear gradient
-		private Color cLeft;
-		private Color cRight;
+namespace Origam.Gui.Win;
 
-		// property of begin color in linear gradient
-		public Color BeginColor
+public class AsGradientLabel : System.Windows.Forms.Label
+{
+	// declare two color for linear gradient
+	private Color cLeft;
+	private Color cRight;
+
+	// property of begin color in linear gradient
+	public Color BeginColor
+	{
+		get
 		{
-			get
-			{
 				return cLeft;
 			}
-			set
-			{
+		set
+		{
 				cLeft = value;
 			}
-		}
-		// property of end color in linear gradient
-		public Color EndColor
+	}
+	// property of end color in linear gradient
+	public Color EndColor
+	{
+		get
 		{
-			get
-			{
 				return cRight;
 			}
-			set
-			{
+		set
+		{
 				cRight = value;
 			}
-		}
-		public AsGradientLabel()
-		{
-			// Default get system color 
-			cLeft = SystemColors.ActiveCaption;
+	}
+	public AsGradientLabel()
+	{
+			// Default get system color 		cLeft = SystemColors.ActiveCaption;
 			cRight = SystemColors.Control;
 		}
-		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
-		{
+	protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+	{
 			// declare linear gradient brush for fill background of label
 			LinearGradientBrush GBrush = new LinearGradientBrush(
 				new Point(0, 0),
 				new Point(this.Width, 0), cLeft, cRight);
 			Rectangle rect = new Rectangle(0,0,this.Width,this.Height);
-			// Fill with gradient 
-			e.Graphics.FillRectangle(GBrush, rect);
+			// Fill with gradient 		e.Graphics.FillRectangle(GBrush, rect);
 
 			// draw text on label
 			SolidBrush drawBrush = new SolidBrush(this.ForeColor);
@@ -80,6 +79,4 @@ namespace Origam.Gui.Win
 			// output string
 			e.Graphics.DrawString(this.Text, this.Font, drawBrush, rectF, sf);
 		}
-	} 
 }
-

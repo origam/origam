@@ -22,24 +22,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute 
+	public SelfJoinSameBaseRuleAttribute()
 	{
-		public SelfJoinSameBaseRuleAttribute()
-		{
 		}
-        public override Exception CheckRule(object instance)
-		{
+	public override Exception CheckRule(object instance)
+	{
 			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
 		}
 
-		public override Exception CheckRule(object instance, string memberName)
-		{
+	public override Exception CheckRule(object instance, string memberName)
+	{
 			if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
 			if (!(instance is EntityRelationItem relationItem))
 			{
@@ -52,5 +52,4 @@ namespace Origam.Schema.EntityModel
 			}
 			return null;
 		}
-	}
 }

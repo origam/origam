@@ -22,12 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class WorkflowTaskFactory
 {
-	public class WorkflowTaskFactory
+	public static IWorkflowEngineTask GetTask(IWorkflowStep step)
 	{
-		public static IWorkflowEngineTask GetTask(IWorkflowStep step)
-		{
 			switch(step)
 			{
 				case CheckRuleStep _:
@@ -58,5 +58,4 @@ namespace Origam.Workflow
 						ResourceUtils.GetString("ErrorStepNotImplemented"));
 			}
 		}
-	}
 }

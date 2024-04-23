@@ -25,43 +25,43 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for EntityRelationColumnPairItem.
+/// </summary>
+[SchemaItemDescription("Key", 3)]
+[HelpTopic("Relationship+Key")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("BaseEntityField")]
+[ClassMetaVersion("6.0.0")]
+public class EntityRelationColumnPairItem : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntityRelationColumnPairItem.
-	/// </summary>
-	[SchemaItemDescription("Key", 3)]
-    [HelpTopic("Relationship+Key")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("BaseEntityField")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityRelationColumnPairItem : AbstractSchemaItem
-	{
-		public const string CategoryConst = "EntityRelationColumnPair";
+	public const string CategoryConst = "EntityRelationColumnPair";
 
-		public EntityRelationColumnPairItem() : base(){}
+	public EntityRelationColumnPairItem() : base(){}
 		
-		public EntityRelationColumnPairItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityRelationColumnPairItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityRelationColumnPairItem(Key primaryKey) : base(primaryKey)	{}
+	public EntityRelationColumnPairItem(Key primaryKey) : base(primaryKey)	{}
 
-		#region Properties
-		public Guid BaseEntityColumnId;
+	#region Properties
+	public Guid BaseEntityColumnId;
 
-		[TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
-		[NotNullModelElementRuleAttribute()]
-        [XmlReference("baseEntityField", "BaseEntityColumnId")]
-        public IDataEntityColumn BaseEntityField
+	[TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
+	[NotNullModelElementRuleAttribute()]
+	[XmlReference("baseEntityField", "BaseEntityColumnId")]
+	public IDataEntityColumn BaseEntityField
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.BaseEntityColumnId;
 
 				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.BaseEntityColumnId = Guid.Empty;
@@ -71,24 +71,24 @@ namespace Origam.Schema.EntityModel
 					this.BaseEntityColumnId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
  
-		public Guid RelatedEntityColumnId;
+	public Guid RelatedEntityColumnId;
 
-		[TypeConverter(typeof(RelationForeignKeyColumnConverter))]
-		[NotNullModelElementRuleAttribute()]
-        [XmlReference("relatedEntityField", "RelatedEntityColumnId")]
-        public IDataEntityColumn RelatedEntityField
+	[TypeConverter(typeof(RelationForeignKeyColumnConverter))]
+	[NotNullModelElementRuleAttribute()]
+	[XmlReference("relatedEntityField", "RelatedEntityColumnId")]
+	public IDataEntityColumn RelatedEntityField
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.RelatedEntityColumnId;
 
 				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.RelatedEntityColumnId = Guid.Empty;
@@ -98,43 +98,43 @@ namespace Origam.Schema.EntityModel
 					this.RelatedEntityColumnId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Overriden AbstractSchemaItem Members
-		public override string Icon
+	#region Overriden AbstractSchemaItem Members
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "3";
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return EntityRelationColumnPairItem.CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			(this.BaseEntityField as AbstractSchemaItem).GetParameterReferences (this.BaseEntityField as AbstractSchemaItem, list);
 			(this.RelatedEntityField as AbstractSchemaItem).GetParameterReferences (this.RelatedEntityField as AbstractSchemaItem, list);
 		}
 
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.BaseEntityField);
 			dependencies.Add(this.RelatedEntityField);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -150,13 +150,12 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

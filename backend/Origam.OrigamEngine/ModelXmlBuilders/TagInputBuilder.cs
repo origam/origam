@@ -23,29 +23,28 @@ using System;
 using System.Xml;
 using System.Data;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for ComboBoxBuilder.
+/// </summary>
+public class TagInputBuilder
 {
-	/// <summary>
-	/// Summary description for ComboBoxBuilder.
-	/// </summary>
-	public class TagInputBuilder
+	public static void BuildTagInput(XmlElement propertyElement, Guid lookupId, string bindingMember, DataTable table)
 	{
-		public static void BuildTagInput(XmlElement propertyElement, Guid lookupId, string bindingMember, DataTable table)
-		{
 			propertyElement.SetAttribute("Entity", "Array");
 			propertyElement.SetAttribute("Column", "TagInput");
 			
 			ComboBoxBuilder.BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);			
 		}
 
-		public static void BuildChecklist(XmlElement propertyElement, Guid lookupId, 
-			string bindingMember, int columnWidth, DataTable table)
-		{
+	public static void BuildChecklist(XmlElement propertyElement, Guid lookupId, 
+		string bindingMember, int columnWidth, DataTable table)
+	{
 			propertyElement.SetAttribute("Entity", "Array");
 			propertyElement.SetAttribute("Column", "Checklist");
 			propertyElement.SetAttribute("ColumnWidth", columnWidth.ToString());
 			
 			ComboBoxBuilder.BuildCommonDropdown(propertyElement, lookupId, bindingMember, table);			
 		}
-	}
 }

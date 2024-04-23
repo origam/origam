@@ -26,41 +26,41 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for DataStructureTemplate.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class DataStructureTemplate : AbstractSchemaItem
 {
-    /// <summary>
-    /// Summary description for DataStructureTemplate.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("6.0.0")]
-	public abstract class DataStructureTemplate : AbstractSchemaItem
-	{
-		public const string CategoryConst = "DataStructureTemplate";
+	public const string CategoryConst = "DataStructureTemplate";
 
-		public DataStructureTemplate() : base(){}
+	public DataStructureTemplate() : base(){}
 		
-		public DataStructureTemplate(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataStructureTemplate(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public DataStructureTemplate(Key primaryKey) : base(primaryKey)	{}
+	public DataStructureTemplate(Key primaryKey) : base(primaryKey)	{}
 
-		#region Properties
-		public Guid DataStructureEntityId;
+	#region Properties
+	public Guid DataStructureEntityId;
 
-		[TypeConverter(typeof(DataQueryEntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRuleAttribute()]
-        [XmlReference("entity", "DataStructureEntityId")]
-		public DataStructureEntity Entity
+	[TypeConverter(typeof(DataQueryEntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRuleAttribute()]
+	[XmlReference("entity", "DataStructureEntityId")]
+	public DataStructureEntity Entity
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataStructureEntityId;
 
 				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.DataStructureEntityId = Guid.Empty;
@@ -70,35 +70,35 @@ namespace Origam.Schema.EntityModel
 					this.DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Overriden AbstractSchemaItem Members
-		public override string Icon
+	#region Overriden AbstractSchemaItem Members
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				return "5";
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Entity);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -114,16 +114,15 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
-
-		#region Private Methods
-		#endregion
 	}
+	#endregion
+
+	#region Private Methods
+	#endregion
 }

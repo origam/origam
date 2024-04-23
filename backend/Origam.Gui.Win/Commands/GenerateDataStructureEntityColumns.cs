@@ -25,26 +25,26 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+
+public class GenerateDataStructureEntityColumns : AbstractMenuCommand
 {
-    public class GenerateDataStructureEntityColumns : AbstractMenuCommand
+    WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    public override bool IsEnabled
     {
-        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+        get
         {
-            get
-            {
                 return Owner is DataStructureEntity;
             }
-            set
-            {
+        set
+        {
                 throw new ArgumentException("Cannot set this property", "IsEnabled");
             }
-        }
+    }
 
-        public override void Run()
-        {
+    public override void Run()
+    {
             DataStructureEntity entity = Owner as DataStructureEntity;
             entity.AllFields = false;
 
@@ -70,14 +70,13 @@ namespace Origam.Gui.Win.Commands
             entity.Persist();
         }
 
-        public override void Dispose()
-        {
+    public override void Dispose()
+    {
             _schema = null;
         }
 
-        public override int GetImageIndex(string icon)
-        {
+    public override int GetImageIndex(string icon)
+    {
             return _schemaBrowser.ImageIndex(icon);
         }
-    }
 }

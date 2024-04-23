@@ -27,12 +27,12 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+internal static class RequestTools
 {
-    internal static class RequestTools
+    internal static UIRequest GetActionRequest(Hashtable parameters, IList selectedItems, EntityUIAction action)
     {
-        internal static UIRequest GetActionRequest(Hashtable parameters, IList selectedItems, EntityUIAction action)
-        {
             UIRequest uir = GetActionRequestBase(parameters, action.Caption);
             Graphics menuIcon = null;
             
@@ -124,9 +124,9 @@ namespace Origam.Server
             return uir;
         }
         
-        private static UIRequest GetActionRequestBase(
-            Hashtable parameters, string caption)
-        {
+    private static UIRequest GetActionRequestBase(
+        Hashtable parameters, string caption)
+    {
             return new UIRequest
             {
                 IsDataOnly = false,
@@ -136,8 +136,8 @@ namespace Origam.Server
             };
         }
 
-        private static UIRequest GetWorkflowActionRequest(Hashtable parameters, Guid workflowId, string caption)
-        {
+    private static UIRequest GetWorkflowActionRequest(Hashtable parameters, Guid workflowId, string caption)
+    {
             UIRequest uir = GetActionRequestBase(parameters, caption);
 
             uir.Type = UIRequestType.WorkflowReferenceMenuItem;
@@ -146,8 +146,8 @@ namespace Origam.Server
             return uir;
         }
 
-        private static UIRequest GetReportActionRequest(Hashtable parameters, Guid reportId, string caption)
-        {
+    private static UIRequest GetReportActionRequest(Hashtable parameters, Guid reportId, string caption)
+    {
             UIRequest uir = GetActionRequestBase(parameters, caption);
 
             uir.Type = UIRequestType.ReportReferenceMenuItem;
@@ -156,5 +156,4 @@ namespace Origam.Server
             return uir;
         }
         
-    }
 }

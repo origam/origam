@@ -26,15 +26,15 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for DashboardConfigurationItemBuilder.
+/// </summary>
+public class DashboardConfigurationItemBuilder
 {
-	/// <summary>
-	/// Summary description for DashboardConfigurationItemBuilder.
-	/// </summary>
-	public class DashboardConfigurationItemBuilder
+	public static void Build(XmlDocument doc, XmlElement children, Guid menuId, DashboardConfigurationItem item, XmlElement dataSourcesElement)
 	{
-		public static void Build(XmlDocument doc, XmlElement children, Guid menuId, DashboardConfigurationItem item, XmlElement dataSourcesElement)
-		{
 			XmlElement itemElement = doc.CreateElement("UIElement");
 			children.AppendChild(itemElement);
 
@@ -53,8 +53,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			BuildComponent(doc, itemChildren, menuId, item, dataSourcesElement);
 		}
 
-		private static void BuildComponent(XmlDocument doc, XmlElement itemChildren, Guid menuId, DashboardConfigurationItem item, XmlElement dataSourcesElement)
-		{
+	private static void BuildComponent(XmlDocument doc, XmlElement itemChildren, Guid menuId, DashboardConfigurationItem item, XmlElement dataSourcesElement)
+	{
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			AbstractDashboardWidget widget = ps.SchemaProvider.RetrieveInstance(typeof(AbstractDashboardWidget), new ModelElementKey(item.ComponentId)) as AbstractDashboardWidget;
 
@@ -126,6 +126,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				}
 			}
 		}
-	}
 }
-

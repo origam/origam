@@ -26,32 +26,32 @@ using Origam.DA.ObjectPersistence;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for Graphics.
+/// </summary>
+[SchemaItemDescription("Style", "icon_style.png")]
+[HelpTopic("Styles")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class UIStyle : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for Graphics.
-	/// </summary>
-	[SchemaItemDescription("Style", "icon_style.png")]
-    [HelpTopic("Styles")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class UIStyle : AbstractSchemaItem
-	{
-		public const string CategoryConst = "Style";
+    public const string CategoryConst = "Style";
 
-        public UIStyle() : base() { Init(); }
+    public UIStyle() : base() { Init(); }
 
-        public UIStyle(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+    public UIStyle(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
 
-        public UIStyle(Key primaryKey) : base(primaryKey) { Init(); }
+    public UIStyle(Key primaryKey) : base(primaryKey) { Init(); }
 
-        private void Init()
-        {
+    private void Init()
+    {
             this.ChildItemTypes.Add(typeof(UIStyleProperty));
         }
 
-        public string StyleDefinition()
-        {
+    public string StyleDefinition()
+    {
             StringBuilder result = new StringBuilder();
             foreach (UIStyleProperty property in 
                 this.ChildItemsByType(UIStyleProperty.CategoryConst))
@@ -61,28 +61,28 @@ namespace Origam.Schema.GuiModel
             return result.ToString();
         }
 
-        #region Properties
-        public Guid ControlId;
+    #region Properties
+    public Guid ControlId;
 
-        [TypeConverter(typeof(ControlConverter))]
-        [NotNullModelElementRule()]
-        [XmlReference("widget", "ControlId")]
-        public ControlItem Widget
+    [TypeConverter(typeof(ControlConverter))]
+    [NotNullModelElementRule()]
+    [XmlReference("widget", "ControlId")]
+    public ControlItem Widget
+    {
+        get
         {
-            get
-            {
                 return (ControlItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlItem), new ModelElementKey(this.ControlId));
             }
-            set
-            {
+        set
+        {
                 this.ControlId = (Guid)value.PrimaryKey["Id"];
             }
-        }
-        #endregion
+    }
+    #endregion
 
-        #region Overriden AbstractSchemaItem Members
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-        {
+    #region Overriden AbstractSchemaItem Members
+    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    {
             if (this.Widget != null)
             {
                 dependencies.Add(this.Widget);
@@ -90,21 +90,20 @@ namespace Origam.Schema.GuiModel
             base.GetExtraDependencies(dependencies);
         }
 
-        public override bool UseFolders
+    public override bool UseFolders
+    {
+        get
         {
-            get
-            {
                 return false;
             }
-        }
+    }
 
-		public override string ItemType
-		{
-			get
-			{
+    public override string ItemType
+    {
+        get
+        {
 				return CategoryConst;
 			}
-		}
-		#endregion
-	}
+    }
+    #endregion
 }

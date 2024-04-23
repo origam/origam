@@ -22,22 +22,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+/// <summary>
+/// Checks a validity of a workflow update context task schemaitem - whether the name defined in "FieldName"
+/// corresponds with either a column defined on datastructure level or with an entity column
+/// provided that AllFields flag on datastructure entity is set.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Checks a validity of a workflow update context task schemaitem - whether the name defined in "FieldName"
-	/// corresponds with either a column defined on datastructure level or with an entity column
-	/// provided that AllFields flag on datastructure entity is set.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	public UpdateContextTaskValidModelElementRuleAttribute()
 	{
-		public UpdateContextTaskValidModelElementRuleAttribute()
-		{
 		}
 
-		public override Exception CheckRule(object instance)
-		{
+	public override Exception CheckRule(object instance)
+	{
 			UpdateContextTask updateContextTask = (UpdateContextTask) instance;
 
 			if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
@@ -54,9 +54,8 @@ namespace Origam.Schema.WorkflowModel
             return null;
 		}
 
-		public override Exception CheckRule(object instance, string memberName)
-		{
+	public override Exception CheckRule(object instance, string memberName)
+	{
 			return CheckRule(instance);
 		}
-	}
 }

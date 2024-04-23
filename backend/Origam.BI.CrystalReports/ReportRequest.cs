@@ -26,16 +26,16 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
-namespace Origam.CrystalReportsService.Models
+namespace Origam.CrystalReportsService.Models;
+
+[DataContract(Namespace = "")]
+public class ReportRequest
 {
-    [DataContract(Namespace = "")]
-    public class ReportRequest
+    [DataMember()]
+    public string Data
     {
-        [DataMember()]
-        public string Data
+        get
         {
-            get
-            {
                 var stringBuilder = new StringBuilder();
                 using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
                 {
@@ -47,15 +47,14 @@ namespace Origam.CrystalReportsService.Models
                 }
                 return stringBuilder.ToString();
             }
-            set
-            {
+        set
+        {
 
             }
-        }
-
-        public DataSet Dataset { get; set; }
-
-        [DataMember()]
-        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
     }
+
+    public DataSet Dataset { get; set; }
+
+    [DataMember()]
+    public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 }

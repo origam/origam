@@ -27,28 +27,26 @@ using Origam.Schema.MenuModel;
 using Origam.Schema;
 using Origam.UI;
 
-namespace Origam.Workbench.Pads
-{
-	/// <summary>
-	/// Summary description for WorkflowPlayerPad.
-	/// </summary>
-	public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
-	{
-		//private System.Windows.Forms.TreeView treeView1;
-		private System.ComponentModel.IContainer components = null;
-		
-		public Origam.Workbench.ExpressionBrowser ebrSchemaBrowser;
-		private IDocumentationService _documentationService;
+namespace Origam.Workbench.Pads;
 
-		private void InitializeComponent()
-		{
+/// <summary>
+/// Summary description for WorkflowPlayerPad.
+/// </summary>
+public class WorkflowPlayerPad : AbstractPadContent, IBrowserPad
+{
+	//private System.Windows.Forms.TreeView treeView1;
+	private System.ComponentModel.IContainer components = null;
+		
+	public Origam.Workbench.ExpressionBrowser ebrSchemaBrowser;
+	private IDocumentationService _documentationService;
+
+	private void InitializeComponent()
+	{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(WorkflowPlayerPad));
 			this.ebrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
 			this.SuspendLayout();
-			// 
-			// ebrSchemaBrowser
-			// 
-			this.ebrSchemaBrowser.AllowEdit = false;
+			// 		// ebrSchemaBrowser
+			// 		this.ebrSchemaBrowser.AllowEdit = false;
 			this.ebrSchemaBrowser.CheckSecurity = true;
 			this.ebrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ebrSchemaBrowser.Location = new System.Drawing.Point(0, 0);
@@ -61,10 +59,8 @@ namespace Origam.Workbench.Pads
 			this.ebrSchemaBrowser.NodeUnderMouseChanged += new System.EventHandler(this.ebrSchemaBrowser_NodeUnderMouseChanged);
 			this.ebrSchemaBrowser.NodeDoubleClick += new System.EventHandler(this.ebrSchemaBrowser_NodeDoubleClick);
 			this.ebrSchemaBrowser.QueryFilterNode += new FilterEventHandler(ebrSchemaBrowser_QueryFilterNode);
-			// 
-			// WorkflowPlayerPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 		// WorkflowPlayerPad
+			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(288, 589);
 			this.Controls.Add(this.ebrSchemaBrowser);
@@ -82,13 +78,13 @@ namespace Origam.Workbench.Pads
 		}
 	
 		
-		public WorkflowPlayerPad()
-		{
+	public WorkflowPlayerPad()
+	{
 			InitializeComponent();
 		}
 
-		private void ebrSchemaBrowser_NodeDoubleClick(object sender, System.EventArgs e)
-		{
+	private void ebrSchemaBrowser_NodeDoubleClick(object sender, System.EventArgs e)
+	{
 			OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
 
 			cmd.Owner = ebrSchemaBrowser.ActiveNode;
@@ -97,15 +93,15 @@ namespace Origam.Workbench.Pads
 		}
 	
 
-		Origam.Schema.MenuModel.Menu _menu;
-		public Origam.Schema.MenuModel.Menu OrigamMenu
+	Origam.Schema.MenuModel.Menu _menu;
+	public Origam.Schema.MenuModel.Menu OrigamMenu
+	{
+		get
 		{
-			get
-			{
 				return _menu;
 			}
-			set
-			{
+		set
+		{
 				_menu = value;
 				this.ebrSchemaBrowser.RemoveAllNodes();
 
@@ -114,23 +110,23 @@ namespace Origam.Workbench.Pads
 					this.ebrSchemaBrowser.AddRootNode(_menu);
 				}
 			}
-		}
+	}
 
-        public ImageList ImageList
-        {
-            get
-            {
+	public ImageList ImageList
+	{
+		get
+		{
                 return ebrSchemaBrowser.imgList;
             }
-        }
+	}
 
-        private void workflowForm_StatusChanged(object sender, EventArgs e)
-		{
+	private void workflowForm_StatusChanged(object sender, EventArgs e)
+	{
 			WorkbenchSingleton.Workbench.UpdateToolbar();
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				if(this.components != null)
@@ -142,8 +138,8 @@ namespace Origam.Workbench.Pads
 			base.Dispose (disposing);
 		}
 
-		private void ebrSchemaBrowser_NodeUnderMouseChanged(object sender, EventArgs e)
-		{
+	private void ebrSchemaBrowser_NodeUnderMouseChanged(object sender, EventArgs e)
+	{
 			_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 
 			if(ebrSchemaBrowser.NodeUnderMouse == null)
@@ -173,8 +169,8 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void ebrSchemaBrowser_QueryFilterNode(object sender, ExpressionBrowserEventArgs e)
-		{
+	private void ebrSchemaBrowser_QueryFilterNode(object sender, ExpressionBrowserEventArgs e)
+	{
 			AbstractMenuItem menu = e.QueriedObject as AbstractMenuItem;
 			Submenu submenu = e.QueriedObject as Submenu;
 
@@ -190,9 +186,8 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-        public int ImageIndex(string icon)
-        {
+	public int ImageIndex(string icon)
+	{
 	        return this.ImageList.ImageIndex(icon);
         }
-    }
 }

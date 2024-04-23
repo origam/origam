@@ -28,26 +28,26 @@ using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Workbench.Commands;
 
-namespace Origam.Workbench.Pads
+namespace Origam.Workbench.Pads;
+
+public class FindSchemaItemResultsPad : AbstractResultPad
 {
-	public class FindSchemaItemResultsPad : AbstractResultPad
-    {
-		private System.Windows.Forms.ListView lvwResults;
-		private System.Windows.Forms.ColumnHeader colItemType;
-		private System.Windows.Forms.ColumnHeader colRootType;
-		private System.Windows.Forms.ColumnHeader colItemPath;
-		private System.Windows.Forms.ColumnHeader colFolderPath;
-		private System.ComponentModel.IContainer components = null;
+	private System.Windows.Forms.ListView lvwResults;
+	private System.Windows.Forms.ColumnHeader colItemType;
+	private System.Windows.Forms.ColumnHeader colRootType;
+	private System.Windows.Forms.ColumnHeader colItemPath;
+	private System.Windows.Forms.ColumnHeader colFolderPath;
+	private System.ComponentModel.IContainer components = null;
 
-		private int sortColumn;
+	private int sortColumn;
 
-		private SchemaBrowser _schemaBrowser;
-        private ColumnHeader colPackageName;
-        private ColumnHeader colPackageReference;
-        ArrayList _results = new ArrayList();
+	private SchemaBrowser _schemaBrowser;
+	private ColumnHeader colPackageName;
+	private ColumnHeader colPackageReference;
+	ArrayList _results = new ArrayList();
 
-		public FindSchemaItemResultsPad()
-		{
+	public FindSchemaItemResultsPad()
+	{
 			// This call is required by the Windows Form Designer.
 			InitializeComponent();
 
@@ -56,8 +56,8 @@ namespace Origam.Workbench.Pads
 			lvwResults.ColumnClick += OnColumnClick; 
 		}
 
-		private void OnColumnClick(object sender, ColumnClickEventArgs eventArgs)
-		{
+	private void OnColumnClick(object sender, ColumnClickEventArgs eventArgs)
+	{
 			if (eventArgs.Column != sortColumn)
 			{
 				sortColumn = eventArgs.Column;
@@ -73,11 +73,11 @@ namespace Origam.Workbench.Pads
 			lvwResults.Sort();
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				if (components != null) 
@@ -90,13 +90,13 @@ namespace Origam.Workbench.Pads
 			base.Dispose( disposing );
 		}
 
-		#region Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+	#region Designer generated code
+	/// <summary>
+	/// Required method for Designer support - do not modify
+	/// the contents of this method with the code editor.
+	/// </summary>
+	private void InitializeComponent()
+	{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindSchemaItemResultsPad));
             this.lvwResults = new System.Windows.Forms.ListView();
             this.colItemPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -106,10 +106,8 @@ namespace Origam.Workbench.Pads
             this.colPackageName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPackageReference = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 
-            // lvwResults
-            // 
-            this.lvwResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // 	 // lvwResults
+            // 	 this.lvwResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvwResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colItemPath,
             this.colRootType,
@@ -129,40 +127,26 @@ namespace Origam.Workbench.Pads
             this.lvwResults.View = System.Windows.Forms.View.Details;
             this.lvwResults.DoubleClick += new System.EventHandler(this.lvwResults_DoubleClick);
             this.lvwResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwResults_KeyDown);
-            // 
-            // colItemPath
-            // 
-            this.colItemPath.Text = "Found In";
+            // 	 // colItemPath
+            // 	 this.colItemPath.Text = "Found In";
             this.colItemPath.Width = 266;
-            // 
-            // colRootType
-            // 
-            this.colRootType.Text = "Root Type";
+            // 	 // colRootType
+            // 	 this.colRootType.Text = "Root Type";
             this.colRootType.Width = 165;
-            // 
-            // colItemType
-            // 
-            this.colItemType.Text = "Type";
+            // 	 // colItemType
+            // 	 this.colItemType.Text = "Type";
             this.colItemType.Width = 120;
-            // 
-            // colFolderPath
-            // 
-            this.colFolderPath.Text = "Folder";
+            // 	 // colFolderPath
+            // 	 this.colFolderPath.Text = "Folder";
             this.colFolderPath.Width = 144;
-            // 
-            // colPackageName
-            // 
-            this.colPackageName.Text = "Package";
+            // 	 // colPackageName
+            // 	 this.colPackageName.Text = "Package";
             this.colPackageName.Width = 130;
-            // 
-            // colPackageReference
-            // 
-            this.colPackageReference.Text = "Package Reference";
+            // 	 // colPackageReference
+            // 	 this.colPackageReference.Text = "Package Reference";
             this.colPackageReference.Width = 119;
-            // 
-            // FindSchemaItemResultsPad
-            // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 	 // FindSchemaItemResultsPad
+            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(816, 245);
             this.Controls.Add(this.lvwResults);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
@@ -178,11 +162,11 @@ namespace Origam.Workbench.Pads
             this.ResumeLayout(false);
 
 		}
-		#endregion
+	#endregion
 
-		#region Public Methods
-		public void ResetResults()
-		{
+	#region Public Methods
+	public void ResetResults()
+	{
 			lvwResults.Items.Clear();
 			_results.Clear();
 			if(_schemaBrowser != null)
@@ -191,8 +175,8 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		public void DisplayResults(AbstractSchemaItem[] results)
-		{
+	public void DisplayResults(AbstractSchemaItem[] results)
+	{
 			ResetResults();
             if (results.Length > 0)
             {
@@ -220,16 +204,16 @@ namespace Origam.Workbench.Pads
 			_schemaBrowser.RedrawContent();
 		}
 
-		public ArrayList Results
+	public ArrayList Results
+	{
+		get
 		{
-			get
-			{
 				return _results;
 			}
-		}
+	}
 
-		private ListViewItem GetResult(AbstractSchemaItem item, List<Guid> referencePackages)
-		{
+	private ListViewItem GetResult(AbstractSchemaItem item, List<Guid> referencePackages)
+	{
 			if (item == null)
 			{
 				return null;
@@ -249,10 +233,10 @@ namespace Origam.Workbench.Pads
 			item.PersistenceProvider.RestrictToLoadedPackage(true);
 			return newItem;
 		}
-		#endregion
+	#endregion
 
-		private void ActivateItem()
-		{
+	private void ActivateItem()
+	{
 			if(lvwResults.SelectedItems.Count > 0)
 			{
 				try
@@ -270,35 +254,35 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-        private void lvwResults_DoubleClick(object sender, System.EventArgs e)
-		{
+	private void lvwResults_DoubleClick(object sender, System.EventArgs e)
+	{
 			ActivateItem();
 		}
 
-		private void lvwResults_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
+	private void lvwResults_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+	{
 			if(e.KeyCode == Keys.Enter)
 			{
 				ActivateItem();
 			}
 		}
 
-		public void Clear()
-		{
+	public void Clear()
+	{
 			lvwResults.Items.Clear();
 		}
-	}
-	internal class ListViewItemComparer : IComparer {
-		private readonly int col;
-		private readonly SortOrder order;
+}
+internal class ListViewItemComparer : IComparer {
+	private readonly int col;
+	private readonly SortOrder order;
 
-		public ListViewItemComparer(int column, SortOrder order) 
-		{
+	public ListViewItemComparer(int column, SortOrder order) 
+	{
 			col=column;
 			this.order = order;
 		}
-		public int Compare(object x, object y) 
-		{
+	public int Compare(object x, object y) 
+	{
 			int returnVal= -1;
 			returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
 				((ListViewItem)y).SubItems[col].Text);
@@ -308,6 +292,4 @@ namespace Origam.Workbench.Pads
 			}
 			return returnVal;
 		}
-	}
 }
-

@@ -42,40 +42,40 @@ using Origam;
 using Origam.Extensions;
 using Origam.Service.Core;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for ExecuteWorkflowButton.
+/// </summary>
+public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataConsumer
 {
-    /// <summary>
-    /// Summary description for ExecuteWorkflowButton.
-    /// </summary>
-    public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataConsumer
+    #region Constructors
+    public ExecuteWorkflowButton()
+        : base()
     {
-        #region Constructors
-        public ExecuteWorkflowButton()
-            : base()
-        {
             this.FlatStyle = FlatStyle.Popup;
             this.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         }
-        #endregion
+    #endregion
 
-        #region Private Members
+    #region Private Members
 
-        private WorkflowEngine _engine;
-        private ContextStore _mergeBackStore = null;
-        private object _dataSource;
-        private string _dataMember;
-        private AbstractSchemaItem _origamMetadata;
-        private Guid _workflowId;
-        private ColumnParameterMappingCollection _parameterMappingCollection = new ColumnParameterMappingCollection();
-        private bool _fillingParameterCache = false;
-        private Guid _iconId = Guid.Empty;
-        private WorkflowHostEventArgs _resultEventArgs;
-        private ServiceOutputMethod _mergeType = ServiceOutputMethod.AppendMergeExisting;
-        #endregion
+    private WorkflowEngine _engine;
+    private ContextStore _mergeBackStore = null;
+    private object _dataSource;
+    private string _dataMember;
+    private AbstractSchemaItem _origamMetadata;
+    private Guid _workflowId;
+    private ColumnParameterMappingCollection _parameterMappingCollection = new ColumnParameterMappingCollection();
+    private bool _fillingParameterCache = false;
+    private Guid _iconId = Guid.Empty;
+    private WorkflowHostEventArgs _resultEventArgs;
+    private ServiceOutputMethod _mergeType = ServiceOutputMethod.AppendMergeExisting;
+    #endregion
 
-        #region Private Methods
-        private void CreateMappingItemsCollection()
-        {
+    #region Private Methods
+    private void CreateMappingItemsCollection()
+    {
             if(this.Workflow == null) return;
 
             // create any missing parameter mappings
@@ -117,30 +117,30 @@ namespace Origam.Gui.Win
             FillParameterCache(this._origamMetadata as ControlSetItem);
         }
 
-        private void ClearMappingItemsOnly()
+    private void ClearMappingItemsOnly()
+    {
+        try
         {
-            try
-            {
-                if(_origamMetadata == null) return;
+            if(_origamMetadata == null) return;
 
-                ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+            ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
 
-                foreach(ColumnParameterMapping mapping in col)
-                {
-                    mapping.IsDeleted = true;
-                }
-            }
-            catch(Exception ex)
+            foreach(ColumnParameterMapping mapping in col)
             {
-                _ = ex.ToString();
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine("AsReportPanel:ERROR=>" + ex.ToString());
-#endif
+                mapping.IsDeleted = true;
             }
         }
-
-        private void FillParameterCache(ControlSetItem controlItem)
+        catch(Exception ex)
         {
+            _ = ex.ToString();
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("AsReportPanel:ERROR=>" + ex.ToString());
+#endif
+        }
+    }
+
+    private void FillParameterCache(ControlSetItem controlItem)
+    {
             if(controlItem == null) return;
 
             _fillingParameterCache = true;
@@ -158,8 +158,8 @@ namespace Origam.Gui.Win
             _fillingParameterCache = false;
         }
 
-        private void SetIcon()
-        {
+    private void SetIcon()
+    {
             if(this.Icon == null)
             {
                 this.Image = null;
@@ -170,8 +170,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        private DataSet GetDataSlice(ContextStore store, DataRow row)
-        {
+    private DataSet GetDataSlice(ContextStore store, DataRow row)
+    {
             DataSet target = new DatasetGenerator(true).CreateDataSet(store.Structure as DataStructure);
 
             DatasetTools.GetDataSlice(target, new List<DataRow> { row });
@@ -180,78 +180,78 @@ namespace Origam.Gui.Win
 
             return target;
         }
-        #endregion
+    #endregion
 
-        #region Public Properties
-        [DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
-        public ServiceOutputMethod MergeType
+    #region Public Properties
+    [DefaultValue(ServiceOutputMethod.AppendMergeExisting)]
+    public ServiceOutputMethod MergeType
+    {
+        get
         {
-            get
-            {
                 return _mergeType;
             }
-            set
-            {
+        set
+        {
                 _mergeType = value;
             }
-        }
+    }
 
-        [Category("Data")]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-        public object DataSource
+    [Category("Data")]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    public object DataSource
+    {
+        get
         {
-            get
-            {
                 return _dataSource;
             }
 
-            set
-            {
+        set
+        {
                 _dataSource = value;
             }
-        }
+    }
 
-        [Category("Data")]
-        [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(System.Drawing.Design.UITypeEditor))]
-        public string DataMember
+    [Category("Data")]
+    [Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(System.Drawing.Design.UITypeEditor))]
+    public string DataMember
+    {
+        get
         {
-            get
-            {
                 return _dataMember;
             }
-            set
-            {
+        set
+        {
                 _dataMember = value;
             }
-        }
+    }
 
-        [Browsable(false)]
-        public Guid WorkflowId
+    [Browsable(false)]
+    public Guid WorkflowId
+    {
+        get
         {
-            get
-            {
                 return _workflowId;
             }
-            set
-            {
+        set
+        {
                 _workflowId = value;
             }
-        }
+    }
 
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [TypeConverter(typeof(WorkflowConverter))]
-        public IWorkflow Workflow
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [TypeConverter(typeof(WorkflowConverter))]
+    public IWorkflow Workflow
+    {
+        get
         {
-            get
-            {
                 if(this._origamMetadata == null)
                     return null;
 
                 return (IWorkflow)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(_workflowId));
             }
-            set
-            {
+        set
+        {
                 if(value == null)
                 {
                     this.WorkflowId = Guid.Empty;
@@ -269,26 +269,26 @@ namespace Origam.Gui.Win
                     CreateMappingItemsCollection();
                 }
             }
-        }
+    }
 
-        private WorkflowExecutionType _actionType = WorkflowExecutionType.NoFormMerge;
-        public WorkflowExecutionType ActionType
+    private WorkflowExecutionType _actionType = WorkflowExecutionType.NoFormMerge;
+    public WorkflowExecutionType ActionType
+    {
+        get
         {
-            get
-            {
                 return _actionType;
             }
-            set
-            {
+        set
+        {
                 _actionType = value;
             }
-        }
+    }
 
-        [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
-        public ColumnParameterMappingCollection ParameterMappings
+    [TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+    public ColumnParameterMappingCollection ParameterMappings
+    {
+        get
         {
-            get
-            {
                 if(!_fillingParameterCache)
                 {
                     CreateMappingItemsCollection();
@@ -296,28 +296,28 @@ namespace Origam.Gui.Win
 
                 return _parameterMappingCollection;
             }
-        }
+    }
 
-        [Browsable(false)]
-        public Guid IconId
+    [Browsable(false)]
+    public Guid IconId
+    {
+        get
         {
-            get
-            {
                 return _iconId;
             }
-            set
-            {
+        set
+        {
                 _iconId = value;
 
                 SetIcon();
             }
-        }
+    }
 
-        [TypeConverter(typeof(GraphicsConverter))]
-        public Origam.Schema.GuiModel.Graphics Icon
+    [TypeConverter(typeof(GraphicsConverter))]
+    public Origam.Schema.GuiModel.Graphics Icon
+    {
+        get
         {
-            get
-            {
                 if(_origamMetadata == null)
                 {
                     return null;
@@ -325,8 +325,8 @@ namespace Origam.Gui.Win
 
                 return (Origam.Schema.GuiModel.Graphics)_origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(IconId));
             }
-            set
-            {
+        set
+        {
                 if(value == null)
                 {
                     this.IconId = Guid.Empty;
@@ -338,12 +338,12 @@ namespace Origam.Gui.Win
 
                 SetIcon();
             }
-        }
-        #endregion
+    }
+    #endregion
 
-        #region Overriden Members
-        protected override void OnClick(EventArgs e)
-        {
+    #region Overriden Members
+    protected override void OnClick(EventArgs e)
+    {
             WorkflowHost host = WorkflowHost.DefaultHost;
 
             if(this.BindingContext == null) return;
@@ -430,14 +430,14 @@ namespace Origam.Gui.Win
             }
         }
 
-        private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-        {
+    private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+    {
             _resultEventArgs = e;
             this.Invoke(new MethodInvoker(this.FinishWorkflow));
         }
 
-        private void FinishWorkflow()
-        {
+    private void FinishWorkflow()
+    {
             WorkflowHostEventArgs e = _resultEventArgs;
 
             if(e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
@@ -492,8 +492,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-        {
+    private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+    {
             if(e.Engine.WorkflowUniqueId.Equals(_engine.WorkflowUniqueId))
             {
                 if(e.Exception != null)
@@ -505,8 +505,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        private void UnsubscribeEvents()
-        {
+    private void UnsubscribeEvents()
+    {
             if(_engine.Host != null)
             {
                 _engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
@@ -514,8 +514,8 @@ namespace Origam.Gui.Win
             }
         }
 
-        private Hashtable Parameters()
-        {
+    private Hashtable Parameters()
+    {
             if(this.DataMember == null)
             {
                 throw new NullReferenceException(Origam.Workflow.ResourceUtils.GetString("ErrorNoDataMember"));
@@ -575,8 +575,8 @@ namespace Origam.Gui.Win
             return result;
         }
 
-        private void HandleException(Exception ex)
-        {
+    private void HandleException(Exception ex)
+    {
             string caption;
             if(ex is RuleException)
             {
@@ -592,8 +592,8 @@ namespace Origam.Gui.Win
             Cursor.Current = Cursors.Default;
         }
 
-        protected override void Dispose(bool disposing)
-        {
+    protected override void Dispose(bool disposing)
+    {
             if(disposing)
             {
                 _origamMetadata = null;
@@ -603,24 +603,23 @@ namespace Origam.Gui.Win
             base.Dispose(disposing);
         }
 
-        #endregion
+    #endregion
 
-        #region IOrigamMetadataConsumer Members
+    #region IOrigamMetadataConsumer Members
 
-        public AbstractSchemaItem OrigamMetadata
+    public AbstractSchemaItem OrigamMetadata
+    {
+        get
         {
-            get
-            {
                 return _origamMetadata;
             }
-            set
-            {
+        set
+        {
                 _origamMetadata = value;
 
                 SetIcon();
                 FillParameterCache(_origamMetadata as ControlSetItem);
             }
-        }
-        #endregion
     }
+    #endregion
 }

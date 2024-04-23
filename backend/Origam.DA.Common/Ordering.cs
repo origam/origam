@@ -24,18 +24,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Linq;
 
-namespace Origam.DA
+namespace Origam.DA;
+
+public class Ordering
 {
-    public class Ordering
+    public string ColumnName { get; }
+    public string Direction { get; }
+
+    public int SortOrder { get; }
+    public Guid LookupId { get;}
+
+    public Ordering(string columnName, string direction, int sortOrder)
     {
-        public string ColumnName { get; }
-        public string Direction { get; }
-
-        public int SortOrder { get; }
-        public Guid LookupId { get;}
-
-        public Ordering(string columnName, string direction, int sortOrder)
-        {
             if (string.IsNullOrWhiteSpace(direction))
             {
                 throw new ArgumentException(nameof(direction) + " cannot be empty");
@@ -49,13 +49,12 @@ namespace Origam.DA
             SortOrder = sortOrder;
         }
 
-        public Ordering(string columnName, string direction,
-            Guid lookupId, int sortOrder)
-            : this(columnName, direction, sortOrder)
-        {
+    public Ordering(string columnName, string direction,
+        Guid lookupId, int sortOrder)
+        : this(columnName, direction, sortOrder)
+    {
             ColumnName = columnName;
             Direction = direction;
             LookupId = lookupId;
         }
-    }
 }

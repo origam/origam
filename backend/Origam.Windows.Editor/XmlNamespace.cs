@@ -18,71 +18,71 @@
 
 using System;
 
-namespace Origam.Windows.Editor
+namespace Origam.Windows.Editor;
+
+/// <summary>
+/// A namespace Uri and a prefix.
+/// </summary>
+public class XmlNamespace
 {
-    /// <summary>
-    /// A namespace Uri and a prefix.
-    /// </summary>
-    public class XmlNamespace
+    string prefix = String.Empty;
+    string name = String.Empty;
+
+    const string prefixToStringStart = "Prefix [";
+    const string uriToStringMiddle = "] Uri [";
+
+    public XmlNamespace()
     {
-        string prefix = String.Empty;
-        string name = String.Empty;
-
-        const string prefixToStringStart = "Prefix [";
-        const string uriToStringMiddle = "] Uri [";
-
-        public XmlNamespace()
-        {
         }
 
-        public XmlNamespace(string prefix, string name)
-        {
+    public XmlNamespace(string prefix, string name)
+    {
             Prefix = prefix;
             Name = name;
         }
 
-        public string Prefix
+    public string Prefix
+    {
+        get { return prefix; }
+        set
         {
-            get { return prefix; }
-            set
-            {
                 prefix = value;
                 if (prefix == null)
                 {
                     prefix = String.Empty;
                 }
             }
-        }
+    }
 
-        public string Name
+    public string Name
+    {
+        get { return name; }
+        set
         {
-            get { return name; }
-            set
-            {
                 name = value;
                 if (name == null)
                 {
                     name = String.Empty;
                 }
             }
-        }
+    }
 
-        public bool HasName
-        {
-            get { return !String.IsNullOrEmpty(name); }
-        }
+    public bool HasName
+    {
+        get { return !String.IsNullOrEmpty(name); }
+    }
 
-        public override string ToString()
-        {
+    public override string ToString()
+    {
             return String.Concat(prefixToStringStart, prefix, uriToStringMiddle, name, "]");
         }
 
-        /// <summary>
-        /// Creates an XmlNamespace instance from the given string that is in the
-        /// format returned by ToString.
-        /// </summary>
-        public static XmlNamespace FromString(string namespaceString)
-        {
+    /// <summary>
+    /// Creates an XmlNamespace instance from the given string that is in the
+    /// format returned by ToString.
+    /// </summary>
+    public static XmlNamespace FromString(string namespaceString)
+    {
             int prefixIndex = namespaceString.IndexOf(prefixToStringStart, StringComparison.Ordinal);
             if (prefixIndex >= 0)
             {
@@ -99,8 +99,8 @@ namespace Origam.Windows.Editor
             return new XmlNamespace();
         }
 
-        public override bool Equals(object obj)
-        {
+    public override bool Equals(object obj)
+    {
             XmlNamespace rhs = obj as XmlNamespace;
             if (rhs != null)
             {
@@ -109,9 +109,8 @@ namespace Origam.Windows.Editor
             return false;
         }
 
-        public override int GetHashCode()
-        {
+    public override int GetHashCode()
+    {
             return Name.GetHashCode() ^ Prefix.GetHashCode();
         }
-    }
 }

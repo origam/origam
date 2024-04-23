@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class ReportSchemaItemProvider : AbstractSchemaItemProvider
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class ReportSchemaItemProvider : AbstractSchemaItemProvider
+	public ReportSchemaItemProvider() 
 	{
-		public ReportSchemaItemProvider() 
-		{
 			this.ChildItemTypes.Add(typeof(CrystalReport));
 			this.ChildItemTypes.Add(typeof(WebReport));
 			this.ChildItemTypes.Add(typeof(PrintItReport));
@@ -37,55 +37,54 @@ namespace Origam.Schema.GuiModel
             this.ChildItemTypes.Add(typeof(FastReport));
         }
 
-        #region ISchemaItemProvider Members
-        public override string RootItemType
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
 		{
-			get
-			{
 				return CrystalReport.CategoryConst;
 			}
-		}
-		public override string Group
+	}
+	public override string Group
+	{
+		get
 		{
-			get
-			{
 				return "UI";
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_20_reports.png";
 			}
-		}
+	}
 
-		public override string NodeText
+	public override string NodeText
+	{
+		get
 		{
-			get
-			{
 				return "Reports";
 			}
-			set
-			{
+		set
+		{
 				base.NodeText = value;
 			}
-		}
+	}
 
-		public override string NodeToolTipText
+	public override string NodeToolTipText
+	{
+		get
 		{
-			get
-			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return "List of Report Definitions";
 			}
-		}
-
-		#endregion
 	}
+
+	#endregion
 }

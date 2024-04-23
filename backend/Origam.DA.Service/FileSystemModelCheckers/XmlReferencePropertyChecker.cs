@@ -28,19 +28,19 @@ using System.Text;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.FileSystemModeCheckers
-{
-    class XmlReferencePropertyChecker: IFileSystemModelChecker
-    {
-        private readonly FilePersistenceProvider filePersistenceProvider;
+namespace Origam.DA.Service.FileSystemModeCheckers;
 
-        public XmlReferencePropertyChecker(FilePersistenceProvider filePersistenceProvider)
-        {
+class XmlReferencePropertyChecker: IFileSystemModelChecker
+{
+    private readonly FilePersistenceProvider filePersistenceProvider;
+
+    public XmlReferencePropertyChecker(FilePersistenceProvider filePersistenceProvider)
+    {
             this.filePersistenceProvider = filePersistenceProvider;
         }
 
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
             var allInstances = filePersistenceProvider
                 .RetrieveList<IFilePersistent>()
                 .ToArray();
@@ -69,9 +69,9 @@ namespace Origam.DA.Service.FileSystemModeCheckers
             );
         }
 
-        private IEnumerable<ErrorMessage> CheckReferencedObjectsExistAndReturnErrors(
-            IFilePersistent instance, TypeData typeData)
-        {
+    private IEnumerable<ErrorMessage> CheckReferencedObjectsExistAndReturnErrors(
+        IFilePersistent instance, TypeData typeData)
+    {
             return typeData
                 .XmlReferenceFieldInfos
                 .Select(info =>
@@ -96,13 +96,13 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 .ToList();
         }
 
-        private string GetFullPath(IFilePersistent instance)
-        {
+    private string GetFullPath(IFilePersistent instance)
+    {
             return Path.Combine(filePersistenceProvider.TopDirectory.FullName, instance.RelativeFilePath);
         }
 
-        private TypeData GetTypeData(Type type)
-        {
+    private TypeData GetTypeData(Type type)
+    {
             var fieldInfos = type
                 .GetProperties()
                 .Select(GetXmlRefAttributeOrNull)
@@ -119,8 +119,8 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 };
         }
 
-        private MemberInfo FindField(Type type, string fieldName)
-        {
+    private MemberInfo FindField(Type type, string fieldName)
+    {
             FieldInfo filedInfo = type.GetField(fieldName);
             if (filedInfo != null) return filedInfo;
 
@@ -130,17 +130,16 @@ namespace Origam.DA.Service.FileSystemModeCheckers
             throw new Exception("Type: "+type+" does not have property or field named: "+fieldName);
         }
 
-        private XmlReferenceAttribute GetXmlRefAttributeOrNull(PropertyInfo prop)
-        {
+    private XmlReferenceAttribute GetXmlRefAttributeOrNull(PropertyInfo prop)
+    {
             return prop.GetCustomAttributes(true)
                 .OfType<XmlReferenceAttribute>()
                 .FirstOrDefault();
         }
-    }
+}
 
-    class TypeData
-    {
-        public Type Type { get; set; }
-        public MemberInfo[] XmlReferenceFieldInfos { get; set; }
-    }
+class TypeData
+{
+    public Type Type { get; set; }
+    public MemberInfo[] XmlReferenceFieldInfos { get; set; }
 }

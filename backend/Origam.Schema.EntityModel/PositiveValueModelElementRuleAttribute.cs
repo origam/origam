@@ -24,25 +24,25 @@ using Origam.Schema.EntityModel;
 using System;
 using System.Data;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	public PositiveValueModelElementRuleAttribute()
 	{
-		public PositiveValueModelElementRuleAttribute()
-		{
 		}
 
-		public override Exception CheckRule(object instance)
-		{
+	public override Exception CheckRule(object instance)
+	{
 			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
 		}
 
-		public override Exception CheckRule(object instance, string memberName)
-		{
+	public override Exception CheckRule(object instance, string memberName)
+	{
 			if(memberName == String.Empty | memberName == null) CheckRule(instance);
 
             var dataStructure = (IDataEntityColumn)instance;
@@ -58,5 +58,4 @@ namespace Origam.DA.ObjectPersistence
             }
             return null;
 		}
-	}
 }

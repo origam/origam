@@ -31,15 +31,15 @@ using Mvp.Xml.Exslt;
 using Origam.Rule.XsltFunctions;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule.Xslt
+namespace Origam.Rule.Xslt;
+
+public class OrigamXsltContext : XsltContext
 {
-    public class OrigamXsltContext : XsltContext
+    private Dictionary<string, object> _xslFunctionsDict;
+    private ExsltContext _exslt;
+    public static OrigamXsltContext Create(
+        XmlNameTable nameTable, string transactionId)
     {
-        private Dictionary<string, object> _xslFunctionsDict;
-        private ExsltContext _exslt;
-        public static OrigamXsltContext Create(
-            XmlNameTable nameTable, string transactionId)
-        {
             var functionContainers = XsltFunctionContainerFactory.Create(
                 transactionId);
             return new OrigamXsltContext(
@@ -48,9 +48,9 @@ namespace Origam.Rule.Xslt
             );
         }
         
-        public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
-            : base((NameTable)nt)
-        {
+    public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
+        : base((NameTable)nt)
+    {
             _exslt = new ExsltContext(nt);
             _xslFunctionsDict = new Dictionary<string, object>();
 
@@ -63,26 +63,26 @@ namespace Origam.Rule.Xslt
             }
         }
 
-        public override bool Whitespace
+    public override bool Whitespace
+    {
+        get
         {
-            get
-            {
                 return false;
             }
-        }
+    }
 
-        public override int CompareDocument(string baseUri, string nextbaseUri)
-        {
+    public override int CompareDocument(string baseUri, string nextbaseUri)
+    {
             return 0;
         }
 
-        public override bool PreserveWhitespace(XPathNavigator node)
-        {
+    public override bool PreserveWhitespace(XPathNavigator node)
+    {
             return false;
         }
 
-        public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
-        {
+    public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
+    {
             object functionContainer;            
             String ns = LookupNamespace(prefix);
             if (ns != null)
@@ -110,30 +110,30 @@ namespace Origam.Rule.Xslt
             return _exslt.ResolveFunction(prefix, name, ArgTypes);
         }
 
-        public override IXsltContextVariable ResolveVariable(string prefix, string name)
-        {
+    public override IXsltContextVariable ResolveVariable(string prefix, string name)
+    {
             return null;
         }
 
-        #region private functions
+    #region private functions
 
-        private bool Equals(string a, string b, bool ignoreCase)
-        {
+    private bool Equals(string a, string b, bool ignoreCase)
+    {
             return string.Compare(a, b,
                 ignoreCase
                     ? StringComparison.OrdinalIgnoreCase
                     : StringComparison.Ordinal) == 0;
         }
 
-        private string GetNameFromAttribute(MethodInfo method)
-        {
+    private string GetNameFromAttribute(MethodInfo method)
+    {
             var xsltFunctionAttribute = method.GetCustomAttribute(typeof(XsltFunctionAttribute)) 
                 as XsltFunctionAttribute;
             return xsltFunctionAttribute?.XsltName;
         }
 
-        private MethodInfo FindBestMethod(MethodInfo[] methods, bool ignoreCase, bool publicOnly, string name, XPathResultType[] argTypes)
-        {
+    private MethodInfo FindBestMethod(MethodInfo[] methods, bool ignoreCase, bool publicOnly, string name, XPathResultType[] argTypes)
+    {
             int length = methods.Length;
             int free = 0;
             // restrict search to methods with the same name and requested protection attribute
@@ -151,8 +151,7 @@ namespace Origam.Rule.Xslt
             length = free;
             if (length == 0)
             {
-                // this is the only place we returning null in this function 
-                return null;
+                // this is the only place we returning null in this function      return null;
             }
             if (argTypes == null)
             {
@@ -175,8 +174,7 @@ namespace Origam.Rule.Xslt
                 // 1 -- no reason to continue search anyway.
                 return methods[0];
             }
-            // restrict search by parameters type 
-            free = 0;
+            // restrict search by parameters type      free = 0;
             for (int i = 0; i < length; i++)
             {
                 bool match = true;
@@ -207,9 +205,9 @@ namespace Origam.Rule.Xslt
             return methods[0];
         }
 
-        private const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-        private IXsltContextFunction GetExtensionMethod(string ns, string name, XPathResultType[] argTypes, object extension)
-        {
+    private const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+    private IXsltContextFunction GetExtensionMethod(string ns, string name, XPathResultType[] argTypes, object extension)
+    {
             MethodInfo method = FindBestMethod(extension.GetType().GetMethods(bindingFlags), /*ignoreCase:*/false, /*publicOnly:*/true, name, argTypes);
                 if (method != null)
                 {
@@ -217,8 +215,8 @@ namespace Origam.Rule.Xslt
                 }
             return null;
         }
-        public static XPathResultType GetXPathType(Type type)
-        {
+    public static XPathResultType GetXPathType(Type type)
+    {
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.String:
@@ -246,15 +244,15 @@ namespace Origam.Rule.Xslt
             }
         }
 
-        private class FuncExtension : XsltFunctionImpl
-        {
-            private object extension;
-            private MethodInfo method;
-            private TypeCode[] typeCodes;
-            private PermissionSet permissions;
+    private class FuncExtension : XsltFunctionImpl
+    {
+        private object extension;
+        private MethodInfo method;
+        private TypeCode[] typeCodes;
+        private PermissionSet permissions;
 
-            public FuncExtension(object extension, MethodInfo method, PermissionSet permissions)
-            {
+        public FuncExtension(object extension, MethodInfo method, PermissionSet permissions)
+        {
                 System.Diagnostics.Debug.Assert(extension != null);
                 System.Diagnostics.Debug.Assert(method != null);
                 this.extension = extension;
@@ -287,8 +285,8 @@ namespace Origam.Rule.Xslt
                 base.Init(minArgs, maxArgs, returnType, argTypes);
             }
 
-            public override object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
-            {
+        public override object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
+        {
                 System.Diagnostics.Debug.Assert(args.Length <= this.Minargs, "We cheking this on resolve time");
                 for (int i = args.Length - 1; 0 <= i; i--)
                 {
@@ -300,38 +298,38 @@ namespace Origam.Rule.Xslt
                 }
                 return method.Invoke(extension, args);
             }
-        }
+    }
 
 
-        private abstract class XsltFunctionImpl : IXsltContextFunction
+    private abstract class XsltFunctionImpl : IXsltContextFunction
+    {
+        private int minargs;
+        private int maxargs;
+        private XPathResultType returnType;
+        private XPathResultType[] argTypes;
+
+        public XsltFunctionImpl() { }
+        public XsltFunctionImpl(int minArgs, int maxArgs, XPathResultType returnType, XPathResultType[] argTypes)
         {
-            private int minargs;
-            private int maxargs;
-            private XPathResultType returnType;
-            private XPathResultType[] argTypes;
-
-            public XsltFunctionImpl() { }
-            public XsltFunctionImpl(int minArgs, int maxArgs, XPathResultType returnType, XPathResultType[] argTypes)
-            {
                 this.Init(minArgs, maxArgs, returnType, argTypes);
             }
-            protected void Init(int minArgs, int maxArgs, XPathResultType returnType, XPathResultType[] argTypes)
-            {
+        protected void Init(int minArgs, int maxArgs, XPathResultType returnType, XPathResultType[] argTypes)
+        {
                 this.minargs = minArgs;
                 this.maxargs = maxArgs;
                 this.returnType = returnType;
                 this.argTypes = argTypes;
             }
 
-            public int Minargs { get { return this.minargs; } }
-            public int Maxargs { get { return this.maxargs; } }
-            public XPathResultType ReturnType { get { return this.returnType; } }
-            public XPathResultType[] ArgTypes { get { return this.argTypes; } }
-            public abstract object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext);
+        public int Minargs { get { return this.minargs; } }
+        public int Maxargs { get { return this.maxargs; } }
+        public XPathResultType ReturnType { get { return this.returnType; } }
+        public XPathResultType[] ArgTypes { get { return this.argTypes; } }
+        public abstract object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext);
 
-            // static helper methods:
-            public static XPathNodeIterator ToIterator(object argument)
-            {
+        // static helper methods:
+        public static XPathNodeIterator ToIterator(object argument)
+        {
                 XPathNodeIterator it = argument as XPathNodeIterator;
                 if (it == null)
                 {
@@ -340,8 +338,8 @@ namespace Origam.Rule.Xslt
                 return it;
             }
 
-            public static XPathNavigator ToNavigator(object argument)
-            {
+        public static XPathNavigator ToNavigator(object argument)
+        {
                 XPathNavigator nav = argument as XPathNavigator;
                 if (nav == null)
                 {
@@ -350,8 +348,8 @@ namespace Origam.Rule.Xslt
                 return nav;
             }
 
-            private static string IteratorToString(XPathNodeIterator it)
-            {
+        private static string IteratorToString(XPathNodeIterator it)
+        {
                 System.Diagnostics.Debug.Assert(it != null);
                 if (it.MoveNext())
                 {
@@ -360,8 +358,8 @@ namespace Origam.Rule.Xslt
                 return string.Empty;
             }
 
-            public static string ToString(object argument)
-            {
+        public static string ToString(object argument)
+        {
                 XPathNodeIterator it = argument as XPathNodeIterator;
                 if (it != null)
                 {
@@ -374,8 +372,8 @@ namespace Origam.Rule.Xslt
                 }
             }
 
-            public static bool ToBoolean(object argument)
-            {
+        public static bool ToBoolean(object argument)
+        {
                 XPathNodeIterator it = argument as XPathNodeIterator;
                 if (it != null)
                 {
@@ -389,8 +387,8 @@ namespace Origam.Rule.Xslt
                 return Convert.ToBoolean(argument, CultureInfo.InvariantCulture);
             }
 
-            public static double ToNumber(object argument)
-            {
+        public static double ToNumber(object argument)
+        {
                 XPathNodeIterator it = argument as XPathNodeIterator;
                 if (it != null)
                 {
@@ -407,18 +405,17 @@ namespace Origam.Rule.Xslt
                 return XmlConvert.ToDouble(XmlTools.ConvertToString(argument));
             }
 
-            private static object ToNumeric(object argument, TypeCode typeCode)
-            {
+        private static object ToNumeric(object argument, TypeCode typeCode)
+        {
                 return Convert.ChangeType(ToNumber(argument), typeCode, CultureInfo.InvariantCulture);
             }
 
-            public static object ConvertToXPathType(object val, XPathResultType xt, TypeCode typeCode)
-            {
+        public static object ConvertToXPathType(object val, XPathResultType xt, TypeCode typeCode)
+        {
                 switch (xt)
                 {
                     case XPathResultType.String:
-                        // Unfortunately XPathResultType.String == XPathResultType.Navigator (This is wrong but cant be changed in Everett) 
-                        // Fortunately we have typeCode hare so let's discriminate by typeCode
+                        // Unfortunately XPathResultType.String == XPathResultType.Navigator (This is wrong but cant be changed in Everett)          // Fortunately we have typeCode hare so let's discriminate by typeCode
                         if (typeCode == TypeCode.String)
                         {
                             return ToString(val);
@@ -438,7 +435,6 @@ namespace Origam.Rule.Xslt
                         return val;
                 }
             }
-        }
-        #endregion
     }
+    #endregion
 }

@@ -19,16 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.WorkflowModel
-{
-	public enum WorkflowTransactionBehavior
-	{
-        InheritExisting = 0,
-        Ignore = 1
-	}
+namespace Origam.Schema.WorkflowModel;
 
-	public interface IWorkflow : IWorkflowBlock
-	{
-        WorkflowTransactionBehavior TransactionBehavior { get; set; }
-	}
+public enum WorkflowTransactionBehavior
+{
+	InheritExisting = 0,
+	Ignore = 1
+}
+
+public interface IWorkflow : IWorkflowBlock
+{
+	WorkflowTransactionBehavior TransactionBehavior { get; set; }
 }

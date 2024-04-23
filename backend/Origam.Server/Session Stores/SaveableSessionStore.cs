@@ -58,26 +58,26 @@ using Origam.Server.Session_Stores;
 using Origam.Schema.MenuModel;
 using Origam.Service.Core;
 
-namespace Origam.Server
-{
-    public abstract class SaveableSessionStore : SessionStore
-    {
-        private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
-               _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
-        private bool _dependenciesInitialized = false;
-        private DataSetBuilder datasetbuilder = new DataSetBuilder();
+namespace Origam.Server;
 
-        public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
-            : base(service, request, name, analytics)
-        {
+public abstract class SaveableSessionStore : SessionStore
+{
+    private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
+        _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
+    private bool _dependenciesInitialized = false;
+    private DataSetBuilder datasetbuilder = new DataSetBuilder();
+
+    public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+        : base(service, request, name, analytics)
+    {
         }
 
-        private Guid _dataStructureId;
-        public Guid DataStructureId
+    private Guid _dataStructureId;
+    public Guid DataStructureId
+    {
+        get { return _dataStructureId; }
+        set
         {
-            get { return _dataStructureId; }
-            set
-            {
                 _dataStructureId = value;
                 this.DirtyEnabledEntities.Clear();
                 _entityFieldDependencies.Clear();
@@ -94,35 +94,35 @@ namespace Origam.Server
                     }
                 }
             }
-        }
+    }
 
-        public DataStructure DataStructure()
-        {
+    public DataStructure DataStructure()
+    {
             return DataStructure(DataStructureId);
         }
-        internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
-        {
+    internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+    {
             return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet);// new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
         }
 
-        internal DataSetBuilder GetDataSetBuilder()
-        {
+    internal DataSetBuilder GetDataSetBuilder()
+    {
             return datasetbuilder;
         }
-        public DataStructure DataStructure(Guid id)
-        {
+    public DataStructure DataStructure(Guid id)
+    {
             return datasetbuilder.DataStructure(id);
         }
 
-        private DataStructureTemplate _template;
-        public DataStructureTemplate Template
-        {
-            get { return _template; }
-            set { _template = value; }
-        }
+    private DataStructureTemplate _template;
+    public DataStructureTemplate Template
+    {
+        get { return _template; }
+        set { _template = value; }
+    }
 
-        internal virtual object Save()
-        {
+    internal virtual object Save()
+    {
             if (Data.HasErrors)
             {
                 throw new UIException(Resources.ErrorInForm);
@@ -192,9 +192,9 @@ namespace Origam.Server
             return listOfChanges;
         }
 
-        public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
-            IDictionary<string, object> parameters, string requestingGrid)
-        {
+    public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
+        IDictionary<string, object> parameters, string requestingGrid)
+    {
             if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
             {
                 return base.CreateObject(entity, values, parameters, requestingGrid);
@@ -228,9 +228,9 @@ namespace Origam.Server
             }
         }
 
-        public override IEnumerable<ChangeInfo> UpdateObject(
-            string entity, object id, string property, object newValue)
-        {
+    public override IEnumerable<ChangeInfo> UpdateObject(
+        string entity, object id, string property, object newValue)
+    {
             lock (_lock)
             {
                 return UpdateObjectWithDependenies(entity, id,
@@ -238,11 +238,11 @@ namespace Origam.Server
             }
         }
 
-        public IEnumerable<ChangeInfo>
-            UpdateObjectWithDependenies(
+    public IEnumerable<ChangeInfo>
+        UpdateObjectWithDependenies(
             string entity, object id, string property, object newValue,
             bool isTopLevel)
-        {
+    {
             InitializeFieldDependencies();
             DataTable table = GetTable(entity, this.Data);
             Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
@@ -284,8 +284,8 @@ namespace Origam.Server
             }
         }
 
-        private static string ColumnNameById(DataTable table, Guid columnId)
-        {
+    private static string ColumnNameById(DataTable table, Guid columnId)
+    {
             foreach (DataColumn col in table.Columns)
             {
                 if ((Guid)col.ExtendedProperties["Id"] == columnId)
@@ -296,10 +296,10 @@ namespace Origam.Server
             throw new ArgumentOutOfRangeException("columnId", columnId, "Column not found in entity " + table.TableName);
         }
 
-        public override string Title
+    public override string Title
+    {
+        get
         {
-            get
-            {
                 if (!this.IsModalDialog)
                 {
                     return base.Title;
@@ -309,14 +309,14 @@ namespace Origam.Server
                     return "";
                 }
             }
-            set
-            {
+        set
+        {
                 base.Title = value;
             }
-        }
+    }
 
-        private void InitializeFieldDependencies()
-        {
+    private void InitializeFieldDependencies()
+    {
             if (_dependenciesInitialized) return;
             IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
 
@@ -354,5 +354,4 @@ namespace Origam.Server
             }
             _dependenciesInitialized = true;
         }
-    }
 }

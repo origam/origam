@@ -23,11 +23,11 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Windows.Forms;
-using Origam.UI;
 using Origam.Rule;
+using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win.Grid
 {
 	/// <summary>
 	/// Summary description for DataGridBuilder.

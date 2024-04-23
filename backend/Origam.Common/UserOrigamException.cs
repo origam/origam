@@ -22,18 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Service.Core;
 
-namespace Origam
+namespace Origam;
+
+public class UserOrigamException : OrigamException, IUserException
 {
-    public class UserOrigamException : OrigamException, IUserException
+    public UserOrigamException(string message) : base(message)
     {
-        public UserOrigamException(string message) : base(message)
-        {
         }
 
-        public UserOrigamException(string message, string exMessage, Exception exception)
-            : base(message, exMessage, exception)
-        {
+    public UserOrigamException(string message, string exMessage, Exception exception)
+        : base(message, exMessage, exception)
+    {
             
         }
-    }
 }

@@ -22,16 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 
-namespace Origam.DA.Service
-{
-    public class ReferenceFileData: ObjectFileData
-    {
-        public XmlFileData XmlFileData { get; }
+namespace Origam.DA.Service;
 
-        public ReferenceFileData(XmlFileData xmlFileData,
-            IOrigamFileFactory origamFileFactory) : 
-            base(new ParentFolders(), xmlFileData, origamFileFactory)
-        {
+public class ReferenceFileData: ObjectFileData
+{
+    public XmlFileData XmlFileData { get; }
+
+    public ReferenceFileData(XmlFileData xmlFileData,
+        IOrigamFileFactory origamFileFactory) : 
+        base(new ParentFolders(), xmlFileData, origamFileFactory)
+    {
             XmlFileData = xmlFileData;
             XmlNodeList xmlNodeList = xmlFileData
                                           .XmlDocument
@@ -49,5 +49,4 @@ namespace Origam.DA.Service
                 ParentFolderIds[folderUri] = new Guid(idStr);
             }
         }
-    }
 }

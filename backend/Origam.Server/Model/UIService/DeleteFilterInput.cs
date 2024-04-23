@@ -1,11 +1,10 @@
 using System;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class DeleteFilterInput
 {
-    public class DeleteFilterInput
-    {
-        [RequiredNonDefault]
-        public Guid FilterId { get; set; }
-    }
+    [RequiredNonDefault]
+    public Guid FilterId { get; set; }
 }

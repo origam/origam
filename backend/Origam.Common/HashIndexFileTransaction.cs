@@ -23,24 +23,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
-namespace Origam
-{
-    public class HashIndexFileTransaction : OrigamTransaction
-    {
-        private readonly string indexFile;
-        private readonly List<string> processedFiles;
-        private readonly HashIndexFile hashIndexFile;
+namespace Origam;
 
-        public HashIndexFileTransaction(
-            string indexFile, List<string> processedFiles)
-        {
+public class HashIndexFileTransaction : OrigamTransaction
+{
+    private readonly string indexFile;
+    private readonly List<string> processedFiles;
+    private readonly HashIndexFile hashIndexFile;
+
+    public HashIndexFileTransaction(
+        string indexFile, List<string> processedFiles)
+    {
             this.indexFile = indexFile;
             this.processedFiles = processedFiles;
             hashIndexFile = new HashIndexFile(indexFile);
         }
         
-        public override void Commit()
-        {
+    public override void Commit()
+    {
             try
             {
                 CommitProcessedFiles();
@@ -51,8 +51,8 @@ namespace Origam
             }
         }
 
-        private void CommitProcessedFiles()
-        {
+    private void CommitProcessedFiles()
+    {
             foreach (string filename in processedFiles)
             {
                 string[] filenameSegments = filename.Split('|');
@@ -76,8 +76,7 @@ namespace Origam
             }
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
         }
-    }
 }

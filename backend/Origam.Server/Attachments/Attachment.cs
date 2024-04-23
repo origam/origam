@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -41,56 +42,55 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class Attachment
 {
-    public class Attachment
+    private string _id;
+
+    public string Id
     {
-        private string _id;
+        get { return _id; }
+        set { _id = value; }
+    }
 
-        public string Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
+    private string _fileName;
 
-        private string _fileName;
+    public string FileName
+    {
+        get { return _fileName; }
+        set { _fileName = value; }
+    }
 
-        public string FileName
-        {
-            get { return _fileName; }
-            set { _fileName = value; }
-        }
+    private string _description;
 
-        private string _description;
+    public string Description
+    {
+        get { return _description; }
+        set { _description = value; }
+    }
 
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
+    private DateTime _dateCreated;
 
-        private DateTime _dateCreated;
+    public DateTime DateCreated
+    {
+        get { return _dateCreated; }
+        set { _dateCreated = value; }
+    }
 
-        public DateTime DateCreated
-        {
-            get { return _dateCreated; }
-            set { _dateCreated = value; }
-        }
+    private string _icon;
 
-        private string _icon;
+    public string Icon
+    {
+        get { return _icon; }
+        set { _icon = value; }
+    }
 
-        public string Icon
-        {
-            get { return _icon; }
-            set { _icon = value; }
-        }
+    private string _creatorName;
 
-        private string _creatorName;
-
-        public string CreatorName
-        {
-            get { return _creatorName; }
-            set { _creatorName = value; }
-        }
+    public string CreatorName
+    {
+        get { return _creatorName; }
+        set { _creatorName = value; }
     }
 }

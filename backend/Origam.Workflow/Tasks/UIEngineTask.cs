@@ -33,19 +33,19 @@ using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+
+/// <summary>
+/// Summary description for UIEngineTask.
+/// </summary>
+public class UIEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for UIEngineTask.
-	/// </summary>
-	public class UIEngineTask : AbstractWorkflowEngineTask
+	public UIEngineTask() : base()
 	{
-		public UIEngineTask() : base()
-		{
 		}
 
-		public override void Execute()
-		{
+	public override void Execute()
+	{
 			Exception exception = null;
 
 			try
@@ -59,78 +59,77 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		protected override void OnExecute()
+	protected override void OnExecute()
+	{
+		UIFormTask task = this.Step as UIFormTask;
+
+		// Cloning the dataset is neccessary, because the form will eventually add new columns
+		// into the dataset (because of GUID columns sorting). This is not possible if the DataSet
+		// is mapped to an XmlDataDocument (which it is always in the workflow).
+		IDataDocument originalData = this.Engine.RuleEngine.GetContext(task.OutputContextStore) as IDataDocument;
+
+		if(originalData == null)
 		{
-			UIFormTask task = this.Step as UIFormTask;
+			throw new Exception(ResourceUtils.GetString("ErrorContextEmpty"));
+		}
 
-			// Cloning the dataset is neccessary, because the form will eventually add new columns
-			// into the dataset (because of GUID columns sorting). This is not possible if the DataSet
-			// is mapped to an XmlDataDocument (which it is always in the workflow).
-			IDataDocument originalData = this.Engine.RuleEngine.GetContext(task.OutputContextStore) as IDataDocument;
-
-			if(originalData == null)
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorContextEmpty"));
-			}
-
-			IDataDocument data = originalData;
+		IDataDocument data = originalData;
 
 #if ORIGAM_SERVER
-			if(task.OutputMethod != ServiceOutputMethod.FullMerge)
-			{
-				data = this.Engine.CloneContext(originalData, false) as IDataDocument;
-			}
+		if(task.OutputMethod != ServiceOutputMethod.FullMerge)
+		{
+			data = this.Engine.CloneContext(originalData, false) as IDataDocument;
+		}
 #else
 			DataSet cloned = this.Engine.CloneContext(originalData, true) as DataSet;
 			DatasetTools.AddSortColumns(cloned);
 			data = DataDocumentFactory.New(cloned);
 #endif
 
-			IEndRule validationRule = null;
+		IEndRule validationRule = null;
 
-			// only assign a validation rule, if it is on the context the user will be editing
-			if(task.ValidationRuleContextStore != null 
-                && task.OutputContextStore.PrimaryKey.Equals(
-                    task.ValidationRuleContextStore.PrimaryKey))
-			{
-				validationRule = task.ValidationRule;
-			}
-
-			AbstractDataStructure structure;
-			if(task.RefreshDataStructure == null)
-			{
-				structure = task.OutputContextStore.Structure;
-			}
-			else
-			{
-				structure = task.RefreshDataStructure;
-			}
-
-			Hashtable parameters = new Hashtable();
-
-			// get parameters for the form
-			foreach(AbstractSchemaItem param in task.RefreshParameters)
-			{
-				parameters.Add(param.Name, this.Evaluate(param));
-			}
-
-			this.Engine.Host.OnWorkflowForm(this, data, this.Engine.GetTaskDescription(task),
-				this.Engine.Notification, task.Screen, task.OutputContextStore.RuleSet, 
-				validationRule, task.IsFinalForm, task.AllowSave, task.AutoNext, structure,
-				task.RefreshMethod, task.RefreshSortSet, task.IsRefreshSuppressedBeforeFirstSave,
-				task.SaveConfirmationRule, task.SaveDataStructure, parameters, 
-                task.RefreshPortalAfterSave == TrueFalseEnum.True);
+		// only assign a validation rule, if it is on the context the user will be editing
+		if(task.ValidationRuleContextStore != null 
+		   && task.OutputContextStore.PrimaryKey.Equals(
+			   task.ValidationRuleContextStore.PrimaryKey))
+		{
+			validationRule = task.ValidationRule;
 		}
 
-		public void Finish()
+		AbstractDataStructure structure;
+		if(task.RefreshDataStructure == null)
 		{
+			structure = task.OutputContextStore.Structure;
+		}
+		else
+		{
+			structure = task.RefreshDataStructure;
+		}
+
+		Hashtable parameters = new Hashtable();
+
+		// get parameters for the form
+		foreach(AbstractSchemaItem param in task.RefreshParameters)
+		{
+			parameters.Add(param.Name, this.Evaluate(param));
+		}
+
+		this.Engine.Host.OnWorkflowForm(this, data, this.Engine.GetTaskDescription(task),
+			this.Engine.Notification, task.Screen, task.OutputContextStore.RuleSet, 
+			validationRule, task.IsFinalForm, task.AllowSave, task.AutoNext, structure,
+			task.RefreshMethod, task.RefreshSortSet, task.IsRefreshSuppressedBeforeFirstSave,
+			task.SaveConfirmationRule, task.SaveDataStructure, parameters, 
+			task.RefreshPortalAfterSave == TrueFalseEnum.True);
+	}
+
+	public void Finish()
+	{
 			if(this.Result == null) OnFinished(new WorkflowEngineTaskEventArgs(new NullReferenceException(ResourceUtils.GetString("ErrorNoResultData"))));
 			OnFinished(new WorkflowEngineTaskEventArgs());
 		}
 
-		public void Abort()
-		{
+	public void Abort()
+	{
 			OnFinished(new WorkflowEngineTaskEventArgs(new WorkflowCancelledByUserException(ResourceUtils.GetString("ErrorUserCanceled"))));
 		}
-	}
 }

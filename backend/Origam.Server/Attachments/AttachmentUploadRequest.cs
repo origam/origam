@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -42,36 +43,35 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Security.Principal;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class AttachmentUploadRequest
 {
-    public class AttachmentUploadRequest
+    public AttachmentUploadRequest(object id, Guid entityId, IPrincipal principal)
     {
-        public AttachmentUploadRequest(object id, Guid entityId, IPrincipal principal)
-        {
             _id = id;
             _userName = principal.Identity.Name;
             _entityId = entityId;
         }
 
-        private object _id;
-        public object Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
+    private object _id;
+    public object Id
+    {
+        get { return _id; }
+        set { _id = value; }
+    }
 
-        private object _entityId;
-        public object EntityId
-        {
-            get { return _entityId; }
-            set { _entityId = value; }
-        }
+    private object _entityId;
+    public object EntityId
+    {
+        get { return _entityId; }
+        set { _entityId = value; }
+    }
 
-        private string _userName;
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
+    private string _userName;
+    public string UserName
+    {
+        get { return _userName; }
+        set { _userName = value; }
     }
 }

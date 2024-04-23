@@ -26,55 +26,55 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+/// <summary>
+/// Summary description for DataConstantReferenceMenuItem.
+/// </summary>
+[SchemaItemDescription("Data Constant Reference", "menu_parameter.png")]
+[HelpTopic("Data+Constant+Menu+Item")]
+[ClassMetaVersion("6.0.0")]
+public class DataConstantReferenceMenuItem : AbstractMenuItem
 {
-	/// <summary>
-	/// Summary description for DataConstantReferenceMenuItem.
-	/// </summary>
-	[SchemaItemDescription("Data Constant Reference", "menu_parameter.png")]
-    [HelpTopic("Data+Constant+Menu+Item")]
-    [ClassMetaVersion("6.0.0")]
-	public class DataConstantReferenceMenuItem : AbstractMenuItem
+	public DataConstantReferenceMenuItem() : base() {}
+
+	public DataConstantReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public DataConstantReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
+
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-		public DataConstantReferenceMenuItem() : base() {}
-
-		public DataConstantReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataConstantReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(Constant);
             if(DataLookup != null) dependencies.Add(DataLookup);
             base.GetExtraDependencies (dependencies);
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
+	}
 
-		#region Properties
-		public Guid DataConstantId;
+	#region Properties
+	public Guid DataConstantId;
 
-		[Category("Data Constant Reference")]
-		[TypeConverter(typeof(DataConstantConverter))]
-        [NotNullModelElementRule()]
-		[XmlReference("constant", "DataConstantId")]
-		public DataConstant Constant
+	[Category("Data Constant Reference")]
+	[TypeConverter(typeof(DataConstantConverter))]
+	[NotNullModelElementRule()]
+	[XmlReference("constant", "DataConstantId")]
+	public DataConstant Constant
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataConstantId;
 
 				return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.DataConstantId = Guid.Empty;
@@ -84,25 +84,25 @@ namespace Origam.Schema.MenuModel
 					this.DataConstantId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 
-        public Guid DataLookupId;
+	public Guid DataLookupId;
 
-        [Category("User Interface")]
-        [TypeConverter(typeof(DataLookupConverter))]
-        [Description("Optional data lookup which will be used to display the drop-down box. If not specified, the lookup defined in DataConstant will be used.")]
-        [XmlReference("dataLookup", "DataLookupId")]
-        public IDataLookup DataLookup
-        {
-            get
-            {
+	[Category("User Interface")]
+	[TypeConverter(typeof(DataLookupConverter))]
+	[Description("Optional data lookup which will be used to display the drop-down box. If not specified, the lookup defined in DataConstant will be used.")]
+	[XmlReference("dataLookup", "DataLookupId")]
+	public IDataLookup DataLookup
+	{
+		get
+		{
                 ModelElementKey key = new ModelElementKey();
                 key.Id = this.DataLookupId;
 
                 return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
             }
-            set
-            {
+		set
+		{
                 if (value == null)
                 {
                     this.DataLookupId = Guid.Empty;
@@ -112,32 +112,31 @@ namespace Origam.Schema.MenuModel
                     this.DataLookupId = (Guid)value.PrimaryKey["Id"];
                 }
             }
-        }
+	}
 
-        [Browsable(false)]
-        public IDataLookup FinalLookup
-        {
-            get
-            {
+	[Browsable(false)]
+	public IDataLookup FinalLookup
+	{
+		get
+		{
                 return DataLookup ?? Constant.DataLookup;
             }
-        }
+	}
 
-        private bool _refreshPortalAfterSave = false;
-        [DefaultValue(false)]
-        [XmlAttribute("refreshPortalAfterSave")]
-        [Description("If true, the client will refresh its menu after saving data.")]
-        public bool RefreshPortalAfterSave
-        {
-            get
-            {
+	private bool _refreshPortalAfterSave = false;
+	[DefaultValue(false)]
+	[XmlAttribute("refreshPortalAfterSave")]
+	[Description("If true, the client will refresh its menu after saving data.")]
+	public bool RefreshPortalAfterSave
+	{
+		get
+		{
                 return _refreshPortalAfterSave;
             }
-            set
-            {
+		set
+		{
                 _refreshPortalAfterSave = value;
             }
-        }
-        #endregion
-    }
+	}
+	#endregion
 }

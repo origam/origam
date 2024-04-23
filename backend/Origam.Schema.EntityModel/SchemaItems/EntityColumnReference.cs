@@ -25,40 +25,40 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for EntityColumnReference.
+/// </summary>
+[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
+[HelpTopic("Field+Reference")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Field")]
+[ClassMetaVersion("6.0.0")]
+public class EntityColumnReference : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntityColumnReference.
-	/// </summary>
-	[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
-    [HelpTopic("Field+Reference")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Field")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityColumnReference : AbstractSchemaItem
-	{
-		public const string CategoryConst = "EntityColumnReference";
+	public const string CategoryConst = "EntityColumnReference";
 
-		public EntityColumnReference() : base() {}
+	public EntityColumnReference() : base() {}
 
-		public EntityColumnReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityColumnReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityColumnReference(Key primaryKey) : base(primaryKey)	{}
+	public EntityColumnReference(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override string Icon
+	public override string Icon
+	{
+		get
 		{
-			get
-			{
 				try
 				{
 					return this.Field.Icon;
@@ -68,23 +68,23 @@ namespace Origam.Schema.EntityModel
 					return "icon_field-reference.png";
 				}
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Field != null)
 				base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Field);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -100,34 +100,34 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		public Guid FieldId;
+	#region Properties
+	public Guid FieldId;
 
-		[Category("Reference")]
-		[TypeConverter(typeof(EntityColumnReferenceConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("field", "FieldId")]
-		public IDataEntityColumn Field
+	[Category("Reference")]
+	[TypeConverter(typeof(EntityColumnReferenceConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("field", "FieldId")]
+	public IDataEntityColumn Field
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.FieldId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
 			}
-			set
-			{
+		set
+		{
 				this.FieldId = (Guid)value.PrimaryKey["Id"];
 
 				if(this.Name == null)
@@ -135,7 +135,6 @@ namespace Origam.Schema.EntityModel
 					this.Name = this.Field.Name;
 				}
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

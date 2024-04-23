@@ -60,16 +60,16 @@ using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Service.Core;
 
-namespace Origam.Server.Pages
-{
-    class XsltPageRequestHandler : AbstractPageRequestHandler
-    {
-        private const string MIME_JSON = "application/json";
-        private const string MIME_HTML = "text/html";
-        private const string MIME_OCTET_STREAM = "application/octet-stream";
+namespace Origam.Server.Pages;
 
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
-        {
+class XsltPageRequestHandler : AbstractPageRequestHandler
+{
+    private const string MIME_JSON = "application/json";
+    private const string MIME_HTML = "text/html";
+    private const string MIME_OCTET_STREAM = "application/octet-stream";
+
+    public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+    {
             XsltDataPage xsltPage = page as XsltDataPage;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IXsltEngine transformer = null;
@@ -250,8 +250,8 @@ namespace Origam.Server.Pages
             }
         }
         
-        private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
-        {
+    private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
+    {
             DataTableCollection datatables = data.Tables;
             object profileId = SecurityTools.CurrentUserProfile().Id;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -264,8 +264,7 @@ namespace Origam.Server.Pages
                 if (entity.HasEntityAFieldDenyReadRule())
                 {
                     //we do this for disable contrains if column is AllowDBNull = false.
-                    //for allow field set Dbnull if has Deny Read rule. 
-                    dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
+                    //for allow field set Dbnull if has Deny Read rule.      dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
                     foreach (DataRow dataRow in dt.Rows)
                     {
                         RowSecurityState rowSecurity = RowSecurityStateBuilder.BuildWithoutRelationsAndActions(ruleEngine, dataRow);
@@ -282,8 +281,8 @@ namespace Origam.Server.Pages
             }
         }
 
-        private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
-        {
+    private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
+    {
             Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
             
             string bodyKey = null;
@@ -311,8 +310,8 @@ namespace Origam.Server.Pages
             return;
         }
 
-        private static void HandleDELETE(XsltDataPage xsltPage, DataSet data, Hashtable transformParams, RuleEngine ruleEngine)
-        {
+    private static void HandleDELETE(XsltDataPage xsltPage, DataSet data, Hashtable transformParams, RuleEngine ruleEngine)
+    {
             IXmlContainer xmldoc = new XmlContainer();
             xmldoc.Xml.LoadXml(data.GetXml());
             Validate(xmldoc, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
@@ -327,5 +326,4 @@ namespace Origam.Server.Pages
             core.DataService.Instance.StoreData(xsltPage.DataStructureId, data, false, null);
             return;
         }
-    }
 }

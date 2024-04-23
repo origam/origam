@@ -23,17 +23,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+public class MultiColumnAdapterFieldWrapperBuilder
 {
-	public class MultiColumnAdapterFieldWrapperBuilder
+	public static void Build(
+		XmlElement propertyElement, ControlSetItem control, 
+		string controlMember)
 	{
-		public static void Build(
-			XmlElement propertyElement, ControlSetItem control, 
-			string controlMember)
-		{
 			propertyElement.SetAttribute("Entity", "Object");
 			propertyElement.SetAttribute("Column", "Polymorph");
 			propertyElement.SetAttribute("ControlPropertyId", controlMember);
 		}
-	}
 }

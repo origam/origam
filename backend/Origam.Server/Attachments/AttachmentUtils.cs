@@ -45,12 +45,12 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Data;
 using Origam.Server;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class AttachmentUtils
 {
-    public class AttachmentUtils
+    public static DataRow LoadAttachmentInfo(object id)
     {
-        public static DataRow LoadAttachmentInfo(object id)
-        {
             DataSet result = core.DataService.Instance.LoadData(new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), new Guid("08a7d05e-c3e8-414e-a9a3-11bee9a26025"), Guid.Empty, Guid.Empty, null, "Attachment_parId", id);
             DataTable t = result.Tables["Attachment"];
             if (t.Rows.Count == 0)
@@ -60,9 +60,8 @@ namespace Origam.Server
             return t.Rows[0];
         }
 
-        public static void SaveAttachmentInfo(DataRow row)
-        {
+    public static void SaveAttachmentInfo(DataRow row)
+    {
             core.DataService.Instance.StoreData(new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), row.Table.DataSet, false, null);
         }
-    }
 }

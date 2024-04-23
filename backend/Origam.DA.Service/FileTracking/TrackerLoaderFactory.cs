@@ -22,29 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using Origam.DA.Service.MetaModelUpgrade;
 
-namespace Origam.DA.Service
-{
-    public class TrackerLoaderFactory
-    {
-        private readonly DirectoryInfo topDirectory;
-        private readonly ObjectFileDataFactory objectFileDataFactory;
-        private readonly OrigamFileFactory origamFileFactory;
-        private readonly FileInfo pathToIndexFile;
-        private readonly XmlFileDataFactory xmlFileDataFactory;
-        private OrigamXmlLoader xmlLoader;
-        private IBinFileLoader binLoader;
-        private readonly bool useBinFile;
-        private FilePersistenceIndex filePersistenceIndex;
-        private readonly IMetaModelUpgradeService metaModelUpgradeService;
+namespace Origam.DA.Service;
 
-        public TrackerLoaderFactory(DirectoryInfo topDirectory,
-            ObjectFileDataFactory objectFileDataFactory,
-            OrigamFileFactory origamFileFactory,
-            XmlFileDataFactory xmlFileDataFactory,
-            FileInfo pathToIndexFile, bool useBinFile,
-            FilePersistenceIndex filePersistence,
-            IMetaModelUpgradeService metaModelUpgradeService)
-        {
+public class TrackerLoaderFactory
+{
+    private readonly DirectoryInfo topDirectory;
+    private readonly ObjectFileDataFactory objectFileDataFactory;
+    private readonly OrigamFileFactory origamFileFactory;
+    private readonly FileInfo pathToIndexFile;
+    private readonly XmlFileDataFactory xmlFileDataFactory;
+    private OrigamXmlLoader xmlLoader;
+    private IBinFileLoader binLoader;
+    private readonly bool useBinFile;
+    private FilePersistenceIndex filePersistenceIndex;
+    private readonly IMetaModelUpgradeService metaModelUpgradeService;
+
+    public TrackerLoaderFactory(DirectoryInfo topDirectory,
+        ObjectFileDataFactory objectFileDataFactory,
+        OrigamFileFactory origamFileFactory,
+        XmlFileDataFactory xmlFileDataFactory,
+        FileInfo pathToIndexFile, bool useBinFile,
+        FilePersistenceIndex filePersistence,
+        IMetaModelUpgradeService metaModelUpgradeService)
+    {
             this.topDirectory = topDirectory;
             this.objectFileDataFactory = objectFileDataFactory;
             this.origamFileFactory = origamFileFactory;
@@ -56,26 +56,25 @@ namespace Origam.DA.Service
         }
 
         
-        internal OrigamXmlLoader XmlLoader {
-            get
-            {
+    internal OrigamXmlLoader XmlLoader {
+        get
+        {
                 return xmlLoader ?? (xmlLoader = new OrigamXmlLoader(
                            objectFileDataFactory, topDirectory, xmlFileDataFactory, metaModelUpgradeService));
             }
-        }
+    }
 
-        internal IBinFileLoader BinLoader {
-            get
-            {
+    internal IBinFileLoader BinLoader {
+        get
+        {
                 return binLoader ?? (binLoader = MakeBinLoader());
             }
-        }
+    }
 
-        private IBinFileLoader MakeBinLoader()
-        {
+    private IBinFileLoader MakeBinLoader()
+    {
             return useBinFile
                 ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile, filePersistenceIndex)
                 : new NullBinFileLoader();
         }
-    }
 }

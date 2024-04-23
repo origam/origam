@@ -31,71 +31,71 @@ using Origam.Extensions;
 using Origam.OrigamEngine;
 using Origam.Schema;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public class OrigamFile : ITrackeableFile
 {
-    public class OrigamFile : ITrackeableFile
-    {
-        internal const string IdAttribute = "id";
-        internal const string IsFolderAttribute = "isFolder";
-        internal const string ParentIdAttribute = "parentId";
-        internal const string TypeAttribute = "type";
-        public const string PackageFileName = PersistenceFiles.PackageFileName; 
-        public const string ReferenceFileName = PersistenceFiles.ReferenceFileName; 
-        public const string GroupFileName = PersistenceFiles.GroupFileName; 
-        public static readonly string OrigamExtension = PersistenceFiles.Extension;
-        public static readonly string ModelPersistenceUri =
-             $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";
-        public static readonly string PackageUri =
-            $"http://schemas.origam.com/Origam.Schema.Package/{Versions.GetCurrentClassVersion(typeof(Package))}";
-        public static readonly string GroupUri =
-           $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/{Versions.GetCurrentClassVersion(typeof(SchemaItemGroup))}";
-        public static readonly string PackageCategory ="package";
-        public static readonly string GroupCategory = "group";
+    internal const string IdAttribute = "id";
+    internal const string IsFolderAttribute = "isFolder";
+    internal const string ParentIdAttribute = "parentId";
+    internal const string TypeAttribute = "type";
+    public const string PackageFileName = PersistenceFiles.PackageFileName; 
+    public const string ReferenceFileName = PersistenceFiles.ReferenceFileName; 
+    public const string GroupFileName = PersistenceFiles.GroupFileName; 
+    public static readonly string OrigamExtension = PersistenceFiles.Extension;
+    public static readonly string ModelPersistenceUri =
+        $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";
+    public static readonly string PackageUri =
+        $"http://schemas.origam.com/Origam.Schema.Package/{Versions.GetCurrentClassVersion(typeof(Package))}";
+    public static readonly string GroupUri =
+        $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/{Versions.GetCurrentClassVersion(typeof(SchemaItemGroup))}";
+    public static readonly string PackageCategory ="package";
+    public static readonly string GroupCategory = "group";
 
-        private readonly OrigamFileManager origamFileManager;
-        private readonly ExternalFileManager externalFileManger;
-        private readonly OrigamXmlManager origamXmlManager;
-        private OrigamPath path;
+    private readonly OrigamFileManager origamFileManager;
+    private readonly ExternalFileManager externalFileManger;
+    private readonly OrigamXmlManager origamXmlManager;
+    private OrigamPath path;
  
-        private bool IsInAGroup => ParentFolderIds.CointainsNoEmptyIds;
+    private bool IsInAGroup => ParentFolderIds.CointainsNoEmptyIds;
 
-        public OrigamXmlDocument DeferredSaveDocument
-        {
-            get => origamXmlManager.OpenDocument;
-            set => origamXmlManager.OpenDocument = value;
-        }
+    public OrigamXmlDocument DeferredSaveDocument
+    {
+        get => origamXmlManager.OpenDocument;
+        set => origamXmlManager.OpenDocument = value;
+    }
 
-        public IEnumerable<FileInfo> ExternalFiles => externalFileManger
-            .Files
-            .Select(filePath => new FileInfo(filePath));
-        public OrigamPath Path
+    public IEnumerable<FileInfo> ExternalFiles => externalFileManger
+        .Files
+        .Select(filePath => new FileInfo(filePath));
+    public OrigamPath Path
+    {
+        get => path;
+        set
         {
-            get => path;
-            set
-            {
                 path = value;
                 origamXmlManager.Path = value;
             }
-        }
+    }
         
-        protected virtual DirectoryInfo ReferenceFileDirectory =>
-            Path.Directory;
+    protected virtual DirectoryInfo ReferenceFileDirectory =>
+        Path.Directory;
         
-        public string FileHash { get; private set; }
-        public IDictionary<Guid, PersistedObjectInfo> ContainedObjects =>
-            origamXmlManager.ContainedObjects;
-        public ParentFolders ParentFolderIds =>
-            origamXmlManager.ParentFolderIds;
+    public string FileHash { get; private set; }
+    public IDictionary<Guid, PersistedObjectInfo> ContainedObjects =>
+        origamXmlManager.ContainedObjects;
+    public ParentFolders ParentFolderIds =>
+        origamXmlManager.ParentFolderIds;
 
-        private bool IsEmpty => ContainedObjects.Count == 0;
+    private bool IsEmpty => ContainedObjects.Count == 0;
         
-        public override string ToString() => Path.Absolute;
+    public override string ToString() => Path.Absolute;
 
-        public OrigamFile(OrigamPath path, IDictionary<string,Guid> parentFolderIds,
-            OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-            FileEventQueue fileEventQueue,
-            bool isAFullyWrittenFile = false )
-        {
+    public OrigamFile(OrigamPath path, IDictionary<string,Guid> parentFolderIds,
+        OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
+        FileEventQueue fileEventQueue,
+        bool isAFullyWrittenFile = false )
+    {
             this.origamFileManager = origamFileManager;
             this.path = path;
             externalFileManger = new ExternalFileManager(this, origamPathFactory, fileEventQueue);
@@ -109,33 +109,33 @@ namespace Origam.DA.Service
                 externalFileManger);
         }
 
-        public OrigamFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
-            OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-            FileEventQueue fileEventQueue, string fileHash):
-            this( path, parentFolderIds, origamFileManager,
-             origamPathFactory, fileEventQueue)
-        {           
+    public OrigamFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
+        OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
+        FileEventQueue fileEventQueue, string fileHash):
+        this( path, parentFolderIds, origamFileManager,
+            origamPathFactory, fileEventQueue)
+    {           
             FileHash = fileHash;
         }
 
-        public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider, bool useCache) => 
-            origamXmlManager.LoadObject(id, provider, useCache);
+    public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider, bool useCache) => 
+        origamXmlManager.LoadObject(id, provider, useCache);
 
-        public void RemoveInstance(Guid id)
-        {
+    public void RemoveInstance(Guid id)
+    {
             origamXmlManager.RemoveInstance(id);
         }
 
-        public virtual void WriteInstance(IFilePersistent instance)
-        {
+    public virtual void WriteInstance(IFilePersistent instance)
+    {
             origamXmlManager.WriteInstance(instance);
         }
 
-        public object GetFromExternalFile(Guid instanceId, string fieldName) => 
-            externalFileManger.GetValue(instanceId, fieldName);
+    public object GetFromExternalFile(Guid instanceId, string fieldName) => 
+        externalFileManger.GetValue(instanceId, fieldName);
 
-        public static bool IsPersistenceFile(FileInfo fileInfo)
-        {
+    public static bool IsPersistenceFile(FileInfo fileInfo)
+    {
             var ignoreCase = StringComparison.InvariantCultureIgnoreCase;
             return
                 IsOrigamFile(fileInfo)||
@@ -144,22 +144,22 @@ namespace Origam.DA.Service
                 string.Equals(fileInfo.Name, GroupFileName, ignoreCase) ;
         }
         
-        public static bool IsPackageFile(OrigamPath origamPath)
-        {
+    public static bool IsPackageFile(OrigamPath origamPath)
+    {
             return string.Equals(
                 origamPath.FileName,
                 PackageFileName,
                 StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public static bool IsOrigamFile(FileInfo fileInfo)
-        {
+    public static bool IsOrigamFile(FileInfo fileInfo)
+    {
             var ignoreCase = StringComparison.InvariantCultureIgnoreCase;
             return string.Equals(fileInfo.Extension, OrigamExtension, ignoreCase);
         }
 
-        public void FinalizeSave()    
-        {
+    public void FinalizeSave()    
+    {
             externalFileManger.UpdateFilesOnDisc();
             if (IsEmpty)
             {
@@ -172,18 +172,18 @@ namespace Origam.DA.Service
             origamXmlManager.InvalidateCache();
         }
 
-        public void ClearCache()
-        {
+    public void ClearCache()
+    {
             origamXmlManager.InvalidateCache();
         }
 
-        public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)
-        {
+    public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)
+    {
             return externalFileManger.GetExternalFile(externalFile);
         }
 
-        private void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
-        {
+    private void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
+    {
             if (!IsInAGroup) return;
 
             bool referenceFileIsMissing = !directory
@@ -198,14 +198,14 @@ namespace Origam.DA.Service
                     directory);
             }
         }
-        public void UpdateHash()
-        {
+    public void UpdateHash()
+    {
             FileHash =  new FileInfo(Path.Absolute).GetFileBase64Hash();
         }
 
-        private void WriteGroupReferenceFile
-            (ParentFolders parentFolderIds, DirectoryInfo directory)
-        {
+    private void WriteGroupReferenceFile
+        (ParentFolders parentFolderIds, DirectoryInfo directory)
+    {
             List<string> contentsList= new List<string>();
             contentsList.Add("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             contentsList.Add($"<x:file xmlns:x=\"{ModelPersistenceUri}\">");
@@ -218,9 +218,8 @@ namespace Origam.DA.Service
             origamFileManager.WriteReferenceFileToDisc(fullPath, contents, parentFolderIds);
         }
 
-        public void RemoveFromCache(Guid instanceId)
-        {
+    public void RemoveFromCache(Guid instanceId)
+    {
             origamXmlManager.RemoveFromCache(instanceId);
         }
-    }
 }

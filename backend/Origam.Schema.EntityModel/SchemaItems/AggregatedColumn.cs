@@ -26,47 +26,47 @@ using System.Xml.Serialization;
 using Origam.DA.EntityModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+public enum AggregationType
 {
-	public enum AggregationType
+	None = 0,
+	Count = 1,
+	Sum = 2,
+	Average = 3,
+	Minimum = 4,
+	Maximum = 5,
+	CumulativeSum = 6
+}
+
+[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
+[HelpTopic("Aggregated+Field")]
+[DefaultProperty("Relation")]
+[ClassMetaVersion("6.0.0")]
+public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
+{
+	public AggregatedColumn() {}
+
+	public AggregatedColumn(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public AggregatedColumn(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractDataEntityColumn Members
+
+	public override string FieldType => "AggregatedColumn";
+
+	public override bool ReadOnly => true;
+
+	public override void GetExtraDependencies(
+		System.Collections.ArrayList dependencies)
 	{
-		None = 0,
-		Count = 1,
-		Sum = 2,
-		Average = 3,
-		Minimum = 4,
-		Maximum = 5,
-		CumulativeSum = 6
-	}
-
-	[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
-    [HelpTopic("Aggregated+Field")]
-    [DefaultProperty("Relation")]
-    [ClassMetaVersion("6.0.0")]
-	public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
-	{
-		public AggregatedColumn() {}
-
-		public AggregatedColumn(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public AggregatedColumn(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractDataEntityColumn Members
-
-		public override string FieldType => "AggregatedColumn";
-
-		public override bool ReadOnly => true;
-
-		public override void GetExtraDependencies(
-			System.Collections.ArrayList dependencies)
-		{
 			dependencies.Add(Field);
 			dependencies.Add(Relation);
 			base.GetExtraDependencies (dependencies);
 		}
 
-        public override void UpdateReferences()
-        {
+	public override void UpdateReferences()
+	{
             if(Relation != null)
             {
                 foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
@@ -83,66 +83,66 @@ namespace Origam.Schema.EntityModel
             }
             base.UpdateReferences();
         }
-        #endregion
+	#endregion
 
-		#region Properties
-		private AggregationType _aggregationType = AggregationType.Sum;
+	#region Properties
+	private AggregationType _aggregationType = AggregationType.Sum;
 
 		
-		[NoDuplicateNamesInParentRule]
-		[Category("(Schema Item)")]
-		[StringNotEmptyModelElementRule]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("name")]
-		public override string Name
-		{
-			get => base.Name; 
-			set => base.Name = value;
-		}
+	[NoDuplicateNamesInParentRule]
+	[Category("(Schema Item)")]
+	[StringNotEmptyModelElementRule]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("name")]
+	public override string Name
+	{
+		get => base.Name; 
+		set => base.Name = value;
+	}
 		
-		[Category("Aggregation")]
-		[NotNullModelElementRule()]
-		[NoNestedCountAggregationsRule]
-        [XmlAttribute("aggregationType")]
-		public AggregationType AggregationType
-		{
-			get => _aggregationType;
-			set => _aggregationType = value;
-		}
+	[Category("Aggregation")]
+	[NotNullModelElementRule()]
+	[NoNestedCountAggregationsRule]
+	[XmlAttribute("aggregationType")]
+	public AggregationType AggregationType
+	{
+		get => _aggregationType;
+		set => _aggregationType = value;
+	}
 
-		public Guid RelationId;
+	public Guid RelationId;
 
-		[Category("Aggregation")]
-		[TypeConverter(typeof(EntityRelationConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("relation", "RelationId")]
-		public IAssociation Relation
-		{
-			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+	[Category("Aggregation")]
+	[TypeConverter(typeof(EntityRelationConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("relation", "RelationId")]
+	public IAssociation Relation
+	{
+		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
 				typeof(AbstractSchemaItem), new ModelElementKey(RelationId)) 
-				as IAssociation;
-			set
-			{
+			as IAssociation;
+		set
+		{
 				RelationId = (Guid)value.PrimaryKey["Id"];
                 Field = null;
 			}
-		}
+	}
 		
-		public Guid ColumnId;
+	public Guid ColumnId;
 
-		[Category("Aggregation")]
-		[TypeConverter(typeof(EntityRelationColumnsConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("field", "ColumnId")]
-        public IDataEntityColumn Field
-		{
-			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+	[Category("Aggregation")]
+	[TypeConverter(typeof(EntityRelationColumnsConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+	[XmlReference("field", "ColumnId")]
+	public IDataEntityColumn Field
+	{
+		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
 				typeof(AbstractSchemaItem), new ModelElementKey(ColumnId)) 
-				as IDataEntityColumn;
-			set
-			{
+			as IDataEntityColumn;
+		set
+		{
 				ColumnId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				if(Field == null)
@@ -154,19 +154,19 @@ namespace Origam.Schema.EntityModel
                 Name = AggregationType + Field.Name;
                 Caption = Field.Caption;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Convert
-		public override bool CanConvertTo(Type type)
-		{
+	#region Convert
+	public override bool CanConvertTo(Type type)
+	{
 			return (type == typeof(FieldMappingItem) 
 			        || type == typeof(DetachedField)) 
 			       && (ParentItem is IDataEntity);
 		}
 
-		protected override ISchemaItem ConvertTo<T>()
-		{
+	protected override ISchemaItem ConvertTo<T>()
+	{
 			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
 			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
@@ -187,7 +187,6 @@ namespace Origam.Schema.EntityModel
 			FinishConversion(this, converted);
 			return converted;
 		}
-		#endregion
+	#endregion
 
-	}
 }

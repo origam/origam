@@ -27,35 +27,35 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+
+/// <summary>
+/// Summary description for AbstractUpdateScriptActivity.
+/// </summary>
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 {
-    /// <summary>
-    /// Summary description for AbstractUpdateScriptActivity.
-    /// </summary>
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
-	{
-		public const string CategoryConst = "DeploymentUpdateScriptActivity";
+	public const string CategoryConst = "DeploymentUpdateScriptActivity";
 
-		public AbstractUpdateScriptActivity() : base() {}
+	public AbstractUpdateScriptActivity() : base() {}
 
-		public AbstractUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public AbstractUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public AbstractUpdateScriptActivity(Key primaryKey) : base(primaryKey)	{}
+	public AbstractUpdateScriptActivity(Key primaryKey) : base(primaryKey)	{}
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override bool CanMove(IBrowserNode2 newNode)
-		{
+	public override bool CanMove(IBrowserNode2 newNode)
+	{
 			DeploymentVersion newVersion = newNode as DeploymentVersion;
 			if(newVersion != null)
 			{
@@ -64,36 +64,36 @@ namespace Origam.Schema.DeploymentModel
 			return base.CanMove (newNode);
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		private int _activityOrder;
-		[Category("Update Script Activity")]
-		[XmlAttribute("activityOrder")]
-		public int ActivityOrder
+	#region Properties
+	private int _activityOrder;
+	[Category("Update Script Activity")]
+	[XmlAttribute("activityOrder")]
+	public int ActivityOrder
+	{
+		get
 		{
-			get
-			{
 				return _activityOrder;
 			}
-			set
-			{
+		set
+		{
 				_activityOrder = value;
 			}
-		}
+	}
 
-		internal DeploymentVersion Version
+	internal DeploymentVersion Version
+	{
+		get
 		{
-			get
-			{
 				return this.ParentItem as DeploymentVersion;
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region IComparable Members
-		public override int CompareTo(object obj)
-		{
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
 			if(obj is AbstractUpdateScriptActivity)
 			{
 				AbstractUpdateScriptActivity compared = obj as AbstractUpdateScriptActivity;
@@ -118,6 +118,5 @@ namespace Origam.Schema.DeploymentModel
 			}
 		}
 
-		#endregion
-	}
+	#endregion
 }

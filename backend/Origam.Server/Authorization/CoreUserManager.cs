@@ -29,37 +29,37 @@ using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Authorization
-{
-    public class CoreUserManager<TUser> : UserManager<IOrigamUser>
-    {
-        private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly UserStore userStore;
+namespace Origam.Server.Authorization;
 
-        public CoreUserManager(
-            IUserStore<IOrigamUser> store, 
-            IOptions<IdentityOptions> optionsAccessor, 
-            IPasswordHasher<IOrigamUser> passwordHasher, 
-            IEnumerable<IUserValidator<IOrigamUser>> userValidators, 
-            IEnumerable<IPasswordValidator<IOrigamUser>> passwordValidators, 
-            ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, 
-            IServiceProvider services, 
-            ILogger<UserManager<IOrigamUser>> logger,
-            IStringLocalizer<SharedResources> localizer) : 
-            base(store, optionsAccessor, passwordHasher, userValidators, 
-                passwordValidators, keyNormalizer, errors, services, logger)
-        {
+public class CoreUserManager<TUser> : UserManager<IOrigamUser>
+{
+    private readonly IStringLocalizer<SharedResources> localizer;
+    private readonly UserStore userStore;
+
+    public CoreUserManager(
+        IUserStore<IOrigamUser> store, 
+        IOptions<IdentityOptions> optionsAccessor, 
+        IPasswordHasher<IOrigamUser> passwordHasher, 
+        IEnumerable<IUserValidator<IOrigamUser>> userValidators, 
+        IEnumerable<IPasswordValidator<IOrigamUser>> passwordValidators, 
+        ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, 
+        IServiceProvider services, 
+        ILogger<UserManager<IOrigamUser>> logger,
+        IStringLocalizer<SharedResources> localizer) : 
+        base(store, optionsAccessor, passwordHasher, userValidators, 
+            passwordValidators, keyNormalizer, errors, services, logger)
+    {
             this.localizer = localizer;
             this.userStore = store as UserStore;
         }
 
-        // invoked, when e-mail is changed (comes also with EmailConfirmed change)
-        // since we're going to change only OrigamUser - Only EmailConfirmed is
-        // relevant and this info comes in IsApproved
+    // invoked, when e-mail is changed (comes also with EmailConfirmed change)
+    // since we're going to change only OrigamUser - Only EmailConfirmed is
+    // relevant and this info comes in IsApproved
 #pragma warning disable 1998
-        public override async Task<IdentityResult> UpdateAsync(IOrigamUser user)
+    public override async Task<IdentityResult> UpdateAsync(IOrigamUser user)
 #pragma warning restore 1998
-        {
+    {
             var origamUserDataSet = UserStore.GetOrigamUserDataSet(
                 UserStore.GET_ORIGAM_USER_BY_USER_NAME,
                 "OrigamUser_parUserName", user.UserName, user.TransactionId);
@@ -82,9 +82,8 @@ namespace Origam.Server.Authorization
             return IdentityResult.Success;
         }
 
-        public Task<IOrigamUser> FindByNameAsync(string name, string transactionId)
-        {
+    public Task<IOrigamUser> FindByNameAsync(string name, string transactionId)
+    {
            return userStore.FindByNameAsync(name, transactionId, CancellationToken);
         }
-    }
 }

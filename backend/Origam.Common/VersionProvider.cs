@@ -21,24 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.OrigamEngine
+namespace Origam.OrigamEngine;
+
+public static class VersionProvider
 {
-    public static class VersionProvider
+    // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
+    public static readonly string CurrentModelMetaVersion = "5.0.0"; 
+        
+    // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
+    public static Version CurrentModelMeta { get; } = 
+        new Version(CurrentModelMetaVersion);
+
+    public static readonly string CurrentPersistenceMetaVersion = "1.0.0";
+    public static Version CurrentPersistenceMeta { get; } = 
+        new Version(CurrentPersistenceMetaVersion);
+        
+
+    public static bool IsCurrentMeta(string versionString)
     {
-        // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
-        public static readonly string CurrentModelMetaVersion = "5.0.0"; 
-        
-        // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
-        public static Version CurrentModelMeta { get; } = 
-            new Version(CurrentModelMetaVersion);
-
-        public static readonly string CurrentPersistenceMetaVersion = "1.0.0";
-        public static Version CurrentPersistenceMeta { get; } = 
-            new Version(CurrentPersistenceMetaVersion);
-        
-
-        public static bool IsCurrentMeta(string versionString)
-        {
             if (string.IsNullOrEmpty(versionString)) return false;
             Version version = new Version(versionString);
             if (version.Build == -1)
@@ -48,5 +48,4 @@ namespace Origam.OrigamEngine
             return version.Equals(CurrentModelMeta);
         }
 
-    }
 }

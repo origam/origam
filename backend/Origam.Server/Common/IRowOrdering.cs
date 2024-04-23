@@ -21,14 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public interface IRowOrdering
 {
-    public interface IRowOrdering
-    {
-        string ColumnId { get; set; }
+    string ColumnId { get; set; }
 
-        string Direction { get; set; }
+    string Direction { get; set; }
 
-        Guid LookupId { get; set; }
-    }
+    Guid LookupId { get; set; }
 }

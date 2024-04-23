@@ -19,29 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+/// <summary>
+/// Summary description for FilterOperator.
+/// </summary>
+public enum FilterOperator
 {
-	/// <summary>
-	/// Summary description for FilterOperator.
-	/// </summary>
-	public enum FilterOperator
-	{
-		None = 0,
-		Equals = 1,
-		Between = 2, 
-		BeginsWith = 3,
-		EndsWith = 4,
-		Contains = 5,
-		GreaterThan = 6,
-		LessThan = 7,
-		GreaterOrEqualThan = 8,
-		LessOrEqualThan = 9,
-		NotEquals = 10,
-		NotBetween = 11,
-		NotBeginsWith = 12,
-		NotEndsWith = 13,
-		NotContains = 14,
-		IsNull = 15, 
-		NotIsNull = 16
-	}
+	None = 0,
+	Equals = 1,
+	Between = 2, 
+	BeginsWith = 3,
+	EndsWith = 4,
+	Contains = 5,
+	GreaterThan = 6,
+	LessThan = 7,
+	GreaterOrEqualThan = 8,
+	LessOrEqualThan = 9,
+	NotEquals = 10,
+	NotBetween = 11,
+	NotBeginsWith = 12,
+	NotEndsWith = 13,
+	NotContains = 14,
+	IsNull = 15, 
+	NotIsNull = 16
 }

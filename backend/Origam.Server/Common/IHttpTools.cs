@@ -22,12 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Server.Pages;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public interface IHttpTools
 {
-    public interface IHttpTools
-    {
-        void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview);
-        void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview, string overrideContentType);
-        string GetFileDisposition(IRequestWrapper request, string fileName);
-    }
+    void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview);
+    void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview, string overrideContentType);
+    string GetFileDisposition(IRequestWrapper request, string fileName);
 }

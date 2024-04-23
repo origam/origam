@@ -21,31 +21,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
-{
-    /// <summary>
-    /// Use this attribute on all classes that require help for the users.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class HelpTopicAttribute : Attribute
-    {
-        private string _topic;
+namespace Origam;
 
-        /// <summary>
-        /// The constructor for the Topic attribute.
-        /// </summary>
-        /// <param name="topic">Help topic (part of url that will be appended to the base Help url).</param>
-        public HelpTopicAttribute(string topic)
-        {
+/// <summary>
+/// Use this attribute on all classes that require help for the users.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+public sealed class HelpTopicAttribute : Attribute
+{
+    private string _topic;
+
+    /// <summary>
+    /// The constructor for the Topic attribute.
+    /// </summary>
+    /// <param name="topic">Help topic (part of url that will be appended to the base Help url).</param>
+    public HelpTopicAttribute(string topic)
+    {
             _topic = topic;
         }
 
-        /// <summary>
-        /// The name of the data structure entity used to store instances of this class.
-        /// </summary>
-        public string Topic
-        {
-            get { return _topic; }
-        }
+    /// <summary>
+    /// The name of the data structure entity used to store instances of this class.
+    /// </summary>
+    public string Topic
+    {
+        get { return _topic; }
     }
 }

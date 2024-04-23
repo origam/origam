@@ -28,112 +28,110 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+[SchemaItemDescription("Client Script Invocation", "Scripts", 
+	"icon_client-script-invocation.png")]
+[HelpTopic("Client+Script")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 {
+	public const string CategoryConst = "EntityWorkflowActionScriptCall";
 
-	[SchemaItemDescription("Client Script Invocation", "Scripts", 
-        "icon_client-script-invocation.png")]
-    [HelpTopic("Client+Script")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityWorkflowActionScriptCall : AbstractSchemaItem
+	public EntityWorkflowActionScriptCall() : base() {}
+
+	public EntityWorkflowActionScriptCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public EntityWorkflowActionScriptCall(Key primaryKey) : base(primaryKey)	{}
+
+	public override string ItemType
 	{
-		public const string CategoryConst = "EntityWorkflowActionScriptCall";
-
-		public EntityWorkflowActionScriptCall() : base() {}
-
-		public EntityWorkflowActionScriptCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityWorkflowActionScriptCall(Key primaryKey) : base(primaryKey)	{}
-
-		public override string ItemType
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		private string _roles = "";
-		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("roles")]
-		public string Roles
+	private string _roles = "";
+	[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
+	}
 
-		private string _features;
-		[Category("Condition")]
-		[XmlAttribute("features")]
-        public string Features
+	private string _features;
+	[Category("Condition")]
+	[XmlAttribute("features")]
+	public string Features
+	{
+		get
 		{
-			get
-			{
 				return _features;
 			}
-			set
-			{
+		set
+		{
 				_features = value;
 			}
-		}		
+	}		
 
-		public Guid RuleId;
+	public Guid RuleId;
 
-		[Category("Condition")]
-		[TypeConverter(typeof(EntityRuleConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlReference("rule", "RuleId")]
-		public IEntityRule Rule
+	[Category("Condition")]
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("rule", "RuleId")]
+	public IEntityRule Rule
+	{
+		get
 		{
-			get
-			{
                 return (IEntityRule)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), new ModelElementKey(RuleId));
 			}
-			set
-			{
+		set
+		{
 				RuleId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		private int _order = 0;
-		[Category("Script")]
-		[XmlAttribute("order")]
-		public int Order
+	private int _order = 0;
+	[Category("Script")]
+	[XmlAttribute("order")]
+	public int Order
+	{
+		get
 		{
-			get
-			{
 				return _order;
 			}
-			set
-			{
+		set
+		{
 				_order = value;
 			}
-		}
+	}
 
-		private string _script;
+	private string _script;
 
-		[Category("Script")]
-		[XmlAttribute("script")]
-		public string Script
-		{
-			get { return _script; }
-			set { _script = value; }
-		}
+	[Category("Script")]
+	[XmlAttribute("script")]
+	public string Script
+	{
+		get { return _script; }
+		set { _script = value; }
+	}
 
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			if(Rule != null) dependencies.Add(Rule);
 			base.GetExtraDependencies (dependencies);
 		}
-	}
 }

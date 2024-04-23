@@ -22,15 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Data;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Summary description for DataBindingTools.
+/// </summary>
+public class DataBindingTools
 {
-	/// <summary>
-	/// Summary description for DataBindingTools.
-	/// </summary>
-	public class DataBindingTools
+	public static DataRow CurrentRow(Control control, string property)
 	{
-		public static DataRow CurrentRow(Control control, string property)
-		{
 			if(control.Parent is AsDataGrid)
 			{
 				AsDataGrid grid = control.Parent as AsDataGrid;
@@ -57,9 +57,9 @@ namespace Origam.Gui.Win
 			}
 		}
 
-        public static void UpdateBindedFormComponent(
-            BindingsCollection bindings, string mappingName)
-        {
+	public static void UpdateBindedFormComponent(
+		BindingsCollection bindings, string mappingName)
+	{
             foreach (Binding binding in bindings)
             {
                 if (binding.BindingMemberInfo.BindingField == mappingName)
@@ -69,5 +69,4 @@ namespace Origam.Gui.Win
                 }
             }
         }
-	}
 }

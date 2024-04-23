@@ -37,34 +37,34 @@ using System.Collections.Generic;
 using Origam.Rule.Xslt;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
-{
-	/// <summary>
-	/// Summary description for TransformationAgent.
-	/// </summary>
-	public class TransformationAgent : AbstractServiceAgent
-	{
-		private static readonly ILog log = LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-        IXsltEngine _transformer = null;
+namespace Origam.Workflow;
 
-		public TransformationAgent()
-		{
+/// <summary>
+/// Summary description for TransformationAgent.
+/// </summary>
+public class TransformationAgent : AbstractServiceAgent
+{
+	private static readonly ILog log = LogManager.GetLogger(
+		MethodBase.GetCurrentMethod().DeclaringType);
+	IXsltEngine _transformer = null;
+
+	public TransformationAgent()
+	{
 			this.PersistenceProviderChanged += new EventHandler(TransformationAgent_PersistenceProviderChanged);
 		}
 
-		#region IServiceAgent Members
-		private object _result;
-		public override object Result
+	#region IServiceAgent Members
+	private object _result;
+	public override object Result
+	{
+		get
 		{
-			get
-			{
 				return _result;
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			switch(this.MethodName)
 			{
 				case "Transform":
@@ -107,8 +107,8 @@ namespace Origam.Workflow
 			}
 		}
 
-        private void TransformText()
-        {
+	private void TransformText()
+	{
             ValidateTransformTextParameters();
             if(Parameters.Contains("XsltEngineType") 
             && (Parameters["XsltEngineType"] is int))
@@ -135,8 +135,8 @@ namespace Origam.Workflow
                 validateOnly);
         }
 
-        private void TransformData()
-        {
+	private void TransformData()
+	{
             IDataReader dataReader = null;
             Stream output = null;
             if(log.IsDebugEnabled)
@@ -189,8 +189,8 @@ namespace Origam.Workflow
             }
             _result = null;
         }
-        private IDataReader GetDataReader()
-        {
+	private IDataReader GetDataReader()
+	{
             DataStructureReference dataStructureReference;
             dataStructureReference = Parameters["DataStructure"] 
                 as DataStructureReference;
@@ -213,8 +213,8 @@ namespace Origam.Workflow
                 query, SecurityManager.CurrentPrincipal, TransactionId);
         }
 
-        private void ValidateTransformTextParameters()
-        {
+	private void ValidateTransformTextParameters()
+	{
             if(!(Parameters["Data"] is IXmlContainer))
             {
                 throw new InvalidCastException(
@@ -230,8 +230,8 @@ namespace Origam.Workflow
                     ResourceUtils.GetString("ErrorNotHashtable"));
         }
 
-        private void ValidateTransformDataParameters()
-        {
+	private void ValidateTransformDataParameters()
+	{
             DataStructureReference dataStructureReference;
             dataStructureReference = Parameters["DataStructure"] 
                 as DataStructureReference;
@@ -269,8 +269,8 @@ namespace Origam.Workflow
             }
         }
 
-		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
-		{
+	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	{
 			IList<string> result = new List<string>();
 			XslTransformation transformation = null;
 			ServiceMethodCallTask task = item as ServiceMethodCallTask;
@@ -287,8 +287,8 @@ namespace Origam.Workflow
 			return result;
 		}
 
-		private XslTransformation ResolveServiceMethodCallTask(ServiceMethodCallTask task)
-		{
+	private XslTransformation ResolveServiceMethodCallTask(ServiceMethodCallTask task)
+	{
 			AbstractSchemaItem tParam = task.GetChildByName("XslScript");
 			if(tParam.ChildItems.Count == 1)
 			{
@@ -300,9 +300,9 @@ namespace Origam.Workflow
 			}
 			return null;
 		}
-		#endregion
-        private void InitializeTransformer(XsltEngineType xsltEngineType)
-        {
+	#endregion
+	private void InitializeTransformer(XsltEngineType xsltEngineType)
+	{
             IPersistenceService persistence 
                 = ServiceManager.Services.GetService(
                     typeof(IPersistenceService)) as IPersistenceService;
@@ -314,8 +314,8 @@ namespace Origam.Workflow
 			_transformer.TraceStepId = this.TraceStepId;
         }
 
-        private void InitializeTransformer(Guid transformationId)
-        {
+	private void InitializeTransformer(Guid transformationId)
+	{
             IPersistenceService persistence 
                 = ServiceManager.Services.GetService(
                     typeof(IPersistenceService)) as IPersistenceService;
@@ -335,12 +335,11 @@ namespace Origam.Workflow
 			_transformer.TraceStepId = this.TraceStepId;
         }
 
-		private void TransformationAgent_PersistenceProviderChanged(object sender, EventArgs e)
-		{
+	private void TransformationAgent_PersistenceProviderChanged(object sender, EventArgs e)
+	{
             if(_transformer != null)
             {
                 _transformer.PersistenceProvider = this.PersistenceProvider;
             }
 		}
-	}
 }

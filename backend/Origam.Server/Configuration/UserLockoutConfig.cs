@@ -23,23 +23,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.Configuration;
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+
+public class UserLockoutConfig
 {
-    public class UserLockoutConfig
+    private static readonly int oneThousandYearsInMinutes = 60 * 24 * 365 * 1000;
+    public int LockoutTimeMinutes { get; set; } = oneThousandYearsInMinutes;
+    public int MaxFailedAccessAttempts { get; set; } = 5;
+
+
+    public UserLockoutConfig()
     {
-        private static readonly int oneThousandYearsInMinutes = 60 * 24 * 365 * 1000;
-        public int LockoutTimeMinutes { get; set; } = oneThousandYearsInMinutes;
-        public int MaxFailedAccessAttempts { get; set; } = 5;
-
-
-        public UserLockoutConfig()
-        {
         }
-        public UserLockoutConfig(IConfiguration configuration)
-        {
+    public UserLockoutConfig(IConfiguration configuration)
+    {
             var section = configuration.GetSection("UserLockoutConfig");
             LockoutTimeMinutes = section.GetValue("LockoutTimeMinutes", oneThousandYearsInMinutes);
             MaxFailedAccessAttempts = section.GetValue<int>("MaxFailedAccessAttempts");
         }
-    }
 }

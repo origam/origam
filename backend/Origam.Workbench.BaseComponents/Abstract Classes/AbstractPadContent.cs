@@ -23,93 +23,91 @@ using System;
 using WeifenLuo.WinFormsUI.Docking;
 using Origam.UI;
 
-namespace Origam.Workbench
-{
-	public class AbstractPadContent : DockContent, IPadContent
-	{
-		string title;
-		string icon;
-		string category = null;
-		string[] shortcut = null;
-		
-		public AbstractPadContent() {}
+namespace Origam.Workbench;
 
-		public AbstractPadContent(string title) : this(title, null)
-		{
+public class AbstractPadContent : DockContent, IPadContent
+{
+	string title;
+	string icon;
+	string category = null;
+	string[] shortcut = null;
+		
+	public AbstractPadContent() {}
+
+	public AbstractPadContent(string title) : this(title, null)
+	{
 		}
 		
-		public AbstractPadContent(string title, string iconResoureName)
-		{
+	public AbstractPadContent(string title, string iconResoureName)
+	{
 			this.title = title;
 			this.icon  = iconResoureName;
 		}
 		
-		public string Category 
+	public string Category 
+	{
+		get 
 		{
-			get 
-			{
 				return category;
 			}
-			set 
-			{
+		set 
+		{
 				category = value;
 			}
-		}
+	}
 		
-		public string[] Shortcut 
+	public string[] Shortcut 
+	{
+		get 
 		{
-			get 
-			{
 				return shortcut;
 			}
-			set 
-			{
+		set 
+		{
 				shortcut = value;
 			}
-		}
+	}
 		
-		public virtual string Title 
+	public virtual string Title 
+	{
+		get 
 		{
-			get 
-			{
 				return this.Name;
 			}
-		}
+	}
 		
-		public virtual string IconResource
+	public virtual string IconResource
+	{
+		get 
 		{
-			get 
-			{
 				return icon;
 			}
-		}
+	}
 
-		public virtual void RedrawContent()
-		{
+	public virtual void RedrawContent()
+	{
 		}
 		
-		protected virtual void OnTitleChanged(EventArgs e)
-		{
+	protected virtual void OnTitleChanged(EventArgs e)
+	{
 			if (TitleChanged != null) 
 			{
 				TitleChanged(this, e);
 			}
 		}
 		
-		protected virtual void OnIconChanged(EventArgs e)
-		{
+	protected virtual void OnIconChanged(EventArgs e)
+	{
 			if (IconChanged != null) 
 			{
 				IconChanged(this, e);
 			}
 		}
 
-		private void InitializeComponent()
-		{
-			// 
-			// AbstractPadContent
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+	private void InitializeComponent()
+	{
+			// 		// AbstractPadContent
+			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 273);
 			this.DockAreas = ((DockAreas)(((((DockAreas.Float | DockAreas.DockLeft) 
 				| DockAreas.DockRight) 
@@ -119,16 +117,15 @@ namespace Origam.Workbench
 
 		}
 		
-		public event EventHandler TitleChanged;
-		public event EventHandler IconChanged;
+	public event EventHandler TitleChanged;
+	public event EventHandler IconChanged;
 		
-		public void BringPadToFront()
-		{
+	public void BringPadToFront()
+	{
 //			if (!WorkbenchSingleton.Workbench.WorkbenchLayout.IsVisible(this)) 
 //			{
 //				WorkbenchSingleton.Workbench.WorkbenchLayout.ShowPad(this);
 //			}
 //			WorkbenchSingleton.Workbench.WorkbenchLayout.ActivatePad(this);
 		}
-	}
 }

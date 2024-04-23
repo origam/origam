@@ -24,49 +24,49 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 
-namespace Origam
+namespace Origam;
+
+public class ConfigurationManager
 {
-	public class ConfigurationManager
+	public static string UserProfileFolder =>
+		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+			"ORIGAM", GetVersion(), "OrigamSettings.config");
+	private static OrigamSettings _activeConfiguration;
+
+	private static string _pathToOrigamSettings;
+
+	public static string GetPathOrigamSettings()
 	{
-		public static string UserProfileFolder =>
-                      Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                      "ORIGAM", GetVersion(), "OrigamSettings.config");
-        private static OrigamSettings _activeConfiguration;
-
-		private static string _pathToOrigamSettings;
-
-		public static string GetPathOrigamSettings()
-		{
 			return _pathToOrigamSettings;
 		}
 
-		public static void SetPathOrigamSettings(string pathToOrigamSettings)
-		{
+	public static void SetPathOrigamSettings(string pathToOrigamSettings)
+	{
 			_pathToOrigamSettings = pathToOrigamSettings;
         }
 
-        public static void SetActiveConfiguration(OrigamSettings configuration)
-		{
+	public static void SetActiveConfiguration(OrigamSettings configuration)
+	{
 			_activeConfiguration = configuration;
 		}
 
-		public static OrigamSettings GetActiveConfiguration()
-		{
+	public static OrigamSettings GetActiveConfiguration()
+	{
 			return _activeConfiguration;
 		}
 
-        public static OrigamSettingsCollection GetAllUserHomeConfigurations()
-        {
+	public static OrigamSettingsCollection GetAllUserHomeConfigurations()
+	{
             CreateUserProfileConfigFile();
             return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
         }
-        public static OrigamSettingsCollection GetAllConfigurations()
-		{
+	public static OrigamSettingsCollection GetAllConfigurations()
+	{
 			return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
 		}
 
-		public static void WriteConfiguration(OrigamSettingsCollection configuration)
-		{
+	public static void WriteConfiguration(OrigamSettingsCollection configuration)
+	{
 			// do some sanity check
 			SortedList list = new SortedList();
 			foreach(OrigamSettings setting in configuration)
@@ -83,8 +83,8 @@ namespace Origam
 
             new OrigamSettingsReader(_pathToOrigamSettings).Write(configuration);
 		}
-        private static void CreateUserProfileConfigFile()
-        {
+	private static void CreateUserProfileConfigFile()
+	{
             if (!File.Exists(UserProfileFolder))
             {
                 FileInfo file = new(UserProfileFolder);
@@ -102,26 +102,24 @@ namespace Origam
             SetPathOrigamSettings(UserProfileFolder);
         }
 
-        private static string GetVersion()
-        {
+	private static string GetVersion()
+	{
             Assembly assembly = Assembly.GetEntryAssembly();
             return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
         }
-    }
-
-    public class OrigamSettingsException: Exception
-	{
-		private static string MakeMessage(string message) =>
-			Strings.OrigamSettingsExceptionPrefix + message;
-		
-		public OrigamSettingsException(string message, Exception innerException) 
-			: base(MakeMessage(message), innerException)
-		{	
-		}
-		public OrigamSettingsException(string message) 
-			: base(MakeMessage(message))
-		{
-		}
-	}
 }
 
+public class OrigamSettingsException: Exception
+{
+	private static string MakeMessage(string message) =>
+		Strings.OrigamSettingsExceptionPrefix + message;
+		
+	public OrigamSettingsException(string message, Exception innerException) 
+		: base(MakeMessage(message), innerException)
+	{	
+		}
+	public OrigamSettingsException(string message) 
+		: base(MakeMessage(message))
+	{
+		}
+}

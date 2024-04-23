@@ -27,83 +27,82 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for CollapsiblePanel.
-	/// </summary>
-	public class CollapsiblePanel : TabPage
-	{
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		private int _indentLevel = 0;
-		private bool _isHeightFixed = false;
-		private bool _isOpen = false;
+namespace Origam.Gui.Win;
 
-		public CollapsiblePanel() : base()
-		{
+/// <summary>
+/// Summary description for CollapsiblePanel.
+/// </summary>
+public class CollapsiblePanel : TabPage
+{
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	private int _indentLevel = 0;
+	private bool _isHeightFixed = false;
+	private bool _isOpen = false;
+
+	public CollapsiblePanel() : base()
+	{
 		}
 
-		public int IndentLevel
+	public int IndentLevel
+	{
+		get
 		{
-			get
-			{
 				return _indentLevel;
 			}
-			set
-			{
+		set
+		{
 				_indentLevel = value;
 			}
-		}
+	}
 
-		public bool IsHeightFixed
+	public bool IsHeightFixed
+	{
+		get
 		{
-			get
-			{
 				return _isHeightFixed;
 			}
-			set
-			{
+		set
+		{
 				_isHeightFixed = value;
 			}
-		}
+	}
 
-		public bool IsOpen
+	public bool IsOpen
+	{
+		get
 		{
-			get
-			{
 				return _isOpen;
 			}
-			set
-			{
+		set
+		{
 				_isOpen = value;
 			}
-		}
+	}
 
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
 		{
-			get
-			{
 				return _styleId;
 			}
-			set
-			{
+		set
+		{
 				_styleId = value;
 			}
-		}
+	}
 
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
 		{
-			get
-			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-			set
-			{
+		set
+		{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
 	}
 }

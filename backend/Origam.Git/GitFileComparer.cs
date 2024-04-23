@@ -26,18 +26,18 @@ using System.Linq;
 using LibGit2Sharp;
 using Origam.Extensions;
 
-namespace Origam.Git
-{
-    public class GitFileComparer
-    {
-        private readonly Signature autor;
-        private readonly Signature committer;
-        private readonly string internalFileName;
-        private Repository repo;
-        private readonly DirectoryInfo repoDir;
+namespace Origam.Git;
 
-        public GitFileComparer()
-        {
+public class GitFileComparer
+{
+    private readonly Signature autor;
+    private readonly Signature committer;
+    private readonly string internalFileName;
+    private Repository repo;
+    private readonly DirectoryInfo repoDir;
+
+    public GitFileComparer()
+    {
             autor = new Signature("GitFileComparer", "@GitFileComparer",
                 DateTime.Now);
             committer = this.autor;
@@ -45,8 +45,8 @@ namespace Origam.Git
             repoDir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "GitCompare"));
         }
 
-        public GitDiff GetGitDiff(FileInfo oldFile, FileInfo newFile)
-        {
+    public GitDiff GetGitDiff(FileInfo oldFile, FileInfo newFile)
+    {
             if (FilesAreIdentical(newFile, oldFile))
             {
                 return new GitDiff(oldFile, newFile, "");
@@ -72,13 +72,13 @@ namespace Origam.Git
             return new GitDiff(oldFile, newFile, diff);
         }
 
-        private bool FilesAreIdentical(FileInfo oldFile, FileInfo newFile)
-        {
+    private bool FilesAreIdentical(FileInfo oldFile, FileInfo newFile)
+    {
             return oldFile.GetFileBase64Hash() == newFile.GetFileBase64Hash();
         }
 
-        private string GetDiff()
-        {
+    private string GetDiff()
+    {
             List<Commit> CommitList = repo.Commits.QueryBy(internalFileName)
                 .Select(entry => entry.Commit)
                 .ToList();
@@ -94,33 +94,32 @@ namespace Origam.Git
             return repoDifferences.First(e => e.Path == internalFileName).Patch;
         }
 
-        private void Commit(string message)
-        {
+    private void Commit(string message)
+    {
             repo.Index.Add(internalFileName);
             repo.Commit(message, autor, committer);
         }
 
-        private void InitRepo()
-        {
+    private void InitRepo()
+    {
             repoDir.DeleteAllIncludingReadOnly();
             repoDir.Create();
             Repository.Init(repoDir.FullName);
             repo = new Repository(repoDir.FullName);
         }
-    }
+}
 
-    public class GitDiff
+public class GitDiff
+{
+    public FileInfo OldFile { get; }
+    public FileInfo NewFile { get;  }
+    public string Text { get; }
+    public bool IsEmpty => string.IsNullOrEmpty(Text);
+
+    public GitDiff(FileInfo oldFile, FileInfo newFile, string text)
     {
-        public FileInfo OldFile { get; }
-        public FileInfo NewFile { get;  }
-        public string Text { get; }
-        public bool IsEmpty => string.IsNullOrEmpty(Text);
-
-        public GitDiff(FileInfo oldFile, FileInfo newFile, string text)
-        {
             OldFile = oldFile;
             NewFile = newFile;
             Text = text;
         }
-    }
 }

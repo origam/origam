@@ -19,11 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public enum ImageBoxSourceType
 {
-	public enum ImageBoxSourceType
-	{
-		Blob,
-		Url
-	}
+	Blob,
+	Url
 }

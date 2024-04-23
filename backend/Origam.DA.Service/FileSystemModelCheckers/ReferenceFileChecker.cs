@@ -28,18 +28,18 @@ using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service
-{
-    class ReferenceFileChecker : IFileSystemModelChecker
-    {
-        private readonly FilePersistenceProvider filePersistenceProvider;
-        private readonly List<FileInfo> modelDirectoryFiles;
-        private readonly ReferenceFileFactory referenceFileFactory;
+namespace Origam.DA.Service;
 
-        public ReferenceFileChecker(
-            FilePersistenceProvider filePersistenceProvider,
-            List<FileInfo> modelDirectoryFiles)
-        {
+class ReferenceFileChecker : IFileSystemModelChecker
+{
+    private readonly FilePersistenceProvider filePersistenceProvider;
+    private readonly List<FileInfo> modelDirectoryFiles;
+    private readonly ReferenceFileFactory referenceFileFactory;
+
+    public ReferenceFileChecker(
+        FilePersistenceProvider filePersistenceProvider,
+        List<FileInfo> modelDirectoryFiles)
+    {
             this.filePersistenceProvider = filePersistenceProvider;
             this.modelDirectoryFiles = modelDirectoryFiles;
             var origamPathFactory = new OrigamPathFactory(
@@ -47,8 +47,8 @@ namespace Origam.DA.Service
             referenceFileFactory = new ReferenceFileFactory(origamPathFactory);
         }
 
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
             List<ErrorMessage> errors = modelDirectoryFiles
                 .Where(file => file.Name == OrigamFile.ReferenceFileName)
                 .Select(ReadToFileData)
@@ -63,8 +63,8 @@ namespace Origam.DA.Service
             );
         }
 
-        private ErrorMessage CheckAndReturnErrors(ReferenceFileData fileData)
-        {
+    private ErrorMessage CheckAndReturnErrors(ReferenceFileData fileData)
+    {
             Guid groupId = fileData.ParentFolderIds.GroupId;
             Guid packageId = fileData.ParentFolderIds.PackageId;
 
@@ -87,47 +87,46 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private  ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
-        {
+    private  ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
+    {
             var xmlFileDataFactory = new XmlFileDataFactory();
             Result<XmlFileData, XmlLoadError> result = xmlFileDataFactory.Create(groupReferenceFile);
 
             var xmlFileData = new ReferenceFileData(result.Value, referenceFileFactory);
             return xmlFileData;
         }
-    }
+}
 
-    class ReferenceFileFactory: IOrigamFileFactory
+class ReferenceFileFactory: IOrigamFileFactory
+{
+    private readonly OrigamPathFactory origamPathFactory;
+    private List<string> parentFolders = new List<string>
     {
-        private readonly OrigamPathFactory origamPathFactory;
-        private List<string> parentFolders = new List<string>
-        {
-            OrigamFile.PackageCategory,
-            OrigamFile.GroupCategory
-        };
+        OrigamFile.PackageCategory,
+        OrigamFile.GroupCategory
+    };
 
-        public ReferenceFileFactory(OrigamPathFactory origamPathFactory)
-        {
+    public ReferenceFileFactory(OrigamPathFactory origamPathFactory)
+    {
             this.origamPathFactory = origamPathFactory;
         }
 
-        public ITrackeableFile New(FileInfo fileInfo, IDictionary<string, Guid> parentFolderIds,
-            bool isAFullyWrittenFile = false)
-        {
+    public ITrackeableFile New(FileInfo fileInfo, IDictionary<string, Guid> parentFolderIds,
+        bool isAFullyWrittenFile = false)
+    {
             OrigamPath path = origamPathFactory.Create(fileInfo);
             return new OrigamReferenceFile(path, parentFolders);
         }
 
-        public OrigamFile New(string relativePath, IDictionary<string, Guid> parentFolderIds,
-            bool isGroup, bool isAFullyWrittenFile = false)
-        {
+    public OrigamFile New(string relativePath, IDictionary<string, Guid> parentFolderIds,
+        bool isGroup, bool isAFullyWrittenFile = false)
+    {
             throw new NotImplementedException();
         }
 
-        public ITrackeableFile New(string relativePath, string fileHash,
-            IDictionary<string, Guid> parentFolderIds)
-        {
+    public ITrackeableFile New(string relativePath, string fileHash,
+        IDictionary<string, Guid> parentFolderIds)
+    {
             throw new NotImplementedException();
         }
-    }
 }

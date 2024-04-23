@@ -29,43 +29,43 @@ using Origam.Schema.GuiModel;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+
+/// <summary>
+/// Summary description for EntitySecurityRule.
+/// </summary>
+[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
+[HelpTopic("Report+Action")]
+[ClassMetaVersion("6.0.0")]
+public class EntityReportAction : EntityUIAction
 {
-	/// <summary>
-	/// Summary description for EntitySecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
-    [HelpTopic("Report+Action")]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityReportAction : EntityUIAction
-	{
-		public EntityReportAction() : base() {}
+	public EntityReportAction() : base() {}
 
-		public EntityReportAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityReportAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityReportAction(Key primaryKey) : base(primaryKey)	{}
+	public EntityReportAction(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Report);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override IList<string> NewTypeNames
+	public override IList<string> NewTypeNames
+	{
+		get
 		{
-			get
-			{
 				try
 				{
 					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
@@ -77,56 +77,55 @@ namespace Origam.Schema.MenuModel
 					return new string[] {};
 				}
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		[Browsable(false)]
-		public override PanelActionType ActionType
+	#region Properties
+	[Browsable(false)]
+	public override PanelActionType ActionType
+	{
+		get
 		{
-			get
-			{
 				return PanelActionType.Report;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException();
 			}
-		}
+	}
 
-		public Guid ReportId;
+	public Guid ReportId;
 
-		[Category("References")]
-		[TypeConverter(typeof(ReportConverter))]
-        [XmlReference("report", "ReportId")]
-		[NotNullModelElementRule]
-		public AbstractReport Report
+	[Category("References")]
+	[TypeConverter(typeof(ReportConverter))]
+	[XmlReference("report", "ReportId")]
+	[NotNullModelElementRule]
+	public AbstractReport Report
+	{
+		get
 		{
-			get
-			{
 				return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
 			}
-			set
-			{
+		set
+		{
 				this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
+	}
 
-		private DataReportExportFormatType _exportFormatType;
-		[Category("Data Report")]
-		[Description("Export Format Type")]
-        [XmlAttribute("exportFormatType")]
-		public DataReportExportFormatType ExportFormatType
+	private DataReportExportFormatType _exportFormatType;
+	[Category("Data Report")]
+	[Description("Export Format Type")]
+	[XmlAttribute("exportFormatType")]
+	public DataReportExportFormatType ExportFormatType
+	{
+		get
 		{
-			get
-			{
 				return _exportFormatType;
 			}
-			set
-			{
+		set
+		{
 				_exportFormatType = value;
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

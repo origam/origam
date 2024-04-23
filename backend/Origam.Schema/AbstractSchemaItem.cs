@@ -31,51 +31,51 @@ using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;
 
-namespace Origam.Schema
-{
-    /// <summary>
-    /// This class makes a persistable base for any schema items. It has a special override for Key,
-    /// it uses a ModelElementKey, which has strongly typed accessors to the primary key of
-    /// any class that is contained under schema versions.
-    /// </summary>
-    [ClassMetaVersion("6.0.0")]
-	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
-        ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
-    {
-        //public const string NAMESPACE = "http://schemas.origam.com/*.*.*/model-element";
-		public readonly object Lock = new object();
-        private static string _regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) 
-            + new string(System.IO.Path.GetInvalidPathChars());
-        private static Regex _regex = new Regex(string.Format("[{0}]", Regex.Escape(_regexSearch)));
+namespace Origam.Schema;
 
-        #region Constructors
-        public AbstractSchemaItem()
-		{
+/// <summary>
+/// This class makes a persistable base for any schema items. It has a special override for Key,
+/// it uses a ModelElementKey, which has strongly typed accessors to the primary key of
+/// any class that is contained under schema versions.
+/// </summary>
+[ClassMetaVersion("6.0.0")]
+public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
+	ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
+{
+	//public const string NAMESPACE = "http://schemas.origam.com/*.*.*/model-element";
+	public readonly object Lock = new object();
+	private static string _regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) 
+	                                     + new string(System.IO.Path.GetInvalidPathChars());
+	private static Regex _regex = new Regex(string.Format("[{0}]", Regex.Escape(_regexSearch)));
+
+	#region Constructors
+	public AbstractSchemaItem()
+	{
 			this.PrimaryKey = new ModelElementKey();
 		}
 
-		public AbstractSchemaItem(Guid extensionId) : this()
-		{
+	public AbstractSchemaItem(Guid extensionId) : this()
+	{
 			this.SchemaExtensionId = extensionId;
 		}
 
-		public AbstractSchemaItem(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
-		{
+	public AbstractSchemaItem(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
+	{
 		}
 
-		#endregion
+	#endregion
 
-		#region Properties
-		public override string ToString()
-		{
+	#region Properties
+	public override string ToString()
+	{
 			return this.Name;
 		}
 
-        [Browsable(false)]
-		public IEnumerable<AbstractSchemaItem> ChildrenRecursive 
+	[Browsable(false)]
+	public IEnumerable<AbstractSchemaItem> ChildrenRecursive 
+	{
+		get
 		{
-			get
-			{
 				foreach (var child1 in ChildItems)
 				{
 					foreach (var child2 in GetChildrenRecursive(child1))
@@ -84,62 +84,62 @@ namespace Origam.Schema
 					}
 				}
 			}
-		}
+	}
 
 
-		private ModelElementKey _oldPrimarykey = null;
-		[Browsable(false)]
-		public ModelElementKey OldPrimaryKey
+	private ModelElementKey _oldPrimarykey = null;
+	[Browsable(false)]
+	public ModelElementKey OldPrimaryKey
+	{
+		get
 		{
-			get
-			{
 				return _oldPrimarykey;
 			}
-			set
-			{
+		set
+		{
 				_oldPrimarykey = value;
 			}
-		}
+	}
 
-		[Category("(Info)")]
-		[Description("Unique ID of this model element. Model elements are internally identified by ID's, not names.")]
-		public new Guid Id
+	[Category("(Info)")]
+	[Description("Unique ID of this model element. Model elements are internally identified by ID's, not names.")]
+	public new Guid Id
+	{
+		get
 		{
-			get
-			{
 				return (Guid)this.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		[Category("(Info)")]
-		//[Browsable(false)]
-		public string SchemaItemType
+	[Category("(Info)")]
+	//[Browsable(false)]
+	public string SchemaItemType
+	{
+		get
 		{
-			get
-			{
 				return this.GetType().ToString();
 			}
-		}
+	}
 
-		private bool _isPersistable = true;
-		[Browsable(false)]
-		public bool IsPersistable
+	private bool _isPersistable = true;
+	[Browsable(false)]
+	public bool IsPersistable
+	{
+		get
 		{
-			get
-			{
 				return _isPersistable;
 			}
-			set
-			{
+		set
+		{
 				_isPersistable = value;
 			}
-		}
+	}
 		
-		[Browsable(false)]
-		public ArrayList ChildItemsRecursive
+	[Browsable(false)]
+	public ArrayList ChildItemsRecursive
+	{
+		get
 		{
-			get
-			{
 				ArrayList items = new ArrayList();
 
 				foreach(AbstractSchemaItem item in this.ChildItems)
@@ -150,74 +150,74 @@ namespace Origam.Schema
 
 				return items;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public string Path
+	[Browsable(false)]
+	public string Path
+	{
+		get
 		{
-			get
-			{
 				return GetPath(this);
 			}
-		}
+	}
         
-        [Browsable(false)]
-	    public bool IsFileRootElement => FileParentId == Guid.Empty;
+	[Browsable(false)]
+	public bool IsFileRootElement => FileParentId == Guid.Empty;
 
-	    [Browsable(false)]
-		public virtual bool UseFolders
+	[Browsable(false)]
+	public virtual bool UseFolders
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
+	}
 
-		private bool _clearCacheOnPersist = true;
-		[Browsable(false)]
-		public bool ClearCacheOnPersist
+	private bool _clearCacheOnPersist = true;
+	[Browsable(false)]
+	public bool ClearCacheOnPersist
+	{
+		get
 		{
-			get
-			{
 				return _clearCacheOnPersist;
 			}
-			set
-			{
+		set
+		{
 				_clearCacheOnPersist = value;
 			}
-		}
+	}
 
-		private bool _throwEventOnPersist = true;
-		[Browsable(false)]
-		public bool ThrowEventOnPersist
+	private bool _throwEventOnPersist = true;
+	[Browsable(false)]
+	public bool ThrowEventOnPersist
+	{
+		get
 		{
-			get
-			{
 				return _throwEventOnPersist;
 			}
-			set
-			{
+		set
+		{
 				_throwEventOnPersist = value;
 			}
-		}
+	}
 
-		private bool _neverRetrieveChildren = false;
-		[Browsable(false)]
-		public bool NeverRetrieveChildren
-		{
-			get => _neverRetrieveChildren;
-			set => _neverRetrieveChildren = value;
-		}
-		#endregion
+	private bool _neverRetrieveChildren = false;
+	[Browsable(false)]
+	public bool NeverRetrieveChildren
+	{
+		get => _neverRetrieveChildren;
+		set => _neverRetrieveChildren = value;
+	}
+	#endregion
 
-		#region Public Methods
-        public string ModelDescription()
-        {
+	#region Public Methods
+	public string ModelDescription()
+	{
             return this.GetType().SchemaItemDescription()?.Name;
         }
 
-        public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
-		{
+	public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	{
 			if(parentItem == null) return;
 
 			foreach(AbstractSchemaItem item in parentItem.ChildItems)
@@ -230,8 +230,8 @@ namespace Origam.Schema
 			}
 		}
 
-		public ArrayList GetUsage()
-		{
+	public ArrayList GetUsage()
+	{
             var referencelist = PersistenceProvider.GetReference(this.PrimaryKey);
             if (referencelist==null)
             {
@@ -240,8 +240,8 @@ namespace Origam.Schema
             return referencelist;
         }
 
-		public static void FinishConversion(AbstractSchemaItem source, AbstractSchemaItem converted)
-		{
+	public static void FinishConversion(AbstractSchemaItem source, AbstractSchemaItem converted)
+	{
 			converted.PrimaryKey["Id"] = source.PrimaryKey["Id"];
 			converted.Name = source.Name;
 			converted.IsAbstract = source.IsAbstract;
@@ -257,12 +257,12 @@ namespace Origam.Schema
 			converted.Persist();
 		}
 
-		/// <summary>
-		/// Recursively changes extension on all child items of the provided schema item.
-		/// </summary>
-		/// <param name="extension"></param>
-		public void SetExtensionRecursive(Package extension)
-		{
+	/// <summary>
+	/// Recursively changes extension on all child items of the provided schema item.
+	/// </summary>
+	/// <param name="extension"></param>
+	public void SetExtensionRecursive(Package extension)
+	{
 			this.Package = extension;
 
 			foreach(ISchemaItem child in this.ChildItems)
@@ -272,8 +272,8 @@ namespace Origam.Schema
 		}
 		
 		
-		private IEnumerable<AbstractSchemaItem> GetChildrenRecursive(AbstractSchemaItem schemaItem)
-		{
+	private IEnumerable<AbstractSchemaItem> GetChildrenRecursive(AbstractSchemaItem schemaItem)
+	{
 			foreach (var child1 in schemaItem.ChildItems)
 			{
 				foreach (var child2 in GetChildrenRecursive(child1))
@@ -285,8 +285,8 @@ namespace Origam.Schema
 		}
 
 
-		public void InvalidateParentPersistenceCache()
-		{
+	public void InvalidateParentPersistenceCache()
+	{
 			AbstractSchemaItem parent = this.ParentItem;
 			while(parent != null)
 			{
@@ -295,25 +295,25 @@ namespace Origam.Schema
 			}
 		}
 
-		public void InvalidateChildrenPersistenceCache()
-		{
+	public void InvalidateChildrenPersistenceCache()
+	{
 			this.PersistenceProvider.RemoveFromCache(this);
 			foreach(AbstractSchemaItem child in this.ChildItems)
 			{
 				child.InvalidateChildrenPersistenceCache();
 			}
 		}
-		#endregion
+	#endregion
 
-		#region Overriden AbstractPersistent Members
-		/// <summary>
-		/// Overriden member from AbstractPersistent. When the item is derived from another item,
-		/// we cannot save it.
-		/// 
-		/// We also persist all child items when persisting this one.
-		/// </summary>
-		public override void Persist()
-		{
+	#region Overriden AbstractPersistent Members
+	/// <summary>
+	/// Overriden member from AbstractPersistent. When the item is derived from another item,
+	/// we cannot save it.
+	/// 
+	/// We also persist all child items when persisting this one.
+	/// </summary>
+	public override void Persist()
+	{
 			if (DerivedFrom != null)
 			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorModifyDerived"));
@@ -383,8 +383,8 @@ namespace Origam.Schema
 			}
 		}
 
-        private void RefreshDescendants(AbstractSchemaItem abstractSchemaItem)
-        {
+	private void RefreshDescendants(AbstractSchemaItem abstractSchemaItem)
+	{
 	        if (!abstractSchemaItem.Inheritable)
 	        {
 		        return;
@@ -401,29 +401,29 @@ namespace Origam.Schema
 	        }
         }
 
-        public void ClearCache()
+	public void ClearCache()
+	{
+		lock(Lock)
 		{
-			lock(Lock)
-			{
-				_ancestorsPopulated = false;
-				_myAncestorsPopulated = false;
-				_childItemsPopulated = false;
+			_ancestorsPopulated = false;
+			_myAncestorsPopulated = false;
+			_childItemsPopulated = false;
 #if ORIGAM_CLIENT
-				_hasParameterReferencesCached = false;
+			_hasParameterReferencesCached = false;
 #endif
-				_parameterReferences.Clear();
+			_parameterReferences.Clear();
 			
-				if(_childItems != null)
-				{
-					_childItems.DeleteItemsOnClear = false;
-					_childItems.Clear();
-					_childItems.DeleteItemsOnClear = true;
-				}
+			if(_childItems != null)
+			{
+				_childItems.DeleteItemsOnClear = false;
+				_childItems.Clear();
+				_childItems.DeleteItemsOnClear = true;
 			}
 		}
+	}
 
-		public override void Refresh()
-		{
+	public override void Refresh()
+	{
 			if(ClearCacheOnPersist)
 			{
 				ClearCache();
@@ -432,8 +432,8 @@ namespace Origam.Schema
 			base.Refresh ();
 		}
 
-		public override IPersistent GetFreshItem()
-		{
+	public override IPersistent GetFreshItem()
+	{
 			IPersistent freshItem = base.GetFreshItem ();
 			AbstractSchemaItem abstractItem = freshItem as AbstractSchemaItem;
 			if(abstractItem != null)
@@ -446,42 +446,42 @@ namespace Origam.Schema
 		}
 
 
-		private bool _persistChildItems = true;
-		[Browsable(false)]
-		public bool PersistChildItems
+	private bool _persistChildItems = true;
+	[Browsable(false)]
+	public bool PersistChildItems
+	{
+		get
 		{
-			get
-			{
 				return _persistChildItems;
 			}
-			set
-			{
+		set
+		{
 				_persistChildItems = value;
 			}
-		}
+	}
 
-		private bool _deleteChildItems = true;
-		[Browsable(false)]
-		public bool DeleteChildItems
+	private bool _deleteChildItems = true;
+	[Browsable(false)]
+	public bool DeleteChildItems
+	{
+		get
 		{
-			get
-			{
 				return _deleteChildItems;
 			}
-			set
-			{
+		set
+		{
 				_deleteChildItems = value;
 			}
-		}
+	}
 
-		public override bool IsDeleted
+	public override bool IsDeleted
+	{
+		get
 		{
-			get
-			{
 				return base.IsDeleted;
 			}
-			set
-			{
+		set
+		{
 				if(this.DerivedFrom != null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorModifyDerived"));
 
 				if(this.DeleteChildItems)
@@ -512,93 +512,93 @@ namespace Origam.Schema
 				//					this.Persist();
 				//				}
 			}
-		}
+	}
 
-		public override bool UseObjectCache
+	public override bool UseObjectCache
+	{
+		get
 		{
-			get
-			{
 				// We cannot cache derived items, because they have multiple instances
 				if(this.IsAbstract)
 					return false;
 				else
 					return base.UseObjectCache;
 			}
-			set
-			{
+		set
+		{
 				base.UseObjectCache = value;
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region ISchemaItem Members
+	#region ISchemaItem Members
 
-		private string _name;
+	private string _name;
 
-		[Category("(Schema Item)")]
-		[StringNotEmptyModelElementRule]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [XmlAttribute("name")]
-		[Description("Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations).")]
-		public virtual string Name
+	[Category("(Schema Item)")]
+	[StringNotEmptyModelElementRule]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("name")]
+	[Description("Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations).")]
+	public virtual string Name
+	{
+		get
 		{
-			get
-			{
 				if(_name == null) return null;
 				return _name.Trim();
 			}
-			set
-			{
+		set
+		{
 				string originalName = _name;
 				_name = value;
 				OnNameChanged(originalName);
 			}
+	}
+
+	public virtual void OnNameChanged(string originalName)
+	{
 		}
 
-		public virtual void OnNameChanged(string originalName)
+	[Category("(Schema Item)"), DefaultValue(false)]
+	[Description("Indicates if this model element allows to be inherited by another model element. If set to true, it is possible e.g. to reuse an entity definition in other entities. If an element is inheritable, all child elements must be set to Inheritable=true.")]
+	public bool Inheritable
+	{
+		get
 		{
-		}
-
-		[Category("(Schema Item)"), DefaultValue(false)]
-		[Description("Indicates if this model element allows to be inherited by another model element. If set to true, it is possible e.g. to reuse an entity definition in other entities. If an element is inheritable, all child elements must be set to Inheritable=true.")]
-		public bool Inheritable
-		{
-			get
-			{
 				return IsAbstract;
 			}
-			set
-			{
+		set
+		{
 				IsAbstract = value;
 			}
-		}
+	}
 
-		private bool _isAbstract;
-		[Browsable(false)]
-        [XmlAttribute("abstract")]
-		public bool IsAbstract
+	private bool _isAbstract;
+	[Browsable(false)]
+	[XmlAttribute("abstract")]
+	public bool IsAbstract
+	{
+		get
 		{
-			get
-			{
 				return _isAbstract;
 			}
-			set
-			{
+		set
+		{
 				_isAbstract = value;
 			}
-		}
+	}
 
-        [Browsable(false)]
-	    public Guid ParentItemId { get; set; }
+	[Browsable(false)]
+	public Guid ParentItemId { get; set; }
 
-	    private AbstractSchemaItem _parentItem = null;
+	private AbstractSchemaItem _parentItem = null;
 
-		[Browsable(false)]
-		public AbstractSchemaItem ParentItem
+	[Browsable(false)]
+	public AbstractSchemaItem ParentItem
+	{
+		get
 		{
-			get
-			{
 				if(_parentItem != null) return _parentItem;
 
 				ModelElementKey key = new ModelElementKey();
@@ -606,8 +606,8 @@ namespace Origam.Schema
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-			set
-			{
+		set
+		{
 				_parentItem = value;
 
 				if(value == null)
@@ -619,29 +619,29 @@ namespace Origam.Schema
 					this.ParentItemId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
-		[Browsable(false)]
-		public AbstractSchemaItem RootItem
+	}
+	[Browsable(false)]
+	public AbstractSchemaItem RootItem
+	{
+		get
 		{
-			get
-			{
 				return this.GetRootItem(this);
 			}
-		}
+	}
 
-		private AbstractSchemaItem GetRootItem(AbstractSchemaItem parentItem)
-		{
+	private AbstractSchemaItem GetRootItem(AbstractSchemaItem parentItem)
+	{
 			if(parentItem.ParentItem == null)
 				return parentItem;
 			else
 				return GetRootItem(parentItem.ParentItem);
 		}
 
-		[Browsable(false)]
-		public IEnumerable<AbstractSchemaItem> Parents
+	[Browsable(false)]
+	public IEnumerable<AbstractSchemaItem> Parents
+	{
+		get
 		{
-			get
-			{
 				var parent = ParentItem;
 				while (parent != null)
 				{
@@ -649,50 +649,50 @@ namespace Origam.Schema
 					parent = parent.ParentItem;
 				}
 			}
-		}
+	}
 
-		[XmlParent(typeof(Package))]
-        [Browsable(false)]
-	    public Guid SchemaExtensionId { get; set; }
+	[XmlParent(typeof(Package))]
+	[Browsable(false)]
+	public Guid SchemaExtensionId { get; set; }
     
 
-		[Category("(Info)")]
-		[Description("Name of the package this model element belongs to.")]
-		public string PackageName
+	[Category("(Info)")]
+	[Description("Name of the package this model element belongs to.")]
+	public string PackageName
+	{
+		get
 		{
-			get
-			{
 				return this.Package.ToString();
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public Package Package
+	[Browsable(false)]
+	public Package Package
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.SchemaExtensionId;
 
 				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
 			}
-			set
-			{
+		set
+		{
 				this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
 			}
-		}
+	}
 
-		private bool _ancestorsPopulated = false;
-		private SchemaItemAncestorCollection _ancestors = new SchemaItemAncestorCollection();
-		private Hashtable _childItemsById = new Hashtable();
-		private Hashtable _childItemsByType = new Hashtable();
-		private Hashtable _childItemsByName = new Hashtable();
+	private bool _ancestorsPopulated = false;
+	private SchemaItemAncestorCollection _ancestors = new SchemaItemAncestorCollection();
+	private Hashtable _childItemsById = new Hashtable();
+	private Hashtable _childItemsByType = new Hashtable();
+	private Hashtable _childItemsByName = new Hashtable();
 
-		[Browsable(false)] 
-		public SchemaItemAncestorCollection AllAncestors
+	[Browsable(false)] 
+	public SchemaItemAncestorCollection AllAncestors
+	{
+		get
 		{
-			get
-			{
 				if(! _ancestorsPopulated)
 				{
 					lock(Lock)
@@ -754,18 +754,18 @@ namespace Origam.Schema
 
 				return _ancestors;
 			}
-		}
+	}
 
-		private bool _myAncestorsPopulated = false;
-		private SchemaItemAncestorCollection _myAncestors = new SchemaItemAncestorCollection();
+	private bool _myAncestorsPopulated = false;
+	private SchemaItemAncestorCollection _myAncestors = new SchemaItemAncestorCollection();
 
-		[Category("(Schema Item)")]
-		[Description("Inherited model elements. E.g. inherited entities from which you want to share fields, filters, etc. In order to inherit a model element, the inherited model element has to be set to Inheritable=true.")]
-        [TypeConverter(typeof(SchemaItemAncestorConverter))]
-        public SchemaItemAncestorCollection Ancestors
+	[Category("(Schema Item)")]
+	[Description("Inherited model elements. E.g. inherited entities from which you want to share fields, filters, etc. In order to inherit a model element, the inherited model element has to be set to Inheritable=true.")]
+	[TypeConverter(typeof(SchemaItemAncestorConverter))]
+	public SchemaItemAncestorCollection Ancestors
+	{
+		get
 		{
-			get
-			{
 				if(! _myAncestorsPopulated)
 				{
 					lock(Lock)
@@ -794,26 +794,26 @@ namespace Origam.Schema
 
 				return _myAncestors;
 			}
-		}
+	}
 
-	    [Browsable(false)]
-	    public List<SchemaItemGroup> ChildGroups => new List<SchemaItemGroup>();
+	[Browsable(false)]
+	public List<SchemaItemGroup> ChildGroups => new List<SchemaItemGroup>();
 
-		[Browsable(false)]
-		public bool HasChildItems => ChildItems.Count > 0;
+	[Browsable(false)]
+	public bool HasChildItems => ChildItems.Count > 0;
 
-	    public bool HasChildItemsByType(string itemType)
-		{
+	public bool HasChildItemsByType(string itemType)
+	{
 			return this.ChildItemsByType(itemType).Count > 0;
 		}
 
-		public bool HasChildItemsByGroup(SchemaItemGroup group)
-		{
+	public bool HasChildItemsByGroup(SchemaItemGroup group)
+	{
 			return this.ChildItemsByGroup(group).Count > 0;
 		}
 
-		public AbstractSchemaItem GetChildByName(string name, string itemType)
-		{
+	public AbstractSchemaItem GetChildByName(string name, string itemType)
+	{
 			foreach(AbstractSchemaItem item in this.ChildItems)
 			{
 				if(item.Name == name & item.ItemType == itemType)
@@ -825,52 +825,52 @@ namespace Origam.Schema
 			return null;
 		}
 
-		public AbstractSchemaItem GetChildByName(string name)
-		{
+	public AbstractSchemaItem GetChildByName(string name)
+	{
 #if ORIGAM_CLIENT
-			AbstractSchemaItem result = GetItemFromCache(name);
+		AbstractSchemaItem result = GetItemFromCache(name);
 
-			if(result != null)
-			{
-				return result;
-			}
-			// if we did not find in cache, we try one by one
+		if(result != null)
+		{
+			return result;
+		}
+		// if we did not find in cache, we try one by one
 #endif
-			foreach(AbstractSchemaItem item in this.ChildItems)
+		foreach(AbstractSchemaItem item in this.ChildItems)
+		{
+			if(item.Name == name) 
 			{
-				if(item.Name == name) 
-				{
-					return item;
-				}
+				return item;
 			}
-
-			return null;
 		}
 
-		public AbstractSchemaItem GetChildById(Guid id)
-		{
+		return null;
+	}
+
+	public AbstractSchemaItem GetChildById(Guid id)
+	{
 #if ORIGAM_CLIENT
-			AbstractSchemaItem result = GetItemFromCache(id);
+		AbstractSchemaItem result = GetItemFromCache(id);
 
-			if(result != null)
-			{
-				return result;
-			}
-			// if we did not find in cache, we try one by one
+		if(result != null)
+		{
+			return result;
+		}
+		// if we did not find in cache, we try one by one
 #endif
-			foreach(AbstractSchemaItem item in this.ChildItems)
+		foreach(AbstractSchemaItem item in this.ChildItems)
+		{
+			if(item.PrimaryKey["Id"].Equals(id)) 
 			{
-				if(item.PrimaryKey["Id"].Equals(id)) 
-				{
-					return item;
-				}
+				return item;
 			}
-
-			return null;
 		}
 
-		public AbstractSchemaItem GetChildByIdRecursive(Guid id)
-		{
+		return null;
+	}
+
+	public AbstractSchemaItem GetChildByIdRecursive(Guid id)
+	{
 			// first try from the current level
 			AbstractSchemaItem result = GetChildById(id);
 
@@ -888,71 +888,71 @@ namespace Origam.Schema
 			return result;
 		}
 
-		SchemaItemCollection _childItems;
-		bool _childItemsPopulated = false;
+	SchemaItemCollection _childItems;
+	bool _childItemsPopulated = false;
 		
-		[Browsable(false)]
-		public virtual SchemaItemCollection ChildItems
+	[Browsable(false)]
+	public virtual SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				// We late-populate the child items collection on first access
 				InitializeItemCache();
 		
 				return _childItems;
 			}
-		}
+	}
 
-		private void InitializeItemCache()
+	private void InitializeItemCache()
+	{
+		if(! _childItemsPopulated)
 		{
-			if(! _childItemsPopulated)
+			lock(Lock)
 			{
-				lock(Lock)
+				if(! _childItemsPopulated)
 				{
-					if(! _childItemsPopulated)
+					if(_childItems == null)
 					{
-						if(_childItems == null)
-						{
-							_childItems = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, this);
-						}
+						_childItems = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, this);
+					}
 
-						_childItems.Clear();
-						_childItems.AddRange(this.GetChildItems(this));
+					_childItems.Clear();
+					_childItems.AddRange(this.GetChildItems(this));
 
-						foreach(SchemaItemAncestor anc in this.AllAncestors)
-						{
+					foreach(SchemaItemAncestor anc in this.AllAncestors)
+					{
 							
-							_childItems.AddRange(this.GetChildItems(anc.Ancestor));
+						_childItems.AddRange(this.GetChildItems(anc.Ancestor));
 							
-						}
+					}
 
 #if ORIGAM_CLIENT
-						_childItemsById.Clear();
-						_childItemsByName.Clear();
-						_childItemsByType.Clear();
+					_childItemsById.Clear();
+					_childItemsByName.Clear();
+					_childItemsByType.Clear();
 
-						foreach(ISchemaItem item in _childItems)
-						{
-							AddItemToCache(item);
-						}
-#endif
-						_childItemsPopulated = true;
+					foreach(ISchemaItem item in _childItems)
+					{
+						AddItemToCache(item);
 					}
+#endif
+					_childItemsPopulated = true;
 				}
 			}
 		}
+	}
 
-		private void AddItemToCache(ISchemaItem item)
-		{
+	private void AddItemToCache(ISchemaItem item)
+	{
 			_childItemsById[item.PrimaryKey["Id"]] = item;
 			_childItemsByName[item.Name] = item;
 			AddItemToTypeCache(item);
 		}
 
-		private int _childItemsTypeCacheCount = 0;
+	private int _childItemsTypeCacheCount = 0;
 
-		private void AddItemToTypeCache(ISchemaItem item)
-		{
+	private void AddItemToTypeCache(ISchemaItem item)
+	{
 			if(! _childItemsByType.Contains(item.ItemType))
 			{
 				_childItemsByType.Add(item.ItemType, new ArrayList());
@@ -963,8 +963,8 @@ namespace Origam.Schema
 			_childItemsTypeCacheCount++;
 		}
 
-		private AbstractSchemaItem GetItemFromCache(string name)
-		{
+	private AbstractSchemaItem GetItemFromCache(string name)
+	{
 			// initialize the cache
 			InitializeItemCache();
 
@@ -978,8 +978,8 @@ namespace Origam.Schema
 			}
 		}
 
-		private AbstractSchemaItem GetItemFromCache(Guid id)
-		{
+	private AbstractSchemaItem GetItemFromCache(Guid id)
+	{
 			// initialize the cache
 			InitializeItemCache();
 
@@ -993,8 +993,8 @@ namespace Origam.Schema
 			}
 		}
 
-		private ArrayList GetItemsFromCache(string itemType)
-		{
+	private ArrayList GetItemsFromCache(string itemType)
+	{
 			// initialize the cache
 			InitializeItemCache();
 
@@ -1010,104 +1010,104 @@ namespace Origam.Schema
 			}
 		}
 
-		[Browsable(false)]
-		public ArrayList Parameters
+	[Browsable(false)]
+	public ArrayList Parameters
+	{
+		get
 		{
-			get
-			{
 				return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 			}
-		}
+	}
 
-		Hashtable _parameterReferences = new Hashtable();
+	Hashtable _parameterReferences = new Hashtable();
 
-		[Category("(Schema Item)")]
-		[Browsable(false)]
-		public virtual Hashtable ParameterReferences
+	[Category("(Schema Item)")]
+	[Browsable(false)]
+	public virtual Hashtable ParameterReferences
+	{
+		get
 		{
-			get
-			{
 #if ORIGAM_CLIENT
-				if(!_hasParameterReferencesCached)
+			if(!_hasParameterReferencesCached)
+			{
+				lock(Lock)
 				{
-					lock(Lock)
+					if(!_hasParameterReferencesCached)
 					{
-						if(!_hasParameterReferencesCached)
-						{
 #else
 					lock(Lock)
 					{
 #endif
-							_parameterReferences.Clear();
-							GetParameterReferences(this, _parameterReferences);
+						_parameterReferences.Clear();
+						GetParameterReferences(this, _parameterReferences);
 #if ORIGAM_CLIENT
-							_hasParameterReferences = (_parameterReferences.Count > 0);
-							_hasParameterReferencesCached = true;
-						}
+						_hasParameterReferences = (_parameterReferences.Count > 0);
+						_hasParameterReferencesCached = true;
 					}
-#endif
 				}
-
-				return _parameterReferences;
-			}
-		}
-
-#if ORIGAM_CLIENT
-		private bool _hasParameterReferencesCached = false;
 #endif
-		private bool _hasParameterReferences = false;
-		
-		[Browsable(false)]
-		public bool HasParameterReferences
-		{
-			get
-			{
+			}
+
+			return _parameterReferences;
+		}
+	}
+
 #if ORIGAM_CLIENT
-				if(! _hasParameterReferencesCached)
+	private bool _hasParameterReferencesCached = false;
+#endif
+	private bool _hasParameterReferences = false;
+		
+	[Browsable(false)]
+	public bool HasParameterReferences
+	{
+		get
+		{
+#if ORIGAM_CLIENT
+			if(! _hasParameterReferencesCached)
+			{
+				lock(Lock)
 				{
-					lock(Lock)
+					if(! _hasParameterReferencesCached)
 					{
-						if(! _hasParameterReferencesCached)
-						{
 #else
 						lock(Lock)
 						{
 #endif
-							_hasParameterReferences = (this.ParameterReferences.Count > 0);
+						_hasParameterReferences = (this.ParameterReferences.Count > 0);
 #if ORIGAM_CLIENT
-							_hasParameterReferencesCached = true;
-						}
+						_hasParameterReferencesCached = true;
 					}
-#endif
 				}
-
-				return _hasParameterReferences;
+#endif
 			}
+
+			return _hasParameterReferences;
 		}
+	}
 		
 
-		public ArrayList ChildItemsByType(string itemType)
-		{
+	public ArrayList ChildItemsByType(string itemType)
+	{
 #if ORIGAM_CLIENT
-			// if the number of items is different than cached, we go through the whole collection
-			if(_childItemsTypeCacheCount == this.ChildItems.Count) 
-			{
-				return GetItemsFromCache(itemType);
-			}
-#endif
-			ArrayList list = new ArrayList();
-
-			foreach(AbstractSchemaItem item in this.ChildItems)
-			{
-				if(item.ItemType == itemType)
-					list.Add(item);
-			}
-			
-			return list;
-		}
-
-		public ArrayList ChildItemsByTypeRecursive(string itemType)
+		// if the number of items is different than cached, we go through the whole collection
+		if(_childItemsTypeCacheCount == this.ChildItems.Count) 
 		{
+			return GetItemsFromCache(itemType);
+		}
+#endif
+		ArrayList list = new ArrayList();
+
+		foreach(AbstractSchemaItem item in this.ChildItems)
+		{
+			if(item.ItemType == itemType)
+				list.Add(item);
+		}
+			
+		return list;
+	}
+
+	public ArrayList ChildItemsByTypeRecursive(string itemType)
+	{
 			ArrayList list = new ArrayList();
 
 			foreach(AbstractSchemaItem item in this.ChildItemsRecursive)
@@ -1119,8 +1119,8 @@ namespace Origam.Schema
 			return list;
 		}
 
-		public ArrayList ChildItemsByGroup(SchemaItemGroup group)
-		{
+	public ArrayList ChildItemsByGroup(SchemaItemGroup group)
+	{
 			ArrayList list = new ArrayList();
 
 			foreach(AbstractSchemaItem item in this.ChildItems)
@@ -1132,19 +1132,19 @@ namespace Origam.Schema
 			return list;
 		}
 
-		[Category("(Info)")]
-		[Description("Type of the model element.")]
-		public abstract string ItemType{get;}
+	[Category("(Info)")]
+	[Description("Type of the model element.")]
+	public abstract string ItemType{get;}
 
-        [XmlParent(typeof(SchemaItemGroup))]
-        public Guid GroupId;
+	[XmlParent(typeof(SchemaItemGroup))]
+	public Guid GroupId;
 
-		//[Category("(Info)")]
-		[Browsable(false)]
-		public SchemaItemGroup Group
+	//[Category("(Info)")]
+	[Browsable(false)]
+	public SchemaItemGroup Group
+	{
+		get
 		{
-			get
-			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.GroupId;
 
@@ -1157,8 +1157,8 @@ namespace Origam.Schema
 					throw new Exception(ResourceUtils.GetString("ErrorGroupNotFound", this.ItemType, this.Path), ex);
 				}
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.GroupId = Guid.Empty;
@@ -1168,41 +1168,41 @@ namespace Origam.Schema
 					this.GroupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-		}
+	}
 
-		private AbstractSchemaItem _derivedFrom = null;
-		[Browsable(false)] 
-		public AbstractSchemaItem DerivedFrom
+	private AbstractSchemaItem _derivedFrom = null;
+	[Browsable(false)] 
+	public AbstractSchemaItem DerivedFrom
+	{
+		get
 		{
-			get
-			{
 				return _derivedFrom;
 			}
-			set
-			{
+		set
+		{
 				if(_derivedFrom != null & value == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorRevertDerived"));
 
 				_derivedFrom = value;
 			}
-		}
+	}
 
-		private ISchemaItemProvider _rootProvider;
-		[Browsable(false)] 
-		public ISchemaItemProvider RootProvider
+	private ISchemaItemProvider _rootProvider;
+	[Browsable(false)] 
+	public ISchemaItemProvider RootProvider
+	{
+		get
 		{
-			get
-			{
 				return _rootProvider;
 			}
-			set
-			{
+		set
+		{
 				_rootProvider = value;
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public ArrayList GetDependencies(bool ignoreErrors)
-		{
+	[Browsable(false)]
+	public ArrayList GetDependencies(bool ignoreErrors)
+	{
 			ArrayList dependencies = new ArrayList();
 			foreach(SchemaItemAncestor anc in this.Ancestors)
 			{
@@ -1220,10 +1220,10 @@ namespace Origam.Schema
 			return dependencies;
 		}
 
-		public virtual void GetExtraDependencies(ArrayList dependencies) {}
+	public virtual void GetExtraDependencies(ArrayList dependencies) {}
 		
-		public virtual void UpdateReferences()
-		{
+	public virtual void UpdateReferences()
+	{
 			foreach(ISchemaItem childItem in this.ChildItems)
 			{
 				if(childItem.DerivedFrom == null)
@@ -1233,24 +1233,24 @@ namespace Origam.Schema
 			}
 		}
 
-		[Browsable(false)]
-		public bool AutoCreateFolder
+	[Browsable(false)]
+	public bool AutoCreateFolder
+	{
+		get
 		{
-			get
-			{
 				return false;
 			}
-		}
-        #endregion
+	}
+	#endregion
 
-        #region IPersistent2 Members
+	#region IPersistent2 Members
 
 
-        [Category("(Info)")]
-        public string RelativeFilePath
-        {
-            get
-            {
+	[Category("(Info)")]
+	public string RelativeFilePath
+	{
+		get
+		{
                 SchemaItemGroup group = this.RootItem.Group;
                 string groupPath = "";
                 if (group != null)
@@ -1260,10 +1260,10 @@ namespace Origam.Schema
                 return Package.Name + "\\" + RootItem.ItemType
                     + "\\" + groupPath + RemoveIllegalCharactersFromPath(RootItem.Name) + PersistenceFiles.Extension;
             }
-        }
+	}
 
-        private string RemoveIllegalCharactersFromPath(string text)
-        {
+	private string RemoveIllegalCharactersFromPath(string text)
+	{
             if (!string.IsNullOrEmpty(text))
             {
                 return _regex.Replace(text, "");
@@ -1271,41 +1271,41 @@ namespace Origam.Schema
             return text;
         }
 
-        [Browsable(false)]
-        public Guid FileParentId
-        {
-            get => this.ParentItemId;
-	        set => ParentItemId = value;
-        }
+	[Browsable(false)]
+	public Guid FileParentId
+	{
+		get => this.ParentItemId;
+		set => ParentItemId = value;
+	}
 
-        [Browsable(false)]
-        public bool IsFolder
-        {
-            get
-            {
+	[Browsable(false)]
+	public bool IsFolder
+	{
+		get
+		{
                 return false;
             }
-        }
+	}
 
-        [Browsable(false)]
-        public IDictionary<string, Guid> ParentFolderIds =>
-	        new Dictionary<string, Guid>
-	        {
-		        {
-			        CategoryFactory.Create(typeof(Package)),
-			        SchemaExtensionId
-		        },
-		        {
-			        CategoryFactory.Create(typeof(SchemaItemGroup)),
-			        GroupId
-		        }
-	        };
-	    #endregion
-
-        #region Private Methods
-
-		private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	[Browsable(false)]
+	public IDictionary<string, Guid> ParentFolderIds =>
+		new Dictionary<string, Guid>
 		{
+			{
+				CategoryFactory.Create(typeof(Package)),
+				SchemaExtensionId
+			},
+			{
+				CategoryFactory.Create(typeof(SchemaItemGroup)),
+				GroupId
+			}
+		};
+	#endregion
+
+	#region Private Methods
+
+	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	{
 			ArrayList items = new ArrayList();
 
 			foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
@@ -1317,8 +1317,8 @@ namespace Origam.Schema
 			return items;
 		}
 
-		private string GetPath(AbstractSchemaItem item)
-		{
+	private string GetPath(AbstractSchemaItem item)
+	{
 			if(this.ParentItem == null)
 			{
 				return this.Name;
@@ -1329,8 +1329,8 @@ namespace Origam.Schema
 			}
 		}
 
-		private SchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
-		{
+	private SchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
+	{
 			SchemaItemCollection col = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, parentItem);
             // Get children if we're allowed to do so
             if(!NeverRetrieveChildren)
@@ -1352,8 +1352,8 @@ namespace Origam.Schema
 			return col;
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if(disposing)
 			{
 				_ancestors.Clear();
@@ -1369,45 +1369,45 @@ namespace Origam.Schema
 			base.Dispose (disposing);
 		}
 
-        public virtual void OnPropertyChanged(string propertyName)
-        {
+	public virtual void OnPropertyChanged(string propertyName)
+	{
             PropertyChanged?.Invoke(this, 
                 new PropertyChangedEventArgs(propertyName));
         }
-		#endregion
+	#endregion
 
-		#region IBrowserNode Members
+	#region IBrowserNode Members
 		
-		[Browsable(false)]
-		public bool HasChildNodes
+	[Browsable(false)]
+	public bool HasChildNodes
+	{
+		get
 		{
-			get
-			{
 				return this.ChildNodes().Count > 0;
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public virtual bool CanRename
+	[Browsable(false)] 
+	public virtual bool CanRename
+	{
+		get
 		{
-			get
-			{
 				// allow renaming only when the item has been persisted already
 				return this.IsPersisted;
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public virtual bool CanDelete
+	[Browsable(false)] 
+	public virtual bool CanDelete
+	{
+		get
 		{
-			get
-			{
 				return true;
 			}
-		}
+	}
 
-		public void Delete()
-		{
+	public void Delete()
+	{
             if (GetUsage().Count == 0)
 			{
 				this.IsDeleted = true;
@@ -1419,9 +1419,9 @@ namespace Origam.Schema
 			}
 		}
 
-		[Browsable(false)] 
-		public virtual BrowserNodeCollection ChildNodes()
-		{
+	[Browsable(false)] 
+	public virtual BrowserNodeCollection ChildNodes()
+	{
 			Hashtable folders = new Hashtable();
 
 			BrowserNodeCollection col = new BrowserNodeCollection();
@@ -1474,83 +1474,83 @@ namespace Origam.Schema
 			return col;
 		}
 
-		[Browsable(false)] 
-		public virtual string NodeText
+	[Browsable(false)] 
+	public virtual string NodeText
+	{
+		get
 		{
-			get
-			{
 				return this.Name;
 			}
-			set
-			{
+		set
+		{
 				this.Name = value;
 				this.Persist();
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public string NodeId
+	[Browsable(false)] 
+	public string NodeId
+	{
+		get
 		{
-			get
-			{
 				return this.Id.ToString();
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public bool Hide
+	[Browsable(false)] 
+	public bool Hide
+	{
+		get
 		{
-			get
-			{
 				return !this.IsPersisted;
 			}
-			set
-			{
+		set
+		{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
 			}
-		}
+	}
 
-		[Browsable(false)] 
-		public virtual string Icon
-        {
-            get
-            {
+	[Browsable(false)] 
+	public virtual string Icon
+	{
+		get
+		{
                 return this.GetType().SchemaItemIcon()?.ToString();
             }
-        }
+	}
 
-	    [Browsable(false)]
-	    public virtual byte[] NodeImage
+	[Browsable(false)]
+	public virtual byte[] NodeImage
+	{
+		get
 		{
-			get
-			{
 				return null;
 			}
-		}
+	}
 
-        [Browsable(false)]
-        public virtual string FontStyle
-        {
-            get
-            {
+	[Browsable(false)]
+	public virtual string FontStyle
+	{
+		get
+		{
                 return "Regular";
             }
-        }
+	}
 
-		public virtual bool CanMove(IBrowserNode2 newNode)
-		{
+	public virtual bool CanMove(IBrowserNode2 newNode)
+	{
 			return false;
 		}
 
-		[Browsable(false)]
-		public IBrowserNode2 ParentNode
+	[Browsable(false)]
+	public IBrowserNode2 ParentNode
+	{
+		get
 		{
-			get
-			{
 				return this.ParentItem;
 			}
-			set
-			{
+		set
+		{
 				if(value is AbstractSchemaItem)
 				{
 					// first remove us from the parent's child items
@@ -1569,17 +1569,17 @@ namespace Origam.Schema
 					throw new ArgumentOutOfRangeException("ParentItem", value, ResourceUtils.GetString("ErrorNotAbstractSchemaItem"));
 				}
 			}
-		}
+	}
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
-		private ArrayList _childItemTypes = new ArrayList();
-		[Browsable(false)]
-		public ArrayList ChildItemTypes
+	#region ISchemaItemFactory Members
+	private ArrayList _childItemTypes = new ArrayList();
+	[Browsable(false)]
+	public ArrayList ChildItemTypes
+	{
+		get
 		{
-			get
-			{
 				foreach(Type[] entry in ExtensionChildItemTypes)
 				{
 					if((entry[0].Equals(this.GetType()) || this.GetType().IsSubclassOf((Type)entry[0])) && ! _childItemTypes.Contains( entry[1]))
@@ -1590,102 +1590,102 @@ namespace Origam.Schema
 
 				return _childItemTypes;
 			}
-		}
+	}
 
-		private static ArrayList _extensionChildItemTypes = new ArrayList();
+	private static ArrayList _extensionChildItemTypes = new ArrayList();
 
-	    public event PropertyChangedEventHandler PropertyChanged;
+	public event PropertyChangedEventHandler PropertyChanged;
 
-		public static ArrayList ExtensionChildItemTypes
+	public static ArrayList ExtensionChildItemTypes
+	{
+		get
 		{
-			get
-			{
 				return _extensionChildItemTypes;
 			}
-		}
+	}
 
-		public virtual T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group) 
-			where T : AbstractSchemaItem
-		{
+	public virtual T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group) 
+		where T : AbstractSchemaItem
+	{
 			return NewItem<T>(schemaExtensionId, group, null);
 		}
 
-		protected T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group, string itemName) 
-			where T : AbstractSchemaItem
+	protected T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group, string itemName) 
+		where T : AbstractSchemaItem
+	{
+		T item;
+		if(((IList)NewItemTypes).Contains(typeof(T)))
 		{
-			T item;
-			if(((IList)NewItemTypes).Contains(typeof(T)))
-			{
-				item = (T)typeof(T).GetConstructor(new[] {typeof(Guid)})
-					.Invoke(new object[] {schemaExtensionId});
-			}
-			else
-			{
-				throw new ArgumentOutOfRangeException("type", typeof(T), 
-					ResourceUtils.GetString(
-						"ErrorTypeNotSupported", GetType().Name));
-			}
-			item.Group = group;
-			item.PersistenceProvider = PersistenceProvider;
-			item.IsAbstract = IsAbstract;
-			if(!string.IsNullOrEmpty(itemName))
-			{
-				item.Name = itemName;
-			}
-			ChildItems.Add(item);
-#if ORIGAM_CLIENT
-			AddItemToTypeCache(item);
-#endif
-			ItemCreated?.Invoke(item);
-			return item;
+			item = (T)typeof(T).GetConstructor(new[] {typeof(Guid)})
+				.Invoke(new object[] {schemaExtensionId});
 		}
-
-		public virtual SchemaItemGroup NewGroup(
-			Guid schemaExtensionId, string groupName)
+		else
 		{
+			throw new ArgumentOutOfRangeException("type", typeof(T), 
+				ResourceUtils.GetString(
+					"ErrorTypeNotSupported", GetType().Name));
+		}
+		item.Group = group;
+		item.PersistenceProvider = PersistenceProvider;
+		item.IsAbstract = IsAbstract;
+		if(!string.IsNullOrEmpty(itemName))
+		{
+			item.Name = itemName;
+		}
+		ChildItems.Add(item);
+#if ORIGAM_CLIENT
+		AddItemToTypeCache(item);
+#endif
+		ItemCreated?.Invoke(item);
+		return item;
+	}
+
+	public virtual SchemaItemGroup NewGroup(
+		Guid schemaExtensionId, string groupName)
+	{
 			return null;
 		}
 
-		[Browsable(false)]
-		public virtual Type[] NewItemTypes 
-			=> (Type[])_childItemTypes.ToArray(typeof(Type));
+	[Browsable(false)]
+	public virtual Type[] NewItemTypes 
+		=> (Type[])_childItemTypes.ToArray(typeof(Type));
 
-		[Browsable(false)]
-		public virtual IList<string> NewTypeNames
+	[Browsable(false)]
+	public virtual IList<string> NewTypeNames
+	{
+		get
 		{
-			get
-			{
 				return new List<string>();
 			}
-		}
+	}
 
-		/// <summary>
-		/// By default all NewItemTypes are nameable. Override if only a subset of types can
-		/// be populated with NewTypeNames.
-		/// </summary>
-		[Browsable(false)]
-		public virtual Type[] NameableTypes
+	/// <summary>
+	/// By default all NewItemTypes are nameable. Override if only a subset of types can
+	/// be populated with NewTypeNames.
+	/// </summary>
+	[Browsable(false)]
+	public virtual Type[] NameableTypes
+	{
+		get
 		{
-			get
-			{
 				return NewItemTypes;
 			}
-		}
+	}
 
-		public event Action<ISchemaItem> ItemCreated;
+	public event Action<ISchemaItem> ItemCreated;
 
-		#endregion
+	#endregion
 
-		#region ICloneable Members
-		public virtual object Clone()
-		{
+	#region ICloneable Members
+	public virtual object Clone()
+	{
 			return this.Clone(false);
 		}
 
-		public object Clone(bool keepKeys)
-		{
+	public object Clone(bool keepKeys)
+	{
 			if(!this.IsPersisted)
 			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
@@ -1706,8 +1706,7 @@ namespace Origam.Schema
 			{
 				newItem.PrimaryKey = new ModelElementKey(Guid.NewGuid());
 			}
-            // in case that for any reason child items were populated already 
-            // in the item's construction, we clear them
+            // in case that for any reason child items were populated already 	 // in the item's construction, we clear them
 			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
@@ -1742,12 +1741,12 @@ namespace Origam.Schema
 			}
 			return newItem;
 		}
-		#endregion
+	#endregion
 
-		#region IComparable Members
+	#region IComparable Members
 
-		public virtual int CompareTo(object obj)
-		{
+	public virtual int CompareTo(object obj)
+	{
 			ISchemaItem item = obj as ISchemaItem;
 			SchemaItemGroup group = obj as SchemaItemGroup;
             string name = this.Name ?? "";
@@ -1765,34 +1764,34 @@ namespace Origam.Schema
 			}
 		}
 
-		#endregion
+	#endregion
 
-		#region ISchemaItemConvertible Members
+	#region ISchemaItemConvertible Members
 
-		public virtual ISchemaItem ConvertTo(Type type)
-		{
+	public virtual ISchemaItem ConvertTo(Type type)
+	{
 			var methodInfo = typeof(AbstractSchemaItem).GetMethod(
 				"ConvertTo", BindingFlags.NonPublic | BindingFlags.Instance);
 			var genericMethodInfo = methodInfo.MakeGenericMethod(type);
 			return (ISchemaItem)genericMethodInfo.Invoke(this, null);
 		}
 
-		public virtual bool CanConvertTo(Type type)
-		{
+	public virtual bool CanConvertTo(Type type)
+	{
 			return false;
 		}
 
-		#endregion
+	#endregion
 
-		protected virtual ISchemaItem ConvertTo<T>()
-			where T : AbstractSchemaItem
-		{
+	protected virtual ISchemaItem ConvertTo<T>()
+		where T : AbstractSchemaItem
+	{
 			throw new Exception(ResourceUtils.GetString(
 				"ErrorConvertTo", typeof(T).ToString()));
 		}
 
-		public void Dump()
-		{
+	public void Dump()
+	{
 			System.Diagnostics.Debug.WriteLine(Path + "[" + GetHashCode() + "]", "DUMP");
 			foreach(AbstractSchemaItem item in ChildItems)
 			{
@@ -1800,8 +1799,8 @@ namespace Origam.Schema
 			}
 		}
 		
-		public T FirstParentOfType<T>() where T : class
-		{
+	public T FirstParentOfType<T>() where T : class
+	{
 			AbstractSchemaItem parent = ParentItem;
 			for (int i = 0; i < 1000; i++)
 			{
@@ -1812,5 +1811,4 @@ namespace Origam.Schema
 			return null;
 		}
 		
-	}
 }

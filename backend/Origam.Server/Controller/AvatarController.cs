@@ -25,16 +25,16 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+
+[Route("chatrooms/[controller]")]
+[Route("internalApi/[controller]")]
+[ApiController]
+public class AvatarController : ControllerBase
 {
-    [Route("chatrooms/[controller]")]
-    [Route("internalApi/[controller]")]
-    [ApiController]
-    public class AvatarController : ControllerBase
+    [HttpGet("{avatarId:guid}")]
+    public IActionResult GetAvatarRequest(Guid avatarId)
     {
-        [HttpGet("{avatarId:guid}")]
-        public IActionResult GetAvatarRequest(Guid avatarId)
-        {
 
             QueryParameterCollection parameters = new QueryParameterCollection
             {
@@ -56,8 +56,8 @@ namespace Origam.Server.Controller
             return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
         }
 
-        private static string MakeInitialsSvg(DataRow userRow)
-        {
+    private static string MakeInitialsSvg(DataRow userRow)
+    {
             string name = userRow.Field<string>("Name");
             string firstName = userRow.Field<string>("FirstName");
             string initials = "";
@@ -73,10 +73,10 @@ namespace Origam.Server.Controller
             return userSvg;
         }
 
-        private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
-                                string transactionId, 
-                                QueryParameterCollection parameters)
-        {
+    private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
+        string transactionId, 
+        QueryParameterCollection parameters)
+    {
             return DataService.Instance.LoadData(dataStructureId,
                      methodId,
                      defaultSetId,
@@ -84,5 +84,4 @@ namespace Origam.Server.Controller
                      transactionId,
                      parameters);
         }
-    }
 }

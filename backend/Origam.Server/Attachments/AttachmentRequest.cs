@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -39,30 +40,29 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public class AttachmentRequest
 {
-    public class AttachmentRequest
+    public AttachmentRequest(object[] ids, bool isPreview)
     {
-        public AttachmentRequest(object[] ids, bool isPreview)
-        {
             _ids = ids;
             _isPreview = isPreview;
         }
 
-        private object[] _ids;
+    private object[] _ids;
 
-        public object[] Ids
-        {
-            get { return _ids; }
-            set { _ids = value; }
-        }
+    public object[] Ids
+    {
+        get { return _ids; }
+        set { _ids = value; }
+    }
 
-        private bool _isPreview;
+    private bool _isPreview;
 
-        public bool IsPreview
-        {
-            get { return _isPreview; }
-            set { _isPreview = value; }
-        }
+    public bool IsPreview
+    {
+        get { return _isPreview; }
+        set { _isPreview = value; }
     }
 }

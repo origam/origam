@@ -19,21 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+
+public class UserConfig
 {
-    public class UserConfig
-    {
-        public string FromAddress { get; set; }
-        public string NewUserRoleId { get; set; }
-        public string UserUnlockNotificationSubject { get; set; }
-        public string UserUnlockNotificationBodyFileName { get; set; }
-        public string UserRegistrationMailSubject { get; set; }
-        public string UserRegistrationMailBodyFileName { get; set; }
-        public string MailQueueName { get; set; }
-        public bool UserRegistrationAllowed { get; set; }
-        public string PortalBaseUrl { get; set; }
-        public string MultiFactorMailSubject { get; set; }
-        public string MultiFactorMailBodyFileName { get; set; }
-        public string AllowedUserNameCharacters { get; set; }
-    }
+    public string FromAddress { get; set; }
+    public string NewUserRoleId { get; set; }
+    public string UserUnlockNotificationSubject { get; set; }
+    public string UserUnlockNotificationBodyFileName { get; set; }
+    public string UserRegistrationMailSubject { get; set; }
+    public string UserRegistrationMailBodyFileName { get; set; }
+    public string MailQueueName { get; set; }
+    public bool UserRegistrationAllowed { get; set; }
+    public string PortalBaseUrl { get; set; }
+    public string MultiFactorMailSubject { get; set; }
+    public string MultiFactorMailBodyFileName { get; set; }
+    public string AllowedUserNameCharacters { get; set; }
 }

@@ -10,19 +10,19 @@ using Origam.Server.Controller;
 using Origam.Service.Core;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
-{
-    public class WorkflowServiceSoap: IWorkflowServiceSoap
-    {
-        private readonly ILogger<AbstractController> log;
+namespace Origam.Server;
 
-        public WorkflowServiceSoap(ILogger<AbstractController> log)
-        {
+public class WorkflowServiceSoap: IWorkflowServiceSoap
+{
+    private readonly ILogger<AbstractController> log;
+
+    public WorkflowServiceSoap(ILogger<AbstractController> log)
+    {
             this.log = log;
         }
 
-        public Task<object> ExecuteWorkflow0Async(string workflowId)
-        {
+    public Task<object> ExecuteWorkflow0Async(string workflowId)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "ExecuteWorkflow0");
@@ -34,8 +34,8 @@ namespace Origam.Server
             return Task.FromResult(diffGram);
         }
 
-        public Task<object> ExecuteWorkflowAsync(string workflowId, Parameter[] parameters)
-        {
+    public Task<object> ExecuteWorkflowAsync(string workflowId, Parameter[] parameters)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "ExecuteWorkflow");
@@ -48,8 +48,8 @@ namespace Origam.Server
             return Task.FromResult(diffGram);
         }
 
-        public Task<object> ExecuteWorkflow1Async(string workflowId, string paramName, string paramValue)
-        {
+    public Task<object> ExecuteWorkflow1Async(string workflowId, string paramName, string paramValue)
+    {
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "ExecuteWorkflow1");
@@ -64,8 +64,8 @@ namespace Origam.Server
         }
         
 
-        private static object ToDiffGram(object result, string rootElementName)
-        {
+    private static object ToDiffGram(object result, string rootElementName)
+    {
             string defaultNamespace = "http://asapenginewebapi.advantages.cz/";
             if (result is IDataDocument document)
             {
@@ -79,5 +79,4 @@ namespace Origam.Server
             }
             return result;
         }
-    }
 }

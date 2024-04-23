@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 /********************************************************************
 	created:	2005/03/27
 	created:	27:3:2005   7:05
@@ -37,51 +38,51 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+
+/// <summary>
+/// Data binding enabled hierarchical tree view control.
+/// </summary>
+public class AsTreeView : TreeView, IAsDataConsumer
 {
-	/// <summary>
-	/// Data binding enabled hierarchical tree view control.
-	/// </summary>
-	public class AsTreeView : TreeView, IAsDataConsumer
-	{
-		const int SB_HORZ = 0;
+	const int SB_HORZ = 0;
 
-		#region Fields
+	#region Fields
 		
-		private System.ComponentModel.Container components = null;
-		private object dataSource;
-		private string dataMember;
-		private CurrencyManager listManager;
+	private System.ComponentModel.Container components = null;
+	private object dataSource;
+	private string dataMember;
+	private CurrencyManager listManager;
 
-		private string idPropertyName;
-		private string namePropertyName;
-		private string parentIdPropertyName;
-		private string valuePropertyName;
+	private string idPropertyName;
+	private string namePropertyName;
+	private string parentIdPropertyName;
+	private string valuePropertyName;
 
-		private PropertyDescriptor idProperty;
-		private PropertyDescriptor nameProperty;
-		private PropertyDescriptor parentIdProperty;
-		private PropertyDescriptor valueProperty;
+	private PropertyDescriptor idProperty;
+	private PropertyDescriptor nameProperty;
+	private PropertyDescriptor parentIdProperty;
+	private PropertyDescriptor valueProperty;
 
-		private TypeConverter valueConverter;
+	private TypeConverter valueConverter;
 
-		private Hashtable items_Positions;
-		private Hashtable items_Identifiers;
+	private Hashtable items_Positions;
+	private Hashtable items_Identifiers;
 
-		private bool selectionChanging;
+	private bool selectionChanging;
 
-		private object _lastSelectedId = null;
+	private object _lastSelectedId = null;
 
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		#endregion
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	#endregion
 
-		#region Constructors
+	#region Constructors
 
-		/// <summary>
-		/// Default constructor.
-		/// </summary>
-		public AsTreeView()
-		{
+	/// <summary>
+	/// Default constructor.
+	/// </summary>
+	public AsTreeView()
+	{
 			this.idPropertyName = string.Empty;
 			this.namePropertyName = string.Empty;
 			this.parentIdPropertyName = string.Empty;
@@ -98,11 +99,11 @@ namespace Origam.Gui.Win
 			this.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.DataTreeView_AfterLabelEdit);
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	protected override void Dispose( bool disposing )
+	{
 			if( disposing )
 			{
 				if( components != null )
@@ -144,128 +145,128 @@ namespace Origam.Gui.Win
 			base.Dispose( disposing );
 		}
 
+	#endregion
+
+	#region Win32
+
+	[DllImport("User32.dll")] 
+	static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);
+
+	#endregion
+
+	#region Internal classes
+
+	/// <summary>
+	/// Tree node with additional data related information.
+	/// </summary>
+	public class DataTreeViewNode : TreeNode
+	{
+		#region Fields
+		
+		private int position;		
+
+		private object parentID;
+
 		#endregion
 
-		#region Win32
-
-		[DllImport("User32.dll")] 
-		static extern bool ShowScrollBar(IntPtr hWnd, int wBar, bool bShow);
-
-		#endregion
-
-		#region Internal classes
+		#region Constructors
 
 		/// <summary>
-		/// Tree node with additional data related information.
+		/// Default constructor of the node.
 		/// </summary>
-		public class DataTreeViewNode : TreeNode
+		public DataTreeViewNode(int position)
 		{
-			#region Fields
-		
-			private int position;		
-
-			private object parentID;
-
-			#endregion
-
-			#region Constructors
-
-			/// <summary>
-			/// Default constructor of the node.
-			/// </summary>
-			public DataTreeViewNode(int position)
-			{
 				this.position = position;
 			}
 
-			#endregion
+		#endregion
 
-			#region Implementation
-
-			#endregion
-
-			#region Properties
-
-			/// <summary>
-			/// Identifier of the node.
-			/// </summary>
-			public object ID
-			{
-				get
-				{				
-					return this.Tag;				
-				}
-				set
-				{
-					this.Tag = value;
-				}
-			}
-
-			/// <summary>
-			/// Identifier of the parent node.
-			/// </summary>
-			public object ParentID
-			{
-				get
-				{
-					return this.parentID;
-				}
-				set
-				{
-					this.parentID = value;
-				}
-			}
-	
-			/// <summary>
-			/// Position in the current currency manager.
-			/// </summary>
-			public int Position
-			{
-				get
-				{
-					return this.position;
-				}
-				set
-				{
-					this.position = value;
-				}
-			}
-
-			#endregion
-		}
-
+		#region Implementation
 
 		#endregion
 
-		private bool _dontFireSelectEvent = false;
-		protected override void OnAfterSelect(TreeViewEventArgs e)
+		#region Properties
+
+		/// <summary>
+		/// Identifier of the node.
+		/// </summary>
+		public object ID
 		{
+			get
+			{				
+					return this.Tag;				
+				}
+			set
+			{
+					this.Tag = value;
+				}
+		}
+
+		/// <summary>
+		/// Identifier of the parent node.
+		/// </summary>
+		public object ParentID
+		{
+			get
+			{
+					return this.parentID;
+				}
+			set
+			{
+					this.parentID = value;
+				}
+		}
+	
+		/// <summary>
+		/// Position in the current currency manager.
+		/// </summary>
+		public int Position
+		{
+			get
+			{
+					return this.position;
+				}
+			set
+			{
+					this.position = value;
+				}
+		}
+
+		#endregion
+	}
+
+
+	#endregion
+
+	private bool _dontFireSelectEvent = false;
+	protected override void OnAfterSelect(TreeViewEventArgs e)
+	{
 			if(! _dontFireSelectEvent)
 			{
 				base.OnAfterSelect (e);
 			}
 		}
 
-		#region Properties
+	#region Properties
 		
-		/// <summary>
-		/// Data source of the tree.
-		/// </summary>
-		[
+	/// <summary>
+	/// Data source of the tree.
+	/// </summary>
+	[
 		DefaultValue((string) null),
 		TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"),
 		RefreshProperties(RefreshProperties.Repaint),
 		Category("Data"),
 		Description("Data source of the tree.")
-		]
-		public object DataSource
+	]
+	public object DataSource
+	{
+		get
 		{
-			get
-			{
 				return this.dataSource;
 			}
-			set
-			{
+		set
+		{
 				if (this.dataSource != value)
 				{
 					this.dataSource = value;
@@ -277,51 +278,51 @@ namespace Origam.Gui.Win
 					catch {}
 				}
 			}
-		}
+	}
 
-		/// <summary>
-		/// Data member of the tree.
-		/// </summary>
-		[
+	/// <summary>
+	/// Data member of the tree.
+	/// </summary>
+	[
 		DefaultValue(""),
 		Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor)),
 		RefreshProperties(RefreshProperties.Repaint),
 		Category("Data"),
 		Description("Data member of the tree.")
-		]
-		public string DataMember
+	]
+	public string DataMember
+	{
+		get
 		{
-			get
-			{
 				return this.dataMember;
 			}
-			set
-			{
+		set
+		{
 				if (this.dataMember != value)
 				{
 					this.dataMember = value;
 					this.ResetData();
 				}
 			}
-		}
+	}
 		
-		/// <summary>
-		/// Identifier member, in most cases this is primary column of the table.
-		/// </summary>
-		[
+	/// <summary>
+	/// Identifier member, in most cases this is primary column of the table.
+	/// </summary>
+	[
 		DefaultValue(""),
 //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
 		Category("Data"),
 		Description("Identifier member, in most cases this is primary column of the table.")		
-		]
-		public string IDColumn
+	]
+	public string IDColumn
+	{
+		get
 		{
-			get
-			{
 				return this.idPropertyName;
 			}
-			set
-			{
+		set
+		{
 				if (this.idPropertyName != value)
 				{
 					this.idPropertyName = value;
@@ -336,25 +337,25 @@ namespace Origam.Gui.Win
 					this.ResetData();
 				}
 			}
-		}
+	}
 
-		/// <summary>
-		/// Name member. Note: editing of this column available only with types that support converting from string.
-		/// </summary>
-		[
+	/// <summary>
+	/// Name member. Note: editing of this column available only with types that support converting from string.
+	/// </summary>
+	[
 		DefaultValue(""),
 //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
 		Category("Data"),
 		Description("Name member. Note: editing of this column available only with types that support converting from string.")		
-		]
-		public string NameColumn
+	]
+	public string NameColumn
+	{
+		get
 		{
-			get
-			{
 				return this.namePropertyName;
 			}
-			set
-			{
+		set
+		{
 				if (this.namePropertyName != value)
 				{
 					this.namePropertyName = value;
@@ -362,25 +363,25 @@ namespace Origam.Gui.Win
 					this.ResetData();
 				}
 			}
-		}
+	}
 
-		/// <summary>
-		/// Identifier of the parent. Note: this member must have the same type as identifier column.
-		/// </summary>
-		[
+	/// <summary>
+	/// Identifier of the parent. Note: this member must have the same type as identifier column.
+	/// </summary>
+	[
 		DefaultValue(""),
 //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
 		Category("Data"),
 		Description("Identifier of the parent. Note: this member must have the same type as identifier column.")
-		]
-		public string ParentIDColumn
+	]
+	public string ParentIDColumn
+	{
+		get
 		{
-			get
-			{
 				return this.parentIdPropertyName;
 			}
-			set
-			{
+		set
+		{
 				if (this.parentIdPropertyName != value)
 				{
 					this.parentIdPropertyName = value;
@@ -388,25 +389,25 @@ namespace Origam.Gui.Win
 					this.ResetData();
 				}
 			}
-		}
+	}
 
-		/// <summary>
-		/// Value member. Form this column value will be taken.
-		/// </summary>
-		[
+	/// <summary>
+	/// Value member. Form this column value will be taken.
+	/// </summary>
+	[
 		DefaultValue(""),
 //		Editor(typeof(FieldTypeEditor), typeof(UITypeEditor)),
 		Category("Data"),
 		Description("Value member. Form this column value will be taken.")
-		]
-		public string ValueColumn
+	]
+	public string ValueColumn
+	{
+		get
 		{
-			get
-			{
 				return this.valuePropertyName;
 			}
-			set
-			{
+		set
+		{
 				if (this.valuePropertyName != value)
 				{
 					this.valuePropertyName = value;
@@ -414,19 +415,19 @@ namespace Origam.Gui.Win
 					this.valueConverter = null;
 				}
 			}
-		}
+	}
 
-		/// <summary>
-		/// Get value current selected item.
-		/// </summary>
-		[		
+	/// <summary>
+	/// Get value current selected item.
+	/// </summary>
+	[		
 		Category("Data"),
 		Description("Get value current selected item.")
-		]
-		public object Value
+	]
+	public object Value
+	{
+		get
 		{
-			get
-			{
 				if (this.SelectedNode != null)
 				{
 					DataTreeViewNode node = this.SelectedNode as DataTreeViewNode;
@@ -438,8 +439,8 @@ namespace Origam.Gui.Win
 				return null;
 			}
 			
-			set
-			{
+		set
+		{
 				_dontFireSelectEvent = true;
 
 				DataTreeViewNode node = this.items_Identifiers[value] as DataTreeViewNode;
@@ -450,40 +451,40 @@ namespace Origam.Gui.Win
 
 				_dontFireSelectEvent = false;
 			}
-		}
+	}
 
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
 		{
-			get
-			{
 				return _styleId;
 			}
-			set
-			{
+		set
+		{
 				_styleId = value;
 			}
-		}
+	}
 
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
 		{
-			get
-			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-			set
-			{
+		set
+		{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Events
+	#region Events
 
-		private void DataTreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
-		{
+	private void DataTreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
+	{
 			this.BeginSelectionChanging();
 			
 			DataTreeViewNode node = e.Node as DataTreeViewNode;
@@ -510,8 +511,8 @@ namespace Origam.Gui.Win
 			this.EndSelectionChanging();
 		}
 
-		private void DataTreeView_AfterLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
-		{
+	private void DataTreeView_AfterLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
+	{
 			DataTreeViewNode node = e.Node as DataTreeViewNode;
 			if (node != null)
 			{
@@ -530,13 +531,13 @@ namespace Origam.Gui.Win
 			e.CancelEdit = true;
 		}
 
-		private void DataTreeView_BindingContextChanged(object sender, System.EventArgs e)
-		{
+	private void DataTreeView_BindingContextChanged(object sender, System.EventArgs e)
+	{
 			this.ResetData();
 		}
 
-		private void listManager_PositionChanged(object sender, EventArgs e)
-		{
+	private void listManager_PositionChanged(object sender, EventArgs e)
+	{
 			_dontFireSelectEvent = true;
 			try
 			{
@@ -548,8 +549,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void DataTreeView_ListChanged(object sender, ListChangedEventArgs e)
-		{	
+	private void DataTreeView_ListChanged(object sender, ListChangedEventArgs e)
+	{	
 			if(this.items_Positions.Count == 0 & e.ListChangedType != ListChangedType.Reset) return;
 
 			try
@@ -627,8 +628,7 @@ namespace Origam.Gui.Win
 
 						//						DataTreeViewNode deletedNode = this.items_Positions[e.OldIndex] as DataTreeViewNode;
 						//						if (deletedNode != null)
-						//						{								
-						//							this.items_Positions.Remove(e.OldIndex);
+						//						{										//							this.items_Positions.Remove(e.OldIndex);
 						//							this.items_Identifiers.Remove(deletedNode.ID);
 						//							deletedNode.Remove();
 						//						}
@@ -650,12 +650,12 @@ namespace Origam.Gui.Win
 			}
 		}		
 
-		#endregion
+	#endregion
 
-		#region Implementation
+	#region Implementation
 
-		private void Clear()
-		{
+	private void Clear()
+	{
 			this.items_Positions.Clear();
 			this.items_Identifiers.Clear();
 
@@ -674,8 +674,8 @@ namespace Origam.Gui.Win
 			}
 		}
 		
-		private bool PrepareDataSource()
-		{
+	private bool PrepareDataSource()
+	{
 			if (this.BindingContext != null)
 			{
 				if (this.dataSource != null)
@@ -692,8 +692,8 @@ namespace Origam.Gui.Win
 			return false;
 		}		
 
-		private bool PrepareDescriptors()
-		{
+	private bool PrepareDescriptors()
+	{
 			if (this.idPropertyName.Length != 0
 				&& this.namePropertyName.Length != 0
 				&& this.parentIdPropertyName.Length != 0)
@@ -717,8 +717,8 @@ namespace Origam.Gui.Win
 				&& this.parentIdProperty != null);
 		}
 
-		private bool PrepareValueDescriptor()
-		{
+	private bool PrepareValueDescriptor()
+	{
 			if (this.valueProperty == null)
 			{
 				if (this.valuePropertyName == string.Empty)
@@ -731,8 +731,8 @@ namespace Origam.Gui.Win
 			return (this.valueProperty != null);
 		}
 
-		private bool PrepareValueConvertor()
-		{
+	private bool PrepareValueConvertor()
+	{
 			if (this.valueConverter == null)
 			{
 				this.valueConverter = TypeDescriptor.GetConverter(this.nameProperty.PropertyType) as TypeConverter;				
@@ -744,15 +744,15 @@ namespace Origam.Gui.Win
 		}
 
 
-		private void WireDataSource()
-		{
+	private void WireDataSource()
+	{
 			this.listManager.PositionChanged += new EventHandler(listManager_PositionChanged);
 			((IBindingList)this.listManager.List).ListChanged += new ListChangedEventHandler(DataTreeView_ListChanged);
 		}
 
 
-		private void ResetData()
-		{
+	private void ResetData()
+	{
 			this.BeginUpdate();
 
 			this.Clear();
@@ -805,8 +805,8 @@ namespace Origam.Gui.Win
 		}
 
 
-		private bool TryAddNode(DataTreeViewNode node)
-		{
+	private bool TryAddNode(DataTreeViewNode node)
+	{
 			if (this.IsIDNull(node.ParentID))
 			{
 				this.AddNode(this.Nodes, node);				
@@ -830,8 +830,8 @@ namespace Origam.Gui.Win
 		}
 
 
-		private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
-		{
+	private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
+	{
 			if(node.ID == null | node.ID == DBNull.Value) return;
 
 			if(!this.items_Positions.ContainsKey(node.Position))
@@ -843,8 +843,8 @@ namespace Origam.Gui.Win
 		}
 
 		
-		private void ChangeParent(DataTreeViewNode node)
-		{			
+	private void ChangeParent(DataTreeViewNode node)
+	{			
 			object dataParentID = this.parentIdProperty.GetValue(this.listManager.List[node.Position]);
 
 			if (node.ParentID != dataParentID)
@@ -865,8 +865,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
-		{
+	private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
+	{
 			if(node == null | parentNode == null) return;
 
 			if(node.ID.Equals(parentNode.ID))
@@ -885,8 +885,8 @@ namespace Origam.Gui.Win
 			}
 		}
 		
-		private void SynchronizeSelection()
-		{
+	private void SynchronizeSelection()
+	{
 			if(this.listManager == null | this.selectionChanging) return;
 
 			DataTreeViewNode node = this.items_Positions[this.listManager.Position] as DataTreeViewNode;
@@ -896,8 +896,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void RefreshData(DataTreeViewNode node)
-		{
+	private void RefreshData(DataTreeViewNode node)
+	{
 			if(this.listManager == null) return;
 
 			int position = node.Position;
@@ -909,38 +909,38 @@ namespace Origam.Gui.Win
 		}
 
 
-		/// <summary>
-		/// Create a DataTreeViewNode with currency manager and position.
-		/// </summary>
-		/// <param name="currencyManager"></param>
-		/// <param name="position"></param>
-		/// <returns></returns>
-		private DataTreeViewNode CreateNode(CurrencyManager currencyManager, int position)
-		{
+	/// <summary>
+	/// Create a DataTreeViewNode with currency manager and position.
+	/// </summary>
+	/// <param name="currencyManager"></param>
+	/// <param name="position"></param>
+	/// <returns></returns>
+	private DataTreeViewNode CreateNode(CurrencyManager currencyManager, int position)
+	{
 			DataTreeViewNode node = new DataTreeViewNode(position);
 			this.RefreshData(node);
 			return node;
 		}
 
 
-		private object GetName(int position)
-		{
+	private object GetName(int position)
+	{
 			return this.nameProperty.GetValue(this.listManager.List[position]);
 		}
 
-		private object GetID(int position)
-		{
+	private object GetID(int position)
+	{
 			return this.idProperty.GetValue(this.listManager.List[position]);
 		}
 
-		private object GetParentID(int position)
-		{
+	private object GetParentID(int position)
+	{
 			return this.parentIdProperty.GetValue(this.listManager.List[position]);
 		}
 
 
-		private bool IsIDNull(object id)
-		{
+	private bool IsIDNull(object id)
+	{
 			if (id == null
 				|| Convert.IsDBNull(id))
 			{
@@ -961,26 +961,25 @@ namespace Origam.Gui.Win
 		}
 
 
-		protected override void InitLayout()
-		{ 
+	protected override void InitLayout()
+	{ 
 			base.InitLayout(); 
 			ShowScrollBar(Handle, SB_HORZ, false); 
 		} 
 
-		private void BeginSelectionChanging()
-		{
+	private void BeginSelectionChanging()
+	{
 			this.selectionChanging = true;
 		}
 
-		private void EndSelectionChanging()
-		{
+	private void EndSelectionChanging()
+	{
 			this.selectionChanging = false;
 		}
 
-		#endregion
+	#endregion
 
-		#region IAsDataServiceConsumer Members
+	#region IAsDataServiceConsumer Members
 
-		#endregion
-	}
+	#endregion
 }

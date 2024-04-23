@@ -23,13 +23,13 @@ using System;
 using Origam.Service.Core;
 using Origam.Sms;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+public class SmsServiceAdapter : AbstractServiceAgent
 {
-    public class SmsServiceAdapter : AbstractServiceAgent
+    public override object Result { get; }
+    public override void Run()
     {
-        public override object Result { get; }
-        public override void Run()
-        {
             switch (MethodName)
             {
                 case "SendSms":
@@ -45,8 +45,8 @@ namespace Origam.Workflow
             }
         }
 
-        private static ISmsService CreateSmsService()
-        {
+    private static ISmsService CreateSmsService()
+    {
             var settings = ConfigurationManager.GetActiveConfiguration();
             var assembly = settings.DataDataService
                 .Split(",".ToCharArray())[0].Trim();
@@ -59,5 +59,4 @@ namespace Origam.Workflow
             }
             return service;
         }
-    }
 }

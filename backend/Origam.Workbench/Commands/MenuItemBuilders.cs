@@ -31,31 +31,31 @@ using Origam.Schema;
 using Origam.Workbench.Editors;
 using Origam.Git;
 
-namespace Origam.Workbench.Commands
+namespace Origam.Workbench.Commands;
+
+public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
 {
-	public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
+	public SchemaItemEditorsMenuBuilder()
 	{
-        public SchemaItemEditorsMenuBuilder()
-        {
 
         }
-        public SchemaItemEditorsMenuBuilder(bool showDialog)
-        {
+	public SchemaItemEditorsMenuBuilder(bool showDialog)
+	{
             this.showDialog = showDialog;
         }
 
-        private readonly bool showDialog;
+	private readonly bool showDialog;
         
-        #region ISubmenuBuilder Members
-        public bool LateBound
-        {
-            get
-            {
+	#region ISubmenuBuilder Members
+	public bool LateBound
+	{
+		get
+		{
                 return true;
             }
-        }
-        public bool HasItems()
-        {
+	}
+	public bool HasItems()
+	{
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
             if (!(sch.IsSchemaLoaded && sch.ActiveNode is ISchemaItemFactory)) return false;
@@ -64,8 +64,8 @@ namespace Origam.Workbench.Commands
             if (factory.NewItemTypes.Length == 0) return false;
             return true;
         }
-        public AsMenuCommand[] BuildSubmenu(object owner)
-        {
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
             object activeNode = owner ?? sch.ActiveNode;
@@ -125,8 +125,8 @@ namespace Origam.Workbench.Commands
             return items.ToArray();
         }
 
-		private static bool IsNameableType(ISchemaItemFactory factory, Type type)
-		{
+	private static bool IsNameableType(ISchemaItemFactory factory, Type type)
+	{
 			foreach(Type nameableType in factory.NameableTypes)
 			{
 				if(nameableType.Equals(type))
@@ -137,10 +137,10 @@ namespace Origam.Workbench.Commands
 			return false;
 		}
 
-		public static void AddNewItem(WorkbenchSchemaService sch, Type type,
-            ISchemaItemFactory parentElement, string newItemName, List<AsMenuCommand> items,
-            bool showDialog)
-		{
+	public static void AddNewItem(WorkbenchSchemaService sch, Type type,
+		ISchemaItemFactory parentElement, string newItemName, List<AsMenuCommand> items,
+		bool showDialog)
+	{
 			AddNewSchemaItem cmd = new AddNewSchemaItem(showDialog);
             cmd.ParentElement = parentElement;
 			cmd.Owner = type;
@@ -168,16 +168,16 @@ namespace Origam.Workbench.Commands
 			menu.Click += new EventHandler(EditNewItem);
 		}
 
-		private static void AddNewSubmenu(string name, ISubmenuBuilder builder, List<AsMenuCommand> items)
-		{
+	private static void AddNewSubmenu(string name, ISubmenuBuilder builder, List<AsMenuCommand> items)
+	{
 			AsMenuCommand result = new AsMenuCommand(name, builder);
 			result.SubItems.Add(builder);
 			items.Add(result);
 		}
-		#endregion
+	#endregion
 
-		private static void EditNewItem(object sender, EventArgs e)
-		{
+	private static void EditNewItem(object sender, EventArgs e)
+	{
 			try
 			{
 				(sender as AsMenuCommand).Command.Run();
@@ -187,21 +187,21 @@ namespace Origam.Workbench.Commands
 				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
 			}
 		}
-	}
+}
 
-	public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
+public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
+{
+	#region ISubmenuBuilder Members
+	public bool LateBound
 	{
-        #region ISubmenuBuilder Members
-        public bool LateBound
-        {
-            get
-            {
+		get
+		{
                 return false;
             }
-        }
+	}
 
-        public bool HasItems()
-        {
+	public bool HasItems()
+	{
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 
@@ -211,8 +211,8 @@ namespace Origam.Workbench.Commands
             if (factory.NewItemTypes == null) return false;
             return true;
         }
-        public AsMenuCommand[] BuildSubmenu(object owner)
-		{
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
             if (! HasItems())
             {
                 return new AsMenuCommand[0];
@@ -255,10 +255,10 @@ namespace Origam.Workbench.Commands
 			}
             return items.ToArray();
 		}
-		#endregion
+	#endregion
 
-		private ISchemaItemFactory ParentFactory(object item)
-		{
+	private ISchemaItemFactory ParentFactory(object item)
+	{
 			if(item is ISchemaItem)
 			{
 				ISchemaItem schemaItem = (item as ISchemaItem);
@@ -276,8 +276,8 @@ namespace Origam.Workbench.Commands
 			return null;
 		}
 
-		private void ConvertItem(object sender, EventArgs e)
-		{
+	private void ConvertItem(object sender, EventArgs e)
+	{
 			try
 			{
 				(sender as AsMenuCommand).Command.Run();
@@ -287,40 +287,40 @@ namespace Origam.Workbench.Commands
 				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
 			}
 		}
-	}
+}
 
 
-    public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
+public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
+{
+	private ArrayList _types;
+	private string _name;
+	private ISchemaItemFactory _parentElement;
+
+	public SchemaItemEditorNamesBuilder (ArrayList types, string name,
+		ISchemaItemFactory parentElement, bool showDialog)
 	{
-        private ArrayList _types;
-		private string _name;
-        private ISchemaItemFactory _parentElement;
-
-        public SchemaItemEditorNamesBuilder (ArrayList types, string name,
-            ISchemaItemFactory parentElement, bool showDialog)
-		{
 			_types = types;
 			_name = name;
             _parentElement = parentElement;
             ShowDialog = showDialog;
 		}
 
-        public bool ShowDialog { get; set; }
+	public bool ShowDialog { get; set; }
 
-        #region ISubmenuBuilder Members
-        public bool LateBound
-        {
-            get
-            {
+	#region ISubmenuBuilder Members
+	public bool LateBound
+	{
+		get
+		{
                 return true;
             }
-        }
-        public bool HasItems()
-        {
+	}
+	public bool HasItems()
+	{
             return _types.Count > 0;
         }
-		public AsMenuCommand[] BuildSubmenu(object owner)
-		{
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
 			WorkbenchSchemaService sch = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 			var items = new List<AsMenuCommand>();
 			foreach(Type type in _types)
@@ -329,24 +329,24 @@ namespace Origam.Workbench.Commands
 			}
             return items.ToArray();
 		}
-		#endregion
-	}
+	#endregion
+}
 
-    public class GitMenuBuilder : ISubmenuBuilder
-    {
-        readonly OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+public class GitMenuBuilder : ISubmenuBuilder
+{
+	readonly OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 
-        AsMenuCommand[] items = new AsMenuCommand[1];
-        public bool LateBound
-        {
-            get
-            {
+	AsMenuCommand[] items = new AsMenuCommand[1];
+	public bool LateBound
+	{
+		get
+		{
                 return true;
             }
-        }
+	}
 
-        public AsMenuCommand[] BuildSubmenu(object owner)
-        {
+	public AsMenuCommand[] BuildSubmenu(object owner)
+	{
             AsMenuCommand menu = new AsMenuCommand("Diff with previous version", new ShowFileDiffXml());
             menu.Click += new EventHandler(ExeItem);
             items[0] = menu;
@@ -354,13 +354,13 @@ namespace Origam.Workbench.Commands
            
         }
 
-        public bool HasItems()
-        {
+	public bool HasItems()
+	{
             return items.Length > 0 && GitManager.IsValid(settings.ModelSourceControlLocation);
         }
 
-        private void ExeItem(object sender, EventArgs e)
-        {
+	private void ExeItem(object sender, EventArgs e)
+	{
             try
             {
                 (sender as AsMenuCommand).Command.Run();
@@ -371,5 +371,4 @@ namespace Origam.Workbench.Commands
             }
         }
 
-    }
 }

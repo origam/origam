@@ -22,11 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System.Data;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class RowData
 {
-    public class RowData
-    {
-        public DataRow Row { get; set; }
-        public DataStructureEntity Entity { get; set; }
-    }
+    public DataRow Row { get; set; }
+    public DataStructureEntity Entity { get; set; }
 }

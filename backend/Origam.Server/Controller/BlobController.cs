@@ -38,41 +38,41 @@ using ImageMagick;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+
+[Controller]
+[Route("internalApi/[controller]")]
+public class BlobController : AbstractController
 {
-    [Controller]
-    [Route("internalApi/[controller]")]
-    public class BlobController : AbstractController
+    private readonly IStringLocalizer<SharedResources> localizer;
+    private readonly CoreHttpTools httpTools = new();
+    public BlobController(
+        SessionObjects sessionObjects, 
+        IStringLocalizer<SharedResources> localizer,
+        ILogger<BlobController> log) : base(log, sessionObjects)
     {
-        private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly CoreHttpTools httpTools = new();
-        public BlobController(
-            SessionObjects sessionObjects, 
-            IStringLocalizer<SharedResources> localizer,
-            ILogger<BlobController> log) : base(log, sessionObjects)
-        {
             this.localizer = localizer;
         }
-        [HttpPost("[action]")]
-        public IActionResult DownloadToken(
-            [FromBody][Required]BlobDownloadTokenInput input)
-        {
+    [HttpPost("[action]")]
+    public IActionResult DownloadToken(
+        [FromBody][Required]BlobDownloadTokenInput input)
+    {
             return AmbiguousInputToRowData(input, dataService)
                 .Map(rowData => CreateDownloadToken(input, rowData))
                 .Finally(UnwrapReturnValue);
         }
-        [HttpPost("[action]")]
-        public IActionResult UploadToken(
-            [FromBody][Required]BlobUploadTokenInput input)
-        {
+    [HttpPost("[action]")]
+    public IActionResult UploadToken(
+        [FromBody][Required]BlobUploadTokenInput input)
+    {
             return AmbiguousInputToRowData(input, dataService)
                 .Map(rowData => CreateUploadToken(input, rowData))
                 .Finally(UnwrapReturnValue);
         }
-        [AllowAnonymous]
-        [HttpGet("{token:guid}")]
-        public IActionResult Get(Guid token)
-        {
+    [AllowAnonymous]
+    [HttpGet("{token:guid}")]
+    public IActionResult Get(Guid token)
+    {
             try
             {
                 var blobDownloadRequest = sessionObjects.SessionManager
@@ -169,10 +169,10 @@ namespace Origam.Server.Controller
                 sessionObjects.SessionManager.RemoveBlobDownloadRequest(token);
             }
         }
-        [AllowAnonymous]
-        [HttpPost("{token:guid}/{filename}")]
-        public IActionResult Post(Guid token, string filename)
-        {
+    [AllowAnonymous]
+    [HttpPost("{token:guid}/{filename}")]
+    public IActionResult Post(Guid token, string filename)
+    {
             try
             {
                 var blobUploadRequest = sessionObjects.SessionManager
@@ -279,9 +279,9 @@ namespace Origam.Server.Controller
                 sessionObjects.SessionManager.RemoveBlobUploadRequest(token);
             }
         }
-        private IActionResult CreateDownloadToken(
-            BlobDownloadTokenInput input, RowData rowData)
-        {
+    private IActionResult CreateDownloadToken(
+        BlobDownloadTokenInput input, RowData rowData)
+    {
             var token = Guid.NewGuid();
             sessionObjects.SessionManager.AddBlobDownloadRequest(
                 token,
@@ -293,9 +293,9 @@ namespace Origam.Server.Controller
             return Ok(token);
         }
 
-        private IActionResult CreateUploadToken(
-            BlobUploadTokenInput input, RowData rowData)
-        {
+    private IActionResult CreateUploadToken(
+        BlobUploadTokenInput input, RowData rowData)
+    {
             var token = Guid.NewGuid();
             sessionObjects.SessionManager.AddBlobUploadRequest(
                 token,
@@ -309,8 +309,8 @@ namespace Origam.Server.Controller
                     rowData.Entity));
             return Ok(token);
         }
-        private static bool CheckMember(object val, bool throwExceptions)
-        {
+    private static bool CheckMember(object val, bool throwExceptions)
+    {
             if((val != null) && !val.Equals(string.Empty) 
             && !val.Equals(Guid.Empty))
             {
@@ -322,8 +322,8 @@ namespace Origam.Server.Controller
             }
             return false;
         }
-        private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
-        {
+    private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
+    {
             MagickImageInfo imageInfo = new MagickImageInfo(byteArrayImage);
             var sourceWidth = imageInfo.Width;
             var sourceHeight = imageInfo.Height;
@@ -352,5 +352,4 @@ namespace Origam.Server.Controller
             backgroundImage.Composite(pictureBitmap, destX, destY);
             return backgroundImage.ToByteArray(imageInfo.Format);
         }
-    }
 }

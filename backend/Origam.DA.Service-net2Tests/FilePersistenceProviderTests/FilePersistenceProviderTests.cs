@@ -36,18 +36,18 @@ using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 
-namespace Origam.DA.ServiceTests
-{
-    public class FilePersistenceProviderTests: AbstractFileTestClass
-    {     
-        protected override TestContext TestContext =>
-            TestContext.CurrentContext;
-        
-        protected override string DirName => "FilePersistenceProviderTests";
+namespace Origam.DA.ServiceTests;
 
-       ///[Test]
-        public void ShouldUpdateItemInOrigamFile()
-        {
+public class FilePersistenceProviderTests: AbstractFileTestClass
+{     
+    protected override TestContext TestContext =>
+        TestContext.CurrentContext;
+        
+    protected override string DirName => "FilePersistenceProviderTests";
+
+    ///[Test]
+    public void ShouldUpdateItemInOrigamFile()
+    {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
@@ -85,9 +85,9 @@ namespace Origam.DA.ServiceTests
              Assert.That(persistedTestBool, Is.EqualTo(false));
         }
 
-       /// [Test]
-        public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
-        {
+    /// [Test]
+    public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
+    {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
@@ -137,9 +137,9 @@ namespace Origam.DA.ServiceTests
             Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(2));
         }
 
-        [Test]
-        public void ShouldMoveItemInFileWhenParentChangedToAnItemTheFile()
-        {
+    [Test]
+    public void ShouldMoveItemInFileWhenParentChangedToAnItemTheFile()
+    {
             PropertyToNamespaceMapping.Init();
             PropertyToNamespaceMapping.AddMapping(typeof(TestItem));
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -191,9 +191,9 @@ namespace Origam.DA.ServiceTests
             Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
         }
         
-       /// [Test]
-        public void ShouldNotDeleteChildrenWhenUpdatingParentNode()
-        {
+    /// [Test]
+    public void ShouldNotDeleteChildrenWhenUpdatingParentNode()
+    {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
@@ -241,8 +241,8 @@ namespace Origam.DA.ServiceTests
             Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
         }
         
-        private XmlDocument LoadXml(string fileName)
-        {
+    private XmlDocument LoadXml(string fileName)
+    {
             var testFilePath =
                 Path.Combine(TestFilesDir.FullName, fileName);
             XmlDocument document = new XmlDocument();
@@ -250,9 +250,9 @@ namespace Origam.DA.ServiceTests
             return document;
         }
 
-       ///[Test]
-        public void ShouldWriteAndReadTestItem()
-        {
+    ///[Test]
+    public void ShouldWriteAndReadTestItem()
+    {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
@@ -276,9 +276,9 @@ namespace Origam.DA.ServiceTests
             Assert.That(origTestObject, Is.EqualTo(retrievedTestObject));
         }
         
-        ///[Test]
-        public void ShouldNotWriteFieldsWithDefaultValues()
-        {
+    ///[Test]
+    public void ShouldNotWriteFieldsWithDefaultValues()
+    {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             var persistor = new PersitHelper(TestFilesDir.FullName);
 
@@ -307,23 +307,23 @@ namespace Origam.DA.ServiceTests
             Assert.That(!attributeNames.Contains("ti:testEmptyString"));
         }
 
-        private OrigamSettings GetTestOrigamSettings()
-        {
+    private OrigamSettings GetTestOrigamSettings()
+    {
             OrigamSettings settings = new OrigamSettings();
             return settings;
         }
-    }
+}
 
-    [XmlRoot("test", Namespace = "http://schemas.origam.com/1.0.0/model-test")]
-    [ClassMetaVersion("6.0.1")]
-    internal class TestItem : IFilePersistent
+[XmlRoot("test", Namespace = "http://schemas.origam.com/1.0.0/model-test")]
+[ClassMetaVersion("6.0.1")]
+internal class TestItem : IFilePersistent
+{
+    private readonly PropertyContainer<string> testXmlContainer;
+    private readonly PropertyContainer<byte[]> testImageContainer;
+    private readonly PropertyContainer<byte[]> nullImageContainer;
+
+    public TestItem(Key primaryKey)
     {
-        private readonly PropertyContainer<string> testXmlContainer;
-        private readonly PropertyContainer<byte[]> testImageContainer;
-        private readonly PropertyContainer<byte[]> nullImageContainer;
-
-        public TestItem(Key primaryKey)
-        {
             PrimaryKey = primaryKey;
             testXmlContainer = new PropertyContainer<string>(
               containerName: nameof(testXmlContainer),
@@ -338,8 +338,8 @@ namespace Origam.DA.ServiceTests
                 containingObject: this);
         }
 
-        public TestItem(IList<string> persistorDefaultFolders)
-        {
+    public TestItem(IList<string> persistorDefaultFolders)
+    {
             ParentFolderIds.Add(persistorDefaultFolders[0], new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e"));
             ParentFolderIds.Add(persistorDefaultFolders[1], new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e"));
             PrimaryKey = new Key
@@ -360,130 +360,129 @@ namespace Origam.DA.ServiceTests
         }
 
         
-        [XmlAttribute("testEmptyBool")]
-        public bool TestEmptyBool { get; set; }
+    [XmlAttribute("testEmptyBool")]
+    public bool TestEmptyBool { get; set; }
         
-        [XmlAttribute("testEmptyInt")]
-        public int TestEmptyInt { get; set; } 
+    [XmlAttribute("testEmptyInt")]
+    public int TestEmptyInt { get; set; } 
         
-        [XmlAttribute("testEmptyString")]
-        public string TestEmptyString { get; set; }
+    [XmlAttribute("testEmptyString")]
+    public string TestEmptyString { get; set; }
         
-        [XmlAttribute("testBool")]
-        public bool TestBool { get; set; }
+    [XmlAttribute("testBool")]
+    public bool TestBool { get; set; }
         
-        [XmlAttribute("testInt")]
-        public int TestInt { get; set; } 
+    [XmlAttribute("testInt")]
+    public int TestInt { get; set; } 
 
-        [XmlAttribute("testString")]
-        public string TestString { get; set; }
+    [XmlAttribute("testString")]
+    public string TestString { get; set; }
 
-        [XmlExternalFileReference(containerName: nameof(testXmlContainer), extension: Xml)]
-        public string TestXml
-        {
-            get => testXmlContainer.Get();
-            set => testXmlContainer.Set(value);
-        }
+    [XmlExternalFileReference(containerName: nameof(testXmlContainer), extension: Xml)]
+    public string TestXml
+    {
+        get => testXmlContainer.Get();
+        set => testXmlContainer.Set(value);
+    }
         
-        [XmlExternalFileReference(containerName: nameof(testImageContainer), extension: Png)]
-        public byte[] TestImage
-        {
-            get => testImageContainer.Get();
-            set => testImageContainer.Set(value);
-        }
+    [XmlExternalFileReference(containerName: nameof(testImageContainer), extension: Png)]
+    public byte[] TestImage
+    {
+        get => testImageContainer.Get();
+        set => testImageContainer.Set(value);
+    }
         
-        [XmlExternalFileReference(containerName: nameof(nullImageContainer), extension: Png)]
-        public byte[] NullImage
-        {
-            get => nullImageContainer.Get();
-            set => nullImageContainer.Set(value);
-        }
+    [XmlExternalFileReference(containerName: nameof(nullImageContainer), extension: Png)]
+    public byte[] NullImage
+    {
+        get => nullImageContainer.Get();
+        set => nullImageContainer.Set(value);
+    }
         
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             
         }
 
-        public event EventHandler Changed
+    public event EventHandler Changed
+    {
+        add { }
+        remove { }
+    }
+    public event EventHandler Deleted
+    {
+        add { }
+        remove { }
+    }
+    public IPersistenceProvider PersistenceProvider { get; set; }
+    public Key PrimaryKey { get; private set; }
+    public Guid Id
+    {
+        get => (Guid) PrimaryKey["Id"];
+        set =>  PrimaryKey =  new Key
         {
-            add { }
-            remove { }
-        }
-        public event EventHandler Deleted
-        {
-            add { }
-            remove { }
-        }
-        public IPersistenceProvider PersistenceProvider { get; set; }
-        public Key PrimaryKey { get; private set; }
-        public Guid Id
-        {
-            get => (Guid) PrimaryKey["Id"];
-            set =>  PrimaryKey =  new Key
-            {
-                ["Id"] = value
-            };
-        }
+            ["Id"] = value
+        };
+    }
 
-        public void Persist()
-        {
+    public void Persist()
+    {
    
         }
 
-        public void Refresh()
-        {
+    public void Refresh()
+    {
 
         }
 
-        public IPersistent GetFreshItem()
-        {
+    public IPersistent GetFreshItem()
+    {
             throw new NotImplementedException();
         }
 
-        public bool IsDeleted { get; set; }
-        public bool IsPersisted { get; set; }
-        public bool UseObjectCache { get; set; }
+    public bool IsDeleted { get; set; }
+    public bool IsPersisted { get; set; }
+    public bool UseObjectCache { get; set; }
 
-        public string RelativeFilePath => "testFile.origam";
+    public string RelativeFilePath => "testFile.origam";
 
-        public Guid FileParentId { get; set; }
-        public bool IsFolder { get; }
-        public IDictionary<string, Guid> ParentFolderIds { get; } = new Dictionary<string, Guid>();
-        public string Path { get; }
-        public bool IsFileRootElement => FileParentId == Guid.Empty;
+    public Guid FileParentId { get; set; }
+    public bool IsFolder { get; }
+    public IDictionary<string, Guid> ParentFolderIds { get; } = new Dictionary<string, Guid>();
+    public string Path { get; }
+    public bool IsFileRootElement => FileParentId == Guid.Empty;
 
-        public List<string> Files => throw new NotImplementedException();
-        public bool? HasGitChange { get; set; }
+    public List<string> Files => throw new NotImplementedException();
+    public bool? HasGitChange { get; set; }
 
-        protected bool Equals(TestItem other) =>
-            TestBool == other.TestBool &&
-            TestInt == other.TestInt &&
-            string.Equals(TestString, other.TestString) &&
-            TestEmptyBool == other.TestEmptyBool &&
-            TestEmptyInt == other.TestEmptyInt &&
-            string.Equals(TestEmptyString, other.TestEmptyString) &&
-            string.Equals(TestXml, other.TestXml) &&
-            ByteArraysEqual(TestImage, other.TestImage);
+    protected bool Equals(TestItem other) =>
+        TestBool == other.TestBool &&
+        TestInt == other.TestInt &&
+        string.Equals(TestString, other.TestString) &&
+        TestEmptyBool == other.TestEmptyBool &&
+        TestEmptyInt == other.TestEmptyInt &&
+        string.Equals(TestEmptyString, other.TestEmptyString) &&
+        string.Equals(TestXml, other.TestXml) &&
+        ByteArraysEqual(TestImage, other.TestImage);
 
-        private bool ByteArraysEqual(byte[] first, byte[] second)
-        {
+    private bool ByteArraysEqual(byte[] first, byte[] second)
+    {
             if (first.Length != second.Length) return false;
             return !first
                 .Where((byte1, i) => byte1 != second[i])
                 .Any();
         }
 
-        public override bool Equals(object obj)
-        {
+    public override bool Equals(object obj)
+    {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((TestItem) obj);
         }
 
-        public override int GetHashCode()
-        {
+    public override int GetHashCode()
+    {
             throw new NotImplementedException();
         }
-    }
 }

@@ -21,13 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class SaveFilterInput
 {
-    public class SaveFilterInput
-    {
-        public Guid DataStructureEntityId { get; set; }
-        public Guid PanelId { get; set; }
-        public UIGridFilterCoreConfiguration Filter { get; set; }
-        public bool IsDefault { get; set; }
-    }
+    public Guid DataStructureEntityId { get; set; }
+    public Guid PanelId { get; set; }
+    public UIGridFilterCoreConfiguration Filter { get; set; }
+    public bool IsDefault { get; set; }
 }

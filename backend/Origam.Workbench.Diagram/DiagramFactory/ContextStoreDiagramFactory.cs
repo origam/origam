@@ -28,31 +28,31 @@ using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Diagram.DiagramFactory
+namespace Origam.Workbench.Diagram.DiagramFactory;
+
+class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
 {
-    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
+
+    private Graph graph;
+    private readonly IPersistenceProvider persistenceProvider;
+    private readonly INodeSelector nodeSelector;
+    private readonly GViewer gViewer;
+    private readonly WorkbenchSchemaService schemaService;
+    private NodeFactory nodeFactory;
+
+    public ContextStoreDiagramFactory(
+        IPersistenceProvider persistenceProvider,
+        INodeSelector nodeSelector, GViewer gViewer,
+        WorkbenchSchemaService schemaService)
     {
-
-        private Graph graph;
-        private readonly IPersistenceProvider persistenceProvider;
-        private readonly INodeSelector nodeSelector;
-        private readonly GViewer gViewer;
-        private readonly WorkbenchSchemaService schemaService;
-        private NodeFactory nodeFactory;
-
-        public ContextStoreDiagramFactory(
-            IPersistenceProvider persistenceProvider,
-            INodeSelector nodeSelector, GViewer gViewer,
-            WorkbenchSchemaService schemaService)
-        {
             this.persistenceProvider = persistenceProvider;
             this.nodeSelector = nodeSelector;
             this.gViewer = gViewer;
             this.schemaService = schemaService;
         }
 
-        public Graph Draw(IContextStore contextStore)
-        {
+    public Graph Draw(IContextStore contextStore)
+    {
             graph = new Graph();
             nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph );
             
@@ -78,5 +78,4 @@ namespace Origam.Workbench.Diagram.DiagramFactory
 
             return graph;
         }
-    }
 }

@@ -28,25 +28,25 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for AsPanelPropertyBuilder.
+/// </summary>
+public static class AsPanelPropertyBuilder
 {
-	/// <summary>
-	/// Summary description for AsPanelPropertyBuilder.
-	/// </summary>
-	public static class AsPanelPropertyBuilder
+	public static XmlElement CreateProperty(XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
+		string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition, 
+		string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
 	{
-		public static XmlElement CreateProperty(XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
-			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition, 
-			string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
-		{
 			return CreateProperty("Property", propertiesElement, propertyNamesElement, modelId, bindingMember, caption, gridCaption, table, readOnly, 
 				left, top, width, height, captionLength, captionPosition, gridColumnWidth, style, tabIndex, fieldType);
 		}
 
-			public static XmlElement CreateProperty(string category, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
-			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
-            string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
-		{
+	public static XmlElement CreateProperty(string category, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
+		string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
+		string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
+	{
 			IPersistenceProvider persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
@@ -117,5 +117,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			return propertyElement;
 		}
-	}
 }

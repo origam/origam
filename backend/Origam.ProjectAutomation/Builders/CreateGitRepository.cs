@@ -20,22 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using Origam.Git;
 
-namespace Origam.ProjectAutomation.Builders
-{
-    class CreateGitRepository : AbstractBuilder
-    {
-        public override string Name => "Init Git";
+namespace Origam.ProjectAutomation.Builders;
 
-        public override void Execute(Project project)
-        {
+class CreateGitRepository : AbstractBuilder
+{
+    public override string Name => "Init Git";
+
+    public override void Execute(Project project)
+    {
             GitManager.CreateRepository(project.SourcesFolder);
             GitManager gitmanager = new GitManager(project.SourcesFolder);
             gitmanager.Init(project.Gitusername, project.Gitemail);
         }
 
-        public override void Rollback()
-        {
+    public override void Rollback()
+    {
           
         }
-    }
 }

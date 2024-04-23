@@ -22,21 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
 
-namespace Origam.Workbench.Diagram.DiagramFactory
+namespace Origam.Workbench.Diagram.DiagramFactory;
+
+class GeneralDiagramFactory: IDiagramFactory<ISchemaItem, Graph>
 {
-    class GeneralDiagramFactory: IDiagramFactory<ISchemaItem, Graph>
-    {
-        private Graph graph;
+    private Graph graph;
 		
-        public Graph Draw(ISchemaItem item)
-        {
+    public Graph Draw(ISchemaItem item)
+    {
             graph = new Graph();
             DrawUniShape(item, null);
             return graph;
         }
 
-        private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
-        {
+    private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
+    {
             Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
             if(parentShape != null)
             {
@@ -48,11 +48,10 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             }
         }
 
-        private Node AddNode(string id, string label)
-        {
+    private Node AddNode(string id, string label)
+    {
             Node shape = graph.AddNode(id);
             shape.LabelText = label;
             return shape;
         }
-    }
 }

@@ -23,13 +23,13 @@ using System;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.EntityModel
+namespace Origam.DA.EntityModel;
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute 
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-    public class NoNestedCountAggregationsRule : AbstractModelElementRuleAttribute 
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
-        {
             if (!(instance is AggregatedColumn aggregatedColumn))
             {
                 throw new Exception(
@@ -56,9 +56,8 @@ namespace Origam.DA.EntityModel
             return null;
         }
 
-        public override Exception CheckRule(object instance, string memberName)
-        {
+    public override Exception CheckRule(object instance, string memberName)
+    {
             return CheckRule(instance);
         }
-    }
 }

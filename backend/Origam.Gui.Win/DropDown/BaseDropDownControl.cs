@@ -28,26 +28,26 @@ using Origam.UI;
 using Origam.Gui.UI;
 
 
-namespace Origam.Gui.Win
-{
-	/// <summary>
-	/// Summary description for BaseDropDownControl.
-	/// </summary>
-	public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
-	{
-        internal class NoKeyUpTextBox : EnhancedTextBox
-        {
-            private const int WM_KEYUP = 0x101;
-			private const int WM_KEYDOWN = 0x100;
-			private const int KEY_CURSOR_UP = 38;
-			private const int KEY_CURSOR_DOWN = 40;
+namespace Origam.Gui.Win;
 
-            public NoKeyUpTextBox()
-            {
+/// <summary>
+/// Summary description for BaseDropDownControl.
+/// </summary>
+public class BaseDropDownControl : BaseCaptionControl, IAsGridEditor
+{
+	internal class NoKeyUpTextBox : EnhancedTextBox
+	{
+		private const int WM_KEYUP = 0x101;
+		private const int WM_KEYDOWN = 0x100;
+		private const int KEY_CURSOR_UP = 38;
+		private const int KEY_CURSOR_DOWN = 40;
+
+		public NoKeyUpTextBox()
+		{
             }
 
-			protected override bool ProcessKeyMessage(ref Message m)
-			{
+		protected override bool ProcessKeyMessage(ref Message m)
+		{
 				if(! _noKeyUp) return base.ProcessKeyMessage (ref m);
 
 				// ignore cursor keys and tab key
@@ -100,8 +100,8 @@ namespace Origam.Gui.Win
 				return base.ProcessKeyMessage (ref m);
 			}
 
-			protected override void OnMouseWheel(MouseEventArgs e)
-			{
+		protected override void OnMouseWheel(MouseEventArgs e)
+		{
 				BaseCaptionControl bcc = this.Parent as BaseCaptionControl;
 
 				if(bcc != null)
@@ -114,71 +114,71 @@ namespace Origam.Gui.Win
 				}
 			}
 
-			private bool _noKeyUp = false;
-			public bool NoKeyUp
+		private bool _noKeyUp = false;
+		public bool NoKeyUp
+		{
+			get
 			{
-				get
-				{
 					return _noKeyUp;
 				}
-				set
-				{
+			set
+			{
 					_noKeyUp = value;
 				}
-			}
+		}
 
-			private bool _ignoreCursorDown = false;
-			public bool IgnoreCursorDown
+		private bool _ignoreCursorDown = false;
+		public bool IgnoreCursorDown
+		{
+			get
 			{
-				get
-				{
 					return _ignoreCursorDown;
 				}
-				set
-				{
+			set
+			{
 					_ignoreCursorDown = value;
 				}
-			}
+		}
 
-            protected override void OnValidating(CancelEventArgs e)
-            {
+		protected override void OnValidating(CancelEventArgs e)
+		{
                 //base.OnValidating(e);
             }
 
-			public event System.EventHandler CursorDownPressed;
-			protected virtual void OnCursorDownPressed(EventArgs e)
-			{
+		public event System.EventHandler CursorDownPressed;
+		protected virtual void OnCursorDownPressed(EventArgs e)
+		{
 				if (this.CursorDownPressed != null)
 				{
 					this.CursorDownPressed(this, e);
 				}
 			}
 
-			public event System.EventHandler CursorUpPressed;
-			protected virtual void OnCursorUpPressed(EventArgs e)
-			{
+		public event System.EventHandler CursorUpPressed;
+		protected virtual void OnCursorUpPressed(EventArgs e)
+		{
 				if (this.CursorUpPressed != null)
 				{
 					this.CursorUpPressed(this, e);
 				}
 			}
-		}
+	}
 
 
-		private BaseDropDownControl.NoKeyUpTextBox txtEdit;
-		private System.Windows.Forms.Button btnDropDown;
-		private System.Windows.Forms.Button btnOpenList;
-		private System.Windows.Forms.ImageList imageList1;
-		private System.ComponentModel.IContainer components;
+	private BaseDropDownControl.NoKeyUpTextBox txtEdit;
+	private System.Windows.Forms.Button btnDropDown;
+	private System.Windows.Forms.Button btnOpenList;
+	private System.Windows.Forms.ImageList imageList1;
+	private System.ComponentModel.IContainer components;
 
-		private static ImageListStreamer ImgListStreamer = null;
-		private PopupWindowHelper _popupHelper = null;
-		private bool _dropDownCanceledByButton = false;
-		public event EventHandler EditorClick = delegate {};
-		public event EventHandler EditorDoubleClick = delegate {};
+	private static ImageListStreamer ImgListStreamer = null;
+	private PopupWindowHelper _popupHelper = null;
+	private bool _dropDownCanceledByButton = false;
+	public event EventHandler EditorClick = delegate {};
+	public event EventHandler EditorDoubleClick = delegate {};
 
-		public BaseDropDownControl()
-		{
+	public BaseDropDownControl()
+	{
 			InitializeComponent();
 
 			txtEdit.DoubleClick += (sender, args) =>
@@ -201,18 +201,16 @@ namespace Origam.Gui.Win
 			_popupHelper.PopupCancel += new PopupCancelEventHandler(popupHelper_PopupCancel);
 		}
 
-		private void InitializeComponent()
-		{
+	private void InitializeComponent()
+	{
 			this.components = new System.ComponentModel.Container();
 			this.txtEdit = new Origam.Gui.Win.BaseDropDownControl.NoKeyUpTextBox();
 			this.btnDropDown = new System.Windows.Forms.Button();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.btnOpenList = new System.Windows.Forms.Button();
 			this.SuspendLayout();
-			// 
-			// txtEdit
-			// 
-			this.txtEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+			// 		// txtEdit
+			// 		this.txtEdit.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txtEdit.IgnoreCursorDown = false;
 			this.txtEdit.Location = new System.Drawing.Point(0, 0);
 			this.txtEdit.Name = "txtEdit";
@@ -221,10 +219,8 @@ namespace Origam.Gui.Win
 			this.txtEdit.TabIndex = 0;
 			this.txtEdit.Tag = null;
 			this.txtEdit.GotFocus += new System.EventHandler(this.txtEdit_GotFocus);
-			// 
-			// btnDropDown
-			// 
-			this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(214)), ((System.Byte)(203)), ((System.Byte)(111)));
+			// 		// btnDropDown
+			// 		this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(214)), ((System.Byte)(203)), ((System.Byte)(111)));
 			this.btnDropDown.Dock = System.Windows.Forms.DockStyle.Right;
 			this.btnDropDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnDropDown.ForeColor = System.Drawing.Color.White;
@@ -236,16 +232,12 @@ namespace Origam.Gui.Win
 			this.btnDropDown.TabIndex = 4;
 			this.btnDropDown.TabStop = false;
 			this.btnDropDown.Click += new System.EventHandler(this.btnDropDown_Click);
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
+			// 		// imageList1
+			// 		this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
 			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
 			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// btnOpenList
-			// 
-			this.btnOpenList.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(214)), ((System.Byte)(203)), ((System.Byte)(111)));
+			// 		// btnOpenList
+			// 		this.btnOpenList.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(214)), ((System.Byte)(203)), ((System.Byte)(111)));
 			this.btnOpenList.Dock = System.Windows.Forms.DockStyle.Right;
 			this.btnOpenList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnOpenList.ForeColor = System.Drawing.Color.White;
@@ -256,10 +248,8 @@ namespace Origam.Gui.Win
 			this.btnOpenList.Size = new System.Drawing.Size(16, 20);
 			this.btnOpenList.TabIndex = 2;
 			this.btnOpenList.TabStop = false;
-			// 
-			// BaseDropDownControl
-			// 
-			this.Controls.Add(this.txtEdit);
+			// 		// BaseDropDownControl
+			// 		this.Controls.Add(this.txtEdit);
 			this.Controls.Add(this.btnOpenList);
 			this.Controls.Add(this.btnDropDown);
 			this.Name = "BaseDropDownControl";
@@ -270,8 +260,8 @@ namespace Origam.Gui.Win
 
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if( disposing )
 			{
 				if(components != null)
@@ -291,8 +281,8 @@ namespace Origam.Gui.Win
 			base.Dispose (disposing);
 		}
 
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
 			if(keyData == Keys.Escape & _droppedDown)
 			{
 				_popup.Canceled = true;
@@ -308,58 +298,58 @@ namespace Origam.Gui.Win
 			return base.ProcessCmdKey (ref msg, keyData);
 		}
 
-		internal BaseDropDownControl.NoKeyUpTextBox EditControl
+	internal BaseDropDownControl.NoKeyUpTextBox EditControl
+	{
+		get
 		{
-			get
-			{
 				return this.txtEdit;
 			}
-		}
+	}
 
-		private bool _noKeyUp = false;
-		public bool NoKeyUp
+	private bool _noKeyUp = false;
+	public bool NoKeyUp
+	{
+		get
 		{
-			get
-			{
 				return _noKeyUp;
 			}
-			set
-			{
+		set
+		{
 				_noKeyUp = value;
 				this.txtEdit.NoKeyUp = value;
 			}
-		}
+	}
 
-		private bool _setFocusToDropDown = false;
-		public bool SetFocusToDropDown
+	private bool _setFocusToDropDown = false;
+	public bool SetFocusToDropDown
+	{
+		get
 		{
-			get
-			{
 				return _setFocusToDropDown;
 			}
-			set
-			{
+		set
+		{
 				_setFocusToDropDown = value;
 			}
-		}
+	}
 
-		public PopupWindowHelper PopupHelper
+	public PopupWindowHelper PopupHelper
+	{
+		get
 		{
-			get
-			{
 				return _popupHelper;
 			}
-		}
+	}
 
-		private bool _readOnly = false;
-		public bool ReadOnly
+	private bool _readOnly = false;
+	public bool ReadOnly
+	{
+		get
 		{
-			get
-			{
 				return _readOnly;
 			}
-			set
-			{
+		set
+		{
 				_readOnly = value;
 
 				if(_readOnly)
@@ -374,17 +364,17 @@ namespace Origam.Gui.Win
 					this.btnDropDown.Visible = true;
 				}
 			}
-		}
+	}
 
-		private bool _showCalendarIcon = false;
-		public bool ShowCalendarIcon
+	private bool _showCalendarIcon = false;
+	public bool ShowCalendarIcon
+	{
+		get
 		{
-			get
-			{
 				return _showCalendarIcon;
 			}
-			set
-			{
+		set
+		{
 				_showCalendarIcon = value;
 				if(value)
 				{
@@ -395,86 +385,86 @@ namespace Origam.Gui.Win
 					this.btnDropDown.ImageIndex = 0;
 				}
 			}
-		}
+	}
 
-		public virtual IDropDownPart CreatePopup ()
-		{
+	public virtual IDropDownPart CreatePopup ()
+	{
 			throw new NotImplementedException();
 		}
 
-		public virtual object SelectedValue
+	public virtual object SelectedValue
+	{
+		get
 		{
-			get
-			{
 				throw new NotImplementedException();
 			}
-			set
-			{
+		set
+		{
 				throw new NotImplementedException();
 			}
-		}
+	}
 
-		private IDropDownPart _popup;
-		[Browsable(false)]
-		public IDropDownPart Popup
+	private IDropDownPart _popup;
+	[Browsable(false)]
+	public IDropDownPart Popup
+	{
+		get
 		{
-			get
-			{
 				return _popup;
 			}
-			set
-			{
+		set
+		{
 				_popup = value;
 			}
-		}
+	}
 
-		public Button OpenListButton
+	public Button OpenListButton
+	{
+		get
 		{
-			get
-			{
 				return btnOpenList;
 			}
-		}
+	}
 
-		private string _displayText;
-		[Browsable(false)]
-		public string DisplayText
+	private string _displayText;
+	[Browsable(false)]
+	public string DisplayText
+	{
+		get
 		{
-			get
-			{
 				return _displayText;
 			}
-			set
-			{
+		set
+		{
 				_displayText = value;
 				txtEdit.Value = value;
 			}
-		}
+	}
 
-		public ScreenLocation ScreenLocation
+	public ScreenLocation ScreenLocation
+	{
+		get
 		{
-			get
-			{
 			    Point point = this.PointToScreen(new Point(txtEdit.Left, btnDropDown.Bottom));
 			    return new ScreenLocation(point.X, point.Y);
 			}
-		}
+	}
 
-		private bool _droppedDown = false;
-		public bool DroppedDown
+	private bool _droppedDown = false;
+	public bool DroppedDown
+	{
+		get
 		{
-			get
-			{
 				return _droppedDown;
 			}
-			set
-			{
+		set
+		{
 				_droppedDown = value;
 			}
-		}
+	}
 
-		public void DropDown()
-		{
+	public void DropDown()
+	{
 			try
 			{
 				if(this.ReadOnly) return;
@@ -535,13 +525,13 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void BaseDropDownControl_SizeChanged(object sender, System.EventArgs e)
-		{
+	private void BaseDropDownControl_SizeChanged(object sender, System.EventArgs e)
+	{
 			this.Height = txtEdit.Height;
 		}
 
-		private void btnDropDown_Click(object sender, System.EventArgs e)
-		{
+	private void btnDropDown_Click(object sender, System.EventArgs e)
+	{
 			try
 			{
 				this.txtEdit.Focus();
@@ -560,14 +550,14 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void btnDropDown_Enter(object sender, System.EventArgs e)
-		{
+	private void btnDropDown_Enter(object sender, System.EventArgs e)
+	{
 			// never set focus on the dropdown button, when focused, focus the edit box
 			this.txtEdit.Focus();
 		}
 
-		private void popupHelper_PopupCancel(object sender, PopupCancelEventArgs e)
-		{
+	private void popupHelper_PopupCancel(object sender, PopupCancelEventArgs e)
+	{
 			txtEdit.Value = this.DisplayText;
 
 			if(_droppedDown)
@@ -603,25 +593,24 @@ namespace Origam.Gui.Win
 			//System.Diagnostics.Debug.WriteLine("Popup cancel Event");
 		}
 	
-		private void BaseDropDownControl_VisibleChanged(object sender, EventArgs e)
-		{
+	private void BaseDropDownControl_VisibleChanged(object sender, EventArgs e)
+	{
 			_popupHelper.ClosePopup();
 		}
 	
-		private void txtEdit_GotFocus(object sender, EventArgs e)
-		{
+	private void txtEdit_GotFocus(object sender, EventArgs e)
+	{
 			txtEdit.SelectAll();
 		}
 
-		#region Events
-		public event System.EventHandler readOnlyChanged;
-		protected virtual void OnReadOnlyChanged(EventArgs e)
-		{
+	#region Events
+	public event System.EventHandler readOnlyChanged;
+	protected virtual void OnReadOnlyChanged(EventArgs e)
+	{
 			if (this.readOnlyChanged != null)
 			{
 				this.readOnlyChanged(this, e);
 			}
 		}
-		#endregion
-	}
+	#endregion
 }

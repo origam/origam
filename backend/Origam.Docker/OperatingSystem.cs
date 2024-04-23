@@ -23,25 +23,25 @@ using Docker.DotNet.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace Origam.Docker
-{
-    public class OperatingSystem
-    {
-        public string TextOs { get; }
-        public string FileNameExtension => GetFileNameExtension();
+namespace Origam.Docker;
 
-        public OperatingSystem(string textOs)
-        {
+public class OperatingSystem
+{
+    public string TextOs { get; }
+    public string FileNameExtension => GetFileNameExtension();
+
+    public OperatingSystem(string textOs)
+    {
             TextOs = textOs;
         }
 
-        public OperatingSystem(Task<VersionResponse> task)
-        {
+    public OperatingSystem(Task<VersionResponse> task)
+    {
             TextOs = task.ConfigureAwait(false).GetAwaiter().GetResult().Os;
         }
 
-        private string GetFileNameExtension()
-        {
+    private string GetFileNameExtension()
+    {
             switch (TextOs)
             {
                 case "linux":
@@ -55,9 +55,8 @@ namespace Origam.Docker
             }
         }
 
-        public bool IsOnline()
-        {
+    public bool IsOnline()
+    {
             return string.IsNullOrEmpty(TextOs);
         }
-    }
 }

@@ -25,33 +25,32 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
+[HelpTopic("File+System+Report")]
+[ClassMetaVersion("6.0.0")]
+public class FileSystemReport : AbstractReport
 {
-	[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
-    [HelpTopic("File+System+Report")]
-    [ClassMetaVersion("6.0.0")]
-    public class FileSystemReport : AbstractReport
-    {
-		public FileSystemReport() : base() { }
+	public FileSystemReport() : base() { }
 
-		public FileSystemReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+	public FileSystemReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
 
-		public FileSystemReport(Key primaryKey) : base(primaryKey) { }
+	public FileSystemReport(Key primaryKey) : base(primaryKey) { }
 
-        private string _reportPath;
+	private string _reportPath;
 
-        [Description("Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters.")]
-        [XmlAttribute("reportPath")]
-        public string ReportPath
+	[Description("Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters.")]
+	[XmlAttribute("reportPath")]
+	public string ReportPath
+	{
+		get
 		{
-			get
-			{
 				return _reportPath;
 			}
-			set
-			{
+		set
+		{
 				_reportPath = value;
 			}
-		}
-    }
+	}
 }

@@ -29,28 +29,28 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Gui.Win.Wizards
+namespace Origam.Gui.Win.Wizards;
+
+class CreateRoleCommand : AbstractMenuCommand
 {
-    class CreateRoleCommand : AbstractMenuCommand
-    {
-		RoleForm roleForm;
-		SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-		public override bool IsEnabled
+	RoleForm roleForm;
+	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+	public override bool IsEnabled
+	{
+		get
 		{
-			get
-			{
                 IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
                 return obj != null && obj.AuthorizationContext != "" && obj.AuthorizationContext != null
                     && obj.AuthorizationContext != "*";
 			}
-			set
-			{
+		set
+		{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-		}
+	}
 
-		public override void Run()
-		{
+	public override void Run()
+	{
 			ServiceCommandUpdateScriptActivity scriptActivity = new ServiceCommandUpdateScriptActivity();
 			ArrayList list = new ArrayList();
 			list.Add(new ListViewItem(scriptActivity.ModelDescription(), scriptActivity.Icon));
@@ -76,21 +76,21 @@ namespace Origam.Gui.Win.Wizards
 				GeneratedModelElements.Clear();
 			}
         }
-		public override void Execute()
-		{
+	public override void Execute()
+	{
 			IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
 			ServiceCommandUpdateScriptActivity activity =
 				CreateRole(obj.AuthorizationContext);
 			GeneratedModelElements.Add(activity);
 		}
 
-		public override int GetImageIndex(string icon)
-		{
+	public override int GetImageIndex(string icon)
+	{
 			return _schemaBrowser.ImageIndex(icon);
 		}
 
-		public override void SetSummaryText(object summary)
-		{
+	public override void SetSummaryText(object summary)
+	{
 			RichTextBox richTextBoxSummary = (RichTextBox)summary;
 			richTextBoxSummary.Text = "This Wizard create Role with this parameters:";
 			richTextBoxSummary.AppendText("");
@@ -102,5 +102,4 @@ namespace Origam.Gui.Win.Wizards
 			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
 			richTextBoxSummary.AppendText(roleForm.NameOfMenu);
 		}
-	}
 }

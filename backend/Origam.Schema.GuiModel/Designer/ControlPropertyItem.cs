@@ -25,96 +25,95 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+/// <summary>
+/// Summary description for ControlPropertyItem.
+/// </summary>
+/// 
+public enum ControlPropertyValueType {Integer=0, Boolean, String, Xml, UniqueIdentifier}
+
+
+[SchemaItemDescription("Property", "Properties", "icon_property.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ControlPropertyItem : AbstractSchemaItem 
 {
-	/// <summary>
-	/// Summary description for ControlPropertyItem.
-	/// </summary>
-	/// 
+	public const string CategoryConst = "ControlPropertyItem";
 
-	public enum ControlPropertyValueType {Integer=0, Boolean, String, Xml, UniqueIdentifier}
+	public ControlPropertyItem() : base(){}
+		
+	public ControlPropertyItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
+	public ControlPropertyItem(Key primaryKey) : base(primaryKey)	{}
 
-	[SchemaItemDescription("Property", "Properties", "icon_property.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class ControlPropertyItem : AbstractSchemaItem 
+	#region Properties
+
+	private ControlPropertyValueType _propertyType;
+		
+	[XmlAttribute("propertyType")]
+	public ControlPropertyValueType PropertyType
 	{
-		public const string CategoryConst = "ControlPropertyItem";
-
-		public ControlPropertyItem() : base(){}
-		
-		public ControlPropertyItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ControlPropertyItem(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-
-		private ControlPropertyValueType _propertyType;
-		
-        [XmlAttribute("propertyType")]
-		public ControlPropertyValueType PropertyType
+		get
 		{
-			get
-			{
 				return _propertyType;
 			}
-			set
-			{
+		set
+		{
 				_propertyType = value;
 			}
-		}
+	}
 
-		private bool _isBindOnly;
-		[XmlAttribute("bindOnly")]
-		public bool IsBindOnly
+	private bool _isBindOnly;
+	[XmlAttribute("bindOnly")]
+	public bool IsBindOnly
+	{
+		get
 		{
-			get
-			{
 				return _isBindOnly;
 			}
-			set
-			{
+		set
+		{
 				_isBindOnly = value;
 			}
-		}
+	}
 
-		private bool _isLocalizable;
-		[XmlAttribute("localizable")]
-		public bool IsLocalizable
+	private bool _isLocalizable;
+	[XmlAttribute("localizable")]
+	public bool IsLocalizable
+	{
+		get
 		{
-			get
-			{
 				return _isLocalizable;
 			}
-			set
-			{
+		set
+		{
 				_isLocalizable = value;
 			}
-		}
-		#endregion
+	}
+	#endregion
 		
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return ControlPropertyItem.CategoryConst;
 			}
-		}
+	}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
+	}
 
-		[Browsable(false)]
-		public Type SystemType {
-			get
-			{
+	[Browsable(false)]
+	public Type SystemType {
+		get
+		{
 				switch(PropertyType) {
 					case ControlPropertyValueType.Integer:
 						return typeof(int);
@@ -129,9 +128,8 @@ namespace Origam.Schema.GuiModel
 						throw new ArgumentOutOfRangeException();
 				}
 			}
-		}
-
-		#endregion
-
 	}
+
+	#endregion
+
 }

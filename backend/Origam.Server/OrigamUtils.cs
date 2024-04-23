@@ -26,13 +26,13 @@ using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
 
-namespace Origam.Server
+namespace Origam.Server;
+
+public static class OrigamUtils
 {
-    public static class OrigamUtils
+    public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
+        bool reloadModelWhenFilesChangesDetected)
     {
-        public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
-            bool reloadModelWhenFilesChangesDetected)
-        {
             OrigamEngine.OrigamEngine.ConnectRuntime();
 
             if (!reloadModelWhenFilesChangesDetected)
@@ -71,5 +71,4 @@ namespace Origam.Server
                 };
             }
         }
-    }
 }

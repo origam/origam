@@ -24,15 +24,15 @@ using System.Linq;
 using System.Xml;
 using MoreLinq;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+
+public static class OrigamDocumentSorter
 {
-    public static class OrigamDocumentSorter
+    private class XmlnsComparer : IComparer<string>
     {
-        private class XmlnsComparer : IComparer<string>
+        private const string XmlnsX = "xmlns:x";
+        public int Compare(string x, string y)
         {
-            private const string XmlnsX = "xmlns:x";
-            public int Compare(string x, string y)
-            {
                 if ((x == XmlnsX) && (y == XmlnsX))
                 {
                     return 0;
@@ -47,9 +47,9 @@ namespace Origam.DA.Service
                 }
                 return string.Compare(x, y);
             }
-        }
-        public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
-        {
+    }
+    public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
+    {
             var nameSpaceInfo = NamespaceInfo.Create(doc);
             var newDoc = new OrigamXmlDocument();
             doc.FileElement.Attributes
@@ -66,12 +66,12 @@ namespace Origam.DA.Service
             return newDoc;
         }
 
-        private static void CopyNodes(
-                XmlNode node, 
-                XmlElement targetNode, 
-                OrigamXmlDocument newDoc, 
-                NamespaceInfo namespaceInfo)
-        {
+    private static void CopyNodes(
+        XmlNode node, 
+        XmlElement targetNode, 
+        OrigamXmlDocument newDoc, 
+        NamespaceInfo namespaceInfo)
+    {
             var fullId = namespaceInfo.PersistencePrefix + ":id";
             CopyAttributes(node, targetNode);
             node.ChildNodes
@@ -92,8 +92,8 @@ namespace Origam.DA.Service
                 });
         }
 
-        private static void CopyAttributes(XmlNode childNode, XmlElement childCopy)
-        {
+    private static void CopyAttributes(XmlNode childNode, XmlElement childCopy)
+    {
             childNode?.Attributes
                 ?.Cast<XmlAttribute>()
                 .OrderBy(attr => attr.LocalName) 
@@ -103,12 +103,12 @@ namespace Origam.DA.Service
                         namespaceURI: attr.NamespaceURI,
                         value: attr.Value));
         }
-    }
+}
 
-    class NamespaceInfo
+class NamespaceInfo
+{
+    public static NamespaceInfo Create(OrigamXmlDocument doc)
     {
-        public static NamespaceInfo Create(OrigamXmlDocument doc)
-        {
             var xmlAttributes = doc.FileElement?.Attributes?
                 .Cast<XmlAttribute>();
             return new NamespaceInfo
@@ -124,7 +124,6 @@ namespace Origam.DA.Service
             };
         }
 
-        public string PersistencePrefix { get; set; }
-        public string AbstractSchemaPrefix { get; set; }
-    }
+    public string PersistencePrefix { get; set; }
+    public string AbstractSchemaPrefix { get; set; }
 }

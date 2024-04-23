@@ -21,23 +21,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema;
 
-namespace Origam.DA.Service
-{
-    public class SQLValueFormatter
-    {
-        private readonly string trueValue;
-        private readonly string falseValue;
-        private readonly Func<string, string> escapeLikeInput;
+namespace Origam.DA.Service;
 
-        public SQLValueFormatter(string trueValue, string falseValue, Func<string, string> escapeLikeInput)
-        {
+public class SQLValueFormatter
+{
+    private readonly string trueValue;
+    private readonly string falseValue;
+    private readonly Func<string, string> escapeLikeInput;
+
+    public SQLValueFormatter(string trueValue, string falseValue, Func<string, string> escapeLikeInput)
+    {
             this.trueValue = trueValue;
             this.falseValue = falseValue;
             this.escapeLikeInput = escapeLikeInput;
         }
             
-        internal string RenderString(string text, string sqlOperator=null)
-        {
+    internal string RenderString(string text, string sqlOperator=null)
+    {
             string escapedValue;
             switch (sqlOperator)
             {
@@ -52,8 +52,8 @@ namespace Origam.DA.Service
             return "'" + escapedValue.Replace("'", "''") + "'";
         }
 
-        public string Format(OrigamDataType dataType, object value, string sqlOperator=null)
-        {
+    public string Format(OrigamDataType dataType, object value, string sqlOperator=null)
+    {
             switch (dataType)
             {
                 case OrigamDataType.Integer:
@@ -105,5 +105,4 @@ namespace Origam.DA.Service
                     throw new NotImplementedException(ResourceUtils.GetString("TypeNotImplementedByDatabase", dataType.ToString()));
             }
         }
-    }
 }

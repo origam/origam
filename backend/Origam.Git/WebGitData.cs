@@ -21,23 +21,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Drawing;
 using static Origam.NewProjectEnums;
 
-namespace Origam.Git
+namespace Origam.Git;
+
+public class WebGitData
 {
-    public class WebGitData
+    public WebGitData(Image avatar, string name, string link, string readme, TypeTemplate typeTemplate)
     {
-        public WebGitData(Image avatar, string name, string link, string readme, TypeTemplate typeTemplate)
-        {
             this.avatar = avatar;
             this.RepositoryName = name;
             this.RepositoryLink = link;
             this.Readme = readme;
             this.TypeTemplate = typeTemplate;
         }
-        public Image avatar { get;  }
-        public string RepositoryName { get; }
-        public string RepositoryLink { get;  }
-        public string Readme { get;  }
-        public TypeTemplate TypeTemplate { get; set; }
+    public Image avatar { get;  }
+    public string RepositoryName { get; }
+    public string RepositoryLink { get;  }
+    public string Readme { get;  }
+    public TypeTemplate TypeTemplate { get; set; }
 
-    }
 }

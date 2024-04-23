@@ -32,34 +32,34 @@ using Origam.Workbench.Services;
 using Origam.DA;
 using Origam.Service.Core;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+
+[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
+[HelpTopic("State+Workflows")]
+[DefaultProperty("Entity")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class StateMachine : AbstractSchemaItem
 {
-	[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
-    [HelpTopic("State+Workflows")]
-    [DefaultProperty("Entity")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class StateMachine : AbstractSchemaItem
+	public const string CategoryConst = "WorkflowStateMachine";
+
+	public StateMachine() {}
+
+	public StateMachine(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+	public StateMachine(Key primaryKey) : base(primaryKey) {}
+
+	#region Public Methods
+	public StateMachineState GetState(object value)
 	{
-		public const string CategoryConst = "WorkflowStateMachine";
-
-		public StateMachine() {}
-
-		public StateMachine(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public StateMachine(Key primaryKey) : base(primaryKey) {}
-
-		#region Public Methods
-		public StateMachineState GetState(object value)
-		{
 			return AllStates().Cast<StateMachineState>()
 				.FirstOrDefault(state => 
 					(state.Type != StateMachineStateType.Group) 
 					&& state.Value.Equals(value));
 		}
 
-		public ArrayList AllStates()
-		{
+	public ArrayList AllStates()
+	{
 			var result = new ArrayList();
 			foreach(ISchemaItem item in ChildItemsRecursive)
 			{
@@ -70,14 +70,14 @@ namespace Origam.Schema.WorkflowModel
 			}
 			return result;
 		}
-		#endregion
+	#endregion
 
-		#region Overriden AbstractSchemaItem Members
+	#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType => CategoryConst;
+	public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
 			dependencies.Add(Entity);
 			if(Field != null)
 			{
@@ -93,19 +93,19 @@ namespace Origam.Schema.WorkflowModel
 			}
 			base.GetExtraDependencies (dependencies);
 		}
-		#endregion
+	#endregion
 
-		#region Properties
-		[Browsable(false)]
-		public ArrayList Events => ChildItemsByType(
-			StateMachineEvent.CategoryConst);
+	#region Properties
+	[Browsable(false)]
+	public ArrayList Events => ChildItemsByType(
+		StateMachineEvent.CategoryConst);
 
-		[Browsable(false)]
-		public ArrayList ParameterMappings => ChildItemsByType(
-			StateMachineDynamicLookupParameterMapping.CategoryConst);
+	[Browsable(false)]
+	public ArrayList ParameterMappings => ChildItemsByType(
+		StateMachineDynamicLookupParameterMapping.CategoryConst);
 
-		public object[] DynamicOperations(IXmlContainer data)
-		{
+	public object[] DynamicOperations(IXmlContainer data)
+	{
 			var dataView = GetDynamicList(DynamicOperationsLookupId, data);
 			var result = new object[dataView.Count];
 			for(var i=0; i < dataView.Count; i++)
@@ -116,8 +116,8 @@ namespace Origam.Schema.WorkflowModel
 			return result;
 		}
 
-		public object[] InitialStateValues(IXmlContainer data)
-		{
+	public object[] InitialStateValues(IXmlContainer data)
+	{
 			var list = new ArrayList();
 			if(DynamicStatesLookup == null)
 			{
@@ -145,8 +145,8 @@ namespace Origam.Schema.WorkflowModel
 			return list.ToArray();
 		}
 
-		private DataView GetDynamicList(Guid lookupId, IXmlContainer data)
-		{
+	private DataView GetDynamicList(Guid lookupId, IXmlContainer data)
+	{
 			DataView view;
 			var dataLookupService 
 				= ServiceManager.Services.GetService<IDataLookupService>();
@@ -197,86 +197,86 @@ namespace Origam.Schema.WorkflowModel
 			return view;
 		}
 		
-		public Guid EntityId;
-        [NotNullModelElementRule]
-		[TypeConverter(typeof(EntityConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("entity", "EntityId")]
-		public IDataEntity Entity
+	public Guid EntityId;
+	[NotNullModelElementRule]
+	[TypeConverter(typeof(EntityConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("entity", "EntityId")]
+	public IDataEntity Entity
+	{
+		get => (IDataEntity)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+		set
 		{
-			get => (IDataEntity)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
-			set
-			{
 				EntityId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				SetName();
 			}
-		}
+	}
 		
-		public Guid FieldId;
+	public Guid FieldId;
 
-		[TypeConverter(typeof(StateMachineEntityFieldConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("field", "FieldId")]
-		public IDataEntityColumn Field
+	[TypeConverter(typeof(StateMachineEntityFieldConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("field", "FieldId")]
+	public IDataEntityColumn Field
+	{
+		get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), new ModelElementKey(FieldId));
+		set
 		{
-			get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(FieldId));
-			set
-			{
 				FieldId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				SetName();
 			}
-		}
+	}
 		
-		public Guid DynamicStatesLookupId;
+	public Guid DynamicStatesLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("dynamicStatesLookup", "DynamicStatesLookupId")]
-		public IDataLookup DynamicStatesLookup
-		{
-			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(DynamicStatesLookupId));
-			set => DynamicStatesLookupId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("dynamicStatesLookup", "DynamicStatesLookupId")]
+	public IDataLookup DynamicStatesLookup
+	{
+		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(DynamicStatesLookupId));
+		set => DynamicStatesLookupId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 		
-		public Guid DynamicOperationsLookupId;
+	public Guid DynamicOperationsLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("dynamicOperationsLookup", "DynamicOperationsLookupId")]
-		public IDataLookup DynamicOperationsLookup
-		{
-			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
-				new ModelElementKey(DynamicOperationsLookupId));
-			set => DynamicOperationsLookupId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("dynamicOperationsLookup", "DynamicOperationsLookupId")]
+	public IDataLookup DynamicOperationsLookup
+	{
+		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), 
+			new ModelElementKey(DynamicOperationsLookupId));
+		set => DynamicOperationsLookupId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
 		
-		public Guid ReverseLookupId;
+	public Guid ReverseLookupId;
 
-		[TypeConverter(typeof(DataLookupConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("reverseLookup", "ReverseLookupId")]
-		public IDataLookup ReverseLookup
-		{
-			get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(
-					ReverseLookupId));
-			set => ReverseLookupId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-		}
-		#endregion
+	[TypeConverter(typeof(DataLookupConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("reverseLookup", "ReverseLookupId")]
+	public IDataLookup ReverseLookup
+	{
+		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), new ModelElementKey(
+				ReverseLookupId));
+		set => ReverseLookupId = (value == null) 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+	#endregion
 
-		#region Private Methods
-		private void SetName()
-		{
+	#region Private Methods
+	private void SetName()
+	{
 			if((Entity != null) && (Field != null))
 			{
 				Name = Entity.Name + "_" + Field.Name;
@@ -290,20 +290,20 @@ namespace Origam.Schema.WorkflowModel
 				Name = "";
 			}
 		}
-		#endregion
+	#endregion
 
-		#region ISchemaItemFactory Members
+	#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[] 
+	public override Type[] NewItemTypes => new[] 
 		{ 
 			typeof(StateMachineState),
 			typeof(StateMachineEvent),
 			typeof(StateMachineDynamicLookupParameterMapping)
 		};
 
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
 			string itemName = null;
 			if(typeof(T) == typeof(StateMachineState))
 			{
@@ -320,6 +320,5 @@ namespace Origam.Schema.WorkflowModel
 			}
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
-		#endregion
-	}
+	#endregion
 }

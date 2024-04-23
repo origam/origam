@@ -25,26 +25,25 @@ using System.Data;
 using Origam.Services;
 using Origam.UI;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+
+public interface IDataLookupService : IWorkbenchService
 {
-	public interface IDataLookupService : IWorkbenchService
-	{
-		object GetDisplayText(Guid lookupId, object lookupValue, string transactionId);
-		object GetDisplayText(Guid lookupId, object lookupValue, 
-            bool useCache, bool returnMessageIfNull, string transactionId);
-		object GetDisplayText(Guid lookupId, Hashtable parameters, 
-            bool useCache, bool returnMessageIfNull, string transactionId);
-        object CreateRecord(Guid lookupId, Hashtable values, string transactionId);
-		DataTable GetList(LookupListRequest request);
-		DataView GetList(Guid lookupId, string transactionId);
-		DataView GetList(Guid lookupId, Hashtable parameters, string transactionId);
-		object LinkTarget(ILookupControl lookupControl, object value);
-		Hashtable LinkParameters(object linkTarget, object value);
-		IMenuBindingResult GetMenuBinding(Guid lookupId, object value);
-		bool HasMenuBindingWithSelection(Guid lookupId);
-		DataTable GetAllValues(Guid lookupId, Hashtable keys);
-		Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys);
+	object GetDisplayText(Guid lookupId, object lookupValue, string transactionId);
+	object GetDisplayText(Guid lookupId, object lookupValue, 
+		bool useCache, bool returnMessageIfNull, string transactionId);
+	object GetDisplayText(Guid lookupId, Hashtable parameters, 
+		bool useCache, bool returnMessageIfNull, string transactionId);
+	object CreateRecord(Guid lookupId, Hashtable values, string transactionId);
+	DataTable GetList(LookupListRequest request);
+	DataView GetList(Guid lookupId, string transactionId);
+	DataView GetList(Guid lookupId, Hashtable parameters, string transactionId);
+	object LinkTarget(ILookupControl lookupControl, object value);
+	Hashtable LinkParameters(object linkTarget, object value);
+	IMenuBindingResult GetMenuBinding(Guid lookupId, object value);
+	bool HasMenuBindingWithSelection(Guid lookupId);
+	DataTable GetAllValues(Guid lookupId, Hashtable keys);
+	Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys);
 		
-		string ValueFromRow(DataRow row, string[] columns);
-	}
+	string ValueFromRow(DataRow row, string[] columns);
 }

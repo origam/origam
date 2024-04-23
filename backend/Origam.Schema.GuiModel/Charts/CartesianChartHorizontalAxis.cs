@@ -26,80 +26,79 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
+[HelpTopic("Horizontal+Axis")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class CartesianChartHorizontalAxis : AbstractSchemaItem
 {
-	[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
-    [HelpTopic("Horizontal+Axis")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class CartesianChartHorizontalAxis : AbstractSchemaItem
+	public const string CategoryConst = "CartesianChartHorizontalAxis";
+
+	public CartesianChartHorizontalAxis() : base() {Init();}
+	public CartesianChartHorizontalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public CartesianChartHorizontalAxis(Key primaryKey) : base(primaryKey) {Init();}
+
+	private void Init()
 	{
-		public const string CategoryConst = "CartesianChartHorizontalAxis";
-
-		public CartesianChartHorizontalAxis() : base() {Init();}
-		public CartesianChartHorizontalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public CartesianChartHorizontalAxis(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
 			
 		}
 
-		#region Properties
-		private string _field = "";
-		[Category("Field")]
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("field")]
-		public string Field
+	#region Properties
+	private string _field = "";
+	[Category("Field")]
+	[StringNotEmptyModelElementRule()]
+	[XmlAttribute("field")]
+	public string Field
+	{
+		get
 		{
-			get
-			{
 				return _field;
 			}
-			set
-			{
+		set
+		{
 				_field = value;
 			}
-		}
+	}
 
-		private string _caption = "";
-		[Category("Axis")]
-		[Localizable(true)]
-        [XmlAttribute("label")]
-		public string Caption
+	private string _caption = "";
+	[Category("Axis")]
+	[Localizable(true)]
+	[XmlAttribute("label")]
+	public string Caption
+	{
+		get
 		{
-			get
-			{
 				return _caption;
 			}
-			set
-			{
+		set
+		{
 				_caption = value;
 			}
-		}
+	}
 
-		private ChartAggregationType _aggregationType = ChartAggregationType.Distinct;
-		[Category("Limits"), DefaultValue(ChartAggregationType.Distinct)]
-		[XmlAttribute("aggregationType")]
-        public ChartAggregationType AggregationType
+	private ChartAggregationType _aggregationType = ChartAggregationType.Distinct;
+	[Category("Limits"), DefaultValue(ChartAggregationType.Distinct)]
+	[XmlAttribute("aggregationType")]
+	public ChartAggregationType AggregationType
+	{
+		get
 		{
-			get
-			{
 				return _aggregationType;
 			}
-			set
-			{
+		set
+		{
 				_aggregationType = value;
 			}
-		}
+	}
 
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
-		#endregion			
 	}
+	#endregion			
 }

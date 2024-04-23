@@ -28,30 +28,28 @@ using Origam.Extensions;
 using Origam.Server;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
 
+public class GetGroupsInput : IEntityIdentification
 {
-    public class GetGroupsInput : IEntityIdentification
-    {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Filter { get; set; }
-        public List<InputRowOrdering> Ordering { get; set; }
-        [Required]
-        public int RowLimit { get; set; }
-        [Required]
-        public string GroupBy { get; set; }
-        public string GroupingUnit { get; set; }
-        public Guid MasterRowId { get; set; }
-        public Guid GroupByLookupId { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        public List<Aggregation> AggregatedColumns { get; set; }
+    [RequiredNonDefault]
+    public Guid MenuId { get; set; }
+    [RequiredNonDefault]
+    public Guid DataStructureEntityId { get; set; }
+    public string Filter { get; set; }
+    public List<InputRowOrdering> Ordering { get; set; }
+    [Required]
+    public int RowLimit { get; set; }
+    [Required]
+    public string GroupBy { get; set; }
+    public string GroupingUnit { get; set; }
+    public Guid MasterRowId { get; set; }
+    public Guid GroupByLookupId { get; set; }
+    public Guid SessionFormIdentifier { get; set; }
+    public List<Aggregation> AggregatedColumns { get; set; }
 
-        public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();    
+    public List<IRowOrdering> OrderingList =>
+        Ordering.ToList<IRowOrdering>();    
 
-        public Dictionary<string, Guid> FilterLookups { get; set; }
-    }
+    public Dictionary<string, Guid> FilterLookups { get; set; }
 }

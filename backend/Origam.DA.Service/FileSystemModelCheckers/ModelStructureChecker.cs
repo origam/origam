@@ -24,19 +24,19 @@ using System.IO;
 using System.Linq;
 using Origam.DA.Service.FileSystemModeCheckers;
 
-namespace Origam.DA.Service
-{
-    public class ModelStructureChecker : IFileSystemModelChecker
-    {
-        private readonly DirectoryInfo topDirectory;
+namespace Origam.DA.Service;
 
-        public ModelStructureChecker(DirectoryInfo topDirectory)
-        {
+public class ModelStructureChecker : IFileSystemModelChecker
+{
+    private readonly DirectoryInfo topDirectory;
+
+    public ModelStructureChecker(DirectoryInfo topDirectory)
+    {
             this.topDirectory = topDirectory;
         }
 
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
             List<ErrorMessage> errors = topDirectory
                 .GetFiles(".origamPackage", SearchOption.AllDirectories)
                 .Where(packageFile => !IsOneLevelBelowTopDirectory(packageFile))
@@ -53,9 +53,8 @@ namespace Origam.DA.Service
                 errors);
         }
 
-        private bool IsOneLevelBelowTopDirectory(FileInfo file)
-        {
+    private bool IsOneLevelBelowTopDirectory(FileInfo file)
+    {
             return file.Directory?.Parent?.FullName == topDirectory.FullName;
         }
-    }
 }

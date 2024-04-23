@@ -25,52 +25,52 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+
+/// <summary>
+/// Summary description for EntitySecurityFilterReference.
+/// </summary>
+[SchemaItemDescription("Row Level Security Filter", "Row Level Security",
+	"icon_row-level-security-filter.png")]
+[HelpTopic("Row+Level+Security+Filters")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Filter")]
+[ClassMetaVersion("6.0.0")]
+public class EntitySecurityFilterReference : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntitySecurityFilterReference.
-	/// </summary>
-	[SchemaItemDescription("Row Level Security Filter", "Row Level Security",
-        "icon_row-level-security-filter.png")]
-    [HelpTopic("Row+Level+Security+Filters")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Filter")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntitySecurityFilterReference : AbstractSchemaItem
-	{
-		public const string CategoryConst = "EntitySecurityFilterReference";
+	public const string CategoryConst = "EntitySecurityFilterReference";
 
-		public EntitySecurityFilterReference() : base() {}
+	public EntitySecurityFilterReference() : base() {}
 
-		public EntitySecurityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntitySecurityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntitySecurityFilterReference(Key primaryKey) : base(primaryKey)	{}
+	public EntitySecurityFilterReference(Key primaryKey) : base(primaryKey)	{}
 	
-		#region Overriden AbstractDataEntityColumn Members
+	#region Overriden AbstractDataEntityColumn Members
 		
-		public override string ItemType
+	public override string ItemType
+	{
+		get
 		{
-			get
-			{
 				return CategoryConst;
 			}
-		}
+	}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-		{
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	{
 			if(this.Filter != null)
 				base.GetParameterReferences(this.Filter as AbstractSchemaItem, list);
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
 			dependencies.Add(this.Filter);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void UpdateReferences()
-		{
+	public override void UpdateReferences()
+	{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -86,46 +86,46 @@ namespace Origam.Schema.EntityModel
 			base.UpdateReferences ();
 		}
 
-		public override SchemaItemCollection ChildItems
+	public override SchemaItemCollection ChildItems
+	{
+		get
 		{
-			get
-			{
 				return new SchemaItemCollection();
 			}
-		}
-		#endregion
+	}
+	#endregion
 
-		#region Properties
-		private string _roles;
-		[Category("Security")]
-		[XmlAttribute("roles")]
-		public string Roles
+	#region Properties
+	private string _roles;
+	[Category("Security")]
+	[XmlAttribute("roles")]
+	public string Roles
+	{
+		get
 		{
-			get
-			{
 				return _roles;
 			}
-			set
-			{
+		set
+		{
 				_roles = value;
 			}
-		}
+	}
 		
-		public Guid FilterId;
+	public Guid FilterId;
 
-		[TypeConverter(typeof(EntityFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRuleAttribute()]
-		[Category("Security")]
-        [XmlReference("filter", "FilterId")]
-        public EntityFilter Filter
+	[TypeConverter(typeof(EntityFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRuleAttribute()]
+	[Category("Security")]
+	[XmlReference("filter", "FilterId")]
+	public EntityFilter Filter
+	{
+		get
 		{
-			get
-			{
 				return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FilterId));
 			}
-			set
-			{
+		set
+		{
 				if(value == null)
 				{
 					this.FilterId = Guid.Empty;
@@ -139,7 +139,6 @@ namespace Origam.Schema.EntityModel
 					this.Name = this.Filter.Name;
 				}
 			}
-		}
-		#endregion
 	}
+	#endregion
 }

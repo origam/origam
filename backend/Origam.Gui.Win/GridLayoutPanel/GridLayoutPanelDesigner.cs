@@ -26,25 +26,25 @@ using System.Windows.Forms.Design;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 
-namespace Origam.Gui.Win
-{
-	internal class GridLayoutPanelDesigner : ParentControlDesigner
-	{
-		// Fields
-		private bool disableDrawGrid = false;
-		private int persistedSelectedIndex = 0;
-		private DesignerVerb removeVerb;
-		private DesignerVerbCollection verbs;
-		private ISelectionService m_SelectionService;
+namespace Origam.Gui.Win;
 
-		// Methods
-		public override bool CanParent(Control control)
-		{
+internal class GridLayoutPanelDesigner : ParentControlDesigner
+{
+	// Fields
+	private bool disableDrawGrid = false;
+	private int persistedSelectedIndex = 0;
+	private DesignerVerb removeVerb;
+	private DesignerVerbCollection verbs;
+	private ISelectionService m_SelectionService;
+
+	// Methods
+	public override bool CanParent(Control control)
+	{
 			return (control is TabPage);
 		}
 
-		protected override void Dispose(bool disposing)
-		{
+	protected override void Dispose(bool disposing)
+	{
 			if (disposing)
 			{
 				ISelectionService service = (ISelectionService) this.GetService(typeof(ISelectionService));
@@ -62,35 +62,35 @@ namespace Origam.Gui.Win
 			base.Dispose(disposing);
 		}
 
-		private enum TabControlHitTest
-		{
-			TCHT_NOWHERE = 1,
-			TCHT_ONITEMICON = 2,
-			TCHT_ONITEMLABEL = 4,
-			TCHT_ONITEM = TCHT_ONITEMICON | TCHT_ONITEMLABEL
-		}
+	private enum TabControlHitTest
+	{
+		TCHT_NOWHERE = 1,
+		TCHT_ONITEMICON = 2,
+		TCHT_ONITEMLABEL = 4,
+		TCHT_ONITEM = TCHT_ONITEMICON | TCHT_ONITEMLABEL
+	}
 
-		private const int TCM_HITTEST = 0x130D;
+	private const int TCM_HITTEST = 0x130D;
 
-		private struct TCHITTESTINFO
-		{
-			public System.Drawing.Point pt;
-			public TabControlHitTest flags;
-		}
+	private struct TCHITTESTINFO
+	{
+		public System.Drawing.Point pt;
+		public TabControlHitTest flags;
+	}
 
-		public ISelectionService SelectionService
+	public ISelectionService SelectionService
+	{
+		get
 		{
-			get
-			{
 				if (m_SelectionService == null)
 					m_SelectionService =
 						(ISelectionService)(this.GetService(typeof(ISelectionService)));
 				return m_SelectionService;
 			}
-		}
+	}
 
-		protected override bool GetHitTest(System.Drawing.Point point)
-		{
+	protected override bool GetHitTest(System.Drawing.Point point)
+	{
 			if (this.SelectionService.PrimarySelection == this.Control)
 			{
 				TCHITTESTINFO hti = new TCHITTESTINFO();
@@ -119,8 +119,8 @@ namespace Origam.Gui.Win
 			return false;
 		}
 
-		internal static TabPage GetTabPageOfComponent(object comp)
-		{
+	internal static TabPage GetTabPageOfComponent(object comp)
+	{
 			if (!(comp is Control))
 			{
 				return null;
@@ -133,16 +133,16 @@ namespace Origam.Gui.Win
 			return (TabPage) parent;
 		}
 
-		private void CheckVerbStatus()
-		{
+	private void CheckVerbStatus()
+	{
 			if (this.removeVerb != null)
 			{
 				this.removeVerb.Enabled = this.Control.Controls.Count > 0;
 			}
 		}
 
-		public override void Initialize(IComponent component)
-		{
+	public override void Initialize(IComponent component)
+	{
 			base.Initialize(component);
 			ISelectionService service = (ISelectionService) this.GetService(typeof(ISelectionService));
 			if (service != null)
@@ -159,8 +159,8 @@ namespace Origam.Gui.Win
 			((TabControl) component).GotFocus += new EventHandler(this.OnGotFocus);
 		}
 
-		private void OnAdd(object sender, EventArgs eevent)
-		{
+	private void OnAdd(object sender, EventArgs eevent)
+	{
 			TabControl component = (TabControl) base.Component;
 			MemberDescriptor member = TypeDescriptor.GetProperties(base.Component)["Controls"];
 			IDesignerHost service = (IDesignerHost) this.GetService(typeof(IDesignerHost));
@@ -207,8 +207,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnComponentChanged(object sender, ComponentChangedEventArgs e)
-		{
+	private void OnComponentChanged(object sender, ComponentChangedEventArgs e)
+	{
 			if (((e.Component == base.Component) && (e.Member != null)) && (e.Member.Name == "TabPages"))
 			{
 				PropertyDescriptor member = TypeDescriptor.GetProperties(base.Component)["Controls"];
@@ -217,8 +217,8 @@ namespace Origam.Gui.Win
 			this.CheckVerbStatus();
 		}
 
-		private void OnComponentChanging(object sender, ComponentChangingEventArgs e)
-		{
+	private void OnComponentChanging(object sender, ComponentChangingEventArgs e)
+	{
 			if (((e.Component == base.Component) && (e.Member != null)) && (e.Member.Name == "TabPages"))
 			{
 				PropertyDescriptor member = TypeDescriptor.GetProperties(base.Component)["Controls"];
@@ -226,8 +226,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnGotFocus(object sender, EventArgs e)
-		{
+	private void OnGotFocus(object sender, EventArgs e)
+	{
 			EventHandlerService service = (EventHandlerService) this.GetService(typeof(EventHandlerService));
 			if (service != null)
 			{
@@ -239,8 +239,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected override void OnPaintAdornments(PaintEventArgs pe)
-		{
+	protected override void OnPaintAdornments(PaintEventArgs pe)
+	{
 			try
 			{
 				this.disableDrawGrid = true;
@@ -252,8 +252,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnRemove(object sender, EventArgs eevent)
-		{
+	private void OnRemove(object sender, EventArgs eevent)
+	{
 			TabControl component = (TabControl) base.Component;
 			if ((component != null) && (component.TabPages.Count != 0))
 			{
@@ -292,8 +292,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnSelectionChanged(object sender, EventArgs e)
-		{
+	private void OnSelectionChanged(object sender, EventArgs e)
+	{
 			ISelectionService service = (ISelectionService) this.GetService(typeof(ISelectionService));
 			if (service != null)
 			{
@@ -311,8 +311,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void OnTabSelectedIndexChanged(object sender, EventArgs e)
-		{
+	private void OnTabSelectedIndexChanged(object sender, EventArgs e)
+	{
 			ISelectionService service = (ISelectionService) this.GetService(typeof(ISelectionService));
 			if (service != null)
 			{
@@ -335,8 +335,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected override void PreFilterProperties(IDictionary properties)
-		{
+	protected override void PreFilterProperties(IDictionary properties)
+	{
 			base.PreFilterProperties(properties);
 			string[] strArray = new string[] { "SelectedIndex" };
 			Attribute[] attributes = new Attribute[0];
@@ -350,8 +350,8 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		protected override void WndProc(ref Message m)
-		{
+	protected override void WndProc(ref Message m)
+	{
 			if (m.Msg == 0x84)
 			{
 				base.WndProc(ref m);
@@ -366,35 +366,35 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		// Properties
-		protected override bool DrawGrid
+	// Properties
+	protected override bool DrawGrid
+	{
+		get
 		{
-			get
-			{
 				if (this.disableDrawGrid)
 				{
 					return false;
 				}
 				return base.DrawGrid;
 			}
-		}
+	}
 
-		private int SelectedIndex
+	private int SelectedIndex
+	{
+		get
 		{
-			get
-			{
 				return this.persistedSelectedIndex;
 			}
-			set
-			{
+		set
+		{
 				this.persistedSelectedIndex = value;
 			}
-		}
+	}
 
-		public override DesignerVerbCollection Verbs
+	public override DesignerVerbCollection Verbs
+	{
+		get
 		{
-			get
-			{
 				if (this.verbs == null)
 				{
 					this.removeVerb = new DesignerVerb("Remove", new EventHandler(this.OnRemove));
@@ -405,6 +405,5 @@ namespace Origam.Gui.Win
 				this.removeVerb.Enabled = this.Control.Controls.Count > 0;
 				return this.verbs;
 			}
-		}
 	}
 }

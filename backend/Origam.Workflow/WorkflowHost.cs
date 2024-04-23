@@ -31,61 +31,61 @@ using Origam.Extensions;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+
+/// <summary>
+/// Summary description for WorkflowHost.
+/// </summary>
+public class WorkflowHost : IDisposable
 {
-	/// <summary>
-	/// Summary description for WorkflowHost.
-	/// </summary>
-	public class WorkflowHost : IDisposable
+	private static readonly log4net.ILog log =
+		log4net.LogManager.GetLogger(
+			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+	private static WorkflowHost _defaultHost = new WorkflowHost();
+
+	private ArrayList _runningWorkflows = new ArrayList();
+	private Hashtable _runningForms = new Hashtable();
+	private bool _supportsUI = false;
+
+	public event WorkflowHostEvent WorkflowFinished;
+	public event WorkflowHostMessageEvent WorkflowMessage;
+	public event WorkflowHostFormEvent FormRequested;
+
+	public WorkflowHost()
 	{
-		private static readonly log4net.ILog log =
-			log4net.LogManager.GetLogger(
-				System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		private static WorkflowHost _defaultHost = new WorkflowHost();
-
-		private ArrayList _runningWorkflows = new ArrayList();
-		private Hashtable _runningForms = new Hashtable();
-		private bool _supportsUI = false;
-
-		public event WorkflowHostEvent WorkflowFinished;
-		public event WorkflowHostMessageEvent WorkflowMessage;
-		public event WorkflowHostFormEvent FormRequested;
-
-		public WorkflowHost()
-		{
 		}
 
-		public static WorkflowHost DefaultHost
+	public static WorkflowHost DefaultHost
+	{
+		get
 		{
-			get
-			{
 				return _defaultHost;
 			}
-		}
+	}
 
-		public bool SupportsUI
+	public bool SupportsUI
+	{
+		get
 		{
-			get
-			{
 				return _supportsUI;
 			}
-			set
-			{
+		set
+		{
 				_supportsUI = value;
 			}
-		}
+	}
 
-		public ArrayList RunningWorkflows
+	public ArrayList RunningWorkflows
+	{
+		get
 		{
-			get
-			{
 				return _runningWorkflows;
 			}
-		}
+	}
 
-		public void ExecuteWorkflow(WorkflowEngine engine)
-		{
+	public void ExecuteWorkflow(WorkflowEngine engine)
+	{
             lock(_runningWorkflows)
             {
                 _runningWorkflows.Add(engine);
@@ -94,8 +94,8 @@ namespace Origam.Workflow
 			engine.RunWorkflowFromHost();
 		}
 
-		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
-		{
+	internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
+	{
 			try
 			{
 				// pass notification texts up to the calling workflow
@@ -129,8 +129,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		private bool PassExceptionOn(WorkflowEngine engine, Exception exception)
-		{
+	private bool PassExceptionOn(WorkflowEngine engine, Exception exception)
+	{
 			if (engine.WorkflowBlock is not Schema.WorkflowModel.Workflow)
 			{
 				return true;
@@ -141,8 +141,8 @@ namespace Origam.Workflow
 				exception.Data["onFailure"] is not StepFailureMode.Suppress;
 		}
 
-		internal void OnWorkflowUserMessage(WorkflowEngine engine, string message, Exception exception, bool popup)
-		{
+	internal void OnWorkflowUserMessage(WorkflowEngine engine, string message, Exception exception, bool popup)
+	{
 			UICheck();
 
 			if(WorkflowMessage != null)
@@ -151,13 +151,13 @@ namespace Origam.Workflow
 			}
 		}
 
-		internal void OnWorkflowForm(Tasks.UIEngineTask task, IDataDocument data, string description, 
-			string notification, FormControlSet form, DataStructureRuleSet ruleSet, IEndRule endRule, 
-			bool isFinalForm, bool allowSave, bool isAutoNext, AbstractDataStructure structure,
-			DataStructureMethod refreshMethod, DataStructureSortSet refreshSort, bool isRefreshSuppressedBeforeFirstSave,
-			IEndRule saveConfirmationRule, AbstractDataStructure saveStructure, Hashtable parameters,
-            bool refreshPortalAfterSave)
-		{
+	internal void OnWorkflowForm(Tasks.UIEngineTask task, IDataDocument data, string description, 
+		string notification, FormControlSet form, DataStructureRuleSet ruleSet, IEndRule endRule, 
+		bool isFinalForm, bool allowSave, bool isAutoNext, AbstractDataStructure structure,
+		DataStructureMethod refreshMethod, DataStructureSortSet refreshSort, bool isRefreshSuppressedBeforeFirstSave,
+		IEndRule saveConfirmationRule, AbstractDataStructure saveStructure, Hashtable parameters,
+		bool refreshPortalAfterSave)
+	{
 			UICheck();
 
 			Guid taskId = Guid.NewGuid();
@@ -174,8 +174,8 @@ namespace Origam.Workflow
 			}
 		}
 
-		public void AbortWorkflowForm(Guid taskId)
-        {
+	public void AbortWorkflowForm(Guid taskId)
+	{
             Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
 
             if (task == null)
@@ -189,8 +189,8 @@ namespace Origam.Workflow
             PrepareAndStartThread(thread, task);
         }
 
-        public void FinishWorkflowForm(Guid taskId, IDataDocument data)
-		{
+	public void FinishWorkflowForm(Guid taskId, IDataDocument data)
+	{
 			Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
 
 			if (task == null)
@@ -206,8 +206,8 @@ namespace Origam.Workflow
             PrepareAndStartThread(thread, task);
 		}
 
-        private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
-        {            
+	private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
+	{            
             thread.Name = "Workflow " + task.Engine.WorkflowInstanceId.ToString();
             thread.IsBackground = true;
             thread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -215,20 +215,19 @@ namespace Origam.Workflow
             thread.Start();
         }
 
-        private void UICheck()
-		{
+	private void UICheck()
+	{
 			if(! SupportsUI)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorNoWorkflowUI"));
 			}
 		}
 
-		#region IDisposable Members
+	#region IDisposable Members
 
-		public void Dispose()
-		{
+	public void Dispose()
+	{
 		}
 
-		#endregion
-	}
+	#endregion
 }

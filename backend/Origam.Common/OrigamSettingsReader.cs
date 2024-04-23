@@ -27,22 +27,22 @@ using System.Xml.Serialization;
 using Origam.Extensions;
 
 
-namespace Origam
+namespace Origam;
+
+public class OrigamSettingsReader
 {
-    public class OrigamSettingsReader
+    private static string DefaultPathToOrigamSettings => 
+        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
+
+    private readonly string pathToOrigamSettings;
+
+    public OrigamSettingsReader(string pathToOrigamSettings = null)
     {
-        private static string DefaultPathToOrigamSettings => 
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
-
-        private readonly string pathToOrigamSettings;
-
-        public OrigamSettingsReader(string pathToOrigamSettings = null)
-        {
             this.pathToOrigamSettings = pathToOrigamSettings
                                         ?? DefaultPathToOrigamSettings;
         }
-        public OrigamSettingsCollection GetAll()
-        {
+    public OrigamSettingsCollection GetAll()
+    {
             XmlReader reader=null;
             try
             {
@@ -71,13 +71,13 @@ namespace Origam
             }
         }
 
-        private XmlNode GetSettingsNode()
-        {
+    private XmlNode GetSettingsNode()
+    {
             return GetNodeByPath("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
         }
 
-        private XmlNode GetNodeByPath(string pathToNode)
-        {
+    private XmlNode GetNodeByPath(string pathToNode)
+    {
             XmlDocument document = new XmlDocument();
             document.Load(pathToOrigamSettings);
 
@@ -91,8 +91,8 @@ namespace Origam
             return arrayOfOrigamSettingsNode;
         }
 
-        public static XmlDocument CreateEmptyDocument()
-        {
+    public static XmlDocument CreateEmptyDocument()
+    {
             XmlDocument doc = new XmlDocument();
             XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
             doc.AppendChild(xmlDeclaration);
@@ -111,8 +111,8 @@ namespace Origam
             return doc;
         }
 	
-        public void Write(OrigamSettingsCollection configuration)
-        {
+    public void Write(OrigamSettingsCollection configuration)
+    {
             XmlDocument document = CreateEmptyDocument();
             XmlNode xmlSerializerNode = 
                 document.SelectSingleNode("OrigamSettings/xmlSerializerSection");
@@ -127,9 +127,8 @@ namespace Origam
             document.Save(pathToOrigamSettings);
         }
 
-        public string GetDefaultPathToOrigamSettings()
-        {
+    public string GetDefaultPathToOrigamSettings()
+    {
             return DefaultPathToOrigamSettings;
         }
-    }
 }

@@ -26,26 +26,26 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.FileSystemModeCheckers;
 
-namespace Origam.DA.Service.FileSystemModelCheckers
-{
-    public class DeadModelFilesChecker: IFileSystemModelChecker
-    {
-        private readonly FilePersistenceProvider filePersistenceProvider;
-        private readonly FileFilter ignoredFileFilter;
-        private readonly List<FileInfo> modelDirectoryFiles;
+namespace Origam.DA.Service.FileSystemModelCheckers;
 
-        public DeadModelFilesChecker(
-            FilePersistenceProvider filePersistenceProvider,
-            FileFilter ignoredFileFilter,
-            List<FileInfo> modelDirectoryFiles)
-        {
+public class DeadModelFilesChecker: IFileSystemModelChecker
+{
+    private readonly FilePersistenceProvider filePersistenceProvider;
+    private readonly FileFilter ignoredFileFilter;
+    private readonly List<FileInfo> modelDirectoryFiles;
+
+    public DeadModelFilesChecker(
+        FilePersistenceProvider filePersistenceProvider,
+        FileFilter ignoredFileFilter,
+        List<FileInfo> modelDirectoryFiles)
+    {
             this.filePersistenceProvider = filePersistenceProvider;
             this.ignoredFileFilter = ignoredFileFilter;
             this.modelDirectoryFiles = modelDirectoryFiles;
         }
 
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
             var fileNamesToIgnore = new []
             {
                 ".origamGroupReference",
@@ -102,5 +102,4 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                 )
             };
         }
-    }
 }

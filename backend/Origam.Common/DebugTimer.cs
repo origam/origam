@@ -22,29 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Diagnostics;
 
-namespace Origam
+namespace Origam;
+
+public class DebugTimer : IDisposable
 {
-    public class DebugTimer : IDisposable
-    {
-        private readonly LogType logType;
-        private readonly Stopwatch watch;
-        private readonly string message;
-        private static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private readonly LogType logType;
+    private readonly Stopwatch watch;
+    private readonly string message;
+    private static readonly log4net.ILog log =
+        log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         
-        public DebugTimer(LogType logType = LogType.CONSOLE,
-            string message = "Elapsed time:")
-        {
+    public DebugTimer(LogType logType = LogType.CONSOLE,
+        string message = "Elapsed time:")
+    {
             this.message = message;
             this.logType = logType;
             watch= new Stopwatch();
             watch.Start();
         }
 
-        public void Dispose()
-        {
+    public void Dispose()
+    {
             watch.Stop();
 
             switch (logType)
@@ -68,7 +68,6 @@ namespace Origam
                     throw new NotImplementedException();
             }
         }
-    }
-    
-    public enum LogType{CONSOLE, INFO, DEBUG, WARNING, ERROR}
 }
+    
+public enum LogType{CONSOLE, INFO, DEBUG, WARNING, ERROR}

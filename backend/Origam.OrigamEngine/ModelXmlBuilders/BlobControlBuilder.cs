@@ -24,15 +24,15 @@ using System.Xml;
 
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+
+/// <summary>
+/// Summary description for DateBoxBuilder.
+/// </summary>
+public class BlobControlBuilder
 {
-	/// <summary>
-	/// Summary description for DateBoxBuilder.
-	/// </summary>
-	public class BlobControlBuilder
+	public static void Build(XmlElement propertyElement, ControlSetItem control)
 	{
-		public static void Build(XmlElement propertyElement, ControlSetItem control)
-		{
 			propertyElement.SetAttribute("Entity", "String");
 			propertyElement.SetAttribute("Column", "Blob");
 
@@ -78,5 +78,4 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				}
 			}
 		}
-	}
 }

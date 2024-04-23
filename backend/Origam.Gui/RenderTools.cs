@@ -25,13 +25,13 @@ using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+public class RenderTools
 {
-    public class RenderTools
-    {
-        public static bool ShouldRenderAction(
-            EntityUIAction action, Guid formId, Guid panelId)
-		{
+	public static bool ShouldRenderAction(
+		EntityUIAction action, Guid formId, Guid panelId)
+	{
 			if(action is EntityDropdownAction)
 			{
 				foreach(EntityUIAction subAction in action.ChildItemsByType(
@@ -52,13 +52,13 @@ namespace Origam.Gui
 			}
 		}
 
-		public static bool ShouldRender(ControlSetItem control)
-		{
+	public static bool ShouldRender(ControlSetItem control)
+	{
 			return ShouldRender(control.Features, control.Roles);
 		}
 
-		public static bool ShouldRender(string features, string roles)
-		{
+	public static bool ShouldRender(string features, string roles)
+	{
 			IParameterService parameterService 
                 = ServiceManager.Services.GetService(
                 typeof(IParameterService)) as IParameterService;
@@ -78,5 +78,4 @@ namespace Origam.Gui
 			}
 			return true;
 		}
-    }
 }

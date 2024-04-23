@@ -6,19 +6,19 @@ using System.Xml;
 using System.Xml.Linq;
 using Origam.DA.Common;
 
-namespace Origam.DA.Service
-{
-    public class OrigamXDocument
-    {
-        public XDocument XDocument { get; }
+namespace Origam.DA.Service;
 
-        public bool IsEmpty => XDocument.Root == null || !XDocument.Root.Descendants().Any();
-        public XElement FileElement => XDocument.Root;
-        public IEnumerable<OrigamNameSpace> Namespaces => GetNamespaces(XDocument);
+public class OrigamXDocument
+{
+    public XDocument XDocument { get; }
+
+    public bool IsEmpty => XDocument.Root == null || !XDocument.Root.Descendants().Any();
+    public XElement FileElement => XDocument.Root;
+    public IEnumerable<OrigamNameSpace> Namespaces => GetNamespaces(XDocument);
         
-        public IEnumerable<XElement> ClassNodes => XDocument.Root.Descendants();
-        public OrigamXDocument()
-        {
+    public IEnumerable<XElement> ClassNodes => XDocument.Root.Descendants();
+    public OrigamXDocument()
+    {
             string xml = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?><x:file xmlns:x=\"{0}\"/>",
                 OrigamFile.ModelPersistenceUri);
@@ -30,8 +30,8 @@ namespace Origam.DA.Service
             }
         }
 
-        public OrigamXDocument(XmlDocument xmlDocument)
-        {
+    public OrigamXDocument(XmlDocument xmlDocument)
+    {
             using (var nodeReader = new XmlNodeReader(xmlDocument))
             {
                 nodeReader.MoveToContent();
@@ -39,20 +39,20 @@ namespace Origam.DA.Service
             }
         }
 
-        public OrigamXDocument(FileInfo file)
-        {
+    public OrigamXDocument(FileInfo file)
+    {
             XDocument = XDocument.Load(file.FullName);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nameSpaceShortCut"> example: "asi"</param>
-        /// <param name="nameSpace">example: "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string AddNamespace(string nameSpaceShortCut, string nameSpace)
-        {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nameSpaceShortCut"> example: "asi"</param>
+    /// <param name="nameSpace">example: "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public string AddNamespace(string nameSpaceShortCut, string nameSpace)
+    {
             if (IsEmpty)
             {
                 throw new Exception("Cannot add namespace to an empty document");
@@ -64,8 +64,8 @@ namespace Origam.DA.Service
             return nextNamespaceName;
         }
 
-        public static IEnumerable<OrigamNameSpace> GetNamespaces(XDocument doc)
-        {
+    public static IEnumerable<OrigamNameSpace> GetNamespaces(XDocument doc)
+    {
             return doc.Root
                 .Attributes()
                 .Select(attr => attr.Value)
@@ -73,8 +73,8 @@ namespace Origam.DA.Service
                 .Select(OrigamNameSpace.CreateOrGet);
         }
 
-        private string GetNextNamespaceName(string nameSpaceName, string nameSpace)
-        {
+    private string GetNextNamespaceName(string nameSpaceName, string nameSpace)
+    {
             string currentValue = XDocument.Root
                 ?.Attributes(XName.Get(nameSpaceName, "http://www.w3.org/2000/xmlns/"))
                 .FirstOrDefault()
@@ -96,8 +96,8 @@ namespace Origam.DA.Service
             return nameSpaceName + nextNamespaceNumber;
         }
 
-        public void RenameNamespace(XNamespace oldNamespace, XNamespace updatedNamespace)
-        {
+    public void RenameNamespace(XNamespace oldNamespace, XNamespace updatedNamespace)
+    {
             XAttribute namespaceAttribute = FileElement
                 .Attributes()
                 .First(attr => attr.Value == oldNamespace);
@@ -124,8 +124,8 @@ namespace Origam.DA.Service
             } 
         }
 
-        public void FixNamespaces()
-        {
+    public void FixNamespaces()
+    {
             var nodeNamespaces = FileElement
                 .Descendants()
                 .Select(node => node.Name.NamespaceName);
@@ -144,8 +144,8 @@ namespace Origam.DA.Service
                 .Remove();
         }
 
-        public XNamespace FindClassNamespace(string fullTypeName)
-        {
+    public XNamespace FindClassNamespace(string fullTypeName)
+    {
             return 
                FileElement
                    .Attributes()
@@ -153,5 +153,4 @@ namespace Origam.DA.Service
                    .FirstOrDefault(nameSpace => nameSpace.Contains(fullTypeName))
                ?? throw new Exception($"Could not find namespace for class {fullTypeName} in {XDocument}");
         }
-    }
 }

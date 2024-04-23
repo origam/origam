@@ -25,13 +25,13 @@ using Origam.Workbench.Services;
 using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+
+public class DeploymentHelper
 {
-	public class DeploymentHelper
+	public static DeploymentVersion CreateVersion
+		(SchemaItemGroup group, string name, string version)
 	{
-		public static DeploymentVersion CreateVersion
-            (SchemaItemGroup group, string name, string version)
-		{
 			var activePackage = ServiceManager.Services
 				.GetService<ISchemaService>()
 				.ActiveExtension;
@@ -43,10 +43,10 @@ namespace Origam.Schema.DeploymentModel
 			return deploymentVersion;
 		}
 		
-		public static ServiceCommandUpdateScriptActivity
-            CreateDatabaseScript(
-	            string name, string script, DatabaseType platformName)
-		{
+	public static ServiceCommandUpdateScriptActivity
+		CreateDatabaseScript(
+			string name, string script, DatabaseType platformName)
+	{
 			var schemaService
 				= ServiceManager.Services.GetService<ISchemaService>();
             var serviceSchemaItemProvider 
@@ -69,13 +69,12 @@ namespace Origam.Schema.DeploymentModel
             return newActivity;
         }
 
-        public static ServiceCommandUpdateScriptActivity CreateSystemRole(
-	        string roleName, AbstractSqlDataService abstractSqlData)
-        {
+	public static ServiceCommandUpdateScriptActivity CreateSystemRole(
+		string roleName, AbstractSqlDataService abstractSqlData)
+	{
             var script = abstractSqlData.CreateSystemRole(roleName);
             var activity = CreateDatabaseScript(
 	            $"AddRole_{roleName}", script,abstractSqlData.PlatformName);
             return activity;
         }
-	}
 }

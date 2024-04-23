@@ -23,14 +23,13 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+
+public class InputRowOrdering : IRowOrdering
 {
-    public class InputRowOrdering : IRowOrdering
-    {
-        [Required] public string ColumnId { get; set; }
+    [Required] public string ColumnId { get; set; }
 
-        [Required] public string Direction { get; set; }
+    [Required] public string Direction { get; set; }
 
-        public Guid LookupId { get; set; }
-    }
+    public Guid LookupId { get; set; }
 }

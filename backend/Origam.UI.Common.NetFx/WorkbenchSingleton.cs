@@ -21,22 +21,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.UI;
 
-namespace Origam.Workbench
+namespace Origam.Workbench;
+
+public class WorkbenchSingleton
 {
-	public class WorkbenchSingleton
-	{
-		static IWorkbench workbench = null;
+	static IWorkbench workbench = null;
 		
-		public static IWorkbench Workbench 
+	public static IWorkbench Workbench 
+	{
+		get 
 		{
-			get 
-			{
 				return workbench;
 			}
-			set 
-			{
+		set 
+		{
 				workbench = value;
 			}
-		}
 	}
 }

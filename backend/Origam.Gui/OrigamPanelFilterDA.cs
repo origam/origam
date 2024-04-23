@@ -25,15 +25,15 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+
+/// <summary>
+/// Summary description for OrigamPanelFilterDA.
+/// </summary>
+public class OrigamPanelFilterDA
 {
-	/// <summary>
-	/// Summary description for OrigamPanelFilterDA.
-	/// </summary>
-	public class OrigamPanelFilterDA
+	public static OrigamPanelFilter LoadFilters(Guid panelId)
 	{
-		public static OrigamPanelFilter LoadFilters(Guid panelId)
-		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
@@ -57,8 +57,8 @@ namespace Origam.Gui
 			return storedFilters;
 		}
 
-		public static void PersistFilter(OrigamPanelFilter filter)
-		{
+	public static void PersistFilter(OrigamPanelFilter filter)
+	{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
 			// persist filters to the database
@@ -73,8 +73,8 @@ namespace Origam.Gui
 			dataServiceAgent.Run();
 		}
 
-		public static OrigamPanelFilter LoadFilter(Guid id)
-		{
+	public static OrigamPanelFilter LoadFilter(Guid id)
+	{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
 			OrigamPanelFilter result = new OrigamPanelFilter();
@@ -97,8 +97,8 @@ namespace Origam.Gui
 			return result;
 		}
 
-		public static object StoredFilterValue(OrigamPanelFilter.PanelFilterDetailRow row, Type type, int valueNumber)
-		{
+	public static object StoredFilterValue(OrigamPanelFilter.PanelFilterDetailRow row, Type type, int valueNumber)
+	{
 			if(type == typeof(bool))
 			{
 				return StoredFilterValue(row, "BoolValue", valueNumber);
@@ -127,8 +127,8 @@ namespace Origam.Gui
 			}
 		}
 
-		public static void AddPanelFilterDetailRow(OrigamPanelFilter filterDS, Guid profileId, Guid filterId, string columnName, int oper, object value1, object value2)
-		{
+	public static void AddPanelFilterDetailRow(OrigamPanelFilter filterDS, Guid profileId, Guid filterId, string columnName, int oper, object value1, object value2)
+	{
 			OrigamPanelFilter.PanelFilterDetailRow detail =  filterDS.PanelFilterDetail.NewPanelFilterDetailRow();
 
 			detail.Id = Guid.NewGuid();
@@ -186,8 +186,8 @@ namespace Origam.Gui
 			filterDS.PanelFilterDetail.Rows.Add(detail);
 		}
 
-		private static object StoredFilterValue(OrigamPanelFilter.PanelFilterDetailRow row, string columnName, int valueNumber)
-		{
+	private static object StoredFilterValue(OrigamPanelFilter.PanelFilterDetailRow row, string columnName, int valueNumber)
+	{
 			string col =  (valueNumber == 1 ? columnName : columnName + valueNumber.ToString());
 
 			if(row.IsNull(col))
@@ -199,5 +199,4 @@ namespace Origam.Gui
 				return row[col];
 			}
 		}
-	}
 }

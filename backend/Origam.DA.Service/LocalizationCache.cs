@@ -27,92 +27,92 @@ using System.Collections;
 using System.Threading;
 using Origam.Extensions;
 
-namespace Origam.DA.ObjectPersistence
-{
-	/// <summary>
-	/// Summary description for LocalizationCache.
-	/// </summary>
-	public class LocalizationCache: ILocalizationCache, IDisposable
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private readonly Hashtable languages = new Hashtable();
-		private readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+namespace Origam.DA.ObjectPersistence;
 
-		public LocalizationCache()
-		{
+/// <summary>
+/// Summary description for LocalizationCache.
+/// </summary>
+public class LocalizationCache: ILocalizationCache, IDisposable
+{
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	private readonly Hashtable languages = new Hashtable();
+	private readonly ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
+
+	public LocalizationCache()
+	{
 			rwLock.RunWriter(LoadFromLocalizationFolder);
 		}
 		
-		/// <summary>
-		/// Initializes the localization cache with a single file.
-		/// </summary>
-		/// <param name="filePath">Path to the file where 5 last characeters of the file name must define a locale
-		/// e.g. "MyPackageName-en-US.xml</param>
-		public LocalizationCache(string filePath)
-		{
+	/// <summary>
+	/// Initializes the localization cache with a single file.
+	/// </summary>
+	/// <param name="filePath">Path to the file where 5 last characeters of the file name must define a locale
+	/// e.g. "MyPackageName-en-US.xml</param>
+	public LocalizationCache(string filePath)
+	{
 			rwLock.RunWriter(() => LoadFile(filePath));
 		}
 
-		private void LoadFromLocalizationFolder()
-		{
+	private void LoadFromLocalizationFolder()
+	{
 #if !ORIGAM_CLIENT
 			return;
 #endif
-			OrigamSettings settings =
-				ConfigurationManager.GetActiveConfiguration() ;
+		OrigamSettings settings =
+			ConfigurationManager.GetActiveConfiguration() ;
 
-			if (settings.LocalizationFolder == String.Empty)
+		if (settings.LocalizationFolder == String.Empty)
+		{
+			if (log.IsInfoEnabled)
 			{
-				if (log.IsInfoEnabled)
-				{
-					log.Info("Localization folder not specified.");
-				}
-
-				return;
-			}
-			else
-			{
-				if (log.IsInfoEnabled)
-				{
-					log.Info("Loading localization strings from folder: " +
-					         settings.LocalizationFolder);
-				}
+				log.Info("Localization folder not specified.");
 			}
 
-			DirectoryInfo di = new DirectoryInfo(settings.LocalizationFolder);
-			if (di.Exists)
+			return;
+		}
+		else
+		{
+			if (log.IsInfoEnabled)
 			{
-				foreach (FileInfo fi in di.GetFiles("*.xml"))
-				{
-					if (log.IsInfoEnabled)
-					{
-						log.Info("Loading localization file: " + fi.FullName);
-					}
-					LoadFile(fi.FullName);
-				}
-			}
-			else
-			{
-				if (log.IsErrorEnabled)
-				{
-					log.Error(
-						"Localization folder specified in OrigamSettings not found.");
-				}
-
-				throw new ArgumentOutOfRangeException("LocalizationFolder",
-					settings.LocalizationFolder,
-					"Localization folder specified in OrigamSettings not found.");
+				log.Info("Loading localization strings from folder: " +
+				         settings.LocalizationFolder);
 			}
 		}
 
-
-		/// <summary>
-		/// Loads a file.
-		/// </summary>
-		/// <param name="path">Path to the file where 5 last characeters of the file name must define a locale
-		/// e.g. "MyPackageName-en-US.xml</param>
-		private void LoadFile(string path)
+		DirectoryInfo di = new DirectoryInfo(settings.LocalizationFolder);
+		if (di.Exists)
 		{
+			foreach (FileInfo fi in di.GetFiles("*.xml"))
+			{
+				if (log.IsInfoEnabled)
+				{
+					log.Info("Loading localization file: " + fi.FullName);
+				}
+				LoadFile(fi.FullName);
+			}
+		}
+		else
+		{
+			if (log.IsErrorEnabled)
+			{
+				log.Error(
+					"Localization folder specified in OrigamSettings not found.");
+			}
+
+			throw new ArgumentOutOfRangeException("LocalizationFolder",
+				settings.LocalizationFolder,
+				"Localization folder specified in OrigamSettings not found.");
+		}
+	}
+
+
+	/// <summary>
+	/// Loads a file.
+	/// </summary>
+	/// <param name="path">Path to the file where 5 last characeters of the file name must define a locale
+	/// e.g. "MyPackageName-en-US.xml</param>
+	private void LoadFile(string path)
+	{
 			string locale = Path.GetFileNameWithoutExtension(path);
 			if(locale.Length != 5)
 			{
@@ -165,33 +165,33 @@ namespace Origam.DA.ObjectPersistence
 			}
 		}
 
-		public string GetLocalizedString(Guid elementId, string memberName,
-			string defaultString)
-		{
+	public string GetLocalizedString(Guid elementId, string memberName,
+		string defaultString)
+	{
 			string locale = Thread.CurrentThread.CurrentUICulture.Name;
 			return GetLocalizedString(elementId, memberName, defaultString, locale);
 		}
 
-		public void Reload()
-		{
+	public void Reload()
+	{
 			rwLock.RunWriter(ReloadCache);
 		}
-		private void ReloadCache()
-		{
+	private void ReloadCache()
+	{
 			languages.Clear();
 			LoadFromLocalizationFolder();
 		}
-		public string GetLocalizedString(Guid elementId, string memberName, 
-			string defaultString, string locale)
-		{
+	public string GetLocalizedString(Guid elementId, string memberName, 
+		string defaultString, string locale)
+	{
 			return rwLock.RunReader(() =>
 				GetLocalizedStringPrivate(elementId, memberName, defaultString,
 					locale));
 		}
 
-		private string GetLocalizedStringPrivate(Guid elementId, string memberName,
-			string defaultString, string locale)
-		{
+	private string GetLocalizedStringPrivate(Guid elementId, string memberName,
+		string defaultString, string locale)
+	{
 			if (log.IsDebugEnabled)
 			{
 				log.DebugFormat(
@@ -234,18 +234,17 @@ namespace Origam.DA.ObjectPersistence
 			}
 		}
 
-		private void Dispose(bool disposing)
-		{
+	private void Dispose(bool disposing)
+	{
 			if (disposing)
 			{
 				rwLock?.Dispose();
 			}
 		}
 
-		public void Dispose()
-		{
+	public void Dispose()
+	{
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-	}
 }
