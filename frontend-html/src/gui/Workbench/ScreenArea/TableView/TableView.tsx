@@ -140,10 +140,7 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
     this.elmTable = elmTable;
     if (elmTable) {
       const d1 = this.props.tablePanelView!.subOnFocusTable(() => {
-        const gridFocusManager = getGridFocusManager(this.props.dataView);
-        if(gridFocusManager.canFocusTable){
-          elmTable.focusTable();
-        }
+        elmTable.focusTable();
       });
       const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
         elmTable.scrollToCellShortest
