@@ -23,9 +23,13 @@ import { handleError } from "../../actions/handleError";
 import { getFocusManager } from "model/selectors/getFocusManager";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function onFirstRowClick(ctx: any) {
-  return flow(function*onPrevRowClick(event: any) {
+  return flow(function*onFirstRowClick(event: any) {
     try {
       const focusManager = getFocusManager(ctx);
       yield focusManager.activeEditorCloses();
@@ -34,6 +38,13 @@ export function onFirstRowClick(ctx: any) {
         return;
       }
       yield*selectFirstRow(ctx)();
+      yield*getRecordInfo(dataView).onSelectedRowMaybeChanged(
+        getMenuItemId(dataView),
+        getDataStructureEntityId(dataView),
+        dataView.selectedRowId,
+        getSessionId(dataView)
+      );
+
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;
