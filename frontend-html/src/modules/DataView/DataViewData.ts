@@ -21,7 +21,7 @@ import { TypeSymbol } from "dic/Container";
 import { IDataTable } from "model/entities/types/IDataTable";
 import { IProperty } from "model/entities/types/IProperty";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export class DataViewData {
   constructor(
