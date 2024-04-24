@@ -59,7 +59,7 @@ import S from "./TableView.module.scss";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import cx from "classnames";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
-import {getScreenFocusManager} from "model/selectors/FormScreen/getScreenFocusManager";
+import { getScreenFocusManager } from "model/selectors/FormScreen/getScreenFocusManager";
 
 interface ITableViewProps {
   dataView?: IDataView;
