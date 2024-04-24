@@ -23,21 +23,22 @@ using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for CrystalReport.
-/// </summary>
-[SchemaItemDescription("Fast Report", 29)]
-[HelpTopic("Fast+Report")]
-[ClassMetaVersion("6.0.0")]
-public class FastReport : AbstractDataReport, IDataStructureReference
+namespace Origam.Schema.GuiModel
 {
-    public FastReport() : base() { }
+    /// <summary>
+    /// Summary description for CrystalReport.
+    /// </summary>
+    [SchemaItemDescription("Fast Report", 29)]
+    [HelpTopic("Fast+Report")]
+    [ClassMetaVersion("6.0.0")]
+    public class FastReport : AbstractDataReport, IDataStructureReference
+    {
+        public FastReport() : base() { }
 
-    public FastReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+        public FastReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
 
-    public FastReport(Key primaryKey) : base(primaryKey) { }
+        public FastReport(Key primaryKey) : base(primaryKey) { }
 
 
+    }
 }

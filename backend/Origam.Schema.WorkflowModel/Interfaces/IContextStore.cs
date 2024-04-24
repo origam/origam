@@ -21,17 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for IContextStore.
-/// </summary>
-public interface IContextStore : ISchemaItem
+namespace Origam.Schema.WorkflowModel
 {
-	OrigamDataType DataType{get; set;}
-	bool IsReturnValue{get; set;}
-	bool DisableConstraints{get;}
-	AbstractDataStructure Structure{get; set;}
-	DataStructureRuleSet RuleSet {get; set;}
-	DataStructureDefaultSet DefaultSet {get; set;}
+	/// <summary>
+	/// Summary description for IContextStore.
+	/// </summary>
+	public interface IContextStore : ISchemaItem
+	{
+		OrigamDataType DataType{get; set;}
+		bool IsReturnValue{get; set;}
+		bool DisableConstraints{get;}
+		AbstractDataStructure Structure{get; set;}
+		DataStructureRuleSet RuleSet {get; set;}
+		DataStructureDefaultSet DefaultSet {get; set;}
+	}
 }

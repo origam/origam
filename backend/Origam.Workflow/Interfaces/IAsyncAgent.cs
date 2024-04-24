@@ -21,15 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Workflow;
-
-public interface IAsyncAgent
+namespace Origam.Workflow
 {
-    event EventHandler<AsyncReturnValues> AsyncCallFinished;
-}
+    public interface IAsyncAgent
+    {
+        event EventHandler<AsyncReturnValues> AsyncCallFinished;
+    }
     
-public class AsyncReturnValues
-{
-    public Exception Exception { get; set; }
-    public object Result { get; set; }
+    public class AsyncReturnValues
+    {
+        public Exception Exception { get; set; }
+        public object Result { get; set; }
+    }
 }

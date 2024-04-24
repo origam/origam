@@ -6,23 +6,23 @@ using System.Text.RegularExpressions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service.CustomCommandParser;
-
-class FilterNode
+namespace Origam.DA.Service.CustomCommandParser
 {
-    private readonly SqlRenderer sqlRenderer;
-    private readonly Dictionary<string, string> lookupExpressions;
-    private readonly List<ColumnInfo> columns;
-    private string[] splitValue;
-    public FilterNode Parent { get; set; }
-    public List<FilterNode> Children { get; } = new List<FilterNode>();
-    public string Value { get; set; } = "";
-    public bool IsBinaryOperator => Value.Contains("$");
-
-    public IEnumerable<FilterNode> AllChildren
+    class FilterNode
     {
-        get
+        private readonly SqlRenderer sqlRenderer;
+        private readonly Dictionary<string, string> lookupExpressions;
+        private readonly List<ColumnInfo> columns;
+        private string[] splitValue;
+        public FilterNode Parent { get; set; }
+        public List<FilterNode> Children { get; } = new List<FilterNode>();
+        public string Value { get; set; } = "";
+        public bool IsBinaryOperator => Value.Contains("$");
+
+        public IEnumerable<FilterNode> AllChildren
         {
+            get
+            {
                 yield return this;
                 foreach (var child in Children)
                 {
@@ -32,17 +32,17 @@ class FilterNode
                     }
                 }
             }
-    }
+        }
         
-    private bool ContainsNumbersOnly(string value)
-    {
+        private bool ContainsNumbersOnly(string value)
+        {
             return Regex.Match(value, "^[\\d,\\s\\.]+$").Success;
         }
 
-    private string[] SplitValue
-    {
-        get
+        private string[] SplitValue
         {
+            get
+            {
                 if (splitValue == null)
                 {
                     splitValue = ContainsNumbersOnly(Value) 
@@ -55,29 +55,29 @@ class FilterNode
 
                 return splitValue;
             }
-    }
+        }
 
-    internal string ColumnName => SplitValue[0].Replace("\"", "");
+        internal string ColumnName => SplitValue[0].Replace("\"", "");
 
-    private string RenderedColumnName =>
-        lookupExpressions.ContainsKey(ColumnName)
-            ? lookupExpressions[ColumnName]
-            : sqlRenderer.NameLeftBracket + ColumnName + sqlRenderer.NameRightBracket;
+        private string RenderedColumnName =>
+            lookupExpressions.ContainsKey(ColumnName)
+                ? lookupExpressions[ColumnName]
+                : sqlRenderer.NameLeftBracket + ColumnName + sqlRenderer.NameRightBracket;
 
 
-    private string Operator => SplitValue?.Length > 1 
-        ? SplitValue[1].Replace("\"","") 
-        : null;
-    private string ParameterValue => ValueToOperand(SplitValue[2]);
+        private string Operator => SplitValue?.Length > 1 
+            ? SplitValue[1].Replace("\"","") 
+            : null;
+        private string ParameterValue => ValueToOperand(SplitValue[2]);
 
-    private ColumnInfo Column =>
-        columns
-            .FirstOrDefault(column => column.Name == ColumnName)
-        ?? throw new Exception($"Unknown column \"{ColumnName}\"");
+        private ColumnInfo Column =>
+            columns
+                .FirstOrDefault(column => column.Name == ColumnName)
+            ?? throw new Exception($"Unknown column \"{ColumnName}\"");
 
-    public OrigamDataType ParameterDataType {
-        get
-        {
+        public OrigamDataType ParameterDataType {
+            get
+            {
                 if (Column.DataType == OrigamDataType.Array)
                 {
                     return OrigamDataType.String;
@@ -92,20 +92,20 @@ class FilterNode
 
                 return Column.DataType;
             }
-    }
+        }
 
-    public bool IsValueNode => Parent != null && 
-                               (Parent.Operator == "in" ||
-                                Parent.Operator == "nin" ||
-                                Parent.Operator == "between" ||
-                                Parent.Operator == "nbetween");
+        public bool IsValueNode => Parent != null && 
+                                   (Parent.Operator == "in" ||
+                                    Parent.Operator == "nin" ||
+                                    Parent.Operator == "between" ||
+                                    Parent.Operator == "nbetween");
 
-    private readonly AbstractFilterRenderer renderer;
-    private readonly List<ParameterData> parameterDataList;
-    public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
-        List<ColumnInfo> columns,
-        AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
-    {
+        private readonly AbstractFilterRenderer renderer;
+        private readonly List<ParameterData> parameterDataList;
+        public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
+            List<ColumnInfo> columns,
+            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
+        {
             this.sqlRenderer = sqlRenderer;
             this.lookupExpressions = lookupExpressions;
             this.columns = columns;
@@ -113,20 +113,20 @@ class FilterNode
             this.parameterDataList = parameterDataList;
         }
 
-    private string GetParameterNameSql(string columnName)
-    {
+        private string GetParameterNameSql(string columnName)
+        {
             return sqlRenderer.ParameterReferenceChar + columnName;
         }
         
-    private string ParameterName => ColumnName + "_" + Operator;
+        private string ParameterName => ColumnName + "_" + Operator;
 
-    private string ValueToOperand(string value)
-    {
+        private string ValueToOperand(string value)
+        {
             return value.Replace("\"", "");
         }
 
-    private object ToDbValue(string value, OrigamDataType dataType)
-    {
+        private object ToDbValue(string value, OrigamDataType dataType)
+        {
             switch(dataType)
             {
                 case OrigamDataType.Integer:
@@ -177,8 +177,8 @@ class FilterNode
             return value;
         }
         
-    public string SqlRepresentation()
-    {
+        public string SqlRepresentation()
+        {
             if (IsBinaryOperator)
             {
                 return GetSqlOfOperatorNode();
@@ -189,30 +189,30 @@ class FilterNode
             }
         }
 
-    private string GetSqlOfOperatorNode()
-    {
+        private string GetSqlOfOperatorNode()
+        {
             string logicalOperator = GetLogicalOperator();
             List<string> operands = Children
                 .Select(node => node.SqlRepresentation()).ToList();
             return renderer.LogicalAndOr(logicalOperator, operands);
         }
 
-    private string GetLogicalOperator()
-    {
+        private string GetLogicalOperator()
+        {
             if (Value.Trim() == "\"$AND\"") return "AND";
             if (Value.Trim() == "\"$OR\"") return "OR";
             throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
-    private string GetSqlOfLeafNode()
-    {
+        private string GetSqlOfLeafNode()
+        {
             string nodeSql = RenderNodeSql();
             nodeSql = AddIsNullToNegativeOperators(nodeSql);
             return nodeSql;
         }
 
-    private string AddIsNullToNegativeOperators(string nodeSql)
-    {
+        private string AddIsNullToNegativeOperators(string nodeSql)
+        {
             if (Operator != "nnull" && 
                 Operator != "null" && 
                 Operator.StartsWith("n") &&
@@ -228,8 +228,8 @@ class FilterNode
             return nodeSql;
         }
 
-    private string RenderNodeSql()
-    {
+        private string RenderNodeSql()
+        {
             string parameterName = GetParameterNameSql(ParameterName);
             var (operatorName, renderedColumnValue) =
                 GetRendererInput(Operator, parameterName);
@@ -301,8 +301,8 @@ class FilterNode
                                 ". If this should be a binary operator prefix it with \"$\".");
         }
 
-    private object[] GetRightHandValues()
-    {
+        private object[] GetRightHandValues()
+        {
             object[] rightHandValues = Children.First()
                 .SplitValue
                 .Select(ValueToOperand)
@@ -319,14 +319,14 @@ class FilterNode
             return rightHandValues;
         }
 
-    private bool IsWholeDay(DateTime dateTime)
-    {
+        private bool IsWholeDay(DateTime dateTime)
+        {
             return dateTime.Millisecond == 0 && dateTime.Second == 0 &&
                    dateTime.Minute == 0 && dateTime.Hour == 0;
         }
 
-    private string RenderDateEquals()
-    {
+        private string RenderDateEquals()
+        {
             string actualOperator;
             switch (Operator)
             {
@@ -369,8 +369,8 @@ class FilterNode
                 isColumnArray: Column.DataType == OrigamDataType.Array);
         }
 
-    private (string,string) GetRendererInput(string operatorName, string parameterName)
-    {
+        private (string,string) GetRendererInput(string operatorName, string parameterName)
+        {
             switch (operatorName)
             {
                 case "gt": return ("GreaterThan", parameterName);
@@ -396,20 +396,21 @@ class FilterNode
             }
         }
 
-    private string PrependWildCard(string value)
-    {
+        private string PrependWildCard(string value)
+        {
             if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot prepend \"%\" to a value which is not a parameter");
             }
             return "'%'" + renderer.StringConcatenationChar + value;
         } 
-    private string AppendWildCard(string value)
-    {
+        private string AppendWildCard(string value)
+        {
             if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }
             return value + renderer.StringConcatenationChar + "'%'";
         }
+    }
 }

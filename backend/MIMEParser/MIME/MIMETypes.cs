@@ -30,21 +30,21 @@
 using System.IO;
 using System.Collections;
 
-namespace OpenPOP;
-
-/// <summary>
-/// MIMETypes
-/// </summary>
-public class MIMETypes
+namespace OpenPOP
 {
-	public const string MIMEType_MSTNEF="application/ms-tnef";
-	private const string Content_Transfer_Encoding_Tag="Content-Transfer-Encoding";
-	private const string Content_Transfer_Charset_Tag="charset";
-	private static Hashtable _MIMETypeList=null;
-
-
-	public static string GetContentTransferEncoding(string strBuffer, int pos)
+	/// <summary>
+	/// MIMETypes
+	/// </summary>
+	public class MIMETypes
 	{
+		public const string MIMEType_MSTNEF="application/ms-tnef";
+		private const string Content_Transfer_Encoding_Tag="Content-Transfer-Encoding";
+		private const string Content_Transfer_Charset_Tag="charset";
+		private static Hashtable _MIMETypeList=null;
+
+
+		public static string GetContentTransferEncoding(string strBuffer, int pos)
+		{
 			int begin=0,end=0;
 			begin=strBuffer.ToLower().IndexOf(Content_Transfer_Encoding_Tag.ToLower(),pos);
 			if(begin!=-1)
@@ -56,8 +56,8 @@ public class MIMETypes
 				return "";
 		}
 
-	public static string GetContentCharset(string strBuffer, int pos)
-	{
+		public static string GetContentCharset(string strBuffer, int pos)
+		{
 			int begin=0,end=0;
 			begin=strBuffer.ToLower().IndexOf(Content_Transfer_Charset_Tag.ToLower(),pos);
 			if(begin!=-1)
@@ -75,8 +75,8 @@ public class MIMETypes
 				return "";
 		}
 
-	public static bool IsMSTNEF(string strContentType)
-	{
+		public static bool IsMSTNEF(string strContentType)
+		{
 			if(strContentType!=null & strContentType!="")
 				if(strContentType.ToLower() == MIMEType_MSTNEF.ToLower())
 					return true;
@@ -86,27 +86,27 @@ public class MIMETypes
 				return false;
 		}
 
-	public static string ContentType(string strExtension)
-	{
+		public static string ContentType(string strExtension)
+		{
 			if(_MIMETypeList.ContainsKey(strExtension))
 				return _MIMETypeList[strExtension].ToString();
 			else
 				return null;
 		}
-	public static Hashtable MIMETypeList
-	{
-		get{return _MIMETypeList;}
-		set{_MIMETypeList=value;}
-	}
+		public static Hashtable MIMETypeList
+		{
+			get{return _MIMETypeList;}
+			set{_MIMETypeList=value;}
+		}
 
-	~MIMETypes()
-	{
+		~MIMETypes()
+		{
 			_MIMETypeList.Clear();
 			_MIMETypeList=null;
 		}
 
-	public MIMETypes()
-	{
+		public MIMETypes()
+		{
 			_MIMETypeList.Add(".323","text/h323");
 			_MIMETypeList.Add(".3gp","video/3gpp");
 			_MIMETypeList.Add(".3gpp","video/3gpp");
@@ -378,10 +378,10 @@ public class MIMETypes
 			_MIMETypeList.Add(".zip","application/x-zip-compressed");
 		}
 
-	/// <summary>Returns the MIME content-type for the supplied file extension</summary>
-	/// <returns>string MIME type (Example: \"text/plain\")</returns>
-	public static string GetMimeType(string strFileName)
-	{			
+		/// <summary>Returns the MIME content-type for the supplied file extension</summary>
+		/// <returns>string MIME type (Example: \"text/plain\")</returns>
+		public static string GetMimeType(string strFileName)
+		{			
 			try
 			{
 				string strFileExtension=new FileInfo(strFileName).Extension;
@@ -400,4 +400,6 @@ public class MIMETypes
 			{ return "application/octet-stream"; }
 		}
 
+	}
 }
+

@@ -23,13 +23,14 @@ using System;
 using System.Collections.Generic;
 using Origam.Server;
 
-namespace Origam.Server.Model.UIService;
-
-public class UIGridFilterCoreConfiguration
+namespace Origam.Server.Model.UIService
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public bool IsGlobal { get; set; }
-    public IList<UIGridFilterFieldConfiguration> Details { get; set; }
+    public class UIGridFilterCoreConfiguration
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public bool IsGlobal { get; set; }
+        public IList<UIGridFilterFieldConfiguration> Details { get; set; }
 	
+    }
 }

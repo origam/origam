@@ -17,52 +17,51 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Text.RegularExpressions;
 using Origam.Gui.UI;
 
-namespace Origam.UI;
-
-public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
+namespace Origam.UI
 {
-    private string description = string.Empty;
-
-    public AsButtonCommand(string label)
+    public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
     {
+        private string description = string.Empty;
+
+        public AsButtonCommand(string label)
+        {
             this.Description = label;
         }
 		
-    public ICommand Command { get; set; }
+        public ICommand Command { get; set; }
 
 
 		
-    private string Description 
-    {
-        get => description;
-        set 
+        private string Description 
         {
+            get => description;
+            set 
+            {
                 description = value;
                 this.ToolTipText = RemoveSingleAmpersands(value).Replace("&&","&");
             }
-    }
-    /// <summary>
-    /// Removes isolated ampersands, double ampersands are not removed.
-    /// Ampersands separated by only one character will also not be removed (for example "ab&d&ef" => "abd&ef") 
-    /// </summary>
-    /// <param name="str"></param>
-    /// <returns></returns>
-    private string RemoveSingleAmpersands(string str)
-    {
+        }
+        /// <summary>
+        /// Removes isolated ampersands, double ampersands are not removed.
+        /// Ampersands separated by only one character will also not be removed (for example "ab&d&ef" => "abd&ef") 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private string RemoveSingleAmpersands(string str)
+        {
             return Regex.Replace(str, @"(^|[^&])(&)($|[^&])", "$1$3");
         }
 
 
-    public bool IsEnabled
-    {
-        get
+        public bool IsEnabled
         {
+            get
+            {
                 bool isEnabled = true; 
                 if (Command != null && Command is IMenuCommand) 
                 {
@@ -70,13 +69,13 @@ public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
                 }
                 return isEnabled;
             }
-        set => this.Enabled = value;
-    }
+            set => this.Enabled = value;
+        }
 
-    #region IStatusUpdate Members
+        #region IStatusUpdate Members
 
-    public void UpdateItemsToDisplay()
-    {
+        public void UpdateItemsToDisplay()
+        {
             if (Command != null && Command is IMenuCommand) 
             {
                 bool isEnabled = IsEnabled & ((IMenuCommand)Command).IsEnabled;
@@ -89,14 +88,15 @@ public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
             this.Text = this.Description;
         }
 
-    #endregion
+        #endregion
 
-    #region IDisposable Members
+        #region IDisposable Members
 
-    void IDisposable.Dispose()
-    {
+        void IDisposable.Dispose()
+        {
             (Command as IDisposable)?.Dispose();
         }
 
-    #endregion
+        #endregion
+    }
 }

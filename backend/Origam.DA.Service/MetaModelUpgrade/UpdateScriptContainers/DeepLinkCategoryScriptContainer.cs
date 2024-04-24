@@ -26,25 +26,25 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Origam.Schema.MenuModel;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
-
-class DeepLinkCategoryScriptContainer : UpgradeScriptContainer
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    public override string FullTypeName { get; } = typeof(DeepLinkCategory).FullName;
-    public override string[] OldPropertyXmlNames { get; }
-    public override List<string> OldFullTypeNames { get; } 
-        = new List<string>{ "Origam.Schema.MenuModel.HashtagCategory" };
-
-    public DeepLinkCategoryScriptContainer() 
+    class DeepLinkCategoryScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = typeof(DeepLinkCategory).FullName;
+        public override string[] OldPropertyXmlNames { get; }
+        public override List<string> OldFullTypeNames { get; } 
+            = new List<string>{ "Origam.Schema.MenuModel.HashtagCategory" };
+
+        public DeepLinkCategoryScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.0"),
                 new Version("1.0.1"),
                 UpgradeTo101()));
         }
 
-    private Action<XElement, OrigamXDocument> UpgradeTo101()
-    {
+        private Action<XElement, OrigamXDocument> UpgradeTo101()
+        {
             return (node, doc) =>
             {
                 if (node.Name.LocalName == "HashtagCategory"
@@ -54,4 +54,5 @@ class DeepLinkCategoryScriptContainer : UpgradeScriptContainer
                 }
             };
         }
+    }    
 }

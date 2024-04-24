@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -42,14 +41,15 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using Origam.Gui;
 
-namespace Origam.Server;
-
-public class PanelActionResult: ActionResult
+namespace Origam.Server
 {
-    public PanelActionResult(ActionResultType type): base(type)
+    public class PanelActionResult: ActionResult
     {
+        public PanelActionResult(ActionResultType type): base(type)
+        {
         }
 
-    public UIResult UIResult { get; set; }
-    public UIRequest Request { get; set; }
+        public UIResult UIResult { get; set; }
+        public UIRequest Request { get; set; }
+    }
 }

@@ -21,10 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA;
-
-public interface IAttachmentService
+namespace Origam.DA
 {
-    void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId);
-    void RemoveAttachment(Guid recordId, string transactionId);
+    public interface IAttachmentService
+    {
+        void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId);
+        void RemoveAttachment(Guid recordId, string transactionId);
+    }
 }

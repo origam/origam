@@ -24,45 +24,45 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for ParameterReference.
-/// </summary>
-[SchemaItemDescription("Parameter Reference", "icon_parameter-reference.png")]
-[HelpTopic("Parameter+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Parameter")]
-[ClassMetaVersion("6.0.0")]
-public class ParameterReference : AbstractSchemaItem
+namespace Origam.Schema
 {
-	public const string CategoryConst = "ParameterReference";
-
-	public ParameterReference() : base() {}
-
-	public ParameterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public ParameterReference(Key primaryKey) : base(primaryKey)	{}
-		
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType
+	/// <summary>
+	/// Summary description for ParameterReference.
+	/// </summary>
+	[SchemaItemDescription("Parameter Reference", "icon_parameter-reference.png")]
+    [HelpTopic("Parameter+Reference")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Parameter")]
+    [ClassMetaVersion("6.0.0")]
+	public class ParameterReference : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "ParameterReference";
+
+		public ParameterReference() : base() {}
+
+		public ParameterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public ParameterReference(Key primaryKey) : base(primaryKey)	{}
+		
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Parameter);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -77,23 +77,23 @@ public class ParameterReference : AbstractSchemaItem
 
 			base.UpdateReferences ();
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public Guid ParameterId;
+		#region Properties
+		public Guid ParameterId;
 
-	[Category("Reference")]
-	[TypeConverter(typeof(ParameterReferenceConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("parameter", "ParameterId")]
-	public SchemaItemParameter Parameter
-	{
-		get
+		[Category("Reference")]
+		[TypeConverter(typeof(ParameterReferenceConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("parameter", "ParameterId")]
+		public SchemaItemParameter Parameter
 		{
+			get
+			{
 				return (SchemaItemParameter)this.PersistenceProvider.RetrieveInstance(typeof(SchemaItemParameter), new ModelElementKey(this.ParameterId)) as SchemaItemParameter;
 			}
-		set
-		{
+			set
+			{
 				this.ParameterId = (Guid)value.PrimaryKey["Id"];
 
 				if(this.Name == null)
@@ -101,6 +101,7 @@ public class ParameterReference : AbstractSchemaItem
 					this.Name = this.Parameter.Name;
 				}
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

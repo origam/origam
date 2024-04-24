@@ -23,80 +23,80 @@ using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.UI.WizardForm;
-
-public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    private IDataEntity _entity;
-    public IDataEntity Entity
+    public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
     {
-        get
+        private IDataEntity _entity;
+        public IDataEntity Entity
         {
+            get
+            {
                 return _entity;
             }
-        set
-        {
+            set
+            {
                 _entity = value;
             }
-    }
-    private AbstractSchemaItem _relatedEntity = null;
-    public AbstractSchemaItem RelatedEntity
-    {
-        get
+        }
+        private AbstractSchemaItem _relatedEntity = null;
+        public AbstractSchemaItem RelatedEntity
         {
+            get
+            {
                 return _relatedEntity;
             }
-        set
-        {
+            set
+            {
                 _relatedEntity = value;
             }
-    }
+        }
 
-    private AbstractSchemaItem _baseEntityField = null;
-    public AbstractSchemaItem BaseEntityFieldSelect
-    {
-        get
+        private AbstractSchemaItem _baseEntityField = null;
+        public AbstractSchemaItem BaseEntityFieldSelect
         {
+            get
+            {
                 return _baseEntityField;
             }
-        set
-        {
+            set
+            {
                 _baseEntityField = value;
             }
-    }
+        }
 
-    private AbstractSchemaItem _relatedEntityField = null;
-    public AbstractSchemaItem RelatedEntityFieldSelect
-    {
-        get
+        private AbstractSchemaItem _relatedEntityField = null;
+        public AbstractSchemaItem RelatedEntityFieldSelect
         {
+            get
+            {
                 return _relatedEntityField;
             }
-        set
-        {
+            set
+            {
                 _relatedEntityField = value;
             }
-    }
+        }
 
-    private Boolean _isparentChild = false;
-    public Boolean ParentChildCheckbox
-    {
-        get
+        private Boolean _isparentChild = false;
+        public Boolean ParentChildCheckbox
         {
+            get
+            {
                 return _isparentChild;
             }
-        set
-        {
+            set
+            {
                 _isparentChild = value;
             }
-    }
+        }
 
-    public string EnterAllInfo { get; set; }
-    public string LookupWiz { get; set; }
-    public string LookupName { get; internal set; }
-    public string LookupKeyName { get; internal set; }
-    internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
-    {
+        public string EnterAllInfo { get; set; }
+        public string LookupWiz { get; set; }
+        public string LookupName { get; internal set; }
+        public string LookupKeyName { get; internal set; }
+        internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
+        {
             if (tableRelation.Items.Count == 0)
             {
                 if (this.Entity == null) return;
@@ -107,8 +107,8 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
                 }
             }
         }
-    internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
-    {
+        internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
+        {
             BaseEntityField.Items.Clear();
             RelatedEntityField.Items.Clear();
             if (this.Entity == null) return;
@@ -122,4 +122,5 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
                 BaseEntityField.Items.Add(column);
             }
         }
+    }
 }

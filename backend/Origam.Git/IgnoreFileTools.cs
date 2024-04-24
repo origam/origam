@@ -24,16 +24,16 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Origam.Git;
-
-public static class IgnoreFileTools
+namespace Origam.Git
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-        
-    public static void TryAdd(string ignoreFileDir, string ignoreFileEntry)
+    public static class IgnoreFileTools
     {
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+                MethodBase.GetCurrentMethod().DeclaringType);
+        
+        public static void TryAdd(string ignoreFileDir, string ignoreFileEntry)
+        {
             string pathToIgnoreFile =
                 Path.Combine(ignoreFileDir, ".gitignore");
             try
@@ -54,4 +54,5 @@ public static class IgnoreFileTools
                 log.Warn($"Could not write to \"{pathToIgnoreFile}\"", ex); 
             }
         }
+    }
 }

@@ -28,16 +28,16 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration;
-
-public class LanguageConfig
+namespace Origam.Server.Configuration
 {
-    public RequestCulture DefaultCulture { get; }
-    public CultureInfo[] AllowedCultures { get; }
-    public CultureItem[] CultureItems { get; }
-
-    public LanguageConfig(IConfiguration configuration)
+    public class LanguageConfig
     {
+        public RequestCulture DefaultCulture { get; }
+        public CultureInfo[] AllowedCultures { get; }
+        public CultureItem[] CultureItems { get; }
+
+        public LanguageConfig(IConfiguration configuration)
+        {
             IConfigurationSection languageSection = configuration
                 .GetSectionOrThrow("LanguageConfig");
             
@@ -66,12 +66,12 @@ public class LanguageConfig
                 .Select(item => new CultureInfo(item.CultureName))
                 .ToArray();
         }
-}
+    }
 
-public class CultureItem
-{
-    public static CultureItem Create(IConfigurationSection section)
+    public class CultureItem
     {
+        public static CultureItem Create(IConfigurationSection section)
+        {
             return  new CultureItem
             {
                 CultureName = section.GetStringOrThrow("Culture"),
@@ -83,22 +83,22 @@ public class CultureItem
             };
         }
 
-    public string CultureName { get; set; }
-    public string Caption { get; set; }
-    public string ResetPasswordMailSubject { get; set; }
-    public string ResetPasswordMailBodyFileName { get; set; }
-    public DateCompleterConfig DateCompleterConfig { get; set; }
-    public DefaultDateFormats DefaultDateFormats { get; set; }
-}
+        public string CultureName { get; set; }
+        public string Caption { get; set; }
+        public string ResetPasswordMailSubject { get; set; }
+        public string ResetPasswordMailBodyFileName { get; set; }
+        public DateCompleterConfig DateCompleterConfig { get; set; }
+        public DefaultDateFormats DefaultDateFormats { get; set; }
+    }
 
-public class DefaultDateFormats
-{
-    public string Short { get; set; }
-    public string Long { get; set; }
-    public string Time { get; set; }
-        
-    public static DefaultDateFormats Create(IConfigurationSection parentSection)
+    public class DefaultDateFormats
     {
+        public string Short { get; set; }
+        public string Long { get; set; }
+        public string Time { get; set; }
+        
+        public static DefaultDateFormats Create(IConfigurationSection parentSection)
+        {
             var section = parentSection.GetSection("DefaultDateFormats");
             return new DefaultDateFormats
             {
@@ -107,18 +107,18 @@ public class DefaultDateFormats
                 Time = section?["Time"] ?? "HH:mm:ss"
             };
         }
-}
+    }
 
-public class DateCompleterConfig
-{
-    public string DateSeparator { get; set; }
-    public string TimeSeparator { get; set; } = ":";
-    public string DateTimeSeparator { get; set; } = " ";
-    public DateSequence DateSequence { get; set; } =
-        DateSequence.DayMonthYear;
-
-    public static DateCompleterConfig Create(IConfigurationSection parentSection)
+    public class DateCompleterConfig
     {
+        public string DateSeparator { get; set; }
+        public string TimeSeparator { get; set; } = ":";
+        public string DateTimeSeparator { get; set; } = " ";
+        public DateSequence DateSequence { get; set; } =
+            DateSequence.DayMonthYear;
+
+        public static DateCompleterConfig Create(IConfigurationSection parentSection)
+        {
             var section = parentSection.GetSection("DateCompleterConfig");
             bool parseSuccess = Enum.TryParse<DateSequence>(
                 section?["DateSequence"], out var sequence);
@@ -135,9 +135,10 @@ public class DateCompleterConfig
                 DateSequence = sequence
             };
         }
-}
+    }
 
-public enum DateSequence
-{
-    DayMonthYear, MonthDayYear
+    public enum DateSequence
+    {
+        DayMonthYear, MonthDayYear
+    }
 }

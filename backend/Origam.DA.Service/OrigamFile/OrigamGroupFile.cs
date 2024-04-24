@@ -26,29 +26,29 @@ using System.Linq;
 using System.Xml;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.DA.Service;
-
-class OrigamGroupFile : OrigamFile
+namespace Origam.DA.Service
 {
-    public OrigamGroupFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
-        OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-        FileEventQueue fileEventQueue, bool isAFullyWrittenFile = false) 
-        : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, isAFullyWrittenFile)
+    class OrigamGroupFile : OrigamFile
     {
+        public OrigamGroupFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
+            OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
+            FileEventQueue fileEventQueue, bool isAFullyWrittenFile = false) 
+            : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, isAFullyWrittenFile)
+        {
         }
 
-    public OrigamGroupFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
-        OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-        FileEventQueue fileEventQueue, string fileHash) 
-        : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, fileHash)
-    {
+        public OrigamGroupFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
+            OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
+            FileEventQueue fileEventQueue, string fileHash) 
+            : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, fileHash)
+        {
         }
 
-    protected override DirectoryInfo ReferenceFileDirectory =>
-        Path.Directory.Parent;
+        protected override DirectoryInfo ReferenceFileDirectory =>
+            Path.Directory.Parent;
 
-    public override void WriteInstance(IFilePersistent instance)
-    {
+        public override void WriteInstance(IFilePersistent instance)
+        {
             XmlNode contentNode = DeferredSaveDocument.ChildNodes[1];
             bool anotherGroupPresent = contentNode.ChildNodes
                 .Cast<XmlNode>()
@@ -61,4 +61,5 @@ class OrigamGroupFile : OrigamFile
             }
             base.WriteInstance(instance);
         }
+    }
 }

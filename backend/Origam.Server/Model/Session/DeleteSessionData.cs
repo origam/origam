@@ -24,9 +24,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Origam.Server.Model.Session;
-
-public class DeleteSessionData
+namespace Origam.Server.Model.Session
 {
-    public Guid SessionId { get; set; }
+    public class DeleteSessionData
+    {
+        public Guid SessionId { get; set; }
+    }
 }

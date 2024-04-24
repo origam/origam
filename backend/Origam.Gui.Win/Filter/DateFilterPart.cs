@@ -21,52 +21,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DropDownFilterPart.
-/// </summary>
-public class DateFilterPart : FilterPart
+namespace Origam.Gui.Win
 {
-	#region Constructor
-	public DateFilterPart(AsDateBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+	/// <summary>
+	/// Summary description for DropDownFilterPart.
+	/// </summary>
+	public class DateFilterPart : FilterPart
 	{
-		}
-	#endregion
-
-	#region Properties
-	private AsDateBox DateBox
-	{
-		get
+		#region Constructor
+		public DateFilterPart(AsDateBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 		{
+		}
+		#endregion
+
+		#region Properties
+		private AsDateBox DateBox
+		{
+			get
+			{
 				return (AsDateBox)this.FilteredControl;
 			}
-	}
+		}
 
-	AsDateBox _filterDateBox = new AsDateBox();
-	private AsDateBox FilterDateBox
-	{
-		get
+		AsDateBox _filterDateBox = new AsDateBox();
+		private AsDateBox FilterDateBox
 		{
+			get
+			{
 				return _filterDateBox;
 			}
-	}
+		}
 
-	AsDateBox _filterDateBox2 = new AsDateBox();
-	private AsDateBox FilterDateBox2
-	{
-		get
+		AsDateBox _filterDateBox2 = new AsDateBox();
+		private AsDateBox FilterDateBox2
 		{
+			get
+			{
 				return _filterDateBox2;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden Members
-	public override FilterOperator[] AllowedOperators
-	{
-		get
+		#region Overriden Members
+		public override FilterOperator[] AllowedOperators
 		{
+			get
+			{
 				return new FilterOperator[] {
 												FilterOperator.Equals, 
 												FilterOperator.NotEquals,
@@ -80,19 +80,19 @@ public class DateFilterPart : FilterPart
 												FilterOperator.NotBetween
 				};
 			}
-	}
+		}
 
-	public override FilterOperator DefaultOperator
-	{
-		get
+		public override FilterOperator DefaultOperator
 		{
+			get
+			{
 				return FilterOperator.GreaterOrEqualThan;
 			}
-	}
+		}
 
 
-	public override void CreateFilterControls()
-	{
+		public override void CreateFilterControls()
+		{
 			UnsubscribeEvents();
 			this.FilterControls.Clear();
 
@@ -110,21 +110,21 @@ public class DateFilterPart : FilterPart
 			OnControlsChanged();
 		}
 
-	private static void SetControlProperties(AsDateBox template, AsDateBox target)
-	{
+		private static void SetControlProperties(AsDateBox template, AsDateBox target)
+		{
 			target.CaptionPosition = CaptionPosition.None;
 			target.Format = template.Format;
 			target.CustomFormat = template.CustomFormat;
 		}
 
-	public override void LoadValues()
-	{
+		public override void LoadValues()
+		{
 			this.FilterDateBox.DateValue = this.Value1;
 			this.FilterDateBox2.DateValue = this.Value2;
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(this.FilterDateBox != null)
@@ -138,16 +138,16 @@ public class DateFilterPart : FilterPart
 		}
 
 
-	#endregion
+		#endregion
 
-	#region EventHandlers
-	private void FilterDateBox_dateValueChanged(object sender, EventArgs e)
-	{
+		#region EventHandlers
+		private void FilterDateBox_dateValueChanged(object sender, EventArgs e)
+		{
 			this.Value1 = this.FilterDateBox.DateValue;
 		}
 
-	private void FilterDateBox2_dateValueChanged(object sender, EventArgs e)
-	{
+		private void FilterDateBox2_dateValueChanged(object sender, EventArgs e)
+		{
 			if(this.FilterDateBox2.DateValue != null)
 			{
 				DateTime dt = (DateTime)this.FilterDateBox2.DateValue;
@@ -166,19 +166,20 @@ public class DateFilterPart : FilterPart
 				this.Value2 = this.FilterDateBox2.DateValue;
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private void SubscribeEvents()
-	{
+		#region Private Methods
+		private void SubscribeEvents()
+		{
 			this.FilterDateBox.dateValueChanged += new EventHandler(FilterDateBox_dateValueChanged);
 			this.FilterDateBox2.dateValueChanged += new EventHandler(FilterDateBox2_dateValueChanged);
 		}
 
-	private void UnsubscribeEvents()
-	{
+		private void UnsubscribeEvents()
+		{
 			this.FilterDateBox.dateValueChanged -= new EventHandler(FilterDateBox_dateValueChanged);
 			this.FilterDateBox2.dateValueChanged -= new EventHandler(FilterDateBox2_dateValueChanged);
 		}
-	#endregion
+		#endregion
+	}
 }

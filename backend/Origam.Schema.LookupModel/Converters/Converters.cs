@@ -24,25 +24,26 @@ using System.Collections;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.LookupModel;
-
-public class DataServiceDataLookupListMethodConverter : System.ComponentModel.TypeConverter
+namespace Origam.Schema.LookupModel
 {
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class DataServiceDataLookupListMethodConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 			
 			if(reference.ListDataStructure == null) return null;
@@ -61,16 +62,16 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
 			return new StandardValuesCollection(methodArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
@@ -89,25 +90,26 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 			
 			if(reference.ValueDataStructure == null) return null;
@@ -126,16 +128,16 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
 			return new StandardValuesCollection(methodArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
@@ -154,25 +156,26 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
 			
 			if(reference.TooltipDataStructure == null) return null;
@@ -191,16 +194,16 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
 			return new StandardValuesCollection(methodArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
@@ -219,25 +222,26 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 			
 			if(reference.ValueDataStructure == null) return null;
@@ -256,16 +260,16 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
 			return new StandardValuesCollection(sortSetArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
@@ -284,25 +288,26 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 			
 			if(reference.ListDataStructure == null) return null;
@@ -321,16 +326,16 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
 			return new StandardValuesCollection(sortSetArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
@@ -349,4 +354,5 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
+	}
 }

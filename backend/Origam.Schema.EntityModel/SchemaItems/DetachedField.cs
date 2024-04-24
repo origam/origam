@@ -28,75 +28,75 @@ using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.EntityModel;
 
-namespace Origam.Schema.EntityModel;
-
-[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
-[HelpTopic("Virtual+Field")]
-[ClassMetaVersion("6.0.0")]
-public class DetachedField : AbstractDataEntityColumn, IRelationReference
+namespace Origam.Schema.EntityModel
 {
-	public DetachedField() {}
-
-	public DetachedField(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DetachedField(Key primaryKey) : base(primaryKey)	{}
-
-	#region Properties
-	public Guid ArrayRelationId;
-
-	[NoDuplicateNamesInParentRule]
-	[Category("(Schema Item)")]
-	[StringNotEmptyModelElementRule]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlAttribute("name")]
-	public override string Name
+	[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
+    [HelpTopic("Virtual+Field")]
+    [ClassMetaVersion("6.0.0")]
+	public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	{
-		get => base.Name; 
-		set => base.Name = value;
-	}
-		
-	[Category("Array")]
-	[TypeConverter(typeof(EntityRelationConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("arrayRelation", "ArrayRelationId")]
-	public IAssociation ArrayRelation
-	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(ArrayRelationId)) 
-			as IAssociation;
-		set
+		public DetachedField() {}
+
+		public DetachedField(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DetachedField(Key primaryKey) : base(primaryKey)	{}
+
+		#region Properties
+		public Guid ArrayRelationId;
+
+		[NoDuplicateNamesInParentRule]
+		[Category("(Schema Item)")]
+		[StringNotEmptyModelElementRule]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[XmlAttribute("name")]
+		public override string Name
 		{
+			get => base.Name; 
+			set => base.Name = value;
+		}
+		
+		[Category("Array")]
+		[TypeConverter(typeof(EntityRelationConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("arrayRelation", "ArrayRelationId")]
+		public IAssociation ArrayRelation
+		{
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ArrayRelationId)) 
+				as IAssociation;
+			set
+			{
 				ArrayRelationId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				ArrayValueField = null;
 			}
-	}
+		}
 
-	[Browsable(false)]
-	// only for IReference needs, for public access we have ArrayRelation
-	public IAssociation Relation
-	{
-		get => ArrayRelation;
-		set
+		[Browsable(false)]
+			// only for IReference needs, for public access we have ArrayRelation
+		public IAssociation Relation
 		{
+			get => ArrayRelation;
+			set
+			{
 				ArrayRelation = value;
                 ArrayValueField = null;
 			}
-	}
+		}
  
-	public Guid ArrayValueFieldId;
+		public Guid ArrayValueFieldId;
 
-	[Category("Array")]
-	[TypeConverter(typeof(EntityRelationColumnsConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("arrayValueField", "ArrayValueFieldId")]
-	public IDataEntityColumn ArrayValueField
-	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
-			new ModelElementKey(ArrayValueFieldId)) as IDataEntityColumn;
-		set
+		[Category("Array")]
+		[TypeConverter(typeof(EntityRelationColumnsConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("arrayValueField", "ArrayValueFieldId")]
+		public IDataEntityColumn ArrayValueField
 		{
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(ArrayValueFieldId)) as IDataEntityColumn;
+			set
+			{
 				ArrayValueFieldId = (value == null) 
 					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 				if(value == null)
@@ -107,22 +107,22 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 				DefaultLookup = ArrayValueField.DefaultLookup;
 				Caption = ArrayValueField.Caption;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden AbstractDataEntityColumn Members
+		#region Overriden AbstractDataEntityColumn Members
 
-	public override string FieldType => "DetachedField";
+		public override string FieldType => "DetachedField";
 
-	public override bool ReadOnly => false;
+		public override bool ReadOnly => false;
 
-	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
-	{
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, Hashtable list)
+		{
 		}
 
-	public override void GetExtraDependencies(ArrayList dependencies)
-	{
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
             if(ArrayRelation != null)
             {
                 dependencies.Add(ArrayRelation);
@@ -134,8 +134,8 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
             base.GetExtraDependencies(dependencies);
         }
 
-	public override void UpdateReferences()
-	{
+        public override void UpdateReferences()
+        {
             if(ArrayRelation != null)
             {
                 foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
@@ -153,17 +153,17 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
             }
             base.UpdateReferences();
         }
-	#endregion
+        #endregion
 
-	#region Convert
-	public override bool CanConvertTo(Type type)
-	{
+		#region Convert
+		public override bool CanConvertTo(Type type)
+		{
 			return (type == typeof(FieldMappingItem)) 
 			       && (ParentItem is IDataEntity);
 		}
 
-	protected override ISchemaItem ConvertTo<T>()
-	{
+		protected override ISchemaItem ConvertTo<T>()
+		{
 			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
 			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
@@ -181,5 +181,6 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 			FinishConversion(this, converted);
 			return converted;
 		}
-	#endregion
+		#endregion
+	}
 }

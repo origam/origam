@@ -24,24 +24,25 @@ using System.Data;
 using System.Xml;
 using Origam.Service.Core;
 
-namespace Origam;
-
-public class DataDocumentFactory
+namespace Origam
 {
-    public static IDataDocument New(XmlDocument xmlDoc)
+    public class DataDocumentFactory
     {
+        public static IDataDocument New(XmlDocument xmlDoc)
+        {
 #if NETSTANDARD
             return new DataDocumentCore(xmlDoc);
 # else
-        return new DataDocumentFx(xmlDoc);
+            return new DataDocumentFx(xmlDoc);
 #endif
-    }
-    public static IDataDocument New(DataSet dataSet)
-    {
+        }
+        public static IDataDocument New(DataSet dataSet)
+        {
 #if NETSTANDARD
             return new DataDocumentCore(dataSet);
 #else
-        return new DataDocumentFx(dataSet);
+            return new DataDocumentFx(dataSet);
 #endif
+        }
     }
 }

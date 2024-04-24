@@ -24,17 +24,17 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing.Design;
 
-namespace Origam.Workbench.PropertyGrid;
-
-public sealed class PropertyValueServiceImpl : IPropertyValueUIService
+namespace Origam.Workbench.PropertyGrid
 {
-    public event EventHandler PropertyUIValueItemsChanged;
-    public event PropertyValueUIHandler QueryPropertyUIValueItems;
-
-    public PropertyValueUIItem[]
-        GetPropertyUIValueItems(ITypeDescriptorContext context,
-            PropertyDescriptor propDesc)
+    public sealed class PropertyValueServiceImpl : IPropertyValueUIService
     {
+        public event EventHandler PropertyUIValueItemsChanged;
+        public event PropertyValueUIHandler QueryPropertyUIValueItems;
+
+        public PropertyValueUIItem[]
+        GetPropertyUIValueItems(ITypeDescriptorContext context,
+        PropertyDescriptor propDesc)
+        {
             ArrayList list = null;
             if (QueryPropertyUIValueItems != null)
             {
@@ -49,23 +49,24 @@ public sealed class PropertyValueServiceImpl : IPropertyValueUIService
             list.CopyTo(result);
             return result;
         }
-    public void NotifyPropertyValueUIItemsChanged()
-    {
+        public void NotifyPropertyValueUIItemsChanged()
+        {
             if (PropertyUIValueItemsChanged != null)
             {
                 PropertyUIValueItemsChanged(this, EventArgs.Empty);
             }
         }
-    void
+        void
         IPropertyValueUIService.RemovePropertyValueUIHandler(PropertyValueUIHandler
-            newHandler)
-    {
+        newHandler)
+        {
             QueryPropertyUIValueItems -= newHandler;
         }
-    void
+        void
         IPropertyValueUIService.AddPropertyValueUIHandler(PropertyValueUIHandler
-            newHandler)
-    {
+        newHandler)
+        {
             QueryPropertyUIValueItems += newHandler;
         }
+    }
 }

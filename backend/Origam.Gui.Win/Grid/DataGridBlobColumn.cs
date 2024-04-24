@@ -28,19 +28,19 @@ using Origam.UI;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DataGridDropdownColumn.
-/// </summary>
-public class DataGridBlobColumn : DataGridTextBoxColumn
+namespace Origam.Gui.Win
 {
-	private BlobControl _blobControl;
-	private bool _isEditing = false;
-	private RuleEngine _ruleEngine;
-
-	public DataGridBlobColumn(BlobControl blobControl, RuleEngine ruleEngine)
+	/// <summary>
+	/// Summary description for DataGridDropdownColumn.
+	/// </summary>
+	public class DataGridBlobColumn : DataGridTextBoxColumn
 	{
+		private BlobControl _blobControl;
+		private bool _isEditing = false;
+		private RuleEngine _ruleEngine;
+
+		public DataGridBlobColumn(BlobControl blobControl, RuleEngine ruleEngine)
+		{
 			_ruleEngine = ruleEngine;
 			_blobControl = new BlobControl();
 			_blobControl.NoKeyUp = true;	// filter key-up events, so tabbing inside grid works correctly
@@ -68,38 +68,38 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			this.TextBox.VisibleChanged += new EventHandler(TextBox_VisibleChanged);
 		}
 
-	private bool _alwaysReadOnly = false;
-	public bool AlwaysReadOnly
-	{
-		get
+		private bool _alwaysReadOnly = false;
+		public bool AlwaysReadOnly
 		{
+			get
+			{
 				return _alwaysReadOnly;
 			}
-		set
-		{
+			set
+			{
 				_alwaysReadOnly = value;
 				_blobControl.ReadOnly = value;
 			}
-	}
+		}
 
-	public BlobControl BlobControl => _blobControl;
+		public BlobControl BlobControl => _blobControl;
 
-	#region Event Handlers
-	private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
-	{
+		#region Event Handlers
+		private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
+		{
 			_isEditing = true;
 			this.ColumnStartedEditing(sender as Control);
 		}
-	#endregion
+		#endregion
 
-	#region Column Overrides
-	protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
-	{
+		#region Column Overrides
+		protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
+		{
 			base.SetColumnValueAtRow (source, rowNum, value);
 		}
 
-	protected override void Abort(int rowNum)
-	{
+		protected override void Abort(int rowNum)
+		{
 			_isEditing = false;
 			_blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
 
@@ -107,8 +107,8 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			base.Abort(rowNum);
 		}
 
-	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			//base.Edit(source, rowNum, bounds, readOnly, instantText , cellIsVisible);
 
 			if(cellIsVisible)
@@ -150,8 +150,8 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override bool Commit(CurrencyManager dataSource, int rowNum)
-	{
+		protected override bool Commit(CurrencyManager dataSource, int rowNum)
+		{
 			if(_blobControl.Bounds.X != 0 | _blobControl.Bounds.Y != 0 | _blobControl.Width != 0) _blobControl.Bounds = Rectangle.Empty;
 
 			_blobControl.ValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
@@ -184,22 +184,22 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 		}
 
 
-	protected override void ReleaseHostedControl()
-	{
+		protected override void ReleaseHostedControl()
+		{
 			base.ReleaseHostedControl ();
 
 			_blobControl.Parent = null;
 		}
 
-	protected override void ConcedeFocus()
-	{
+		protected override void ConcedeFocus()
+		{
 			_blobControl.Bounds = Rectangle.Empty;
 
 			base.ConcedeFocus();
 		}
 
-	protected override void SetDataGridInColumn(DataGrid value) 
-	{
+		protected override void SetDataGridInColumn(DataGrid value) 
+		{
 			//base.SetDataGridInColumn(value);
 			if (_blobControl.Parent != null) 
 			{
@@ -212,10 +212,10 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			}
 		}
 
-	#endregion
+		#endregion
 
-	protected override void Paint(System.Drawing.Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
-	{
+		protected override void Paint(System.Drawing.Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
+		{
 			Brush myBackBrush = backBrush;
 			Brush myForeBrush = new SolidBrush(OrigamColorScheme.LinkColor);
 
@@ -244,8 +244,8 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			format1.Dispose();
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				_ruleEngine = null;
@@ -254,8 +254,9 @@ public class DataGridBlobColumn : DataGridTextBoxColumn
 			base.Dispose (disposing);
 		}
 
-	private void TextBox_VisibleChanged(object sender, EventArgs e)
-	{
+		private void TextBox_VisibleChanged(object sender, EventArgs e)
+		{
 			this.TextBox.Bounds = Rectangle.Empty;
 		}
+	}
 }

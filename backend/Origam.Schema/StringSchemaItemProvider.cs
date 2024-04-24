@@ -22,50 +22,51 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 
-namespace Origam.Schema;
-
-public class StringSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema
 {
-	public StringSchemaItemProvider() {}
+	public class StringSchemaItemProvider : AbstractSchemaItemProvider
+	{
+		public StringSchemaItemProvider() {}
 		
-	#region ISchemaItemProvider Members
-	public override string RootItemType => StringItem.CategoryConst;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => StringItem.CategoryConst;
 
-	public override string Group => "COMMON";
+		public override string Group => "COMMON";
 
-	#endregion
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_04_string-library.png";
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_04_string-library.png";
 
-	public override string NodeText
-	{
-		get => "String Library";
-		set => base.NodeText = value;
-	}
+		public override string NodeText
+		{
+			get => "String Library";
+			set => base.NodeText = value;
+		}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		"List of Strings";
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Strings";
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[] {typeof(StringItem)};
+		public override Type[] NewItemTypes => new[] {typeof(StringItem)};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group) 
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(StringItem) ?
 					"NewString" : null);
 		}
 
-	#endregion
+		#endregion
 
 
+	}
 }

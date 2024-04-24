@@ -43,12 +43,12 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Collections;
 using Origam.Schema.MenuModel;
 
-namespace Origam.Gui;
-
-public class EntityWorkflowActionScriptCallComparer : IComparer
+namespace Origam.Gui
 {
-    public int Compare(object x, object y)
+    public class EntityWorkflowActionScriptCallComparer : IComparer
     {
+        public int Compare(object x, object y)
+        {
             EntityWorkflowActionScriptCall scriptX
                 = (EntityWorkflowActionScriptCall)x;
             EntityWorkflowActionScriptCall scriptY
@@ -66,4 +66,5 @@ public class EntityWorkflowActionScriptCallComparer : IComparer
                 return -1;
             }
         }
+    }
 }

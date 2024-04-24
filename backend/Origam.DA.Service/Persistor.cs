@@ -30,23 +30,23 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service;
-
-class Persistor
+namespace Origam.DA.Service
 {
-    private readonly IPersistenceProvider persistenceProvider;
-    private readonly FilePersistenceIndex index;
-    private readonly TransactionStore transactionStore =
-        new TransactionStore();
-    private readonly OrigamFileFactory origamFileFactory;
-    private readonly OrigamFileManager origamFileManager;
-    private readonly TrackerLoaderFactory trackerLoaderFactory;
-    public bool IsInTransaction { get; private set; }
-
-    public Persistor(IPersistenceProvider persistenceProvider,
-        FilePersistenceIndex index, OrigamFileFactory origamFileFactory,
-        OrigamFileManager origamFileManager, TrackerLoaderFactory trackerLoaderFactory)
+    class Persistor
     {
+        private readonly IPersistenceProvider persistenceProvider;
+        private readonly FilePersistenceIndex index;
+        private readonly TransactionStore transactionStore =
+            new TransactionStore();
+        private readonly OrigamFileFactory origamFileFactory;
+        private readonly OrigamFileManager origamFileManager;
+        private readonly TrackerLoaderFactory trackerLoaderFactory;
+        public bool IsInTransaction { get; private set; }
+
+        public Persistor(IPersistenceProvider persistenceProvider,
+            FilePersistenceIndex index, OrigamFileFactory origamFileFactory,
+            OrigamFileManager origamFileManager, TrackerLoaderFactory trackerLoaderFactory)
+        {
             this.persistenceProvider = persistenceProvider;
             this.index = index;
             this.origamFileFactory = origamFileFactory;
@@ -54,8 +54,8 @@ class Persistor
             this.trackerLoaderFactory = trackerLoaderFactory;
         }
 
-    public void Persist(IPersistent obj, bool checkRules)
-    {
+        public void Persist(IPersistent obj, bool checkRules)
+        {
             CheckObjectCanBePersisted(obj, checkRules);
             IFilePersistent instance = (IFilePersistent) obj;
 
@@ -84,8 +84,8 @@ class Persistor
             instance.IsPersisted = true;
         }
 
-    private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
-    {
+        private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
+        {
             if (instance.IsFileRootElement)
             {
                 newFile.ParentFolderIds.AddOrReplaceRange(instance.ParentFolderIds);
@@ -97,17 +97,17 @@ class Persistor
             transactionStore.AddOrReplace(newFile);
         }
 
-    private void RemoveFromFile(IFilePersistent instance, OrigamFile origamFile)
-    {
+        private void RemoveFromFile(IFilePersistent instance, OrigamFile origamFile)
+        {
             if (origamFile == null) return;
             origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
             origamFile.RemoveInstance(instance.Id);
             transactionStore.AddOrReplace(origamFile);
         }
 
-    private void UpdateIndex(IFilePersistent instance,
-        PersistedObjectInfo updatedObjectInfo)
-    {
+        private void UpdateIndex(IFilePersistent instance,
+            PersistedObjectInfo updatedObjectInfo)
+        {
             if (instance.IsDeleted)
             {
                 index.Remove(updatedObjectInfo);
@@ -118,38 +118,38 @@ class Persistor
             }
         }
 
-    public void BeginTransaction()
-    {
+        public void BeginTransaction()
+        {
             if (IsInTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
             IsInTransaction = true;
         }
 
-    public void EndTransaction()
-    {
+        public void EndTransaction()
+        {
             if (!IsInTransaction) throw new Exception("Not in transaction! No transaction  to end.");
             ProcessTransactionStore();
             IsInTransaction = false;
         }
 
-    private void ProcessTransactionStore()
-    {
+        private void ProcessTransactionStore()
+        {
             transactionStore.ProcessTransactions();
             index.AddToPersist(trackerLoaderFactory,false);
         }
 
-    public void EndTransactionDontSave()
-    {
+        public void EndTransactionDontSave()
+        {
             transactionStore.Clear();
             IsInTransaction = false;
         }
 
-    public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
-    {
+        public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
+        {
             return transactionStore.FindObjInfo(id);
         }
 
-    private PersistedObjectInfo CreateObjectInfo(IFilePersistent instance, OrigamFile origamFile)
-    {
+        private PersistedObjectInfo CreateObjectInfo(IFilePersistent instance, OrigamFile origamFile)
+        {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
                 category: CategoryFactory.Create(instance.GetType()),
                 id: instance.Id,
@@ -162,8 +162,8 @@ class Persistor
             return updatedObjectInfo;
         }
 
-    private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance)
-    {
+        private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance)
+        {
             origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
             if (instance.IsDeleted)
             {
@@ -175,9 +175,9 @@ class Persistor
             }
         }
 
-    private void RenameRelatedItems(IFilePersistent instance,
-        OrigamFile containingFile)
-    {
+        private void RenameRelatedItems(IFilePersistent instance,
+            OrigamFile containingFile)
+        {
             if (containingFile == null)
             {
                 return;
@@ -196,9 +196,9 @@ class Persistor
             }
         }
 
-    private void RenameSchemaExtension(OrigamFile containingFile,
-        Package package)
-    {
+        private void RenameSchemaExtension(OrigamFile containingFile,
+            Package package)
+        {
             if (!package.WasRenamed) return;
             if (containingFile == null) return;
 
@@ -220,23 +220,23 @@ class Persistor
             }
         }
 
-    private void RenameGroup(SchemaItemGroup group, string newName)
-    {
+        private void RenameGroup(SchemaItemGroup group, string newName)
+        {
             RenameGroupDirectory(group, newName);
             group.Name = newName;
             group.Persist();
         }
 
-    private void RenameGroupDirectory(SchemaItemGroup group, string newName)
-    {
+        private void RenameGroupDirectory(SchemaItemGroup group, string newName)
+        {
             PersistedObjectInfo objInfo = index.GetById(group.Id);
             if (objInfo == null) return;
             DirectoryInfo groupDir = index.GetById(group.Id).OrigamFile.Path.Directory;
             origamFileManager.RenameDirectory(groupDir, newName);
         }
 
-    private OrigamFile FindFileWhereInstanceIsStoredNow(IFilePersistent instance)
-    {
+        private OrigamFile FindFileWhereInstanceIsStoredNow(IFilePersistent instance)
+        {
             PersistedObjectInfo objInfo;
             OrigamFile origamFile;
             if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
@@ -252,9 +252,9 @@ class Persistor
             return origamFile;
         }
         
-    private OrigamFile FindFileWhereInstanceShouldBeStored(
-        IFilePersistent instance)
-    {
+        private OrigamFile FindFileWhereInstanceShouldBeStored(
+            IFilePersistent instance)
+        {
             if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
             {
                 return transactionStore.Get(instance.RelativeFilePath);
@@ -283,8 +283,8 @@ class Persistor
                      isGroup: instance.IsFolder);
         }
 
-    private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
-    {
+        private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
+        {
             if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
                 return transactionStore.Get(origamFile.Path.Relative)
@@ -295,8 +295,8 @@ class Persistor
                 : new OrigamXmlDocument();
         }
 
-    private static void CheckObjectCanBePersisted(IPersistent obj, bool checkRules)
-    {
+        private static void CheckObjectCanBePersisted(IPersistent obj, bool checkRules)
+        {
             if (!(obj is IFilePersistent instance))
             {
                 throw new Exception(
@@ -311,8 +311,8 @@ class Persistor
             }
         }
         
-    private void ScheduleFolderRenamingTaskIfApplicable(IFilePersistent instance, OrigamFile origamFile)
-    {
+        private void ScheduleFolderRenamingTaskIfApplicable(IFilePersistent instance, OrigamFile origamFile)
+        {
             switch (instance)
             {
                 case Package schemaExtension:
@@ -336,20 +336,20 @@ class Persistor
                     break;
             }
         }
-}
+    }
 
-class RenameSchemaExtensionTask: IDeferredTask
-{
-    private readonly Package _package;
-    private readonly OrigamFile origamFile;
-    private readonly IPersistenceProvider persistenceProvider;
-    private readonly FilePersistenceIndex index;
-    private readonly OrigamFileManager origamFileManager;
-    public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
-        FilePersistenceIndex index,
-        IPersistenceProvider persistenceProvider, OrigamFile origamFile,
-        Package package)
+    class RenameSchemaExtensionTask: IDeferredTask
     {
+        private readonly Package _package;
+        private readonly OrigamFile origamFile;
+        private readonly IPersistenceProvider persistenceProvider;
+        private readonly FilePersistenceIndex index;
+        private readonly OrigamFileManager origamFileManager;
+        public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex index,
+            IPersistenceProvider persistenceProvider, OrigamFile origamFile,
+            Package package)
+        {
             this._package = package;
             this.origamFile = origamFile;
             this.origamFileManager = origamFileManager;
@@ -357,8 +357,8 @@ class RenameSchemaExtensionTask: IDeferredTask
             this.persistenceProvider = persistenceProvider;
         }
 
-    public void Run()
-    {
+        public void Run()
+        {
             if (!_package.WasRenamed) return;
             if (origamFile == null) return;
             try
@@ -379,8 +379,8 @@ class RenameSchemaExtensionTask: IDeferredTask
                     "Original error: " + e.Message, e);
             }
         }
-    private void RenameGroup(SchemaItemGroup group, string newName)
-    {
+        private void RenameGroup(SchemaItemGroup group, string newName)
+        {
             new RenameGroupDirectoryTask(
                 origamFileManager,
                 index,
@@ -390,46 +390,46 @@ class RenameSchemaExtensionTask: IDeferredTask
             group.Name = newName;
             group.Persist();
         }
-}
+    }
 
-class RenameGroupDirectoryTask: IDeferredTask
-{
-    private readonly SchemaItemGroup group;
-    private readonly string newName;
-    private readonly FilePersistenceIndex persistenceIndex;
-    private readonly OrigamFileManager origamFileManager;
-
-    public RenameGroupDirectoryTask(OrigamFileManager origamFileManager,
-        FilePersistenceIndex persistenceIndex, SchemaItemGroup group, string newName)
+    class RenameGroupDirectoryTask: IDeferredTask
     {
+        private readonly SchemaItemGroup group;
+        private readonly string newName;
+        private readonly FilePersistenceIndex persistenceIndex;
+        private readonly OrigamFileManager origamFileManager;
+
+        public RenameGroupDirectoryTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex persistenceIndex, SchemaItemGroup group, string newName)
+        {
             this.origamFileManager = origamFileManager;
             this.persistenceIndex = persistenceIndex;
             this.group = group;
             this.newName = newName;
         }
 
-    public void Run()   
-    {
+        public void Run()   
+        {
             PersistedObjectInfo objInfo = persistenceIndex.GetById(group.Id);
             if (objInfo == null) return;
             DirectoryInfo groupDir = persistenceIndex.GetById(group.Id).OrigamFile.Path.Directory;
             origamFileManager.RenameDirectory(groupDir, newName);
         }
-}
+    }
     
 
-internal class TransactionStore
-{
-    private readonly ReaderWriterLockSlim readWriteLock =
-        new ReaderWriterLockSlim();
-    public Queue<IDeferredTask> FolderRenamingTasks { get; } =
-        new Queue<IDeferredTask>();
-
-    private readonly IDictionary<string, OrigamFile> pathFileDict =
-        new Dictionary<string, OrigamFile>();
-
-    public void AddOrReplace(OrigamFile file)
+    internal class TransactionStore
     {
+        private readonly ReaderWriterLockSlim readWriteLock =
+            new ReaderWriterLockSlim();
+        public Queue<IDeferredTask> FolderRenamingTasks { get; } =
+            new Queue<IDeferredTask>();
+
+        private readonly IDictionary<string, OrigamFile> pathFileDict =
+            new Dictionary<string, OrigamFile>();
+
+         public void AddOrReplace(OrigamFile file)
+         {
              readWriteLock.RunWriter(() =>
              {
                 if (file.DeferredSaveDocument == null)
@@ -439,18 +439,18 @@ internal class TransactionStore
                 pathFileDict[file.Path.Relative] = file;
              });
         }
-    public OrigamFile Get(string relativePath)
-    {
+        public OrigamFile Get(string relativePath)
+        {
            return readWriteLock.RunReader(() => pathFileDict[relativePath]);
         }
 
-    public bool Contains(string relativePath)
-    {
+        public bool Contains(string relativePath)
+        {
             return readWriteLock.RunReader(() => pathFileDict.ContainsKey(relativePath));
         }
 
-    public void Clear()
-    {
+        public void Clear()
+        {
             readWriteLock.RunWriter(() =>
             {
                 foreach (OrigamFile origamFile in pathFileDict.Values)
@@ -461,8 +461,8 @@ internal class TransactionStore
             });
         }
 
-    public void ProcessTransactions()
-    {
+        public void ProcessTransactions()
+        {
             readWriteLock.RunWriter(() =>
             {
                 foreach (IDeferredTask task in FolderRenamingTasks)
@@ -483,8 +483,8 @@ internal class TransactionStore
             });
         }
 
-    public PersistedObjectInfo FindObjInfo(Guid id)
-    {
+        public PersistedObjectInfo FindObjInfo(Guid id)
+        {
             return readWriteLock.RunReader(() =>
             {
                 foreach (var origamFile in pathFileDict.Values)
@@ -497,4 +497,5 @@ internal class TransactionStore
                 return null;
             });
         }
+    }
 }

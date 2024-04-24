@@ -17,14 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
 
-namespace Origam.Workbench.Diagram.DiagramFactory;
-
-public interface IDiagramFactory<in Titem, out Tgraph> where Titem : ISchemaItem where Tgraph: Graph
+namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    Tgraph Draw(Titem graphParent);
+    public interface IDiagramFactory<in Titem, out Tgraph> where Titem : ISchemaItem where Tgraph: Graph
+    {
+        Tgraph Draw(Titem graphParent);
+    }
 }

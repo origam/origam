@@ -25,63 +25,64 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for WorkqueueLoader.
-/// </summary>
-[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class WorkqueueLoader : AbstractSchemaItem
+namespace Origam.Schema.WorkflowModel
 {
-	public const string CategoryConst = "WorkqueueLoader";
-
-	public WorkqueueLoader() : base() {Init();}
-
-	public WorkqueueLoader(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-
-	public WorkqueueLoader(Key primaryKey) : base(primaryKey)	{Init();}
-	
-	private void Init()
+	/// <summary>
+	/// Summary description for WorkqueueLoader.
+	/// </summary>
+	[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class WorkqueueLoader : AbstractSchemaItem
 	{
+		public const string CategoryConst = "WorkqueueLoader";
+
+		public WorkqueueLoader() : base() {Init();}
+
+		public WorkqueueLoader(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+
+		public WorkqueueLoader(Key primaryKey) : base(primaryKey)	{Init();}
+	
+		private void Init()
+		{
 		}
 
-	#region Overriden AbstractDataEntityColumn Members
+		#region Overriden AbstractDataEntityColumn Members
 		
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Workflow);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	#endregion
+		#endregion
 
-	#region Properties
-	public Guid WorkflowId;
+		#region Properties
+		public Guid WorkflowId;
 
-	[Category("References")]
-	[TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
-	[XmlReference("workflow", "WorkflowId")]
-	public IWorkflow Workflow
-	{
-		get
+		[Category("References")]
+		[TypeConverter(typeof(WorkflowConverter)), NotNullModelElementRule()]
+        [XmlReference("workflow", "WorkflowId")]
+		public IWorkflow Workflow
 		{
+			get
+			{
 				return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
 			}
-		set
-		{
+			set
+			{
 				this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

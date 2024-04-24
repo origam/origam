@@ -26,15 +26,15 @@ using Origam.Mail;
 using Origam.Workbench.Services;
 using Origam.Workflow.WorkQueue;
 
-namespace Origam.workflow.mail;
-
-public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
+namespace Origam.workflow.mail
 {
-	string _transactionId;
-	Pop3Client _popClient;
-
-	public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
+	public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
 	{
+		string _transactionId;
+	    Pop3Client _popClient;
+
+		public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
+		{
 			_transactionId = transactionId;
 
 			string server = null;
@@ -82,13 +82,13 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
 		        useSsl: ssl);
         }
 
-	public override void Disconnect()
-	{
+		public override void Disconnect()
+		{
 			_popClient = null;
 		}
 
-	public override WorkQueueAdapterResult GetItem(string lastState)
-	{
+		public override WorkQueueAdapterResult GetItem(string lastState)
+		{
 			MailData mailData = new MailData();
 			mailData.DataSetName = "ROOT";
 
@@ -113,4 +113,5 @@ public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
 
 			return result;
 		}
+	}
 }

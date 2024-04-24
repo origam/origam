@@ -28,51 +28,51 @@ using Npgsql;
 using Origam.Schema.EntityModel;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.DA.Service;
-
-/// <summary>
-/// Summary description for PgSqlDataService.
-/// </summary>
-public class PgSqlDataService : AbstractSqlDataService
+namespace Origam.DA.Service
 {
-    private const DatabaseType _PlatformName = DatabaseType.PgSql;
-    private string _DbUser = "";
+	/// <summary>
+	/// Summary description for PgSqlDataService.
+	/// </summary>
+	public class PgSqlDataService : AbstractSqlDataService
+	{
+        private const DatabaseType _PlatformName = DatabaseType.PgSql;
+        private string _DbUser = "";
 
-    #region Constructors
-    public PgSqlDataService()
-    {
+        #region Constructors
+        public PgSqlDataService()
+		{
 			Init();
 		}
 
-    public override DatabaseType PlatformName
-    {
-        get
+        public override DatabaseType PlatformName
         {
+            get
+            {
                 return _PlatformName;
             }
-    }
+        }
 
-    public PgSqlDataService(string connection, int bulkInsertThreshold,
-        int updateBatchSize) : base(connection, bulkInsertThreshold,
-        updateBatchSize)
-    {
+        public PgSqlDataService(string connection, int bulkInsertThreshold,
+            int updateBatchSize) : base(connection, bulkInsertThreshold,
+            updateBatchSize)
+		{
 			Init();
 		}
-    #endregion
+		#endregion
 
-    private void Init()
-    {
+		private void Init()
+		{
 			AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
         }
 
-    internal override IDbConnection GetConnection(string connectionString)
-    {
+        internal override IDbConnection GetConnection(string connectionString)
+		{
 			return new NpgsqlConnection(connectionString);
 		}
-    public override string BuildConnectionString(string hostName,int port, string databaseName, 
-        string userName, string password, bool integratedAuthentication, bool pooling)
-    {
+        public override string BuildConnectionString(string hostName,int port, string databaseName, 
+			string userName, string password, bool integratedAuthentication, bool pooling)
+        {
             NpgsqlConnectionStringBuilder sb = new NpgsqlConnectionStringBuilder
             {
                 ApplicationName = "Origam",
@@ -87,8 +87,8 @@ public class PgSqlDataService : AbstractSqlDataService
             return sb.ConnectionString;
         }
 
-    internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
-    {
+        internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
+		{
             if (ex is NpgsqlException NgPsqlEx)
             {
                 string customMessage = NgPsqlEx.Message;
@@ -126,8 +126,8 @@ public class PgSqlDataService : AbstractSqlDataService
             throw new OrigamException(ex.Message, ex);
         }
 
-    private void SQLProcedureException(Exception ex)
-    {
+        private void SQLProcedureException(Exception ex)
+        {
             int firstApostrophe = ex.Message.IndexOf("\"");
             string procedureName = ex.Message;
             if (ex.Message.Length > firstApostrophe && firstApostrophe != -1)
@@ -142,8 +142,8 @@ public class PgSqlDataService : AbstractSqlDataService
             throw new DatabaseProcedureNotFoundException(procedureName, ex);
         }
 
-    private void DataTableException(Exception ex)
-    {
+        private void DataTableException(Exception ex)
+        {
             int firstApostrophe = ex.Message.IndexOf("\"");
             if (ex.Message.Length > firstApostrophe)
             {
@@ -154,18 +154,18 @@ public class PgSqlDataService : AbstractSqlDataService
             }
         }
 
-    private void PgDataException(string recordErrorMessage, Exception ex)
-    {
+        private void PgDataException(string recordErrorMessage, Exception ex)
+        {
             throw new DataException("Syntax Error" +
                             Environment.NewLine + recordErrorMessage + Environment.NewLine + ex.Message, ex);
         }
 
-    public override string[] DatabaseSpecificDatatypes()
-    {
+        public override string[] DatabaseSpecificDatatypes()
+        {
             return Enum.GetNames(typeof(NpgsqlTypes.NpgsqlDbType));
         }
-    public override void CreateDatabaseUser(string user,string password,string database, bool DatabaseIntegratedAuthentication)
-    {
+        public override void CreateDatabaseUser(string user,string password,string database, bool DatabaseIntegratedAuthentication)
+        {
             string transaction1 = Guid.NewGuid().ToString();
             try
             {
@@ -182,55 +182,55 @@ public class PgSqlDataService : AbstractSqlDataService
             }
         }
 
-    public override void DeleteUser(string user, bool DatabaseIntegratedAuthentication)
-    {
+        public override void DeleteUser(string user, bool DatabaseIntegratedAuthentication)
+        {
             //The user can be dropped only after the database is dropped,
             //so the operation is done in DeleteDatabase method
         }
-    public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
-    {
+        public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
+        {
             ExecuteUpdate("ALTER PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
         }
-    public override void DeleteDatabase(string name)
-    {
+        public override void DeleteDatabase(string name)
+        {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
             ExecuteUpdate(string.Format("DROP ROLE IF EXISTS \"{0}\" ", name), null);
         }
 
-    public override void CreateDatabase(string name)
-    {
+        public override void CreateDatabase(string name)
+        {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\" ENCODING ='UTF8' ", name), null);
         }
 
-    public override void CreateSchema(string SchemaName)
-    {
+        public override void CreateSchema(string SchemaName)
+        {
             ExecuteUpdate(string.Format("CREATE SCHEMA \"{0}\";", SchemaName), null);
             ExecuteUpdate(string.Format("CREATE EXTENSION pgcrypto SCHEMA \"{0}\";", SchemaName), null);
         }
 
-    private void CheckDatabaseName(string name)
-    {
+        private void CheckDatabaseName(string name)
+        {
             if(name.Contains("\""))
             {
                 throw new Exception(string.Format("Invalid database name: {0}", name));
             }
         }
 
-    internal override string GetAllTablesSql()
-    {
+        internal override string GetAllTablesSql()
+        {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }
 
-    internal override string GetAllColumnsSQL()
-    {
+        internal override string GetAllColumnsSQL()
+        {
             return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH " +
                 "FROM INFORMATION_SCHEMA.COLUMNS where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }
 
-    internal override string GetSqlIndexFields()
-    {
+        internal override string GetSqlIndexFields()
+        {
             return "SELECT c.relname AS TableName, "
                 + "i.relname as IndexName,f.attname AS ColumnName, "
                 + "f.attnum as OrdinalPosition, "
@@ -249,13 +249,13 @@ public class PgSqlDataService : AbstractSqlDataService
                 + "AND f.attnum > 0";
         }
 
-    internal override string GetSqlIndexes()
-    {
+        internal override string GetSqlIndexes()
+        {
             return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname =(select current_schema)";
         }
 
-    internal override string GetSqlFk()
-    {
+        internal override string GetSqlFk()
+        {
             return @"SELECT 
     ccu.table_name AS PK_Table,
     tc.table_name AS FK_Table, 
@@ -304,13 +304,13 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         }
 
-    internal override string GetPid()
-    {
+        internal override string GetPid()
+        {
             return "select pg_backend_pid()";
         }
 
-    public override string CreateSystemRole(string roleName)
-    {
+        public override string CreateSystemRole(string roleName)
+        {
             StringBuilder systemRole = new StringBuilder();
             string roleId = Guid.NewGuid().ToString();
             systemRole.Append(" INSERT INTO \"OrigamApplicationRole\" (\"Id\", \"Name\", \"Description\", \"IsSystemRole\" , \"RecordCreated\")");
@@ -326,8 +326,8 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
-    public override string CreateInsert(int fieldcount)
-    {
+        public override string CreateInsert(int fieldcount)
+        {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("INSERT INTO \"{0}\" (");
             for (int i=1;i<fieldcount+1;i++)
@@ -345,10 +345,10 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             return stringBuilder.ToString();
         }
 
-    public override string Info
-    {
-        get
-        {
+        public override string Info
+		{
+			get
+			{
 				string result = "";
 
 				using (NpgsqlConnection cn = new NpgsqlConnection(this.ConnectionString))
@@ -418,10 +418,10 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
 				return result;
 			}
-    }
+		}
 
-    internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
-    {
+        internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
+        {
             string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
                 .MappedObjectName;
             string indexName = dataEntityIndex.Name;
@@ -433,8 +433,8 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             DataSet index = GetData(sqlIndex);
             return index.Tables[0].Rows.Count == 1;
         }
-    internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
-    {
+        internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
+        {
             Hashtable dbIndexList = new Hashtable();
             foreach (DataRow row in indexes.Tables[0].Rows)
             {
@@ -447,8 +447,8 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             return dbIndexList;
         }
 
-    internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
-    {
+        internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+        {
             Hashtable schemaIndexListGenerate = new Hashtable();
             foreach (TableMappingItem t in schemaTables)
             {
@@ -472,17 +472,17 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             return schemaIndexListGenerate;
         }
 
-    public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
+        public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
 
-    internal override object FillParameterArrayData(ICollection ar)
-    {
+        internal override object FillParameterArrayData(ICollection ar)
+        {
             String[] vs = new String[ar.Count];
             ar.Cast<object>().Select(g => { return g.ToString(); }).ToArray().CopyTo(vs, 0);
             return vs;
         }
 
-    public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO \"BusinessPartner\" (\"FirstName\",\"UserName\",\"Name\",\"Id\",\"UserEmail\") " +
                 "VALUES ('{0}','{1}','{2}','{3}','{4}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "FirstName").Select(param => param.Value).FirstOrDefault(),
@@ -492,8 +492,8 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Email").Select(param => param.Value).FirstOrDefault());
         }
 
-    public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
                 "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
@@ -502,20 +502,21 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
                 Guid.NewGuid().ToString(),0,"false");
         }
-    public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO \"BusinessPartnerOrigamRole\" (\"Id\",\"refBusinessPartnerId\",\"refOrigamRoleId\") " +
                 "VALUES ('{0}','{1}','{2}')",
                 Guid.NewGuid().ToString(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
         }
-    public override string AlreadyCreatedUser(QueryParameterCollection parameters)
-    {
+        public override string AlreadyCreatedUser(QueryParameterCollection parameters)
+        {
             return string.Format("UPDATE \"OrigamParameters\" SET \"BooleanValue\" = true WHERE \"Id\" = 'e42f864f-5018-4967-abdc-5910439adc9a'");
         }
 
-    protected override void ResetTransactionIsolationLevel(IDbCommand command)
-    {
+        protected override void ResetTransactionIsolationLevel(IDbCommand command)
+        {
         }
+    }
 }

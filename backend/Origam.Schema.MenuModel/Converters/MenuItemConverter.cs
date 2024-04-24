@@ -24,27 +24,28 @@ using System.Collections;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.MenuModel;
-
-public class MenuItemConverter : TypeConverter
+namespace Origam.Schema.MenuModel
 {
-	ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+    public class MenuItemConverter : TypeConverter
 	{
+		ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
 
 			ArrayList menuArray = new ArrayList();
@@ -63,16 +64,16 @@ public class MenuItemConverter : TypeConverter
 			return new StandardValuesCollection(menuArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
@@ -87,4 +88,6 @@ public class MenuItemConverter : TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
+	}
+
 }

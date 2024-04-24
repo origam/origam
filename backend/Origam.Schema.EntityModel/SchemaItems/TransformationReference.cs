@@ -25,86 +25,87 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for TransformationReference.
-/// </summary>
-[SchemaItemDescription("Transformation Reference", 16)]
-[HelpTopic("Transformation+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Transformation")]
-[ClassMetaVersion("6.0.0")]
-public class TransformationReference : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "TransformationReference";
-
-	public TransformationReference() : base() {}
-
-	public TransformationReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public TransformationReference(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType
+	/// <summary>
+	/// Summary description for TransformationReference.
+	/// </summary>
+	[SchemaItemDescription("Transformation Reference", 16)]
+    [HelpTopic("Transformation+Reference")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Transformation")]
+    [ClassMetaVersion("6.0.0")]
+    public class TransformationReference : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "TransformationReference";
+
+		public TransformationReference() : base() {}
+
+		public TransformationReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TransformationReference(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "16";
 			}
-	}
+		}
 
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-	{
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		{
 			if(this.Transformation != null)
 				base.GetParameterReferences(this.Transformation as AbstractSchemaItem, list);
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Transformation);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	public Guid TransformationId;
+		#region Properties
+		public Guid TransformationId;
 
-	[Category("Reference")]
-	[TypeConverter(typeof(TransformationConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[XmlReference("transformation", "TransformationId")]
-	public ITransformation Transformation
-	{
-		get
+		[Category("Reference")]
+		[TypeConverter(typeof(TransformationConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRule()]
+        [XmlReference("transformation", "TransformationId")]
+		public ITransformation Transformation
 		{
+			get
+			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TransformationId)) as ITransformation;
 			}
-		set
-		{
+			set
+			{
 				this.TransformationId = (Guid)value.PrimaryKey["Id"];
 
 				this.Name = this.Transformation.Name;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

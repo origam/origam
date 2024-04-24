@@ -22,12 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Microsoft.Extensions.Logging;
 using Origam.Server.Controller;
 
-namespace Origam.Server.Extensions;
-
-public static class LogExtensions
+namespace Origam.Server.Extensions
 {
-    public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
+    public static class LogExtensions
     {
+        public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
+        {
             log.LogInformation(message, new []{arg} );
         }
+    }
 }

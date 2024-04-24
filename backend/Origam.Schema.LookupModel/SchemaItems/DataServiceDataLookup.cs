@@ -22,19 +22,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.LookupModel;
-
-/// <summary>
-/// Summary description for DataServiceDataLookup.
-/// </summary>
-[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
-[HelpTopic("Lookups")]
-[ClassMetaVersion("6.0.0")]
-public class DataServiceDataLookup : AbstractDataLookup
+namespace Origam.Schema.LookupModel
 {
-	public DataServiceDataLookup() : base() {}
+	/// <summary>
+	/// Summary description for DataServiceDataLookup.
+	/// </summary>
+	[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
+    [HelpTopic("Lookups")]
+    [ClassMetaVersion("6.0.0")]
+	public class DataServiceDataLookup : AbstractDataLookup
+	{
+		public DataServiceDataLookup() : base() {}
 
-	public DataServiceDataLookup(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public DataServiceDataLookup(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-	public DataServiceDataLookup(Key primaryKey) : base(primaryKey)	{}
+		public DataServiceDataLookup(Key primaryKey) : base(primaryKey)	{}
+	}
 }

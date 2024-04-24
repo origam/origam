@@ -26,17 +26,18 @@ using NUnit.Framework;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.ServiceTests.MetaModelUpgraderTests;
 
-namespace Origam.DA.ServiceTests.ScriptContainersTests;
-
-[TestFixture]
-public class PackageScriptContainerTests: ClassUpgradeTestBase
+namespace Origam.DA.ServiceTests.ScriptContainersTests
 {
-    protected override string DirName => "ScriptContainersTests";
-    [Test]
-    public void ShouldRenameSchemaExtensionToPackage()
+    [TestFixture]
+    public class PackageScriptContainerTests: ClassUpgradeTestBase
     {
+        protected override string DirName => "ScriptContainersTests";
+        [Test]
+        public void ShouldRenameSchemaExtensionToPackage()
+        {
             XFileData xFileData = LoadFile("Security_V5.0.0_.origamPackage");
             var modelUpgrader = new MetaModelAnalyzer(new NullFileWriter(), new MetaModelUpgrader());
             modelUpgrader.TryUpgrade(xFileData);
         }
+    }
 }

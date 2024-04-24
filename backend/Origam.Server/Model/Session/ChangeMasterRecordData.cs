@@ -23,14 +23,15 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.Session;
-
-public class ChangeMasterRecordData
+namespace Origam.Server.Model.Session
 {
-    [RequiredNonDefault]
-    public Guid SessionFormIdentifier { get; set; }
-    [Required]
-    public string Entity { get; set; }
-    [Required]
-    public object RowId { get; set; }
+    public class ChangeMasterRecordData
+    {
+        [RequiredNonDefault]
+        public Guid SessionFormIdentifier { get; set; }
+        [Required]
+        public string Entity { get; set; }
+        [Required]
+        public object RowId { get; set; }
+    }
 }

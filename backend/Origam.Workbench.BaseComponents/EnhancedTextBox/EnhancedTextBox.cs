@@ -23,18 +23,18 @@ using System;
 using System.Windows.Forms;
 using System.Globalization;
 
-namespace Origam.Gui.UI;
-
-public class EnhancedTextBox : TextBox
+namespace Origam.Gui.UI
 {
-    private Type dataType = typeof(string);
-    private IFormatter formatter;
-    private string customFormat;
-    private static readonly object ValueChangedEventKey = new object();
-    private readonly Func<DateTime> timeNowFunc;
-        
-    public EnhancedTextBox(Func<DateTime> timeNowFunc = null)
+    public class EnhancedTextBox : TextBox
     {
+        private Type dataType = typeof(string);
+        private IFormatter formatter;
+        private string customFormat;
+        private static readonly object ValueChangedEventKey = new object();
+        private readonly Func<DateTime> timeNowFunc;
+        
+        public EnhancedTextBox(Func<DateTime> timeNowFunc = null)
+        {
             KeyDown += OnKeyDown;
             KeyPress += OnKeyPress;
             Leave += OnLeave;
@@ -43,12 +43,12 @@ public class EnhancedTextBox : TextBox
             this.timeNowFunc = timeNowFunc ?? (() => DateTime.Now);
         }
 
-    public Type DataType
-    {
-        get => dataType;
-
-        set
+        public Type DataType
         {
+            get => dataType;
+
+            set
+            {
                 if (value == typeof(DateTime))
                 {
                     formatter = new DatetimeFormatter(this,customFormat,timeNowFunc);
@@ -118,16 +118,16 @@ public class EnhancedTextBox : TextBox
                 }
                 dataType = value;
             }
-    }
+        }
 
-    private  NumberFormatInfo CurrentNumFormat 
-        => CultureInfo.CurrentCulture.NumberFormat;
+        private  NumberFormatInfo CurrentNumFormat 
+            => CultureInfo.CurrentCulture.NumberFormat;
 
-    public object Value
-    {
-        get => formatter.GetValue();
-        set
+        public object Value
         {
+            get => formatter.GetValue();
+            set
+            {
                 if (value == null)
                 {
                     Text = "";
@@ -138,26 +138,26 @@ public class EnhancedTextBox : TextBox
                 formatter.OnLeave(null, EventArgs.Empty);
                 OnValueChanged(EventArgs.Empty);
             }
-    }
+        }
 
-    public string CustomFormat
-    {
-        get => customFormat;
-        set
+        public string CustomFormat
         {
+            get => customFormat;
+            set
+            {
                 customFormat = value;
                 DataType = dataType; // updates format in validator
             }
-    }
+        }
 
-    public event EventHandler ValueChanged
-    {
-        add => Events.AddHandler(ValueChangedEventKey, value);
-        remove => Events.RemoveHandler(ValueChangedEventKey, value);
-    }
+        public event EventHandler ValueChanged
+        {
+            add => Events.AddHandler(ValueChangedEventKey, value);
+            remove => Events.RemoveHandler(ValueChangedEventKey, value);
+        }
 
-    private void OnValueChanged(EventArgs e)
-    {
+        private void OnValueChanged(EventArgs e)
+        {
             if (!(Events[ValueChangedEventKey] is EventHandler eventHandler))
             {
                 return;
@@ -165,19 +165,20 @@ public class EnhancedTextBox : TextBox
             eventHandler(this, e);
         }
 
-    private void OnKeyDown(object sender, KeyEventArgs e)
-    {
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
             formatter.OnKeyDown(sender, e);
         }
 
-    private void OnKeyPress(object sender, KeyPressEventArgs e)
-    {
+        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        {
             formatter.OnKeyPress(sender, e);
         }
 
-    private void OnLeave(object sender, EventArgs e)
-    {
+        private void OnLeave(object sender, EventArgs e)
+        {
             formatter.OnLeave(sender, e);
             OnValueChanged(e);
         }
+    }
 }

@@ -24,56 +24,56 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.UI;
 
-namespace Origam.Schema;
-
-public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
+namespace Origam.Schema
 {
-	public NonpersistentSchemaItemNode() {}
-
-	#region IBrowserNode2 Members
-
-	public bool CanMove(IBrowserNode2 newNode) =>
-		// TODO:  Add NonpersistentSchemaItemNode.CanMove implementation
-		false;
-
-	private IBrowserNode2 _parentNode;
-	public IBrowserNode2 ParentNode
+	public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 	{
-		get => _parentNode;
-		set => _parentNode = value;
-	}
+		public NonpersistentSchemaItemNode() {}
 
-	public bool CanDelete => false;
+		#region IBrowserNode2 Members
 
-	public void Delete()
-	{
+		public bool CanMove(IBrowserNode2 newNode) =>
+			// TODO:  Add NonpersistentSchemaItemNode.CanMove implementation
+			false;
+
+		private IBrowserNode2 _parentNode;
+		public IBrowserNode2 ParentNode
+		{
+			get => _parentNode;
+			set => _parentNode = value;
+		}
+
+		public bool CanDelete => false;
+
+		public void Delete()
+		{
 			throw new InvalidOperationException(
 				ResourceUtils.GetString("ErrorDeleteIndividual"));
 		}
 
-	public bool Hide
-	{
-		get =>
-			// TODO:  Add NonpersistentSchemaItemNode.Hide getter implementation
-			false;
-		set
+		public bool Hide
 		{
+			get =>
+				// TODO:  Add NonpersistentSchemaItemNode.Hide getter implementation
+				false;
+			set
+			{
 				// TODO:  Add NonpersistentSchemaItemNode.Hide setter implementation
 			}
-	}
+		}
 
-	public byte[] NodeImage => null;
+		public byte[] NodeImage => null;
 
-	#endregion
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public bool HasChildNodes => this.ChildNodes().Count > 0;
+		public bool HasChildNodes => this.ChildNodes().Count > 0;
 
-	public bool CanRename => false;
+		public bool CanRename => false;
 
-	public BrowserNodeCollection ChildNodes()
-	{
+		public BrowserNodeCollection ChildNodes()
+		{
 			var result = new BrowserNodeCollection();
 			AbstractSchemaItem parent;
 			if(ParentNode is not SchemaItemAncestor ancestor)
@@ -119,27 +119,27 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 			return result;
 		}
 
-	public string NodeId => ParentNode.NodeId;
+		public string NodeId => ParentNode.NodeId;
 
-	private string _nodeText = "";
-	public string NodeText
-	{
-		get => _nodeText;
-		set => _nodeText = value;
-	}
+		private string _nodeText = "";
+		public string NodeText
+		{
+			get => _nodeText;
+			set => _nodeText = value;
+		}
 
-	public string Icon => "38_folder-categories-1.png";
+		public string Icon => "38_folder-categories-1.png";
 
-	public virtual string FontStyle => "Regular";
+		public virtual string FontStyle => "Regular";
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public virtual T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
-	{
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
+		{
 			T newItem;
 			if(ParentNode is ISchemaItemFactory)
 			{
@@ -155,16 +155,16 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 			return newItem;
 		}
 
-	public SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
-	{
+		public SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
+		{
 			// TODO:  Add NonpersistentSchemaItemNode.NewGroup implementation
 			return null;
 		}
 
-	public Type[] NewItemTypes
-	{
-		get
+		public Type[] NewItemTypes
 		{
+			get
+			{
 				if(ParentNode is not ISchemaItemFactory parent)
 				{
 					return new Type[] { };
@@ -180,35 +180,35 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 				}
 				return types.ToArray(typeof(Type)) as Type[];
 			}
-	}
+		}
 
-	public virtual IList<string> NewTypeNames
-	{
-		get
+		public virtual IList<string> NewTypeNames
 		{
+			get
+			{
 				if(ParentNode is ISchemaItemFactory parent)
 				{
 					return parent.NewTypeNames;
 				}
 				return new List<string>();
 			}
-	}
+		}
 
-	public virtual Type[] NameableTypes => NewItemTypes;
+		public virtual Type[] NameableTypes => NewItemTypes;
 
-	public event Action<ISchemaItem> ItemCreated;
+		public event Action<ISchemaItem> ItemCreated;
 
-	#endregion
+		#endregion
 
-	private string SchemaItemDescription(Type type)
-	{
+		private string SchemaItemDescription(Type type)
+		{
 			var schemaItemDescriptionAttribute = type.SchemaItemDescription();
 			return schemaItemDescriptionAttribute?.FolderName;
 		}
 
-	#region IComparable Members
-	public int CompareTo(object obj)
-	{
+		#region IComparable Members
+		public int CompareTo(object obj)
+		{
 			if(obj is not IBrowserNode other)
 			{
 				return -1;
@@ -219,5 +219,6 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 			}
 			throw new InvalidCastException();
 		}
-	#endregion
+        #endregion
+    }
 }

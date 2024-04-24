@@ -28,16 +28,16 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Designer;
-
-[ProvideProperty("MappingCondition", typeof(Control))]
-public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
+namespace Origam.Gui.Designer
 {
-	[Category("Multi Column Adapter Field")]
-	[TypeConverter(typeof(DataConstantConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	public DataConstant GetMappingCondition(Control acontrol)
+	[ProvideProperty("MappingCondition", typeof(Control))]
+	public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 	{
+		[Category("Multi Column Adapter Field")]
+		[TypeConverter(typeof(DataConstantConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		public DataConstant GetMappingCondition(Control acontrol)
+		{
 			ControlSetItem csi = acontrol.Tag as ControlSetItem;
 			if(csi != null)
 			{
@@ -54,8 +54,8 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 			}
 		}
 
-	public void SetMappingCondition(Control acontrol, DataConstant value)
-	{
+		public void SetMappingCondition(Control acontrol, DataConstant value)
+		{
 			ControlSetItem csi = acontrol.Tag as ControlSetItem;
 			if(csi != null)
 			{
@@ -64,8 +64,8 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 			}
 		}
 
-	public bool CanExtend(object extendee)
-	{
+		public bool CanExtend(object extendee)
+		{
 			if(extendee is Control 
 			&& ((extendee as Control).Parent is MultiColumnAdapterFieldWrapper) 
 			&& (extendee as Control).Tag is ISchemaItem)
@@ -77,4 +77,5 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 				return false;
 			}
 		}
+	}
 }

@@ -35,68 +35,68 @@ using Origam.Schema.DeploymentModel;
 using Origam.Workbench.Services.CoreServices;
 using Origam.DA.Service;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for DeploymentService.
-/// </summary>
-public class DeploymentService : IDeploymentService
+namespace Origam.Workbench.Services
 {
+	/// <summary>
+	/// Summary description for DeploymentService.
+	/// </summary>
+	public class DeploymentService : IDeploymentService
+    {
 
-	#region Local variables
-	string _transactionId = null;
-	SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-	private static OrigamModelVersionData _versionData = null;
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        #region Local variables
+		string _transactionId = null;
+		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+        private static OrigamModelVersionData _versionData = null;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
-	public OrigamModelVersionData VersionData
-	{
-		get
-		{
+        public OrigamModelVersionData VersionData
+        {
+            get
+            {
                 if(_versionData==null)
                     _versionData = new OrigamModelVersionData();
                 return _versionData;
             }
-		set
-		{
+            set
+            {
                 _versionData = value;
             }
-	}
+        }
 
-	private bool _versionsLoaded = false;
+        private bool _versionsLoaded = false;
 
-	private readonly Guid asapModelVersionQueryId =
-		new Guid("f3e89044-68b2-49c1-a203-4fe3a7b1ca1d");
-	private readonly Guid origamModelVersionQueryId =
-		new Guid("c14d5f5b-df9b-46fa-9f94-2535b9c758e9");
+		private readonly Guid asapModelVersionQueryId =
+			new Guid("f3e89044-68b2-49c1-a203-4fe3a7b1ca1d");
+		private readonly Guid origamModelVersionQueryId =
+			new Guid("c14d5f5b-df9b-46fa-9f94-2535b9c758e9");
 		
-	private readonly Dictionary<string, Guid> OrigamOwnedPackages 
-		= new Dictionary<string, Guid>{
-			{"Root", new Guid("147FA70D-6519-4393-B5D0-87931F9FD609")},
-			{"Security", new Guid("951F2CDA-2867-4B99-8824-071FA8749EAD")}
-		};
-	#endregion
+		private readonly Dictionary<string, Guid> OrigamOwnedPackages 
+			= new Dictionary<string, Guid>{
+				{"Root", new Guid("147FA70D-6519-4393-B5D0-87931F9FD609")},
+				{"Security", new Guid("951F2CDA-2867-4B99-8824-071FA8749EAD")}
+			};
+		#endregion
 
-	#region Constructors
-	public DeploymentService()
-	{
+		#region Constructors
+		public DeploymentService()
+		{
 		}
-	#endregion
+		#endregion
 
-	#region IDeploymentService Members
+		#region IDeploymentService Members
 
-	public void Deploy()
-	{
+		public void Deploy()
+		{
 			RunWithErrorHandling(Update);
 		}
 		
-	public void ForceDeployCurrentPackage()
-	{
+		public void ForceDeployCurrentPackage()
+		{
 			RunWithErrorHandling(ForceUpdateCurrentPackageOnly);
 		}
 
-	private void RunWithErrorHandling(Action action)
-	{
+		private void RunWithErrorHandling(Action action)
+		{
 			if(_transactionId == null)
 			{
 				TryLoadVersions();
@@ -124,8 +124,8 @@ public class DeploymentService : IDeploymentService
 			}
 		}
 
-	private void SaveVersionAfterUpdate()
-	{
+		private void SaveVersionAfterUpdate()
+        {
             IList <Package> packages = _schema.ActiveExtension.IncludedPackages;
             packages.Add(_schema.ActiveExtension);
 
@@ -136,14 +136,14 @@ public class DeploymentService : IDeploymentService
             ClearVersions();
         }
 
-	public bool CanUpdate(Package extension)
-	{
+        public bool CanUpdate(Package extension)
+		{
 			TryLoadVersions();
 			return CurrentDeployedVersion(extension) < extension.Version;
 		}
 
-	public PackageVersion CurrentDeployedVersion(Package extension)
-	{
+		public PackageVersion CurrentDeployedVersion(Package extension)
+		{
 			TryLoadVersions();
 			foreach(OrigamModelVersionData.OrigamModelVersionRow versionRow in VersionData.OrigamModelVersion)
 			{
@@ -163,8 +163,8 @@ public class DeploymentService : IDeploymentService
 			return PackageVersion.Zero;
 		}
 
-	public void ExecuteActivity(Key key)
-	{
+		public void ExecuteActivity(Key key)
+		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			AbstractUpdateScriptActivity activity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractUpdateScriptActivity), key) as AbstractUpdateScriptActivity;
             _transactionId = Guid.NewGuid().ToString();
@@ -184,30 +184,30 @@ public class DeploymentService : IDeploymentService
             }
         }
 
-	public void CreateNewModelVersion(SchemaItemGroup group, string name, string version)
-	{
+		public void CreateNewModelVersion(SchemaItemGroup group, string name, string version)
+		{
 			DeploymentHelper.CreateVersion(group, name, version);
 		}
-	#endregion
+		#endregion
 
-	#region IService Members
+		#region IService Members
 
-	public void UnloadService()
-	{
+		public void UnloadService()
+		{
 			_schema = null;
             VersionData = null;
 			_versionsLoaded = false;
 		}
 
-	public void InitializeService()
-	{
+		public void InitializeService()
+		{
 		}
 
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private void ExecuteActivity(AbstractUpdateScriptActivity activity)
-	{
+		#region Private Methods
+		private void ExecuteActivity(AbstractUpdateScriptActivity activity)
+		{
 			Log("Executing activity: " + activity.Name);
 
 			try
@@ -236,8 +236,8 @@ public class DeploymentService : IDeploymentService
 			}
 		}
 		
-	private void ExecuteActivity(ServiceCommandUpdateScriptActivity activity)
-	{
+		private void ExecuteActivity(ServiceCommandUpdateScriptActivity activity)
+		{
 			IBusinessServicesService service = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
             IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
             string result = "";
@@ -262,8 +262,8 @@ public class DeploymentService : IDeploymentService
 			Log(result);
 		}
 
-	private void ExecuteActivity(FileRestoreUpdateScriptActivity activity)
-	{
+		private void ExecuteActivity(FileRestoreUpdateScriptActivity activity)
+		{
 			string fileName;
 
 			switch(activity.TargetLocation)
@@ -310,8 +310,8 @@ public class DeploymentService : IDeploymentService
 			File.SetCreationTime(fileName, entry.DateTime);
 		}
 
-	private void Update()
-	{
+		private void Update()
+		{
             Log("=======================================================================" + Environment.NewLine);
 			Log(DateTime.Now + " Starting update");
 
@@ -345,8 +345,8 @@ public class DeploymentService : IDeploymentService
 				});
         }
 		
-	private void ForceUpdateCurrentPackageOnly()
-	{
+		private void ForceUpdateCurrentPackageOnly()
+		{
 			Log("=======================================================================" + Environment.NewLine);
 			Log(DateTime.Now + " Starting update");
 
@@ -365,16 +365,16 @@ public class DeploymentService : IDeploymentService
 				});
 		}
 
-	private bool WasNotRunAlready(DeploymentVersion deplversion)
-	{
+		private bool WasNotRunAlready(DeploymentVersion deplversion)
+		{
 			PackageVersion currentDeployedVersion =
 				CurrentDeployedVersion(deplversion.Package);
 
 			return deplversion.Version > currentDeployedVersion;
 		}
 
-	private void UpdateVersionData(Package package)
-	{
+		private void UpdateVersionData(Package package)
+		{
 			TryLoadVersions();
 			bool found = false;
 			// update version number
@@ -397,8 +397,8 @@ public class DeploymentService : IDeploymentService
 			}
 		}
 
-	private void AddMissingDeploymentDependencies(IList<Package> packages)
-	{
+		private void AddMissingDeploymentDependencies(IList<Package> packages)
+		{
 			foreach (Package package in packages)
 			{
 				GetDeploymentVersions(package)
@@ -409,9 +409,9 @@ public class DeploymentService : IDeploymentService
 			}
 		}
 
-	private void AddDeploymentDependencies(Package package,
-		DeploymentVersion deplVersion)
-	{
+		private void AddDeploymentDependencies(Package package,
+			DeploymentVersion deplVersion)
+		{
 			if (package.IncludedPackages.Count == 0)
 			{
 				return;
@@ -426,9 +426,9 @@ public class DeploymentService : IDeploymentService
 			AddDependencyOnPreviousDeploymentVersion(deplVersion, package);
 		}
 
-	private void AddDependencyOnPreviousDeploymentVersion(
-		DeploymentVersion deplVersion, Package package)
-	{
+		private void AddDependencyOnPreviousDeploymentVersion(
+			DeploymentVersion deplVersion, Package package)
+		{
 			Maybe<PackageVersion> mayBePackageVersion =
 				GetPreviousVersion(deplVersion.Version, package);
 			if (mayBePackageVersion.HasValue)
@@ -438,9 +438,9 @@ public class DeploymentService : IDeploymentService
 			}
 		}
 
-	private DeploymentDependency FindVersionToDependOn(
-		Package dependentPackage)
-	{
+		private DeploymentDependency FindVersionToDependOn(
+			Package dependentPackage)
+		{
 			PackageVersion dependentVersion =
 				IsOrigamOwned(dependentPackage)
 					? GetPreviousVersion(PackageVersion.Five, dependentPackage).Value
@@ -448,11 +448,11 @@ public class DeploymentService : IDeploymentService
 			return new DeploymentDependency(dependentPackage.Id, dependentVersion);
 		}
 
-	private bool IsOrigamOwned(Package dependentPackage) => 
-		OrigamOwnedPackages.ContainsValue(dependentPackage.Id);
+		private bool IsOrigamOwned(Package dependentPackage) => 
+			OrigamOwnedPackages.ContainsValue(dependentPackage.Id);
 
-	public bool IsEmptyDatabase()
-	{
+		public bool IsEmptyDatabase()
+        {
 	        string localTransaction = Guid.NewGuid().ToString();
 	        DataSet versionDataFromOrigamModelVersion =
 		        LoadVersionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
@@ -469,13 +469,13 @@ public class DeploymentService : IDeploymentService
 	        return false;
         }
 
-	private void ClearVersions()
-	{
+		private void ClearVersions()
+		{
             VersionData.Clear();
 			_versionsLoaded = false;
 		}
-	private DataSet LoadVersionDataFrom(Guid queryId, string tableName,string localTransaction)
-	{
+        private DataSet LoadVersionDataFrom(Guid queryId, string tableName,string localTransaction)
+		{
 			IServiceAgent dataServiceAgent = 
 				ServiceManager.Services.
 					GetService<IBusinessServicesService>()
@@ -506,8 +506,8 @@ public class DeploymentService : IDeploymentService
                 }
 		}
 
-	private void TryLoadVersions()
-	{
+        private void TryLoadVersions()
+        {
             if (_versionsLoaded) return;
 
             ClearVersions();
@@ -542,15 +542,15 @@ public class DeploymentService : IDeploymentService
             _versionsLoaded = true;
         }
 
-	private void SaveVersions()
-	{
+        private void SaveVersions()
+		{
 			if (TrySaveVersions(origamModelVersionQueryId)) return;
 			if (TrySaveVersions(asapModelVersionQueryId))return;
 			throw new Exception("Failed to save Model versions. Does a table named OrigamModelVersion or AsapModelVersion exist?");
 		}
 
-	private bool TrySaveVersions(Guid queryId)
-	{
+		private bool TrySaveVersions(Guid queryId)
+		{
 			IServiceAgent dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>()
 				.GetAgent("DataService", null, null);
@@ -578,8 +578,8 @@ public class DeploymentService : IDeploymentService
 			return true;
 		}
 		
-	private List<DeploymentVersion> GetDeploymentVersions(Package extension)
-	{
+		private List<DeploymentVersion> GetDeploymentVersions(Package extension)
+		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
 				.ChildItemsByType(DeploymentVersion.CategoryConst)
 				.Cast<DeploymentVersion>()
@@ -588,9 +588,9 @@ public class DeploymentService : IDeploymentService
 				.ToList();
 		}
 
-	public Maybe<PackageVersion> GetPreviousVersion(PackageVersion version,
-		Package extension)
-	{
+		public Maybe<PackageVersion> GetPreviousVersion(PackageVersion version,
+			Package extension)
+		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
 				.ChildItemsByType(DeploymentVersion.CategoryConst)
 			    .Cast<DeploymentVersion>()
@@ -600,12 +600,13 @@ public class DeploymentService : IDeploymentService
 				?.Version;
 		}
 
-	private void Log(string text)
-	{
+		private void Log(string text)
+		{
 			if(log.IsInfoEnabled)
 			{
 				log.Info(text);
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

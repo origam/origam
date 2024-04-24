@@ -48,32 +48,32 @@ using Origam.Docker;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace OrigamArchitect;
-
-public partial class NewProjectWizard : Form
+namespace OrigamArchitect
 {
-    [DllImport("user32")]
-    public static extern UInt32 SendMessage
-        (IntPtr hWnd, UInt32 msg, UInt32 wParam, UInt32 lParam);
-
-    internal const int BCM_FIRST = 0x1600; //Normal button
-    internal const int BCM_SETSHIELD = (BCM_FIRST + 0x000C); //Elevated button
-    ProjectBuilder _builder = new ProjectBuilder();
-    Project _project = new Project();
-    NewProjectWizardSettings _settings = new NewProjectWizardSettings();
-    private WebGitXmlParser XmlParser = new WebGitXmlParser();
-    private List<WebGitData> repositories = new List<WebGitData>();
-    private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
-
-    public NewProjectWizard()
+    public partial class NewProjectWizard : Form
     {
+        [DllImport("user32")]
+        public static extern UInt32 SendMessage
+            (IntPtr hWnd, UInt32 msg, UInt32 wParam, UInt32 lParam);
+
+        internal const int BCM_FIRST = 0x1600; //Normal button
+        internal const int BCM_SETSHIELD = (BCM_FIRST + 0x000C); //Elevated button
+        ProjectBuilder _builder = new ProjectBuilder();
+        Project _project = new Project();
+        NewProjectWizardSettings _settings = new NewProjectWizardSettings();
+        private WebGitXmlParser XmlParser = new WebGitXmlParser();
+        private List<WebGitData> repositories = new List<WebGitData>();
+        private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
+
+        public NewProjectWizard()
+        {
             InitializeComponent();
             InitGitConfig();
             wizard1.FinishButtonText = "Run";
         }
 
-    private void InitGitConfig()
-    {
+        private void InitGitConfig()
+        {
             string[] creditials = new GitManager().GitConfig();
             if (creditials != null)
             {
@@ -82,10 +82,10 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private DeploymentType Deployment
-    {
-        get
+        private DeploymentType Deployment
         {
+            get
+            {
                 switch (cboDeploymentType.SelectedIndex)
                 {
                     case 0:
@@ -97,12 +97,12 @@ public partial class NewProjectWizard : Form
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
                 }
             }
-    }
+        }
 
-    private DatabaseType DatabaseType
-    {
-        get
+        private DatabaseType DatabaseType
         {
+            get
+            {
                 switch (txtDatabaseType.SelectedIndex)
                 {
                     case 0:
@@ -115,10 +115,10 @@ public partial class NewProjectWizard : Form
 
                 }
             }
-    }
+        }
 
-    private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             pageReview.AllowNext = false;
             SaveSettings();
             InitTaskList();
@@ -149,8 +149,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void SaveSettings()
-    {
+        private void SaveSettings()
+        {
             _settings.SourcesFolder = txtSourcesFolder.Text;
             _settings.BinFolder = txtBinFolderRoot.Text;
             _settings.DatabaseServerName = txtServerName.Text;
@@ -160,14 +160,14 @@ public partial class NewProjectWizard : Form
             _settings.Save();
         }
 
-    private void pageReview_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void pageReview_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             _builder.CreateTasks(_project);
             InitTaskList();
         }
 
-    private void InitTaskList()
-    {
+        private void InitTaskList()
+        {
             lstTasks.BeginUpdate();
             lstTasks.Items.Clear();
             foreach (IProjectBuilder builder in _builder.Tasks)
@@ -177,8 +177,8 @@ public partial class NewProjectWizard : Form
             lstTasks.EndUpdate();
         }
 
-    private void pageLocalDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageLocalDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (txtName.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
                 AsMessageBox.ShowError(this, strings.NameContainsInvalidChars_Message, strings.NewProjectWizard_Title, null);
@@ -251,8 +251,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text) ? _settings.DatabaseServerName : txtServerName.Text;
             cboWebRoot.Items.Clear();
             cboWebRoot.Visible = false;
@@ -284,8 +284,8 @@ public partial class NewProjectWizard : Form
             TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
-    private void SetPort()
-    {
+        private void SetPort()
+        {
             if (DatabaseType == DatabaseType.MsSql)
             {
                 txtPort.Text = "1433";
@@ -299,8 +299,8 @@ public partial class NewProjectWizard : Form
                 txtPort.Text = "5433";
             }
         }
-    private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (string.IsNullOrEmpty(defaultModelPath.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, strings.NewProjectWizard_Title, null);
@@ -334,23 +334,23 @@ public partial class NewProjectWizard : Form
             _project.GitRepository = gitrepo.Checked;
         }
 
-    private void btnSelectBinFolderRoot_Click(object sender, EventArgs e)
-    {
+        private void btnSelectBinFolderRoot_Click(object sender, EventArgs e)
+        {
             SelectFolder(txtBinFolderRoot);
         }
 
-    private void btnSelectSourcesFolder_Click(object sender, EventArgs e)
-    {
+        private void btnSelectSourcesFolder_Click(object sender, EventArgs e)
+        {
             SelectFolder(txtSourcesFolder);
         }
 
-    private void btnSelectTemplateFolder_Click(object sender, EventArgs e)
-    {
+        private void btnSelectTemplateFolder_Click(object sender, EventArgs e)
+        {
             SelectFolder(defaultModelPath);
         }
 
-    private void SelectFolder(TextBox targetControl)
-    {
+        private void SelectFolder(TextBox targetControl)
+        {
             if (!string.IsNullOrEmpty(targetControl.Text))
             {
                 folderBrowserDialog1.SelectedPath = targetControl.Text;
@@ -360,8 +360,8 @@ public partial class NewProjectWizard : Form
             targetControl.Focus();
         }
 
-    private void pagePaths_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void pagePaths_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtdosourcefolder.Text = _settings.DockerSourceFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
@@ -379,8 +379,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             if (NEEDS_ELEVATED_PRIVILEDGES && !IsAdmin())
             {
                 pageWelcome.AllowNext = false;
@@ -394,15 +394,15 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private static bool IsAdmin()
-    {
+        private static bool IsAdmin()
+        {
             WindowsIdentity id = WindowsIdentity.GetCurrent();
             WindowsPrincipal p = new WindowsPrincipal(id);
             return p.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-    private static void RestartElevated()
-    {
+        private static void RestartElevated()
+        {
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.UseShellExecute = true;
             startInfo.WorkingDirectory = Environment.CurrentDirectory;
@@ -420,19 +420,19 @@ public partial class NewProjectWizard : Form
             Application.Exit();
         }
 
-    private static void AddShieldToButton(Button b)
-    {
+        private static void AddShieldToButton(Button b)
+        {
             b.FlatStyle = FlatStyle.System;
             SendMessage(b.Handle, BCM_SETSHIELD, 0, 0xFFFFFFFF);
         }
 
-    private void btnAdminElevate_Click(object sender, EventArgs e)
-    {
+        private void btnAdminElevate_Click(object sender, EventArgs e)
+        {
             RestartElevated();
         }
 
-    private void pageDeploymentType_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageDeploymentType_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (string.IsNullOrEmpty(txtName.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterProjectName_Message, strings.NewProjectWizard_Title, null);
@@ -486,8 +486,8 @@ public partial class NewProjectWizard : Form
                     break;
             }
         }
-    private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             if (cboDeploymentType.SelectedIndex < 0)
             {
                 cboDeploymentType.SelectedIndex = 0;
@@ -498,12 +498,12 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void pageAzureDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageAzureDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
 
         }
-    private void PageGit_Init(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void PageGit_Init(object sender, WizardPageConfirmEventArgs e)
+        {
             if (Deployment == DeploymentType.DockerPostgres)
             {
                 dockerSourceFolderLabel.Show();
@@ -520,8 +520,8 @@ public partial class NewProjectWizard : Form
                 dockerlabeldescription.Hide();
             }
         }
-    private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (string.IsNullOrEmpty(txtGitUser.Text) && gitrepo.Checked)
             {
                 AsMessageBox.ShowError(this, strings.EnterUser_name, strings.NewProjectWizard_Title, null);
@@ -566,14 +566,14 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void Gitrepo_CheckedChanged(object sender, EventArgs e)
-    {
+        private void Gitrepo_CheckedChanged(object sender, EventArgs e)
+        {
             txtGitUser.Enabled = gitrepo.Checked;
             txtGitEmail.Enabled = gitrepo.Checked;
         }
 
-    private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
-    {
+        private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if(Deployment == DeploymentType.DockerPostgres)
             {
                 txtPort.Text = "5433";
@@ -581,8 +581,8 @@ public partial class NewProjectWizard : Form
             SetPort();
         }
 
-    private void InitTemplates()
-    {
+        private void InitTemplates()
+        {
             Thread bgThread = new Thread(FillTemplate)
             {
                 IsBackground = true
@@ -590,8 +590,8 @@ public partial class NewProjectWizard : Form
             bgThread.Start();
         }
 
-    private void PageTemplateType_Initialize(object sender, WizardPageInitEventArgs e)
-    {
+        private void PageTemplateType_Initialize(object sender, WizardPageInitEventArgs e)
+        {
             WaitForLoaded();
             if (listViewTemplate.Items.Count == 0)
             {
@@ -617,8 +617,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void WaitForLoaded()
-    {
+        private void WaitForLoaded()
+        {
             Cursor.Current = Cursors.WaitCursor;
             for (int i = 0; i < 10; i++)
             {
@@ -634,8 +634,8 @@ public partial class NewProjectWizard : Form
             Cursor.Current = Cursors.Default;
         }
 
-    private void FillTemplate()
-    {
+        private void FillTemplate()
+        {
             repositories.Add(new WebGitData(Images.New, 
                 "Empty Template", null, 
                 "This template will create an new empty project.", 
@@ -657,8 +657,8 @@ public partial class NewProjectWizard : Form
             //}
             XmlParser.IsLoaded = true;
         }
-    private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (listViewTemplate.SelectedItems.Count == 0)
             {
                 AsMessageBox.ShowError(this, strings.TemplateNotSelect, "Template", null);
@@ -683,8 +683,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
-    {
+        private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
+        {
             MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
             foreach (ListViewItem item in listViewTemplate.SelectedItems)
             {
@@ -693,8 +693,8 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    private void WizOpenRepository_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void WizOpenRepository_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (string.IsNullOrEmpty(tbRepositoryLink.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, "Template", null);
@@ -721,30 +721,30 @@ public partial class NewProjectWizard : Form
             }
         }
 
-    public bool TestTemplate()
-    {
+        public bool TestTemplate()
+        {
             string gitPassw = tbRepPassword.Text;
             string gitUsername = tbRepUsername.Text;
             GitManager gitManager = new GitManager();
             return gitManager.IsValidUrl(tbRepositoryLink.Text, gitUsername, gitPassw);
         }
 
-    private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
+        {
             if(!rdClone.Checked && !rdClone.Checked &&!rdNone.Checked)
             {
                 rdCopy.Checked = true;
             }
             gitrepo.Enabled = true;
         }
-    private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
+        {
             label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
             label21.Text += Environment.NewLine;
             label21.Text += "After create new project run " + Path.Combine(_project.SourcesFolder, _project.Url, _project.Url) + ".cmd and this script run docker with new project.";
         }
-    private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if(!int.TryParse(txtDockerPort.Text,out int result))
             {
                 AsMessageBox.ShowError(this, "Port is not number!", "DockerPort", null);
@@ -759,8 +759,8 @@ public partial class NewProjectWizard : Form
             }
             _project.DockerPort = result;
         }
-    private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
-    {
+        private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
             if (string.IsNullOrEmpty(txtWebUserLoginName.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterWebUserName_Message, "Template", null);
@@ -804,8 +804,8 @@ public partial class NewProjectWizard : Form
             _project.WebEmail = txtWebEmail.Text;
         }
 
-    private void cboDeploymentType_SelectedIndexChanged(object sender, EventArgs e)
-    {
+        private void cboDeploymentType_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if(cboDeploymentType.SelectedIndex == 1)
             {
                 txtDockerApiAdress.Show();
@@ -819,4 +819,5 @@ public partial class NewProjectWizard : Form
                 dockerlabeldescription.Hide();
             }
         }
+    }
 }

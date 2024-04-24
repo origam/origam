@@ -22,39 +22,40 @@ using ICSharpCode.AvalonEdit.Editing;
 using System;
 using System.Windows.Media;
 
-namespace Origam.Windows.Editor.CodeCompletion;
-
-public class DefaultCompletionItem : ICompletionData
+namespace Origam.Windows.Editor.CodeCompletion
 {
-    public string Text { get; private set; }
-    public virtual object Description { get; set; }
-    //public virtual Image Image { get; set; }
-
-    public virtual double Priority { get; protected set; }
-
-    public ImageSource Image
+    public class DefaultCompletionItem : ICompletionData
     {
-        get
+        public string Text { get; private set; }
+        public virtual object Description { get; set; }
+        //public virtual Image Image { get; set; }
+
+        public virtual double Priority { get; protected set; }
+
+        public ImageSource Image
         {
+            get
+            {
                 return null;
             }
-    }
+        }
 
-    public object Content
-    {
-        get
+        public object Content
         {
+            get
+            {
                 return this.Text;
             }
-    }
+        }
 
-    public DefaultCompletionItem(string text)
-    {
+        public DefaultCompletionItem(string text)
+        {
             this.Text = text;
         }
 
-    public virtual void Complete(TextArea area, ISegment segment, EventArgs e)
-    {
+        public virtual void Complete(TextArea area, ISegment segment, EventArgs e)
+        {
             area.Document.Replace(segment.Offset, segment.Length, this.Text);
         }
+    }
 }

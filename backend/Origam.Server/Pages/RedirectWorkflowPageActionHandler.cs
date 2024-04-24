@@ -49,12 +49,12 @@ using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Origam.Service.Core;
 
-namespace Origam.Server.Pages;
-
-class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
+namespace Origam.Server.Pages
 {
-    public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
+    class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
     {
+        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
+        {
             RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
 
             RuleEngine re = RuleEngine.Create(new Hashtable(), null);
@@ -74,4 +74,5 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
 
             response.Redirect(result);
         }
+    }
 }

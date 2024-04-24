@@ -24,14 +24,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Origam.UI;
-
-internal static class MenuItemTools
+namespace Origam.UI
 {
-    public static void UpdateMenuItems(ToolStripItemCollection itemsToUpdate,
-        IEnumerable<ToolStripItem> itemsToAdd,
-        object caller)
+    internal static class MenuItemTools
     {
+        public static void UpdateMenuItems(ToolStripItemCollection itemsToUpdate,
+            IEnumerable<ToolStripItem> itemsToAdd,
+            object caller)
+        {
             itemsToUpdate.Clear();
             foreach (ToolStripItem item in itemsToAdd) 
             {
@@ -52,4 +52,5 @@ internal static class MenuItemTools
                 }
             }
         }
+    }
 }

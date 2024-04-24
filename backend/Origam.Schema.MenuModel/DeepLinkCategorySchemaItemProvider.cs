@@ -22,60 +22,61 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Origam.Schema.MenuModel;
-
-public class DeepLinkCategorySchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+namespace Origam.Schema.MenuModel
 {
-	public DeepLinkCategorySchemaItemProvider()
-	{
+    public class DeepLinkCategorySchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+    {
+        public DeepLinkCategorySchemaItemProvider()
+        {
             this.ChildItemTypes.Add(typeof(DeepLinkCategory));
         }
 
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return DeepLinkCategory.CategoryConst;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "UI";
 			}
-	}
-	#endregion
-	#region IBrowserNode Members
+		}
+		#endregion
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "hashtag_category_group.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Deep Link Categories";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	public override string NodeToolTipText
-	{
-		get
+		public override string NodeToolTipText
 		{
+			get
+			{
 				return "List of Deep Links";
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

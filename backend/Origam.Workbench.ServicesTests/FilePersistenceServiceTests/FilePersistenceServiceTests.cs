@@ -12,23 +12,23 @@ using Origam.Schema.EntityModel;
 using Origam.TestCommon;
 using Origam.Workbench.Services;
 
-namespace Origam.Workbench.ServicesTests;
-
-[TestFixture]
-public class FilePersistenceServiceTests: AbstractFileTestClass
+namespace Origam.Workbench.ServicesTests
 {
-    private string PathToRuntimeModelConfig => 
-        Path.Combine(PathToTestDirectory, "RuntimeModelConfiguration.json");
-
-    private string PathToTestDirectory => Path.Combine(TestContext.WorkDirectory, 
-        "FilePersistenceServiceTests", "TestFiles");
-
-    protected override TestContext TestContext =>
-        TestContext.CurrentContext;
-        
-    [Test]
-    public void ShouldReloadModelWhenChangesDetected()
+    [TestFixture]
+    public class FilePersistenceServiceTests: AbstractFileTestClass
     {
+        private string PathToRuntimeModelConfig => 
+            Path.Combine(PathToTestDirectory, "RuntimeModelConfiguration.json");
+
+        private string PathToTestDirectory => Path.Combine(TestContext.WorkDirectory, 
+            "FilePersistenceServiceTests", "TestFiles");
+
+        protected override TestContext TestContext =>
+            TestContext.CurrentContext;
+        
+        [Test]
+        public void ShouldReloadModelWhenChangesDetected()
+        {
             string pathToTestDirectory = Path.Combine(TestContext.WorkDirectory, 
                 "FilePersistenceServiceTests", "TestFiles");
             string pathToTestFile = Path.Combine(pathToTestDirectory, "TestEntity.origam");
@@ -62,9 +62,9 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
             File.Delete(pathToTestFile);
         }
         
-    [Test]
-    public void ShouldReadNewValueAfterRuntimeConfigChanged()
-    {
+        [Test]
+        public void ShouldReadNewValueAfterRuntimeConfigChanged()
+        {
             Guid testItemId = new Guid("5c42ad31-e3f6-4bb4-bc03-fd5f6d930b1d");
             
             SetTraceLevelInConfigFile(oldValue: "No",newValue: "Yes");
@@ -83,8 +83,8 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
             Assert.That(itemAfterChange.TraceLevel, Is.EqualTo(Trace.No));
         }
 
-    private void SetTraceLevelInConfigFile(string oldValue, string newValue)
-    {
+        private void SetTraceLevelInConfigFile(string oldValue, string newValue)
+        {
             string configText = File.ReadAllText(PathToRuntimeModelConfig);
             configText = configText.Replace(
                 $"\"PropertyValue\": \"{oldValue}\"",
@@ -92,9 +92,9 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
             File.WriteAllText(PathToRuntimeModelConfig, configText);
         }
 
-    private FilePersistenceService InitializeFilePersistenceService(
-        string pathToTestDirectory)
-    {
+        private FilePersistenceService InitializeFilePersistenceService(
+            string pathToTestDirectory)
+        {
             List<string> defaultFolders = new List<string>
             {
                 CategoryFactory.Create(typeof(Package)),
@@ -114,4 +114,5 @@ public class FilePersistenceServiceTests: AbstractFileTestClass
                 pathToRuntimeModelConfig: PathToRuntimeModelConfig);
             return sut;
         }
+    }
 }

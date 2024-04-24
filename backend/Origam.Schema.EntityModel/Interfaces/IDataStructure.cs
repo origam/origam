@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for IDataStructure.
-/// </summary>
-public interface IDataStructure : ISchemaItem
+namespace Origam.Schema.EntityModel
 {
+	/// <summary>
+	/// Summary description for IDataStructure.
+	/// </summary>
+	public interface IDataStructure : ISchemaItem
+	{
+	}
 }

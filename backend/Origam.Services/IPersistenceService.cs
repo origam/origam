@@ -26,15 +26,16 @@ using System.Data;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for IPersistenceService.
-/// </summary>
-public interface IPersistenceService : IWorkbenchService, ICloneable, IDisposable
+namespace Origam.Workbench.Services
 {
-	IPersistenceProvider SchemaProvider{get;}
-	IPersistenceProvider SchemaListProvider{get;}
-	Package LoadSchema(Guid schemaExtensionId);
-	void InitializeRepository();
+	/// <summary>
+	/// Summary description for IPersistenceService.
+	/// </summary>
+	public interface IPersistenceService : IWorkbenchService, ICloneable, IDisposable
+    {
+		IPersistenceProvider SchemaProvider{get;}
+		IPersistenceProvider SchemaListProvider{get;}
+		Package LoadSchema(Guid schemaExtensionId);
+		void InitializeRepository();
+	}
 }

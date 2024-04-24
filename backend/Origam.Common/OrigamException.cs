@@ -23,38 +23,38 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace Origam;
-
-/// <summary>
-/// Summary description for OrigamException.
-/// </summary>
-public class OrigamException : Exception
+namespace Origam
 {
-	private StringBuilder _appendStackTrace;
-
-	public OrigamException() : base()
+	/// <summary>
+	/// Summary description for OrigamException.
+	/// </summary>
+	public class OrigamException : Exception
 	{
+		private StringBuilder _appendStackTrace;
+
+		public OrigamException() : base()
+		{
 		}
 
-	public OrigamException (string message) : base(message)
-	{
+		public OrigamException (string message) : base(message)
+		{
 		}
 
-	public OrigamException (string message, Exception innerException) : base(message, innerException)
-	{
+		public OrigamException (string message, Exception innerException) : base(message, innerException)
+		{
 			foreach (DictionaryEntry entry in innerException.Data)
 			{
 				Data[entry.Key] = entry.Value;
 			}
 		}
 
-	public OrigamException (string message, string customStackTrace, Exception innerException) : this(message, innerException)
-	{
+		public OrigamException (string message, string customStackTrace, Exception innerException) : this(message, innerException)
+		{
 			this.AppendStackTrace(customStackTrace);
 		}
 
-	public void AppendStackTrace(string stacktrace)
-	{
+		public void AppendStackTrace(string stacktrace)
+		{
 			if(_appendStackTrace == null) _appendStackTrace = new StringBuilder();
 
 			_appendStackTrace.Append(Environment.NewLine);
@@ -66,10 +66,10 @@ public class OrigamException : Exception
 			_appendStackTrace.Append(Environment.NewLine);
 		}
 
-	public override string StackTrace
-	{
-		get
+		public override string StackTrace
 		{
+			get
+			{
 				if(_appendStackTrace != null)
 				{
 					_appendStackTrace.Append(base.StackTrace);
@@ -80,6 +80,7 @@ public class OrigamException : Exception
 					return base.StackTrace;
 				}
 			}
-	}
+		}
 
+	}
 }

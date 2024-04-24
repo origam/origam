@@ -27,15 +27,16 @@ using System.Data;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-public class AsTextBoxStyleColumn : DataGridTextBoxColumn
+namespace Origam.Gui.Win
 {
-	public AsTextBox AsTextBox;
-	private bool _isEditing;
 
-	public AsTextBoxStyleColumn()
+	public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 	{
+		public AsTextBox AsTextBox;
+		private bool _isEditing;
+
+		public AsTextBoxStyleColumn()
+		{
 			_isEditing = false;
             AsTextBox = new NoKeyUpTextBox();
 
@@ -49,21 +50,21 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			AsTextBox.KeyDown += AsTextBox_KeyDown;
 		}
 
-	private bool _alwaysReadOnly = false;
-	public bool AlwaysReadOnly
-	{
-		get => _alwaysReadOnly;
-		set
+		private bool _alwaysReadOnly = false;
+		public bool AlwaysReadOnly
 		{
+			get => _alwaysReadOnly;
+			set
+			{
 				_alwaysReadOnly = value;
 				this.AsTextBox.ReadOnly = value;
 			}
-	}
+		}
 		
 		
 
-	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
-	{
+		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
+		{
 			Brush myBackBrush = backBrush;
 			Brush myForeBrush = foreBrush;
 
@@ -107,8 +108,8 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 		}
 
 		
-	private string GetText(object value)
-	{
+		private string GetText(object value)
+		{
 			if (value is DBNull)
 			{
 				return this.NullText;
@@ -136,14 +137,14 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			return value.ToString();
 		}
 		
-	protected override void ConcedeFocus()
-	{
+		protected override void ConcedeFocus()
+		{
 			AsTextBox.Bounds = Rectangle.Empty;
 			base.ConcedeFocus();
 		}
 
-	protected override void Abort(int rowNum)
-	{
+		protected override void Abort(int rowNum)
+		{
 			_isEditing = false;
 //			AsTextBox.ModifiedChanged -= new EventHandler(AsTextBox_ModifiedChanged);
 			Invalidate();
@@ -152,8 +153,8 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			base.Abort(rowNum);
 		}
 
-	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			
 			if(cellIsVisible)
 			{
@@ -212,20 +213,20 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			if (AsTextBox.Visible) DataGridTableStyle.DataGrid.Invalidate(bounds);
 		}
 
-	private RuleEngine GetRuleEngine()
-	{
+        private RuleEngine GetRuleEngine()
+        {
             RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
             return ruleEngine;
         }
 
-	private bool IsReadDenied(DataRow row, RuleEngine ruleEngine)
-	{
+        private bool IsReadDenied(DataRow row, RuleEngine ruleEngine)
+        {
             return !ruleEngine.EvaluateRowLevelSecurityState(row, this.MappingName, CredentialType.Read);
         }
 
 
-	protected override bool Commit(CurrencyManager dataSource, int rowNum)
-	{
+		protected override bool Commit(CurrencyManager dataSource, int rowNum)
+		{
             this.AsTextBox.Bounds = Rectangle.Empty;
             this.AsTextBox.Hide();
 			if(_isEditing)
@@ -254,15 +255,15 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			return true;
 		}
 
-	protected override void ReleaseHostedControl()
-	{
+		protected override void ReleaseHostedControl()
+		{
 			base.ReleaseHostedControl ();
 
 			this.AsTextBox.Parent = null;
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(this.AsTextBox != null)
@@ -278,8 +279,8 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			base.Dispose (disposing);
 		}
 
-	private void AsTextBox_ModifiedChanged(object sender, EventArgs e)
-	{
+		private void AsTextBox_ModifiedChanged(object sender, EventArgs e)
+		{
 			if(this.AsTextBox.ReadOnly) return;
 
 			_isEditing = true;
@@ -294,13 +295,13 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			}
 		}
 
-	private void TextBox_VisibleChanged(object sender, EventArgs e)
-	{
+		private void TextBox_VisibleChanged(object sender, EventArgs e)
+		{
 			this.TextBox.Visible = false;
 		}
 
-	private void AsTextBox_KeyPress(object sender, KeyPressEventArgs e)
-	{
+		private void AsTextBox_KeyPress(object sender, KeyPressEventArgs e)
+		{
 			if(e.KeyChar == (char)Keys.Escape) return;
             bool canEdit = false;
 
@@ -330,8 +331,8 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 			}
 		}
 
-	private void AsTextBox_KeyDown(object sender, KeyEventArgs e)
-	{
+		private void AsTextBox_KeyDown(object sender, KeyEventArgs e)
+		{
 			if(e.KeyCode == Keys.Delete | e.KeyCode == Keys.Back)
 			{
 				if(this.AsTextBox.ReadOnly) return;
@@ -348,15 +349,15 @@ public class AsTextBoxStyleColumn : DataGridTextBoxColumn
 				}
 			}
 		}
-}
+	}
 
-internal class NoKeyUpTextBox : AsTextBox 
-{
-	private const int WM_KEYUP = 0x101;
-	private const int WM_KEYDOWN = 0x100;
-
-	protected override bool ProcessKeyMessage(ref Message m)
+	internal class NoKeyUpTextBox : AsTextBox 
 	{
+		private const int WM_KEYUP = 0x101;
+		private const int WM_KEYDOWN = 0x100;
+
+		protected override bool ProcessKeyMessage(ref Message m)
+		{
 			// ignore cursor keys and tab key
 			if(m.Msg == WM_KEYDOWN)
 			{
@@ -390,4 +391,5 @@ internal class NoKeyUpTextBox : AsTextBox
 
 			return base.ProcessKeyMessage (ref m);
 		}
+	}
 }

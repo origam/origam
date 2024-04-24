@@ -34,35 +34,35 @@ using Origam.Rule.XsltFunctions;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule.Xslt;
-
-public abstract class MicrosoftXsltEngine : AbstractXsltEngine
+namespace Origam.Rule.Xslt
 {
-    private readonly IEnumerable<XsltFunctionsDefinition> functionsDefinitions;
-
-    #region Constructors
-
-    protected MicrosoftXsltEngine()
+    public abstract class MicrosoftXsltEngine : AbstractXsltEngine
     {
+        private readonly IEnumerable<XsltFunctionsDefinition> functionsDefinitions;
+
+        #region Constructors
+
+        protected MicrosoftXsltEngine()
+        {
             functionsDefinitions = XsltFunctionContainerFactory.Create();
         }
 
-    public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) : base ()
-    {
+        public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) : base ()
+        {
             this.functionsDefinitions = functionsDefinitions ?? XsltFunctionContainerFactory.Create();
         }
 
-    public MicrosoftXsltEngine(IPersistenceProvider persistence)
-        : base(persistence)
-    {
+        public MicrosoftXsltEngine(IPersistenceProvider persistence)
+            : base(persistence)
+		{
             functionsDefinitions = XsltFunctionContainerFactory.Create();
 		}
-    #endregion
+		#endregion
 
-    internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, 
-        Hashtable parameters, string transactionId, 
-        IDataStructure outputStructure, bool validateOnly)
-    {
+        internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, 
+            Hashtable parameters, string transactionId, 
+            IDataStructure outputStructure, bool validateOnly)
+        {
             XsltArgumentList xslArg = BuildArgumentListWithFunctions(transactionId);
 
             // If source xml is completely empty (not even a root element), we add one
@@ -252,10 +252,10 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             }
             return resultDoc;
         }
-    internal override void Transform(
-        IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-        string transactionId, Stream output)
-    {
+        internal override void Transform(
+            IXPathNavigable input, object xsltEngine, Hashtable parameters, 
+            string transactionId, Stream output)
+        {
             XsltArgumentList xslArg = BuildArgumentListWithFunctions(transactionId);
             try
             {
@@ -383,8 +383,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             }
         }
 
-    private XsltArgumentList BuildArgumentListWithFunctions(string transactionId)
-    {
+        private XsltArgumentList BuildArgumentListWithFunctions(string transactionId)
+        {
             XsltArgumentList xslArg = new XsltArgumentList();
             foreach (var functionsDefinition in functionsDefinitions)
             {
@@ -415,8 +415,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
             return xslArg;
         }
 
-    private void TraceResult(IXmlContainer traceDocument)
-    {
+        private void TraceResult(IXmlContainer traceDocument)
+        {
             StringBuilder b = new StringBuilder();
             StringWriter swr = new StringWriter(b);
             XmlTextWriter xwr = new XmlTextWriter(swr);
@@ -429,7 +429,8 @@ public abstract class MicrosoftXsltEngine : AbstractXsltEngine
                 this.TraceStepId, "Transformation Service", "Output", null, b.ToString(), null, null);
         }
 
-    public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr);
-    public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc);
-    public abstract void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output);
+        public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr);
+        public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc);
+        public abstract void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output);
+    }
 }

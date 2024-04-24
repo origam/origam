@@ -27,246 +27,250 @@ using System.Text;
 using System.ComponentModel.Design;
 using System.Drawing.Design; 
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-///     <para>
-///       A collection that stores <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects.
-///    </para>
-/// </summary>
-/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>
-[Serializable()]
-[Editor(typeof(ColumnParameterMappingCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
-public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescriptor {
+namespace Origam.Gui.Win 
+{
+    
+    
+    /// <summary>
+    ///     <para>
+    ///       A collection that stores <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects.
+    ///    </para>
+    /// </summary>
+    /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>
+    [Serializable()]
+	[Editor(typeof(ColumnParameterMappingCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+	public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescriptor {
         
-	/// <summary>
-	///     <para>
-	///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.
-	///    </para>
-	/// </summary>
-	public ColumnParameterMappingCollection() {
+        /// <summary>
+        ///     <para>
+        ///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.
+        ///    </para>
+        /// </summary>
+        public ColumnParameterMappingCollection() {
         }
         
-	/// <summary>
-	///     <para>
-	///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> based on another <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.
-	///    </para>
-	/// </summary>
-	/// <param name='value'>
-	///       A <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> from which the contents are copied
-	/// </param>
-	public ColumnParameterMappingCollection(ColumnParameterMappingCollection value) {
+        /// <summary>
+        ///     <para>
+        ///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> based on another <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.
+        ///    </para>
+        /// </summary>
+        /// <param name='value'>
+        ///       A <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> from which the contents are copied
+        /// </param>
+        public ColumnParameterMappingCollection(ColumnParameterMappingCollection value) {
             this.AddRange(value);
         }
         
-	/// <summary>
-	///     <para>
-	///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> containing any array of <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects.
-	///    </para>
-	/// </summary>
-	/// <param name='value'>
-	///       A array of <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects with which to intialize the collection
-	/// </param>
-	public ColumnParameterMappingCollection(ColumnParameterMapping[] value) {
+        /// <summary>
+        ///     <para>
+        ///       Initializes a new instance of <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> containing any array of <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects.
+        ///    </para>
+        /// </summary>
+        /// <param name='value'>
+        ///       A array of <see cref='Origam.Gui.Win.ColumnParameterMapping'/> objects with which to intialize the collection
+        /// </param>
+        public ColumnParameterMappingCollection(ColumnParameterMapping[] value) {
             this.AddRange(value);
         }
         
-	/// <summary>
-	/// <para>Represents the entry at the specified index of the <see cref='Origam.Gui.Win.ColumnParameterMapping'/>.</para>
-	/// </summary>
-	/// <param name='index'><para>The zero-based index of the entry to locate in the collection.</para></param>
-	/// <value>
-	///    <para> The entry at the specified index of the collection.</para>
-	/// </value>
-	/// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
-	public ColumnParameterMapping this[int index] {
-		get {
+        /// <summary>
+        /// <para>Represents the entry at the specified index of the <see cref='Origam.Gui.Win.ColumnParameterMapping'/>.</para>
+        /// </summary>
+        /// <param name='index'><para>The zero-based index of the entry to locate in the collection.</para></param>
+        /// <value>
+        ///    <para> The entry at the specified index of the collection.</para>
+        /// </value>
+        /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='index'/> is outside the valid range of indexes for the collection.</exception>
+        public ColumnParameterMapping this[int index] {
+            get {
                 return ((ColumnParameterMapping)(List[index]));
             }
-		set {
+            set {
                 List[index] = value;
             }
-	}
+        }
         
-	/// <summary>
-	///    <para>Adds a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> with the specified value to the 
-	///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
-	/// </summary>
-	/// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to add.</param>
-	/// <returns>
-	///    <para>The index at which the new element was inserted.</para>
-	/// </returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.AddRange'/>
-	public int Add(ColumnParameterMapping value) {
+        /// <summary>
+        ///    <para>Adds a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> with the specified value to the 
+        ///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
+        /// </summary>
+        /// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to add.</param>
+        /// <returns>
+        ///    <para>The index at which the new element was inserted.</para>
+        /// </returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.AddRange'/>
+        public int Add(ColumnParameterMapping value) {
             return List.Add(value);
         }
         
-	/// <summary>
-	/// <para>Copies the elements of an array to the end of the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.</para>
-	/// </summary>
-	/// <param name='value'>
-	///    An array of type <see cref='Origam.Gui.Win.ColumnParameterMapping'/> containing the objects to add to the collection.
-	/// </param>
-	/// <returns>
-	///   <para>None.</para>
-	/// </returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
-	public void AddRange(ColumnParameterMapping[] value) {
+        /// <summary>
+        /// <para>Copies the elements of an array to the end of the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>.</para>
+        /// </summary>
+        /// <param name='value'>
+        ///    An array of type <see cref='Origam.Gui.Win.ColumnParameterMapping'/> containing the objects to add to the collection.
+        /// </param>
+        /// <returns>
+        ///   <para>None.</para>
+        /// </returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
+        public void AddRange(ColumnParameterMapping[] value) {
             for (int i = 0; (i < value.Length); i = (i + 1)) {
                 this.Add(value[i]);
             }
         }
         
-	/// <summary>
-	///     <para>
-	///       Adds the contents of another <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> to the end of the collection.
-	///    </para>
-	/// </summary>
-	/// <param name='value'>
-	///    A <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> containing the objects to add to the collection.
-	/// </param>
-	/// <returns>
-	///   <para>None.</para>
-	/// </returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
-	public void AddRange(ColumnParameterMappingCollection value) {
+        /// <summary>
+        ///     <para>
+        ///       Adds the contents of another <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> to the end of the collection.
+        ///    </para>
+        /// </summary>
+        /// <param name='value'>
+        ///    A <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> containing the objects to add to the collection.
+        /// </param>
+        /// <returns>
+        ///   <para>None.</para>
+        /// </returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
+        public void AddRange(ColumnParameterMappingCollection value) {
             for (int i = 0; (i < value.Count); i = (i + 1)) {
                 this.Add(value[i]);
             }
         }
         
-	/// <summary>
-	/// <para>Gets a value indicating whether the 
-	///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> contains the specified <see cref='Origam.Gui.Win.ColumnParameterMapping'/>.</para>
-	/// </summary>
-	/// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to locate.</param>
-	/// <returns>
-	/// <para><see langword='true'/> if the <see cref='Origam.Gui.Win.ColumnParameterMapping'/> is contained in the collection; 
-	///   otherwise, <see langword='false'/>.</para>
-	/// </returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.IndexOf'/>
-	public bool Contains(ColumnParameterMapping value) {
+        /// <summary>
+        /// <para>Gets a value indicating whether the 
+        ///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> contains the specified <see cref='Origam.Gui.Win.ColumnParameterMapping'/>.</para>
+        /// </summary>
+        /// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to locate.</param>
+        /// <returns>
+        /// <para><see langword='true'/> if the <see cref='Origam.Gui.Win.ColumnParameterMapping'/> is contained in the collection; 
+        ///   otherwise, <see langword='false'/>.</para>
+        /// </returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.IndexOf'/>
+        public bool Contains(ColumnParameterMapping value) {
             return List.Contains(value);
         }
         
-	/// <summary>
-	/// <para>Copies the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the 
-	///    specified index.</para>
-	/// </summary>
-	/// <param name='array'><para>The one-dimensional <see cref='System.Array'/> that is the destination of the values copied from <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para></param>
-	/// <param name='index'>The index in <paramref name='array'/> where copying begins.</param>
-	/// <returns>
-	///   <para>None.</para>
-	/// </returns>
-	/// <exception cref='System.ArgumentException'><para><paramref name='array'/> is multidimensional.</para> <para>-or-</para> <para>The number of elements in the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> is greater than the available space between <paramref name='arrayIndex'/> and the end of <paramref name='array'/>.</para></exception>
-	/// <exception cref='System.ArgumentNullException'><paramref name='array'/> is <see langword='null'/>. </exception>
-	/// <exception cref='System.ArgumentOutOfRangeException'><paramref name='arrayIndex'/> is less than <paramref name='array'/>'s lowbound. </exception>
-	/// <seealso cref='System.Array'/>
-	public void CopyTo(ColumnParameterMapping[] array, int index) {
+        /// <summary>
+        /// <para>Copies the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> values to a one-dimensional <see cref='System.Array'/> instance at the 
+        ///    specified index.</para>
+        /// </summary>
+        /// <param name='array'><para>The one-dimensional <see cref='System.Array'/> that is the destination of the values copied from <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para></param>
+        /// <param name='index'>The index in <paramref name='array'/> where copying begins.</param>
+        /// <returns>
+        ///   <para>None.</para>
+        /// </returns>
+        /// <exception cref='System.ArgumentException'><para><paramref name='array'/> is multidimensional.</para> <para>-or-</para> <para>The number of elements in the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> is greater than the available space between <paramref name='arrayIndex'/> and the end of <paramref name='array'/>.</para></exception>
+        /// <exception cref='System.ArgumentNullException'><paramref name='array'/> is <see langword='null'/>. </exception>
+        /// <exception cref='System.ArgumentOutOfRangeException'><paramref name='arrayIndex'/> is less than <paramref name='array'/>'s lowbound. </exception>
+        /// <seealso cref='System.Array'/>
+        public void CopyTo(ColumnParameterMapping[] array, int index) {
             List.CopyTo(array, index);
         }
         
-	/// <summary>
-	///    <para>Returns the index of a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> in 
-	///       the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
-	/// </summary>
-	/// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to locate.</param>
-	/// <returns>
-	/// <para>The index of the <see cref='Origam.Gui.Win.ColumnParameterMapping'/> of <paramref name='value'/> in the 
-	/// <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>, if found; otherwise, -1.</para>
-	/// </returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Contains'/>
-	public int IndexOf(ColumnParameterMapping value) {
+        /// <summary>
+        ///    <para>Returns the index of a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> in 
+        ///       the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
+        /// </summary>
+        /// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to locate.</param>
+        /// <returns>
+        /// <para>The index of the <see cref='Origam.Gui.Win.ColumnParameterMapping'/> of <paramref name='value'/> in the 
+        /// <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/>, if found; otherwise, -1.</para>
+        /// </returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Contains'/>
+        public int IndexOf(ColumnParameterMapping value) {
             return List.IndexOf(value);
         }
         
-	/// <summary>
-	/// <para>Inserts a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> into the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> at the specified index.</para>
-	/// </summary>
-	/// <param name='index'>The zero-based index where <paramref name='value'/> should be inserted.</param>
-	/// <param name=' value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to insert.</param>
-	/// <returns><para>None.</para></returns>
-	/// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
-	public void Insert(int index, ColumnParameterMapping value) {
+        /// <summary>
+        /// <para>Inserts a <see cref='Origam.Gui.Win.ColumnParameterMapping'/> into the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> at the specified index.</para>
+        /// </summary>
+        /// <param name='index'>The zero-based index where <paramref name='value'/> should be inserted.</param>
+        /// <param name=' value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to insert.</param>
+        /// <returns><para>None.</para></returns>
+        /// <seealso cref='Origam.Gui.Win.ColumnParameterMappingCollection.Add'/>
+        public void Insert(int index, ColumnParameterMapping value) {
             List.Insert(index, value);
         }
         
-	/// <summary>
-	///    <para>Returns an enumerator that can iterate through 
-	///       the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
-	/// </summary>
-	/// <returns><para>None.</para></returns>
-	/// <seealso cref='System.Collections.IEnumerator'/>
-	public new ColumnParameterMappingEnumerator GetEnumerator() {
+        /// <summary>
+        ///    <para>Returns an enumerator that can iterate through 
+        ///       the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
+        /// </summary>
+        /// <returns><para>None.</para></returns>
+        /// <seealso cref='System.Collections.IEnumerator'/>
+        public new ColumnParameterMappingEnumerator GetEnumerator() {
             return new ColumnParameterMappingEnumerator(this);
         }
         
-	/// <summary>
-	///    <para> Removes a specific <see cref='Origam.Gui.Win.ColumnParameterMapping'/> from the 
-	///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
-	/// </summary>
-	/// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to remove from the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</param>
-	/// <returns><para>None.</para></returns>
-	/// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
-	public void Remove(ColumnParameterMapping value) {
+        /// <summary>
+        ///    <para> Removes a specific <see cref='Origam.Gui.Win.ColumnParameterMapping'/> from the 
+        ///    <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</para>
+        /// </summary>
+        /// <param name='value'>The <see cref='Origam.Gui.Win.ColumnParameterMapping'/> to remove from the <see cref='Origam.Gui.Win.ColumnParameterMappingCollection'/> .</param>
+        /// <returns><para>None.</para></returns>
+        /// <exception cref='System.ArgumentException'><paramref name='value'/> is not found in the Collection. </exception>
+        public void Remove(ColumnParameterMapping value) {
             List.Remove(value);
         }
         
-	public class ColumnParameterMappingEnumerator : object, IEnumerator {
+        public class ColumnParameterMappingEnumerator : object, IEnumerator {
             
-		private IEnumerator baseEnumerator;
+            private IEnumerator baseEnumerator;
             
-		private IEnumerable temp;
+            private IEnumerable temp;
             
-		public ColumnParameterMappingEnumerator(ColumnParameterMappingCollection mappings) {
+            public ColumnParameterMappingEnumerator(ColumnParameterMappingCollection mappings) {
                 this.temp = ((IEnumerable)(mappings));
                 this.baseEnumerator = temp.GetEnumerator();
             }
             
-		public ColumnParameterMapping Current {
-			get {
+            public ColumnParameterMapping Current {
+                get {
                     return ((ColumnParameterMapping)(baseEnumerator.Current));
                 }
-		}
+            }
             
-		object IEnumerator.Current {
-			get {
+            object IEnumerator.Current {
+                get {
                     return baseEnumerator.Current;
                 }
-		}
+            }
             
-		public bool MoveNext() {
+            public bool MoveNext() {
                 return baseEnumerator.MoveNext();
             }
             
-		bool IEnumerator.MoveNext() {
+            bool IEnumerator.MoveNext() {
                 return baseEnumerator.MoveNext();
             }
             
-		public void Reset() {
+            public void Reset() {
                 baseEnumerator.Reset();
             }
             
-		void IEnumerator.Reset() {
+            void IEnumerator.Reset() {
                 baseEnumerator.Reset();
             }
-	}
+        }
 
-	#region ICustomTypeDescriptor implementation
-	public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-	{
+		#region ICustomTypeDescriptor implementation
+		public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+		{
 			return GetProperties();
 		}
 
-	public PropertyDescriptorCollection GetProperties() 
-	{
+		public PropertyDescriptorCollection GetProperties() 
+		{
 			// Create a new collection object PropertyDescriptorCollection
 			PropertyDescriptorCollection pds = new PropertyDescriptorCollection(null);
 
 			// Iterate the list of items
 			for( int i = 0; i < this.List.Count; i++ )
 			{
-				// For each item create a property descriptor 		// and add it to the 		// PropertyDescriptorCollection instance
+				// For each item create a property descriptor 
+				// and add it to the 
+				// PropertyDescriptorCollection instance
 				ColumnParameterMappingPropertyDescriptor pd = new 
 					ColumnParameterMappingPropertyDescriptor(this, i);
 				pds.Add(pd);
@@ -274,95 +278,95 @@ public class ColumnParameterMappingCollection : CollectionBase, ICustomTypeDescr
 			return pds;
 		}
 
-	public String GetClassName()
-	{
+		public String GetClassName()
+		{
 			return TypeDescriptor.GetClassName(this,true);
 		}
 
-	public AttributeCollection GetAttributes()
-	{
+		public AttributeCollection GetAttributes()
+		{
 			return TypeDescriptor.GetAttributes(this,true);
 		}
 
-	public String GetComponentName()
-	{
+		public String GetComponentName()
+		{
 			return TypeDescriptor.GetComponentName(this, true);
 		}
 
-	public TypeConverter GetConverter()
-	{
+		public TypeConverter GetConverter()
+		{
 			return TypeDescriptor.GetConverter(this, true);
 		}
 
-	public EventDescriptor GetDefaultEvent() 
-	{
+		public EventDescriptor GetDefaultEvent() 
+		{
 			return TypeDescriptor.GetDefaultEvent(this, true);
 		}
 
-	public PropertyDescriptor GetDefaultProperty() 
-	{
+		public PropertyDescriptor GetDefaultProperty() 
+		{
 			return TypeDescriptor.GetDefaultProperty(this, true);
 		}
 
-	public object GetEditor(Type editorBaseType) 
-	{
+		public object GetEditor(Type editorBaseType) 
+		{
 			return TypeDescriptor.GetEditor(this, editorBaseType, true);
 		}
 
-	public EventDescriptorCollection GetEvents(Attribute[] attributes) 
-	{
+		public EventDescriptorCollection GetEvents(Attribute[] attributes) 
+		{
 			return TypeDescriptor.GetEvents(this, attributes, true);
 		}
 
-	public EventDescriptorCollection GetEvents()
-	{
+		public EventDescriptorCollection GetEvents()
+		{
 			return TypeDescriptor.GetEvents(this, true);
 		}
 
-	public object GetPropertyOwner(PropertyDescriptor pd) 
-	{
+		public object GetPropertyOwner(PropertyDescriptor pd) 
+		{
 			return this;
 		}
-	#endregion
-}
+		#endregion
+    }
 
-public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
-{
-	private ColumnParameterMappingCollection collection = null;
-	private int index = -1;
-
-	public ColumnParameterMappingPropertyDescriptor(ColumnParameterMappingCollection coll, 
-		int idx) : base( "#"+idx.ToString(), null )
+	public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
 	{
+		private ColumnParameterMappingCollection collection = null;
+		private int index = -1;
+
+		public ColumnParameterMappingPropertyDescriptor(ColumnParameterMappingCollection coll, 
+			int idx) : base( "#"+idx.ToString(), null )
+		{
 			this.collection = coll;
 			this.index = idx;
 		} 
 
-	public override AttributeCollection Attributes
-	{
-		get 
-		{ 
+		public override AttributeCollection Attributes
+		{
+			get 
+			{ 
 				return new AttributeCollection(null);
 			}
-	}
+		}
 
-	public override bool CanResetValue(object component)
-	{
+		public override bool CanResetValue(object component)
+		{
 			return true;
 		}
 
-	public override Type ComponentType
-	{
-		get 
-		{ 
+		public override Type ComponentType
+		{
+			get 
+			{ 
 				return this.collection.GetType();
 			}
-	}
+		}
 
-	public override string DisplayName
-	{
-		get 
+		public override string DisplayName
 		{
+			get 
+			{
 				if (this.collection.Count <= index) {
 					return null;
 				}
@@ -370,12 +374,12 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
 				ColumnParameterMapping mapping = this.collection[index];
 				return mapping.Name;
 			}
-	}
+		}
 
-	public override string Description
-	{
-		get
+		public override string Description
 		{
+			get
+			{
 				ColumnParameterMapping mapping = this.collection[index];
 				StringBuilder sb = new StringBuilder();
 				sb.Append(mapping.Name);
@@ -384,49 +388,49 @@ public class ColumnParameterMappingPropertyDescriptor : PropertyDescriptor
 
 				return sb.ToString();
 			}
-	}
+		}
 
-	public override object GetValue(object component)
-	{
+		public override object GetValue(object component)
+		{
 			ColumnParameterMapping mapping = this.collection[index] as ColumnParameterMapping;
 			return mapping.ColumnName;
 		}
 
-	public override bool IsReadOnly
-	{
-		get { return false;  }
-	}
+		public override bool IsReadOnly
+		{
+			get { return false;  }
+		}
 
-	public override string Name
-	{
-		get { return "#"+index.ToString(); }
-	}
+		public override string Name
+		{
+			get { return "#"+index.ToString(); }
+		}
 
-	public override Type PropertyType
-	{
-		get { return typeof(string); }
-	}
+		public override Type PropertyType
+		{
+			get { return typeof(string); }
+		}
 
-	public override void ResetValue(object component) {}
+		public override void ResetValue(object component) {}
 
-	public override bool ShouldSerializeValue(object component)
-	{
+		public override bool ShouldSerializeValue(object component)
+		{
 			return true;
 		}
 
-	public override void SetValue(object component, object value)
-	{
+		public override void SetValue(object component, object value)
+		{
 			ColumnParameterMapping mapping = this.collection[index] as ColumnParameterMapping;
 			mapping.ColumnName = (string)value;
 		}
-}
+	}
 
-public class ColumnParameterMappingCollectionConverter : ExpandableObjectConverter
-{
-	public override object ConvertTo(ITypeDescriptorContext context, 
-		System.Globalization.CultureInfo culture, 
-		object value, Type destinationType)
+	public class ColumnParameterMappingCollectionConverter : ExpandableObjectConverter
 	{
+		public override object ConvertTo(ITypeDescriptorContext context, 
+			System.Globalization.CultureInfo culture, 
+			object value, Type destinationType)
+		{
 			ColumnParameterMappingCollection col = value as ColumnParameterMappingCollection;
 			if(destinationType == typeof(string) && col != null)
 			{
@@ -439,22 +443,22 @@ public class ColumnParameterMappingCollectionConverter : ExpandableObjectConvert
 			}
 			return base.ConvertTo(context,culture,value,destinationType);
 		}
-}
+	}
 
-public class ColumnParameterMappingCollectionEditor : CollectionEditor
-{
-	public ColumnParameterMappingCollectionEditor(Type type)
-		: base(type)
+	public class ColumnParameterMappingCollectionEditor : CollectionEditor
 	{
+		public ColumnParameterMappingCollectionEditor(Type type)
+			: base(type)
+		{
 		}
 
-	/// <summary>
-	/// This is the way to remove the collection editor button from the property grid.
-	/// </summary>
-	/// <param name="context"></param>
-	/// <returns></returns>
-	public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
-	{
+		/// <summary>
+		/// This is the way to remove the collection editor button from the property grid.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+		{
 			return UITypeEditorEditStyle.None;
 		}
-}
+	}}

@@ -19,16 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for UpsertType.
-/// </summary>
-public enum UpsertType
+namespace Origam.Schema.EntityModel
 {
-	Replace,
-	Increase,
-	Decrease,
-	InsertOnly,
-	Key
+	/// <summary>
+	/// Summary description for UpsertType.
+	/// </summary>
+	public enum UpsertType
+	{
+		Replace,
+		Increase,
+		Decrease,
+		InsertOnly,
+		Key
+	}
 }

@@ -53,12 +53,12 @@ using System.Xml;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Server.Pages;
-
-class WorkflowPageRequestHandler : AbstractPageRequestHandler
+namespace Origam.Server.Pages
 {
-	public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
-	{
+    class WorkflowPageRequestHandler : AbstractPageRequestHandler
+    {
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+        {
             WorkflowPage workflowPage = page as WorkflowPage;
 
             QueryParameterCollection qparams = new QueryParameterCollection();
@@ -138,17 +138,18 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
             }
         }
 
-	private bool IsFeatureOn(string featureCode)
-	{
+        private bool IsFeatureOn(string featureCode)
+        {
 	        return ServiceManager.Services
 		        .GetService<IParameterService>()
 		        .IsFeatureOn(featureCode);
         }
 
-	private bool IsInRole(string roleName)
-	{
+        private bool IsInRole(string roleName)
+        {
 	        return SecurityManager
 		        .GetAuthorizationProvider()
 		        .Authorize(SecurityManager.CurrentPrincipal, roleName);
         }
+    }
 }

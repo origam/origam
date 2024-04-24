@@ -24,19 +24,19 @@ using System.Xml;
 using System.Xml.XPath;
 using System.IO;
 
-namespace Origam;
-
-/// <summary>
-/// Summary description for AsXmlTextWriter.
-/// </summary>
-public class AsXmlTextWriter : XmlTextWriter
+namespace Origam
 {
-	public AsXmlTextWriter(TextWriter tw) : base (tw)
+	/// <summary>
+	/// Summary description for AsXmlTextWriter.
+	/// </summary>
+	public class AsXmlTextWriter : XmlTextWriter
 	{
+		public AsXmlTextWriter(TextWriter tw) : base (tw)
+		{
 		}
 
-	public void WriteNode(XPathNavigator navigator)
-	{
+		public void WriteNode(XPathNavigator navigator)
+		{
 			bool flag;
 			if (navigator == null)
 			{
@@ -124,8 +124,8 @@ public class AsXmlTextWriter : XmlTextWriter
 			}
 		}
 		
-	private void WriteLocalNamespaces(XPathNavigator nsNav)
-	{
+		private void WriteLocalNamespaces(XPathNavigator nsNav)
+		{
 			string localName = nsNav.LocalName;
 			string str2 = nsNav.Value;
 			if (nsNav.MoveToNextNamespace(XPathNamespaceScope.Local))
@@ -141,4 +141,5 @@ public class AsXmlTextWriter : XmlTextWriter
 				this.WriteAttributeString("xmlns", localName, "http://www.w3.org/2000/xmlns/", str2);
 			}
 		}
+	}
 }

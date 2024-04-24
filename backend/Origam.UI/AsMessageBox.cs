@@ -22,29 +22,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.UI;
-
-/// <summary>
-/// Summary description for AsMessageBox.
-/// </summary>
-public class AsMessageBox
+namespace Origam.UI
 {
-	public static void ShowError(IWin32Window owner, string text, string caption, Exception exception)
+	/// <summary>
+	/// Summary description for AsMessageBox.
+	/// </summary>
+	public class AsMessageBox
 	{
+		public static void ShowError(IWin32Window owner, string text, string caption, Exception exception)
+		{
 			ASMessageBoxForm frm = new ASMessageBoxForm(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error, exception, _debugInfoProvider);
 			frm.ShowDialog(owner);
 		}
 
-	private static IDebugInfoProvider _debugInfoProvider = null;
-	public static IDebugInfoProvider DebugInfoProvider
-	{
-		get
+		private static IDebugInfoProvider _debugInfoProvider = null;
+		public static IDebugInfoProvider DebugInfoProvider
 		{
+			get
+			{
 				return _debugInfoProvider;
 			}
-		set
-		{
+			set
+			{
 				_debugInfoProvider = value;
 			}
+		}
 	}
 }

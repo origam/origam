@@ -21,48 +21,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.ObjectPersistence;
-
-/// <summary>
-/// Summary description for AbstractModelElementRuleAttribute.
-/// </summary>
-public abstract class AbstractModelElementRuleAttribute : Attribute, IModelElementRule
+namespace Origam.DA.ObjectPersistence
 {
-	private string _errorMessage;
-	private string _name;
-
-	public AbstractModelElementRuleAttribute()
+	/// <summary>
+	/// Summary description for AbstractModelElementRuleAttribute.
+	/// </summary>
+	public abstract class AbstractModelElementRuleAttribute : Attribute, IModelElementRule
 	{
+		private string _errorMessage;
+		private string _name;
+
+		public AbstractModelElementRuleAttribute()
+		{
 		}
 
-	#region IModelElementRule Members
+		#region IModelElementRule Members
 
-	public abstract Exception CheckRule(object instance);
-	public abstract Exception CheckRule(object instance, string memberName);
+		public abstract Exception CheckRule(object instance);
+		public abstract Exception CheckRule(object instance, string memberName);
 
-	public string Name
-	{
-		get
+		public string Name
 		{
+			get
+			{
 				return _name;
 			}
-		set
-		{
+			set
+			{
 				_name = value;
 			}
-	}
+		}
 
-	public string ErrorMessage
-	{
-		get
+		public string ErrorMessage
 		{
+			get
+			{
 				return _errorMessage;
 			}
-		set
-		{
+			set
+			{
 				_errorMessage = value;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

@@ -27,32 +27,32 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands;
-
-/// <summary>
-/// Makes the selected version the current version of the package
-/// </summary>
-public class MakeActiveVersionCurrent : AbstractMenuCommand
+namespace Origam.Gui.Win.Commands
 {
-    WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-    public override bool IsEnabled
+    /// <summary>
+    /// Makes the selected version the current version of the package
+    /// </summary>
+    public class MakeActiveVersionCurrent : AbstractMenuCommand
     {
-        get
+        WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
         {
+            get
+            {
                 return Owner is DeploymentVersion 
                        && (Owner as DeploymentVersion).IsCurrentVersion == false 
                        & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
                            _schemaService.ActiveExtension.PrimaryKey);
             }
-        set
-        {
+            set
+            {
                 throw new ArgumentException("Cannot set this property", "IsEnabled");
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             bool dirtyDocumentExists = WorkbenchSingleton.Workbench.ViewContentCollection
                 .Cast<IViewContent>()
                 .Any(x => x.IsDirty);
@@ -70,12 +70,13 @@ public class MakeActiveVersionCurrent : AbstractMenuCommand
             extensionPad!.UpdateExtensionInfo(schema.ActiveExtension);
         }
 
-    public override void Dispose()
-    {
+        public override void Dispose()
+        {
             _schemaService = null;
         }
-    public override int GetImageIndex(string icon)
-    {
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
+    }
 }

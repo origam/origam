@@ -27,19 +27,19 @@ using System.Security.Principal;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Security;
-
-/// <summary>
-/// Summary description for OrigamDatabaseTenantAuthorizationProvider.
-/// </summary>
-public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationProvider
+namespace Origam.Security
 {
-	public OrigamDatabaseTenantAuthorizationProvider()
+	/// <summary>
+	/// Summary description for OrigamDatabaseTenantAuthorizationProvider.
+	/// </summary>
+	public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationProvider
 	{
+		public OrigamDatabaseTenantAuthorizationProvider()
+		{
 		}
 
-	private Hashtable GetCache()
-	{
+		private Hashtable GetCache()
+		{
 			string cacheName = "DatabaseAuthorizationProviderCache";
 			Hashtable context = OrigamUserContext.Context;
 
@@ -51,10 +51,10 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
 			return (Hashtable)OrigamUserContext.Context[cacheName];
 		}
 
-	#region IAuthorizationProvider Members
+		#region IAuthorizationProvider Members
 
-	public bool Authorize(IPrincipal principal, string context)
-	{
+		public bool Authorize(IPrincipal principal, string context)
+		{
 			if(context == null) return false;
 			if(context.Trim() == "") return false;
 
@@ -114,11 +114,11 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
 
 			return false;
 		}
-	#endregion
+		#endregion
 
-	#region private methods
-	Credential[] RoleList(IPrincipal principal)
-	{
+		#region private methods
+		Credential[] RoleList(IPrincipal principal)
+		{
 			Hashtable cache = GetCache();
 			string name = principal.Identity.Name;
 			if(! principal.Identity.IsAuthenticated)
@@ -216,5 +216,6 @@ public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationPro
 
 			return array;
 		}
-	#endregion
+		#endregion
+	}
 }

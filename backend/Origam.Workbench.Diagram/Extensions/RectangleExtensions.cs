@@ -17,18 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System.Drawing;
 
-namespace Origam.Workbench.Diagram.Extensions;
-
-public static class RectangleExtensions
+namespace Origam.Workbench.Diagram.Extensions
 {
-    public static Point GetCenter(this Rectangle rectangle)
+    public static class RectangleExtensions
     {
+        public static Point GetCenter(this Rectangle rectangle)
+        {
             return new Point(
                 rectangle.X + rectangle.Width/2 , 
                 rectangle.Y + rectangle.Height/2);
         }
+    }
 }

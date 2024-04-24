@@ -38,30 +38,30 @@ using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.Service;
-
-#region Data Loader
-internal class DataLoader
+namespace Origam.DA.Service
 {
-	private static readonly ILog log 
-		= LogManager.GetLogger(
-			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-	public string ConnectionString = null;
-	public DataStructureFilterSet FilterSet = null;
-	public DataStructureSortSet SortSet = null;
-	public DataStructureEntity Entity = null;
-	public DataStructureQuery Query = null;
-	public DataStructure DataStructure = null;
-	public DataSet Dataset = null;
-	public AbstractSqlDataService DataService = null;
-	public IDbTransaction Transaction = null;
-	public string TransactionId;
-	public UserProfile CurrentProfile = null;
-	public int Timeout;
-
-	public void Fill()
+	#region Data Loader
+	internal class DataLoader
 	{
+		private static readonly ILog log 
+			= LogManager.GetLogger(
+				System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public string ConnectionString = null;
+		public DataStructureFilterSet FilterSet = null;
+		public DataStructureSortSet SortSet = null;
+		public DataStructureEntity Entity = null;
+		public DataStructureQuery Query = null;
+		public DataStructure DataStructure = null;
+		public DataSet Dataset = null;
+		public AbstractSqlDataService DataService = null;
+		public IDbTransaction Transaction = null;
+		public string TransactionId;
+		public UserProfile CurrentProfile = null;
+		public int Timeout;
+
+		public void Fill()
+		{
 			IDbConnection connection = (Transaction == null) 
 				? DataService.GetConnection(ConnectionString) 
 				: Transaction.Connection;
@@ -156,9 +156,9 @@ internal class DataLoader
 			}
 		}
 
-	private void HandleException(
-		Exception exception, string commandText, bool logAsDebug)
-	{
+		private void HandleException(
+			Exception exception, string commandText, bool logAsDebug)
+		{
 			if(log.IsErrorEnabled && !logAsDebug)
 			{
 				log.LogOrigamError(
@@ -178,65 +178,65 @@ internal class DataLoader
 				Environment.NewLine, exception.Message);
 			DataService.HandleException(exception, standardMessage, null);
 		}
-}
-#endregion
+	}
+    #endregion
 
-// version of log4net for NetStandard 1.3 does not have the method
-// LogManager.GetLogger(string)... have to use the overload with Type
-// as parameter 
-public class ConcurrencyExceptionLogger
-{
-}
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type
+    // as parameter 
+    public class ConcurrencyExceptionLogger
+    {
+    }
 
-public abstract class AbstractSqlDataService : AbstractDataService
-{				
-	private readonly Profiler profiler = new Profiler(); 
+    public abstract class AbstractSqlDataService : AbstractDataService
+	{				
+		private readonly Profiler profiler = new Profiler(); 
 		
-	private static readonly ILog log = LogManager.GetLogger(
-		System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	// Special logger for concurrency exception detail logging
-	private static readonly ILog concurrencyLog = LogManager.GetLogger(
-		typeof(ConcurrencyExceptionLogger));
-	private IDbDataAdapterFactory adapterFactory;
-	private string connectionString = "";
-	private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
+		private static readonly ILog log = LogManager.GetLogger(
+			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        // Special logger for concurrency exception detail logging
+        private static readonly ILog concurrencyLog = LogManager.GetLogger(
+	        typeof(ConcurrencyExceptionLogger));
+		private IDbDataAdapterFactory adapterFactory;
+		private string connectionString = "";
+        private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
         
-	#region Constructors
-	public AbstractSqlDataService()
-	{
+        #region Constructors
+        public AbstractSqlDataService()
+        {
         }
 
-	public AbstractSqlDataService(
-		string connection, int bulkInsertThreshold, int updateBatchSize)
-	{
+		public AbstractSqlDataService(
+			string connection, int bulkInsertThreshold, int updateBatchSize)
+		{
 			connectionString = connection;
             UpdateBatchSize = updateBatchSize;
             BulkInsertThreshold = bulkInsertThreshold;
 		}
-	#endregion
+        #endregion
 
-	public override string ConnectionString
-	{
-		get => connectionString;
-		set => connectionString = value;
-	}
+        public override string ConnectionString
+		{
+			get => connectionString;
+			set => connectionString = value;
+		}
 
-	public override IDbDataAdapterFactory DbDataAdapterFactory
-	{
-		get => adapterFactory;
-		internal set => adapterFactory = value;
-	}
+		public override IDbDataAdapterFactory DbDataAdapterFactory
+		{
+			get => adapterFactory;
+			internal set => adapterFactory = value;
+		}
         
-	#region Public Methods
+        #region Public Methods
 
-	public abstract string CreateSystemRole(string roleName);
+        public abstract string CreateSystemRole(string roleName);
         
-	public abstract string CreateInsert(int fieldCount);
+        public abstract string CreateInsert(int fieldCount);
 
 
-	internal override IDbTransaction GetTransaction(
-		string transactionId, IsolationLevel isolationLevel)
-	{
+        internal override IDbTransaction GetTransaction(
+	        string transactionId, IsolationLevel isolationLevel)
+		{
 			IDbTransaction transaction;
 			if(transactionId == null)
 			{
@@ -266,19 +266,19 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return transaction;
 		}
 
-	public override DataSet LoadDataSet(
-		DataStructureQuery dataStructureQuery, 
-		IPrincipal principal, string transactionId)
-	{
+		public override DataSet LoadDataSet(
+			DataStructureQuery dataStructureQuery, 
+            IPrincipal principal, string transactionId)
+		{
 			var loadedDataSet = LoadDataSet(
 				dataStructureQuery, principal, null, transactionId);
 			profiler.LogRememberedExecutionTimes();
 			return loadedDataSet;
 		}
 
-	public override DataSet LoadDataSet(DataStructureQuery query,
-		IPrincipal principal, DataSet dataset, string transactionId)
-	{
+		public override DataSet LoadDataSet(DataStructureQuery query,
+            IPrincipal principal, DataSet dataset, string transactionId)
+		{
 			var settings = ConfigurationManager.GetActiveConfiguration();
 			int timeout = settings.DataServiceSelectTimeout;
 			UserProfile currentProfile = null;
@@ -432,9 +432,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return dataset;
 		}
 		
-	private bool LoadWillReturnZeroResults(DataSet dataset,
-		DataStructureEntity entity, QueryDataSourceType dataSourceType)
-	{
+		private bool LoadWillReturnZeroResults(DataSet dataset,
+			DataStructureEntity entity, QueryDataSourceType dataSourceType)
+		{
 			DataStructureEntity rootEntity = entity.RootEntity;
 			if(dataSourceType == QueryDataSourceType.DataStructureEntity)
 			{
@@ -460,18 +460,18 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return (rootTable != null) && (rootTable.Rows.Count == 0);
 		}
 
-	public override int UpdateData(
-		DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
-		string transactionId)
-	{
+		public override int UpdateData(
+            DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
+            string transactionId)
+        {
             return UpdateData(
                 query, userProfile, dataset, transactionId, false);
         }
 
-	public override int UpdateData(
-		DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
-		string transactionId, bool forceBulkInsert)
-	{
+		public override int UpdateData(
+            DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
+            string transactionId, bool forceBulkInsert)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.RunHandled(() =>
@@ -601,7 +601,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 									});
 							}
 						}
-						// finally add the table to a list of changed tables so 		// changes can be accepted later
+						// finally add the table to a list of changed tables so 
+						// changes can be accepted later
 						if(!changedTables.Contains(changedTable.TableName))
 						{
 							changedTables.Add(changedTable.TableName);
@@ -692,9 +693,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return 0;
 		}
 
-	private void ComposeGeneralErrorMessage(
-		string lastTableName, DataTable changedTable, Exception exception)
-	{
+		private void ComposeGeneralErrorMessage(
+			string lastTableName, DataTable changedTable, Exception exception)
+        {
             DataRow errorRow = DatasetTools.GetErrorRow(changedTable);
             if(errorRow == null)
             {
@@ -734,10 +735,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
             HandleException(exception, rowErrorMessage, errorRow);
         }
 
-	private string ComposeConcurrencyErrorMessage(IPrincipal userProfile, 
-		DataSet dataset, string transactionId, string currentEntityName, 
-		string lastTableName, DBConcurrencyException exception)
-	{
+        private string ComposeConcurrencyErrorMessage(IPrincipal userProfile, 
+            DataSet dataset, string transactionId, string currentEntityName, 
+            string lastTableName, DBConcurrencyException exception)
+        {
             var concurrentUserName = "";
             var errorString = "";
             try
@@ -861,20 +862,20 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return errorString;
         }
 
-	private void ExecuteUpdate(
-		DataStructureQuery query, 
-		string transactionId, 
-		UserProfile profile, 
-		DataStructure dataStructure, 
-		IDbTransaction transaction, 
-		IDbConnection connection, 
-		ArrayList deletedRowIds, 
-		DataTable changedTable, 
-		DataRowState rowState, 
-		DataStructureEntity entity, 
-		int rowCount,
-		bool forceBulkInsert)
-	{
+        private void ExecuteUpdate(
+            DataStructureQuery query, 
+            string transactionId, 
+            UserProfile profile, 
+            DataStructure dataStructure, 
+            IDbTransaction transaction, 
+            IDbConnection connection, 
+			ArrayList deletedRowIds, 
+            DataTable changedTable, 
+            DataRowState rowState, 
+            DataStructureEntity entity, 
+            int rowCount,
+            bool forceBulkInsert)
+        {
             // LOGGING
             LogData(changedTable, profile, transactionId, connection, 
 	            transaction);
@@ -984,17 +985,17 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	internal virtual void BulkInsert(
-		DataStructureEntity entity,
-		IDbConnection connection,
-		IDbTransaction transaction,
-		DataTable table)
-	{
+        internal virtual void BulkInsert(
+            DataStructureEntity entity,
+            IDbConnection connection,
+            IDbTransaction transaction,
+            DataTable table)
+        {
             throw new NotImplementedException();
         }
 
-	private Hashtable GetScalarCommandCache()
-	{
+		private Hashtable GetScalarCommandCache()
+		{
 			Hashtable context = OrigamUserContext.Context;
             lock (context)
             {
@@ -1006,10 +1007,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return (Hashtable)OrigamUserContext.Context["ScalarCommandCache"];
 		}
 
-	public override object GetScalarValue(
-		DataStructureQuery query, ColumnsInfo columnsInfo, 
-		IPrincipal principal, string transactionId)
-	{
+		public override object GetScalarValue(
+			DataStructureQuery query, ColumnsInfo columnsInfo, 
+			IPrincipal principal, string transactionId)
+		{
 			IDbCommand command;
 			object result = null;
 			UserProfile currentProfile = null;
@@ -1108,7 +1109,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				}
 				// Reset the transaction isolation level to its default. See the following from MSDN:
 				// =====================================================================================
-				// Note   After a transaction is committed or rolled back, the isolation level 		// of the transaction persists for all subsequent commands that are in autocommit mode 		// (the Microsoft SQL Server default). This can produce unexpected results, 		// such as an isolation level of Repeatable read persisting and locking other users out 		// of a row. To reset the isolation level to the default (Read committed), execute 		// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 		// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 		// For more information about isolation levels, see SQL Server Books Online.
+				// Note   After a transaction is committed or rolled back, the isolation level 
+				// of the transaction persists for all subsequent commands that are in autocommit mode 
+				// (the Microsoft SQL Server default). This can produce unexpected results, 
+				// such as an isolation level of Repeatable read persisting and locking other users out 
+				// of a row. To reset the isolation level to the default (Read committed), execute 
+				// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 
+				// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
+				// For more information about isolation levels, see SQL Server Books Online.
 				ResetTransactionIsolationLevel(command);
 			}
 			catch(Exception ex)
@@ -1134,13 +1142,13 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return result;
 		}
 
-	protected abstract void ResetTransactionIsolationLevel(
-		IDbCommand command);
+        protected abstract void ResetTransactionIsolationLevel(
+	        IDbCommand command);
 
-	public override DataSet ExecuteProcedure(
-		string name, string entityOrder, DataStructureQuery query, 
-		string transactionId)
-	{
+        public override DataSet ExecuteProcedure(
+	        string name, string entityOrder, DataStructureQuery query, 
+	        string transactionId)
+		{
 			var settings = ConfigurationManager.GetActiveConfiguration();
 			DataStructure dataStructure = GetDataStructure(query);
 			DataSet result = null;
@@ -1280,14 +1288,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return result;
 		}
 
-	public override int UpdateField(
-		Guid entityId, 
-		Guid fieldId, 
-		object oldValue, 
-		object newValue, 
-		IPrincipal userProfile, 
-		string transactionId)
-	{
+		public override int UpdateField(
+			Guid entityId, 
+			Guid fieldId, 
+			object oldValue, 
+			object newValue, 
+			IPrincipal userProfile, 
+			string transactionId)
+		{
 			var result = 0;
 			var profile = SecurityManager.GetProfileProvider().GetProfile(
 				userProfile.Identity) as UserProfile;
@@ -1374,10 +1382,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	public override int ReferenceCount(
-		Guid entityId, Guid fieldId, object value, IPrincipal userProfile, 
-		string transactionId)
-	{
+		public override int ReferenceCount(
+			Guid entityId, Guid fieldId, object value, IPrincipal userProfile, 
+			string transactionId)
+		{
 			var profile = SecurityManager.GetProfileProvider().GetProfile(
 				userProfile.Identity) as UserProfile;
 			IDbTransaction transaction = GetTransaction(transactionId, 
@@ -1418,17 +1426,17 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	/// <summary>
-	/// Executes an arbitrary SQL command on the database.
-	/// </summary>
-	/// <param name="command"></param>
-	/// <param name="transactionId">Existing transaction id. IMPORTANT:
-	/// if transactionId is NULL the command runs without
-	/// a transaction!</param>
-	/// <returns></returns>
-	public override string ExecuteUpdate(
-		string command, string transactionId)
-	{
+        /// <summary>
+        /// Executes an arbitrary SQL command on the database.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="transactionId">Existing transaction id. IMPORTANT:
+        /// if transactionId is NULL the command runs without
+        /// a transaction!</param>
+        /// <returns></returns>
+        public override string ExecuteUpdate(
+	        string command, string transactionId)
+		{
 			IDbTransaction transaction = null;
 			IDbConnection connection;
             if(transactionId == null)
@@ -1472,8 +1480,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	private static StringBuilder FormatResults(DataSet dataset)
-	{
+        private static StringBuilder FormatResults(DataSet dataset)
+        {
             var stringBuilder = new StringBuilder();
             foreach(DataTable table in dataset.Tables)
             {
@@ -1517,8 +1525,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return stringBuilder;
         }
 
-	private static int GetLength(DataColumn column)
-	{
+        private static int GetLength(DataColumn column)
+        {
             int nameLength = column.ColumnName.Length + 1;
             int dataLength;
             if(column.DataType == typeof(string))
@@ -1544,18 +1552,18 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return nameLength > dataLength ? nameLength : dataLength;
         }
 
-	private void LogData(DataTable changedTable, UserProfile profile, 
-		string transactionId, IDbConnection connection, 
-		IDbTransaction transaction)
-	{
+        private void LogData(DataTable changedTable, UserProfile profile, 
+	        string transactionId, IDbConnection connection, 
+	        IDbTransaction transaction)
+		{
 			LogData(changedTable, profile, transactionId, connection, 
 				transaction, -1);
 		}
 
-	private void LogData(DataTable changedTable, UserProfile profile, 
-		string transactionId, IDbConnection connection, 
-		IDbTransaction transaction, int overrideActionType)
-	{
+		private void LogData(DataTable changedTable, UserProfile profile, 
+			string transactionId, IDbConnection connection, 
+			IDbTransaction transaction, int overrideActionType)
+		{
 			DataAuditLog dataAuditLog = GetLog(
 				changedTable, profile, transactionId, overrideActionType);
 			if((dataAuditLog == null) || (dataAuditLog.AuditRecord.Count <= 0))
@@ -1579,8 +1587,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			SetConnection(logAdapter, null);
 		}
 
-	public override string DatabaseSchemaVersion()
-	{
+		public override string DatabaseSchemaVersion()
+		{
 			try
 			{
 			    var settings = ConfigurationManager.GetActiveConfiguration();
@@ -1600,9 +1608,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	private string RunSchemaVersionQuery(IDbConnection connection,
-		OrigamSettings settings)
-	{
+		private string RunSchemaVersionQuery(IDbConnection connection,
+			OrigamSettings settings)
+		{
 			try
 			{
 				return TryGetSchemaVersion(
@@ -1620,9 +1628,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	private string TryGetSchemaVersion(IDbConnection connection,
-		OrigamSettings settings, string versionCommandName)
-	{
+		private string TryGetSchemaVersion(IDbConnection connection,
+			OrigamSettings settings, string versionCommandName)
+		{
 			using(IDbCommand command = DbDataAdapterFactory.GetCommand(
 				      versionCommandName, connection))
 			{
@@ -1633,8 +1641,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 		
-	public override string EntityDdl(Guid entityId)
-	{
+        public override string EntityDdl(Guid entityId)
+        {
 	        if(!(PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), 
 		            new ModelElementKey(entityId)) is TableMappingItem table))
             {
@@ -1644,8 +1652,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return DbDataAdapterFactory.TableDefinitionDdl(table);
         }
 
-	public override string[] FieldDdl(Guid fieldId)
-	{
+        public override string[] FieldDdl(Guid fieldId)
+        {
             var result = new string[2];
             if(!(PersistenceProvider.RetrieveInstance(typeof(FieldMappingItem), 
 	                new ModelElementKey(fieldId)) is FieldMappingItem column))
@@ -1659,9 +1667,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            column.ForeignKeyConstraint);
             return result;
         }
-	public override IDataReader ExecuteDataReader(DataStructureQuery query,
-		IPrincipal principal, string transactionId)
-	{
+        public override IDataReader ExecuteDataReader(DataStructureQuery query,
+            IPrincipal principal, string transactionId)
+        {
             DataSet dataSet = null;
             var settings = ConfigurationManager.GetActiveConfiguration();
             int timeout = settings.DataServiceSelectTimeout;
@@ -1731,17 +1739,17 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
         
-	public override IEnumerable<IEnumerable<object>> ExecuteDataReader(
-		DataStructureQuery query)
-	{
+        public override IEnumerable<IEnumerable<object>> ExecuteDataReader(
+	        DataStructureQuery query)
+        {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line
 			        => line.Select(pair => pair.Value));
         }
 
-	public override IEnumerable<Dictionary<string, object>> 
-		ExecuteDataReaderReturnPairs(DataStructureQuery query)
-	{
+        public override IEnumerable<Dictionary<string, object>> 
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line => ExpandAggregationData(line, query))
 		        .Select( line=> line
@@ -1751,9 +1759,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			        pair => pair.Value));
         }
 
-	private List<KeyValuePair<string, object>> ExpandAggregationData(
-		IEnumerable<KeyValuePair<string, object>> line, DataStructureQuery query)
-	{
+        private List<KeyValuePair<string, object>> ExpandAggregationData(
+	        IEnumerable<KeyValuePair<string, object>> line, DataStructureQuery query)
+        {
 	        var processedItems = new List<KeyValuePair<string, object>>();
 	        var aggregationData = new List<object>();
 	        foreach (KeyValuePair<string, object> pair in line)
@@ -1782,13 +1790,13 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	        return processedItems;
         }
 
-	private IEnumerable<T> ToEnumerable<T>(T item)
-	{
+        private IEnumerable<T> ToEnumerable<T>(T item)
+        {
 	        yield return item;
         }
 
-	private List<ColumnData> GetAllQueryColumns(DataStructureQuery query)
-	{
+        private List<ColumnData> GetAllQueryColumns(DataStructureQuery query)
+        {
 	        return query.GetAllQueryColumns()
 		        .SelectMany(column =>
 		        {
@@ -1810,9 +1818,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		        .ToList();
         }
 
-	private IEnumerable<IEnumerable<KeyValuePair<string, object>>> 
-		ExecuteDataReaderInternal(DataStructureQuery query)
-	{
+        private IEnumerable<IEnumerable<KeyValuePair<string, object>>> 
+	        ExecuteDataReaderInternal(DataStructureQuery query)
+        {
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
@@ -1839,8 +1847,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	        }
         }
         
-	private static List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
-	{
+        private static List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
+        {
 	        if (columnData == null)
 		        throw new ArgumentNullException(nameof(columnData));
 	        var updatedValues = new List<KeyValuePair<string, object>>();
@@ -1870,9 +1878,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         
 
-	private static DataStructureEntity GetEntity(
-		DataStructureQuery query, DataStructure dataStructure)
-	{
+        private static DataStructureEntity GetEntity(
+	        DataStructureQuery query, DataStructure dataStructure)
+	    {
 	        DataStructureEntity entity;
 	        switch(query.DataSourceType)
 	        {
@@ -1914,12 +1922,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	        return entity;
 	    }
 
-	public virtual void CreateSchema(string databaseName)
-	{
+        public virtual void CreateSchema(string databaseName)
+        {
         }
 
-	public void CreateFirstNewWebUser(QueryParameterCollection parameters)
-	{
+        public void CreateFirstNewWebUser(QueryParameterCollection parameters)
+        {
 			var transactionId = Guid.NewGuid().ToString();
 			try
 			{
@@ -1939,33 +1947,33 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				throw;
 			}
 		}
-	public abstract string CreateBusinessPartnerInsert(
-		QueryParameterCollection parameters);
-	public abstract string CreateOrigamUserInsert(
-		QueryParameterCollection parameters);
-	public abstract string CreateBusinessPartnerRoleIdInsert(
-		QueryParameterCollection parameters);
-	public abstract string AlreadyCreatedUser(
-		QueryParameterCollection parameters);
-	#endregion
+		public abstract string CreateBusinessPartnerInsert(
+			QueryParameterCollection parameters);
+		public abstract string CreateOrigamUserInsert(
+			QueryParameterCollection parameters);
+		public abstract string CreateBusinessPartnerRoleIdInsert(
+			QueryParameterCollection parameters);
+		public abstract string AlreadyCreatedUser(
+			QueryParameterCollection parameters);
+	    #endregion
 
-	#region Is Schema Item in Database
-	public override bool IsSchemaItemInDatabase(ISchemaItem schemaItem)
-	{
+        #region Is Schema Item in Database
+        public override bool IsSchemaItemInDatabase(ISchemaItem schemaItem)
+        {
 	        return (schemaItem is DataEntityIndex dataEntityIndex) 
 	               && IsDataEntityIndexInDatabase(dataEntityIndex);
         }
 
-	internal abstract bool IsDataEntityIndexInDatabase(
-		DataEntityIndex dataEntityIndex);
+        internal abstract bool IsDataEntityIndexInDatabase(
+	        DataEntityIndex dataEntityIndex);
 
-	#endregion
+        #endregion
 
-	#region Compare Schema
+		#region Compare Schema
 		
-	internal abstract string GetAllTablesSql();
-	public override ArrayList CompareSchema(IPersistenceProvider provider)
-	{
+        internal abstract string GetAllTablesSql();
+		public override ArrayList CompareSchema(IPersistenceProvider provider)
+		{
 			var results = new ArrayList();
             ArrayList schemaTables = GetSchemaTables(provider);
             // tables
@@ -2016,10 +2024,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return results;
 		}
 
-	private void DoCompareIndexExistingTables(
-		ArrayList results, ArrayList schemaTables, DataSet foreignKeys, 
-		DataSet columns)
-	{
+        private void DoCompareIndexExistingTables(
+	        ArrayList results, ArrayList schemaTables, DataSet foreignKeys, 
+	        DataSet columns)
+        {
             foreach(TableMappingItem table in schemaTables)
             {
 	            // not for views and not for tables where generating script
@@ -2075,10 +2083,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	private void CompareConstraintMissingInDatabase(
-		DataEntityConstraint constraint, TableMappingItem table,
-		DataSet foreignKeys, DataSet columns, ArrayList results)
-	{
+        private void CompareConstraintMissingInDatabase(
+	        DataEntityConstraint constraint, TableMappingItem table,
+	        DataSet foreignKeys, DataSet columns, ArrayList results)
+        {
 			if((constraint.Type != ConstraintType.ForeignKey) 
 			   || !(constraint.ForeignEntity is TableMappingItem) 
 			   || !(constraint.Fields[0] is FieldMappingItem))
@@ -2184,11 +2192,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
         }
 
-	internal abstract string GetSqlFk();
+        internal abstract string GetSqlFk();
 
-	private void DoCompareIndex(
-		ArrayList results, ArrayList schemaTables, DataSet indexFields)
-	{
+        private void DoCompareIndex(
+	        ArrayList results, ArrayList schemaTables, DataSet indexFields)
+        {
             foreach(TableMappingItem table in schemaTables)
             {
 	            if(!table.GenerateDeploymentScript 
@@ -2273,19 +2281,19 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	internal abstract Hashtable GetDbIndexList(
-		DataSet indexes, Hashtable schemaTableList);
-	internal abstract Hashtable GetSchemaIndexListGenerate(
-		ArrayList schemaTables, Hashtable dbTableList, 
-		Hashtable schemaIndexListAll);
+        internal abstract Hashtable GetDbIndexList(
+	        DataSet indexes, Hashtable schemaTableList);
+        internal abstract Hashtable GetSchemaIndexListGenerate(
+	        ArrayList schemaTables, Hashtable dbTableList, 
+	        Hashtable schemaIndexListAll);
         
-	internal abstract string GetSqlIndexFields();
-	internal abstract string GetSqlIndexes();
+        internal abstract string GetSqlIndexFields();
+        internal abstract string GetSqlIndexes();
 
-	private void DoCompareDatabaseInModel(
-		ArrayList results, Hashtable schemaTableList, 
-		Hashtable schemaColumnList, DataSet columns)
-	{
+        private void DoCompareDatabaseInModel(
+	        ArrayList results, Hashtable schemaTableList, 
+	        Hashtable schemaColumnList, DataSet columns)
+        {
             var abstractSqlCommandGenerator 
 	            = (AbstractSqlCommandGenerator)DbDataAdapterFactory;
             foreach(DataRow row in columns.Tables[0].Rows)
@@ -2375,8 +2383,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	private bool CompareType(DataRow row, string modelType)
-	{
+        private bool CompareType(DataRow row, string modelType)
+        {
 			string columnType = GetColumnType(row);
 			if(columnType.Contains("TIMESTAMP") 
 			   && modelType.Contains("TIMESTAMP"))
@@ -2391,8 +2399,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return columnType != modelType;
 		}
 
-	private string GetColumnType(DataRow row)
-	{
+        private string GetColumnType(DataRow row)
+        {
 			var stringBuilder = new StringBuilder();
 			stringBuilder.Append((string)row["DATA_TYPE"]);
             int length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) 
@@ -2404,10 +2412,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return stringBuilder.ToString().ToUpper();
 		}
 
-	private void DoCompareModelInDatabase(
-		ArrayList results, ArrayList schemaTables, Hashtable dbTableList, 
-		Hashtable schemaColumnList, DataSet columns)
-	{
+        private void DoCompareModelInDatabase(
+	        ArrayList results, ArrayList schemaTables, Hashtable dbTableList, 
+	        Hashtable schemaColumnList, DataSet columns)
+        {
             foreach(TableMappingItem table in schemaTables)
             {
 	            // only if the table exists in the database,
@@ -2485,10 +2493,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	internal abstract string GetAllColumnsSQL();
+        internal abstract string GetAllColumnsSQL();
 
-	private Hashtable GetDbTableList()
-	{
+        private Hashtable GetDbTableList()
+        {
             DataSet tables = GetData(GetAllTablesSql());
             var dbTableList = new Hashtable();
             foreach(DataRow row in tables.Tables[0].Rows)
@@ -2498,8 +2506,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return dbTableList;
         }
         
-	private Hashtable GetSchemaTableList(ArrayList schemaTables)
-	{
+        private Hashtable GetSchemaTableList(ArrayList schemaTables)
+        {
             var schemaTableList = new Hashtable();
             foreach(TableMappingItem table in schemaTables)
             {
@@ -2511,8 +2519,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return schemaTableList;
         }
 
-	private ArrayList GetSchemaTables(IPersistenceProvider provider)
-	{
+        private ArrayList GetSchemaTables(IPersistenceProvider provider)
+        {
             List<AbstractSchemaItem> entityList = provider
 	            .RetrieveListByCategory<AbstractSchemaItem>(
 		            AbstractDataEntity.CategoryConst);
@@ -2525,9 +2533,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
             return schemaTables;
         }
 
-	private static string ConstraintName(TableMappingItem table, 
-		DataEntityConstraint constraint)
-	{
+        private static string ConstraintName(TableMappingItem table, 
+            DataEntityConstraint constraint)
+        {
             return 
 	            "FK_" 
 	            + table.MappedObjectName 
@@ -2537,11 +2545,11 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
         }
 
-	private void DoCompare(ArrayList results, Hashtable dbList, 
-		Hashtable schemaList, DataSet columns, 
-		DbCompareResultType direction, Type schemaItemType,
-		IPersistenceProvider provider)
-	{
+		private void DoCompare(ArrayList results, Hashtable dbList, 
+            Hashtable schemaList, DataSet columns, 
+            DbCompareResultType direction, Type schemaItemType,
+            IPersistenceProvider provider)
+		{
             switch(direction)
 			{
 				case DbCompareResultType.MissingInDatabase:
@@ -2559,10 +2567,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
 		}
 
-	private void CompareMissingInModel(ArrayList results, Hashtable dbList, 
-		Hashtable schemaList, DataSet columns, Type schemaItemType, 
-		IPersistenceProvider provider)
-	{
+        private void CompareMissingInModel(ArrayList results, Hashtable dbList, 
+            Hashtable schemaList, DataSet columns, Type schemaItemType, 
+            IPersistenceProvider provider)
+        {
             var sqlGenerator 
 	            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
             foreach(DictionaryEntry entry in dbList)
@@ -2631,9 +2639,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	private void CompareMissingInDatabase(ArrayList results,
-		Hashtable dbList, Hashtable schemaList, Type schemaItemType)
-	{
+        private void CompareMissingInDatabase(ArrayList results,
+            Hashtable dbList, Hashtable schemaList, Type schemaItemType)
+        {
             var sqlGenerator 
 	            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
             foreach(DictionaryEntry entry in schemaList)
@@ -2686,8 +2694,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
             }
         }
 
-	internal DataSet GetData(string sql)
-	{
+        internal DataSet GetData(string sql)
+		{
 			using(IDbConnection connection = GetConnection(connectionString))
 			{
 				connection.Open();
@@ -2705,14 +2713,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				}
 			}
 		}
-	#endregion
+		#endregion
 
         
-	#region Private Methods
-	private void AcceptChanges(DataSet dataset, ArrayList changedTables, 
-		DataStructureQuery query, string transactionId, 
-		IPrincipal userProfile)
-	{
+		#region Private Methods
+		private void AcceptChanges(DataSet dataset, ArrayList changedTables, 
+			DataStructureQuery query, string transactionId, 
+			IPrincipal userProfile)
+		{
 			// Retrieve actual values and accept changes.
 			// Much faster than DataSet.AcceptChanges()
 			foreach(string tableName in changedTables)
@@ -2802,24 +2810,24 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	private DataStructureEntity GetEntity(Guid entityId)
-	{
+		private DataStructureEntity GetEntity(Guid entityId)
+		{
 			return PersistenceProvider.RetrieveInstance(
 				typeof(DataStructureEntity), 
 				new ModelElementKey(entityId)
 				) as DataStructureEntity;		
         }
 
-	private IDataEntityColumn GetField(Guid fieldId)
-	{
+        private IDataEntityColumn GetField(Guid fieldId)
+        {
             return PersistenceProvider.RetrieveInstance(
                 typeof(AbstractSchemaItem),
                 new ModelElementKey(fieldId)
                 ) as IDataEntityColumn;
         }
         
-	private DataSet CloneDatasetForActualRow(DataTable table)
-	{
+        private DataSet CloneDatasetForActualRow(DataTable table)
+		{
 			var newData = new DataSet(table.DataSet.DataSetName);
 			newData.Tables.Add(new OrigamDataTable(table.TableName));
 			foreach(DataColumn column in table.Columns)
@@ -2834,10 +2842,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			return newData;
 		}
 
-	private void LoadActualRow(DataSet newData, Guid entityId, 
-		Guid filterSetId, DataRow row, IPrincipal userProfile,
-		string transactionId)
-	{
+		private void LoadActualRow(DataSet newData, Guid entityId, 
+            Guid filterSetId, DataRow row, IPrincipal userProfile,
+            string transactionId)
+		{
 			var newDataQuery = new DataStructureQuery(
 				entityId, filterSetId)
 			{
@@ -2854,8 +2862,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			LoadDataSet(newDataQuery, userProfile, newData, transactionId);
 		}
 
-	internal void TraceCommand(IDbCommand command, string transactionId)
-	{
+		internal void TraceCommand(IDbCommand command, string transactionId)
+		{
 			if(!log.IsDebugEnabled)
 			{
 				return;
@@ -2879,56 +2887,56 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 		}
 
-	internal abstract string GetPid();
+        internal abstract string GetPid();
 
-	private void SetTransaction(
-		DbDataAdapter adapter, IDbTransaction transaction)
-	{
+        private void SetTransaction(
+	        DbDataAdapter adapter, IDbTransaction transaction)
+		{
 			((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).UpdateCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).DeleteCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).InsertCommand.Transaction = transaction;
 		}
 
-	private void SetConnection(
-		DbDataAdapter adapter, IDbConnection connection)
-	{
+		private void SetConnection(
+			DbDataAdapter adapter, IDbConnection connection)
+		{
 			((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
 			((IDbDataAdapter)adapter).UpdateCommand.Connection = connection;
 			((IDbDataAdapter)adapter).DeleteCommand.Connection = connection;
 			((IDbDataAdapter)adapter).InsertCommand.Connection = connection;
 		}
 
-	#endregion
+        #endregion
 
-	#region IDisposable
-	public override void Dispose()
-	{
+		#region IDisposable
+		public override void Dispose()
+		{
 			connectionString = null;
 			base.Dispose ();
 		}
 
-	#endregion
-}
-// version of log4net for NetStandard 1.3 does not have the method
-// LogManager.GetLogger(string)... have to use the overload with Type
-// as parameter 
-public class WorkflowProfiling
-{
-}
+		#endregion
+	}
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type
+    // as parameter 
+    public class WorkflowProfiling
+    {
+    }
 
-internal class Profiler
-{
-	private static readonly ILog workflowProfilingLog 
-		= LogManager.GetLogger(typeof(Profiler));
-	private readonly Dictionary<DataStructureEntity,List<double>> 
-		durationsMs = new Dictionary<DataStructureEntity, List<double>>();
-	private readonly List<DataStructureEntity> entityOrder 
-		= new List<DataStructureEntity>();
-	private static string currentTaskId;
-
-	public void LogRememberedExecutionTimes()
+    internal class Profiler
 	{
+		private static readonly ILog workflowProfilingLog 
+			= LogManager.GetLogger(typeof(Profiler));
+		private readonly Dictionary<DataStructureEntity,List<double>> 
+			durationsMs = new Dictionary<DataStructureEntity, List<double>>();
+		private readonly List<DataStructureEntity> entityOrder 
+			= new List<DataStructureEntity>();
+		private static string currentTaskId;
+
+		public void LogRememberedExecutionTimes()
+		{
 			var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
 			var taskId = (string)ThreadContext.Properties["currentTaskId"];
 			var serviceMethodName = (string)ThreadContext
@@ -2950,25 +2958,25 @@ internal class Profiler
 			entityOrder.Clear();
 		}
 
-	public void ExecuteAndRememberLoadDuration(DataStructureEntity entity,
-		Action actionToExecute)
-	{
+		public void ExecuteAndRememberLoadDuration(DataStructureEntity entity,
+			 Action actionToExecute)
+		{
 			ExecuteAndTakeLoggingAction(entity, RememberLoadDuration, 
 				actionToExecute);
 		}
 
-	public void ExecuteAndLogStoreActionDuration(DataStructureEntity entity,
+		public void ExecuteAndLogStoreActionDuration(DataStructureEntity entity,
 		Action actionToExecute)
-	{
+		{
 			ExecuteAndTakeLoggingAction(entity, LogStoreDuration, 
 				actionToExecute);
 		}
 
-	private static void ExecuteAndTakeLoggingAction(
-		DataStructureEntity entity, 
-		Action<DataStructureEntity, Stopwatch> loggingAction, 
-		Action actionToExecute)	
-	{
+		private static void ExecuteAndTakeLoggingAction(
+			DataStructureEntity entity, 
+			Action<DataStructureEntity, Stopwatch> loggingAction, 
+			Action actionToExecute)	
+		{
 			if(workflowProfilingLog.IsDebugEnabled)
 			{
 				var taskId = (string)ThreadContext.Properties["currentTaskId"];
@@ -2985,9 +2993,9 @@ internal class Profiler
 			actionToExecute.Invoke();
 		}
 	
-	private void RememberLoadDuration(DataStructureEntity entity, 
-		Stopwatch stoppedWatch)
-	{
+		private void RememberLoadDuration(DataStructureEntity entity, 
+			Stopwatch stoppedWatch)
+		{
 			var taskId = (string)ThreadContext.Properties["currentTaskId"];
 			if(currentTaskId != taskId)
 			{
@@ -3003,9 +3011,9 @@ internal class Profiler
 			durationsMs[entity].Add(stoppedWatch.Elapsed.TotalMilliseconds);
 		}
 
-	private static void LogStoreDuration(DataStructureEntity entity, 
-		Stopwatch stoppedWatch)
-	{
+		private static void LogStoreDuration(DataStructureEntity entity, 
+			Stopwatch stoppedWatch)
+		{
 			var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
 			var taskId = (string)ThreadContext.Properties["currentTaskId"];
 			var serviceMethodName =(string)ThreadContext
@@ -3017,9 +3025,9 @@ internal class Profiler
 				duration: stoppedWatch.Elapsed.TotalMilliseconds);
 		}
 
-	private static void LogDuration(string logEntryType, string path, 
-		string id, double duration, int rows=0)
-	{
+		private static void LogDuration(string logEntryType, string path, 
+			string id, double duration, int rows=0)
+		{
 			var typeWithDoubleColon = $"{logEntryType}:";
 			var message 
 				= $"{typeWithDoubleColon,-18}{path,-80} Id: {id}  Duration: {duration,7:0.0} ms";
@@ -3029,4 +3037,5 @@ internal class Profiler
 			}
 			workflowProfilingLog.Debug(message);
 		}
+	}
 }

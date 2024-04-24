@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for PanelActionMode.
-/// </summary>
-public enum PanelActionMode
+namespace Origam.Schema.GuiModel
 {
-	ActiveRecord = 0,
-	MultipleCheckboxes = 1,
-	//SpecifiedCheckboxes,
-	Always = 3
+	/// <summary>
+	/// Summary description for PanelActionMode.
+	/// </summary>
+	public enum PanelActionMode
+	{
+		ActiveRecord = 0,
+		MultipleCheckboxes = 1,
+		//SpecifiedCheckboxes,
+        Always = 3
+	}
 }

@@ -23,31 +23,31 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Origam.DA.Service;
-
-public class FileFilter
+namespace Origam.DA.Service
 {
-    private readonly IEnumerable<string> fileExtensionsToIgnore;
-    private readonly IEnumerable<FileInfo> filesToIgnore;
-    private readonly IEnumerable<string> directoryNamesToIgnore;
-
-    public FileFilter(IEnumerable<string> fileExtensionsToIgnore, IEnumerable<FileInfo> filesToIgnore, IEnumerable<string> directoryNamesToIgnore)
+    public class FileFilter
     {
+        private readonly IEnumerable<string> fileExtensionsToIgnore;
+        private readonly IEnumerable<FileInfo> filesToIgnore;
+        private readonly IEnumerable<string> directoryNamesToIgnore;
+
+        public FileFilter(IEnumerable<string> fileExtensionsToIgnore, IEnumerable<FileInfo> filesToIgnore, IEnumerable<string> directoryNamesToIgnore)
+        {
             this.fileExtensionsToIgnore = fileExtensionsToIgnore;
             this.filesToIgnore = filesToIgnore;
             this.directoryNamesToIgnore = directoryNamesToIgnore;
         }
 
-    public bool ShouldPass(string fullPath)
-    {
+        public bool ShouldPass(string fullPath)
+        {
             return 
                 !HasIgnoredExtension(fullPath) &&
                 !IsIgnoredFile(fullPath) &&
                 !IsInIgnoredDirectory(fullPath);
         }
 
-    private bool HasIgnoredExtension(string fullPath)
-    {
+        private bool HasIgnoredExtension(string fullPath)
+        {
             string extension = Path.GetExtension(fullPath);
             if (extension.StartsWith("."))
             {
@@ -56,15 +56,16 @@ public class FileFilter
             return fileExtensionsToIgnore.Any(ext => ext == extension);
         }
 
-    private bool IsIgnoredFile(string fullPath)
-    {
+        private bool IsIgnoredFile(string fullPath)
+        {
             return filesToIgnore.Any(f => f.FullName == fullPath);
         }
 
-    private bool IsInIgnoredDirectory(string fullPath)
-    {
+        private bool IsInIgnoredDirectory(string fullPath)
+        {
             return fullPath
                 .Split(Path.DirectorySeparatorChar)
                 .Any(dirName => directoryNamesToIgnore.Contains(dirName));
         }
+    }
 }

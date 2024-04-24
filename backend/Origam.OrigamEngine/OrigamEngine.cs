@@ -39,32 +39,32 @@ using System.Security.Principal;
 using Origam.Extensions;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.OrigamEngine;
-
-/// <summary>
-/// Summary description for OrigamEngine.
-/// </summary>
-public class OrigamEngine
+namespace Origam.OrigamEngine
 {
-	#region Private Members
-	private const string LAST_RESTART_REQUEST_CONST_NAME = "LastRestartRequest";
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
-	private static DateTime LastRestartRequestDate;
-	private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
-	#endregion
-
-	#region Constructors
-	internal OrigamEngine()
+	/// <summary>
+	/// Summary description for OrigamEngine.
+	/// </summary>
+	public class OrigamEngine
 	{
+        #region Private Members
+        private const string LAST_RESTART_REQUEST_CONST_NAME = "LastRestartRequest";
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
+        private static DateTime LastRestartRequestDate;
+        private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
+        #endregion
+
+        #region Constructors
+        internal OrigamEngine()
+		{
 		}
-	#endregion
+		#endregion
 
 		
 		
-	#region Public Static Methods
-	public static void InitializeSchemaItemProviders(SchemaService service)
-	{
+		#region Public Static Methods
+		public static void InitializeSchemaItemProviders(SchemaService service)
+		{
 			service.RemoveAllProviders();
 
             foreach (var schemaItemProvider in new OrigamProviderBuilder().GetAll())
@@ -102,28 +102,28 @@ public class OrigamEngine
                     typeof(PagesSchemaItemProvider), typeof(WorkflowPage)});
 		}
 
-	public static void InitializeRuntimeServices()
-	{
+		public static void InitializeRuntimeServices()
+		{
 			serviceFactory.InitializeServices();
 		}
 
-	public static void UnloadConnectedServices()
-	{
+        public static void UnloadConnectedServices()
+        {
 	        RestartTimer?.Stop();
             serviceFactory.UnloadServices();
             DataServiceFactory.ClearDataService();
         }
         
-	public static void DisconnectRuntime()
-	{
+        public static void DisconnectRuntime()
+        {
 	        UnloadConnectedServices();
         }
 
-	public static void ConnectRuntime(
-		string configName="", bool runRestartTimer=true,
-		bool loadDeploymentScripts=false,
-		IRuntimeServiceFactory customServiceFactory=null)
-	{
+		public static void ConnectRuntime(
+			string configName="", bool runRestartTimer=true,
+			bool loadDeploymentScripts=false,
+			IRuntimeServiceFactory customServiceFactory=null)
+		{
 			log.Info("Connecting ORIGAM Runtime.");
 			AppDomain.CurrentDomain.SetPrincipalPolicy(
                 PrincipalPolicy.NoPrincipal);
@@ -162,16 +162,16 @@ public class OrigamEngine
 			log.Info("ORIGAM Runtime Connected");
 		}
 
-	private static void SetActiveConfiguration(string configName="")
-	{
+		private static void SetActiveConfiguration(string configName="")
+		{
 			var configurations = ConfigurationManager.GetAllConfigurations();
 			var origamSettings = GetSettings(configName, configurations);
 			ConfigurationManager.SetActiveConfiguration(origamSettings);
 		}
 
-	private static OrigamSettings GetSettings(string configName,
-		OrigamSettingsCollection configurations)
-	{
+		private static OrigamSettings GetSettings(string configName,
+			OrigamSettingsCollection configurations)
+		{
 			if (string.IsNullOrEmpty(configName))
 			{
 				if (configurations.Count != 1)
@@ -189,25 +189,25 @@ public class OrigamEngine
 				?? throw new ArgumentException($"Configuration {configName} not found in settings file.");
 		}
 
-	public static void SetRestart()
-	{
+		public static void SetRestart()
+		{
 			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			parameterService.SetCustomParameterValue(LAST_RESTART_REQUEST_CONST_NAME, DateTime.Now, 
 				Guid.Empty, 0, null, false, 0, 0, DateTime.Now, false);
 		}
 
-	public static IPersistenceService CreatePersistenceService()
-	{
+        public static IPersistenceService CreatePersistenceService()
+        {
 	        return serviceFactory.CreatePersistenceService();
         }
 
-	public static IDocumentationService CreateDocumentationService()
-	{
+        public static IDocumentationService CreateDocumentationService()
+        {
 	        return serviceFactory.CreateDocumentationService();
         }
 
-	private static DateTime GetLastRestartRequestDate()
-	{
+		private static DateTime GetLastRestartRequestDate()
+		{
 			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			object value = parameterService.GetCustomParameterValue(LAST_RESTART_REQUEST_CONST_NAME);
 			if(value == null)
@@ -219,36 +219,37 @@ public class OrigamEngine
 				return (DateTime)value;
 			}
 		}
-	#endregion
+		#endregion
 
-	public static bool IsRestartPending()
-	{
+        public static bool IsRestartPending()
+        {
             SecurityManager.SetServerIdentity();
             DateTime newDate = GetLastRestartRequestDate();
             return !LastRestartRequestDate.Equals(newDate);
         }
 
-	#region Event Handlers
-	private static void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-	{
-		try
+		#region Event Handlers
+		private static void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
 		{
+            try
+            {
 #if ORIGAM_SERVER
-			if (IsRestartPending())
-			{
-				AppDomain.Unload(AppDomain.CurrentDomain);
-			}
+                if (IsRestartPending())
+                {
+                    AppDomain.Unload(AppDomain.CurrentDomain);
+                }
 #endif
-			RestartTimer.Interval = 1000;
+                RestartTimer.Interval = 1000;
+            }
+            catch (Exception ex)
+            {
+                RestartTimer.Interval *= 10;
+                if(log.IsErrorEnabled)
+                {
+                    log.LogOrigamError("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
+                }
+            }
 		}
-		catch (Exception ex)
-		{
-			RestartTimer.Interval *= 10;
-			if(log.IsErrorEnabled)
-			{
-				log.LogOrigamError("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
-			}
-		}
+#endregion
 	}
-	#endregion
 }

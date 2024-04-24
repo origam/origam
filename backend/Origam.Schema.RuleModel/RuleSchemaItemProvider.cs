@@ -22,15 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System.Collections;
 
-namespace Origam.Schema.RuleModel;
-
-/// <summary>
-/// Summary description for RuleSchemaItemProvider.
-/// </summary>
-public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
+namespace Origam.Schema.RuleModel
 {
-	public RuleSchemaItemProvider()
+	/// <summary>
+	/// Summary description for RuleSchemaItemProvider.
+	/// </summary>
+	public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
 	{
+		public RuleSchemaItemProvider()
+		{
             this.ChildItemTypes.Add(typeof(StartRule));
             this.ChildItemTypes.Add(typeof(EndRule));
             this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
@@ -39,33 +39,33 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
             this.ChildItemTypes.Add(typeof(SimpleDataRule));
         }
 
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return AbstractRule.CategoryConst;
 			}
-	}
-	public override bool AutoCreateFolder
-	{
-		get
+		}
+		public override bool AutoCreateFolder
 		{
+			get
+			{
 				return true;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "BL";
 			}
-	}
+		}
 
-	public ArrayList StartRules
-	{
-		get
-		{
+        public ArrayList StartRules
+        {
+            get
+            {
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -76,12 +76,12 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
                 }
                 return result;
             }
-	}
+        }
 
-	public ArrayList EndRules
-	{
-		get
-		{
+        public ArrayList EndRules
+        {
+            get
+            {
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -92,12 +92,12 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
                 }
                 return result;
             }
-	}
+        }
 
-	public ArrayList DataRules
-	{
-		get
-		{
+        public ArrayList DataRules
+        {
+            get
+            {
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -108,12 +108,12 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
                 }
                 return result;
             }
-	}
+        }
 
-	public ArrayList EntityRules
-	{
-		get
-		{
+        public ArrayList EntityRules
+        {
+            get
+            {
                 ArrayList result = new ArrayList();
                 foreach (AbstractRule rule in this.ChildItems)
                 {
@@ -124,39 +124,40 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
                 }
                 return result;
             }
-	}
-	#endregion
+        }
+        #endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_27_rules.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Rules";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
-	public override string NodeToolTipText
-	{
-		get
+		}
+		public override string NodeToolTipText
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

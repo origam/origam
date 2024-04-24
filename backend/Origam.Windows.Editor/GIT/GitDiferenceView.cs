@@ -3,17 +3,17 @@ using Origam.Git;
 using Origam.UI;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Origam.Windows.Editor.GIT;
-
-public partial class GitDiferenceView : DockContent, IViewContent
+namespace Origam.Windows.Editor.GIT
 {
-    public GitDiferenceView()
+    public partial class GitDiferenceView : DockContent, IViewContent
     {
+        public GitDiferenceView()
+        {
             InitializeComponent();
         }
 
-    public void ShowDiff(GitDiff gitDiff)
-    {
+        public void ShowDiff(GitDiff gitDiff)
+        {
             oldFileLabel.Text = gitDiff.OldFile.FullName;
             newFileLabel.Text = gitDiff.NewFile.FullName;
             
@@ -27,8 +27,8 @@ public partial class GitDiferenceView : DockContent, IViewContent
             singleColumnDiff1.Show(diffInfo);
         }
 
-    public void ShowDiff(string oldfile,string newfile, string text)
-    {
+        public void ShowDiff(string oldfile,string newfile, string text)
+        {
             oldFileLabel.Text = oldfile;
             newFileLabel.Text = newfile;
 
@@ -42,77 +42,78 @@ public partial class GitDiferenceView : DockContent, IViewContent
             singleColumnDiff1.Show(diffInfo);
         }
 
-    public IWorkbenchWindow WorkbenchWindow { get; set; }
+        public IWorkbenchWindow WorkbenchWindow { get; set; }
 
-    public string TabPageText => "Diferences";
+        public string TabPageText => "Diferences";
 
-    public void SwitchedTo()
-    {
+        public void SwitchedTo()
+        {
         }
 
-    public void Selected()
-    {
+        public void Selected()
+        {
         }
 
-    public void Deselected()
-    {
+        public void Deselected()
+        {
         }
 
-    public void RedrawContent()
-    {
+        public void RedrawContent()
+        {
         }
 
-    public string UntitledName { get; set; }
-    public string TitleName { get; set; } = "Diferences";
-    public string StatusText { get; set; }
-    public Guid DisplayedItemId { get; set; }
-    public string HelpTopic { get; }
-    public bool IsUntitled { get; }
-    public bool IsDirty { get; set; }
-    public bool CanRefreshContent { get; set; }
-    public bool IsReadOnly { get; set; } = true;
-    public bool IsViewOnly { get; } = true;
-    public bool CreateAsSubViewContent { get; }
-    public void RefreshContent()
-    {
+        public string UntitledName { get; set; }
+        public string TitleName { get; set; } = "Diferences";
+        public string StatusText { get; set; }
+        public Guid DisplayedItemId { get; set; }
+        public string HelpTopic { get; }
+        public bool IsUntitled { get; }
+        public bool IsDirty { get; set; }
+        public bool CanRefreshContent { get; set; }
+        public bool IsReadOnly { get; set; } = true;
+        public bool IsViewOnly { get; } = true;
+        public bool CreateAsSubViewContent { get; }
+        public void RefreshContent()
+        {
         }
 
-    public void SaveObject()
-    {
+        public void SaveObject()
+        {
         }
 
-    public void LoadObject(object objectToLoad)
-    {
+        public void LoadObject(object objectToLoad)
+        {
             throw new NotImplementedException();
         }
 
-    public object LoadedObject { get; }
-    public string Test() => "";
+        public object LoadedObject { get; }
+        public string Test() => "";
 
-    public event EventHandler TitleNameChanged
-    {
-        add { }
-        remove { }
-    }
-    public event EventHandler DirtyChanged
-    {
-        add { }
-        remove { }
-    }
+        public event EventHandler TitleNameChanged
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler DirtyChanged
+        {
+            add { }
+            remove { }
+        }
 
-    public event EventHandler Saving
-    {
-        add { }
-        remove { }
-    }
-    public event SaveEventHandler Saved
-    {
-        add { }
-        remove { }
-    }
-    public event EventHandler StatusTextChanged
-    {
-        add { }
-        remove { }
+        public event EventHandler Saving
+        {
+            add { }
+            remove { }
+        }
+        public event SaveEventHandler Saved
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler StatusTextChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }

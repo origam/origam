@@ -22,9 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Server.Model.UIService;
-
-public class WorkflowNextInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid SessionFormIdentifier { get; set; }
+    public class WorkflowNextInput
+    {
+        public Guid SessionFormIdentifier { get; set; }
+    } 
 }

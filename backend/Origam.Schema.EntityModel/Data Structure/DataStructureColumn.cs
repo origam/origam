@@ -29,55 +29,55 @@ using Origam.DA.ObjectPersistence.Attributes;
 using System.Collections;
 using Origam.Schema.Attributes;
 
-namespace Origam.Schema.EntityModel;
-
-public enum DataStructureColumnSortDirection
+namespace Origam.Schema.EntityModel
 {
-	Ascending = 1,
-	Descending = 2
-}
-
-/// <summary>
-/// Summary description for DataStructureColumn.
-/// </summary>
-[SchemaItemDescription("Field", "Fields", 22)]
-[HelpTopic("Data+Structure+Field")]
-[ExpressionBrowserTreeSortAtribute(typeof(ComparerSortByName))]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.1")]
-public class DataStructureColumn : AbstractSchemaItem
-{
-	public const string CategoryConst = "DataStructureColumn";
-
-	public DataStructureColumn() : base(){}
-		
-	public DataStructureColumn(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DataStructureColumn(Key primaryKey) : base(primaryKey)	{}
-
-	#region Properties
-	public Guid DataStructureEntityId;
-
-	[TypeConverter(typeof(DataQueryEntityConverterNoSelf))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("entity", "DataStructureEntityId")]
-	public DataStructureEntity Entity
+	public enum DataStructureColumnSortDirection
 	{
-		get
+		Ascending = 1,
+		Descending = 2
+	}
+
+	/// <summary>
+	/// Summary description for DataStructureColumn.
+	/// </summary>
+	[SchemaItemDescription("Field", "Fields", 22)]
+    [HelpTopic("Data+Structure+Field")]
+	[ExpressionBrowserTreeSortAtribute(typeof(ComparerSortByName))]
+	[XmlModelRoot(CategoryConst)]
+    [DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.1")]
+    public class DataStructureColumn : AbstractSchemaItem
+	{
+		public const string CategoryConst = "DataStructureColumn";
+
+		public DataStructureColumn() : base(){}
+		
+		public DataStructureColumn(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataStructureColumn(Key primaryKey) : base(primaryKey)	{}
+
+		#region Properties
+		public Guid DataStructureEntityId;
+
+		[TypeConverter(typeof(DataQueryEntityConverterNoSelf))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("entity", "DataStructureEntityId")]
+        public DataStructureEntity Entity
 		{
+			get
+			{
 				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.DataStructureEntityId));
 			}
-		set
-		{
+			set
+			{
 				this.DataStructureEntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 
 				this.Field = null;
 			}
-	}
+		}
 
-	public bool IsFromParentEntity()
-	{
+		public bool IsFromParentEntity()
+		{
 			if(this.Entity == null)
 			{
 				return false;
@@ -97,17 +97,17 @@ public class DataStructureColumn : AbstractSchemaItem
 			return false;
 		}
 		
-	public Guid ColumnId;
+		public Guid ColumnId;
 
-	private IDataEntityColumn _column;
-	[TypeConverter(typeof(DataStructureColumnConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("field", "ColumnId")]
-	[NotNullModelElementRule()]
-	public IDataEntityColumn Field
-	{
-		get
+		private IDataEntityColumn _column;
+		[TypeConverter(typeof(DataStructureColumnConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("field", "ColumnId")]
+        [NotNullModelElementRule()]
+        public IDataEntityColumn Field
 		{
+			get
+			{
 				if(_column != null) return _column;
 
 				try
@@ -120,8 +120,8 @@ public class DataStructureColumn : AbstractSchemaItem
 					throw new InvalidOperationException(ResourceUtils.GetString("ErrorColumnNotFound", this.Path));
 				}
 			}
-		set
-		{
+			set
+			{
 				_column = value;
 
 				if(value == null)
@@ -144,23 +144,23 @@ public class DataStructureColumn : AbstractSchemaItem
 					}
 				}
 			}
-	}
+		}
         
-	public Guid DefaultLookupId;
+		public Guid DefaultLookupId;
 
-	[TypeConverter(typeof(DataLookupConverter))]
-	[XmlReference("lookup", "DefaultLookupId")]
-	public IDataLookup DefaultLookup
-	{
-		get
+		[TypeConverter(typeof(DataLookupConverter))]
+        [XmlReference("lookup", "DefaultLookupId")]
+        public IDataLookup DefaultLookup
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DefaultLookupId;
 
 				return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				LookupField lookupField = this.Field as LookupField;
 
 				if(lookupField != null)
@@ -176,30 +176,30 @@ public class DataStructureColumn : AbstractSchemaItem
 					this.DefaultLookupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-	}
+		}
 
-	private string _caption = "";
-	[XmlAttribute("label")]
-	[Localizable(true)]
-	public string Caption
-	{
-		get
+		private string _caption = "";
+		[XmlAttribute("label")]
+		[Localizable(true)]
+        public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value;
 			}
-	}
+		}
 
-	private bool _useLookupValue = false;
-	[XmlAttribute("useLookupValue")]
-	[DefaultValue(false)]
-	public bool UseLookupValue
-	{
-		get
+		private bool _useLookupValue = false;
+        [XmlAttribute("useLookupValue")]
+        [DefaultValue(false)]
+		public bool UseLookupValue
 		{
+			get
+			{
 				// try-catch when source field is deleted so we can delete
 				// the data-structure-column without errors
 				try
@@ -220,48 +220,48 @@ public class DataStructureColumn : AbstractSchemaItem
 					return _useLookupValue;
 				}
 		}
-		set
-		{
+			set
+			{
 				_useLookupValue = value;
 			}
-	}
+		}
 
-	private bool _useCopiedValue = false;
-	[XmlAttribute("useCopiedValue")]
-	[DefaultValue(false)]
-	public bool UseCopiedValue
-	{
-		get
+		private bool _useCopiedValue = false;
+        [XmlAttribute("useCopiedValue")]
+        [DefaultValue(false)]
+		public bool UseCopiedValue
 		{
+			get
+			{
 				return _useCopiedValue;
 			}
-		set
-		{
+			set
+			{
 				_useCopiedValue = value;
 			}
-	}
+		}
 
-	private bool _isWriteOnly = false;
-	[XmlAttribute("writeOnly")]
-	[DefaultValue(false)]
-	public bool IsWriteOnly
-	{
-		get
+		private bool _isWriteOnly = false;
+        [XmlAttribute("writeOnly")]
+        [DefaultValue(false)]
+		public bool IsWriteOnly
 		{
+			get
+			{
 				return _isWriteOnly;
 			}
-		set
-		{
+			set
+			{
 				_isWriteOnly = value;
 			}
-	}
+		}
 
 
-	[Browsable(false)]
-	private DataStructureColumn LookedUpDisplayColumn
-	{
-		get
+		[Browsable(false)]
+		private DataStructureColumn LookedUpDisplayColumn
 		{
+			get
+			{
 				if(!this.UseLookupValue) throw new InvalidOperationException(ResourceUtils.GetString("ErrorUseLookupValueTrue", this.Path));
 				IDataLookup lookup = this.FinalLookup;
 
@@ -276,13 +276,13 @@ public class DataStructureColumn : AbstractSchemaItem
 
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorValueDisplayMemberNotFound", lookup.Name));
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public DataStructureColumn LookedUpValueColumn
-	{
-		get
+		[Browsable(false)]
+		public DataStructureColumn LookedUpValueColumn
 		{
+			get
+			{
 				if(!this.UseLookupValue) throw new InvalidOperationException(ResourceUtils.GetString("ErrorUseLookupValueTrue", this.Path));
 				IDataLookup lookup = this.FinalLookup;
 
@@ -296,30 +296,30 @@ public class DataStructureColumn : AbstractSchemaItem
 
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorValueDisplayMemberNotFound", lookup.Name));
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public IDataLookup FinalLookup
-	{
-		get
+		[Browsable(false)]
+		public IDataLookup FinalLookup
 		{
+			get
+			{
 				return (this.DefaultLookup == null ? this.Field.DefaultLookup : this.DefaultLookup);
 			}
-	}
+		}
 
-	public DataStructureColumn FinalColumn
-	{
-		get
+		public DataStructureColumn FinalColumn
 		{
+			get
+			{
 				return this.UseLookupValue ? this.LookedUpDisplayColumn : this;
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public OrigamDataType DataType
-	{
-		get
+		[Browsable(false)]
+		public OrigamDataType DataType
 		{
+			get
+			{
 				OrigamDataType finalDataType;
 				if(this.FinalColumn.Aggregation == AggregationType.Count)
 				{
@@ -332,88 +332,88 @@ public class DataStructureColumn : AbstractSchemaItem
 
 				return finalDataType;
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public DataStructureEntity LookupEntity
-	{
-		get
+		[Browsable(false)]
+		public DataStructureEntity LookupEntity
 		{
+			get
+			{
 				if(this.FinalLookup == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoLookupDefined", this.Name, this.Path));
 				return this.FinalLookup.ValueDataStructure.Entities[0] as DataStructureEntity;
 			}
-	}
+		}
 
-	private AggregationType _aggregationType = AggregationType.None;
-	[XmlAttribute("aggregation")]
-	[DefaultValue(AggregationType.None)]
-	public AggregationType Aggregation
-	{
-		get
+		private AggregationType _aggregationType = AggregationType.None;
+        [XmlAttribute("aggregation")]
+        [DefaultValue(AggregationType.None)]
+        public AggregationType Aggregation
 		{
+			get
+			{
 				return _aggregationType;
 			}
-		set
-		{
+			set
+			{
 				_aggregationType = value;
 			}
-	}
+		}
 		
-	private int _order = 0;
-	[XmlAttribute("order")]
-	public int Order
-	{
-		get
+		private int _order = 0;
+		[XmlAttribute("order")]
+        public int Order
 		{
+			get
+			{
 				return _order;
 			}
-		set
-		{
+			set
+			{
 				_order = value;
 			}
-	}
+		}
 
-	private DataStructureColumnXmlMappingType _xmlMappingType = DataStructureColumnXmlMappingType.Default;
-	[Category("Entity Column"), DefaultValue(DataStructureColumnXmlMappingType.Default)]
-	[XmlAttribute("xmlMappingType")]
-	public DataStructureColumnXmlMappingType XmlMappingType 
-	{
-		get
+		private DataStructureColumnXmlMappingType _xmlMappingType = DataStructureColumnXmlMappingType.Default;
+		[Category("Entity Column"), DefaultValue(DataStructureColumnXmlMappingType.Default)]
+        [XmlAttribute("xmlMappingType")]
+		public DataStructureColumnXmlMappingType XmlMappingType 
 		{
+			get
+			{
 				return _xmlMappingType;
 			}
-		set
-		{
+			set
+			{
 				_xmlMappingType = value;
 			}
-	}
+		}
 
-	[Category("Entity Column"), DefaultValue(false)]
-	[XmlAttribute("hideInOutput")]
-	[Description("Will remove the column from json and xml representations when requested through an api call.")]
-	public bool HideInOutput { get; set; }
+		[Category("Entity Column"), DefaultValue(false)]
+		[XmlAttribute("hideInOutput")]
+		[Description("Will remove the column from json and xml representations when requested through an api call.")]
+		public bool HideInOutput { get; set; }
 
-	private UpsertType _upsertType = UpsertType.Replace;
-	[Category("Update"), DefaultValue(UpsertType.Replace)]
-	[XmlAttribute("upsertType")]
-	public UpsertType UpsertType 
-	{
-		get
+		private UpsertType _upsertType = UpsertType.Replace;
+		[Category("Update"), DefaultValue(UpsertType.Replace)]
+        [XmlAttribute("upsertType")]
+		public UpsertType UpsertType 
 		{
+			get
+			{
 				return _upsertType;
 			}
-		set
-		{
+			set
+			{
 				_upsertType = value;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden AbstractSchemaItem Members
-	public override string Icon
-	{
-		get
+		#region Overriden AbstractSchemaItem Members
+		public override string Icon
 		{
+			get
+			{
 				try
 				{
 					if(this.UseLookupValue)
@@ -448,19 +448,19 @@ public class DataStructureColumn : AbstractSchemaItem
 					return null;
 				}
 			}
-	}
+		}
 
-	[RelationTypeParentModelElementRule()]
-	public override string ItemType
-	{
-		get
+        [RelationTypeParentModelElementRule()]
+        public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-	{
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		{
 			if(this.Field != null)
 				base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
 		}
@@ -480,8 +480,8 @@ public class DataStructureColumn : AbstractSchemaItem
 //			}
 //		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Field);
 			if(this.DefaultLookup != null) dependencies.Add(this.DefaultLookup);
 			if(this.Entity != null) dependencies.Add(this.Entity);
@@ -489,8 +489,8 @@ public class DataStructureColumn : AbstractSchemaItem
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+        public override void UpdateReferences()
+        {
             foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
             {
                 if (item.OldPrimaryKey != null && this.Entity != null)
@@ -506,18 +506,18 @@ public class DataStructureColumn : AbstractSchemaItem
             base.UpdateReferences();
         }
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				try
 				{
 					if(this.Field != null && this.Field.Name != this.Name)
@@ -531,17 +531,17 @@ public class DataStructureColumn : AbstractSchemaItem
 
 				return base.NodeText;
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region Public Methods
-	public bool IsColumnSorted(DataStructureSortSet sortSet)
-	{
+		#region Public Methods
+		public bool IsColumnSorted(DataStructureSortSet sortSet)
+		{
 			if(sortSet == null) return false;
 
 			foreach(DataStructureSortSetItem item in sortSet.ChildItems)
@@ -552,8 +552,8 @@ public class DataStructureColumn : AbstractSchemaItem
 			return false;
 		}
 
-	public DataStructureColumnSortDirection SortDirection(DataStructureSortSet sortSet)
-	{
+		public DataStructureColumnSortDirection SortDirection(DataStructureSortSet sortSet)
+		{
 			if(sortSet == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoSortSet"));
 
 			foreach(DataStructureSortSetItem item in sortSet.ChildItems)
@@ -564,8 +564,8 @@ public class DataStructureColumn : AbstractSchemaItem
 			throw new ArgumentOutOfRangeException("sortSet", sortSet, ResourceUtils.GetString("ErrorNoSortDirection"));
 		}
 
-	public int SortOrder(DataStructureSortSet sortSet)
-	{
+		public int SortOrder(DataStructureSortSet sortSet)
+		{
 			if(sortSet == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoSortSet"));
 
 			foreach(DataStructureSortSetItem item in sortSet.ChildItems)
@@ -575,11 +575,11 @@ public class DataStructureColumn : AbstractSchemaItem
 
 			throw new ArgumentOutOfRangeException("sortSet", sortSet, ResourceUtils.GetString("ErrorNoSortDirection"));
 		}
-	#endregion
+		#endregion
 
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
+		#region IComparable Members
+		public override int CompareTo(object obj)
+		{
 			DataStructureColumn compared = obj as DataStructureColumn;
 
 			if(compared != null)
@@ -592,13 +592,13 @@ public class DataStructureColumn : AbstractSchemaItem
 			}
 		}
 
-	#endregion
-}
+		#endregion
+	}
 
-public class ComparerSortByName : IComparer
-{
-	public int Compare(object a, object obj)
+	public class ComparerSortByName : IComparer
 	{
+		public int Compare(object a, object obj)
+		{
 
 			DataStructureColumn compared = obj as DataStructureColumn;
 			DataStructureColumn compare = a as DataStructureColumn;
@@ -612,4 +612,5 @@ public class ComparerSortByName : IComparer
 				return 0;
 			}
 		}
+	}
 }

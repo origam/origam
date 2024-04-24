@@ -27,35 +27,35 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.Schema.DeploymentModel;
-
-/// <summary>
-/// Summary description for AbstractUpdateScriptActivity.
-/// </summary>
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
+namespace Origam.Schema.DeploymentModel
 {
-	public const string CategoryConst = "DeploymentUpdateScriptActivity";
-
-	public AbstractUpdateScriptActivity() : base() {}
-
-	public AbstractUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public AbstractUpdateScriptActivity(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType
+    /// <summary>
+    /// Summary description for AbstractUpdateScriptActivity.
+    /// </summary>
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 	{
-		get
+		public const string CategoryConst = "DeploymentUpdateScriptActivity";
+
+		public AbstractUpdateScriptActivity() : base() {}
+
+		public AbstractUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public AbstractUpdateScriptActivity(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override bool CanMove(IBrowserNode2 newNode)
-	{
+		public override bool CanMove(IBrowserNode2 newNode)
+		{
 			DeploymentVersion newVersion = newNode as DeploymentVersion;
 			if(newVersion != null)
 			{
@@ -64,36 +64,36 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
 			return base.CanMove (newNode);
 		}
 
-	#endregion
+		#endregion
 
-	#region Properties
-	private int _activityOrder;
-	[Category("Update Script Activity")]
-	[XmlAttribute("activityOrder")]
-	public int ActivityOrder
-	{
-		get
+		#region Properties
+		private int _activityOrder;
+		[Category("Update Script Activity")]
+		[XmlAttribute("activityOrder")]
+		public int ActivityOrder
 		{
+			get
+			{
 				return _activityOrder;
 			}
-		set
-		{
+			set
+			{
 				_activityOrder = value;
 			}
-	}
+		}
 
-	internal DeploymentVersion Version
-	{
-		get
+		internal DeploymentVersion Version
 		{
+			get
+			{
 				return this.ParentItem as DeploymentVersion;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
+		#region IComparable Members
+		public override int CompareTo(object obj)
+		{
 			if(obj is AbstractUpdateScriptActivity)
 			{
 				AbstractUpdateScriptActivity compared = obj as AbstractUpdateScriptActivity;
@@ -118,5 +118,6 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

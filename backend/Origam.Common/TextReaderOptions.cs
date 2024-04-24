@@ -24,27 +24,27 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Collections;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for TextReaderAgentSettings.
-/// </summary>
-[Serializable()]
-public class TextReaderOptions
+namespace Origam.Workflow
 {
-	public TextReaderOptions()
+	/// <summary>
+	/// Summary description for TextReaderAgentSettings.
+	/// </summary>
+	[Serializable()]
+	public class TextReaderOptions
 	{
+		public TextReaderOptions()
+		{
 		}
 
-	private int _ignoreFirst = 0;
-	private int _ignoreLast = 0;
-	private string _separator = ",";
-	private Hashtable _cache = null;
+		private int _ignoreFirst = 0;
+		private int _ignoreLast = 0;
+		private string _separator = ",";
+		private Hashtable _cache = null;
 
-	private TextReaderOptionsField[] _fieldOptions;
+		private TextReaderOptionsField[] _fieldOptions;
 
-	public static TextReaderOptions Deserialize(XmlDocument doc)
-	{
+		public static TextReaderOptions Deserialize(XmlDocument doc)
+		{
 			if(doc == null) return new TextReaderOptions();
 
 			XmlSerializer ser = new XmlSerializer(typeof(TextReaderOptions));
@@ -54,60 +54,60 @@ public class TextReaderOptions
 			return (TextReaderOptions)ser.Deserialize(reader);
 		}
 
-	[XmlAttribute()]
-	public int IgnoreFirst
-	{
-		get
+		[XmlAttribute()]
+		public int IgnoreFirst
 		{
+			get
+			{
 				return _ignoreFirst;
 			}
-		set
-		{
+			set
+			{
 				_ignoreFirst = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public int IgnoreLast
-	{
-		get
+		[XmlAttribute()]
+		public int IgnoreLast
 		{
+			get
+			{
 				return _ignoreLast;
 			}
-		set
-		{
+			set
+			{
 				_ignoreLast = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string Separator
-	{
-		get
+		[XmlAttribute()]
+		public string Separator
 		{
+			get
+			{
 				return _separator;
 			}
-		set
-		{
+			set
+			{
 				_separator = value;
 			}
-	}
+		}
 
-	[XmlArrayItem("Option", typeof(TextReaderOptionsField))]
-	public TextReaderOptionsField[] FieldOptions
-	{
-		get
+		[XmlArrayItem("Option", typeof(TextReaderOptionsField))]
+		public TextReaderOptionsField[] FieldOptions
 		{
+			get
+			{
 				return _fieldOptions;
 			}
-		set
-		{
+			set
+			{
 				_fieldOptions = value;
 			}
-	}
+		}
 
-	public TextReaderOptionsField GetFieldOption(string fieldName)
-	{
+		public TextReaderOptionsField GetFieldOption(string fieldName)
+		{
 			if(_cache == null) 
 			{
 				_cache = new Hashtable();
@@ -123,4 +123,5 @@ public class TextReaderOptions
 
 			return _cache[fieldName] as TextReaderOptionsField;
 		}
+	}
 }

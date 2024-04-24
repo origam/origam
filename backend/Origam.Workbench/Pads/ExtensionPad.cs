@@ -29,27 +29,27 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Workbench.Pads;
-
-/// <summary>
-/// Summary description for ExtensionPad.
-/// </summary>
-public class ExtensionPad : AbstractPadContent
+namespace Origam.Workbench.Pads
 {
-	private WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	//		public Origam.Workbench.ExpressionBrowser ebrSchemaBrowser;
-	private System.Windows.Forms.ToolBar toolBar1;
-	private System.Windows.Forms.ImageList imageList1;
-	private System.Windows.Forms.ToolBarButton tbrNew;
-	private System.Windows.Forms.ListView lvwPackages;
-	private System.Windows.Forms.ColumnHeader colPackage;
-	private System.Windows.Forms.ColumnHeader colVersion;
-	private System.Windows.Forms.ToolBarButton tbrRemove;
-	private System.ComponentModel.IContainer components;
-
-	public ExtensionPad()
+	/// <summary>
+	/// Summary description for ExtensionPad.
+	/// </summary>
+	public class ExtensionPad : AbstractPadContent
 	{
+		private WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		//		public Origam.Workbench.ExpressionBrowser ebrSchemaBrowser;
+		private System.Windows.Forms.ToolBar toolBar1;
+		private System.Windows.Forms.ImageList imageList1;
+		private System.Windows.Forms.ToolBarButton tbrNew;
+		private System.Windows.Forms.ListView lvwPackages;
+		private System.Windows.Forms.ColumnHeader colPackage;
+		private System.Windows.Forms.ColumnHeader colVersion;
+		private System.Windows.Forms.ToolBarButton tbrRemove;
+		private System.ComponentModel.IContainer components;
+
+		public ExtensionPad()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -57,11 +57,11 @@ public class ExtensionPad : AbstractPadContent
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -72,13 +72,13 @@ public class ExtensionPad : AbstractPadContent
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtensionPad));
             this.toolBar1 = new System.Windows.Forms.ToolBar();
@@ -89,8 +89,10 @@ public class ExtensionPad : AbstractPadContent
             this.colPackage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 	 // toolBar1
-            // 	 this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            // 
+            // toolBar1
+            // 
+            this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
             this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
             this.tbrNew,
             this.tbrRemove});
@@ -103,25 +105,33 @@ public class ExtensionPad : AbstractPadContent
             this.toolBar1.TabIndex = 1;
             this.toolBar1.TextAlign = System.Windows.Forms.ToolBarTextAlign.Right;
             this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
-            // 	 // tbrNew
-            // 	 this.tbrNew.Enabled = false;
+            // 
+            // tbrNew
+            // 
+            this.tbrNew.Enabled = false;
             this.tbrNew.ImageIndex = 0;
             this.tbrNew.Name = "tbrNew";
             this.tbrNew.Text = "Add";
-            // 	 // tbrRemove
-            // 	 this.tbrRemove.Enabled = false;
+            // 
+            // tbrRemove
+            // 
+            this.tbrRemove.Enabled = false;
             this.tbrRemove.ImageIndex = 1;
             this.tbrRemove.Name = "tbrRemove";
             this.tbrRemove.Text = "Remove";
-            // 	 // imageList1
-            // 	 this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
             this.imageList1.Images.SetKeyName(0, "add_black.png");
             this.imageList1.Images.SetKeyName(1, "delete_black.png");
             this.imageList1.Images.SetKeyName(2, "");
             this.imageList1.Images.SetKeyName(3, "09_packages-1.ico");
-            // 	 // lvwPackages
-            // 	 this.lvwPackages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // 
+            // lvwPackages
+            // 
+            this.lvwPackages.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvwPackages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colPackage,
             this.colVersion});
@@ -138,14 +148,20 @@ public class ExtensionPad : AbstractPadContent
             this.lvwPackages.View = System.Windows.Forms.View.Details;
             this.lvwPackages.DoubleClick += new System.EventHandler(this.lvwPackages_DoubleClick);
             this.lvwPackages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwPackages_KeyDown);
-            // 	 // colPackage
-            // 	 this.colPackage.Text = "Package";
+            // 
+            // colPackage
+            // 
+            this.colPackage.Text = "Package";
             this.colPackage.Width = 173;
-            // 	 // colVersion
-            // 	 this.colVersion.Text = "Version";
+            // 
+            // colVersion
+            // 
+            this.colVersion.Text = "Version";
             this.colVersion.Width = 89;
-            // 	 // ExtensionPad
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 
+            // ExtensionPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(272, 273);
             this.Controls.Add(this.lvwPackages);
             this.Controls.Add(this.toolBar1);
@@ -163,10 +179,10 @@ public class ExtensionPad : AbstractPadContent
             this.PerformLayout();
 
 		}
-	#endregion
+		#endregion
 
-	public void LoadPackages()
-	{
+		public void LoadPackages()
+		{
 			try
 			{
 				lvwPackages.SuspendLayout();
@@ -205,8 +221,8 @@ public class ExtensionPad : AbstractPadContent
             tbrRemove.Enabled = true;
         }
 
-	public void UpdateExtensionInfo(Package updatedPackage)
-	{
+		public void UpdateExtensionInfo(Package updatedPackage)
+		{
 			foreach (ListViewItem item in lvwPackages.Items)
 			{
 				if (item.Tag is Package package && package.Id == updatedPackage.Id)
@@ -218,17 +234,17 @@ public class ExtensionPad : AbstractPadContent
 			}
 		}
 
-	public void UnloadPackages()
-	{
+		public void UnloadPackages()
+        {
             lvwPackages.Items.Clear();
             tbrNew.Enabled = false;
             tbrRemove.Enabled = false;
         }
 
-	public Package SelectedExtension
-	{
-		get
+        public Package SelectedExtension
 		{
+			get
+			{
 				if(lvwPackages.SelectedItems.Count == 1)
 				{
 					return lvwPackages.SelectedItems[0].Tag as Package;
@@ -238,8 +254,8 @@ public class ExtensionPad : AbstractPadContent
 					return null;
 				}
 			}
-		set
-		{
+			set
+			{
 				lvwPackages.SelectedItems.Clear();
 				if(value != null)
 				{
@@ -252,10 +268,10 @@ public class ExtensionPad : AbstractPadContent
 					}
 				}
 			}
-	}
+		}
 
-	private void DeleteItems(ArrayList items)
-	{
+		private void DeleteItems(ArrayList items)
+		{
 			foreach(DA.ObjectPersistence.IPersistent item in items)
 			{
 				item.IsDeleted = true;
@@ -263,8 +279,8 @@ public class ExtensionPad : AbstractPadContent
 			}
 		}
 
-	private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
-	{
+		private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
+		{
 			if(e.Button == tbrNew)
 			{
 				AddPackage addPackageDialog = new AddPackage();
@@ -303,8 +319,8 @@ public class ExtensionPad : AbstractPadContent
 			}
 		}
 
-	private void OpenSelectedPackage()
-	{
+		private void OpenSelectedPackage()
+		{
 			try
 			{
 				Commands.LoadSelectedPackage cmd = new Origam.Workbench.Commands.LoadSelectedPackage();
@@ -317,16 +333,17 @@ public class ExtensionPad : AbstractPadContent
 			}
 		}
 
-	private void lvwPackages_DoubleClick(object sender, System.EventArgs e)
-	{
+		private void lvwPackages_DoubleClick(object sender, System.EventArgs e)
+		{
 			OpenSelectedPackage();
 		}
 
-	private void lvwPackages_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		private void lvwPackages_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			if(e.KeyCode == Keys.Enter)
 			{
 				OpenSelectedPackage();
 			}
 		}
+	}
 }

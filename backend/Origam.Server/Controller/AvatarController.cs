@@ -25,16 +25,16 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Controller;
-
-[Route("chatrooms/[controller]")]
-[Route("internalApi/[controller]")]
-[ApiController]
-public class AvatarController : ControllerBase
+namespace Origam.Server.Controller
 {
-    [HttpGet("{avatarId:guid}")]
-    public IActionResult GetAvatarRequest(Guid avatarId)
+    [Route("chatrooms/[controller]")]
+    [Route("internalApi/[controller]")]
+    [ApiController]
+    public class AvatarController : ControllerBase
     {
+        [HttpGet("{avatarId:guid}")]
+        public IActionResult GetAvatarRequest(Guid avatarId)
+        {
 
             QueryParameterCollection parameters = new QueryParameterCollection
             {
@@ -56,8 +56,8 @@ public class AvatarController : ControllerBase
             return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
         }
 
-    private static string MakeInitialsSvg(DataRow userRow)
-    {
+        private static string MakeInitialsSvg(DataRow userRow)
+        {
             string name = userRow.Field<string>("Name");
             string firstName = userRow.Field<string>("FirstName");
             string initials = "";
@@ -73,10 +73,10 @@ public class AvatarController : ControllerBase
             return userSvg;
         }
 
-    private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
-        string transactionId, 
-        QueryParameterCollection parameters)
-    {
+        private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
+                                string transactionId, 
+                                QueryParameterCollection parameters)
+        {
             return DataService.Instance.LoadData(dataStructureId,
                      methodId,
                      defaultSetId,
@@ -84,4 +84,5 @@ public class AvatarController : ControllerBase
                      transactionId,
                      parameters);
         }
+    }
 }

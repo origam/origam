@@ -22,40 +22,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.UI;
-
-class WholeNumberFormattrer: Formatter
+namespace Origam.Gui.UI
 {
-    private readonly NumberParser numberParser;
-    public WholeNumberFormattrer(TextBox textBox, string customFormat,
-        Func<string,object> textParseFunc) 
-        : base(textBox,customFormat)
+    class WholeNumberFormattrer: Formatter
     {
+        private readonly NumberParser numberParser;
+        public WholeNumberFormattrer(TextBox textBox, string customFormat,
+            Func<string,object> textParseFunc) 
+            : base(textBox,customFormat)
+        {
             numberParser= new NumberParser(textParseFunc,errorReporter);
         }
 
-    private string Format => 
-        string.IsNullOrEmpty(customFormat) ? "###,###,###,###,###" : customFormat;
+        private string Format => 
+            string.IsNullOrEmpty(customFormat) ? "###,###,###,###,###" : customFormat;
         
-    public override void OnLeave(object sender, EventArgs e)
-    {
+        public override void OnLeave(object sender, EventArgs e)
+        {
             if (string.IsNullOrEmpty(Text)) return;
             
             var value = numberParser.Parse(Text);
             Text = string.Format(Culture, "{0:"+Format+"}", value);
         }
 
-    public override object GetValue()
-    {
+        public override object GetValue()
+        {
             return numberParser.Parse(Text);
         }
 
-    protected override bool IsValidChar(char input)
-    {
+        protected override bool IsValidChar(char input)
+        {
             if (base.IsValidChar(input)) return true;
 
             return char.IsDigit(input) ||
                    input == ThousandsSeparator ||
                    input == Minus;
         }
+    }
 }

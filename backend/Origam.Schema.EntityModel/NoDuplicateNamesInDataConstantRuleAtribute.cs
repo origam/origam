@@ -26,22 +26,22 @@ using Origam.DA.ObjectPersistence;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel;
-
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRuleAttribute 
-{
-    public NoDuplicateNamesInDataConstantRuleAtribute()
+namespace Origam.Schema.EntityModel
+{   
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+    public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRuleAttribute 
     {
+        public NoDuplicateNamesInDataConstantRuleAtribute()
+        {
         }
 
-    public override Exception CheckRule(object instance)
-    {
+        public override Exception CheckRule(object instance)
+        {
             return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
         }
 
-    public override Exception CheckRule(object instance, string memberName)
-    {
+        public override Exception CheckRule(object instance, string memberName)
+        {
             if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
             if(memberName != "Name") throw new Exception(nameof(NoDuplicateNamesInDataConstantRuleAtribute) +" can be only applied to Name properties");  
             if (!(instance is DataConstant dataconstant)) return null;
@@ -64,4 +64,5 @@ public class NoDuplicateNamesInDataConstantRuleAtribute : AbstractModelElementRu
             }
             return null;
         }
+    }
 }

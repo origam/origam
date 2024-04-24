@@ -23,57 +23,59 @@ using System;
 using Origam.UI;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Origam.Workbench;
-
-public class AbstractBaseViewContent : DockContent, IBaseViewContent
+namespace Origam.Workbench
 {
-	IWorkbenchWindow workbenchWindow = null;
-		
-	public virtual IWorkbenchWindow WorkbenchWindow 
+	public class AbstractBaseViewContent : DockContent, IBaseViewContent
 	{
-		get 
+		IWorkbenchWindow workbenchWindow = null;
+		
+		public virtual IWorkbenchWindow WorkbenchWindow 
 		{
+			get 
+			{
 				return workbenchWindow;
 			}
-		set 
-		{
+			set 
+			{
 				workbenchWindow = value;
 				OnWorkbenchWindowChanged(EventArgs.Empty);
 			}
-	}
+		}
 		
-	public virtual string TabPageText 
-	{
-		get 
+		public virtual string TabPageText 
 		{
+			get 
+			{
 				return "Abstract Content";
 			}
-	}
-		
-	public virtual void SwitchedTo()
-	{
 		}
 		
-	public virtual void Selected()
-	{
+		public virtual void SwitchedTo()
+		{
 		}
 		
-	public virtual void Deselected()
-	{
+		public virtual void Selected()
+		{
+		}
+		
+		public virtual void Deselected()
+		{
 		}
 		
 		
-	public virtual void RedrawContent()
-	{
+		public virtual void RedrawContent()
+		{
 		}
 				
-	protected virtual void OnWorkbenchWindowChanged(EventArgs e)
-	{
+		protected virtual void OnWorkbenchWindowChanged(EventArgs e)
+		{
 			if (WorkbenchWindowChanged != null) 
 			{
 				WorkbenchWindowChanged(this, e);
 			}
 		}
 		
-	public event EventHandler WorkbenchWindowChanged;
+		public event EventHandler WorkbenchWindowChanged;
+	}
 }
+

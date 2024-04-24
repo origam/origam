@@ -3,16 +3,16 @@ using Origam.Security.Common;
 using System;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation.Builders;
-
-public class NewUserBuilder : AbstractDatabaseBuilder
+namespace Origam.ProjectAutomation.Builders
 {
-    DatabaseType _databaseType;
-
-    public override string Name => "Create Web User";
-
-    public override void Execute(Project project)
+    public class NewUserBuilder : AbstractDatabaseBuilder
     {
+        DatabaseType _databaseType;
+
+        public override string Name => "Create Web User";
+
+        public override void Execute(Project project)
+        {
             var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
             string hashPassword = adaptivePassword.HashPassword(project.WebUserPassword);
 
@@ -33,15 +33,16 @@ public class NewUserBuilder : AbstractDatabaseBuilder
             DataService(_databaseType).CreateFirstNewWebUser(parameters);
         }
 
-    private string BuildConnectionString(Project project)
-    {
+        private string BuildConnectionString(Project project)
+        {
             return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
             project.DataDatabaseName, project.DatabaseUserName,
             project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
         }
 
-    public override void Rollback()
-    {
+        public override void Rollback()
+        {
             
         }
+    }
 }

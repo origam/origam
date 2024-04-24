@@ -24,49 +24,49 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel;
-
-[SchemaItemDescription("Parameter", 15)]
-[HelpTopic("Function+Call+Field")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class FunctionCallParameter : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "FunctionCallParameter";
-
-	public FunctionCallParameter() {}
-
-	public FunctionCallParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public FunctionCallParameter(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType => CategoryConst;
-
-	public override string Icon => "15";
-
-	[Browsable(false)]
-	public override bool UseFolders => false;
-
-	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+	[SchemaItemDescription("Parameter", 15)]
+    [HelpTopic("Function+Call+Field")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class FunctionCallParameter : AbstractSchemaItem
 	{
+		public const string CategoryConst = "FunctionCallParameter";
+
+		public FunctionCallParameter() {}
+
+		public FunctionCallParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public FunctionCallParameter(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType => CategoryConst;
+
+		public override string Icon => "15";
+
+		[Browsable(false)]
+		public override bool UseFolders => false;
+
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(FunctionParameter);
 
 			base.GetExtraDependencies (dependencies);
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public Guid FunctionParameterId;
+		#region Properties
+		public Guid FunctionParameterId;
 
-	[NotNullModelElementRule()]
-	[XmlReference("parameter", "FunctionParameterId")]
-	public FunctionParameter FunctionParameter
-	{
-		get
+		[NotNullModelElementRule()]
+        [XmlReference("parameter", "FunctionParameterId")]
+        public FunctionParameter FunctionParameter
 		{
+			get
+			{
 				var key = new ModelElementKey
 				{
 					Id = FunctionParameterId
@@ -74,15 +74,15 @@ public class FunctionCallParameter : AbstractSchemaItem
 				return (FunctionParameter)PersistenceProvider.RetrieveInstance(
 					typeof(FunctionParameter), key);
 			}
-		set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
-	}
-	#endregion
+			set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
+		}
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	[Browsable(false)]
-	public override Type[] NewItemTypes =>
-		new[] {
+		[Browsable(false)]
+		public override Type[] NewItemTypes =>
+			new[] {
 				typeof(EntityColumnReference),
 				typeof(FunctionCall),
 				typeof(ParameterReference),
@@ -91,12 +91,12 @@ public class FunctionCallParameter : AbstractSchemaItem
 				typeof(EntityFilterLookupReference)
 			};
 
-	#endregion
+		#endregion
 
-	#region IComparable Members
+		#region IComparable Members
 
-	public override int CompareTo(object obj)
-	{
+		public override int CompareTo(object obj)
+		{
 			if(obj is FunctionCallParameter functionCallParameter)
 			{
 				return FunctionParameter.OrdinalPosition.CompareTo(
@@ -105,5 +105,6 @@ public class FunctionCallParameter : AbstractSchemaItem
 			return base.CompareTo(obj);
 		}
 
-	#endregion
+		#endregion
+	}
 }

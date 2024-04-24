@@ -21,49 +21,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.EntityModel;
-
-public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.EntityModel
 {
-	public EntityModelSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => AbstractDataEntity.CategoryConst;
-
-	public override bool AutoCreateFolder => true;
-
-	public override string Group => "DATA";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_09_entities.png";
-
-	public override string NodeText
+	public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Entities";
-		set => base.NodeText = value;
-	}
+		public EntityModelSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => AbstractDataEntity.CategoryConst;
 
-	#endregion
+		public override bool AutoCreateFolder => true;
 
-	#region ISchemaItemFactory Members
+		public override string Group => "DATA";
 
-	public override Type[] NewItemTypes => new[]
+		#endregion
+
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_09_entities.png";
+
+		public override string NodeText
+		{
+			get => "Entities";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(TableMappingItem), typeof(DetachedEntity)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			T item;
 			if(typeof(T) == typeof(TableMappingItem))
 			{
@@ -90,5 +90,6 @@ public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
 			return item;
 		}
 
-	#endregion
+		#endregion
+	}
 }

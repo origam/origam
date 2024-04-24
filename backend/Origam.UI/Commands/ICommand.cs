@@ -22,27 +22,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema;
 using System.Collections.Generic;
 
-namespace Origam.UI;
-
-/// <summary>
-/// A basic command interface. A command has simply an owner which "runs" the command
-/// and a Run method which invokes the command.
-/// </summary>
-public interface ICommand
-{	
+namespace Origam.UI
+{
 	/// <summary>
-	/// Returns the owner of the command.
+	/// A basic command interface. A command has simply an owner which "runs" the command
+	/// and a Run method which invokes the command.
 	/// </summary>
-	object Owner 
-	{
-		get;
-		set;
-	}
+	public interface ICommand
+	{	
+		/// <summary>
+		/// Returns the owner of the command.
+		/// </summary>
+		object Owner 
+		{
+			get;
+			set;
+		}
 		
-	/// <summary>
-	/// Invokes the command.
-	/// </summary>
-	void Run();
+		/// <summary>
+		/// Invokes the command.
+		/// </summary>
+		void Run();
 
-	List<AbstractSchemaItem> GeneratedModelElements { get; }
+        List<AbstractSchemaItem> GeneratedModelElements { get; }
+	}
 }

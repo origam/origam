@@ -27,25 +27,25 @@ using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests;
-
-[TestFixture]
-public class XmlLoaderTest: AbstractFileTestClass
+namespace Origam.DA.Service_net2Tests
 {
-    protected override TestContext TestContext =>
-        TestContext.CurrentContext;
+    [TestFixture]
+    public class XmlLoaderTest: AbstractFileTestClass
+    {
+        protected override TestContext TestContext =>
+            TestContext.CurrentContext;
         
-    private List<string> parentFolders = new List<string>
-    {
-        OrigamFile.PackageCategory,
-        OrigamFile.GroupCategory
-    };
+        private List<string> parentFolders = new List<string>
+        {
+            OrigamFile.PackageCategory,
+            OrigamFile.GroupCategory
+        };
 
-    private static readonly XmlFileDataFactory XmlFileDataFactory = 
-        new XmlFileDataFactory();
+        private static readonly XmlFileDataFactory XmlFileDataFactory = 
+            new XmlFileDataFactory();
 
-    private OrigamFileFactory MakeOrigamFileFactory(DirectoryInfo topDir)
-    {
+        private OrigamFileFactory MakeOrigamFileFactory(DirectoryInfo topDir)
+        {
             var pathFactory = new OrigamPathFactory(topDir);
             var index = new FilePersistenceIndex(pathFactory);
             var origamFileManager = new OrigamFileManager(
@@ -57,12 +57,12 @@ public class XmlLoaderTest: AbstractFileTestClass
                 new FileEventQueue(index, new NullWatchDog()));
         }
         
-    private ObjectFileDataFactory MakeObjectFileDataFactory(DirectoryInfo topDir)=>
-        new ObjectFileDataFactory(MakeOrigamFileFactory(topDir), parentFolders);
+        private ObjectFileDataFactory MakeObjectFileDataFactory(DirectoryInfo topDir)=>
+            new ObjectFileDataFactory(MakeOrigamFileFactory(topDir), parentFolders);
 
-    [Test]
-    public void ReadXlms()
-    {
+        [Test]
+        public void ReadXlms()
+        {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             InitFilePersistenceProvider(parentFolders, TestProjectDir);
             var origamXmlLoader =
@@ -77,9 +77,9 @@ public class XmlLoaderTest: AbstractFileTestClass
             origamXmlLoader.LoadInto(itemTracker, MetaModelUpgradeMode.Ignore);
         }
 
-    [Test]
-    public void ReadPackageFile()
-    {
+        [Test]
+        public void ReadPackageFile()
+        {
             string fileName = Path.Combine(TestFilesDir.FullName, OrigamFile.PackageFileName);
             var objectFileDataFactory = MakeObjectFileDataFactory(TestFilesDir);
             var packageFileData =
@@ -91,9 +91,9 @@ public class XmlLoaderTest: AbstractFileTestClass
             Assert.That(packageId, Is.EqualTo(expectedPackageId));
         }
 
-    [Test]
-    public void ReadGroupFile()
-    {
+        [Test]
+        public void ReadGroupFile()
+        {
             string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.GroupFileName);
             var objectFileDataFactory = MakeObjectFileDataFactory(TestFilesDir);
             var packageFileData = objectFileDataFactory.NewGroupFileData(
@@ -103,9 +103,9 @@ public class XmlLoaderTest: AbstractFileTestClass
                 new Guid("d266feb3-ff9e-4ac2-8386-517a31519d06");
             Assert.That(groupIdId, Is.EqualTo(expectedPackageId));
         }
-    [Test]
-    public void ReadReferenceFile()
-    {
+        [Test]
+        public void ReadReferenceFile()
+        {
             string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.ReferenceFileName);
             var objectFileDataFactory = MakeObjectFileDataFactory(TestFilesDir);
             var xmlFileData = XmlFileDataFactory.Create(new FileInfo(fileName)).Value;
@@ -124,9 +124,9 @@ public class XmlLoaderTest: AbstractFileTestClass
             Assert.That(actualGroupId, Is.EqualTo(expectedGropupId));
         }
 
-    // [Test]
-    public void ReadObjectFile()
-    {
+       // [Test]
+        public void ReadObjectFile()
+        {
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             InitFilePersistenceProvider(parentFolders, TestFilesDir);
             var objectFileData = new ObjectFileData(
@@ -141,11 +141,11 @@ public class XmlLoaderTest: AbstractFileTestClass
             ITrackeableFile origamFile = objectFileData.Read();
             
         }
-    protected override string DirName => "FilePersistenceProviderTests";
+        protected override string DirName => "FilePersistenceProviderTests";
         
-    private void InitFilePersistenceProvider(List<string> parentFolders,
-        DirectoryInfo topDir)
-    {
+        private void InitFilePersistenceProvider(List<string> parentFolders,
+            DirectoryInfo topDir)
+        {
             var ignoredFileFilter = new FileFilter( new HashSet<string> {"bin", "bak"},new FileInfo[0],new string[0]);
             var fileChangesWatchDog = new FileChangesWatchDog(
                 topDir: topDir,
@@ -182,4 +182,5 @@ public class XmlLoaderTest: AbstractFileTestClass
                     true,
                     runtimeModelConfig: new NullRuntimeModelConfig());
         }
+    }
 }

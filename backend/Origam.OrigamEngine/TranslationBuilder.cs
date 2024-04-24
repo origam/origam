@@ -30,15 +30,15 @@ using Origam.Schema;
 using Origam.Workbench.Services;
 using System.Linq;
 
-namespace Origam.OrigamEngine;
-
-/// <summary>
-/// Summary description for TranslationBuilder.
-/// </summary>
-public static class TranslationBuilder
+namespace Origam.OrigamEngine
 {
-    public static void Build(Stream stream, LocalizationCache currentTranslations, string locale, Guid packageId)
-    {
+	/// <summary>
+	/// Summary description for TranslationBuilder.
+	/// </summary>
+	public static class TranslationBuilder
+	{
+        public static void Build(Stream stream, LocalizationCache currentTranslations, string locale, Guid packageId)
+        {
             XmlTextWriter xtw = new XmlTextWriter(stream, System.Text.Encoding.UTF8);
             xtw.Formatting = Formatting.Indented;
             xtw.WriteStartDocument(true);
@@ -131,8 +131,8 @@ public static class TranslationBuilder
             xtw.Flush();
         }
 
-    private static string[] GetDocumentationCategoriesToInclude()
-    {
+        private static string[] GetDocumentationCategoriesToInclude()
+        {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             if (settings.LocalizationIncludedDocumentationElements == null) { 
                 return new string[0];
@@ -143,4 +143,5 @@ public static class TranslationBuilder
                 .Where(x => x != "")
                 .ToArray();
         }
+    }
 }

@@ -31,12 +31,12 @@ using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.BI.PrintIt;
-
-public class PrintItService : IReportService
-{		
-	public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
-	{
+namespace Origam.BI.PrintIt
+{
+	public class PrintItService : IReportService
+	{		
+		public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
+		{
 			
 			if (format != DataReportExportFormatType.PDF.ToString())
 			{
@@ -102,8 +102,8 @@ public class PrintItService : IReportService
 			}
 		}
 
-	private void TraceReportData(string data, string reportName)
-	{
+		private void TraceReportData(string data, string reportName)
+		{
 			try
 			{
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
@@ -124,19 +124,20 @@ public class PrintItService : IReportService
 			}
 		}
 		
-	public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
-	{
+		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+		{
 			throw new NotSupportedException();
 		}
-	public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-	{
+        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        {
             // do nothing unless we need to trace something
         }
 
-	public string PrepareExternalReportViewer(Guid reportId,
-		IXmlContainer data, string format,
-		Hashtable parameters, string dbTransaction)
-	{
+        public string PrepareExternalReportViewer(Guid reportId,
+			IXmlContainer data, string format,
+			Hashtable parameters, string dbTransaction)
+        {
             throw new NotImplementedException();
         }
+    }
 }

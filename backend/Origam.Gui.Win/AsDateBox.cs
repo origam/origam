@@ -27,34 +27,34 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Represents a Windows date time picker control. It enhances the .NET standard <b>DateTimePicker</b>
-/// control with a ReadOnly mode as well as with the possibility to show empty values (null values).
-/// </summary>
-[ComVisible(false)]
-[ToolboxBitmap(typeof(AsDateBox))]
-public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
+namespace Origam.Gui.Win
 {
-	public event EventHandler dateValueChanged;
-	public event EventHandler onTextBoxValueChanged; // se AsDataViewColumn for comments
-
-	#region Member variables
-	// The format of the DateTimePicker control
-	private DateTimePickerFormat format = DateTimePickerFormat.Long;
-
-	// The custom format of the DateTimePicker control
-	private string customFormat;
-
-	#endregion
-
-	#region Constructor
 	/// <summary>
-	/// Default Constructor
+	/// Represents a Windows date time picker control. It enhances the .NET standard <b>DateTimePicker</b>
+	/// control with a ReadOnly mode as well as with the possibility to show empty values (null values).
 	/// </summary>
-	public AsDateBox()
+	[ComVisible(false)]
+	[ToolboxBitmap(typeof(AsDateBox))]
+	public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 	{
+		public event EventHandler dateValueChanged;
+		public event EventHandler onTextBoxValueChanged; // se AsDataViewColumn for comments
+
+		#region Member variables
+		// The format of the DateTimePicker control
+		private DateTimePickerFormat format = DateTimePickerFormat.Long;
+
+		// The custom format of the DateTimePicker control
+		private string customFormat;
+
+		#endregion
+
+		#region Constructor
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		public AsDateBox()
+		{
 			CultureInfo ci = Thread.CurrentThread.CurrentCulture;
 			DateTimeFormatInfo dtf = ci.DateTimeFormat;
 			this.EditControl.CustomFormat = dtf.LongDatePattern;
@@ -69,16 +69,16 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 
 			this.PopupHelper.PopupClosed += PopupHelper_PopupClosed;
 		}
-	#endregion
+		#endregion
 
-	#region Public properties
+		#region Public properties
 
-	private bool _enabled = true;
+		private bool _enabled = true;
 
-	public new bool Enabled
-	{
-		get
+		public new bool Enabled
 		{
+			get
+			{
 				if(this.ReadOnly) 
 				{
 					return false;
@@ -88,8 +88,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 					return _enabled;
 				}
 			}
-		set
-		{
+			set
+			{
 				_enabled = value;
 
 				if(this.ReadOnly)
@@ -108,13 +108,13 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 					base.Enabled = value;
 				}
 			}
-	}
+		}
 
-	private object _selectedValue = null;
-	public override object SelectedValue
-	{
-		get
+		private object _selectedValue = null;
+		public override object SelectedValue
 		{
+			get
+			{
 				if(_selectedValue == null)
 				{
 					return DBNull.Value;
@@ -124,8 +124,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 					return _selectedValue;
 				}
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					_selectedValue = DBNull.Value;
@@ -137,26 +137,26 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 
 				this.DateValue = _selectedValue;
 			}
-	}
+		}
 
 
-	bool _settingValue = false;
-	/// <summary>
-	/// Gets or sets the date/time value assigned to the control.
-	/// </summary>
-	/// <value>The DateTime value assigned to the control
-	/// </value>
-	/// <remarks>
-	/// <p>If the <b>Value</b> property has not been changed in code or by the user, it is set
-	/// to the current date and time (<see cref="DateTime.Now"/>).</p>
-	/// <p>If <b>Value</b> is <b>null</b>, the DateTimePicker shows 
-	/// <see cref="NullValue"/>.</p>
-	/// </remarks>
-	public Object DateValue 
-	{
-		get => this.SelectedValue;
-		set 
+		bool _settingValue = false;
+		/// <summary>
+		/// Gets or sets the date/time value assigned to the control.
+		/// </summary>
+		/// <value>The DateTime value assigned to the control
+		/// </value>
+		/// <remarks>
+		/// <p>If the <b>Value</b> property has not been changed in code or by the user, it is set
+		/// to the current date and time (<see cref="DateTime.Now"/>).</p>
+		/// <p>If <b>Value</b> is <b>null</b>, the DateTimePicker shows 
+		/// <see cref="NullValue"/>.</p>
+		/// </remarks>
+		public Object DateValue 
 		{
+			get => this.SelectedValue;
+			set 
+			{
 				if(_settingValue) return;
 
 				if(_selectedValue != value)
@@ -195,51 +195,51 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 					}
 				}
 			}
-	}
+		}
 
-	/// <summary>
-	/// Gets or sets the format of the date and time displayed in the control.
-	/// </summary>
-	/// <value>One of the <see cref="DateTimePickerFormat"/> values. The default is 
-	/// <see cref="DateTimePickerFormat.Long"/>.</value>
-	[Browsable(true)]
-	[DefaultValue(DateTimePickerFormat.Long), TypeConverter(typeof(Enum))]
-	public DateTimePickerFormat Format
-	{
-		get => format;
-		set
+		/// <summary>
+		/// Gets or sets the format of the date and time displayed in the control.
+		/// </summary>
+		/// <value>One of the <see cref="DateTimePickerFormat"/> values. The default is 
+		/// <see cref="DateTimePickerFormat.Long"/>.</value>
+		[Browsable(true)]
+		[DefaultValue(DateTimePickerFormat.Long), TypeConverter(typeof(Enum))]
+		public DateTimePickerFormat Format
 		{
+			get => format;
+			set
+			{
 				if(value == 0) value = DateTimePickerFormat.Long;
 
 				format = value;
 				SetFormat();
 			}
-	}
+		}
 
-	/// <summary>
-	/// Gets or sets the custom date/time format string.
-	/// <value>A string that represents the custom date/time format. The default is a null
-	/// reference (<b>Nothing</b> in Visual Basic).</value>
-	/// </summary>
-	/// 
-	[DefaultValue("dd.MMMM yyyy")]
-	public String CustomFormat
-	{
-		get => customFormat;
-		set 
-		{ 
+		/// <summary>
+		/// Gets or sets the custom date/time format string.
+		/// <value>A string that represents the custom date/time format. The default is a null
+		/// reference (<b>Nothing</b> in Visual Basic).</value>
+		/// </summary>
+		/// 
+		[DefaultValue("dd.MMMM yyyy")]
+		public String CustomFormat
+		{
+			get => customFormat;
+			set 
+			{ 
 				customFormat = value; 
 				SetFormat();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Private methods/properties
-	/// <summary>
-	/// Sets the format according to the current DateTimePickerFormat.
-	/// </summary>
-	private void SetFormat()
-	{
+		#region Private methods/properties
+		/// <summary>
+		/// Sets the format according to the current DateTimePickerFormat.
+		/// </summary>
+		private void SetFormat()
+		{
 			CultureInfo ci = Thread.CurrentThread.CurrentCulture;
 			DateTimeFormatInfo dtf = ci.DateTimeFormat;
 			switch (format)
@@ -259,8 +259,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			}
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				this.EditControl.KeyUp -=EditControl_KeyUp;
@@ -269,36 +269,36 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			base.Dispose (disposing);
 		}
 
-	public override IDropDownPart CreatePopup()
-	{
+		public override IDropDownPart CreatePopup()
+		{
 			return new CalendarDropDown();
 		}
 
-	#endregion
+		#endregion
 
-	#region OnXXXX()
+		#region OnXXXX()
 
-	void OnDateValueChanged(EventArgs e)
-	{
+		void OnDateValueChanged(EventArgs e)
+		{
 			dateValueChanged?.Invoke(this, e);
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DateValue"));
 		}
 
-	/// <summary>
-	/// This member overrides <see cref="Control.OnKeyDown"/>.
-	/// </summary>
-	/// <param name="e"></param>
-	#endregion
+		/// <summary>
+		/// This member overrides <see cref="Control.OnKeyDown"/>.
+		/// </summary>
+		/// <param name="e"></param>
+		#endregion
 
-	#region IAsControl Members
+		#region IAsControl Members
 		
-	public override string DefaultBindableProperty { get; } = "DateValue";
+		public override string DefaultBindableProperty { get; } = "DateValue";
 
-	#endregion
+		#endregion
 
 
-	private void EditControl_KeyUp(object sender, KeyEventArgs e)
-	{
+		private void EditControl_KeyUp(object sender, KeyEventArgs e)
+		{
             if (! this.Enabled)
             {
                 return;
@@ -332,10 +332,10 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			}
 		}
 
-	bool valueChangedByUser = false;
+		bool valueChangedByUser = false;
 
-	private void EditControl_ValueChanged(object sender, EventArgs e)
-	{
+		private void EditControl_ValueChanged(object sender, EventArgs e)
+		{
             if (!this.Enabled) return;
 			if (! this.DateValue.Equals(this.EditControl.Value))
 		    {
@@ -364,8 +364,8 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			}
 		}
 
-	private void PopupHelper_PopupClosed(object sender, PopupClosedEventArgs e)
-	{
+		private void PopupHelper_PopupClosed(object sender, PopupClosedEventArgs e)
+		{
 			if(e.Popup != null)
 			{
 				if(!(e.Popup as IDropDownPart).Canceled)
@@ -379,5 +379,6 @@ public class AsDateBox : BaseDropDownControl, INotifyPropertyChanged
 			this.DroppedDown = false;
 		}
 
-	public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
 }

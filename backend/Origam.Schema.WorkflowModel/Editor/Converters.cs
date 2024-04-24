@@ -27,25 +27,26 @@ using Origam.Services;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.WorkflowModel;
-
-public class ContextStoreConverter : System.ComponentModel.TypeConverter
+namespace Origam.Schema.WorkflowModel
 {
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ContextStoreConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList contextArray = new ArrayList();
 			AbstractSchemaItem item = (context.Instance as AbstractSchemaItem);
 
@@ -70,16 +71,16 @@ public class ContextStoreConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(contextArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				AbstractSchemaItem item = (context.Instance as AbstractSchemaItem);
@@ -104,25 +105,26 @@ public class ContextStoreConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return false;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			UpdateContextTask updateContextTask = context.Instance as UpdateContextTask;
 			if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
 			{
@@ -140,16 +142,16 @@ public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(entityArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				UpdateContextTask updateContextTask = context.Instance as UpdateContextTask;
@@ -170,26 +172,27 @@ public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
 
-public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList contextArray;
 			ArrayList contexts;
 			
@@ -217,16 +220,16 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 			return new StandardValuesCollection(contextArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList contexts;
@@ -252,25 +255,26 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineEventParameterMappingContextStoreConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineEventParameterMappingContextStoreConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList contextArray;
 			ArrayList contexts;
 			
@@ -305,16 +309,16 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 			return new StandardValuesCollection(contextArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList contexts;
@@ -340,26 +344,27 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
 
-public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList fields;
 			ArrayList fieldArray;
 			
@@ -379,16 +384,16 @@ public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(fieldArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -406,25 +411,26 @@ public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkflowStepConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList stepArray;
 			ArrayList steps;
 
@@ -459,16 +465,16 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(stepArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList tasks;
@@ -502,25 +508,26 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList stepArray;
 			ArrayList steps;
 
@@ -559,16 +566,16 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(stepArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList tasks;
@@ -602,27 +609,28 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class ServiceConverter : System.ComponentModel.TypeConverter
-{
-	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ServiceConverter : System.ComponentModel.TypeConverter
 	{
+		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ServiceSchemaItemProvider services = _schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
 
 			ArrayList columnArray = new ArrayList(services.ChildItems.Count);
@@ -636,16 +644,16 @@ public class ServiceConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(columnArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ServiceSchemaItemProvider services = _schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
@@ -664,25 +672,26 @@ public class ServiceConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 	
-public class ServiceMethodConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList methodArray;
 			SchemaItemCollection methods;
 			IService service = (context.Instance as ServiceMethodCallTask).Service as IService;
@@ -708,16 +717,16 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(methodArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				SchemaItemCollection methods;
@@ -742,25 +751,26 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList fields;
 			IDataEntity entity = (context.Instance as StateMachine).Entity;
 
@@ -779,16 +789,16 @@ public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConver
 			return new StandardValuesCollection(fields);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -813,25 +823,26 @@ public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConver
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
 
 			states.Sort();
@@ -839,16 +850,16 @@ public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(states);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
@@ -863,25 +874,26 @@ public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineStateConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList states = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).AllStates();
 
 			states.Sort();
@@ -889,16 +901,16 @@ public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(states);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList states = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).AllStates();
@@ -913,25 +925,26 @@ public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList mappedFields = new ArrayList();
 			ArrayList fields = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).Entity.EntityColumns;
 			foreach(IDataEntityColumn col in fields)
@@ -947,16 +960,16 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 			return new StandardValuesCollection(mappedFields);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList mappedFields = new ArrayList();
@@ -979,27 +992,28 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
-{
-	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
 	{
+		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ScheduleTimeSchemaItemProvider times = _schema.GetProvider(typeof(ScheduleTimeSchemaItemProvider)) as ScheduleTimeSchemaItemProvider;
 
 			ArrayList itemArray = new ArrayList(times.ChildItems.Count);
@@ -1013,16 +1027,16 @@ public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(itemArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ScheduleTimeSchemaItemProvider times = _schema.GetProvider(typeof(ScheduleTimeSchemaItemProvider)) as ScheduleTimeSchemaItemProvider;
@@ -1037,27 +1051,28 @@ public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkflowConverter : System.ComponentModel.TypeConverter
-{
-	static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkflowConverter : System.ComponentModel.TypeConverter
 	{
+		static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkflowSchemaItemProvider workflows = _schema.GetProvider(typeof(WorkflowSchemaItemProvider)) as WorkflowSchemaItemProvider;
 
 			ArrayList itemArray = new ArrayList(workflows.ChildItems.Count);
@@ -1071,16 +1086,16 @@ public class WorkflowConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(itemArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkflowSchemaItemProvider workflows = _schema.GetProvider(typeof(WorkflowSchemaItemProvider)) as WorkflowSchemaItemProvider;
@@ -1095,33 +1110,34 @@ public class WorkflowConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class StateMachineStateLookupReaderConverter : System.ComponentModel.TypeConverter
-{
-	IDataLookupService _lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-	DataView _currentList;
-	IDataLookup _currentLookup;
-
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class StateMachineStateLookupReaderConverter : System.ComponentModel.TypeConverter
 	{
+		IDataLookupService _lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+		DataView _currentList;
+		IDataLookup _currentLookup;
+
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return false;
 		}
 
-	private void InitList(Guid id)
-	{
+		private void InitList(Guid id)
+		{
 			_currentList = _lookupManager.GetList(id, null);
 		}
 
-	private void InitLookup(IDataLookup lookup)
-	{
+		private void InitLookup(IDataLookup lookup)
+		{
 			if(lookup != _currentLookup)
 			{
 				_currentLookup = lookup;
@@ -1129,9 +1145,9 @@ public class StateMachineStateLookupReaderConverter : System.ComponentModel.Type
 			}
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			IDataLookup lookup = ((context.Instance as StateMachineState).RootItem as StateMachine).Field.DefaultLookup;
 			InitLookup(lookup);
 
@@ -1150,16 +1166,16 @@ public class StateMachineStateLookupReaderConverter : System.ComponentModel.Type
 			return new StandardValuesCollection(list);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			IDataLookup lookup = ((context.Instance as StateMachineState).RootItem as StateMachine).Field.DefaultLookup;
 
 			if(lookup == null | value == null)
@@ -1180,8 +1196,8 @@ public class StateMachineStateLookupReaderConverter : System.ComponentModel.Type
 			}
 		}
 
-	public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-	{
+		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		{
 			if(value == null) return null;
 			if(context == null) return value.ToString();
 
@@ -1206,25 +1222,26 @@ public class StateMachineStateLookupReaderConverter : System.ComponentModel.Type
 				return base.ConvertTo (context, culture, value, destinationType);
 			}
 		}
-}
+	}
 
-public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
 
@@ -1243,16 +1260,16 @@ public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ContextStore currentItem = context.Instance as ContextStore;
@@ -1270,25 +1287,26 @@ public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
 
@@ -1307,16 +1325,16 @@ public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConvert
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ContextStore currentItem = context.Instance as ContextStore;
@@ -1334,25 +1352,26 @@ public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConvert
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.Entity == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1371,16 +1390,16 @@ public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1398,25 +1417,26 @@ public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkQueueClassEntityStructureFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassEntityStructureFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.EntityStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1435,16 +1455,16 @@ public class WorkQueueClassEntityStructureFilterConverter : System.ComponentMode
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1462,25 +1482,26 @@ public class WorkQueueClassEntityStructureFilterConverter : System.ComponentMode
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkQueueClassNotificationStructureFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassNotificationStructureFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.NotificationStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1499,16 +1520,16 @@ public class WorkQueueClassNotificationStructureFilterConverter : System.Compone
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1526,25 +1547,26 @@ public class WorkQueueClassNotificationStructureFilterConverter : System.Compone
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1563,16 +1585,16 @@ public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentMode
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1590,25 +1612,26 @@ public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentMode
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 	
-public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
 
@@ -1627,16 +1650,16 @@ public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentMod
 			return new StandardValuesCollection(array);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
@@ -1654,25 +1677,26 @@ public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentMod
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 	
-public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			ArrayList fields;
 			IDataEntity entity = ((context.Instance as WorkQueueClassEntityMapping).ParentItem as WorkQueueClass).Entity;
 
@@ -1690,16 +1714,16 @@ public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.T
 			return new StandardValuesCollection(fields);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				ArrayList fields;
@@ -1724,25 +1748,26 @@ public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.T
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			UIFormTask reference = context.Instance as UIFormTask;
 			
 			if(reference.RefreshDataStructure == null) return null;
@@ -1761,16 +1786,16 @@ public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(methodArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				UIFormTask reference = context.Instance as UIFormTask;
@@ -1789,25 +1814,26 @@ public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
-}
+	}
 
-public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
-{
-	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+	public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
 	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
 			//true means show a combobox
 			return true;
 		}
 
-	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-	{
-			//true will limit to list. false will show the list, 		//but allow free-form entry
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
 			return true;
 		}
 
-	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-		GetStandardValues(ITypeDescriptorContext context)
-	{
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
 			UIFormTask reference = context.Instance as UIFormTask;
 			
 			if(reference.RefreshDataStructure == null) return null;
@@ -1826,16 +1852,16 @@ public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(sortSetArray);
 		}
 
-	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-	{
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
 			if( sourceType == typeof(string) )
 				return true;
 			else 
 				return base.CanConvertFrom(context, sourceType);
 		}
 
-	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-	{
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
 			if( value.GetType() == typeof(string) )
 			{
 				UIFormTask reference = context.Instance as UIFormTask;
@@ -1854,4 +1880,6 @@ public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
 			else
 				return base.ConvertFrom(context, culture, value);
 		}
+	}
+
 }

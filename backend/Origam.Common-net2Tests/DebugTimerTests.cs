@@ -22,17 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Threading;
 using NUnit.Framework;
 
-namespace Origam.Common_net2Tests;
-
-[TestFixture]
-public class DebugTimerTests
+namespace Origam.Common_net2Tests
 {
-    [Test]
-    public void ShouldMessureElapsedTime()
+    [TestFixture]
+    public class DebugTimerTests
     {
+        [Test]
+        public void ShouldMessureElapsedTime()
+        {
             using (new DebugTimer())
             {
                 Thread.Sleep(1000);
             }
         }
+    }
 }

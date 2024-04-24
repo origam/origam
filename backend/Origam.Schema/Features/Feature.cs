@@ -23,37 +23,38 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for Feature.
-/// </summary>
-[SchemaItemDescription("Feature", "icon_feature.png")]
-[HelpTopic("Features")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class Feature : AbstractSchemaItem
+namespace Origam.Schema
 {
-	public const string CategoryConst = "Feature";
-
-	public Feature() : base() {}
-
-	public Feature(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public Feature(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType
+	/// <summary>
+	/// Summary description for Feature.
+	/// </summary>
+	[SchemaItemDescription("Feature", "icon_feature.png")]
+    [HelpTopic("Features")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class Feature : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "Feature";
+
+		public Feature() : base() {}
+
+		public Feature(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public Feature(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion
+
+		#region Properties
+		#endregion
+
 	}
-	#endregion
-
-	#region Properties
-	#endregion
-
 }

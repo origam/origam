@@ -24,44 +24,44 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.TestModel;
-
-public enum TestCaseStepType
+namespace Origam.Schema.TestModel
 {
-	InitialCheck,
-	Step,
-	FinalCheck
-}
-
-/// <summary>
-/// Summary description for TestCaseStep.
-/// </summary>
-[SchemaItemDescription("Step", "Steps", 24)]
-[ClassMetaVersion("6.0.0")]
-public class TestCaseStep : AbstractSchemaItem
-{
-	public const string CategoryConst = "TestCaseStep";
-
-	public TestCaseStep() : base() {}
-
-	public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType
+	public enum TestCaseStepType
 	{
-		get
-		{
-				return CategoryConst;
-			}
+		InitialCheck,
+		Step,
+		FinalCheck
 	}
 
-	public override string Icon
+	/// <summary>
+	/// Summary description for TestCaseStep.
+	/// </summary>
+	[SchemaItemDescription("Step", "Steps", 24)]
+    [ClassMetaVersion("6.0.0")]
+	public class TestCaseStep : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "TestCaseStep";
+
+		public TestCaseStep() : base() {}
+
+		public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType
 		{
+			get
+			{
+				return CategoryConst;
+			}
+		}
+
+		public override string Icon
+		{
+			get
+			{
 				switch(this.StepType)
 				{
 					case TestCaseStepType.InitialCheck:
@@ -76,57 +76,58 @@ public class TestCaseStep : AbstractSchemaItem
 
 				return "0";
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.ChecklistRule);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	private TestCaseStepType _stepType = TestCaseStepType.Step;
+		#region Properties
+		private TestCaseStepType _stepType = TestCaseStepType.Step;
 		
-	[Category("Test Step")]
-	public TestCaseStepType StepType
-	{
-		get
+		[Category("Test Step")]
+		public TestCaseStepType StepType
 		{
+			get
+			{
 				return _stepType;
 			}
-		set
-		{
+			set
+			{
 				_stepType = value;
 			}
-	}
+		}
 		
-	public Guid ChecklistRuleId;
+		public Guid ChecklistRuleId;
 
-	[Category("Test Step")]
-	[TypeConverter(typeof(TestChecklistRuleConverter))]
-	public TestChecklistRule ChecklistRule
-	{
-		get
+		[Category("Test Step")]
+		[TypeConverter(typeof(TestChecklistRuleConverter))]
+		public TestChecklistRule ChecklistRule
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.ChecklistRuleId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as TestChecklistRule;
 			}
-		set
-		{
+			set
+			{
 				this.ChecklistRuleId = (Guid)value.PrimaryKey["Id"];
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

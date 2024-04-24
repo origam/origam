@@ -23,23 +23,23 @@ using Origam.Services;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.LookupModel;
-
-public class LookupHelper
+namespace Origam.Schema.LookupModel
 {
-	public static DataServiceDataLookup CreateDataServiceLookup(
-		string name, 
-		SchemaItemGroup group, 
-		DataStructure listDataStructure, 
-		DataStructureFilterSet listFilterSet, 
-		string listValueMember, 
-		string listDisplayMember, 
-		DataStructure valueDataStructure, 
-		DataStructureFilterSet valueFilterSet, 
-		string valueValueMember, 
-		string valueDisplayMember, 
-		bool persist)
+	public class LookupHelper
 	{
+		public static DataServiceDataLookup CreateDataServiceLookup(
+			string name, 
+			SchemaItemGroup group, 
+			DataStructure listDataStructure, 
+			DataStructureFilterSet listFilterSet, 
+			string listValueMember, 
+			string listDisplayMember, 
+			DataStructure valueDataStructure, 
+			DataStructureFilterSet valueFilterSet, 
+			string valueValueMember, 
+			string valueDisplayMember, 
+			bool persist)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var dataLookupSchemaItemProvider 
@@ -64,16 +64,16 @@ public class LookupHelper
 			return dataServiceDataLookup;
 		}
 
-	public static DataServiceDataLookup CreateDataServiceLookup(
-		string name, 
-		IDataEntity fromEntity, 
-		IDataEntityColumn idField, 
-		IDataEntityColumn nameField, 
-		IDataEntityColumn codeField, 
-		EntityFilter idFilter, 
-		EntityFilter listFilter, 
-		string listDisplayMember)
-	{
+		public static DataServiceDataLookup CreateDataServiceLookup(
+			string name, 
+            IDataEntity fromEntity, 
+			IDataEntityColumn idField, 
+            IDataEntityColumn nameField, 
+			IDataEntityColumn codeField, 
+            EntityFilter idFilter, 
+			EntityFilter listFilter, 
+            string listDisplayMember)
+		{
 			var dataStructure = EntityHelper.CreateDataStructure(
                 fromEntity, "Lookup" + name, true);
 			var dataStructureEntity 
@@ -125,4 +125,5 @@ public class LookupHelper
                 nameColumn.Name, true);
 			return dataServiceLookup;
 		}
+	}
 }

@@ -23,19 +23,19 @@ using System;
 using System.Collections;
 using System.Xml;
 
-namespace Origam.Workbench.Services.CoreServices;
-
-/// <summary>
-/// Summary description for ReportService.
-/// </summary>
-public class ReportService
+namespace Origam.Workbench.Services.CoreServices
 {
-	public ReportService()
+	/// <summary>
+	/// Summary description for ReportService.
+	/// </summary>
+	public class ReportService
 	{
+		public ReportService()
+		{
 		}
 
-	public static byte[] GetReport(Guid reportId, XmlDocument data, string format, Hashtable parameters, string transactionId)
-	{
+		public static byte[] GetReport(Guid reportId, XmlDocument data, string format, Hashtable parameters, string transactionId)
+		{
 			IServiceAgent reportServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("ReportService", null, null);
 
 			reportServiceAgent.MethodName = "GetReport";
@@ -50,4 +50,5 @@ public class ReportService
 
 			return (byte[])reportServiceAgent.Result;
 		}
+	}
 }

@@ -23,12 +23,13 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Origam.Security.Common;
 
-namespace Origam.Server;
-
-public interface IMailService
+namespace Origam.Server
 {
-    void SendPasswordResetToken(IOrigamUser user, string token, int tokenValidityHours);
-    void SendNewUserToken(IOrigamUser user, string token);
-    void SendMultiFactorAuthCode(IOrigamUser user, string token);
-    void SendUserUnlockedMessage(IOrigamUser user);
+    public interface IMailService
+    {
+        void SendPasswordResetToken(IOrigamUser user, string token, int tokenValidityHours);
+        void SendNewUserToken(IOrigamUser user, string token);
+        void SendMultiFactorAuthCode(IOrigamUser user, string token);
+        void SendUserUnlockedMessage(IOrigamUser user);
+    }
 }

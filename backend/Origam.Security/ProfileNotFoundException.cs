@@ -21,14 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Security;
-
-/// <summary>
-/// Summary description for ProfileNotFoundException.
-/// </summary>
-public class ProfileNotFoundException : Exception
+namespace Origam.Security
 {
-	public ProfileNotFoundException(string message) : base(message)
+	/// <summary>
+	/// Summary description for ProfileNotFoundException.
+	/// </summary>
+	public class ProfileNotFoundException : Exception
 	{
+		public ProfileNotFoundException(string message) : base(message)
+		{
 		}
+	}
 }

@@ -21,71 +21,72 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml.Serialization;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for ComponentBinding.
-/// </summary>
-public class ComponentBinding
+namespace Origam.Gui.Win
 {
-	public ComponentBinding()
+	/// <summary>
+	/// Summary description for ComponentBinding.
+	/// </summary>
+	public class ComponentBinding
 	{
+		public ComponentBinding()
+		{
 			
 		}
 
-	private string _parentComponent = "";
-	[XmlAttribute()]
-	public string ParentComponent
-	{
-		get
+		private string _parentComponent = "";
+		[XmlAttribute()]
+		public string ParentComponent
 		{
+			get
+			{
 				return _parentComponent;
 			}
-		set
-		{
+			set
+			{
 				_parentComponent = value;
 			}
-	}
+		}
 
-	private string _parentProperty = "";
-	[XmlAttribute()]
-	public string ParentProperty
-	{
-		get
+		private string _parentProperty = "";
+		[XmlAttribute()]
+		public string ParentProperty
 		{
+			get
+			{
 				return _parentProperty;
 			}
-		set
-		{
+			set
+			{
 				_parentProperty = value;
 			}
-	}
+		}
 
-	private string _childComponent = "";
-	[XmlAttribute()]
-	public string ChildComponent
-	{
-		get
+		private string _childComponent = "";
+		[XmlAttribute()]
+		public string ChildComponent
 		{
+			get
+			{
 				return _childComponent;
 			}
-		set
-		{
+			set
+			{
 				_childComponent = value;
 			}
-	}
+		}
 
-	private string _childProperty = "";
-	[XmlAttribute()]
-	public string ChildProperty
-	{
-		get
+		private string _childProperty = "";
+		[XmlAttribute()]
+		public string ChildProperty
 		{
+			get
+			{
 				return _childProperty;
 			}
-		set
-		{
+			set
+			{
 				_childProperty = value;
 			}
+		}
 	}
 }

@@ -28,29 +28,29 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands;
-
-public class SaveDataFromDataStructure : AbstractMenuCommand
+namespace Origam.Gui.Win.Commands
 {
-    WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-    IServiceAgent _dataServiceAgent;
-
-    public override bool IsEnabled
+    public class SaveDataFromDataStructure : AbstractMenuCommand
     {
-        get
+        WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        IServiceAgent _dataServiceAgent;
+
+        public override bool IsEnabled
         {
+            get
+            {
                 return Owner is DataStructure 
                        ||  Owner is DataStructureMethod;
             }
-        set
-        {
+            set
+            {
                 throw new ArgumentException("Cannot set this property", "IsEnabled");
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             DataStructure structure;
             DataStructureMethod method = null;
 
@@ -98,8 +98,8 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
             }
         }
 
-    private DataSet LoadData(DataStructureQuery query)
-    {
+        private DataSet LoadData(DataStructureQuery query)
+        {
             _dataServiceAgent.MethodName = "LoadDataByQuery";
             _dataServiceAgent.Parameters.Clear();
             _dataServiceAgent.Parameters.Add("Query", query);
@@ -109,13 +109,14 @@ public class SaveDataFromDataStructure : AbstractMenuCommand
             return _dataServiceAgent.Result as DataSet;
         }
 
-    public override void Dispose()
-    {
+        public override void Dispose()
+        {
             _schemaService = null;
             _dataServiceAgent = null;
         }
-    public override int GetImageIndex(string icon)
-    {
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
+    }
 }

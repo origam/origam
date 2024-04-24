@@ -10,15 +10,15 @@ using System.Windows.Forms;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
-namespace OrigamArchitect;
-
-public partial class ModelUpgradeForm : Form
+namespace OrigamArchitect
 {
-    private readonly IMetaModelUpgradeService metaModelUpgradeService;
-
-    public ModelUpgradeForm(
-        IMetaModelUpgradeService metaModelUpgradeService)
+    public partial class ModelUpgradeForm : Form
     {
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
+
+        public ModelUpgradeForm(
+            IMetaModelUpgradeService metaModelUpgradeService)
+        {
             this.metaModelUpgradeService = metaModelUpgradeService;
             metaModelUpgradeService.UpgradeProgress += (sender, info) =>
             {
@@ -43,9 +43,10 @@ public partial class ModelUpgradeForm : Form
             InitializeComponent();
         }
 
-    private void cancelButton_Click(object sender, EventArgs e)
-    {
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
             metaModelUpgradeService.Cancel();
             this.RunWithInvoke(() => currentFileLabel.Text = "Canceling...");
         }
+    }
 }

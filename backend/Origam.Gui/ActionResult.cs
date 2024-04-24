@@ -45,26 +45,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui;
-
-public class ActionResult
+namespace Origam.Gui
 {
-    public ActionResult(ActionResultType type)
+    public class ActionResult
     {
+        public ActionResult(ActionResultType type)
+        {
             Type = type.ToString();
         }
 
-    public string Type { get; set; }
+        public string Type { get; set; }
 
-    public string Url { get; set; }
+        public string Url { get; set; }
 
-    public string UrlOpenMethod { get; set; } = WebPageOpenMethod.OrigamTab.ToString();
+        public string UrlOpenMethod { get; set; } = WebPageOpenMethod.OrigamTab.ToString();
 
-    public string RefreshOnReturnSessionId { get; set; } = null;
+        public string RefreshOnReturnSessionId { get; set; } = null;
 
-    public string RefreshOnReturnType { get; set; } = null;
+        public string RefreshOnReturnType { get; set; } = null;
 
-    public IList Changes { get; set; }
+        public IList Changes { get; set; }
 
-    public string Script { get; set; } = null;
+        public string Script { get; set; } = null;
+    }
 }

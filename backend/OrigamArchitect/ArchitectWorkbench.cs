@@ -66,37 +66,37 @@ using Origam.Workflow.Gui.Win;
 using OrigamArchitect.Commands;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace OrigamArchitect;
-
-/// <summary>
-/// Summary description for MainForm.
-/// </summary>
-internal class frmMain : Form, IWorkbench
+namespace OrigamArchitect
 {
-	private static readonly log4net.ILog log 
-		= log4net.LogManager.GetLogger(
+	/// <summary>
+	/// Summary description for MainForm.
+	/// </summary>
+	internal class frmMain : Form, IWorkbench
+	{
+		private static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-	private CancellationTokenSource modelCheckCancellationTokenSource = new CancellationTokenSource();
-	private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
-		= new Dictionary<IToolStripContainer,List<ToolStrip>>();
+        private CancellationTokenSource modelCheckCancellationTokenSource = new CancellationTokenSource();
+        private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
+			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
-	AsMenu _fileMenu = null;
-	AsMenu _schemaMenu = null;
-	AsMenu _viewMenu = null;
-	AsMenu _toolsMenu = null;
-	AsMenu _helpMenu = null;
-	AsMenu _windowMenu = null;
+		AsMenu _fileMenu = null;
+		AsMenu _schemaMenu = null;
+		AsMenu _viewMenu = null;
+		AsMenu _toolsMenu = null;
+		AsMenu _helpMenu = null;
+        AsMenu _windowMenu = null;
 
-	WorkbenchSchemaService _schema;
-	private StatusBarService _statusBarService;
-	bool closeAll = false;
+		WorkbenchSchemaService _schema;
+		private StatusBarService _statusBarService;
+		bool closeAll = false;
 
-	// Toolboxes
-	SchemaBrowser _schemaBrowserPad;
+		// Toolboxes
+		SchemaBrowser _schemaBrowserPad;
 #if ORIGAM_CLIENT
-	AttachmentPad _attachmentPad;
-	AuditLogPad _auditLogPad;
+		AttachmentPad _attachmentPad;
+		AuditLogPad _auditLogPad;
 #else
 		WorkflowWatchPad _workflowWatchPad;
 		AttachmentPad _attachmentPad;
@@ -106,79 +106,79 @@ internal class frmMain : Form, IWorkbench
         FindRulesPad _findRulesPad;
 		LogPad _logPad;
 #endif
-	PropertyPad _propertyPad;
-	WorkflowPlayerPad _workflowPad;
-	OutputPad _outputPad;
-	ServerLogPad _serverLogPad;
-	ExtensionPad _extensionPad;
+        PropertyPad _propertyPad;
+		WorkflowPlayerPad _workflowPad;
+		OutputPad _outputPad;
+        ServerLogPad _serverLogPad;
+        ExtensionPad _extensionPad;
 
-	Hashtable _shortcuts = new Hashtable();
+		Hashtable _shortcuts = new Hashtable();
 
-	private static ICellStyle _dateCellStyle;
-	private string _configFilePath;
-	private FormWindowState lastWindowState;
+		private static ICellStyle _dateCellStyle;
+		private string _configFilePath;
+	    private FormWindowState lastWindowState;
 	    
-	public const bool IgnoreHTTPSErrors = false;
+		public const bool IgnoreHTTPSErrors = false;
 		
 
-	private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
-	private System.Windows.Forms.StatusBar statusBar;
-	private System.Windows.Forms.StatusBarPanel sbpText;
-	private System.Windows.Forms.StatusBarPanel sbpMemory;
-	private MenuStrip menuStrip;
-	private LabeledToolStrip ducumentToolStrip;
-	private LabeledToolStrip toolsToolStrip;
-	private PictureBox logoPictureBox;
-	private FlowLayoutPanel toolStripFlowLayoutPanel;
-	private Panel toolStripPanel;
-	private TableLayoutPanel rightToolsTripLayoutPanel;
-	private ComboBox searchComboBox;
+		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
+		private System.Windows.Forms.StatusBar statusBar;
+		private System.Windows.Forms.StatusBarPanel sbpText;
+        private System.Windows.Forms.StatusBarPanel sbpMemory;
+        private MenuStrip menuStrip;
+        private LabeledToolStrip ducumentToolStrip;
+		private LabeledToolStrip toolsToolStrip;
+        private PictureBox logoPictureBox;
+		private FlowLayoutPanel toolStripFlowLayoutPanel;
+		private Panel toolStripPanel;
+        private TableLayoutPanel rightToolsTripLayoutPanel;
+        private ComboBox searchComboBox;
 
 
-	/// <summary>
-	/// Required designer variable.
-	/// </summary>
-	private System.ComponentModel.Container components = null;
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
 
-	public frmMain()
-	{
-		//
-		// Required for Windows Form Designer support
-		//
-		InitializeComponent();
+		public frmMain()
+		{
+			//
+			// Required for Windows Form Designer support
+			//
+			InitializeComponent();
 
-		WorkflowHost.DefaultHost.SupportsUI = true;
-		dockPanel.Theme = new OrigamTheme();
-		dockPanel.ShowDocumentIcon = false;
+			WorkflowHost.DefaultHost.SupportsUI = true;
+            dockPanel.Theme = new OrigamTheme();
+            dockPanel.ShowDocumentIcon = false;
 
-		string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-		string origamPath = Path.Combine(appDataPath, "ORIGAM");
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			string origamPath = Path.Combine(appDataPath, "ORIGAM");
 #if ORIGAM_CLIENT
-		string configFileName = "ClientWorkspace.config";
+			string configFileName = "ClientWorkspace.config";
 #else
 			string configFileName = "ArchitectWorkspace.config";
 #endif
 
-		if(! Directory.Exists(origamPath))
+			if(! Directory.Exists(origamPath))
+			{
+				Directory.CreateDirectory(origamPath);
+			}
+
+			_configFilePath = Path.Combine(origamPath, configFileName);
+
+            TypeDescriptor.AddAttributes(typeof(ISchemaItem),
+                        new EditorAttribute(typeof(ModelUIEditor), typeof(System.Drawing.Design.UITypeEditor)));
+            TypeDescriptor.AddAttributes(typeof(SchemaItemAncestorCollection),
+                        new EditorAttribute(typeof(SchemaItemAncestorCollectionEditor),
+                            typeof(System.Drawing.Design.UITypeEditor)));
+		    TypeDescriptor.AddAttributes(typeof(Bitmap),
+		        new EditorAttribute(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor)));
+		    TypeDescriptor.AddAttributes(typeof(Byte[]),
+		        new EditorAttribute(typeof(Byte[]), typeof(FileSelectionUITypeEditor)));
+    }
+
+    public void OpenForm(object owner,Hashtable parameters)
 		{
-			Directory.CreateDirectory(origamPath);
-		}
-
-		_configFilePath = Path.Combine(origamPath, configFileName);
-
-		TypeDescriptor.AddAttributes(typeof(ISchemaItem),
-			new EditorAttribute(typeof(ModelUIEditor), typeof(System.Drawing.Design.UITypeEditor)));
-		TypeDescriptor.AddAttributes(typeof(SchemaItemAncestorCollection),
-			new EditorAttribute(typeof(SchemaItemAncestorCollectionEditor),
-				typeof(System.Drawing.Design.UITypeEditor)));
-		TypeDescriptor.AddAttributes(typeof(Bitmap),
-			new EditorAttribute(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor)));
-		TypeDescriptor.AddAttributes(typeof(Byte[]),
-			new EditorAttribute(typeof(Byte[]), typeof(FileSelectionUITypeEditor)));
-	}
-
-	public void OpenForm(object owner,Hashtable parameters)
-	{
 			ExecuteSchemaItem cmd = new ExecuteSchemaItem();
 			cmd.Owner = owner;
 			
@@ -190,11 +190,11 @@ internal class frmMain : Form, IWorkbench
 			cmd.Run();
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				components?.Dispose();
@@ -202,26 +202,26 @@ internal class frmMain : Form, IWorkbench
 			base.Dispose( disposing );
 		}
 
-	private void OnChildFormToolStripsLoaded(object sender, EventArgs e)
-	{
+		private void OnChildFormToolStripsLoaded(object sender, EventArgs e)
+		{
 			UpdateToolStrips();
 		}
 		
-	private void OnAllToolStripsRemovedFromALoadedForm(object sender, EventArgs e)
-	{
+		private void OnAllToolStripsRemovedFromALoadedForm(object sender, EventArgs e)
+		{
 			var toolStripContainer = (IToolStripContainer) sender;
 			if (!loadedForms.ContainsKey(toolStripContainer)) return;
 			RemoveToolStrips(toolStripContainer);
 			loadedForms.Remove(toolStripContainer);
 		}
 
-	private void OnToolStripsNeedUpdate(object sender, EventArgs args)
-	{
+		private void OnToolStripsNeedUpdate(object sender, EventArgs args)
+		{
 			UpdateToolStrips();
 		}
 		
-	private void CleanUpToolStripsWhenClosing(IViewContent closingForm)
-	{
+		private void CleanUpToolStripsWhenClosing(IViewContent closingForm)
+		{
 			if (closingForm is IToolStripContainer toolStripContainer)
 			{
 				RemoveToolStrips(toolStripContainer);
@@ -229,8 +229,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void UpdateToolStrips()
-	{
+		private void UpdateToolStrips()
+		{
 		    loadedForms.Keys.ForEach(RemoveToolStrips);
             if (ActiveDocument is IToolStripContainer toolStripContainer)
 			{
@@ -251,8 +251,8 @@ internal class frmMain : Form, IWorkbench
 
 		}
 
-	private void RemoveToolStrips(IToolStripContainer toolStripOwner)
-	{
+		private void RemoveToolStrips(IToolStripContainer toolStripOwner)
+		{
 		    toolStripFlowLayoutPanel.Controls
 		        .OfType<LabeledToolStrip>()
 		        .Where(toolStrip => toolStrip.Owner == toolStripOwner)
@@ -261,13 +261,13 @@ internal class frmMain : Form, IWorkbench
 		            toolStripFlowLayoutPanel.Controls.Remove(toolStrip));
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusBar = new System.Windows.Forms.StatusBar();
@@ -288,16 +288,20 @@ internal class frmMain : Form, IWorkbench
             this.toolStripPanel.SuspendLayout();
             this.rightToolsTripLayoutPanel.SuspendLayout();
             this.SuspendLayout();
-            // 	 // dockPanel
-            // 	 this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // dockPanel
+            // 
+            this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockPanel.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             this.dockPanel.Location = new System.Drawing.Point(0, 119);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
             this.dockPanel.Size = new System.Drawing.Size(864, 464);            
             this.dockPanel.TabIndex = 7;
-            // 	 // statusBar
-            // 	 this.statusBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            // 
+            // statusBar
+            // 
+            this.statusBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.statusBar.Location = new System.Drawing.Point(0, 583);
             this.statusBar.Name = "statusBar";
             this.statusBar.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
@@ -306,40 +310,52 @@ internal class frmMain : Form, IWorkbench
             this.statusBar.ShowPanels = true;
             this.statusBar.Size = new System.Drawing.Size(864, 28);
             this.statusBar.TabIndex = 9;
-            // 	 // sbpText
-            // 	 this.sbpText.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
+            // 
+            // sbpText
+            // 
+            this.sbpText.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
             this.sbpText.Name = "sbpText";
             this.sbpText.Width = 833;
-            // 	 // sbpMemory
-            // 	 this.sbpMemory.Alignment = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // sbpMemory
+            // 
+            this.sbpMemory.Alignment = System.Windows.Forms.HorizontalAlignment.Right;
             this.sbpMemory.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
             this.sbpMemory.Name = "sbpMemory";
             this.sbpMemory.Width = 10;
-            // 	 // menuStrip
-            // 	 this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(864, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
-            // 	 // ducumentToolStrip
-            // 	 this.ducumentToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            // 
+            // ducumentToolStrip
+            // 
+            this.ducumentToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.ducumentToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ducumentToolStrip.MinimumSize = new System.Drawing.Size(0, 95);
             this.ducumentToolStrip.Name = "ducumentToolStrip";
             this.ducumentToolStrip.Size = new System.Drawing.Size(111, 95);
             this.ducumentToolStrip.TabIndex = 0;
             this.ducumentToolStrip.Text = strings.DocumentToolStripText;
-            // 	 // toolsToolStrip
-            // 	 this.toolsToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            // 
+            // toolsToolStrip
+            // 
+            this.toolsToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolsToolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolsToolStrip.MinimumSize = new System.Drawing.Size(0, 95);
             this.toolsToolStrip.Name = "toolsToolStrip";
             this.toolsToolStrip.Size = new System.Drawing.Size(111, 95);
             this.toolsToolStrip.TabIndex = 0;
             this.toolsToolStrip.Text = strings.ToolsToolStripText;
-            // 	 // toolStripFlowLayoutPanel
-            // 	 this.toolStripFlowLayoutPanel.AutoSize = true;
+            // 
+            // toolStripFlowLayoutPanel
+            // 
+            this.toolStripFlowLayoutPanel.AutoSize = true;
             this.toolStripFlowLayoutPanel.Controls.Add(this.ducumentToolStrip);
             this.toolStripFlowLayoutPanel.Controls.Add(this.toolsToolStrip);
             this.toolStripFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
@@ -350,8 +366,10 @@ internal class frmMain : Form, IWorkbench
             this.toolStripFlowLayoutPanel.Size = new System.Drawing.Size(222, 95);
             this.toolStripFlowLayoutPanel.TabIndex = 0;
             this.toolStripFlowLayoutPanel.WrapContents = false;
-            // 	 // logoPictureBox
-            // 	 this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
             this.logoPictureBox.Location = new System.Drawing.Point(3, 12);
             this.logoPictureBox.Name = "logoPictureBox";
@@ -360,8 +378,10 @@ internal class frmMain : Form, IWorkbench
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.logoPictureBox.TabIndex = 1;
             this.logoPictureBox.TabStop = false;
-            // 	 // toolStripPanel
-            // 	 this.toolStripPanel.Controls.Add(this.rightToolsTripLayoutPanel);
+            // 
+            // toolStripPanel
+            // 
+            this.toolStripPanel.Controls.Add(this.rightToolsTripLayoutPanel);
             this.toolStripPanel.Controls.Add(this.toolStripFlowLayoutPanel);
             this.toolStripPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolStripPanel.Location = new System.Drawing.Point(0, 24);
@@ -370,8 +390,10 @@ internal class frmMain : Form, IWorkbench
             this.toolStripPanel.Name = "toolStripPanel";
             this.toolStripPanel.Size = new System.Drawing.Size(864, 95);
             this.toolStripPanel.TabIndex = 9;
-            // 	 // rightToolsTripLayoutPanel
-            // 	 this.rightToolsTripLayoutPanel.ColumnCount = 1;
+            // 
+            // rightToolsTripLayoutPanel
+            // 
+            this.rightToolsTripLayoutPanel.ColumnCount = 1;
             this.rightToolsTripLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.rightToolsTripLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.rightToolsTripLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -385,8 +407,10 @@ internal class frmMain : Form, IWorkbench
             this.rightToolsTripLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.rightToolsTripLayoutPanel.Size = new System.Drawing.Size(200, 95);
             this.rightToolsTripLayoutPanel.TabIndex = 2;
-            // 	 // searchComboBox
-            // 	 this.searchComboBox.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // searchComboBox
+            // 
+            this.searchComboBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.searchComboBox.FormattingEnabled = true;
             this.searchComboBox.Location = new System.Drawing.Point(3, 50);
             this.searchComboBox.Name = "searchComboBox";
@@ -395,8 +419,10 @@ internal class frmMain : Form, IWorkbench
             this.searchComboBox.TabStop = false;
 		    this.searchComboBox.KeyDown += searchBox_KeyDown;
             this.searchComboBox.Text = "Search";
-            // 	 // frmMain
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            // 
+            // frmMain
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(864, 611);
             this.Controls.Add(this.dockPanel);
@@ -422,16 +448,16 @@ internal class frmMain : Form, IWorkbench
             this.PerformLayout();
 
 		}
-	#endregion
+		#endregion
 
-	internal bool AdministratorMode { get; set; } = false;
+		internal bool AdministratorMode { get; set; } = false;
 
-	public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
+		public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
 
-	public bool ApplicationDataDisconnectedMode { get; set; } = false;
+        public bool ApplicationDataDisconnectedMode { get; set; } = false;
         
-	public void UpdateToolbar()
-	{
+        public void UpdateToolbar()
+		{
 			if(this.Disposing) return;
 
 			foreach(object item in ducumentToolStrip.Items)
@@ -444,19 +470,19 @@ internal class frmMain : Form, IWorkbench
 				}
 			}
 
-	private void PrepareMenuBars()
-	{
-		ducumentToolStrip.ItemClicked += toolStrip_ItemClicked;
-		toolsToolStrip.ItemClicked += toolStrip_ItemClicked;
+		private void PrepareMenuBars()
+		{
+            ducumentToolStrip.ItemClicked += toolStrip_ItemClicked;
+			toolsToolStrip.ItemClicked += toolStrip_ItemClicked;
 #if ORIGAM_CLIENT
-		_fileMenu = new AsMenu(this,strings.File_Menu);
-		_viewMenu = new AsMenu(this, strings.View_Menu);
-		_helpMenu = new AsMenu(this, strings.Help_Menu);
-		_windowMenu = new AsMenu(this,strings.Window_Menu);
-		menuStrip.Items.Add(_fileMenu);
-		menuStrip.Items.Add(_viewMenu);
-		menuStrip.Items.Add(_windowMenu);
-		menuStrip.Items.Add(_helpMenu);
+			_fileMenu = new AsMenu(this,strings.File_Menu);
+			_viewMenu = new AsMenu(this, strings.View_Menu);
+			_helpMenu = new AsMenu(this, strings.Help_Menu);
+			_windowMenu = new AsMenu(this,strings.Window_Menu);
+			menuStrip.Items.Add(_fileMenu);
+            menuStrip.Items.Add(_viewMenu);
+            menuStrip.Items.Add(_windowMenu);
+            menuStrip.Items.Add(_helpMenu);
 #else
             _fileMenu = new AsMenu(this, strings.File_Menu);
 			_schemaMenu = new AsMenu(this, strings.Model_Menu);		
@@ -471,16 +497,16 @@ internal class frmMain : Form, IWorkbench
             menuStrip.Items.Add(_windowMenu);
             menuStrip.Items.Add(_helpMenu);
 #endif
-	}
+        }
 
-	private void FinishMenuBars()
-	{
+		private void FinishMenuBars()
+		{
 			UpdateMenu();
 			UpdateToolbar();
 		}
 
-	private void CreateMainMenu()
-	{
+		private void CreateMainMenu()
+		{
 			ducumentToolStrip.Items.Clear();
 			toolsToolStrip.Items.Clear();
             _fileMenu.Clear();
@@ -501,33 +527,33 @@ internal class frmMain : Form, IWorkbench
 				}
 			}
 
-	private void UnloadMainMenu()
-	{
+		private void UnloadMainMenu()
+		{
 			CreateMainMenu();
 			UpdateMenu();
 			UpdateToolbar();
 		}
 
-	private void CreateMainMenuConnect()
-	{
-#if ORIGAM_CLIENT
-		CreateViewMenu();
-#else
+		private void CreateMainMenuConnect()
+		{
+			#if ORIGAM_CLIENT
+				CreateViewMenu();
+			#else
 				CreateViewMenu();
 				CreateModelMenu();
 				CreateToolsMenu();
 				CreateModelBrowserContextMenu();
-#endif
+			#endif
 
-		foreach(object o in menuStrip.Items)
-		{
-			(o as AsMenu)?.PopulateMenu();
+			foreach(object o in menuStrip.Items)
+			{
+				(o as AsMenu)?.PopulateMenu();
+				}
+			UpdateMenu();
 		}
-		UpdateMenu();
-	}
 
-	private void CreateProcessBrowserContextMenu()
-	{
+		private void CreateProcessBrowserContextMenu()
+		{
 			// context menu for workflowPlayerPad
 			AsContextMenu workflowPlayerContextMenu = new AsContextMenu(this);
 			AsMenuCommand mnuMakeWorkflowRecurring = new AsMenuCommand(strings.Retry_MenuCommand);
@@ -540,8 +566,8 @@ internal class frmMain : Form, IWorkbench
 			_workflowPad.ebrSchemaBrowser.ContextMenuStrip = workflowPlayerContextMenu;
 		}
 
-	private void CreateModelBrowserContextMenu()
-	{
+		private void CreateModelBrowserContextMenu()
+		{
 			IList<ToolStripItem> clonedIems 
 				= CloneToolStripItems(_schemaMenu.SubItems);
 			
@@ -551,9 +577,9 @@ internal class frmMain : Form, IWorkbench
 			_schema.SchemaContextMenu = schemaContextMenu;
 		}
 
-	private IList<ToolStripItem> CloneToolStripItems(
-		IList<ToolStripItem> items)
-	{
+		private IList<ToolStripItem> CloneToolStripItems(
+			IList<ToolStripItem> items)
+			{
 			var clonedItems = new List<ToolStripItem>();
 			foreach (var item in items)
 			{
@@ -574,41 +600,41 @@ internal class frmMain : Form, IWorkbench
 		}
 
 
-	private void CreateFileMenu()
-	{
-#if ORIGAM_CLIENT
-		AsMenuCommand mnuSave = CreateMenuItem(strings.Save_MenuCommand, new SaveContent(), Images.Save, Keys.Control | Keys.S, _fileMenu);
-		AsMenuCommand mnuRefresh = CreateMenuItem(strings.Refresh_MenuCommand, new RefreshContent(), Images.Refresh, Keys.Control | Keys.R, _fileMenu);
-		AsMenuCommand mnuFinishWorkflowTask = CreateMenuItem(strings.FinishTask_MenuCommand, new Commands.FinishWorkflowTask(), Images.Forward, Keys.F5, _fileMenu);
-
-		_fileMenu.SubItems.Add(CreateSeparator());
-
-		CreateMenuItem(strings.Connect_MenuItem, new ConnectRepository(), Images.Home, Keys.None, _fileMenu);
-		CreateMenuItem(strings.Disconnect_MenuItem, new DisconnectRepository(), null, Keys.None, _fileMenu);
-
-		if(AdministratorMode)
+		private void CreateFileMenu()
 		{
-			CreateMenuItem(strings.ConnectionConfig_MenuItem, new Origam.Workbench.Commands.EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
+#if ORIGAM_CLIENT
+			AsMenuCommand mnuSave = CreateMenuItem(strings.Save_MenuCommand, new SaveContent(), Images.Save, Keys.Control | Keys.S, _fileMenu);
+			AsMenuCommand mnuRefresh = CreateMenuItem(strings.Refresh_MenuCommand, new RefreshContent(), Images.Refresh, Keys.Control | Keys.R, _fileMenu);
+			AsMenuCommand mnuFinishWorkflowTask = CreateMenuItem(strings.FinishTask_MenuCommand, new Commands.FinishWorkflowTask(), Images.Forward, Keys.F5, _fileMenu);
 
 			_fileMenu.SubItems.Add(CreateSeparator());
+
+			CreateMenuItem(strings.Connect_MenuItem, new ConnectRepository(), Images.Home, Keys.None, _fileMenu);
+			CreateMenuItem(strings.Disconnect_MenuItem, new DisconnectRepository(), null, Keys.None, _fileMenu);
+
+			if(AdministratorMode)
+			{
+				CreateMenuItem(strings.ConnectionConfig_MenuItem, new Origam.Workbench.Commands.EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
+
+				_fileMenu.SubItems.Add(CreateSeparator());
                 
-			CreateMenuItem(strings.RunRefreshActions_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
-		}
+				CreateMenuItem(strings.RunRefreshActions_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
+			}
 
-		_fileMenu.SubItems.Add(CreateSeparator());
+			_fileMenu.SubItems.Add(CreateSeparator());
 			
-		CreateMenuItem(strings.Exit_MenuItem, new ExitWorkbench(), null, Keys.None, _fileMenu);
+			CreateMenuItem(strings.Exit_MenuItem, new ExitWorkbench(), null, Keys.None, _fileMenu);
 
 	
-		ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
-		ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
-		ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
+		    ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
+            ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
+            ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
 	
-		searchComboBox.Enabled = false;
-		searchComboBox.Visible = false;
-		rightToolsTripLayoutPanel.Controls.Remove(this.searchComboBox);
-		rightToolsTripLayoutPanel.RowCount = 1;
-		logoPictureBox.Dock = DockStyle.Fill;
+			searchComboBox.Enabled = false;
+			searchComboBox.Visible = false;
+			rightToolsTripLayoutPanel.Controls.Remove(this.searchComboBox);
+			rightToolsTripLayoutPanel.RowCount = 1;
+			logoPictureBox.Dock = DockStyle.Fill;
 
 #else
             CreateMenuItem(strings.NewProject_MenuItem, new Commands.CreateNewProject(), Images.New, Keys.None, _fileMenu);
@@ -643,43 +669,43 @@ internal class frmMain : Form, IWorkbench
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
             toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
-	}
-	private void CreateHelpMenu()
-	{
+        }
+		private void CreateHelpMenu()
+		{
 #if ORIGAM_CLIENT
-		CreateMenuItem(strings.About_MenuItem, new Commands.ViewAboutScreen(), null, Keys.None, _helpMenu);
+			CreateMenuItem(strings.About_MenuItem, new Commands.ViewAboutScreen(), null, Keys.None, _helpMenu);
 #else
             CreateMenuItem(strings.Help_MenuItem, new Commands.ShowHelp(), null, Keys.F1, _helpMenu);
             CreateMenuItem(strings.CommunityForums_MenuItem, new Commands.ShowCommunity(), null, Keys.None, _helpMenu);
             _helpMenu.SubItems.Add(CreateSeparator());	
             CreateMenuItem(strings.About_MenuItem, new Commands.ViewAboutScreen(), null, Keys.None, _helpMenu);
 #endif
-	}
+		}
 
-	private void CreateWindowMenu()
-	{
+        private void CreateWindowMenu()
+        {
 #if ORIGAM_CLIENT
-		CreateMenuItem(strings.Close_MenuItem, new Commands.CloseWindow(), null, Keys.None, _windowMenu);
-		CreateMenuItem(strings.CloseAll_MenuItem, new Commands.CloseAllWindows(), null, Keys.None, _windowMenu);
-		CreateMenuItem(strings.CloseAllButThis_MenuItem, new Commands.CloseAllButThis(), null, Keys.None, _windowMenu);
+			CreateMenuItem(strings.Close_MenuItem, new Commands.CloseWindow(), null, Keys.None, _windowMenu);
+			CreateMenuItem(strings.CloseAll_MenuItem, new Commands.CloseAllWindows(), null, Keys.None, _windowMenu);
+            CreateMenuItem(strings.CloseAllButThis_MenuItem, new Commands.CloseAllButThis(), null, Keys.None, _windowMenu);
 #else
             CreateMenuItem(strings.Close_MenuItem, new Commands.CloseWindow(), null, Keys.None, _windowMenu);
             CreateMenuItem(strings.CloseAll_MenuItem, new Commands.CloseAllWindows(), null, Keys.None, _windowMenu);
             CreateMenuItem(strings.CloseAllButThis_MenuItem, new Commands.CloseAllButThis(), null, Keys.None, _windowMenu);
 #endif
-	}
+        }
 
-	private void CreateViewMenuDisconnected()
-	{
-#if ORIGAM_CLIENT
-		if(AdministratorMode)
+		private void CreateViewMenuDisconnected()
 		{
-			CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), Images.PropertyPad, Keys.F4, _viewMenu);
-			CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), Images.Output, Keys.None, _viewMenu);
-		}
+#if ORIGAM_CLIENT
+			if(AdministratorMode)
+			{
+				CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), Images.PropertyPad, Keys.F4, _viewMenu);
+				CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), Images.Output, Keys.None, _viewMenu);
+			}
 
-		CreateMenuItem(strings.Menu_MenuItem, new Commands.ViewProcessBrowserPad(), _workflowPad.Icon.ToBitmap(), Keys.F2, _viewMenu);
-		CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
+			CreateMenuItem(strings.Menu_MenuItem, new Commands.ViewProcessBrowserPad(), _workflowPad.Icon.ToBitmap(), Keys.F2, _viewMenu);
+			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
 #else
             CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), _propertyPad.Icon.ToBitmap(), Keys.F4, _viewMenu);
 			CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), _outputPad.Icon.ToBitmap(), Keys.None, _viewMenu);
@@ -688,23 +714,23 @@ internal class frmMain : Form, IWorkbench
             CreateMenuItem(strings.ModelBrowser_MenuItem, new ViewSchemaBrowserPad(), _schemaBrowserPad.Icon.ToBitmap(), Keys.F3, _viewMenu);
 			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
 #endif
-	}
+		}
 
-	private void CreateViewMenu()
-	{
+		private void CreateViewMenu()
+		{
 #if ORIGAM_CLIENT
-		CreateMenuItem(strings.Attachements_MenuItem, new ViewAttachmentPad(), Images.Attachment, Keys.None, _viewMenu);
-		CreateMenuItem(strings.AuditLog_MenuItem, new ViewAuditLogPad(), Images.History, Keys.None, _viewMenu);
+			CreateMenuItem(strings.Attachements_MenuItem, new ViewAttachmentPad(), Images.Attachment, Keys.None, _viewMenu);
+			CreateMenuItem(strings.AuditLog_MenuItem, new ViewAuditLogPad(), Images.History, Keys.None, _viewMenu);
 #else
             CreateMenuItem(strings.PackageBrowser_MenuItem, new ViewExtensionPad(), _extensionPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.WorkflowWatch_MenuItem, new Commands.ViewWorkflowWatchPad(), _workflowWatchPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.Documentation_MenuItem, new ViewDocumentationPad(), _documentationPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.FindSchemaItemResults_MenuItem, new ViewFindSchemaItemResultsPad(), _findSchemaItemResultsPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #endif
-	}
+		}
 
-	private void CreateModelMenu()
-	{
+		private void CreateModelMenu()
+		{
 			AsMenuCommand schemaNewMenu = CreateMenuWithSubmenu(strings.New_MenuItem, ImageRes.icon_new, new SchemaItemEditorsMenuBuilder(), _schemaMenu);
 			CreateMenuItem(strings.NewGroup_MenuItem, new AddNewGroup(), ImageRes.icon_new_group, Keys.None, _schemaMenu);
             CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), ImageRes.icon_repeat_new, Keys.F12, _schemaMenu);
@@ -738,8 +764,8 @@ internal class frmMain : Form, IWorkbench
             AsMenuCommand schemamenuGit = CreateMenuWithSubmenu("Git", Images.Git, new GitMenuBuilder(), _schemaMenu);
         }
 
-	private void CreateToolsMenu()
-	{
+		private void CreateToolsMenu()
+		{
 			CreateMenuItem(strings.DeploymentScriptGenerator_MenuItem, new Commands.ShowDbCompare(), Images.DeploymentScriptGenerator, Keys.None, _toolsMenu);
             CreateMenuItem(strings.ShowWebApplication_MenuItem, new Commands.ShowWebApplication(), null, Keys.None, _toolsMenu);
             CreateMenuItem(strings.GenerateGUID_MenuItem, new Commands.GenerateGuid(), null, Keys.Control | Keys.Shift | Keys.G, _toolsMenu);
@@ -750,8 +776,8 @@ internal class frmMain : Form, IWorkbench
 			CreateMenuItem(strings.RebuildLocalizationFiles_MenuItem, new Commands.GenerateLocalizationFile(), null, Keys.None, _toolsMenu);
         }
 
-	private void UpdateMenu()
-	{
+        private void UpdateMenu()
+		{
 			if(this.Disposing) return;
 
 			foreach(object item in menuStrip.Items)
@@ -763,13 +789,13 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private ToolStripSeparator CreateSeparator()
-	{
+        private ToolStripSeparator CreateSeparator()
+		{
             return new ToolStripSeparator();
 		}
 
-	private AsMenuCommand CreateMenuWithSubmenu(string name, Image image, ISubmenuBuilder builder, AsMenu parentMenu)
-	{
+		private AsMenuCommand CreateMenuWithSubmenu(string name, Image image, ISubmenuBuilder builder, AsMenu parentMenu)
+		{
 			AsMenuCommand result = new AsMenuCommand(name);
 			if(image != null)
 			{
@@ -780,8 +806,8 @@ internal class frmMain : Form, IWorkbench
 			return result;
 		}
 
-	private AsButtonCommand CreateButtonFromMenu(AsMenuCommand menu)
-	{
+		private AsButtonCommand CreateButtonFromMenu(AsMenuCommand menu)
+		{
 			return
 				new AsButtonCommand(menu.Description)
 				{
@@ -789,8 +815,8 @@ internal class frmMain : Form, IWorkbench
 					Command = menu.Command
 				};
 		}
-	private AsButtonCommand CreateButtonFromMenu(AsMenuCommand menu,Image newImage)
-	{
+		private AsButtonCommand CreateButtonFromMenu(AsMenuCommand menu,Image newImage)
+		{
 			return
 				new AsButtonCommand(menu.Description)
 				{
@@ -799,8 +825,8 @@ internal class frmMain : Form, IWorkbench
 				};
 		}
 
-	private AsMenuCommand CreateMenuItem(string text, ICommand command, Image image)
-	{
+		private AsMenuCommand CreateMenuItem(string text, ICommand command, Image image)
+		{
 			AsMenuCommand menuItem = new AsMenuCommand(text, command);
 			menuItem.Click += MenuItemClick;
 			
@@ -812,8 +838,8 @@ internal class frmMain : Form, IWorkbench
 			return menuItem;
 		}
 
-	private AsMenuCommand CreateMenuItem(string text, ICommand command, Image image, Keys shortcut, AsMenu parentMenu)
-	{
+		private AsMenuCommand CreateMenuItem(string text, ICommand command, Image image, Keys shortcut, AsMenu parentMenu)
+		{
 			AsMenuCommand result = CreateMenuItem(text, command, image);
 			if(shortcut != Keys.None)
 			{
@@ -824,8 +850,8 @@ internal class frmMain : Form, IWorkbench
 			return result;
 		}
 
-	private IDockContent GetContentFromPersistString(string persistString)
-	{
+		private IDockContent GetContentFromPersistString(string persistString)
+		{
 			foreach(IPadContent pad in this.PadContentCollection)
 			{
 				if(persistString == pad.GetType().ToString())
@@ -835,34 +861,34 @@ internal class frmMain : Form, IWorkbench
 			return null;
 		}
 		
-	private void LoadWorkspace()
-	{
-		dockPanel.SuspendLayout(true);
-		try
+		private void LoadWorkspace()
 		{
-			if (File.Exists(_configFilePath) && dockPanel.Contents.Count == 0)
+			dockPanel.SuspendLayout(true);
+			try
 			{
-				dockPanel.LoadFromXml(_configFilePath,GetContentFromPersistString);
-			}
-			else
-			{
-				// Default Workspace
+				if (File.Exists(_configFilePath) && dockPanel.Contents.Count == 0)
+				{
+					dockPanel.LoadFromXml(_configFilePath,GetContentFromPersistString);
+				}
+				else
+				{
+					// Default Workspace
 
 #if ORIGAM_CLIENT
 				new Commands.ViewProcessBrowserPad().Run();
 #else
 				new ViewExtensionPad().Run();
 #endif
+				}
+			}
+			finally
+			{
+				dockPanel.ResumeLayout(true, true);
 			}
 		}
-		finally
-		{
-			dockPanel.ResumeLayout(true, true);
-		}
-	}
 
-	private void frmMain_Closing(object sender,CancelEventArgs e)
-	{
+		private void frmMain_Closing(object sender,CancelEventArgs e)
+		{
 			if(! Disconnect())
 			{
 				e.Cancel = true;
@@ -874,32 +900,32 @@ internal class frmMain : Form, IWorkbench
 		}
 
 
-	#region IWorkbench Members
+		#region IWorkbench Members
 
-	public bool IsConnected { get; private set; } 
+		public bool IsConnected { get; private set; } 
 
-	public string Title
-	{
-		get => this.Text;
-		set => this.Text = value;
-	}
-
-	public ViewContentCollection ViewContentCollection { get; } 
-		= new ViewContentCollection();
-
-	public PadContentCollection PadContentCollection { get; } 
-		= new PadContentCollection();
-
-	public IViewContent ActiveViewContent
-		=> this.dockPanel.ActiveContent as IViewContent;
-
-	public IViewContent ActiveDocument
-		=> this.dockPanel.ActiveDocument as IViewContent;
-
-	public int WorkflowFormsCount
-	{
-		get
+		public string Title
 		{
+			get => this.Text;
+			set => this.Text = value;
+			}
+
+		public ViewContentCollection ViewContentCollection { get; } 
+			= new ViewContentCollection();
+
+		public PadContentCollection PadContentCollection { get; } 
+			= new PadContentCollection();
+
+		public IViewContent ActiveViewContent
+			=> this.dockPanel.ActiveContent as IViewContent;
+
+		public IViewContent ActiveDocument
+			=> this.dockPanel.ActiveDocument as IViewContent;
+
+		public int WorkflowFormsCount
+		{
+			get
+			{
 				int result = 0;
 				foreach(IViewContent content in this.ViewContentCollection)
 				{
@@ -911,10 +937,10 @@ internal class frmMain : Form, IWorkbench
 
 				return result;
 			}
-	}
+		}
 
-	public void ShowView(IViewContent content)
-	{
+		public void ShowView(IViewContent content)
+		{
 			if(ConfigurationManager.GetActiveConfiguration() is OrigamSettings settings &&
 			   settings.MaxOpenTabs > 0 &&
 			   this.dockPanel.DocumentsCount == settings.MaxOpenTabs)
@@ -928,8 +954,8 @@ internal class frmMain : Form, IWorkbench
 			OnViewOpened(new ViewContentEventArgs(content));
 		}
 
-	public void ShowPad(IPadContent content)
-	{
+		public void ShowPad(IPadContent content)
+		{
 			DockContent dock = content as DockContent;
 
 			switch(dock.DockState)
@@ -951,13 +977,13 @@ internal class frmMain : Form, IWorkbench
 			dock.Show(dockPanel);
 		}
 
-	public T GetPad<T>() where T: IPadContent
-	{
+		public T GetPad<T>() where T: IPadContent
+		{
 			return (T)GetPad(typeof(T));
 		}
 
-	public IPadContent GetPad(Type type)
-	{
+		public IPadContent GetPad(Type type)
+		{
 			foreach (IPadContent pad in PadContentCollection) 
 			{
 				// try the type itself
@@ -979,13 +1005,13 @@ internal class frmMain : Form, IWorkbench
 			return null;
 		}
 
-	public void CloseContent(IViewContent content)
-	{
+		public void CloseContent(IViewContent content)
+		{
             ((DockContent) content).Close();
 		}
 
-	public void CloseAllViews(IViewContent except)
-	{
+		public void CloseAllViews(IViewContent except)
+		{
             foreach (DockContent content in this.dockPanel.DocumentsToArray())
             {
                 if (except == null || !except.Equals(content))
@@ -996,31 +1022,31 @@ internal class frmMain : Form, IWorkbench
             }
         }
 
-	public void CloseAllViews()
-	{
+		public void CloseAllViews()
+		{
             CloseAllViews(null);
 		}
 
-	public void RedrawAllComponents()
-	{
+		public void RedrawAllComponents()
+		{
 			// TODO:  Add frmMain.RedrawAllComponents implementation
 		}
 
-	public event Origam.UI.ViewContentEventHandler ViewOpened;
+		public event Origam.UI.ViewContentEventHandler ViewOpened;
 
-	public event Origam.UI.ViewContentEventHandler ViewClosed;
+		public event Origam.UI.ViewContentEventHandler ViewClosed;
 
-	public event System.EventHandler ActiveWorkbenchWindowChanged;
+		public event System.EventHandler ActiveWorkbenchWindowChanged;
 
-	#endregion
+		#endregion
 
-	protected override void OnResizeEnd(EventArgs e)
-	{
+	    protected override void OnResizeEnd(EventArgs e)
+	    {
 	        UpdateToolStrips();
 	    }
 
-	protected override void OnResize(EventArgs e)
-	{
+        protected override void OnResize(EventArgs e)
+	    {
 	        base.OnResize(e);
             if (WindowState != lastWindowState)
 	        {
@@ -1029,8 +1055,8 @@ internal class frmMain : Form, IWorkbench
             }
 	    }
 
-	protected virtual void OnViewOpened(ViewContentEventArgs e)
-	{
+	    protected virtual void OnViewOpened(ViewContentEventArgs e)
+		{
 			e.Content.DirtyChanged += Content_DirtyChanged;
 			UpdateToolbar();
 			HandleAttachments();
@@ -1042,8 +1068,8 @@ internal class frmMain : Form, IWorkbench
 			ViewOpened?.Invoke(this, e);
         }
 		
-	protected virtual void OnViewClosed(ViewContentEventArgs e)
-	{
+		protected virtual void OnViewClosed(ViewContentEventArgs e)
+		{
 			if(e.Content is IRecordReferenceProvider)
 			{
 				(e.Content as IRecordReferenceProvider).RecordReferenceChanged -= AttachmentDocument_ParentIdChanged;
@@ -1057,8 +1083,8 @@ internal class frmMain : Form, IWorkbench
 			CleanUpToolStripsWhenClosing(closingForm: e.Content);
 			}
 
-	void OnActiveWindowChanged(object sender, EventArgs e)
-	{
+		void OnActiveWindowChanged(object sender, EventArgs e)
+		{
 			UpdateToolbar();
 			HandleAttachments();
 			if(!closeAll && ActiveWorkbenchWindowChanged != null) 
@@ -1073,8 +1099,8 @@ internal class frmMain : Form, IWorkbench
 			UpdateToolStrips();
         }
 
-	private void HandleAttachments()
-	{
+		private void HandleAttachments()
+		{
 			if(this.ActiveDocument is IRecordReferenceProvider)
 			{
 				// Last window closed
@@ -1117,8 +1143,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void MenuItemClick(object sender, EventArgs e)
-	{
+		private void MenuItemClick(object sender, EventArgs e)
+		{
 			// User clicked the menu, so we run the command associated with the
 			// menu item.
 
@@ -1154,8 +1180,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void DockContentClosed(object sender, EventArgs e)
-	{
+		private void DockContentClosed(object sender, EventArgs e)
+		{
 			try
 			{
 				OnViewClosed(new ViewContentEventArgs(sender as IViewContent));
@@ -1168,14 +1194,14 @@ internal class frmMain : Form, IWorkbench
 			catch{}
 		}
 
-	public void Connect()
-	{
+        public void Connect()
+        {
 	        Connect(null);
 	        SubscribeToPersistenceServiceEvents();
         }
 
-	private void SubscribeToPersistenceServiceEvents()
-	{
+        private void SubscribeToPersistenceServiceEvents()
+		{
 			var currentPersistenceService =
 				ServiceManager.Services.GetService<IPersistenceService>();
 
@@ -1185,8 +1211,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	void OnFilePersistServiceReloadRequested(object sender, FileSystemChangeEventArgs args)
-	{
+		void OnFilePersistServiceReloadRequested(object sender, FileSystemChangeEventArgs args)
+		{
 			FilePersistenceService filePersistenceService =
 				(FilePersistenceService) sender;
 			FilePersistenceProvider filePersistenceProvider
@@ -1211,9 +1237,11 @@ internal class frmMain : Form, IWorkbench
             }
 		}
 
-	private bool ConfirmReload(FileSystemChangeEventArgs args)
-	{
-            // try/catch block for unhandled exceptions 	 // main try/catch block doesn't show error message 	 // and leaves application in unstable state
+	    private bool ConfirmReload(FileSystemChangeEventArgs args)
+        {
+            // try/catch block for unhandled exceptions 
+            // main try/catch block doesn't show error message 
+            // and leaves application in unstable state
             try
             {
                 DialogResult dialogResult = FlexibleMessageBox.Show(
@@ -1231,11 +1259,13 @@ internal class frmMain : Form, IWorkbench
             return false;
         }
 
-	private void UpdateUIAfterReload(
-		FilePersistenceProvider filePersistenceProvider, 
-		FileSystemChangeEventArgs args)
-	{
-            // try/catch block for unhandled exceptions 	 // main try/catch block doesn't show error message 	 // and leaves application in unstable state
+        private void UpdateUIAfterReload(
+	        FilePersistenceProvider filePersistenceProvider, 
+            FileSystemChangeEventArgs args)
+        {
+            // try/catch block for unhandled exceptions 
+            // main try/catch block doesn't show error message 
+            // and leaves application in unstable state
             try
             {
                 GetPad<SchemaBrowser>()
@@ -1252,10 +1282,10 @@ internal class frmMain : Form, IWorkbench
             }
         }
 
-	private bool ShouldRaiseWarning(
-		FilePersistenceProvider filePersistProvider, 
-		FileInfo file)
-	{
+        private bool ShouldRaiseWarning(
+            FilePersistenceProvider filePersistProvider, 
+            FileInfo file)
+        {
 	        return ViewContentCollection
 		        .Cast<IViewContent>()
 		        .Select(view =>
@@ -1264,8 +1294,8 @@ internal class frmMain : Form, IWorkbench
 		        .Any(objInfo => objInfo.OrigamFile.Path.EqualsTo(file));
         }
 
-	private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
-	{
+		private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
+		{
 			Maybe<XmlLoadError> maybeError = filePersistService.Reload();
 
 			if (maybeError.HasNoValue) return null;
@@ -1274,9 +1304,9 @@ internal class frmMain : Form, IWorkbench
             return maybeError;
 		}
 
-	private bool TryHandleOldVersionFound(FilePersistenceService filePersistService,
-		string message)
-	{
+		private bool TryHandleOldVersionFound(FilePersistenceService filePersistService,
+			string message)
+		{
 			DialogResult updateVersionsResult = MessageBox.Show(this,
 				$"{message}{Environment.NewLine}Do you want to upgrade this file and all other files with old versions?",
 				"Old Meta Model Version Detected", MessageBoxButtons.YesNo);
@@ -1291,9 +1321,9 @@ internal class frmMain : Form, IWorkbench
 			return false; 
 		}
 
-	private void ReloadOpenWindows(
-		FilePersistenceProvider filePersistenceProvider)
-	{
+		private void ReloadOpenWindows(
+			FilePersistenceProvider filePersistenceProvider)
+		{
 			List<IViewContent> openViewList = ViewContentCollection
 				.Cast<IViewContent>()
 			    .Where(x => CanBeReOpened(filePersistenceProvider, x))
@@ -1313,17 +1343,17 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private static bool CanBeReOpened(
-		FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
-	{
+		private static bool CanBeReOpened(
+			FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
+		{
 			if (viewContent is SchemaCompareEditor) return true;
 			if (viewContent.LoadedObject == null) return false;
 			IPersistent loadedObject = (IPersistent) viewContent.LoadedObject;
 			return filePersistenceProvider.Has(loadedObject.Id);
 		}
 
-	private void ActivateViewByType(Type typeToActivate)
-	{
+		private void ActivateViewByType(Type typeToActivate)
+		{
 			ViewContentCollection
 				.Cast<IViewContent>()
 				.Where(cont => cont.GetType() == typeToActivate)
@@ -1332,8 +1362,8 @@ internal class frmMain : Form, IWorkbench
 				.Activate();
 		}
 
-	private void ActivateViewByContent(IViewContent refContent)
-	{
+		private void ActivateViewByContent(IViewContent refContent)
+		{
 			if(refContent == null) return;
 			IBrowserNode2 loadedObject = (IBrowserNode2)refContent.LoadedObject;
 			
@@ -1348,10 +1378,10 @@ internal class frmMain : Form, IWorkbench
 				?.Activate();
 		}
 
-	private void ReopenViewContents(
-		FilePersistenceProvider filePersistenceProvider,
-		List<IViewContent> openViewList)
-	{
+		private void ReopenViewContents(
+			FilePersistenceProvider filePersistenceProvider,
+			List<IViewContent> openViewList)
+		{
 			foreach (IViewContent viewContent in openViewList)
 			{
 				Maybe<AbstractCommand> maybeReOpenCommand 
@@ -1374,98 +1404,98 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private static IFilePersistent RefreshLoadedObject(
-		FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
-	{
+		private static IFilePersistent RefreshLoadedObject(
+			FilePersistenceProvider filePersistenceProvider, IViewContent viewContent)
+		{
 			var loadedObject = (IFilePersistent) viewContent.LoadedObject;
 			if (loadedObject == null) throw new Exception("loadedObject not set");
 			filePersistenceProvider.RefreshInstance(loadedObject);
 			return loadedObject;
 		}
 
-	private Maybe<AbstractCommand> GetCommandToReOpen(IViewContent viewContent)
-	{
+		private Maybe<AbstractCommand> GetCommandToReOpen(IViewContent viewContent)
+		{
 			if (viewContent is SchemaCompareEditor) return new ShowDbCompare();
 			if (viewContent is AbstractViewContent) return new EditSchemaItem();
 			if (viewContent is AsForm) return new ExecuteSchemaItem();
 			return null;
 		}
 
-	public void Connect(string configurationName)
-	{
-		// Ask for configuration
-		if (!LoadConfiguration(configurationName))
+		public void Connect(string configurationName)
 		{
-			return;
-		}
-		Application.DoEvents();
+			// Ask for configuration
+            if (!LoadConfiguration(configurationName))
+			{
+				return;
+			}
+            Application.DoEvents();
 
-		foreach (DockContent content in this.dockPanel.Documents.ToList())
-		{
-			content.Close();
-		}
+            foreach (DockContent content in this.dockPanel.Documents.ToList())
+			{
+                content.Close();
+			}
 
-		if(this.dockPanel.DocumentsCount > 0)
-		{
-			// could not close all the documents
-			return;
-		}
+			if(this.dockPanel.DocumentsCount > 0)
+			{
+				// could not close all the documents
+				return;
+			}
 
-		try
-		{
-			_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
-			InitPersistenceService();
-			_schema.SchemaBrowser = _schemaBrowserPad;
+			try
+			{
+				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
+				InitPersistenceService();
+				_schema.SchemaBrowser = _schemaBrowserPad;
 
-			// Init services
-			InitializeConnectedServices();
+				// Init services
+				InitializeConnectedServices();
 
-			// Initialize model-connected user interface
-			InitializeConnectedPads();
-			CreateMainMenuConnect();
-			IsConnected = true;
+                // Initialize model-connected user interface
+                InitializeConnectedPads();
+                CreateMainMenuConnect();
+				IsConnected = true;
 #if !ORIGAM_CLIENT
 				RunBackgroundInitializationTasks();
 #endif
 
 #if ORIGAM_CLIENT
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
-			try
-			{
-				_schema.LoadSchema(
-					settings.DefaultSchemaExtensionId, isInteractive: true);
-			}
-			catch(Exception ex)
-			{
-				this.Show();
-				AsMessageBox.ShowError(this, ex.Message, strings.LoadingModelErrorTitle, ex);
+				try
+				{
+					_schema.LoadSchema(
+						settings.DefaultSchemaExtensionId, isInteractive: true);
+				}
+				catch(Exception ex)
+				{
+					this.Show();
+					AsMessageBox.ShowError(this, ex.Message, strings.LoadingModelErrorTitle, ex);
                 
-				Disconnect();
-				return;
-			}
+					Disconnect();
+					return;
+				}
 				
-			CheckModelRootPackageVersion();
+				CheckModelRootPackageVersion();
 #endif
-			UpdateTitle();
-		}
-		finally
-		{
-			_statusBarService.SetStatusText("");
-			this.WindowState = FormWindowState.Maximized;
-		}
+                UpdateTitle();
+            }
+            finally
+			{
+				_statusBarService.SetStatusText("");
+				this.WindowState = FormWindowState.Maximized;
+			}
 
 #if ORIGAM_CLIENT
-		Commands.ViewProcessBrowserPad cmd = new Commands.ViewProcessBrowserPad();
+			Commands.ViewProcessBrowserPad cmd = new Commands.ViewProcessBrowserPad();
 #else
 			ViewExtensionPad cmd = new ViewExtensionPad();
 #endif
-		this.LoadWorkspace();
-		cmd.Run();
-	}
+			this.LoadWorkspace();
+			cmd.Run();
+        }
 
-	private void SubscribeToUpgradeServiceEvents()
-	{
+		private void SubscribeToUpgradeServiceEvents()
+		{
 			var metaModelUpgradeService = ServiceManager.Services.GetService<IMetaModelUpgradeService>();
 
 			metaModelUpgradeService.UpgradeStarted += (sender, args) =>
@@ -1481,8 +1511,8 @@ internal class frmMain : Form, IWorkbench
 			};
 		}
 
-	public void RunBackgroundInitializationTasks()
-	{
+		public void RunBackgroundInitializationTasks()
+	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
@@ -1508,9 +1538,9 @@ internal class frmMain : Form, IWorkbench
            );
 	    }
 
-	private void IndexReferences(FilePersistenceService independentPersistenceService,
-		CancellationToken cancellationToken)
-	{
+		private void IndexReferences(FilePersistenceService independentPersistenceService,
+			CancellationToken cancellationToken)
+		{
 			try
 			{
 				_statusBarService.SetStatusText("Indexing references...");
@@ -1533,8 +1563,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void TaskErrorHandler(Task previousTask)
-	{
+		private void TaskErrorHandler(Task previousTask)
+	    {
 	        try
 	        {
 	            previousTask.Wait();
@@ -1553,10 +1583,10 @@ internal class frmMain : Form, IWorkbench
 	        }
 	    }
 
-	private void DoModelChecks(
-		FilePersistenceService independentPersistenceService,
-		CancellationToken cancellationToken)
-	{
+	    private void DoModelChecks(
+		    FilePersistenceService independentPersistenceService,
+		    CancellationToken cancellationToken)
+	    {
 		    List<Dictionary<IFilePersistent, string>> errorFragments =
                 ModelRules.GetErrors(
                     schemaProviders: new OrigamProviderBuilder()
@@ -1594,8 +1624,8 @@ internal class frmMain : Form, IWorkbench
             }
 	    }
 	    
-	protected override void WndProc(ref Message m)
-	{
+	    protected override void WndProc(ref Message m)
+		{
 			if(m.Msg == 16)
 			{
 				CancelEventArgs args1 = new CancelEventArgs(false);
@@ -1625,31 +1655,31 @@ internal class frmMain : Form, IWorkbench
 		}
 
 
-	public bool UnloadSchema()
-	{
-		CloseAllViews();
-		// make sure the application knows all windows were closed otherwise
-		// it might throw an error when trying to set an active form which
-		// is not there anymore
-		Application.DoEvents();
-
-		if(this.dockPanel.DocumentsCount > 0)
+		public bool UnloadSchema()
 		{
-			// could not close all the documents
-			return false;
-		}
-		_workflowPad.OrigamMenu = null;
+            CloseAllViews();
+            // make sure the application knows all windows were closed otherwise
+            // it might throw an error when trying to set an active form which
+            // is not there anymore
+            Application.DoEvents();
+
+            if(this.dockPanel.DocumentsCount > 0)
+			{
+				// could not close all the documents
+				return false;
+			}
+            _workflowPad.OrigamMenu = null;
 			
 #if ! ORIGAM_CLIENT
 			_findSchemaItemResultsPad?.ResetResults();
 			_documentationPad?.ClearDocumentation();
 #endif
-		_auditLogPad?.ClearList();
-		return true;
-	}
+			_auditLogPad?.ClearList();
+			return true;
+		}
 
-	public bool Disconnect()
-	{
+        public bool Disconnect()
+		{
 			try
 			{
 				if (IsConnected)
@@ -1701,8 +1731,8 @@ internal class frmMain : Form, IWorkbench
 			return true;
 		}
 
-	private void ClearReferenceIndex()
-	{
+        private void ClearReferenceIndex()
+        {
             IPersistenceService persistenceService =
                  ServiceManager.Services.GetService<IPersistenceService>();
             if (persistenceService != null)
@@ -1711,27 +1741,27 @@ internal class frmMain : Form, IWorkbench
             }
         }
 
-	private void UnloadConnectedPads()
-	{
+        private void UnloadConnectedPads()
+        {
             GetPad<AuditLogPad>().ClearList();
             GetPad<ExtensionPad>().UnloadPackages();
             GetPad<FindSchemaItemResultsPad>()?.Clear();
             GetPad<FindRulesPad>()?.Clear();
         }
 
-	private void SaveWorkspace()
-	{
+        private void SaveWorkspace()
+		{
 			try
 			{
 				dockPanel.SaveAsXml(_configFilePath);
 			} 
 			catch {}
 		}
-	/// <summary>
-	/// Get configuration and load it. If there is more than 1 configuration, display selection dialog.
-	/// </summary>
-	private bool LoadConfiguration(string configurationName)
-	{
+		/// <summary>
+		/// Get configuration and load it. If there is more than 1 configuration, display selection dialog.
+		/// </summary>
+		private bool LoadConfiguration(string configurationName)
+		{
 			OrigamSettingsCollection configurations =
 				ConfigurationManager.GetAllUserHomeConfigurations();
 
@@ -1779,8 +1809,8 @@ internal class frmMain : Form, IWorkbench
 			return true;
 		}
 
-	private void UnloadConnectedServices()
-	{
+		private void UnloadConnectedServices()
+		{
 		    IControlsLookUpService controlsLookupService =
 				ServiceManager.Services.GetService<IControlsLookUpService>();
 			if (controlsLookupService != null)
@@ -1799,17 +1829,17 @@ internal class frmMain : Form, IWorkbench
             OrigamEngine.UnloadConnectedServices();
         }
 
-	/// <summary>
-	/// After configuration is selected, connect to the repository and load the model list from the repository.
-	/// </summary>
-	private void InitPersistenceService()
-	{
+		/// <summary>
+		/// After configuration is selected, connect to the repository and load the model list from the repository.
+		/// </summary>
+		private void InitPersistenceService()
+		{
 			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
 			ServiceManager.Services.AddService(persistence);
 		}
 
-	private void frmMain_Load(object sender, EventArgs e)
-	{
+		private void frmMain_Load(object sender, EventArgs e)
+		{
 			try
 			{
 				AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security
@@ -1847,25 +1877,25 @@ internal class frmMain : Form, IWorkbench
 		}
 
 
-	private void InitializeDefaultPads()
-	{
-		// this will not be used in the Client, but we need to have an instance, because icons are taken from it
-		_extensionPad = CreatePad<ExtensionPad>();
-		_attachmentPad = CreatePad<AttachmentPad>();
-		_auditLogPad = CreatePad<AuditLogPad>();
-		_schema.SchemaListBrowser = _extensionPad;
+		private void InitializeDefaultPads()
+		{
+            // this will not be used in the Client, but we need to have an instance, because icons are taken from it
+            _extensionPad = CreatePad<ExtensionPad>();
+            _attachmentPad = CreatePad<AttachmentPad>();
+            _auditLogPad = CreatePad<AuditLogPad>();
+            _schema.SchemaListBrowser = _extensionPad;
 
 #if ORIGAM_CLIENT
-		_schemaBrowserPad = new SchemaBrowser();
+			_schemaBrowserPad = new SchemaBrowser();
 
-		if(AdministratorMode)
-		{
-			_propertyPad = new PropertyPad();
-			this.PadContentCollection.Add(_propertyPad);
+			if(AdministratorMode)
+			{
+				_propertyPad = new PropertyPad();
+				this.PadContentCollection.Add(_propertyPad);
 
-			_outputPad = new OutputPad();
-			this.PadContentCollection.Add(_outputPad);
-		}
+				_outputPad = new OutputPad();
+				this.PadContentCollection.Add(_outputPad);
+			}
 #else
 
             _schemaBrowserPad = CreatePad<SchemaBrowser>();
@@ -1878,29 +1908,29 @@ internal class frmMain : Form, IWorkbench
             _findRulesPad = CreatePad<FindRulesPad>();
 #endif
 
-		_workflowPad = CreatePad<WorkflowPlayerPad>();
-		_serverLogPad = CreatePad<ServerLogPad>();
-		CreatePad<WorkQueuePad>();
-	}
+            _workflowPad = CreatePad<WorkflowPlayerPad>();
+            _serverLogPad = CreatePad<ServerLogPad>();
+            CreatePad<WorkQueuePad>();
+		}
 
-	private void InitializeConnectedPads()
-	{
+		private void InitializeConnectedPads()
+		{
 #if !ORIGAM_CLIENT
             GetPad<ExtensionPad>()?.LoadPackages();
 #endif
-	}
-	private T CreatePad<T>()
-	{
+        }
+        private T CreatePad<T>()
+        {
             var pad = Activator.CreateInstance<T>();
             PadContentCollection.Add((IPadContent)pad);
             return pad;
         }
 
-	/// <summary>
-	/// After successfully loading the model list, we initialize model-connected services
-	/// </summary>
-	private void InitializeConnectedServices()
-	{
+		/// <summary>
+		/// After successfully loading the model list, we initialize model-connected services
+		/// </summary>
+		private void InitializeConnectedServices()
+		{
 			ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
 			ServiceManager.Services.AddService(new StateMachineService());
 			ServiceManager.Services.AddService(OrigamEngine.CreateDocumentationService());
@@ -1914,25 +1944,25 @@ internal class frmMain : Form, IWorkbench
 			ServiceManager.Services.AddService(new RuleEngineService());
 		}
 
-	private void InitializeDefaultServices()
-	{
-		ServiceManager.Services.AddService(new MetaModelUpgradeService());
-		// Status bar service
-		_statusBarService = new StatusBarService(statusBar);
-		ServiceManager.Services.AddService(_statusBarService);
+		private void InitializeDefaultServices()
+		{
+			ServiceManager.Services.AddService(new MetaModelUpgradeService());
+			// Status bar service
+			_statusBarService = new StatusBarService(statusBar);
+			ServiceManager.Services.AddService(_statusBarService);
 
-		// Schema service
-		_schema = new WorkbenchSchemaService();
-		ServiceManager.Services.AddService(_schema);
-		_schema.SchemaLoaded += _schema_SchemaLoaded;
-		_schema.SchemaUnloading += _schema_SchemaUnloading;
+			// Schema service
+			_schema = new WorkbenchSchemaService();
+			ServiceManager.Services.AddService(_schema);
+			_schema.SchemaLoaded += _schema_SchemaLoaded;
+			_schema.SchemaUnloading += _schema_SchemaUnloading;
 #if ! ORIGAM_CLIENT
 			_schema.ActiveNodeChanged += _schema_ActiveNodeChanged;
 #endif
-	}
+		}
 
-	private void _schema_ActiveNodeChanged(object sender, EventArgs e)
-	{
+		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
+		{
 			UpdateToolbar();
             AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
@@ -1983,14 +2013,14 @@ internal class frmMain : Form, IWorkbench
 
 		}
 
-	private void dockPanel_ActiveDocumentChanged(object sender, EventArgs e)
-	{
+		private void dockPanel_ActiveDocumentChanged(object sender, EventArgs e)
+		{
 			if(this.dockPanel.ActiveDocument != null)
 				OnActiveWindowChanged(sender, new EventArgs());
 		}
 
-	private void dockPanel_ContentRemoved(object sender, DockContentEventArgs e)
-	{
+		private void dockPanel_ContentRemoved(object sender, DockContentEventArgs e)
+		{
 			UpdateToolbar();
 
 			if(e.Content is IViewContent)
@@ -2000,8 +2030,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void dockPanel_ActiveContentChanged(object sender, EventArgs e)
-	{
+		private void dockPanel_ActiveContentChanged(object sender, EventArgs e)
+		{
 			UpdateToolbar();
 			if(this.ActiveViewContent != null)
 			{
@@ -2012,22 +2042,22 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void Content_DirtyChanged(object sender, EventArgs e)
-	{
+		private void Content_DirtyChanged(object sender, EventArgs e)
+		{
 			UpdateToolbar();
 		}
 
-	private void ActiveViewContent_StatusTextChanged(object sender, EventArgs e)
-	{
+		private void ActiveViewContent_StatusTextChanged(object sender, EventArgs e)
+		{
 			if(this.ActiveViewContent != null)
 			{
 				_statusBarService.SetStatusText(this.ActiveViewContent.StatusText);
 			}
 		}
 
-	// Handle keyboard shortcuts
-	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-	{
+		// Handle keyboard shortcuts
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
             if (_shortcuts.Contains(keyData))
             {
                 ToolStripItem menu = _shortcuts[keyData] as ToolStripItem;
@@ -2047,42 +2077,42 @@ internal class frmMain : Form, IWorkbench
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-	private void _schema_SchemaLoaded(object sender, bool isInteractive)
-	{
-		OrigamEngine.InitializeSchemaItemProviders(_schema);
-		IDeploymentService deployment 
-			= ServiceManager.Services.GetService<IDeploymentService>();
-		IParameterService parameterService 
-			= ServiceManager.Services.GetService<IParameterService>();
+        private void _schema_SchemaLoaded(object sender, bool isInteractive)
+		{
+            OrigamEngine.InitializeSchemaItemProviders(_schema);
+            IDeploymentService deployment 
+                = ServiceManager.Services.GetService<IDeploymentService>();
+			IParameterService parameterService 
+				= ServiceManager.Services.GetService<IParameterService>();
 
 #if ORIGAM_CLIENT
-		deployment.CanUpdate(_schema.ActiveExtension);
-		string modelVersion = _schema.ActiveExtension.Version;
-		string dbVersion = deployment.CurrentDeployedVersion(_schema.ActiveExtension);
+			deployment.CanUpdate(_schema.ActiveExtension);
+			string modelVersion = _schema.ActiveExtension.Version;
+			string dbVersion = deployment.CurrentDeployedVersion(_schema.ActiveExtension);
 
-		if(modelVersion != dbVersion)
-		{
-			if(AdministratorMode)
+			if(modelVersion != dbVersion)
 			{
-				string message = string.Format(
-					strings.ModelDatabaseVersionMissmatch_Message,
-					Environment.NewLine, 
-					modelVersion + Environment.NewLine,
-					dbVersion);
+				if(AdministratorMode)
+				{
+					string message = string.Format(
+                        strings.ModelDatabaseVersionMissmatch_Message,
+                        Environment.NewLine, 
+                        modelVersion + Environment.NewLine,
+                        dbVersion);
 
-				AsMessageBox.ShowError(this, message, strings.ConnectionTitle, null);
-			}
-			else
-			{
-				string message = string.Format(
-					strings.ModelDatabaseVersionMissmatchNoAdmin_Message,
-					Environment.NewLine, 
-					modelVersion + Environment.NewLine,
-					dbVersion);
+					AsMessageBox.ShowError(this, message, strings.ConnectionTitle, null);
+				}
+				else
+				{
+					string message = string.Format(
+                        strings.ModelDatabaseVersionMissmatchNoAdmin_Message,
+                        Environment.NewLine, 
+                        modelVersion + Environment.NewLine,
+                        dbVersion);
 
-				throw new Exception(message);
+					throw new Exception(message);
+				}
 			}
-		}
 #else
 			ApplicationDataDisconnectedMode
 				= !TestConnectionToApplicationDataDatabase();
@@ -2112,16 +2142,16 @@ internal class frmMain : Form, IWorkbench
             RunDeploymentScripts(deployment, isInteractive);
 
 #endif
-		try
-		{
-			parameterService.RefreshParameters();
-		}
-		catch(Exception ex)
-		{
-			// show the error but go on
-			// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
-			AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
-		}
+			try
+			{
+				parameterService.RefreshParameters();
+			}
+			catch(Exception ex)
+			{
+				// show the error but go on
+				// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
+				AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
+			}
 
 #if ! ORIGAM_CLIENT
             // we have to initialize the new user after parameter service gets loaded
@@ -2140,16 +2170,16 @@ internal class frmMain : Form, IWorkbench
             }
 #endif
 
-		MenuSchemaItemProvider menuProvider = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-		if(menuProvider.ChildItems.Count > 0)
-		{
-			_workflowPad.OrigamMenu = menuProvider.MainMenu;
+			MenuSchemaItemProvider menuProvider = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
+			if(menuProvider.ChildItems.Count > 0)
+			{
+				_workflowPad.OrigamMenu = menuProvider.MainMenu;
+			}
+            UpdateTitle();
 		}
-		UpdateTitle();
-	}
 
-	private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive)
-	{
+		private void RunDeploymentScripts(IDeploymentService deployment, bool isInteractive)
+		{
 			DeployVersion deployCommand = new DeployVersion();
 			if (!deployCommand.IsEnabled)
 			{
@@ -2183,44 +2213,44 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	public void UpdateTitle()
-	{
+		public void UpdateTitle()
+        {
 #if ORIGAM_CLIENT
-		Title = "";
+			Title = "";
 #else
             Title = strings.OrigamArchitect_Title;
 #endif
-		OrigamSettings settings 
-			= ConfigurationManager.GetActiveConfiguration() ;
-		if(settings == null)
-		{
-			return;
-		}
-		if(settings.TitleText != "")
-		{
-			if(Title != "")
+			OrigamSettings settings 
+                = ConfigurationManager.GetActiveConfiguration() ;
+            if(settings == null)
+            {
+                return;
+            }
+			if(settings.TitleText != "")
 			{
-				Title += " - ";
+                if(Title != "")
+                {
+                    Title += " - ";
+                }
+				Title += settings.TitleText;
 			}
-			Title += settings.TitleText;
-		}
-		if(_schema?.ActiveExtension == null)
-		{
-			return;
-		}
+            if(_schema?.ActiveExtension == null)
+            {
+                return;
+            }
 #if !ORIGAM_CLIENT
             Title += " - ";
             Title += _schema.ActiveExtension.Name;
 #endif
-		Title += string.Format(
-			strings.ModelVersion_Title, 
-			_schema?.ActiveExtension?.VersionString,
-			(ApplicationDataDisconnectedMode 
-				? strings.Disconnected : ""));
-	}
+			Title += string.Format(
+                strings.ModelVersion_Title, 
+                _schema?.ActiveExtension?.VersionString,
+                (ApplicationDataDisconnectedMode 
+                    ? strings.Disconnected : ""));
+        }
 
-	private void AttachmentDocument_ParentIdChanged(object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences)
-	{
+		private void AttachmentDocument_ParentIdChanged(object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences)
+		{
 			try
 			{
 				_attachmentPad?.GetAttachments(mainEntityId, mainRecordId, childReferences);
@@ -2231,8 +2261,8 @@ internal class frmMain : Form, IWorkbench
 		}
 
 
-	public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters)
-	{
+		public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters)
+		{
 			AbstractMenuItem targetMenuItem = linkTarget as AbstractMenuItem;
 
 			OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
@@ -2267,18 +2297,18 @@ internal class frmMain : Form, IWorkbench
 			cmd.Run();
 		}
 
-	public void ExitWorkbench()
-	{
+		public void ExitWorkbench()
+		{
 			this.Close();
 		}
 
-	private void _schema_SchemaUnloading(object sender, CancelEventArgs e)
-	{
+		private void _schema_SchemaUnloading(object sender, CancelEventArgs e)
+		{
 			e.Cancel = ! UnloadSchema();
         }
 
-	private void CheckModelRootPackageVersion()
-	{
+		private void CheckModelRootPackageVersion()
+		{
 			if(! AdministratorMode)
 			{
 				bool found = false;
@@ -2308,8 +2338,8 @@ internal class frmMain : Form, IWorkbench
 			}
 		}
 
-	private void searchBox_KeyDown(object sender, KeyEventArgs e)
-	{
+		private void searchBox_KeyDown(object sender, KeyEventArgs e)
+		{
 #if ORIGAM_CLIENT
 #else
 			if(e.KeyCode == Keys.Enter)
@@ -2333,15 +2363,15 @@ internal class frmMain : Form, IWorkbench
                 e.Handled = true;
 			}
 #endif
-	}
+		}
 
-	void toolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-	{
+        void toolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+		{
 			MenuItemClick(e.ClickedItem, EventArgs.Empty);
 		}
 
-	public void ExportToExcel(string name, ArrayList list)
-	{
+        public void ExportToExcel(string name, ArrayList list)
+        {
             try
             {
                 ExcelFormat excelFormat = ExcelTools.StringToExcelFormat(
@@ -2427,9 +2457,9 @@ internal class frmMain : Form, IWorkbench
             }
         }
 
-	private SaveFileDialog GetExportToExcelSaveDialog(
-		ExcelFormat excelFormat)
-	{
+        private SaveFileDialog GetExportToExcelSaveDialog(
+            ExcelFormat excelFormat)
+        {
             SaveFileDialog sfd = new SaveFileDialog();
             if(excelFormat == ExcelFormat.XLSX)
             {
@@ -2445,8 +2475,8 @@ internal class frmMain : Form, IWorkbench
             return sfd;
         }
         
-	private static bool TestConnectionToApplicationDataDatabase()
-	{
+        private static bool TestConnectionToApplicationDataDatabase()
+        {
             AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             try
             {
@@ -2458,4 +2488,5 @@ internal class frmMain : Form, IWorkbench
                 return false;
             }
         }
+    }
 }

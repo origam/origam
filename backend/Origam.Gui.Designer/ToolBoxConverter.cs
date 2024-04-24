@@ -22,20 +22,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Designer;
-
-public struct ToolBoxConverter
+namespace Origam.Gui.Designer
 {
-    const string WIDGET_TEXTBOX = "Origam.Gui.Win.AsTextBox,Origam.Gui.Win";
-    const string WIDGET_DROPDOWN = "Origam.Gui.Win.AsDropDown,Origam.Gui.Win";
-    const string WIDGET_TAGINPUT = "Origam.Gui.Win.TagInput,Origam.Gui.Win";
-    const string WIDGET_IMAGEBOX = "Origam.Gui.Win.ImageBox,Origam.Gui.Win";
-    const string WIDGET_CHECKBOX = "Origam.Gui.Win.AsCheckBox,Origam.Gui.Win";
-    const string WIDGET_DATEBOX = "Origam.Gui.Win.AsDateBox,Origam.Gui.Win";
-    const string WIDGET_MULTICOLUMNWRAPPER = "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
+    public struct ToolBoxConverter
+	{
+        const string WIDGET_TEXTBOX = "Origam.Gui.Win.AsTextBox,Origam.Gui.Win";
+        const string WIDGET_DROPDOWN = "Origam.Gui.Win.AsDropDown,Origam.Gui.Win";
+        const string WIDGET_TAGINPUT = "Origam.Gui.Win.TagInput,Origam.Gui.Win";
+        const string WIDGET_IMAGEBOX = "Origam.Gui.Win.ImageBox,Origam.Gui.Win";
+        const string WIDGET_CHECKBOX = "Origam.Gui.Win.AsCheckBox,Origam.Gui.Win";
+        const string WIDGET_DATEBOX = "Origam.Gui.Win.AsDateBox,Origam.Gui.Win";
+        const string WIDGET_MULTICOLUMNWRAPPER = "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
 
-    public static string Convert(IDataEntityColumn field)
-    {
+        public static string Convert(IDataEntityColumn field)
+		{
 			string result;
             if (field.DefaultLookup != null)
             {
@@ -67,4 +67,5 @@ public struct ToolBoxConverter
             }
             return result;
 		}
+	}
 }

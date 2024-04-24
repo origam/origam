@@ -28,14 +28,14 @@ using Origam.Schema;
 using MoreLinq;
 using NUnit.Framework;
 
-namespace Origam.Common_net2Tests;
-
-[TestFixture]
-public class DictiaoaryExtensionsTests
+namespace Origam.Common_net2Tests
 {
-    [Test]
-    public void ShouldRemoveValues()
+    [TestFixture]
+    public class DictiaoaryExtensionsTests
     {
+        [Test]
+        public void ShouldRemoveValues()
+        {
             int distSize = 1000000;
             int itemsToKeep = 10000;
 
@@ -52,54 +52,54 @@ public class DictiaoaryExtensionsTests
 
         }
 
-    private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(
-        int numOfEntries)
-    {
+        private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(
+            int numOfEntries)
+        {
             return Enumerable
                 .Range(1, numOfEntries)
                 .ToDictionary(x => x, x => new ReferenceTypeInt(x));
         }
 
-    class ReferenceTypeInt
-    {
-        private readonly int val;
-
-        public ReferenceTypeInt(int val)
+        class ReferenceTypeInt
         {
+            private readonly int val;
+
+            public ReferenceTypeInt(int val)
+            {
                 this.val = val;
             }
 
-        protected bool Equals(ReferenceTypeInt other) => val == other.val;
+            protected bool Equals(ReferenceTypeInt other) => val == other.val;
 
-        public override bool Equals(object obj)
-        {
+            public override bool Equals(object obj)
+            {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
                 return Equals((ReferenceTypeInt) obj);
             }
 
-        public override int GetHashCode() => val;
+            public override int GetHashCode() => val;
+        }
+
     }
 
-}
-
-[TestFixture]
-public class TypeExtensionsTests
-{
-    [Test]
-    public void ShouldRemoveValues()
+    [TestFixture]
+    public class TypeExtensionsTests
     {
+        [Test]
+        public void ShouldRemoveValues()
+        {
             IEnumerable<Type> allPublicSubTypes = typeof(AbstractSchemaItem).GetAllPublicSubTypes().ToList();
         }
-}
+    }
     
-[TestFixture]
-public class DirectoryInfoExtensionTests
-{
-    [Test]
-    public void ShouldRecognizeDirectoryAsParent()
+    [TestFixture]
+    public class DirectoryInfoExtensionTests
     {
+        [Test]
+        public void ShouldRecognizeDirectoryAsParent()
+        {
             var parent = new DirectoryInfo(@"Serialization\Root Menu".
                 Replace('\\', Path.DirectorySeparatorChar));
             var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
@@ -108,9 +108,9 @@ public class DirectoryInfoExtensionTests
             Assert.That(parent.IsOnPathOf(child));
         }
         
-    [Test]
-    public void ShouldRecognizeDirectoryIsNotParent()
-    {
+        [Test]
+        public void ShouldRecognizeDirectoryIsNotParent()
+        {
             var notApatent = new DirectoryInfo(@"Serialization\Root".
                 Replace('\\', Path.DirectorySeparatorChar));
             var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
@@ -118,13 +118,13 @@ public class DirectoryInfoExtensionTests
 
             Assert.That(!notApatent.IsOnPathOf(child));
         }
-}
-[TestFixture]
-public class StringExtensionTests
-{
-    [Test]
-    public void ShouldTruncateString()
+    }
+    [TestFixture]
+    public class StringExtensionTests
     {
+        [Test]
+        public void ShouldTruncateString()
+        {
             string stringTestValue = "The quick brown fox jumps over the lazy dog.";
             string nullString = null;
             Assert.That(stringTestValue.Truncate(0).Equals(string.Empty));
@@ -134,4 +134,5 @@ public class StringExtensionTests
             Assert.That(nullString.Truncate(0) is null);
             Assert.That(nullString.Truncate(10) is null);
         }
+    }
 }

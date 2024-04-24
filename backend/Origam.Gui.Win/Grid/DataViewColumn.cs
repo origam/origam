@@ -26,19 +26,20 @@ using System.Data;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-public class AsDataViewColumn : DataGridTextBoxColumn
+namespace Origam.Gui.Win
 {
-	public AsDateBox AsDateBox;
-	private bool _isEditing;
 
-	private CurrencyManager dataSource;
-	private int rowNum;
-		
-		
-	public AsDataViewColumn() : base()
+	public class AsDataViewColumn : DataGridTextBoxColumn
 	{
+		public AsDateBox AsDateBox;
+		private bool _isEditing;
+
+		private CurrencyManager dataSource;
+		private int rowNum;
+		
+		
+		public AsDataViewColumn() : base()
+		{
 			_isEditing = false;
 			AsDateBox = new AsDateBox();
 			AsDateBox.NoKeyUp = true;
@@ -50,34 +51,38 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 
 		}
 
-	private void OnAsDateBoxTextValueChanged(object sender, EventArgs args)
-	{
+		private void OnAsDateBoxTextValueChanged(object sender, EventArgs args)
+		{
 			// dataSource is null if this method gets called vefore Commit method
 			if (dataSource == null) return;
 			
-			// Workaround to write chages made in textBox to dataSource 		// and redraw when Tab is pressed. 		// It looks like without this handler the Commit method gets 		// called before AsDateBox has a chance to update it's state.
+			// Workaround to write chages made in textBox to dataSource 
+			// and redraw when Tab is pressed. 
+			// It looks like without this handler the Commit method gets 
+			// called before AsDateBox has a chance to update it's state.
 			// This handler is called after the update is complete so that
-			// the Commit method can update the dataSource with the new data.  		if (GetColumnValueAtRow(dataSource, rowNum) != AsDateBox.DateValue)
+			// the Commit method can update the dataSource with the new data.  
+			if (GetColumnValueAtRow(dataSource, rowNum) != AsDateBox.DateValue)
 			{
 				_isEditing = true;
 				Commit(dataSource, rowNum);
 			}
 		}
 
-	private bool _alwaysReadOnly = false;
-	public bool AlwaysReadOnly
-	{
-		get => _alwaysReadOnly;
-		set
+		private bool _alwaysReadOnly = false;
+		public bool AlwaysReadOnly
 		{
+			get => _alwaysReadOnly;
+			set
+			{
 				_alwaysReadOnly = value;
 				this.AsDateBox.ReadOnly = value;
 			}
-	}
+		}
 
-	private bool _isDisposed = false;
-	protected override void Dispose(bool disposing)
-	{
+		private bool _isDisposed = false;
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(AsDateBox != null)
@@ -94,8 +99,8 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 			_isDisposed = true;
 		}
 
-	protected override void Abort(int rowNum)
-	{
+		protected override void Abort(int rowNum)
+		{
 			if(_isDisposed) return;
 
 			_isEditing = false;
@@ -106,8 +111,8 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 		}
 
 
-	protected override void Edit(System.Windows.Forms.CurrencyManager source, int rowNum, System.Drawing.Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(System.Windows.Forms.CurrencyManager source, int rowNum, System.Drawing.Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			if(! AlwaysReadOnly)
 			{
 				RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
@@ -166,8 +171,8 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override bool Commit(System.Windows.Forms.CurrencyManager dataSource, int rowNum)
-	{
+		protected override bool Commit(System.Windows.Forms.CurrencyManager dataSource, int rowNum)
+		{
 			AsDateBox.dateValueChanged -= new EventHandler(AsDateBox_dateValueChanged);
 			this.dataSource = dataSource;
 			this.rowNum = rowNum;
@@ -198,21 +203,21 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 			return true;
 		}
 
-	protected override void ReleaseHostedControl()
-	{
+		protected override void ReleaseHostedControl()
+		{
 			base.ReleaseHostedControl ();
 
 			this.AsDateBox.Parent = null;
 		}
 
-	protected override void ConcedeFocus()
-	{
+		protected override void ConcedeFocus()
+		{
 			AsDateBox.Hide();
 			base.ConcedeFocus();
 		}
 
-	protected override void SetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum, object value)
-	{
+		protected override void SetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum, object value)
+		{
 			if(_isEditing)
 			{
 				base.SetColumnValueAtRow(source, rowNum, value);
@@ -220,8 +225,8 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 
 		}
 
-	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
-	{
+		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
+		{
 			Brush myBackBrush = backBrush;
 			Brush myForeBrush = foreBrush;
 
@@ -236,12 +241,13 @@ public class AsDataViewColumn : DataGridTextBoxColumn
 		}
 
 
-	private void AsDateBox_dateValueChanged(object sender, EventArgs e)
-	{
+		private void AsDateBox_dateValueChanged(object sender, EventArgs e)
+		{
 			_isEditing = true;
 			base.ColumnStartedEditing((Control) sender);
 		}
 
 
 
+	}
 }

@@ -31,21 +31,21 @@ using CrystalDecisions.Shared;
 using System.Drawing.Printing;
 using Origam.Service.Core;
 
-namespace Origam.BI.CrystalReports;
-
-/// <summary>
-/// Summary description for CrystalReportService.
-/// </summary>
-public class CrystalReportService : IReportService
+namespace Origam.BI.CrystalReports
 {
-	CrystalReportHelper _helper = new CrystalReportHelper();
-
-	public CrystalReportService()
+	/// <summary>
+	/// Summary description for CrystalReportService.
+	/// </summary>
+	public class CrystalReportService : IReportService
 	{
+		CrystalReportHelper _helper = new CrystalReportHelper();
+
+		public CrystalReportService()
+		{
 		}
 
-	public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
-	{
+		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+		{
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 
              if(! (data is IDataDocument | data == null))
@@ -89,8 +89,8 @@ public class CrystalReportService : IReportService
 			}
 		}
 
-	public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
-	{
+		public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
+		{
 			var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
 
 			IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
@@ -145,15 +145,16 @@ public class CrystalReportService : IReportService
 				}
 			}
 		}
-	public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-	{
+        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        {
             // do nothing unless we need to trace
         }
 
-	public string PrepareExternalReportViewer(Guid reportId,
-		IXmlContainer data, string format, Hashtable parameters,
-		string dbTransaction)
-	{
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
             throw new NotImplementedException();
         }
+    }
 }

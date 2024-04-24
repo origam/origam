@@ -27,17 +27,17 @@ using System.Drawing.Design;
 using System.Globalization;
 using System.Windows.Forms.Design;
 
-namespace Origam.Workbench;
-
-public class ModelUIEditor : UITypeEditor
+namespace Origam.Workbench
 {
-    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+    public class ModelUIEditor : UITypeEditor
     {
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+        {
             return UITypeEditorEditStyle.DropDown;
         }
 
-    public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
-    {
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
             IWindowsFormsEditorService editorService = null;
             if (provider != null)
             {
@@ -71,21 +71,21 @@ public class ModelUIEditor : UITypeEditor
             return value;
         }
 
-    public override bool GetPaintValueSupported(ITypeDescriptorContext context)
-    {
+        public override bool GetPaintValueSupported(ITypeDescriptorContext context)
+        {
             return true;
         }
 
-    public override bool IsDropDownResizable
-    {
-        get
+        public override bool IsDropDownResizable
         {
+            get
+            {
                 return true;
             }
-    }
+        }
 
-    public override void PaintValue(PaintValueEventArgs e)
-    {
+        public override void PaintValue(PaintValueEventArgs e)
+        {
             ISchemaItem schemaItem = e.Value as ISchemaItem;
             if (schemaItem == null)
             {
@@ -106,4 +106,5 @@ public class ModelUIEditor : UITypeEditor
                 e.Graphics.DrawImage(imageList.Images[icon], e.Bounds.X + 6, e.Bounds.Y, e.Bounds.Height, e.Bounds.Height);
             }
         }
+    }
 }

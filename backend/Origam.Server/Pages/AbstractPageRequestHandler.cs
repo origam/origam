@@ -50,17 +50,17 @@ using Origam.Rule;
 using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 
-namespace Origam.Server.Pages;
-
-public abstract class AbstractPageRequestHandler : IPageRequestHandler
+namespace Origam.Server.Pages
 {
-	public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+	public abstract class AbstractPageRequestHandler : IPageRequestHandler
 	{
+		public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+		{
 			throw new NotImplementedException();
 		}
 
-	internal static Hashtable GetPreprocessorParameters(IRequestWrapper request)
-	{
+		internal static Hashtable GetPreprocessorParameters(IRequestWrapper request)
+		{
 			Hashtable preprocessorParams = new Hashtable();
 
 			XmlDocument capabDoc = new XmlDocument();
@@ -85,8 +85,8 @@ public abstract class AbstractPageRequestHandler : IPageRequestHandler
 			return preprocessorParams;
 		}
 
-	protected static void Validate(IXmlContainer data, Hashtable transformParams, RuleEngine ruleEngine, IEndRule validation)
-	{
+		protected static void Validate(IXmlContainer data, Hashtable transformParams, RuleEngine ruleEngine, IEndRule validation)
+		{
 			if (validation != null)
 			{
 				RuleExceptionDataCollection result =
@@ -99,4 +99,5 @@ public abstract class AbstractPageRequestHandler : IPageRequestHandler
 				}
 			}
 		}
+	}
 }

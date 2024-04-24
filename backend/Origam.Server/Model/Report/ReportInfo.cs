@@ -1,6 +1,7 @@
-﻿namespace Origam.Server.Model.Report;
-
-public class ReportInfo
+﻿namespace Origam.Server.Model.Report
 {
-    public bool IsWebReport { get; set; }
+    public class ReportInfo
+    {
+        public bool IsWebReport { get; set; }
+    }
 }

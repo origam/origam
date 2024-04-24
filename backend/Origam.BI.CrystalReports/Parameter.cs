@@ -21,13 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Runtime.Serialization;
 
-namespace Origam.CrystalReportsService.Models;
-
-[DataContract(Namespace = "")]
-public class Parameter
+namespace Origam.CrystalReportsService.Models
 {
-    [DataMember]
-    public string Key { get; set; }
-    [DataMember(EmitDefaultValue = false)]
-    public string Value { get; set; }
+    [DataContract(Namespace = "")]
+    public class Parameter
+    {
+        [DataMember]
+        public string Key { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public string Value { get; set; }
+    }
 }

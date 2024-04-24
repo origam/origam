@@ -21,10 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.Model.UIService;
-
-public class LookupLabelsInput : AbstractLookupInput
+namespace Origam.Server.Model.UIService
 {
-    [Required]
-    public object[] LabelIds { get; set; }
+    public class LookupLabelsInput : AbstractLookupInput
+    {
+        [Required]
+        public object[] LabelIds { get; set; }
+    }
 }

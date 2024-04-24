@@ -25,42 +25,43 @@ using System.Data;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
-namespace Origam.Workbench.Services;
-
-public class NullPersistenceService : IPersistenceService
+namespace Origam.Workbench.Services
 {
-    public void InitializeService()
+    public class NullPersistenceService : IPersistenceService
     {
+        public void InitializeService()
+        {
         }
 
-    public void UnloadService()
-    {
+        public void UnloadService()
+        {
         }
 
-    public object Clone()
-    {
+        public object Clone()
+        {
             throw new NotImplementedException();
         }
 
-    public IPersistenceProvider SchemaProvider => new NullPersistenceProvider();
-    public IPersistenceProvider SchemaListProvider => new NullPersistenceProvider();
+        public IPersistenceProvider SchemaProvider => new NullPersistenceProvider();
+        public IPersistenceProvider SchemaListProvider => new NullPersistenceProvider();
         
-    public Package LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
-        string transactionId)
-    {
+        public Package LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
+            string transactionId)
+        {
             throw new NotImplementedException();
         }
 
-    public Package LoadSchema(Guid schemaExtensionId)
-    {
+        public Package LoadSchema(Guid schemaExtensionId)
+        {
             throw new NotImplementedException();
         }
 
-    public void InitializeRepository()
-    {
+        public void InitializeRepository()
+        {
         }
 
-    public void Dispose()
-    {
+        public void Dispose()
+        {
         }
+    }
 }

@@ -31,23 +31,23 @@ using Origam.DA;
 using Origam.Excel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow.FileService;
-
-/// <summary>
-/// Summary description for ExcelService.
-/// </summary>
-public class ExcelAgent : AbstractServiceAgent
+namespace Origam.Workflow.FileService
 {
-    private static ICellStyle _dateCellStyle;
-
-    public ExcelAgent()
+    /// <summary>
+    /// Summary description for ExcelService.
+    /// </summary>
+    public class ExcelAgent : AbstractServiceAgent
     {
+        private static ICellStyle _dateCellStyle;
+
+        public ExcelAgent()
+        {
         }
 
-    private IDataDocument ReadSheet(
-        ExcelFormat excelFormat, string fileName, string sheetName,
-        string entity, XmlDocument optionsXml, byte[] file)
-    {
+        private IDataDocument ReadSheet(
+            ExcelFormat excelFormat, string fileName, string sheetName,
+            string entity, XmlDocument optionsXml, byte[] file)
+        {
             IWorkbook wb;
             TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
             if(options == null)
@@ -149,8 +149,8 @@ public class ExcelAgent : AbstractServiceAgent
             return DataDocumentFactory.New(data);
         }
 
-    private DataColumn LookupColumnByCaption(DataTable table, string caption)
-    {
+        private DataColumn LookupColumnByCaption(DataTable table, string caption)
+        {
             foreach(DataColumn col in table.Columns)
             {
                 if(col.Caption == caption) return col;
@@ -159,10 +159,10 @@ public class ExcelAgent : AbstractServiceAgent
             return null;
         }
 
-    private void UpdateSheet(
-        ExcelFormat excelFormat, string fileName, string sheetName,
-        string entity, IDataDocument data, XmlDocument optionsXml)
-    {
+        private void UpdateSheet(
+            ExcelFormat excelFormat, string fileName, string sheetName,
+            string entity, IDataDocument data, XmlDocument optionsXml)
+        {
             TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
             IWorkbook wb;
             FileInfo fi = new FileInfo(fileName);
@@ -205,18 +205,18 @@ public class ExcelAgent : AbstractServiceAgent
             ExcelTools.SaveWorkbook(wb, fi);
         }
 
-    #region IServiceAgent Members
-    private object _result;
-    public override object Result
-    {
-        get
+        #region IServiceAgent Members
+        private object _result;
+        public override object Result
         {
+            get
+            {
                 return _result;
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             switch(this.MethodName)
             {
                 case "ReadSheet":
@@ -273,5 +273,6 @@ public class ExcelAgent : AbstractServiceAgent
                     break;
             }
         }
-    #endregion
+        #endregion
+    }
 }

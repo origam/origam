@@ -28,19 +28,19 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
-
-/// <summary>
-/// Summary description for ModelXmlResolver.
-/// </summary>
-public class ModelXmlResolver : XmlResolver
+namespace Origam.Rule
 {
-	public ModelXmlResolver() : base()
+	/// <summary>
+	/// Summary description for ModelXmlResolver.
+	/// </summary>
+	public class ModelXmlResolver : XmlResolver
 	{
+		public ModelXmlResolver() : base()
+		{
 		}
 
-	public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
-	{ 
+		public override object GetEntity(Uri absoluteUri, string role, Type ofObjectToReturn)
+		{ 
 //			if(absoluteUri.IsFile)
 //			{
 //				System.Xml.XmlUrlResolver x = new XmlUrlResolver();
@@ -79,16 +79,17 @@ public class ModelXmlResolver : XmlResolver
 //			}
 		}
 
-	public override Uri ResolveUri(Uri baseUri, string relativeUri)
-	{
+		public override Uri ResolveUri(Uri baseUri, string relativeUri)
+		{
 			return base.ResolveUri (baseUri, relativeUri);
 		}
 
-	public override System.Net.ICredentials Credentials
-	{
-		set
+		public override System.Net.ICredentials Credentials
 		{
+			set
+			{
 			}
-	}
+		}
 
+	}
 }

@@ -17,18 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Threading;
 
-namespace Origam.Extensions;
-
-public static class ReaderWriterLockSlimExtensions
+namespace Origam.Extensions
 {
-        
-    public static void RunWriter(this ReaderWriterLockSlim rwLock, Action action)
+    public static class ReaderWriterLockSlimExtensions
     {
+        
+        public static void RunWriter(this ReaderWriterLockSlim rwLock, Action action)
+        {
             rwLock.EnterWriteLock();
             try
             {
@@ -40,8 +39,8 @@ public static class ReaderWriterLockSlimExtensions
             }
         }
         
-    public static T RunWriter<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
-    {
+        public static T RunWriter<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
+        {
             rwLock.EnterWriteLock();
             try
             {
@@ -53,8 +52,8 @@ public static class ReaderWriterLockSlimExtensions
             }
         }
         
-    public static void RunReader(this ReaderWriterLockSlim rwLock,Action action)
-    {
+        public static void RunReader(this ReaderWriterLockSlim rwLock,Action action)
+        {
             rwLock.EnterReadLock();
             try
             {
@@ -66,8 +65,8 @@ public static class ReaderWriterLockSlimExtensions
             }
         }
         
-    public static T RunReader<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
-    {
+        public static T RunReader<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
+        {
             rwLock.EnterReadLock();
             try
             {
@@ -80,4 +79,5 @@ public static class ReaderWriterLockSlimExtensions
         }
         
         
+    }
 }

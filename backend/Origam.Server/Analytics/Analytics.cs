@@ -45,32 +45,32 @@ using System.Collections.Generic;
 using log4net;
 using log4net.Core;
 
-namespace Origam.Server;
-
-public class Analytics
+namespace Origam.Server
 {
-    private static Analytics instance;
-    public static Analytics Instance => instance ?? (instance = new Analytics());
-
-    private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
-    public const string PropertyNamePrefix = "log4net_app_";
-
-
-    public void SetProperty(string propertyName, object value)
+    public class Analytics
     {
+        private static Analytics instance;
+        public static Analytics Instance => instance ?? (instance = new Analytics());
+
+        private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
+        public const string PropertyNamePrefix = "log4net_app_";
+
+
+        public void SetProperty(string propertyName, object value)
+        {
             log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
         }
 
-    public void Log(string message)
-    {
+        public void Log(string message)
+        {
             if (perfLog.IsInfoEnabled)
             {
                 perfLog.Info(message);
             }
         }
 
-    public void Log(Type type, string message, IDictionary<string, string> properties)
-    {
+        public void Log(Type type, string message, IDictionary<string, string> properties)
+        {
             if (perfLog.IsInfoEnabled)
             {
                 LoggingEvent loggingEvent = new LoggingEvent(
@@ -89,9 +89,10 @@ public class Analytics
             }
         }
 
-    public bool IsAnalyticsEnabled => perfLog.IsInfoEnabled;
-}
+        public bool IsAnalyticsEnabled => perfLog.IsInfoEnabled;
+    }
 
-class NullPropertyProvider : IAdaptivePropertyProvider
-{
+    class NullPropertyProvider : IAdaptivePropertyProvider
+    {
+    }
 }

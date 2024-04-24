@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workbench;
-
-/// <summary>
-/// Summary description for IMenuBindingResult.
-/// </summary>
-public interface IMenuBindingResult
+namespace Origam.Workbench
 {
-	string MenuId {get;}
-	string PanelId {get;}
+	/// <summary>
+	/// Summary description for IMenuBindingResult.
+	/// </summary>
+	public interface IMenuBindingResult
+	{
+		string MenuId {get;}
+		string PanelId {get;}
+	}
 }

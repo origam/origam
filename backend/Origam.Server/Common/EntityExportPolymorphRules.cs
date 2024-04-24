@@ -42,16 +42,17 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Collections;
 
-namespace Origam.Server;
-
-public class EntityExportPolymorphRules
+namespace Origam.Server
 {
-    private string controlField;
-    private IDictionary rules = new Hashtable();
-
-    public string ControlField
+    public class EntityExportPolymorphRules
     {
-        get => controlField; set => controlField = value;
+        private string controlField;
+        private IDictionary rules = new Hashtable();
+
+        public string ControlField
+        {
+            get => controlField; set => controlField = value;
+        }
+        public IDictionary Rules { get => rules; set => rules = value; }
     }
-    public IDictionary Rules { get => rules; set => rules = value; }
 }

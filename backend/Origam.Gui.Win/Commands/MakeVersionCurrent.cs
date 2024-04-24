@@ -26,12 +26,12 @@ using Origam.Schema.DeploymentModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands;
-
-public class MakeVersionCurrent : AbstractCommand
+namespace Origam.Gui.Win.Commands
 {
-	public override void Run()
+	public class MakeVersionCurrent : AbstractCommand
 	{
+		public override void Run()
+		{
 			var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			DeploymentVersion version = (Owner as DeploymentVersion)!;
 
@@ -52,4 +52,5 @@ public class MakeVersionCurrent : AbstractCommand
 			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
 			schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 		}
+	}
 }

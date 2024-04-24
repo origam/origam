@@ -25,119 +25,119 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for AsPanelTitle.
-/// </summary>
-public class AsPanelTitle : Panel
+namespace Origam.Gui.Win
 {
-	public AsPanelTitle() : base()
+	/// <summary>
+	/// Summary description for AsPanelTitle.
+	/// </summary>
+	public class AsPanelTitle : Panel
 	{
+		public AsPanelTitle() : base()
+		{
 			this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | System.Windows.Forms.ControlStyles.DoubleBuffer,true);
 			this.ResizeRedraw = true;
 		}
 
-	private string _panelTitle = "";
-	public string PanelTitle
-	{
-		get
+		private string _panelTitle = "";
+		public string PanelTitle
 		{
+			get
+			{
 				return _panelTitle;
 			}
-		set
-		{
+			set
+			{
 				_panelTitle = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Bitmap _panelIcon;
-	public Bitmap PanelIcon
-	{
-		get
+		private Bitmap _panelIcon;
+		public Bitmap PanelIcon
 		{
+			get
+			{
 				return _panelIcon;
 			}
-		set
-		{
+			set
+			{
 				_panelIcon = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Bitmap _statusIcon;
-	public Bitmap StatusIcon
-	{
-		get
+		private Bitmap _statusIcon;
+		public Bitmap StatusIcon
 		{
+			get
+			{
 				return _statusIcon;
 			}
-		set
-		{
+			set
+			{
 				_statusIcon = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Color _startColor;
-	public Color StartColor
-	{
-		get
+		private Color _startColor;
+		public Color StartColor
 		{
+			get
+			{
 				return _startColor;
 			}
-		set
-		{
+			set
+			{
 				_startColor = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Color _endColor;
-	public Color EndColor
-	{
-		get
+		private Color _endColor;
+		public Color EndColor
 		{
+			get
+			{
 				return _endColor;
 			}
-		set
-		{
+			set
+			{
 				_endColor = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Color _middleStartColor;
-	public Color MiddleStartColor
-	{
-		get
+		private Color _middleStartColor;
+		public Color MiddleStartColor
 		{
+			get
+			{
 				return _middleStartColor;
 			}
-		set
-		{
+			set
+			{
 				_middleStartColor = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	private Color _middleEndColor;
-	public Color MiddleEndColor
-	{
-		get
+		private Color _middleEndColor;
+		public Color MiddleEndColor
 		{
+			get
+			{
 				return _middleEndColor;
 			}
-		set
-		{
+			set
+			{
 				_middleEndColor = value;
 				this.Invalidate(true);
 			}
-	}
+		}
 
-	protected override void OnPaint(PaintEventArgs e)
-	{
+		protected override void OnPaint(PaintEventArgs e)
+		{
 			if(this.Width == 0) return;
 			//base.OnPaint (e);
 
@@ -214,8 +214,9 @@ public class AsPanelTitle : Panel
 			}
 		}
 
-	private int GetColorSplitPosition(int height)
-	{
+		private int GetColorSplitPosition(int height)
+		{
 			return Convert.ToInt32((height / 2.5));
 		}
+	}
 }

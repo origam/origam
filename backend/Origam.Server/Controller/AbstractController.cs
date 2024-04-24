@@ -44,32 +44,32 @@ using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Controller;
-
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-[ApiController]
-[Route("internalApi/[controller]")]
-public abstract class AbstractController: ControllerBase
+namespace Origam.Server.Controller
 {
-    protected readonly SessionObjects sessionObjects;
-    protected readonly IDataService dataService;
-    protected readonly string workQueueEntity = "WorkQueueEntry";
-    protected class EntityData
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+    [ApiController]
+    [Route("internalApi/[controller]")]
+    public abstract class AbstractController: ControllerBase
     {
-        public FormReferenceMenuItem MenuItem { get; set; }
-        public DataStructureEntity Entity { get; set; }
-    }
-    // ReSharper disable once InconsistentNaming
-    protected readonly ILogger<AbstractController> log;
-    protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects)
-    {
+        protected readonly SessionObjects sessionObjects;
+        protected readonly IDataService dataService;
+        protected readonly string workQueueEntity = "WorkQueueEntry";
+        protected class EntityData
+        {
+            public FormReferenceMenuItem MenuItem { get; set; }
+            public DataStructureEntity Entity { get; set; }
+        }
+        // ReSharper disable once InconsistentNaming
+        protected readonly ILogger<AbstractController> log;
+        protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects)
+        {
             this.log = log;
             this.sessionObjects = sessionObjects;
             dataService = DataServiceFactory.GetDataService();
         }
-    protected static MenuLookupIndex MenuLookupIndex {
-        get
-        {
+        protected static MenuLookupIndex MenuLookupIndex {
+            get
+            {
                 const string allowedLookups = "AllowedLookups";
                 if(!OrigamUserContext.Context.ContainsKey(allowedLookups))
                 {
@@ -80,9 +80,9 @@ public abstract class AbstractController: ControllerBase
                     allowedLookups];
                 return lookupIndex;
             }
-    }
-    protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
-    {
+        }
+        protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
+        {
             try
             {
                 return func();
@@ -118,16 +118,16 @@ public abstract class AbstractController: ControllerBase
                 return StatusCode(500, ex);
             }
         }
-    protected Result<AbstractMenuItem, IActionResult> Authorize(
-        AbstractMenuItem menuItem)
-    {
+        protected Result<AbstractMenuItem, IActionResult> Authorize(
+            AbstractMenuItem menuItem)
+        {
             return SecurityManager.GetAuthorizationProvider().Authorize(
                 User, menuItem.Roles)
                 ? Result.Success<AbstractMenuItem, IActionResult>(menuItem)
                 : Result.Failure<AbstractMenuItem, IActionResult>(Forbid());
         }
-    protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
-    {
+        protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
+        {
             return !(ServiceManager.Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
@@ -136,27 +136,27 @@ public abstract class AbstractController: ControllerBase
                     NotFound("Object with requested id not found."))
                 : Result.Success<T, IActionResult>(instance);
         }
-    protected Result<EntityData, IActionResult> GetEntityData(
-        Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
-    {
+        protected Result<EntityData, IActionResult> GetEntityData(
+            Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
+        {
             return FindEntity(dataStructureEntityId)
                 .Map(entity => 
                     new EntityData {MenuItem = menuItem, Entity = entity});
         }
-    protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
-        EntityData entityData)
-    {
+        protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
+            EntityData entityData)
+        {
             return (entityData.MenuItem.Screen.DataStructure.Id 
                 == entityData.Entity.RootEntity.ParentItemId)
                 ? Result.Success<EntityData, IActionResult>(entityData)
                 : Result.Failure<EntityData, IActionResult>(
                     BadRequest("The requested Entity does not belong to the menu."));
         }
-    protected Result<RowData, IActionResult> GetRow(
-        IDataService dataService,
-        DataStructureEntity entity, Guid dataStructureEntityId,
-        Guid methodId, Guid rowId)
-    {
+        protected Result<RowData, IActionResult> GetRow(
+            IDataService dataService,
+            DataStructureEntity entity, Guid dataStructureEntityId,
+            Guid methodId, Guid rowId)
+        {
             var rows = SessionStore.LoadRows(dataService, entity, 
                 dataStructureEntityId, methodId, new List<Guid> { rowId });
             if(rows.Count == 0)
@@ -167,22 +167,22 @@ public abstract class AbstractController: ControllerBase
             return Result.Success<RowData, IActionResult>(
                 new RowData{Row = rows[0], Entity = entity});
         }
-    protected IActionResult UnwrapReturnValue(
-        Result<IActionResult, IActionResult> result)
-    {
+        protected IActionResult UnwrapReturnValue(
+            Result<IActionResult, IActionResult> result)
+        {
             return result.IsSuccess ? result.Value : result.Error;
         }
-    protected Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
-    {
+        protected Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
+        {
             return FindItem<DataStructureEntity>(id)
                 .OnFailureCompensate(error =>
                     Result.Failure<DataStructureEntity, IActionResult>(
                         NotFound("Requested DataStructureEntity not found. " 
                         + error.GetMessage())));
         }
-    protected IActionResult SubmitChange(
-        RowData rowData, Operation operation)
-    {
+        protected IActionResult SubmitChange(
+            RowData rowData, Operation operation)
+        {
             try
             {
                 DataService.Instance.StoreData(
@@ -206,9 +206,9 @@ public abstract class AbstractController: ControllerBase
                 operation: operation, 
                 rowStateProcessor: null));
         }
-    protected Result<RowData, IActionResult> AmbiguousInputToRowData(
-        AmbiguousInput input, IDataService dataService)
-    {
+        protected Result<RowData, IActionResult> AmbiguousInputToRowData(
+            AmbiguousInput input, IDataService dataService)
+        {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return 
@@ -248,8 +248,8 @@ public abstract class AbstractController: ControllerBase
             }
         }
 
-    private Result<Guid, IActionResult> AuthorizeQueueItem(Guid menuId)
-    {
+        private Result<Guid, IActionResult> AuthorizeQueueItem(Guid menuId)
+        {
             DataTable workQueues = ServiceManager.Services
                 .GetService<IWorkQueueService>()
                 .UserQueueList()
@@ -264,9 +264,9 @@ public abstract class AbstractController: ControllerBase
                     NotFound("Object with requested id not found."));
         }
 
-    protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
-        AmbiguousInput input)
-    {
+        protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
+            AmbiguousInput input)
+        {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
@@ -283,9 +283,9 @@ public abstract class AbstractController: ControllerBase
                     input.SessionFormIdentifier, input.Entity);
             }
         } 
-    protected Result<EntityData, IActionResult> EntityIdentificationToEntityData(
-        IEntityIdentification input)
-    {
+        protected Result<EntityData, IActionResult> EntityIdentificationToEntityData(
+            IEntityIdentification input)
+        {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
@@ -302,20 +302,20 @@ public abstract class AbstractController: ControllerBase
                         input.DataStructureEntityId, menuItem));
             }
         }
-    protected Result<Guid, IActionResult> EntityDataToEntityId(
-        EntityData entityData)
-    {
+        protected Result<Guid, IActionResult> EntityDataToEntityId(
+            EntityData entityData)
+        {
             return Result.Ok<Guid, IActionResult>(entityData.Entity.EntityId);
         }
-    protected IActionResult ToActionResult(object obj)
-    {
+        protected IActionResult ToActionResult(object obj)
+        {
             return Ok(obj);
         }
         
-    protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
-        Guid sessionFormIdentifier, Guid masterRowId, EntityData entityData,
-        DataStructureQuery query)
-    {
+        protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
+            Guid sessionFormIdentifier, Guid masterRowId, EntityData entityData,
+            DataStructureQuery query)
+        {
             bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;
             if(isLazyLoaded)
             {
@@ -369,8 +369,8 @@ public abstract class AbstractController: ControllerBase
             return Result.Ok<DataStructureQuery, IActionResult>(query);
         }
 
-    protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
-    {
+        protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
+        {
             var orderings = orderingList
                 .Select((inputOrdering, i) => 
                     new Ordering(
@@ -382,9 +382,9 @@ public abstract class AbstractController: ControllerBase
             return new CustomOrderings(orderings);
         }
         
-    protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
-        ILazyRowLoadInput input, EntityData entityData)
-    {
+        protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
+            ILazyRowLoadInput input, EntityData entityData)
+        {
             var customOrderings = GetOrderings(input.OrderingList);
 
             if(input.RowOffset != 0 && customOrderings.IsEmpty)
@@ -434,18 +434,18 @@ public abstract class AbstractController: ControllerBase
         }
 
 
-    protected Result<IEnumerable<Dictionary<string, object>>, IActionResult> 
-        ExecuteDataReaderGetPairs(
+        protected Result<IEnumerable<Dictionary<string, object>>, IActionResult> 
+            ExecuteDataReaderGetPairs(
             DataStructureQuery dataStructureQuery)
-    {
+        {
             var linesAsPairs = dataService
                 .ExecuteDataReaderReturnPairs(dataStructureQuery);
             return Result.Ok<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
         }
 
-    protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
-        DataStructureQuery dataStructureQuery, Guid methodId)
-    {
+        protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
+            DataStructureQuery dataStructureQuery, Guid methodId)
+        {
             Result<DataStructureMethod, IActionResult> method 
                 = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
             if(method.IsSuccess)
@@ -466,10 +466,10 @@ public abstract class AbstractController: ControllerBase
             return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
         }
         
-    private IEnumerable<object> LoadData(
-        FormReferenceMenuItem menuItem, 
-        DataStructureQuery dataStructureQuery)
-    {
+        private IEnumerable<object> LoadData(
+            FormReferenceMenuItem menuItem, 
+            DataStructureQuery dataStructureQuery)
+        {
             var datasetBuilder = new DataSetBuilder();
             var data = datasetBuilder.InitializeFullStructure(
                 menuItem.ListDataStructureId,menuItem.DefaultSet);
@@ -481,9 +481,9 @@ public abstract class AbstractController: ControllerBase
                 dataStructureQuery);
         }
         
-    private IEnumerable<object> TransformData(
-        DataSet dataSet, DataStructureQuery query)
-    {
+        private IEnumerable<object> TransformData(
+            DataSet dataSet, DataStructureQuery query)
+        {
             var table = dataSet.Tables[0];
             foreach(DataRow dataRow in table.Rows)
             {
@@ -497,8 +497,8 @@ public abstract class AbstractController: ControllerBase
             }
         }
         
-    private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
-    {
+        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        {
             if(columnsInfo == null)
             {
                 throw new ArgumentNullException(nameof(columnsInfo));
@@ -510,9 +510,9 @@ public abstract class AbstractController: ControllerBase
             }
             return updatedValues;
         }
-    protected Result<DataStructureQuery, IActionResult> WorkQueueGetRowsGetRowsQuery(
-        ILazyRowLoadInput input, WorkQueueSessionStore sessionStore)
-    {
+        protected Result<DataStructureQuery, IActionResult> WorkQueueGetRowsGetRowsQuery(
+            ILazyRowLoadInput input, WorkQueueSessionStore sessionStore)
+        {
             var customOrderings = GetOrderings(input.OrderingList);
             if (input.RowOffset != 0 && customOrderings.IsEmpty)
             {
@@ -566,4 +566,5 @@ public abstract class AbstractController: ControllerBase
             return query;
         }
 
+    }
 }

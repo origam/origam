@@ -25,27 +25,27 @@ using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Workbench.Commands;
-
-/// <summary>
-/// Connect to the workbench repository
-/// </summary>
-public class LoadSelectedPackage : AbstractMenuCommand
+namespace Origam.Workbench.Commands
 {
-	public override bool IsEnabled
+	/// <summary>
+	/// Connect to the workbench repository
+	/// </summary>
+	public class LoadSelectedPackage : AbstractMenuCommand
 	{
-		get
+		public override bool IsEnabled
 		{
+			get
+			{
 				return (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension != null;
 			}
-		set
-		{
+			set
+			{
 				base.IsEnabled = value;
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			Package extension = (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension;
 			
 			SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
@@ -56,4 +56,5 @@ public class LoadSelectedPackage : AbstractMenuCommand
 				cmd.Run();
 			}
 		}		
+	}
 }

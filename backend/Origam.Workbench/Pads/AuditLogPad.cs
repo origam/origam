@@ -27,30 +27,30 @@ using Origam.DA;
 using Origam.Workbench.Services;
 using Origam.Schema;
 
-namespace Origam.Workbench.Pads;
-
-/// <summary>
-/// Summary description for AttachmentPad.
-/// </summary>
-public class AuditLogPad : AbstractPadContent
+namespace Origam.Workbench.Pads
 {
-	private class OtherTextColumn : DataGridTextBoxColumn
+	/// <summary>
+	/// Summary description for AttachmentPad.
+	/// </summary>
+	public class AuditLogPad : AbstractPadContent
 	{
-		public OtherTextColumn() : base()
+		private class OtherTextColumn : DataGridTextBoxColumn
 		{
+			public OtherTextColumn() : base()
+			{
 				this.TextBox.ReadOnly = true;
 			}
-	}
+		}
 
-	private class FieldNameColumn : DataGridTextBoxColumn
-	{
-
-		public FieldNameColumn() : base()
+		private class FieldNameColumn : DataGridTextBoxColumn
 		{
+
+			public FieldNameColumn() : base()
+			{
 			}
 
-		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
-		{
+			protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
+			{
 				Guid columnId = (Guid)base.GetColumnValueAtRow (source, rowNum);
 				AbstractSchemaItem item;
 				try
@@ -86,17 +86,17 @@ public class AuditLogPad : AbstractPadContent
 					return item.Name;
 				}
 			}
-	}
+		}
 
-	private class ActionTypeColumn : DataGridTextBoxColumn
-	{
-		public ActionTypeColumn() : base()
+		private class ActionTypeColumn : DataGridTextBoxColumn
 		{
+			public ActionTypeColumn() : base()
+			{
 				this.TextBox.ReadOnly = true;
 			}
 
-		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
-		{
+			protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
+			{
 				switch((int)base.GetColumnValueAtRow (source, rowNum))
 				{
 					case 4:
@@ -111,17 +111,17 @@ public class AuditLogPad : AbstractPadContent
 						return "?";
 				}
 			}
-	}
+		}
 
-	private class UserNameColumn : DataGridTextBoxColumn
-	{
-		public UserNameColumn() : base()
+		private class UserNameColumn : DataGridTextBoxColumn
 		{
+			public UserNameColumn() : base()
+			{
 				this.TextBox.ReadOnly = true;
 			}
 
-		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
-		{
+			protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
+			{
 				object o = base.GetColumnValueAtRow(source, rowNum);
 				if(o == DBNull.Value) return null;
 
@@ -139,8 +139,8 @@ public class AuditLogPad : AbstractPadContent
 				}
 			}
 
-		protected override void Dispose(bool disposing)
-		{
+			protected override void Dispose(bool disposing)
+			{
 				if(disposing)
 				{
 				}
@@ -148,28 +148,28 @@ public class AuditLogPad : AbstractPadContent
 				base.Dispose (disposing);
 			}
 
-	}
+		}
 
 
-	private System.Windows.Forms.DataGrid dataGrid1;
-	private bool _supportLog = true;
-	private DataAuditLog _dataset;
-	private ActionTypeColumn col0;
-	private OtherTextColumn col1;
-	private OtherTextColumn col2;
-	private OtherTextColumn col3;
-	private FieldNameColumn col4;
-	private UserNameColumn col5;
-	private System.Windows.Forms.DataGridTableStyle dataGridTableStyle1;
+		private System.Windows.Forms.DataGrid dataGrid1;
+		private bool _supportLog = true;
+		private DataAuditLog _dataset;
+		private ActionTypeColumn col0;
+		private OtherTextColumn col1;
+		private OtherTextColumn col2;
+		private OtherTextColumn col3;
+		private FieldNameColumn col4;
+		private UserNameColumn col5;
+		private System.Windows.Forms.DataGridTableStyle dataGridTableStyle1;
 
-	public AuditLogPad()
-	{
+		public AuditLogPad()
+		{
 			InitializeComponent();
 		}
 
-	#region Windows Form Designer generated code
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		private void InitializeComponent()
+		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(AuditLogPad));
 			this._dataset = new Origam.DA.DataAuditLog();
 			this.dataGrid1 = new System.Windows.Forms.DataGrid();
@@ -183,11 +183,15 @@ public class AuditLogPad : AbstractPadContent
 			((System.ComponentModel.ISupportInitialize)(this._dataset)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
 			this.SuspendLayout();
-			// 		// _dataset
-			// 		this._dataset.DataSetName = "DataAuditLog";
+			// 
+			// _dataset
+			// 
+			this._dataset.DataSetName = "DataAuditLog";
 			this._dataset.Locale = new System.Globalization.CultureInfo("cs-CZ");
-			// 		// dataGrid1
-			// 		this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
+			// 
+			// dataGrid1
+			// 
+			this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
 			this.dataGrid1.BackColor = System.Drawing.Color.White;
 			this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGoldenrodYellow;
 			this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -220,8 +224,10 @@ public class AuditLogPad : AbstractPadContent
 			this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
 																								  this.dataGridTableStyle1});
 			this.dataGrid1.VisibleChanged += new System.EventHandler(this.dataGrid1_VisibleChanged);
-			// 		// dataGridTableStyle1
-			// 		this.dataGridTableStyle1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
+			// 
+			// dataGridTableStyle1
+			// 
+			this.dataGridTableStyle1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
 			this.dataGridTableStyle1.BackColor = System.Drawing.Color.White;
 			this.dataGridTableStyle1.DataGrid = this.dataGrid1;
 			this.dataGridTableStyle1.ForeColor = System.Drawing.Color.DarkSlateBlue;
@@ -239,46 +245,60 @@ public class AuditLogPad : AbstractPadContent
 			this.dataGridTableStyle1.MappingName = "AuditRecord";
 			this.dataGridTableStyle1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
 			this.dataGridTableStyle1.SelectionForeColor = System.Drawing.Color.GhostWhite;
-			// 		// col0
-			// 		this.col0.Format = "";
+			// 
+			// col0
+			// 
+			this.col0.Format = "";
 			this.col0.FormatInfo = null;
 			this.col0.HeaderText = ResourceUtils.GetString("TypeTitle");
 			this.col0.MappingName = "ActionType";
 			this.col0.Width = 50;
-			// 		// col4
-			// 		this.col4.Format = "";
+			// 
+			// col4
+			// 
+			this.col4.Format = "";
 			this.col4.FormatInfo = null;
 			this.col4.HeaderText = ResourceUtils.GetString("FieldTitle");
 			this.col4.MappingName = "refColumnId";
 			this.col4.Width = 75;
-			// 		// col2
-			// 		this.col2.Format = "";
+			// 
+			// col2
+			// 
+			this.col2.Format = "";
 			this.col2.FormatInfo = null;
 			this.col2.HeaderText = ResourceUtils.GetString("OldValueTitle");
 			this.col2.MappingName = "OldValue";
 			this.col2.NullText = ResourceUtils.GetString("Empty");
 			this.col2.Width = 200;
-			// 		// col3
-			// 		this.col3.Format = "";
+			// 
+			// col3
+			// 
+			this.col3.Format = "";
 			this.col3.FormatInfo = null;
 			this.col3.HeaderText = ResourceUtils.GetString("NewValueTitle");
 			this.col3.MappingName = "NewValue";
 			this.col3.NullText = ResourceUtils.GetString("Empty");
 			this.col3.Width = 200;
-			// 		// col1
-			// 		this.col1.Format = "";
+			// 
+			// col1
+			// 
+			this.col1.Format = "";
 			this.col1.FormatInfo = null;
 			this.col1.HeaderText = ResourceUtils.GetString("DateTitle");
 			this.col1.MappingName = "RecordCreated";
 			this.col1.Width = 75;
-			// 		// col5
-			// 		this.col5.Format = "";
+			// 
+			// col5
+			// 
+			this.col5.Format = "";
 			this.col5.FormatInfo = null;
 			this.col5.HeaderText = ResourceUtils.GetString("UserTitle");
 			this.col5.MappingName = "RecordCreatedBy";
 			this.col5.Width = 200;
-			// 		// AuditLogPad
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// AuditLogPad
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
 			this.ClientSize = new System.Drawing.Size(728, 397);
 			this.Controls.Add(this.dataGrid1);
@@ -296,11 +316,11 @@ public class AuditLogPad : AbstractPadContent
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private void RetrieveLog(Guid entityId, Guid recordId)
-	{
+		#region Private Methods
+		private void RetrieveLog(Guid entityId, Guid recordId)
+		{
 			try
 			{
 				DataSet result = AuditLogDA.RetrieveLog(entityId, recordId);
@@ -315,13 +335,13 @@ public class AuditLogPad : AbstractPadContent
 			}
 
 		}
-	#endregion
+		#endregion
 
-	#region Private Properties
-	private DataRow CurrentRow
-	{
-		get
+		#region Private Properties
+		private DataRow CurrentRow
 		{
+			get
+			{
 				try
 				{
 					return _dataset.AuditRecord.DefaultView[dataGrid1.CurrentRowIndex].Row;
@@ -331,59 +351,59 @@ public class AuditLogPad : AbstractPadContent
 					return null;
 				}
 			}
-	}
+		}
 
-	private Guid _parentId;
-	private Guid ParentId 
-	{
-		get
+		private Guid _parentId;
+		private Guid ParentId 
 		{
+			get
+			{
 				return _parentId;
 			}
-		set
-		{
+			set
+			{
 				_parentId=value;
 			}
-	}
+		}
 
-	private Guid _parentEntityId;
-	private Guid ParentEntityId 
-	{
-		get
+		private Guid _parentEntityId;
+		private Guid ParentEntityId 
 		{
+			get
+			{
 				return _parentEntityId;
 			}
-		set
-		{
+			set
+			{
 				_parentEntityId = value;
 			}
-	}
+		}
 
-	private ArrayList _childReferences;
-	private ArrayList ChildReferences
-	{
-		get
+		private ArrayList _childReferences;
+		private ArrayList ChildReferences
 		{
+			get
+			{
 				return _childReferences;
 			}
-		set
-		{
+			set
+			{
 				_childReferences = value;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Public Methods
-	public void GetAuditLog(Guid mainEntityId, Guid mainRecordId, ArrayList childReferences)
-	{
+		#region Public Methods
+		public void GetAuditLog(Guid mainEntityId, Guid mainRecordId, ArrayList childReferences)
+		{
 			this.ParentId = mainRecordId;
 			this.ParentEntityId = mainEntityId;
 			this.ChildReferences = childReferences;
 			GetLog();
 		}
 
-	public void GetLog()
-	{
+		public void GetLog()
+		{
 			if(!_supportLog) return;
 
 			try
@@ -402,22 +422,22 @@ public class AuditLogPad : AbstractPadContent
 			}
 		}
 
-	public void ClearList()
-	{
+		public void ClearList()
+		{
 			if(_dataset != null)
 			{
 				_dataset.Clear();
 			}
 		}
-	#endregion
+		#endregion
 
-	private void dataGrid1_VisibleChanged(object sender, System.EventArgs e)
-	{
+		private void dataGrid1_VisibleChanged(object sender, System.EventArgs e)
+		{
 			this.PerformLayout();
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(ChildReferences != null)
@@ -432,4 +452,5 @@ public class AuditLogPad : AbstractPadContent
 			}
 			base.Dispose (disposing);
 		}
+	}
 }

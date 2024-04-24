@@ -23,19 +23,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Origam.DA.Service;
-
-public class OrigamFileFactory : IOrigamFileFactory
+namespace Origam.DA.Service
 {
-    private readonly IList<string> defaultParentFolders;
-    private readonly OrigamFileManager origamFileManager;
-    private readonly OrigamPathFactory origamPathFactory;
-    private readonly FileEventQueue fileEventQueue;
-
-    public OrigamFileFactory(
-        OrigamFileManager origamFileManager, IList<string> defaultParentFolders,
-        OrigamPathFactory origamPathFactory,FileEventQueue fileEventQueue)
+    public class OrigamFileFactory : IOrigamFileFactory
     {
+        private readonly IList<string> defaultParentFolders;
+        private readonly OrigamFileManager origamFileManager;
+        private readonly OrigamPathFactory origamPathFactory;
+        private readonly FileEventQueue fileEventQueue;
+
+        public OrigamFileFactory(
+            OrigamFileManager origamFileManager, IList<string> defaultParentFolders,
+            OrigamPathFactory origamPathFactory,FileEventQueue fileEventQueue)
+        {
             this.origamPathFactory = origamPathFactory;
             this.defaultParentFolders = defaultParentFolders;
 
@@ -43,9 +43,9 @@ public class OrigamFileFactory : IOrigamFileFactory
             this.fileEventQueue = fileEventQueue;
         }
         
-    public OrigamFile New(string  relativePath, IDictionary<string,Guid> parentFolderIds,
-        bool isGroup, bool isAFullyWrittenFile=false)
-    {
+        public OrigamFile New(string  relativePath, IDictionary<string,Guid> parentFolderIds,
+            bool isGroup, bool isAFullyWrittenFile=false)
+        {
             IDictionary<string, Guid> parentFolders =
                 GetNonEmptyParentFolders(parentFolderIds);
 
@@ -63,9 +63,9 @@ public class OrigamFileFactory : IOrigamFileFactory
             }
         }
         
-    public ITrackeableFile New(FileInfo fileInfo, IDictionary<string,Guid> parentFolderIds,
-        bool isAFullyWrittenFile=false)
-    {
+        public ITrackeableFile New(FileInfo fileInfo, IDictionary<string,Guid> parentFolderIds,
+            bool isAFullyWrittenFile=false)
+        {
             IDictionary<string, Guid> parentFolders =
                 GetNonEmptyParentFolders(parentFolderIds);
 
@@ -85,17 +85,17 @@ public class OrigamFileFactory : IOrigamFileFactory
             }
         }
 
-    private IDictionary<string, Guid> GetNonEmptyParentFolders(IDictionary<string, Guid> parentFolderIds)
-    {
+        private IDictionary<string, Guid> GetNonEmptyParentFolders(IDictionary<string, Guid> parentFolderIds)
+        {
             IDictionary<string, Guid> parentFolders = parentFolderIds.Count == 0
                 ? new ParentFolders(defaultParentFolders)
                 : parentFolderIds;
             return parentFolders;
         }
 
-    public ITrackeableFile New(string relativePath, string fileHash,
-        IDictionary<string, Guid> parentFolderIds)
-    {
+        public ITrackeableFile New(string relativePath, string fileHash,
+            IDictionary<string, Guid> parentFolderIds)
+        {
             OrigamPath path = origamPathFactory.CreateFromRelative(relativePath);
             switch (path.FileName)
             {
@@ -109,4 +109,5 @@ public class OrigamFileFactory : IOrigamFileFactory
                         origamFileManager, origamPathFactory, fileEventQueue, fileHash);
             }
         }  
+    }
 }

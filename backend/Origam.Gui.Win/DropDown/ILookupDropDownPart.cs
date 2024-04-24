@@ -21,15 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Data;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for IDropDownPart.
-/// </summary>
-public interface ILookupDropDownPart : IDropDownPart
+namespace Origam.Gui.Win
 {
-	DataView DataSource{get; set;}
-	string ValueMember{get; set;}
-	string DisplayMember{get; set;}
-	string ParentMember{get; set;}
+	/// <summary>
+	/// Summary description for IDropDownPart.
+	/// </summary>
+	public interface ILookupDropDownPart : IDropDownPart
+	{
+		DataView DataSource{get; set;}
+		string ValueMember{get; set;}
+		string DisplayMember{get; set;}
+		string ParentMember{get; set;}
+	}
 }

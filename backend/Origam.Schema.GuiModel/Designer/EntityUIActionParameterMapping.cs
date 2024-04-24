@@ -24,65 +24,66 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for EntitySecurityRule.
-/// </summary>
-[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 
-	"icon_parameter-mapping.png")]
-[HelpTopic("Action+Parameter+Mapping")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "EntityUIActionParameterMapping";
-
-	public EntityUIActionParameterMapping() : base() {}
-
-	public EntityUIActionParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntityUIActionParameterMapping(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType
+	/// <summary>
+	/// Summary description for EntitySecurityRule.
+	/// </summary>
+	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 
+        "icon_parameter-mapping.png")]
+    [HelpTopic("Action+Parameter+Mapping")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
 	{
-		get
+		public const string CategoryConst = "EntityUIActionParameterMapping";
+
+		public EntityUIActionParameterMapping() : base() {}
+
+		public EntityUIActionParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntityUIActionParameterMapping(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	private string _field = "";
-	[StringNotEmptyModelElementRule()]
-	[XmlAttribute("field")]
-	public string Field
-	{
-		get
+		#region Properties
+		private string _field = "";
+		[StringNotEmptyModelElementRule()]
+        [XmlAttribute("field")]
+		public string Field
 		{
+			get
+			{
 				return _field;
 			}
-		set
-		{
+			set
+			{
 				_field = value;
 			}
-	}
+		}
 
-	EntityUIActionParameterMappingType _type = EntityUIActionParameterMappingType.Current;
-	[XmlAttribute("type")]
-	public EntityUIActionParameterMappingType Type
-	{
-		get
+		EntityUIActionParameterMappingType _type = EntityUIActionParameterMappingType.Current;
+		[XmlAttribute("type")]
+		public EntityUIActionParameterMappingType Type
 		{
+			get
+			{
 				return _type;
 			}
-		set
-		{
+			set
+			{
 				_type = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

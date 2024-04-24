@@ -7,36 +7,36 @@ using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
 
-namespace Origam.DA.Service;
-
-public class OrigamXmlDocument : XmlDocument
+namespace Origam.DA.Service
 {
-    public bool IsEmpty => ChildNodes.Count < 2;
-    public XmlElement FileElement => LastChild as XmlElement;
-
-    public OrigamXmlDocument(string pathToXml)
+    public class OrigamXmlDocument : XmlDocument
     {
+        public bool IsEmpty => ChildNodes.Count < 2;
+        public XmlElement FileElement => LastChild as XmlElement;
+
+        public OrigamXmlDocument(string pathToXml)
+        {
             Load(pathToXml);
         }
 
-    public OrigamXmlDocument(XDocument xDocument)
-    {
+        public OrigamXmlDocument(XDocument xDocument)
+        {
             using(var xmlReader = xDocument.CreateReader())
             {
                 Load(xmlReader);
             }
         }
 
-    public OrigamXmlDocument()
-    {
+        public OrigamXmlDocument()
+        {
             string xml = string.Format(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?><x:file xmlns:x=\"{0}\"/>",
                 OrigamFile.ModelPersistenceUri);
             LoadXml(xml);
         }
 
-    public string AddNamespace(string nameSpaceName, string nameSpace)
-    {
+        public string AddNamespace(string nameSpaceName, string nameSpace)
+        {
             if (IsEmpty)
             {
                 throw new Exception("Cannot add namespace to an empty document");
@@ -54,8 +54,8 @@ public class OrigamXmlDocument : XmlDocument
             return nameSpaceName;
         }
         
-    public void RemoveWithNamespace(XmlNode nodeToDelete)
-    {
+        public void RemoveWithNamespace(XmlNode nodeToDelete)
+        {
             nodeToDelete.ParentNode.RemoveChild(nodeToDelete);
             bool moreNodesInTheNamespaceExist = 
                 this.GetAllNodes()
@@ -69,8 +69,8 @@ public class OrigamXmlDocument : XmlDocument
             }
         }
 
-    public void UseTopNamespacePrefixesEverywhere()
-    {
+        public void UseTopNamespacePrefixesEverywhere()
+        {
             foreach (XmlNode node in FileElement.GetAllNodes())
             {
                 XmlAttribute namespaceDefinition = FileElement.Attributes
@@ -82,4 +82,5 @@ public class OrigamXmlDocument : XmlDocument
                 }
             }
         }
+    }
 }

@@ -44,33 +44,33 @@ using Origam.Service.Core;
 using ImageMagick;
 using IdentityServer4.Extensions;
 
-namespace Origam.Server.Pages;
-
-public class UserApiProcessor
+namespace Origam.Server.Pages
 {
-    private readonly IHttpTools httpTools;
-    private static readonly log4net.ILog log 
-        = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    private Lazy<UrlApiPageCache> urlApiPageCache =
-        new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
-            (ServiceManager.Services.GetService<SchemaService>())
-            .GetProvider<PagesSchemaItemProvider>()
-        ));
-
-    public UserApiProcessor(IHttpTools httpTools)
+    public class UserApiProcessor
     {
+        private readonly IHttpTools httpTools;
+        private static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private Lazy<UrlApiPageCache> urlApiPageCache =
+            new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
+                 (ServiceManager.Services.GetService<SchemaService>())
+                    .GetProvider<PagesSchemaItemProvider>()
+                ));
+
+        public UserApiProcessor(IHttpTools httpTools)
+        {
             this.httpTools = httpTools;
         }
 
-    #region IHttpModule Members
+        #region IHttpModule Members
 
-    public void Dispose()
-    {
+        public void Dispose()
+        {
         }
 
-    public void Process(IHttpContextWrapper context)
-    {
+        public void Process(IHttpContextWrapper context)
+        {
             if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith(
                 "~/assets/"))
             {
@@ -185,8 +185,8 @@ public class UserApiProcessor
             }
         }
 
-    private int GetStausCode(Exception ex)
-    {
+        private int GetStausCode(Exception ex)
+        {
             if (ex is RuleException ruleException)
             {
                 var dataList = ruleException.RuleResult
@@ -200,14 +200,14 @@ public class UserApiProcessor
             return 400;
         }
 
-    protected virtual void Handle404(IHttpContextWrapper context)
-    { 
+        protected virtual void Handle404(IHttpContextWrapper context)
+        { 
             // nothing found, let others handle it
         }
 
-    private static void PageAnalytics(
-        AbstractPage page, Dictionary<string, string> urlParameters)
-    {
+        private static void PageAnalytics(
+            AbstractPage page, Dictionary<string, string> urlParameters)
+        {
             Analytics.Instance.SetProperty("OrigamPageId", page.Id);
             Analytics.Instance.SetProperty("OrigamPageName", page.Name);
             foreach (KeyValuePair<string, string> pair in urlParameters)
@@ -218,9 +218,9 @@ public class UserApiProcessor
             Analytics.Instance.Log("PAGE_ACCESS");
         }
         
-    private static void RequestAnalytics(
-        IHttpContextWrapper context, string mimeType)
-    {
+        private static void RequestAnalytics(
+            IHttpContextWrapper context, string mimeType)
+        {
             Analytics.Instance.SetProperty(
                 "ContentType", mimeType);
             Analytics.Instance.SetProperty(
@@ -250,8 +250,8 @@ public class UserApiProcessor
             }
         }
 
-    private IPageRequestHandler HandlePage(AbstractPage page)
-    {
+        private IPageRequestHandler HandlePage(AbstractPage page)
+        {
             IPageRequestHandler handler;
             switch (page)
             {
@@ -274,8 +274,8 @@ public class UserApiProcessor
             return handler;
         }
 
-    private static Dictionary<string, object> MapParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters, AbstractPage page, string requestMimeType)
-    {
+        private static Dictionary<string, object> MapParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters, AbstractPage page, string requestMimeType)
+        {
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             Dictionary<string, object> mappedParameters = new Dictionary<string, object>();
 
@@ -324,10 +324,10 @@ public class UserApiProcessor
             return mappedParameters;
         }
 
-    private static void MapOtherParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters,
-        IParameterService parameterService, Dictionary<string, object> mappedParameters, PageParameterMapping ppm,
-        string requestMimeType)
-    {
+        private static void MapOtherParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters,
+            IParameterService parameterService, Dictionary<string, object> mappedParameters, PageParameterMapping ppm,
+            string requestMimeType)
+        {
             string paramValue = null;
 
             // URL parameter
@@ -424,8 +424,8 @@ public class UserApiProcessor
             }
         }
 
-    private static void MapFileToParameter(IHttpContextWrapper context, Dictionary<string, object> mappedParameters, PageParameterMapping ppm, PageParameterFileMapping fileMapping)
-    {
+        private static void MapFileToParameter(IHttpContextWrapper context, Dictionary<string, object> mappedParameters, PageParameterMapping ppm, PageParameterFileMapping fileMapping)
+        {
             PostedFile file = context.Request.FilesGet(ppm.MappedParameter);
 
             if (file != null)
@@ -460,11 +460,11 @@ public class UserApiProcessor
             }
         }
 
-    private static void MapContentToParameter(IHttpContextWrapper context,
-        AbstractPage page, string requestMimeType,
-        Dictionary<string, object> mappedParameters,
-        PageParameterMapping ppm)
-    {
+        private static void MapContentToParameter(IHttpContextWrapper context,
+                AbstractPage page, string requestMimeType,
+                Dictionary<string, object> mappedParameters,
+                PageParameterMapping ppm)
+        {
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat("Mapping parameter {0}, Request content type: {1}", ppm.Name, requestMimeType);
@@ -593,18 +593,18 @@ public class UserApiProcessor
             }
         }
 
-    private static void GetEmptyData(ref IXmlContainer doc,
-        ref DataSet data, DataStructure ds,
-        Dictionary<string, object> mappedParameters)
-    {
+        private static void GetEmptyData(ref IXmlContainer doc,
+                ref DataSet data, DataStructure ds,
+                Dictionary<string, object> mappedParameters)
+        {
             GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
         }
 
-    private static void GetEmptyData(ref IXmlContainer doc,
-        ref DataSet data, DataStructure ds,
-        Dictionary<string, object> mappedParameters,
-        DataStructureDefaultSet defaultSet)
-    {
+        private static void GetEmptyData(ref IXmlContainer doc,
+                ref DataSet data, DataStructure ds,
+                Dictionary<string, object> mappedParameters,
+                DataStructureDefaultSet defaultSet)
+        {
             DatasetGenerator dsg = new DatasetGenerator(true);
             data = dsg.CreateDataSet(ds, defaultSet);
             DatasetGenerator.ApplyDynamicDefaults(data, mappedParameters);
@@ -617,8 +617,8 @@ public class UserApiProcessor
             }
         }
 
-    public static void RemoveEmptyNodes(ref XmlDocument doc)
-    {
+        public static void RemoveEmptyNodes(ref XmlDocument doc)
+        {
             XmlNodeList nodes = doc.SelectNodes("//*");
 
             if (log.IsDebugEnabled)
@@ -650,8 +650,8 @@ public class UserApiProcessor
             }
         }
 
-    private static byte[] GetFileBytes(PageParameterFileMapping fileMapping, PostedFile file)
-    {
+        private static byte[] GetFileBytes(PageParameterFileMapping fileMapping, PostedFile file)
+        {
             byte[] fileBytes = null;
 
             if (fileMapping.ThumbnailHeight == 0 && fileMapping.ThumbnailWidth == 0)
@@ -688,10 +688,10 @@ public class UserApiProcessor
             return fileBytes;
         }
 
-    private (int, AbstractPage) ResolvePage(
-        IHttpContextWrapper context, 
-        out Dictionary<string, string> outUrlParameters)
-    {
+        private (int, AbstractPage) ResolvePage(
+            IHttpContextWrapper context, 
+            out Dictionary<string, string> outUrlParameters)
+        {
             outUrlParameters = new Dictionary<string, string>();
             var currentUrlParams = new Dictionary<string, string>();
             
@@ -819,9 +819,9 @@ public class UserApiProcessor
             }
         }
 
-    private static bool IsPageValidByVerb(
-        AbstractPage page, IHttpContextWrapper context)
-    {
+        private static bool IsPageValidByVerb(
+            AbstractPage page, IHttpContextWrapper context)
+        {
             switch (context.Request.HttpMethod)
             {
                 case "PUT":
@@ -835,9 +835,9 @@ public class UserApiProcessor
             }
         }
 
-    private static (int, AbstractPage) ValidatePageSecurity(
-        IOrigamAuthorizationProvider auth, AbstractPage page)
-    {
+        private static (int, AbstractPage) ValidatePageSecurity(
+            IOrigamAuthorizationProvider auth, AbstractPage page)
+        {
             try
             {
                 return auth.Authorize(SecurityManager.CurrentPrincipal, 
@@ -848,83 +848,87 @@ public class UserApiProcessor
                 return (401, null);
             }
         }
-    #endregion
-}
+        #endregion
+    }
 
-public class PostedFile
-{
-    public object ContentType { get; set; }
-    public object FileName { get; set; }
-    public long ContentLength { get; set; }
-    public Stream InputStream { get; set; }
-}
-
-public interface IHttpContextWrapper
-{
-    IResponseWrapper Response { get; }
-    IRequestWrapper Request { get; }
-}
-
-public interface IRequestWrapper
-{
-    string AppRelativeCurrentExecutionFilePath { get; }
-    string ContentType { get;  }
-    string AbsoluteUri { get;  }
-    Stream InputStream { get;  }
-    string HttpMethod { get;  }
-    string RawUrl { get;  }
-    string Url { get;  }
-    string UrlReferrer { get; }
-    string UserAgent { get;  }
-    string Browser { get;  }
-    string BrowserVersion { get;  }
-    string UserHostAddress { get;  }
-    string UserHostName { get;}
-    IEnumerable<string> UserLanguages { get; }
-    Encoding ContentEncoding { get;  }
-    long ContentLength { get;  }
-    IDictionary BrowserCapabilities { get;  }
-    string UrlReferrerAbsoluteUri { get;  }
-    Parameters Params { get; }
-    PostedFile FilesGet(string name);
-}
-
-public interface IResponseWrapper
-{
-    bool BufferOutput {  set; }
-    string ContentType {  set; }
-    bool TrySkipIisCustomErrors {  set; }
-    int StatusCode {  set; }
-    string Charset { get; set; }
-    void WriteToOutput(Action<TextWriter> writeAction);
-    void CacheSetMaxAge(TimeSpan timeSpan);
-    void End();
-    void Clear();
-    void Write(string message);
-    void AddHeader(string name, string value);
-    void BinaryWrite(byte[] bytes);
-    void Redirect(string requestUrlReferrerAbsolutePath);
-    void OutputStreamWrite(byte[] buffer, int offset, int count);
-    void AppendHeader(string contentDisposition, string disposition);
-}
-
-public class Parameters
-{
-    private readonly Dictionary<string, string> paramsDictionary;
-
-    public Parameters(Dictionary<string, string> parameters)
+    public class PostedFile
     {
+        public object ContentType { get; set; }
+        public object FileName { get; set; }
+        public long ContentLength { get; set; }
+        public Stream InputStream { get; set; }
+    }
+
+    public interface IHttpContextWrapper
+    {
+        IResponseWrapper Response { get; }
+        IRequestWrapper Request { get; }
+    }
+
+    public interface IRequestWrapper
+    {
+        string AppRelativeCurrentExecutionFilePath { get; }
+        string ContentType { get;  }
+        string AbsoluteUri { get;  }
+        Stream InputStream { get;  }
+        string HttpMethod { get;  }
+        string RawUrl { get;  }
+        string Url { get;  }
+        string UrlReferrer { get; }
+        string UserAgent { get;  }
+        string Browser { get;  }
+        string BrowserVersion { get;  }
+        string UserHostAddress { get;  }
+        string UserHostName { get;}
+        IEnumerable<string> UserLanguages { get; }
+        Encoding ContentEncoding { get;  }
+        long ContentLength { get;  }
+        IDictionary BrowserCapabilities { get;  }
+        string UrlReferrerAbsoluteUri { get;  }
+        Parameters Params { get; }
+        PostedFile FilesGet(string name);
+    }
+
+    public interface IResponseWrapper
+    {
+        bool BufferOutput {  set; }
+        string ContentType {  set; }
+        bool TrySkipIisCustomErrors {  set; }
+        int StatusCode {  set; }
+        string Charset { get; set; }
+        void WriteToOutput(Action<TextWriter> writeAction);
+        void CacheSetMaxAge(TimeSpan timeSpan);
+        void End();
+        void Clear();
+        void Write(string message);
+        void AddHeader(string name, string value);
+        void BinaryWrite(byte[] bytes);
+        void Redirect(string requestUrlReferrerAbsolutePath);
+        void OutputStreamWrite(byte[] buffer, int offset, int count);
+        void AppendHeader(string contentDisposition, string disposition);
+    }
+
+    public class Parameters
+    {
+        private readonly Dictionary<string, string> paramsDictionary;
+
+        public Parameters(Dictionary<string, string> parameters)
+        {
             paramsDictionary = parameters;
         }
 
-    public string this[string key]
-    {
-        get
+        public string this[string key]
         {
+            get
+            {
                 paramsDictionary.TryGetValue(key, out string value);
                 return value;
             }
-    }
+        }
 
-    public IEnumerable<string> Keys => paramsDictionary.Keys;
+        public IEnumerable<string> Keys => paramsDictionary.Keys;
+    }
 }
+
+
+

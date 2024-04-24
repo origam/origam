@@ -23,16 +23,16 @@ using System;
 using System.Collections.Concurrent;
 using Origam.Server;
 
-namespace Origam.Server;
-
-public class SessionObjects
+namespace Origam.Server
 {
-    public SessionManager SessionManager { get; }
-    public UIManager UIManager { get; }
-    public ServerCoreUIService UIService { get; }
-
-    public SessionObjects()
+    public class SessionObjects
     {
+        public SessionManager SessionManager { get; }
+        public UIManager UIManager { get; }
+        public ServerCoreUIService UIService { get; }
+
+        public SessionObjects()
+        {
             var analytics = Analytics.Instance;
             SessionManager = new SessionManager(
                 portalSessions: new ConcurrentDictionary<Guid, PortalSessionStore>(),
@@ -45,4 +45,5 @@ public class SessionObjects
             UIManager = new UIManager(50, SessionManager, analytics);
             UIService = new ServerCoreUIService(UIManager, SessionManager);
         }
+    }
 }

@@ -28,153 +28,154 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workbench.Services;
-
-public class NullParameterService: IParameterService
+namespace Origam.Workbench.Services
 {
-	public void InitializeService()
+
+	public class NullParameterService: IParameterService
 	{
+		public void InitializeService()
+		{
 		}
 
-	public void UnloadService()
-	{
+		public void UnloadService()
+		{
 		}
 
-	public string GetString(string name, params object[] args)
-	{
+		public string GetString(string name, params object[] args)
+		{
 			return "";
 		}
 
-	public string GetString(string name, bool throwException, params object[] args)
-	{
+		public string GetString(string name, bool throwException, params object[] args)
+		{
 			return "";
 		}
 
-	public object GetCustomParameterValue(Guid id)
-	{
+		public object GetCustomParameterValue(Guid id)
+		{
 			return null;
 		}
 
-	public object GetCustomParameterValue(string parameterName)
-	{
+		public object GetCustomParameterValue(string parameterName)
+		{
 			return null;
 		}
 
-	public object GetParameterValue(Guid id, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(Guid id, Guid? overridenProfileId = null)
+		{
 			return null;
 		}
 
-	public object GetParameterValue(Guid id, OrigamDataType targetType,
-		Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(Guid id, OrigamDataType targetType,
+			Guid? overridenProfileId = null)
+		{
 			return null;
 		}
 
-	public object GetParameterValue(string parameterName, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(string parameterName, Guid? overridenProfileId = null)
+		{
 			return null;
 		}
 
-	public object GetParameterValue(string parameterName, OrigamDataType targetType,
-		Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(string parameterName, OrigamDataType targetType,
+			Guid? overridenProfileId = null)
+		{
 			return null;
 		}
 
-	public void SetFeatureStatus(string featureCode, bool status)
-	{
+		public void SetFeatureStatus(string featureCode, bool status)
+		{
 			
 		}
 
-	public bool IsFeatureOn(string featureCode)
-	{
+		public bool IsFeatureOn(string featureCode)
+		{
 			return true;
 		}
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue)
-	{
+		public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue)
+		{
 			
 		}
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, bool useIdentity)
-	{
+		public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue, bool useIdentity)
+		{
 			
 		}
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, Guid? overridenProfileId)
-	{
+		public void SetCustomParameterValue(Guid id, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue, Guid? overridenProfileId)
+		{
 			
 		}
 
-	public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue)
-	{
+		public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue)
+		{
 			
 		}
 
-	public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, bool useIdentity)
-	{
+		public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue, bool useIdentity)
+		{
 			
 		}
 
-	public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, Guid? overridenProfileId)
-	{
+		public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+			decimal currencyValue, object dateValue, Guid? overridenProfileId)
+		{
 			
 		}
 
-	public void RefreshParameters()
-	{
+		public void RefreshParameters()
+		{
 			
 		}
-	public void PrepareParameters()
-	{
+		public void PrepareParameters()
+        {
 
         }
-	public Guid ResolveLanguageId(string cultureString)
-	{
+		public Guid ResolveLanguageId(string cultureString)
+		{
 			return Guid.Empty;
 		}
-}
+	}
 
-/// <summary>
-/// Summary description for ParameterService.
-/// </summary>
-public class ParameterService : IParameterService
-{
-	SchemaService _schemaService 
-		= ServiceManager.Services.GetService(typeof(SchemaService)) 
-			as SchemaService;
-	IDictionary<Guid, object> _constantsById = 
-		new Dictionary<Guid, object>();
-	IDictionary<string, Guid> _constantIdByName = 
-		new Dictionary<string, Guid>();
-	SortedList _stringsByName = new SortedList();
-	IDictionary<Guid, DataConstant> _userDefinableConstants = 
-		new Dictionary<Guid, DataConstant>();
-	OrigamParametersData _parameterData = null;
-	private object _parameterLock = new object();
-	private static Hashtable languageResolveDict = null;
-
-	#region IParameterService Members
-	public string GetString(string name, params object[] args)
+	/// <summary>
+	/// Summary description for ParameterService.
+	/// </summary>
+	public class ParameterService : IParameterService
 	{
+		SchemaService _schemaService 
+			= ServiceManager.Services.GetService(typeof(SchemaService)) 
+			as SchemaService;
+        IDictionary<Guid, object> _constantsById = 
+			new Dictionary<Guid, object>();
+        IDictionary<string, Guid> _constantIdByName = 
+			new Dictionary<string, Guid>();
+		SortedList _stringsByName = new SortedList();
+        IDictionary<Guid, DataConstant> _userDefinableConstants = 
+			new Dictionary<Guid, DataConstant>();
+		OrigamParametersData _parameterData = null;
+        private object _parameterLock = new object();
+		private static Hashtable languageResolveDict = null;
+
+		#region IParameterService Members
+        public string GetString(string name, params object[] args)
+        {
             return GetString(name, true, args);
         }
 		
-	public string GetString(string name, bool throwException, params object[] args)
-	{
+        public string GetString(string name, bool throwException, params object[] args)
+		{
 			if(_stringsByName.Contains(name))
 			{
 				IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -191,8 +192,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	public object GetParameterValue(Guid id, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(Guid id, Guid? overridenProfileId = null)
+		{
 			if(_constantsById.ContainsKey(id))
 			{
                 if (_userDefinableConstants.ContainsKey(id))
@@ -227,13 +228,13 @@ public class ParameterService : IParameterService
 			throw new ArgumentOutOfRangeException("id", id, ResourceUtils.GetString("ErrorParamNotFound"));
 		}
 
-	public object GetParameterValue(Guid id, OrigamDataType targetType, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(Guid id, OrigamDataType targetType, Guid? overridenProfileId = null)
+		{
 			return Convert(targetType, GetParameterValue(id, overridenProfileId));
 		}
 
-	public object GetParameterValue(string parameterName, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(string parameterName, Guid? overridenProfileId = null)
+		{
 			if(_constantIdByName.ContainsKey(parameterName))
 			{
 				return GetParameterValue(_constantIdByName[parameterName], overridenProfileId);
@@ -244,13 +245,13 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	public object GetParameterValue(string parameterName, OrigamDataType targetType, Guid? overridenProfileId = null)
-	{
+		public object GetParameterValue(string parameterName, OrigamDataType targetType, Guid? overridenProfileId = null)
+		{
 			return Convert(targetType, GetParameterValue(parameterName, overridenProfileId));
 		}
 
-	public object GetCustomParameterValue(string parameterName)
-	{
+		public object GetCustomParameterValue(string parameterName)
+		{
 			if(_constantIdByName.ContainsKey(parameterName))
 			{
 				return GetCustomParameterValue(_constantIdByName[parameterName]);
@@ -261,8 +262,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	public object GetCustomParameterValue(Guid id)
-	{
+		public object GetCustomParameterValue(Guid id)
+		{
 			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			DataConstant constant = ps.SchemaProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(id)) as DataConstant;
@@ -298,24 +299,24 @@ public class ParameterService : IParameterService
 			return ls.GetDisplayText(lookupId, id, false, false, null);
 		}
 
-	public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue)
-	{
+		public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue)
+		{
 			SetCustomParameterValue(parameterName, value, guidValue, intValue, stringValue, boolValue, floatValue, currencyValue, dateValue, true);
 		}
 
-	public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, bool useIdentity)
-	{
+        public void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+            int intValue, string stringValue, bool boolValue, decimal floatValue,
+            decimal currencyValue, object dateValue, bool useIdentity)
+        {
             SetCustomParameterValue(parameterName, value, guidValue, intValue, stringValue,
                 boolValue, floatValue, currencyValue, dateValue, useIdentity, null);
         }
 
-	private void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, bool useIdentity, Guid? overridenProfileId)
-	{
+        private void SetCustomParameterValue(string parameterName, object value, Guid guidValue,
+			int intValue, string stringValue, bool boolValue, decimal floatValue,
+            decimal currencyValue, object dateValue, bool useIdentity, Guid? overridenProfileId)
+		{
 			if(_constantIdByName.ContainsKey(parameterName))
 			{
 				SetCustomParameterValue(_constantIdByName[parameterName], 
@@ -328,24 +329,24 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue, int intValue, 
-		string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue)
-	{
+		public void SetCustomParameterValue(Guid id, object value, Guid guidValue, int intValue, 
+			string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue)
+		{
 			SetCustomParameterValue(id, value, guidValue, intValue, stringValue, boolValue, floatValue, currencyValue, dateValue, true);
 		}
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
-		int intValue, string stringValue, bool boolValue, decimal floatValue, 
-		decimal currencyValue, object dateValue, bool useIdentity)
-	{
+        public void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
+            int intValue, string stringValue, bool boolValue, decimal floatValue, 
+            decimal currencyValue, object dateValue, bool useIdentity)
+        {
             SetCustomParameterValue(id, value, guidValue, intValue, stringValue, 
                 boolValue, floatValue, currencyValue, dateValue, useIdentity, null);
         }
 
-	private void SetCustomParameterValue(Guid id, object value, Guid guidValue, int intValue, 
-		string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue,
-		bool useIdentity, Guid? overridenProfileId)
-	{
+        private void SetCustomParameterValue(Guid id, object value, Guid guidValue, int intValue, 
+			string stringValue, bool boolValue, decimal floatValue, decimal currencyValue, object dateValue,
+			bool useIdentity, Guid? overridenProfileId)
+		{
 			// test if the value exists, otherwise error will be thrown
 			GetParameterValue(id);
             bool isUserDefinable = _userDefinableConstants.ContainsKey(id);
@@ -416,8 +417,8 @@ public class ParameterService : IParameterService
             OrigamUserContext.Reset();
         }
 
-	public void RefreshParameters()
-	{
+		public void RefreshParameters()
+		{
 			PrepareParameters();
 			LoadParameters();
 			LoadFeatures();
@@ -446,9 +447,9 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private static object ValueFromRow(OrigamDataType dataType,
-		OrigamParametersData.OrigamParametersRow row)
-	{
+        private static object ValueFromRow(OrigamDataType dataType,
+            OrigamParametersData.OrigamParametersRow row)
+        {
             string stringValue = null;
             int intValue = 0;
             decimal currencyValue = 0;
@@ -467,8 +468,8 @@ public class ParameterService : IParameterService
                 currencyValue, floatValue, booleanValue, dateValue);
         }
 
-	public bool IsFeatureOn(string features)
-	{
+		public bool IsFeatureOn(string features)
+		{
 			if(features == null | features == "") return true;
 
 			foreach(string feature in features.Split(";".ToCharArray()))
@@ -510,10 +511,10 @@ public class ParameterService : IParameterService
 			return false;
 		}
 
-	private Hashtable LanguageResolveDict
-	{
-		get
+		private Hashtable LanguageResolveDict
 		{
+			get
+			{
 				if (languageResolveDict != null) return languageResolveDict;
 
 				// lazily initialize resolver dict from db
@@ -533,13 +534,13 @@ public class ParameterService : IParameterService
 				}				
 				return languageResolveDict;
 			}
-	}
-	#endregion
+		}
+		#endregion
 		
-	#region IWorkbenchService Members
+		#region IWorkbenchService Members
 		
-	public void UnloadService()
-	{
+		public void UnloadService()
+		{
             if (_schemaService != null)
             {
                 _schemaService.SchemaChanged
@@ -556,19 +557,19 @@ public class ParameterService : IParameterService
             }
 		}
 
-	public void InitializeService()
-	{
+		public void InitializeService()
+		{
 			_schemaService.SchemaChanged 
 				+= new EventHandler(schemaService_SchemaChanged);
 		}
 
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private Hashtable FeatureList
-	{
-		get
+		#region Private Methods
+		private Hashtable FeatureList
 		{
+			get
+			{
 				if(! OrigamUserContext.Context.Contains("Features"))
 				{
 					OrigamUserContext.Context.Add("Features", new Hashtable());
@@ -577,10 +578,10 @@ public class ParameterService : IParameterService
 
 				return OrigamUserContext.Context["Features"] as Hashtable;
 			}
-	}
+		}
 
-	public void PrepareParameters()
-	{
+		public void PrepareParameters()
+		{
 			lock(_constantsById)
 			{
 				_constantsById.Clear();
@@ -607,8 +608,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private void LoadParameters()
-	{
+		private void LoadParameters()
+		{
 			lock(_parameterLock)
 			{
 				IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
@@ -631,8 +632,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private void LoadStrings()
-	{
+		private void LoadStrings()
+		{
 			lock(_stringsByName)
 			{
 				StringSchemaItemProvider provider = _schemaService.GetProvider(typeof(StringSchemaItemProvider)) as StringSchemaItemProvider;
@@ -645,8 +646,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	public void SetFeatureStatus(string featureCode, bool status)
-	{
+		public void SetFeatureStatus(string featureCode, bool status)
+		{
 			// ignore features not contained in the current model
 			if(this.FeatureList.Contains(featureCode))
 			{
@@ -654,8 +655,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private void LoadFeatures()
-	{
+		private void LoadFeatures()
+		{
 			lock(FeatureList)
 			{
 				// prepare features defined by the model
@@ -704,8 +705,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private void SaveParameters(bool useIdentity)
-	{
+		private void SaveParameters(bool useIdentity)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			DataStructureQuery query = new DataStructureQuery(new Guid("996ec515-47a5-4e88-a94b-7bb9afca1a0d"));
 			query.LoadByIdentity = useIdentity;
@@ -717,8 +718,8 @@ public class ParameterService : IParameterService
 			dataServiceAgent.Run();
             }
 
-	private object Convert(OrigamDataType targetType, object value)
-	{
+		private object Convert(OrigamDataType targetType, object value)
+		{
 			switch(targetType)
 			{
 				case OrigamDataType.String:
@@ -752,8 +753,8 @@ public class ParameterService : IParameterService
 			}
 		}
 
-	private void schemaService_SchemaChanged(object sender, EventArgs e)
-	{
+		private void schemaService_SchemaChanged(object sender, EventArgs e)
+		{
 			if((sender is DataConstant)
 			|| (sender is Feature)
 			|| (sender is StringItem))
@@ -762,11 +763,11 @@ public class ParameterService : IParameterService
 			}
             OrigamUserContext.ResetAll();
 		}
-	#endregion
+		#endregion
 
 
-	public Guid ResolveLanguageId(string cultureString)
-	{
+		public Guid ResolveLanguageId(string cultureString)
+		{
 			if (LanguageResolveDict.ContainsKey(cultureString.ToLower()))
 			{
 				return (Guid) LanguageResolveDict[cultureString.ToLower()];
@@ -779,19 +780,20 @@ public class ParameterService : IParameterService
 
 
 
-	public void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
-		int intValue, string stringValue, bool boolValue, decimal floatValue, 
-		decimal currencyValue, object dateValue, Guid? overridenProfileId)
-	{
+        public void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
+            int intValue, string stringValue, bool boolValue, decimal floatValue, 
+            decimal currencyValue, object dateValue, Guid? overridenProfileId)
+        {
             SetCustomParameterValue(id, value, guidValue, intValue, stringValue,
                 boolValue, floatValue, currencyValue, dateValue, true, overridenProfileId);
         }
 
-	public void SetCustomParameterValue(string parameterName, object value, 
-		Guid guidValue, int intValue, string stringValue, bool boolValue, 
-		decimal floatValue, decimal currencyValue, object dateValue, Guid? overridenProfileId)
-	{
+        public void SetCustomParameterValue(string parameterName, object value, 
+            Guid guidValue, int intValue, string stringValue, bool boolValue, 
+            decimal floatValue, decimal currencyValue, object dateValue, Guid? overridenProfileId)
+        {
             SetCustomParameterValue(parameterName, value, guidValue, intValue, stringValue,
                 boolValue, floatValue, currencyValue, dateValue, true, overridenProfileId);
         }
+    }
 }

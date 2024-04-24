@@ -56,18 +56,18 @@ using Origam.Gui;
 using Origam.Server;
 using Origam.Service.Core;
 
-namespace Origam.Server;
-
-public class SelectionDialogSessionStore : SessionStore
+namespace Origam.Server
 {
-    private Guid _dataStructureId;
-    private IEndRule _endRule;
-
-    public SelectionDialogSessionStore(IBasicUIService service, UIRequest request,
-        Guid dataSourceId, Guid beforeTransformationId, Guid afterTransformationId, 
-        Guid panelId, string name, IEndRule endRule, Analytics analytics)
-        : base(service, request, name, analytics)
+    public class SelectionDialogSessionStore : SessionStore
     {
+        private Guid _dataStructureId;
+        private IEndRule _endRule;
+
+        public SelectionDialogSessionStore(IBasicUIService service, UIRequest request,
+            Guid dataSourceId, Guid beforeTransformationId, Guid afterTransformationId, 
+            Guid panelId, string name, IEndRule endRule, Analytics analytics)
+            : base(service, request, name, analytics)
+        {
             this.DataStructureId = dataSourceId;
             this.BeforeTransformationId = beforeTransformationId;
             this.AfterTransformationId = afterTransformationId;
@@ -75,15 +75,15 @@ public class SelectionDialogSessionStore : SessionStore
             this.EndRule = endRule;
         }
 
-    #region Overriden SessionStore Methods
+        #region Overriden SessionStore Methods
 
-    public override void Init()
-    {
+        public override void Init()
+        {
             LoadData();
         }
 
-    private void LoadData()
-    {
+        private void LoadData()
+        {
             Hashtable parameters = new Hashtable(this.Request.Parameters);
 
             DataSet data = FormTools.GetSelectionDialogData(this.DataStructureId, this.BeforeTransformationId, true, SecurityTools.CurrentUserProfile().Id, parameters);
@@ -91,8 +91,8 @@ public class SelectionDialogSessionStore : SessionStore
             SetDataSource(data);
         }
 
-    public override object ExecuteActionInternal(string actionId)
-    {
+        public override object ExecuteActionInternal(string actionId)
+        {
             switch (actionId)
             {
                 case ACTION_REFRESH:
@@ -106,8 +106,8 @@ public class SelectionDialogSessionStore : SessionStore
             }
         }
 
-    public override XmlDocument GetFormXml()
-    {
+        public override XmlDocument GetFormXml()
+        {
             XmlDocument formXml = FormXmlBuilder.GetXmlFromPanel(this.PanelId, "", new Guid(this.Request.ObjectId));
             XmlNodeList list = formXml.SelectNodes("/Window");
             XmlElement windowElement = list[0] as XmlElement;
@@ -125,19 +125,19 @@ public class SelectionDialogSessionStore : SessionStore
             return formXml;
         }
 
-    public override string Title
-    {
-        get
+        public override string Title
         {
+            get
+            {
                 return "";
             }
-        set
-        {
+            set
+            {
                 base.Title = value;
             }
-    }
-    private object Next()
-    {
+        }
+        private object Next()
+        {
             if (this.EndRule != null)
             {
                 RuleExceptionDataCollection ruleExceptions =
@@ -160,8 +160,8 @@ public class SelectionDialogSessionStore : SessionStore
             }
         }
 
-    private object NextReport()
-    {
+        private object NextReport()
+        {
             UserProfile profile = SecurityTools.CurrentUserProfile();
             PanelActionResult result = new PanelActionResult(ActionResultType.OpenUrl);
             result.Request = new UIRequest();
@@ -185,8 +185,8 @@ public class SelectionDialogSessionStore : SessionStore
             return result;
         }
 
-    private object NextForm()
-    {
+        private object NextForm()
+        {
             UserProfile profile = SecurityTools.CurrentUserProfile();
             PanelActionResult result = new PanelActionResult(ActionResultType.OpenForm);
             UIRequest request = new UIRequest();
@@ -211,8 +211,8 @@ public class SelectionDialogSessionStore : SessionStore
             return result;
         }
 
-    private void SetParameters(IDictionary parameters, DataRow row, AbstractSchemaItem item)
-    {
+        private void SetParameters(IDictionary parameters, DataRow row, AbstractSchemaItem item)
+        {
             // map the parameters from the selection dialog data row
             foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
             {
@@ -246,50 +246,51 @@ public class SelectionDialogSessionStore : SessionStore
             }
         }
 
-    private object Refresh()
-    {
+        private object Refresh()
+        {
             this.Clear();
             LoadData();
             return this.Data;
         }
 
-    #endregion
+        #endregion
 
-    #region Properties
-    public Guid DataStructureId
-    {
-        get { return _dataStructureId; }
-        set { _dataStructureId = value; }
+        #region Properties
+        public Guid DataStructureId
+        {
+            get { return _dataStructureId; }
+            set { _dataStructureId = value; }
+        }
+
+        private Guid _panelId;
+
+        public Guid PanelId
+        {
+            get { return _panelId; }
+            set { _panelId = value; }
+        }
+
+        private Guid _beforeTransformationId;
+
+        public Guid BeforeTransformationId
+        {
+            get { return _beforeTransformationId; }
+            set { _beforeTransformationId = value; }
+        }
+
+        private Guid _afterTransformationId;
+
+        public Guid AfterTransformationId
+        {
+            get { return _afterTransformationId; }
+            set { _afterTransformationId = value; }
+        }
+
+        public IEndRule EndRule
+        {
+            get { return _endRule; }
+            set { _endRule = value; }
+        }
+        #endregion
     }
-
-    private Guid _panelId;
-
-    public Guid PanelId
-    {
-        get { return _panelId; }
-        set { _panelId = value; }
-    }
-
-    private Guid _beforeTransformationId;
-
-    public Guid BeforeTransformationId
-    {
-        get { return _beforeTransformationId; }
-        set { _beforeTransformationId = value; }
-    }
-
-    private Guid _afterTransformationId;
-
-    public Guid AfterTransformationId
-    {
-        get { return _afterTransformationId; }
-        set { _afterTransformationId = value; }
-    }
-
-    public IEndRule EndRule
-    {
-        get { return _endRule; }
-        set { _endRule = value; }
-    }
-    #endregion
 }

@@ -23,29 +23,29 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 
-namespace Origam;
-
-/// <summary>
-/// This class represents a collection of column names/values that make a unique key of an entity.
-/// </summary>
-public class Key : Hashtable
+namespace Origam
 {
-
-    public Key()
+    /// <summary>
+    /// This class represents a collection of column names/values that make a unique key of an entity.
+    /// </summary>
+    public class Key : Hashtable
     {
+
+        public Key()
+        {
         }
 
-    public Key(string id) : this(new Guid(id))
-    {
+        public Key(string id) : this(new Guid(id))
+        {
         }
 
-    public Key(Guid id)
-    {
+        public Key(Guid id)
+        {
             this["Id"] = id;
         }
 
-    public override string ToString()
-    {
+        public override string ToString()
+        {
             string keyString = "";
 
             foreach (DictionaryEntry entry in this)
@@ -56,33 +56,33 @@ public class Key : Hashtable
             return keyString;
         }
 
-    public object[] ValueArray
-    {
-        get
+        public object[] ValueArray
         {
+            get
+            {
                 object[] ret = new object[this.Values.Count];
 
                 this.Values.CopyTo(ret, 0);
 
                 return ret;
             }
-    }
+        }
 
-    public object[] KeyArray
-    {
-        get
+        public object[] KeyArray
         {
+            get
+            {
                 object[] ret = new object[this.Values.Count];
 
                 this.Keys.CopyTo(ret, 0);
 
                 return ret;
             }
-    }
+        }
 
 
-    public override bool Equals(object obj)
-    {
+         public override bool Equals(object obj)
+         {
         	if (ReferenceEquals(null, obj)) return false;
         	if (ReferenceEquals(this, obj)) return true;
         	if (!(obj is Key)) return false;
@@ -106,8 +106,8 @@ public class Key : Hashtable
         }
 
 
-    public override int GetHashCode()
-    {
+        public override int GetHashCode()
+        {
             if (Count == 1 && Contains("Id")) return this["Id"].GetHashCode();
             int hashCode = 0;
 
@@ -118,4 +118,5 @@ public class Key : Hashtable
 
             return hashCode;
         }
+    }
 }

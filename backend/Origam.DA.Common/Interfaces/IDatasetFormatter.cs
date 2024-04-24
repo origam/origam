@@ -17,9 +17,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Data;
 
-namespace Origam.DA.ObjectPersistence;
-
-public interface IDatasetFormatter
+namespace Origam.DA.ObjectPersistence
 {
-    DataSet Format(DataSet data);	
+    public interface IDatasetFormatter
+    {
+        DataSet Format(DataSet data);	
+    }
 }

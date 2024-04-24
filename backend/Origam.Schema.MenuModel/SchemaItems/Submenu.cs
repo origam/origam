@@ -27,24 +27,24 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.MenuModel;
-
-[SchemaItemDescription("Submenu", "menu_folder.png")]
-[HelpTopic("Submenu")]
-[ClassMetaVersion("6.0.0")]
-public class Submenu : AbstractMenuItem
+namespace Origam.Schema.MenuModel
 {
-	public Submenu() {}
-
-	public Submenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public Submenu(Key primaryKey) : base(primaryKey) {}
-
-	[Browsable(false)]
-	public override string Roles
+	[SchemaItemDescription("Submenu", "menu_folder.png")]
+    [HelpTopic("Submenu")]
+    [ClassMetaVersion("6.0.0")]
+	public class Submenu : AbstractMenuItem
 	{
-		get
+		public Submenu() {}
+
+		public Submenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public Submenu(Key primaryKey) : base(primaryKey) {}
+
+		[Browsable(false)]
+		public override string Roles
 		{
+			get
+			{
 				var children = ChildItemsRecursive;
 				var roles = new ArrayList();
 				foreach(var child in children)
@@ -78,14 +78,14 @@ public class Submenu : AbstractMenuItem
 				}
 				return stringBuilder.ToString();
 			}
-		set => base.Roles = value;
-	}
+			set => base.Roles = value;
+		}
 
-	[Browsable(false)]
-	public override string Features
-	{
-		get
+		[Browsable(false)]
+		public override string Features
 		{
+			get
+			{
 				var children = ChildItemsRecursive;
 				var features = new ArrayList();
 				foreach(var child in children)
@@ -117,23 +117,23 @@ public class Submenu : AbstractMenuItem
 				}
 				return stringBuilder.ToString();
 			}
-		set => base.Features = value;
-	}
+			set => base.Features = value;
+		}
 
-	[DefaultValue(false)]
-	[XmlAttribute("isHidden")]
-	public bool IsHidden { get; set; } 
+		[DefaultValue(false)]
+		[XmlAttribute("isHidden")]
+		public bool IsHidden { get; set; } 
 
-	[Browsable(false)]
-	public new bool OpenExclusively
-	{
-		get => base.OpenExclusively;
-		set => base.OpenExclusively = value;
-	}
+		[Browsable(false)]
+        public new bool OpenExclusively
+        {
+            get => base.OpenExclusively;
+            set => base.OpenExclusively = value;
+        }
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[] {
+		public override Type[] NewItemTypes => new[] {
 			typeof(Submenu),
 			typeof(FormReferenceMenuItem),
 			typeof(DataConstantReferenceMenuItem),
@@ -143,9 +143,9 @@ public class Submenu : AbstractMenuItem
 			typeof(DynamicMenu)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			string itemName = null;
 			if(typeof(T) == typeof(WorkflowReferenceMenuItem))
 			{
@@ -178,8 +178,8 @@ public class Submenu : AbstractMenuItem
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	public override int CompareTo(object obj)
-	{
+		public override int CompareTo(object obj)
+		{
 			var abstractMenuItem = obj as AbstractMenuItem;
 			if(obj is Submenu)
 			{
@@ -193,6 +193,7 @@ public class Submenu : AbstractMenuItem
 		}
 
 
-	#endregion
+		#endregion
 
+	}
 }

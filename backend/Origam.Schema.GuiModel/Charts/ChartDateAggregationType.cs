@@ -19,23 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for ChartDateAggregationType.
-/// </summary>
-public enum ChartAggregationType
+namespace Origam.Schema.GuiModel
 {
-	Distinct,
-	DateYear,
-	DateQuarter,
-	DateMonth,
-	DateWeek,
-	DateDay,
+	/// <summary>
+	/// Summary description for ChartDateAggregationType.
+	/// </summary>
+	public enum ChartAggregationType
+	{
+		Distinct,
+		DateYear,
+		DateQuarter,
+		DateMonth,
+		DateWeek,
+		DateDay,
 /*
 		DateHour,
 		DateMinute,
 		DateSecond,
 		DateMillisecond
 */
+	}
 }

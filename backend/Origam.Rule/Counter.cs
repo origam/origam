@@ -25,34 +25,34 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
-
-public interface ICounter
+namespace Origam.Rule
 {
-	string GetNewCounter (string counterCode, DateTime date, string transactionId);
-}
-
-/// <summary>
-/// Summary description for Counter.
-/// </summary>
-public class Counter : ICounter
-{
-	private const int RETRIES		= 50;
-	private const int RETRY_INTERVAL = 1000;
-	public const string	QUERY		= "b9a9c301-d33c-4139-ad22-a10e8514e3d5";
-	public const string FILTER		= "01cc148c-1099-4653-8a17-95d1c9a033be";
-
-	private DataStructureQuery _query = null;
-	private CounterDataset _data = new CounterDataset();
-	private readonly IServiceAgent _dataServiceAgent;
-
-	public Counter(IBusinessServicesService businessService)
+	public interface ICounter
 	{
+		string GetNewCounter (string counterCode, DateTime date, string transactionId);
+	}
+
+	/// <summary>
+	/// Summary description for Counter.
+	/// </summary>
+	public class Counter : ICounter
+	{
+		private const int RETRIES		= 50;
+		private const int RETRY_INTERVAL = 1000;
+		public const string	QUERY		= "b9a9c301-d33c-4139-ad22-a10e8514e3d5";
+		public const string FILTER		= "01cc148c-1099-4653-8a17-95d1c9a033be";
+
+		private DataStructureQuery _query = null;
+		private CounterDataset _data = new CounterDataset();
+		private readonly IServiceAgent _dataServiceAgent;
+
+		public Counter(IBusinessServicesService businessService)
+		{
 			_dataServiceAgent = businessService.GetAgent("DataService", null, null);
 		}
 
-	public string GetNewCounter (string counterCode, DateTime date, string transactionId)
-	{
+		public string GetNewCounter (string counterCode, DateTime date, string transactionId)
+		{
 			CounterDataset.CounterDetailRow row = null;
 			int counter = 0;
 			string result = "";
@@ -104,9 +104,9 @@ public class Counter : ICounter
 			return result;
 		}
 
-	private CounterDataset.CounterDetailRow ReadRow(DataStructureQuery query, string counterCode, DateTime date, 
-		string transactionId)
-	{
+		private CounterDataset.CounterDetailRow ReadRow(DataStructureQuery query, string counterCode, DateTime date, 
+			string transactionId)
+		{
 			_dataServiceAgent.MethodName = "LoadDataByQuery";
 			_dataServiceAgent.Parameters.Clear();
 			_dataServiceAgent.Parameters.Add("Query", query);
@@ -146,8 +146,8 @@ public class Counter : ICounter
 			}
 		}
 
-	private void Update (DataStructureQuery query, CounterDataset.CounterDetailRow row, int counter, DateTime date, string transactionId)
-	{
+		private void Update (DataStructureQuery query, CounterDataset.CounterDetailRow row, int counter, DateTime date, string transactionId)
+		{
 			string name = (row.GetParentRow(row.Table.ParentRelations[0]) as CounterDataset.CounterRow).ReferenceCode;
 
 			if(! row.IsCounterToNull())
@@ -170,4 +170,5 @@ public class Counter : ICounter
 			_dataServiceAgent.TransactionId = transactionId;
 			_dataServiceAgent.Run();
 		}
+	}
 }

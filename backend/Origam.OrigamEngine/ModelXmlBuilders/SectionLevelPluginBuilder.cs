@@ -27,14 +27,14 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-public class SectionLevelPluginBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-    public static void Build(XmlElement parentNode, string text,
-        DataTable table, DataStructure dataStructure, bool isPreloaded,
-        bool isIndependent, Hashtable dataSources, string modelId, string dataMember)
+    public class SectionLevelPluginBuilder
     {
+        public static void Build(XmlElement parentNode, string text,
+            DataTable table, DataStructure dataStructure, bool isPreloaded,
+            bool isIndependent, Hashtable dataSources, string modelId, string dataMember)
+        {
             DataStructureEntity entity = dataStructure
                 .ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst)
                 .Cast<DataStructureEntity>()
@@ -72,4 +72,5 @@ public class SectionLevelPluginBuilder
                     ref lastPos, propertiesElement,	propertyNamesElement, table, null);
             }
         }
+    }
 }

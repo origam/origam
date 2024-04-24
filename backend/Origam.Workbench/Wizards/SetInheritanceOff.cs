@@ -22,28 +22,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI;
 
-namespace Origam.Schema.Wizards;
-
-/// <summary>
-/// Summary description for SetInheritanceOff.
-/// </summary>
-public class SetInheritanceOff : AbstractMenuCommand
+namespace Origam.Schema.Wizards
 {
-	public override bool IsEnabled
+	/// <summary>
+	/// Summary description for SetInheritanceOff.
+	/// </summary>
+	public class SetInheritanceOff : AbstractMenuCommand
 	{
-		get
+		public override bool IsEnabled
 		{
+			get
+			{
                 AbstractSchemaItem item = Owner as AbstractSchemaItem;
                 return item != null && item.Inheritable;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			AbstractSchemaItem item = Owner as AbstractSchemaItem;
 
 			SetInheritance(item, false);
@@ -52,8 +52,8 @@ public class SetInheritanceOff : AbstractMenuCommand
 			item.ClearCacheOnPersist = true;
 		}
 
-	private static void SetInheritance(AbstractSchemaItem item, bool value)
-	{
+		private static void SetInheritance(AbstractSchemaItem item, bool value)
+		{
 			item.Inheritable = value;
 
 			foreach(AbstractSchemaItem child in item.ChildItems)
@@ -64,4 +64,5 @@ public class SetInheritanceOff : AbstractMenuCommand
 				}
 			}
 		}
+	}
 }

@@ -23,13 +23,13 @@ using System;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow.Tasks;
-
-public class AcceptContextStoreChangesEngineTask 
-    : AbstractWorkflowEngineTask
+namespace Origam.Workflow.Tasks
 {
-    protected override void OnExecute()
+    public class AcceptContextStoreChangesEngineTask 
+        : AbstractWorkflowEngineTask
     {
+        protected override void OnExecute()
+        {
             var acceptContextStoreChangesTask = Step as AcceptContextStoreChangesTask;
             if(!(Engine.RuleEngine.GetContext(
                    acceptContextStoreChangesTask.ContextStore) 
@@ -41,4 +41,5 @@ public class AcceptContextStoreChangesEngineTask
             }
             dataDocument.DataSet.AcceptChanges();
         }
+    }
 }

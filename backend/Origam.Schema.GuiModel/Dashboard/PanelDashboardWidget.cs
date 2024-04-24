@@ -24,42 +24,43 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Panel Widget", "icon_panel-widget.png")]
-public class PanelDashboardWidget : AbstractDataDashboardWidget
+namespace Origam.Schema.GuiModel
 {
-	public PanelDashboardWidget() : base() {Init();}
-	public PanelDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public PanelDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Panel Widget", "icon_panel-widget.png")]
+	public class PanelDashboardWidget : AbstractDataDashboardWidget
 	{
+		public PanelDashboardWidget() : base() {Init();}
+		public PanelDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public PanelDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Panel);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	#region Properties
-	public Guid PanelId;
+		#region Properties
+		public Guid PanelId;
 
-	[Category("UI")]
-	[TypeConverter(typeof(PanelControlSetConverter))]
-	[XmlReference("screenSection", "PanelId")]
-	public PanelControlSet Panel
-	{
-		get
+		[Category("UI")]
+		[TypeConverter(typeof(PanelControlSetConverter))]
+        [XmlReference("screenSection", "PanelId")]
+		public PanelControlSet Panel
 		{
+			get
+			{
 				return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
 			}
-		set
-		{
+			set
+			{
 				this.PanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

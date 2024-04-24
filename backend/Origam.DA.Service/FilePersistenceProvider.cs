@@ -33,44 +33,44 @@ using Origam.DA.Service.FileSystemModelCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service;
-
-public interface IFilePersistenceProvider: IPersistenceProvider
+namespace Origam.DA.Service
 {
-    DirectoryInfo GetParentPackageDirectory(Guid itemId);
-    bool Has(Guid id);
-    DirectoryInfo TopDirectory { get; }
-}
-
-public class FilePersistenceProvider : AbstractPersistenceProvider,
-    IFilePersistenceProvider
-{
-    private FilePersistenceIndex index;
-    private readonly Persistor persistor;
-    private readonly FileEventQueue fileEventQueue;
-    private readonly FileFilter ignoredFileFilter;
-    private readonly ILocalizationCache localizationCache;
-    private readonly TrackerLoaderFactory trackerLoaderFactory;
-    private readonly OrigamFileManager origamFileManager;
-    private readonly IRuntimeModelConfig runtimeModelConfig;
-
-    public override bool InTransaction => persistor.IsInTransaction;
-    public override ILocalizationCache LocalizationCache => localizationCache;
-
-    public HashSet<Guid> LoadedPackages {
-        set => index.LoadedPackages = value;
-    }
-        
-    public DirectoryInfo TopDirectory { get; }
-
-    public FilePersistenceProvider(DirectoryInfo topDirectory,
-        FileEventQueue fileEventQueue,
-        FileFilter ignoredFileFilter,
-        TrackerLoaderFactory trackerLoaderFactory,
-        OrigamFileFactory origamFileFactory,
-        FilePersistenceIndex index, OrigamFileManager origamFileManager,
-        bool checkRules, IRuntimeModelConfig runtimeModelConfig)
+    public interface IFilePersistenceProvider: IPersistenceProvider
     {
+        DirectoryInfo GetParentPackageDirectory(Guid itemId);
+        bool Has(Guid id);
+        DirectoryInfo TopDirectory { get; }
+    }
+
+    public class FilePersistenceProvider : AbstractPersistenceProvider,
+        IFilePersistenceProvider
+    {
+        private FilePersistenceIndex index;
+        private readonly Persistor persistor;
+        private readonly FileEventQueue fileEventQueue;
+        private readonly FileFilter ignoredFileFilter;
+        private readonly ILocalizationCache localizationCache;
+        private readonly TrackerLoaderFactory trackerLoaderFactory;
+        private readonly OrigamFileManager origamFileManager;
+        private readonly IRuntimeModelConfig runtimeModelConfig;
+
+        public override bool InTransaction => persistor.IsInTransaction;
+        public override ILocalizationCache LocalizationCache => localizationCache;
+
+        public HashSet<Guid> LoadedPackages {
+            set => index.LoadedPackages = value;
+        }
+        
+        public DirectoryInfo TopDirectory { get; }
+
+        public FilePersistenceProvider(DirectoryInfo topDirectory,
+            FileEventQueue fileEventQueue,
+            FileFilter ignoredFileFilter,
+            TrackerLoaderFactory trackerLoaderFactory,
+            OrigamFileFactory origamFileFactory,
+            FilePersistenceIndex index, OrigamFileManager origamFileManager,
+            bool checkRules, IRuntimeModelConfig runtimeModelConfig)
+        {
             CheckRules = checkRules;
             this.origamFileManager = origamFileManager;
             this.runtimeModelConfig = runtimeModelConfig;
@@ -94,8 +94,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             runtimeModelConfig.ConfigurationReloaded += OnRuntimeModelConfigReloaded;
         }
 
-    private void OnRuntimeModelConfigReloaded(object sender, List<Guid> invalidatedItemIds)
-    {
+        private void OnRuntimeModelConfigReloaded(object sender, List<Guid> invalidatedItemIds)
+        {
             foreach (Guid itemId in invalidatedItemIds)
             {
                 FindPersistedObjectInfo(itemId)?
@@ -103,43 +103,43 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             }
         }
 
-    #region UNUSED
-    public override ICompiledModel CompiledModel
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-    #endregion
+        #region UNUSED
+        public override ICompiledModel CompiledModel
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+        #endregion
     
-    public override void RestrictToLoadedPackage(bool restrictToLoadedPackage)
-    {
+        public override void RestrictToLoadedPackage(bool restrictToLoadedPackage)
+        {
             index = restrictToLoadedPackage
                 ? FilePersistenceIndex.GetPackageRespectingVersion(index) 
                 : FilePersistenceIndex.GetPackageIgnoringVersion(index);
         }
 
-    public void PersistIndex()
-    {
+        public void PersistIndex()
+        {
             PersistIndex(false);
         }
-    public void PersistIndex(bool unloadProject)
-    {
+        public void PersistIndex(bool unloadProject)
+        {
             index.AddToPersist(trackerLoaderFactory,unloadProject);
         }
 
-    public override void BeginTransaction()
-    {
+        public override void BeginTransaction()
+        {
             persistor.BeginTransaction();
         }
 
-    public override void EndTransaction()
-    {       
+        public override void EndTransaction()
+        {       
             persistor.EndTransaction();
             base.EndTransaction();
         }
 
-    public override void EndTransactionDontSave()
-    {
+        public override void EndTransactionDontSave()
+        {
             persistor.EndTransactionDontSave();
             Maybe<XmlLoadError> result = ReloadFiles();
             if(result.HasValue)
@@ -149,13 +149,13 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             PersistIndex(false);
         }
 
-    public override bool IsInTransaction => persistor.IsInTransaction;
+        public override bool IsInTransaction => persistor.IsInTransaction;
 
-    public bool CheckRules { get; }
+        public bool CheckRules { get; }
 
-    private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
-        bool useCache=true)
-    {
+        private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
+            bool useCache=true)
+        {
             var id = persistedObjInfo.Id;
             var retrievedInstance = persistedObjInfo.OrigamFile.LoadObject(
                 id, this, useCache);
@@ -170,37 +170,37 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return retrievedInstance;
         }
 
-    public override object RetrieveValue(Guid instanceId, Type parentType,
-        string fieldName)
-    {
+        public override object RetrieveValue(Guid instanceId, Type parentType,
+            string fieldName)
+        {
             var objInfo = index.GetById(instanceId);
             return objInfo?.OrigamFile.GetFromExternalFile(
                 instanceId,fieldName);
         }
 
-    public new T RetrieveInstance<T>(Guid id)
-    {
+        public new T RetrieveInstance<T>(Guid id)
+        {
             return (T)RetrieveInstance(typeof(T) ,new Key{{"Id",id}});
         }
 
-    public override object RetrieveInstance(Type type, Key primaryKey) => 
-        RetrieveInstance(type, primaryKey, true);
+        public override object RetrieveInstance(Type type, Key primaryKey) => 
+            RetrieveInstance(type, primaryKey, true);
 
-    public override object RetrieveInstance(Type type, Key primaryKey,
-        bool useCache) => 
-        RetrieveInstance(
-            type: type, 
-            primaryKey: primaryKey, 
-            useCache: useCache, 
-            throwNotFoundException: true);
+        public override object RetrieveInstance(Type type, Key primaryKey,
+            bool useCache) => 
+            RetrieveInstance(
+                type: type, 
+                primaryKey: primaryKey, 
+                useCache: useCache, 
+                throwNotFoundException: true);
 
-    public override object RetrieveInstance(Type type, Key primaryKey, 
-        bool useCache, bool throwNotFoundException) => 
-        RetrieveInstance(primaryKey, useCache, throwNotFoundException);
+        public override object RetrieveInstance(Type type, Key primaryKey, 
+            bool useCache, bool throwNotFoundException) => 
+            RetrieveInstance(primaryKey, useCache, throwNotFoundException);
 
-    private IFilePersistent RetrieveInstance(Key primaryKey, bool useCache, 
-        bool throwNotFoundException)
-    {
+        private IFilePersistent RetrieveInstance(Key primaryKey, bool useCache, 
+            bool throwNotFoundException)
+        {
             if((Guid)primaryKey["Id"] == Guid.Empty)
             {
                 return null;
@@ -214,20 +214,20 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 RetrieveInstance(persistedObjectInfo, useCache);
         }
 
-    private PersistedObjectInfo FindPersistedObjectInfo(Key primaryKey)
-    {
+        private PersistedObjectInfo FindPersistedObjectInfo(Key primaryKey)
+        {
             var id = (Guid)primaryKey["Id"];
             return id.Equals(Guid.Empty) ? null : FindPersistedObjectInfo(id);
         }
 
-    public PersistedObjectInfo FindPersistedObjectInfo(Guid id)
-    {
+        public PersistedObjectInfo FindPersistedObjectInfo(Guid id)
+        {
             return 
                 persistor.GetObjInfoFromTransactionStore(id) ?? index.GetById(id);
         }
 
-    public override List<string> Files(IPersistent persistentObject)
-    {
+        public override List<string> Files(IPersistent persistentObject)
+        {
             var result = new List<string>();
             var fileInfo = FindPersistedObjectInfo(persistentObject.Id);
             if(fileInfo == null)
@@ -242,8 +242,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return result;
         }
 
-    public override void RefreshInstance(IPersistent persistentObject)
-    {
+        public override void RefreshInstance(IPersistent persistentObject)
+        {
             if(!(persistentObject is IFilePersistent origObject))
             {
                 throw new InvalidOperationException(
@@ -273,13 +273,13 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             );
         }
 
-    public override void RemoveFromCache(IPersistent instance)
-    {
+        public override void RemoveFromCache(IPersistent instance)
+        {
             index.GetById(instance.Id)?.OrigamFile.RemoveFromCache(instance.Id);
         }
 
-    public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)
-    {
+        public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)
+        {
             if(filter != null && filter.Count > 0)
             {
                 throw new NotImplementedException("Filtering not implemented.");
@@ -293,8 +293,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToList();
         }
 
-    private IEnumerable<object> RetrieveAll(Type type)
-    {
+        private IEnumerable<object> RetrieveAll(Type type)
+        {
             var category = CategoryFactory.Create(type);
             if(string.IsNullOrWhiteSpace(category))
             {
@@ -305,9 +305,9 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .Select(objInfo => RetrieveInstance(objInfo));
         }
 
-    public override List<T> RetrieveListByParent<T>(Key primaryKey,
+        public override List<T> RetrieveListByParent<T>(Key primaryKey,
         string parentTableName, string childTableName, bool useCache)
-    {
+        {
             return RetrieveListByParent(
                     (Guid) primaryKey["Id"],
                     CategoryFactory.Create(typeof(T)),
@@ -316,9 +316,9 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToList<T>();
         }
 
-    private ArrayList RetrieveListByParent(Guid id, string category,
-        Type type, bool useCache)
-    {         
+        private ArrayList RetrieveListByParent(Guid id, string category,
+            Type type, bool useCache)
+        {         
             var result = new ArrayList();
             foreach (var objInfo in index.GetByParentId(id))
             {
@@ -336,20 +336,20 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return result;
         }
 
-    public override void Persist(IPersistent obj)
-    {
+        public override void Persist(IPersistent obj)
+        {
             persistor.Persist(obj, CheckRules);
             runtimeModelConfig.UpdateConfig(obj);
             base.Persist(obj);
         }
 
-    public override void FlushCache()
-    {
+        public override void FlushCache()
+        {
             index.ClearCache();
         }
 
-    public override void DeletePackage(Guid packageId)
-    {
+        public override void DeletePackage(Guid packageId)
+        {
             var dependentPackages = string.Join(", ",
                 RetrieveList<PackageReference>()
                     .Where(x => x.ReferencedPackage.Id == packageId)
@@ -368,13 +368,13 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             }
         }
 
-    public override object Clone()
-    {
+        public override object Clone()
+        {
             throw new NotImplementedException();
         }
 
-    public override void Dispose()
-    {
+        public override void Dispose()
+        {
             fileEventQueue.Stop();
             localizationCache.Dispose();
             index?.Dispose();
@@ -383,8 +383,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             runtimeModelConfig.Dispose();
         }
 
-    public override T[] FullTextSearch<T>(string text)
-    {
+        public override T[] FullTextSearch<T>(string text)
+        {
             var lookingForAGuid 
                 = Guid.TryParse(text, out Guid guidToLookFor);
             return lookingForAGuid
@@ -392,8 +392,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 : FindStringInPersistedFiles<T>(text);
         }
 
-    private T[] FindStringInPersistedFiles<T>(string text)
-    {
+        private T[] FindStringInPersistedFiles<T>(string text)
+        {
             return new FlatFileSearcher(text)
                 .SearchIn(index.GetLoadedPackageDirectories().Values)
                 .Select(itemId => index.GetById(itemId))
@@ -402,8 +402,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToArray();
         }
 
-    private T[] FindSingleItemById<T>(Guid guidToLookFor)
-    {
+        private T[] FindSingleItemById<T>(Guid guidToLookFor)
+        {
             var objInfo = index.GetById(guidToLookFor);
             if(objInfo != null)
             {
@@ -412,8 +412,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return new T[0];
         }
 
-    public override List<T> RetrieveListByPackage<T>(Guid packageId)
-    {
+        public override List<T> RetrieveListByPackage<T>(Guid packageId)
+        {
             return index.GetByPackage(packageId)
                 .Select(objInfo => RetrieveInstance(objInfo))
                 .Where(obj => obj is T)
@@ -421,8 +421,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToList();
         }
 
-    public override List<T> RetrieveListByCategory<T>(string category)
-    {
+        public override List<T> RetrieveListByCategory<T>(string category)
+        {
             return index                       
                 .GetListByCategory(category)
                 .Select(objInfo => RetrieveInstance(objInfo))
@@ -430,8 +430,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToList();
         }
 
-    public override List<T> RetrieveListByGroup<T>(Key primaryKey)
-    {
+        public override List<T> RetrieveListByGroup<T>(Key primaryKey)
+        {
             var category = CategoryFactory.Create(typeof(T));
             return index
                 .GetByParentFolder(category,  (Guid)primaryKey["Id"])
@@ -441,14 +441,14 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 .ToList();
         }
 
-    public Maybe<XmlLoadError> ReloadFiles()
-    {
+        public Maybe<XmlLoadError> ReloadFiles()
+        {
             localizationCache.Reload();
             return index.ReloadFiles(trackerLoaderFactory);
         }
 
-    public DirectoryInfo GetParentPackageDirectory(Guid itemId)
-    {
+        public DirectoryInfo GetParentPackageDirectory(Guid itemId)
+        {
             var item = (AbstractSchemaItem)RetrieveInstance(
                     type: null, 
                     primaryKey: new Key {{"Id", itemId}});
@@ -463,8 +463,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return directory ?? throw new Exception("package: "+ packageId+" not found among currently loaded packages");
         }
 
-    public bool Has(Guid id)
-    {
+        public bool Has(Guid id)
+        {
             var retrievedInstance = RetrieveInstance(
                 type: null,
                 primaryKey: new Key {{"Id", id}}, 
@@ -473,8 +473,8 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             return retrievedInstance != null;
         }
 
-    public List<ModelErrorSection> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
-    {
+        public List<ModelErrorSection> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
+        {
             List<FileInfo> modelDirectoryFiles = TopDirectory
                 .GetAllFilesInSubDirectories()
                 .ToList();
@@ -500,4 +500,5 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                     .Where(errorSection => !errorSection.IsEmpty)
                     .ToList();
         }   
+    }
 }

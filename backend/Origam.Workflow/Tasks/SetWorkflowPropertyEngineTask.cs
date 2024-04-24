@@ -30,19 +30,19 @@ using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks;
-
-/// <summary>
-/// Summary description for SetWorkflowPropertyEngineTask.
-/// </summary>
-public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
+namespace Origam.Workflow.Tasks
 {
-	public SetWorkflowPropertyEngineTask() : base()
+	/// <summary>
+	/// Summary description for SetWorkflowPropertyEngineTask.
+	/// </summary>
+	public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
 	{
+		public SetWorkflowPropertyEngineTask() : base()
+		{
 		}
 
-	protected override void OnExecute()
-	{
+		protected override void OnExecute()
+		{
 			SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
 
 		    IXmlContainer data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
@@ -98,4 +98,5 @@ public class SetWorkflowPropertyEngineTask : AbstractWorkflowEngineTask
 					throw new ArgumentOutOfRangeException("WorkflowProperty", setProperty.WorkflowProperty, ResourceUtils.GetString("ErrorUnknownWorkflow"));
 			}
 		}
+	}
 }

@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Origam.Server.Configuration;
-
-public class ChatConfig
+namespace Origam.Server.Configuration
 {
-    public string PathToChatApp { get; set; }
-    public int ChatRefreshInterval { get; set; }
+    public class ChatConfig
+    {
+        public string PathToChatApp { get; set; }
+        public int ChatRefreshInterval { get; set; }
+    }
 }

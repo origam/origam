@@ -23,29 +23,29 @@ using System;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.Wizards;
-
-/// <summary>
-/// Summary description for SetInheritanceOff.
-/// </summary>
-public class CreatePackageFolders : AbstractMenuCommand
+namespace Origam.Schema.Wizards
 {
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
+	/// <summary>
+	/// Summary description for SetInheritanceOff.
+	/// </summary>
+	public class CreatePackageFolders : AbstractMenuCommand
 	{
-		get
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
 		{
+			get
+			{
 				return _schema.ActiveNode is Package;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			foreach(ISchemaItemProvider provider in _schema.Providers)
 			{
 				SchemaItemGroup group = provider.NewGroup(_schema.ActiveSchemaExtensionId);
@@ -56,8 +56,8 @@ public class CreatePackageFolders : AbstractMenuCommand
 			(_schema.ActiveNode as Package).Refresh();
 		}
 
-	private static void SetInheritance(AbstractSchemaItem item, bool value)
-	{
+		private static void SetInheritance(AbstractSchemaItem item, bool value)
+		{
 			item.Inheritable = value;
 
 			foreach(AbstractSchemaItem child in item.ChildItems)
@@ -68,4 +68,5 @@ public class CreatePackageFolders : AbstractMenuCommand
 				}
 			}
 		}
+	}
 }

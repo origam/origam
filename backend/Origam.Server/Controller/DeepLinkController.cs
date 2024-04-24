@@ -34,43 +34,43 @@ using System.Linq;
 using System.Xml;
 using Origam.Server.Model.DeepLink;
 
-namespace Origam.Server.Controller;
-
-[ApiController]
-[Route("internalApi/[controller]")]
-public class DeepLinkController : AbstractController
+namespace Origam.Server.Controller
 {
-    private readonly ILogger<AbstractController> logger;
-    public DeepLinkController(
-        SessionObjects sessionObjects,
-        IStringLocalizer<SharedResources> localizer,
-        ILogger<AbstractController> log) : base(log, sessionObjects)
+    [ApiController]
+    [Route("internalApi/[controller]")]
+    public class DeepLinkController : AbstractController
     {
+        private readonly ILogger<AbstractController> logger;
+        public DeepLinkController(
+            SessionObjects sessionObjects,
+            IStringLocalizer<SharedResources> localizer,
+            ILogger<AbstractController> log) : base(log, sessionObjects)
+        {
             this.logger = log;
         }
-    [HttpGet("categories")]
-    public IActionResult GetCategoriesRequest()
-    {
+        [HttpGet("categories")]
+        public IActionResult GetCategoriesRequest()
+        {
             return RunWithErrorHandler(() =>
                 Ok(GetCategories()));
         }
-    [HttpGet("{categoryId}/objects")]
-    public IActionResult GetObjectsRequest(string categoryId, [FromQuery] int limit,
-        [FromQuery] int pageNumber,
-        [FromQuery] string searchPhrase)
-    {
+        [HttpGet("{categoryId}/objects")]
+        public IActionResult GetObjectsRequest(string categoryId, [FromQuery] int limit,
+            [FromQuery] int pageNumber,
+            [FromQuery] string searchPhrase)
+        {
             return RunWithErrorHandler(() =>
                 GetObjets(categoryId, limit, pageNumber, searchPhrase));
         }
-    [HttpPost("{categoryId}/labels")]
-    public IActionResult GetLookupLabelRequest(string categoryId,
-        [FromBody] DeepLinkLabelInput label)
-    {
+        [HttpPost("{categoryId}/labels")]
+        public IActionResult GetLookupLabelRequest(string categoryId,
+            [FromBody] DeepLinkLabelInput label)
+        {
             return RunWithErrorHandler(() =>
                 GetLookupLabel(categoryId, label.LabelIds));
         }
-    private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
-    {
+        private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
+        {
             DeepLinkCategory category = GetCategory(categoryId);
             if (category == null)
             {
@@ -83,16 +83,16 @@ public class DeepLinkController : AbstractController
             }
             return Forbid();
         }
-    private DeepLinkCategory GetCategory(string categoryId)
-    {
+        private DeepLinkCategory GetCategory(string categoryId)
+        {
             var deepLinkProvider = GetDeepLinkProvider();
             DeepLinkCategory category = deepLinkProvider.GetChildByName(
                 categoryId, DeepLinkCategory.CategoryConst) as DeepLinkCategory;
             return category;
         }
-    private Dictionary<object, string> GetLookupLabelsInternal(
-        DeepLinkCategory input, object[] labelIds)
-    {
+        private Dictionary<object, string> GetLookupLabelsInternal(
+           DeepLinkCategory input, object[] labelIds)
+        {
             IDataLookupService lookupService
                    = ServiceManager.Services.GetService<IDataLookupService>();
             var labelDictionary = labelIds.ToDictionary(
@@ -108,16 +108,16 @@ public class DeepLinkController : AbstractController
                     });
             return labelDictionary;
         }
-    [HttpPost("[action]")]
-    public IActionResult GetMenuId([FromBody] GetDeepLinkMenuInput input)
-    {
+        [HttpPost("[action]")]
+        public IActionResult GetMenuId([FromBody] GetDeepLinkMenuInput input)
+        {
             return RunWithErrorHandler(() => Ok(GetMenuId(
                 deepLinkCategory: input.Category,
                 referenceId: input.ReferenceId))
             );
         }
-    private string GetMenuId(string deepLinkCategory, object referenceId)
-    {
+        private string GetMenuId(string deepLinkCategory, object referenceId)
+        {
             DeepLinkCategory linkCategory = GetCategory(deepLinkCategory);
             if (linkCategory == null)
             {
@@ -130,8 +130,8 @@ public class DeepLinkController : AbstractController
                 ?? throw new Exception($"deepLinkCategory: \"{deepLinkCategory}\" or ReferenceId: \"{referenceId}\" was not found"))
                 .MenuId;
         }
-    private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
-    {
+        private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
+        {
             DeepLinkCategory category = GetCategory(categoryId);
             if (category != null)
             {
@@ -140,13 +140,13 @@ public class DeepLinkController : AbstractController
             }
             return NotFound();
         }
-    private DeepLinkCategorySchemaItemProvider GetDeepLinkProvider()
-    {
+        private DeepLinkCategorySchemaItemProvider GetDeepLinkProvider()
+        {
             var schemaservice = ServiceManager.Services.GetService<SchemaService>();
             return schemaservice.GetProvider<DeepLinkCategorySchemaItemProvider>();
         }
-    private Result<IEnumerable<object[]>, IActionResult> GetLookupData(DeepLinkCategory hashT, int limit, int pageNumber, string searchPhrase)
-    {
+        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(DeepLinkCategory hashT, int limit, int pageNumber, string searchPhrase)
+        {
             IDataLookupService lookupService
                     = ServiceManager.Services.GetService<IDataLookupService>();
             var internalRequest = new LookupListRequest
@@ -166,14 +166,14 @@ public class DeepLinkController : AbstractController
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
-    private string[] GetListColumn(DeepLinkCategory deepLinkCategory)
-    {
+        private string[] GetListColumn(DeepLinkCategory deepLinkCategory)
+        {
             string displayColumn = deepLinkCategory.Lookup.ListValueMember +";" +deepLinkCategory.Lookup.ListDisplayMember;
             return displayColumn.Split(";");
         }
-    private IEnumerable<object[]> GetRowData(
-        LookupListRequest input, DataTable dataTable, string[] columnNames)
-    {
+        private IEnumerable<object[]> GetRowData(
+            LookupListRequest input, DataTable dataTable, string[] columnNames)
+        {
             var lookup = FindItem<DataServiceDataLookup>(input.LookupId).Value;
             if (lookup.IsFilteredServerside)
             {
@@ -184,9 +184,9 @@ public class DeepLinkController : AbstractController
             logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!", input.LookupId));
             return (IEnumerable<object[]>)BadRequest("Invalid lookup configuration. Data could not be retrieved. See log for more details.");
         }
-    private static bool AreColumnNamesValid(
-        string[] columnNames, DataTable dataTable)
-    {
+        private static bool AreColumnNamesValid(
+           string[] columnNames, DataTable dataTable)
+        {
             var actualColumnNames = dataTable.Columns
                 .Cast<DataColumn>()
                 .Select(x => x.ColumnName)
@@ -194,8 +194,8 @@ public class DeepLinkController : AbstractController
             return columnNames
                 .All(colName => actualColumnNames.Contains(colName));
         }
-    private List<DeepLinkCategoryResult> GetCategories()
-    {
+        private List<DeepLinkCategoryResult> GetCategories()
+        {
             var deepLinkProvider = GetDeepLinkProvider();
             var categories = deepLinkProvider.ChildItems;
             List<DeepLinkCategoryResult> deepLinkCategoryList = new List<DeepLinkCategoryResult>();
@@ -214,17 +214,18 @@ public class DeepLinkController : AbstractController
             }
             return deepLinkCategoryList;
         }
-    private bool TestRole(string roles)
-    {
+        private bool TestRole(string roles)
+        {
             return SecurityManager.GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, roles);
         }
-    private string CreateComboBox(DeepLinkCategory category)
-    {
+        private string CreateComboBox(DeepLinkCategory category)
+        {
             XmlDocument doc = new XmlDocument();
             XmlElement controlElement = doc.CreateElement("control");
             doc.AppendChild(controlElement);
             ComboBoxBuilder.Build(controlElement, category.LookupId, false, null, null);
             return doc.InnerXml;
         }
+    }
 }

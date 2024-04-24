@@ -24,16 +24,17 @@ using System.Xml;
 using System.Collections;
 using Origam.Service.Core;
 
-namespace Origam.BI;
-
-/// <summary>
-/// Summary description for IReportService.
-/// </summary>
-public interface IReportService : ITraceInfoContainer
+namespace Origam.BI
 {
-	void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
-	object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);
-	// Prepare report and return an external web report url with exteranl report viewer
-	string PrepareExternalReportViewer(Guid reportId, IXmlContainer data,
-		string format, Hashtable parameters, string dbTransaction);
+	/// <summary>
+	/// Summary description for IReportService.
+	/// </summary>
+	public interface IReportService : ITraceInfoContainer
+    {
+		void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
+		object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);
+  		// Prepare report and return an external web report url with exteranl report viewer
+		string PrepareExternalReportViewer(Guid reportId, IXmlContainer data,
+			string format, Hashtable parameters, string dbTransaction);
+	}
 }

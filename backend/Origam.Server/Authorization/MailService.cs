@@ -29,15 +29,15 @@ using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 using Origam.Server.Configuration;
 
-namespace Origam.Server.Authorization;
-
-class MailService : IMailService
+namespace Origam.Server.Authorization
 {
-    private AccountMailSender mailSender;
-    private LanguageConfig languageConfig;
-    public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, 
-        IConfiguration configuration)
+    class MailService : IMailService
     {
+        private AccountMailSender mailSender;
+        private LanguageConfig languageConfig;
+        public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, 
+            IConfiguration configuration)
+        {
             this.languageConfig = languageConfig;
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
                 ?.Replace(";",",")
@@ -58,24 +58,24 @@ class MailService : IMailService
                 applicationBasePath: AppContext.BaseDirectory,
                 mailQueueName: userConfig.Value.MailQueueName); 
         }
-    private string GetDefaultResetPasswordSubject()
-    {
+        private string GetDefaultResetPasswordSubject()
+        {
                 return languageConfig.CultureItems.Where(cultname => 
                         cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
                         .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
                         FirstOrDefault();
         }
-    private string GetDefaultResetPasswordFileName()
-    {
+        private string GetDefaultResetPasswordFileName()
+        {
             return languageConfig.CultureItems.Where(cultname => 
                     cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
                     .Select(cultname => { return cultname.ResetPasswordMailBodyFileName; }).
                     FirstOrDefault();
 
         }
-    public void SendPasswordResetToken(IOrigamUser user, string token,
-        int tokenValidityHours)
-    {
+        public void SendPasswordResetToken(IOrigamUser user, string token,
+            int tokenValidityHours)
+        {
             SetResetPasswordItems();
             mailSender.SendPasswordResetToken(
                 username: user.UserName,
@@ -88,13 +88,13 @@ class MailService : IMailService
                 resultMessage: out string _);
         }
 
-    private void SetResetPasswordItems()
-    {
+        private void SetResetPasswordItems()
+        {
             mailSender.ResetPasswordSubject = GetDefaultResetPasswordSubject();
             mailSender.ResetPasswordBodyFilename = GetDefaultResetPasswordFileName();
         }
-    public void SendNewUserToken(IOrigamUser user, string token)
-    {
+        public void SendNewUserToken(IOrigamUser user, string token)
+        {
             SetResetPasswordItems();
             mailSender.SendNewUserToken(
                 userId: user.BusinessPartnerId,
@@ -104,18 +104,19 @@ class MailService : IMailService
                 firstName: user.FirstName,
                 token: token);
         }
-    public void SendMultiFactorAuthCode(IOrigamUser user, string token)
-    {
+        public void SendMultiFactorAuthCode(IOrigamUser user, string token)
+        {
             mailSender.SendMultiFactorAuthCode(
                 email: user.Email,
                 code: token);
         }
-    public void SendUserUnlockedMessage(IOrigamUser user)
-    {
+        public void SendUserUnlockedMessage(IOrigamUser user)
+        {
             mailSender.SendUserUnlockingNotification(
                 username: user.UserName,
                 email: user.Email,
                 firstNameAndName: user.FirstName + " " + user.Name,
                 languageId: user.LanguageId.ToString());
         }
+    }
 }

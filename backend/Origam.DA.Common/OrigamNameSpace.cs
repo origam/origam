@@ -25,32 +25,32 @@ using System;
 using System.Collections.Concurrent;
 using System.Xml.Serialization;
 
-namespace Origam.DA.Common;
-
-public class OrigamNameSpace
+namespace Origam.DA.Common
 {
-    private static readonly string firstPart = "http://schemas.origam.com";
-    public Version Version { get; }
-    public string StringValue { get; }
-    public string FullTypeName { get; }
-        
-    private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
-        =  new ConcurrentDictionary<string, OrigamNameSpace>();
-
-    public static implicit operator string(OrigamNameSpace nameSpace) => nameSpace.StringValue;
-
-    private static string MakeNamespaceString(string fullTypeName, Version version)
+    public class OrigamNameSpace
     {
+        private static readonly string firstPart = "http://schemas.origam.com";
+        public Version Version { get; }
+        public string StringValue { get; }
+        public string FullTypeName { get; }
+        
+        private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
+            =  new ConcurrentDictionary<string, OrigamNameSpace>();
+
+        public static implicit operator string(OrigamNameSpace nameSpace) => nameSpace.StringValue;
+
+        private static string MakeNamespaceString(string fullTypeName, Version version)
+        {
             return $"{firstPart}/{fullTypeName}/{version}";
         }
         
-    public static bool IsOrigamNamespace(string candidate)
-    {
+        public static bool IsOrigamNamespace(string candidate)
+        {
             return candidate.StartsWith(firstPart);
         }
 
-    public static OrigamNameSpace CreateOrGet(Type type, Version version)
-    {
+        public static OrigamNameSpace CreateOrGet(Type type, Version version)
+        {
             string namespaceString = MakeNamespaceString(type.FullName, version);
             return instances.GetOrAdd(
                 namespaceString, 
@@ -62,19 +62,19 @@ public class OrigamNameSpace
         }
 
         
-    public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
-    {
+        public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
+        {
             string namespaceString = MakeNamespaceString(fullTypeName, version);
             return CreateOrGet(namespaceString);
         }
 
-    public static OrigamNameSpace CreateOrGet(string xmlNamespace)
-    {
+        public static OrigamNameSpace CreateOrGet(string xmlNamespace)
+        {
             return instances.GetOrAdd(xmlNamespace, CreateNonCached);
         }
 
-    private static OrigamNameSpace CreateNonCached(string xmlNamespace)
-    {
+        private static OrigamNameSpace CreateNonCached(string xmlNamespace)
+        {
             if (xmlNamespace == null)
                 throw new ArgumentNullException(nameof(xmlNamespace));
 
@@ -109,10 +109,11 @@ public class OrigamNameSpace
                 fullTypeName: splitElName[3]);
         }
         
-    private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
-    {
+        private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
+        {
             Version = version;
             StringValue = stringValue;
             FullTypeName = fullTypeName;
         }
+    }
 }

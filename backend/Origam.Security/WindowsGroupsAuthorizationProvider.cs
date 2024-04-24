@@ -25,31 +25,31 @@ using System.Collections;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Security;
-
-/// <summary>
-/// Summary description for WindowsGroupsAuthorizationProvider.
-/// </summary>
-public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
+namespace Origam.Security
 {
-	private class Credential
+	/// <summary>
+	/// Summary description for WindowsGroupsAuthorizationProvider.
+	/// </summary>
+	public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 	{
-		public string RoleName;
-		public bool IsReadOnly;
-
-		public Credential(string roleName, bool isReadOnly)
+		private class Credential
 		{
+			public string RoleName;
+			public bool IsReadOnly;
+
+			public Credential(string roleName, bool isReadOnly)
+			{
 				RoleName = roleName;
 				IsReadOnly = isReadOnly;
 			}
-	}
-
-	public WindowsGroupsAuthorizationProvider()
-	{
 		}
 
-	private Hashtable GetCache()
-	{
+		public WindowsGroupsAuthorizationProvider()
+		{
+		}
+
+		private Hashtable GetCache()
+		{
 			string cacheName = "WindowsGroupsAuthorizationProviderCache";
 			Hashtable context = OrigamUserContext.Context;
 
@@ -61,10 +61,10 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 			return (Hashtable)OrigamUserContext.Context[cacheName];
 		}
 
-	#region IAuthorizationProvider Members
+		#region IAuthorizationProvider Members
 
-	public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
-	{
+		public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
+		{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			
 			//			System.Windows.Forms.MessageBox.Show("Authorizing identity: '" + principal.Identity.Name + "'");
@@ -151,11 +151,11 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 			return false;
 		}
 
-	#endregion
+		#endregion
 
-	#region private methods
-	Credential[] CredentialList(string applicationRole)
-	{
+		#region private methods
+		Credential[] CredentialList(string applicationRole)
+		{
 			Hashtable cache = GetCache();
 
 			if(cache.Contains(applicationRole))
@@ -223,5 +223,6 @@ public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 
 			return array;
 		}
-	#endregion
+		#endregion
+	}
 }

@@ -2,18 +2,18 @@
 using System.Collections;
 using System.Windows.Forms;
 
-namespace Origam.UI.WizardForm;
-
-public class ScreenWizardForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    public IDataEntity Entity { get; set; }
-    public bool IsRoleVisible { get; set; }
-    public bool textColumnsOnly { get; set; }
-    private CheckedListBox _lstFields;
-    public bool CheckOnClick { get; set; } = false;
-    public string Caption { get; set; }
-    public void SetUpForm(CheckedListBox lstField)
+    public class ScreenWizardForm : AbstractWizardForm
     {
+        public IDataEntity Entity { get; set; }
+        public bool IsRoleVisible { get; set; }
+        public bool textColumnsOnly { get; set; }
+        private CheckedListBox _lstFields;
+        public bool CheckOnClick { get; set; } = false;
+        public string Caption { get; set; }
+        public void SetUpForm(CheckedListBox lstField)
+        {
             if (_lstFields == null)
             {
                 _lstFields = lstField;
@@ -30,10 +30,10 @@ public class ScreenWizardForm : AbstractWizardForm
                 }
             }
         }
-    public Hashtable SelectedFieldNames
-    {
-        get
+        public Hashtable SelectedFieldNames
         {
+            get
+            {
                 Hashtable result = new Hashtable();
 
                 foreach (IDataEntityColumn column in _lstFields.CheckedItems)
@@ -43,7 +43,8 @@ public class ScreenWizardForm : AbstractWizardForm
 
                 return result;
             }
+        }
+        public ICollection SelectedFields { get; set; }
+        public string Role { get; set; }
     }
-    public ICollection SelectedFields { get; set; }
-    public string Role { get; set; }
 }

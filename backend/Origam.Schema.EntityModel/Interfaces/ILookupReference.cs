@@ -19,9 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel.Interfaces;
-
-public interface ILookupReference
+namespace Origam.Schema.EntityModel.Interfaces
 {
-    IDataLookup Lookup { get; set; }
+    public interface ILookupReference
+    {
+        IDataLookup Lookup { get; set; }
+    }
 }

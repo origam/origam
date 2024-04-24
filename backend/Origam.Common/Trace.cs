@@ -1,8 +1,9 @@
-﻿namespace Origam;
-
-public enum Trace
+﻿namespace Origam
 {
-    InheritFromParent,
-    Yes,
-    No
+    public enum Trace
+    {
+        InheritFromParent,
+        Yes,
+        No
+    }
 }

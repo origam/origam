@@ -22,78 +22,79 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for DashboardConfigurationItemParameter.
-/// </summary>
-[Serializable()]
-public class DashboardConfigurationItemParameter
+namespace Origam.Schema.GuiModel
 {
-	private string _name;
-	private bool _isBound;
-	private string _value;
-
-	public DashboardConfigurationItemParameter()
+	/// <summary>
+	/// Summary description for DashboardConfigurationItemParameter.
+	/// </summary>
+	[Serializable()]
+	public class DashboardConfigurationItemParameter
 	{
+		private string _name;
+		private bool _isBound;
+		private string _value;
+
+		public DashboardConfigurationItemParameter()
+		{
 		}
 
-	[XmlAttribute("name")]
-	public string Name
-	{
-		get
+		[XmlAttribute("name")]
+		public string Name
 		{
+			get
+			{
 				return _name;
 			}
-		set
-		{
+			set
+			{
 				_name = value;
 			}
-	}
+		}
 
-	[XmlAttribute("isBound")]
-	public bool IsBound
-	{
-		get
+		[XmlAttribute("isBound")]
+		public bool IsBound
 		{
+			get
+			{
 				return _isBound;
 			}
-		set
-		{
+			set
+			{
 				_isBound = value;
 			}
-	}
+		}
 
-	[XmlAttribute("value")]
-	public string Value
-	{
-		get
+		[XmlAttribute("value")]
+		public string Value
 		{
+			get
+			{
 				return _value;
 			}
-		set
-		{
+			set
+			{
 				_value = value;
 			}
-	}
+		}
 
-	public Guid BoundItemId
-	{
-		get
+		public Guid BoundItemId
 		{
+			get
+			{
 				string[] paramArray = this.Value.Split(".".ToCharArray());
 				
 				return new Guid(paramArray[0]);
 			}
-	}
+		}
 
-	public string BoundItemProperty
-	{
-		get
+		public string BoundItemProperty
 		{
+			get
+			{
 				string[] paramArray = this.Value.Split(".".ToCharArray());
 				
 				return paramArray[1];
 			}
+		}
 	}
 }

@@ -27,64 +27,65 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for PropertyValueItem.
-/// </summary>
-/// 
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class PropertyBindingInfo : AbstractPropertyValueItem
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "PropertyBindingInfo";
-
-	public PropertyBindingInfo() : base(){}
-		
-	public PropertyBindingInfo(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public PropertyBindingInfo(Key primaryKey) : base(primaryKey)	{}
-
-	private string _value;
-
-	[Localizable(true)]
-	[XmlAttribute("value")]
-	public string Value
+    /// <summary>
+    /// Summary description for PropertyValueItem.
+    /// </summary>
+    /// 
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public class PropertyBindingInfo : AbstractPropertyValueItem
 	{
-		get
-		{
+		public const string CategoryConst = "PropertyBindingInfo";
+
+		public PropertyBindingInfo() : base(){}
+		
+		public PropertyBindingInfo(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public PropertyBindingInfo(Key primaryKey) : base(primaryKey)	{}
+
+        private string _value;
+
+        [Localizable(true)]
+        [XmlAttribute("value")]
+        public string Value
+        {
+            get
+            {
                 if (_value == null) return null;
 
                 return _value.Trim();
             }
-		set
-		{
+            set
+            {
                 _value = value;
             }
 
-	}
+        }
 
-	private string _designDataSetPath;
+        private string _designDataSetPath;
 
-	[XmlAttribute("designDataSetPath")]
-	public string DesignDataSetPath
-	{
-		get
+        [XmlAttribute("designDataSetPath")]
+		public string DesignDataSetPath
 		{
+			get
+			{
 				return _designDataSetPath;
 			}
-		set
-		{
+			set
+			{
 				_designDataSetPath=value;
 			}
 
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return PropertyBindingInfo.CategoryConst;
 			}
+		}
 	}
 }

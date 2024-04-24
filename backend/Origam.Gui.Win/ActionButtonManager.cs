@@ -33,41 +33,41 @@ using Origam.Schema.GuiModel.Designer;
 using Origam.Gui.UI;
 using Origam.Service.Core;
 
-namespace Origam.Gui.Win;
-
-public class ActionButtonManager : IDisposable
+namespace Origam.Gui.Win
 {
-
-    private readonly Func<CurrencyManager> bindingManagerGetter;
-    private readonly Func<Guid> parentIdGetter;
-    private readonly Func<DataSet> dataSourceGetter;
-    private readonly Func<Guid> FormPanelIdGetter;
-    private readonly Func<string> dataMemberGetter;
-    private readonly Func<FormGenerator> formGeneratorGetter;
-    private readonly Func<Guid> formIdGetter;
-    private readonly Func<ToolStrip> toolStripGetter;
-    private IList<ToolStripItem> actionButtons;
-    private ToolStripItem dafaultButton;
-
-    public IList<ToolStripItem> ActionButtons
+    public class ActionButtonManager : IDisposable
     {
-        set
+
+        private readonly Func<CurrencyManager> bindingManagerGetter;
+        private readonly Func<Guid> parentIdGetter;
+        private readonly Func<DataSet> dataSourceGetter;
+        private readonly Func<Guid> FormPanelIdGetter;
+        private readonly Func<string> dataMemberGetter;
+        private readonly Func<FormGenerator> formGeneratorGetter;
+        private readonly Func<Guid> formIdGetter;
+        private readonly Func<ToolStrip> toolStripGetter;
+        private IList<ToolStripItem> actionButtons;
+        private ToolStripItem dafaultButton;
+
+        public IList<ToolStripItem> ActionButtons
         {
+            set
+            {
                 actionButtons = value;
                 dafaultButton = (ToolStripItem) actionButtons
                     .Where(item => item is IActionContainer)
                     .Cast<IActionContainer>()
                     .FirstOrDefault(container => container.GetAction().IsDefault);
             }
-    }
+        }
 
 
-    public ActionButtonManager(Func<CurrencyManager> bindingManagerGetter,
-        Func<Guid> parentIdGetter, Func<DataSet> dataSourceGetter, 
-        Func<Guid> formPanelIdGetter, Func<string> dataMemberGetter, 
-        Func<ToolStrip> toolStripGetter,Func<FormGenerator> formGeneratorGetter,
-        Func<Guid> formIdGetter)
-    {
+        public ActionButtonManager(Func<CurrencyManager> bindingManagerGetter,
+            Func<Guid> parentIdGetter, Func<DataSet> dataSourceGetter, 
+            Func<Guid> formPanelIdGetter, Func<string> dataMemberGetter, 
+            Func<ToolStrip> toolStripGetter,Func<FormGenerator> formGeneratorGetter,
+            Func<Guid> formIdGetter)
+        {
             this.bindingManagerGetter = bindingManagerGetter;
             this.parentIdGetter = parentIdGetter;
             this.dataSourceGetter = dataSourceGetter;
@@ -78,13 +78,13 @@ public class ActionButtonManager : IDisposable
             this.formIdGetter = formIdGetter;
         }
         
-    public void RunDefaultAction()
-    {
+        public void RunDefaultAction()
+        {
             dafaultButton?.PerformClick();
         }  
         
-    public void UpdateActionButtons()
-    {
+        public void UpdateActionButtons()
+        {
             if (actionButtons == null) return;
 
             var disabledActionIds = GetDisabledActionIds();
@@ -99,8 +99,8 @@ public class ActionButtonManager : IDisposable
             toolStrip.Visible = toolStripShouldBeShown;
         }
 
-    public void BindActionButtons()
-    {
+        public void BindActionButtons()
+        {
             if (actionButtons == null) return;
 
             foreach (var actionButton in actionButtons)
@@ -117,8 +117,8 @@ public class ActionButtonManager : IDisposable
             }
         }
 
-    public void Dispose()
-    {
+        public void Dispose()
+        {
             if (actionButtons == null) return;
 
             foreach (var actionButton in actionButtons)
@@ -136,8 +136,8 @@ public class ActionButtonManager : IDisposable
             }
         }
 
-    private IList<string> GetDisabledActionIds()
-    {
+        private IList<string> GetDisabledActionIds()
+        {
             var currencyManager = bindingManagerGetter.Invoke();
             Guid entityId = parentIdGetter.Invoke();
             RuleEngine ruleEngine = formGeneratorGetter.Invoke().FormRuleEngine;
@@ -171,9 +171,9 @@ public class ActionButtonManager : IDisposable
                 .ToList();
         }
 
-    private void UpdateToolStripItemVisibility(
-        IList<string> disabledActionIds)
-    {
+        private void UpdateToolStripItemVisibility(
+            IList<string> disabledActionIds)
+        {
             foreach (var actionButton in actionButtons)
             {
                 if (actionButton is ToolStripActionDropDownButton dropDownbutton
@@ -194,17 +194,17 @@ public class ActionButtonManager : IDisposable
             }
         }
 
-    private static void UpdateEnabledState(IList<string> disabledActionIds,
-        ToolStripItem actionItem)
-    {
+        private static void UpdateEnabledState(IList<string> disabledActionIds,
+            ToolStripItem actionItem)
+        {
             var showButton = !disabledActionIds.Contains(
                 ((IActionContainer) actionItem).GetAction().Id.ToString());
             actionItem.Enabled = showButton;
             actionItem.Visible = showButton;
         }
 
-    private void actionButton_Click(object sender, EventArgs e)
-    {
+        private void actionButton_Click(object sender, EventArgs e)
+        {
             var actionButton = sender as IActionContainer;
             var desktopEntityUiActionRunnerClient
                 = new DesktopEntityUIActionRunnerClient(
@@ -227,8 +227,8 @@ public class ActionButtonManager : IDisposable
                 inputParameters: new Hashtable());
         }
 
-    private List<string> GetSelectedItemsForAction()
-    {
+        private List<string> GetSelectedItemsForAction()
+        {
             var currencyManager = bindingManagerGetter.Invoke();
             var selectedItems = new List<string>();
             if ((currencyManager.Current is DataRowView dataRowView)
@@ -243,4 +243,5 @@ public class ActionButtonManager : IDisposable
             return selectedItems;
         }
 
+    }
 }

@@ -46,14 +46,14 @@ using System.Collections.Generic;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Data;
 
-namespace Origam.Server;
-
-public class PortalStyle
+namespace Origam.Server
 {
-    public IDictionary<string, int> Colors
+    public class PortalStyle
     {
-        get
+        public IDictionary<string, int> Colors
         {
+            get
+            {
                 Dictionary<string, int> result = new Dictionary<string, int>();
 
                 DataSet ds = core.DataService.Instance.LoadData(new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"), Guid.Empty, Guid.Empty, Guid.Empty, null);
@@ -65,5 +65,6 @@ public class PortalStyle
 
                 return result;
             }
+        }
     }
 }

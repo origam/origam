@@ -1,9 +1,10 @@
-﻿namespace Origam.Windows.Editor.GIT;
-
-public enum DiffContext
+﻿namespace Origam.Windows.Editor.GIT
 {
-    Added,
-    Deleted,
-    Context,
-    Blank
+    public enum DiffContext
+    {
+        Added,
+        Deleted,
+        Context,
+        Blank
+    }
 }

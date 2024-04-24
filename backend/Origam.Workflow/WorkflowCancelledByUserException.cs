@@ -19,18 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for WorkflowCancelledByUserException.
-/// </summary>
-public class WorkflowCancelledByUserException : WorkflowException
+namespace Origam.Workflow
 {
-	public WorkflowCancelledByUserException() : base()
+	/// <summary>
+	/// Summary description for WorkflowCancelledByUserException.
+	/// </summary>
+	public class WorkflowCancelledByUserException : WorkflowException
 	{
+		public WorkflowCancelledByUserException() : base()
+		{
 		}
 
-	public WorkflowCancelledByUserException(string message) : base (message)
-	{
+		public WorkflowCancelledByUserException(string message) : base (message)
+		{
 		}
+	}
 }

@@ -27,96 +27,97 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel;
-
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public abstract class AbstractSeries : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "ChartSeries";
-
-	public AbstractSeries() : base() {Init();}
-	public AbstractSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractSeries(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
+    public abstract class AbstractSeries : AbstractSchemaItem
 	{
+		public const string CategoryConst = "ChartSeries";
+
+		public AbstractSeries() : base() {Init();}
+		public AbstractSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public AbstractSeries(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 			
 		}
 
-	#region Properties
-	private string _field = "";
-	[Category("Series")]
-	[StringNotEmptyModelElementRule()]
-	[XmlAttribute("field")]
-	public string Field
-	{
-		get
+		#region Properties
+		private string _field = "";
+		[Category("Series")]
+		[StringNotEmptyModelElementRule()]
+        [XmlAttribute("field")]
+		public string Field
 		{
+			get
+			{
 				return _field;
 			}
-		set
-		{
+			set
+			{
 				_field = value;
 			}
-	}
+		}
 
-	private string _caption = "";
-	[Category("Series")]
-	[Localizable(true)]
-	[XmlAttribute("label")]
-	public string Caption
-	{
-		get
+		private string _caption = "";
+		[Category("Series")]
+		[Localizable(true)]
+        [XmlAttribute("label")]
+        public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value;
 			}
-	}
+		}
 
-	private AggregationType _aggregation = AggregationType.Sum;
-	[Category("Series"), DefaultValue(AggregationType.Sum)]
-	[XmlAttribute("aggregation")]
-	public AggregationType Aggregation
-	{
-		get
+		private AggregationType _aggregation = AggregationType.Sum;
+		[Category("Series"), DefaultValue(AggregationType.Sum)]
+		[XmlAttribute("aggregation")]
+        public AggregationType Aggregation
 		{
+			get
+			{
 				return _aggregation;
 			}
-		set
-		{
+			set
+			{
 				_aggregation = value;
 			}
-	}
+		}
 
-	public Guid ColorsLookupId;
+		public Guid ColorsLookupId;
 
-	[TypeConverter(typeof(DataLookupConverter))]
-	[Category("Series"), 
-	 Description("When defined this lookup should return a list of custom colors for the series in a fixed structure of Id, Color.")]
-	[XmlReference("colorsLookup", "ColorsLookupId")]
-	public IDataLookup ColorsLookup
-	{
-		get
+		[TypeConverter(typeof(DataLookupConverter))]
+		[Category("Series"), 
+		Description("When defined this lookup should return a list of custom colors for the series in a fixed structure of Id, Color.")]
+        [XmlReference("colorsLookup", "ColorsLookupId")]
+		public IDataLookup ColorsLookup
 		{
+			get
+			{
 				return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), new ModelElementKey(this.ColorsLookupId));
 			}
-		set
-		{
+			set
+			{
 				this.ColorsLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

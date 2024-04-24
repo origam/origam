@@ -27,23 +27,23 @@ using System.Windows.Forms;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DropDownList.
-/// </summary>
-public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
+namespace Origam.Gui.Win
 {
 	/// <summary>
-	/// Required designer variable.
+	/// Summary description for DropDownList.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-	private const int MAX_ITEMS = 20;
-	private DropDownDataGrid grid;
-	private const int MIN_ITEMS = 4;
-
-	public DropDownGrid()
+	public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+		private const int MAX_ITEMS = 20;
+		private DropDownDataGrid grid;
+		private const int MIN_ITEMS = 4;
+
+		public DropDownGrid()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -52,11 +52,11 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			//this.Height = (this.list.ItemHeight * MIN_ITEMS) + 2;
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -69,8 +69,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			base.Dispose( disposing );
 		}
 
-	protected override bool ProcessTabKey(bool forward)
-	{
+		protected override bool ProcessTabKey(bool forward)
+		{
 			this.SelectItem();
 			return true;
 		}
@@ -89,18 +89,20 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 //			e.Graphics.DrawRectangle(SystemPens.ControlDark, borderRect);			
 //		}
 //
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.grid = new Origam.Gui.Win.DropDownGrid.DropDownDataGrid();
 			((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
 			this.SuspendLayout();
-			// 		// grid
-			// 		this.grid.AllowNavigation = false;
+			// 
+			// grid
+			// 
+			this.grid.AllowNavigation = false;
 			this.grid.AlternatingBackColor = System.Drawing.SystemColors.Info;
 			this.grid.BackgroundColor = System.Drawing.SystemColors.Window;
 			this.grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -116,8 +118,10 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			this.grid.RowHeadersVisible = false;
 			this.grid.Size = new System.Drawing.Size(290, 214);
 			this.grid.TabIndex = 0;
-			// 		// DropDownGrid
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// DropDownGrid
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.ClientSize = new System.Drawing.Size(292, 216);
 			this.ControlBox = false;
@@ -132,13 +136,13 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public override bool Focused
-	{
-		get
+		#region Properties
+		public override bool Focused
 		{
+			get
+			{
 				if(base.Focused | grid.Focused) 
 				{
 					return true;
@@ -148,39 +152,39 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 					return false;
 				}
 			}
-	}
+		}
 
-	private bool _canceled = false;
-	public bool Canceled
-	{
-		get
+		private bool _canceled = false;
+		public bool Canceled
 		{
+			get
+			{
 				return _canceled;
 			}
-		set
-		{
+			set
+			{
 				_canceled = value;
 			}
-	}
+		}
 		
-	private BaseDropDownControl _dropDownControl;
-	public BaseDropDownControl DropDownControl
-	{
-		get
+		private BaseDropDownControl _dropDownControl;
+		public BaseDropDownControl DropDownControl
 		{
+			get
+			{
 				return _dropDownControl;
 			}
-		set
-		{
+			set
+			{
 				_dropDownControl = value;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private void UpdateListSize()
-	{
+		#region Private Methods
+		private void UpdateListSize()
+		{
 			if(this.IsDisposed) return;
 		
 			this.Height = 200;
@@ -243,8 +247,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			this.Location = location;
 		}
 
-	private void ColAutoResize(DataGridColumnStyle style)
-	{
+		private void ColAutoResize(DataGridColumnStyle style)
+		{
 			DataGridTableStyle myGridTable = grid.TableStyles[0];
 
 			CurrencyManager listManager = this.Context as CurrencyManager;
@@ -287,16 +291,16 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				}
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Public Methods
-	public void SelectItem()
-	{
+		#region Public Methods
+		public void SelectItem()
+		{
 			this.Close();
 		}
 
-	public void MoveUp()
-	{
+		public void MoveUp()
+		{
 			this.grid.Focus();
 
 			if(this.grid.CurrentRowIndex > 0)
@@ -305,8 +309,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 		}
 
-	public void MoveDown()
-	{
+		public void MoveDown()
+		{
 			this.grid.Focus();
 
 			if(this.grid.CurrentRowIndex < this.Context.Count-1)
@@ -315,24 +319,24 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 		}
 
-	#endregion
+		#endregion
 
-	#region Event Handlers
-	private void DropDownGrid_ListChanged(object sender, ListChangedEventArgs e)
-	{
+		#region Event Handlers
+		private void DropDownGrid_ListChanged(object sender, ListChangedEventArgs e)
+		{
 			UpdateListSize();
 		}
-	#endregion
+		#endregion
 
-	#region IDropDownPart Members
-	public DataView DataSource
-	{
-		get
+		#region IDropDownPart Members
+		public DataView DataSource
 		{
+			get
+			{
 				return this.grid.DataSource as DataView;
 			}
-		set
-		{
+			set
+			{
 				if(value != null)
 				{
 					value.ListChanged -= new ListChangedEventHandler(DropDownGrid_ListChanged);
@@ -372,54 +376,54 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 
 				value.ListChanged += new ListChangedEventHandler(DropDownGrid_ListChanged);
 			}
-	}
+		}
 
-	private string _valueMember;
-	public string ValueMember
-	{
-		get
+		private string _valueMember;
+		public string ValueMember
 		{
+			get
+			{
 				return _valueMember;
 			}
-		set
-		{
+			set
+			{
 				_valueMember = value;
 			}
-	}
+		}
 
-	private string _displayMember;
-	public string DisplayMember
-	{
-		get
+		private string _displayMember;
+		public string DisplayMember
 		{
+			get
+			{
 				return _displayMember;
 			}
-		set
-		{
+			set
+			{
 				_displayMember = value;
 			}
-	}
+		}
 
-	private string[] ColumnList
-	{
-		get
+		private string[] ColumnList
 		{
+			get
+			{
 				return this.DisplayMember.Split(";".ToCharArray());
 			}
-	}
+		}
 
-	private BindingManagerBase Context
-	{
-		get
+		private BindingManagerBase Context
 		{
+			get
+			{
 				return this.grid.BindingContext[this.DataSource, ""];
 			}
-	}
+		}
 
-	public string SelectedText
-	{
-		get
+		public string SelectedText
 		{
+			get
+			{
 				if(this.Context.Position >= 0)
 				{
 					return (this.Context.Current as DataRowView)[this.ColumnList[0]].ToString();
@@ -430,23 +434,23 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				}
 				//				return this.list.GetItemText(this.list.SelectedItem);
 			}
-		set
-		{
+			set
+			{
 				throw new NotImplementedException();
 			}
-	}
+		}
 
-	public object SelectedValue
-	{
-		get
+		public object SelectedValue
 		{
+			get
+			{
 				if(this.Context.Position < 0) return DBNull.Value;
 
 				return (this.Context.Current as DataRowView)[this.ValueMember];
 //				return this.list.SelectedValue;
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					if(this.Context.Count > 0)
@@ -470,40 +474,40 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 					catch {}
 				}
 			}
-	}
+		}
 
-	public string ParentMember
-	{
-		get
+		public string ParentMember
 		{
+			get
+			{
 				// TODO:  Add DropDownList.ParentMember getter implementation
 				return null;
 			}
-		set
-		{
+			set
+			{
 				// TODO:  Add DropDownList.ParentMember setter implementation
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	private class DropDownTextColumn : DataGridTextBoxColumn
-	{
-		public DropDownTextColumn() : base()
+		private class DropDownTextColumn : DataGridTextBoxColumn
 		{
+			public DropDownTextColumn() : base()
+			{
 				this.TextBox.VisibleChanged += new EventHandler(TextBox_VisibleChanged);
 			}
 
-		private void TextBox_VisibleChanged(object sender, EventArgs e)
-		{
+			private void TextBox_VisibleChanged(object sender, EventArgs e)
+			{
 				if(this.TextBox.Visible)
 				{
 					this.TextBox.Hide();
 				}
 			}
 
-		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
-		{
+			protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
+			{
 				if(source.Position == rowNum)
 				{
 					backBrush = new SolidBrush(this.DataGridTableStyle.SelectionBackColor);
@@ -513,16 +517,16 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				base.Paint (g, bounds, source, rowNum, backBrush, foreBrush, alignToRight);
 			}
 
-	}
+		}
 
-	private class DropDownDataGrid : DataGrid
-	{
-		public DropDownDataGrid() : base()
+		private class DropDownDataGrid : DataGrid
 		{
+			public DropDownDataGrid() : base()
+			{
 			}
 
-		protected override void OnMouseUp(MouseEventArgs e)
-		{
+			protected override void OnMouseUp(MouseEventArgs e)
+			{
 				base.OnMouseUp (e);
 
 				DataGrid.HitTestInfo hti = this.HitTest(e.X, e.Y);
@@ -535,8 +539,8 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 
 
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
+			protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+			{
 				DropDownGrid parent = this.Parent as DropDownGrid;
 
 				if(parent != null)
@@ -563,5 +567,6 @@ public class DropDownGrid : System.Windows.Forms.Form, ILookupDropDownPart
 				return base.ProcessCmdKey (ref msg, keyData);
 			}
 
+		}
 	}
 }

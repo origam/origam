@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Origam.Server.Model.UIService;
-
-public class ResetDefaultFilterInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
-    public Guid PanelInstanceId { get; set; }
+    public class ResetDefaultFilterInput
+    {
+        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+        public Guid PanelInstanceId { get; set; }
+    }
 }

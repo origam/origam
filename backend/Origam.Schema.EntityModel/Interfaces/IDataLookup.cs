@@ -19,24 +19,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for AbstractMenuItem.
-/// </summary>
-public interface IDataLookup : ISchemaItem
+namespace Origam.Schema.EntityModel
 {
-	DataStructure ListDataStructure{get; set;}
-	string ListValueMember{get; set;}
-	string ListDisplayMember{get; set;}
+	/// <summary>
+	/// Summary description for AbstractMenuItem.
+	/// </summary>
+	public interface IDataLookup : ISchemaItem
+	{
+		DataStructure ListDataStructure{get; set;}
+		string ListValueMember{get; set;}
+		string ListDisplayMember{get; set;}
 
-	DataStructure ValueDataStructure{get; set;}
-	string ValueValueMember{get; set;}
-	string ValueDisplayMember{get; set;}
-	DataStructureColumn ValueColumn{get;}
-	DataStructureColumn ValueDisplayColumn{get;}
+		DataStructure ValueDataStructure{get; set;}
+		string ValueValueMember{get; set;}
+		string ValueDisplayMember{get; set;}
+		DataStructureColumn ValueColumn{get;}
+		DataStructureColumn ValueDisplayColumn{get;}
 
-	string RoleFilterMember{get; set;}
-	string FeatureFilterMember{get; set;}
-	bool IsFilteredServerside { get; set; }
+		string RoleFilterMember{get; set;}
+		string FeatureFilterMember{get; set;}
+		bool IsFilteredServerside { get; set; }
+	}
 }

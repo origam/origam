@@ -36,41 +36,41 @@ using Origam.DA.Service;
 using log4net;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workbench.Services;
-
-public class ParameterizedEventArgs : EventArgs
+namespace Origam.Workbench.Services
 {
-	public ParameterizedEventArgs()
+	public class ParameterizedEventArgs : EventArgs
 	{
+		public ParameterizedEventArgs()
+		{
 		}
 
-	public IOrigamForm SourceForm;
-	public readonly Hashtable Parameters = new Hashtable();
-}
-
-/// <summary>
-/// Summary description for LookupManager.
-/// </summary>
-public class DataLookupService : IDataLookupService
-{
-
-	public const string SCHEMA_LOOKUP_ID = "3396e71f-6ee9-4c1d-8fad-739822c8df96";
-	private static readonly ILog log =
-		LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	private enum QueryType
-	{
-		List,
-		Value,
-		ValueCacheList
+		public IOrigamForm SourceForm;
+		public readonly Hashtable Parameters = new Hashtable();
 	}
 
-	private Hashtable _valueCache = new Hashtable();
-
-	public DataLookupService()
+	/// <summary>
+	/// Summary description for LookupManager.
+	/// </summary>
+	public class DataLookupService : IDataLookupService
 	{
+
+		public const string SCHEMA_LOOKUP_ID = "3396e71f-6ee9-4c1d-8fad-739822c8df96";
+		private static readonly ILog log =
+			LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private enum QueryType
+		{
+			List,
+			Value,
+			ValueCacheList
 		}
 
-	#region Properties
+		private Hashtable _valueCache = new Hashtable();
+
+		public DataLookupService()
+		{
+		}
+
+		#region Properties
 //		private IDataService _dataService;
 //		public IDataService DataService
 //		{
@@ -83,15 +83,15 @@ public class DataLookupService : IDataLookupService
 //				_dataService = value;
 //			}
 //		}
-	#endregion
+		#endregion
 		
-	public DataView GetList(Guid lookupId, string transactionId)
-	{
+		public DataView GetList(Guid lookupId, string transactionId)
+		{
 			return GetList(lookupId, new Hashtable(), transactionId);
 		}
 
-	public Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys)
-	{
+		public Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys)
+		{
 			Hashtable result = new Hashtable();
 
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
@@ -130,8 +130,8 @@ public class DataLookupService : IDataLookupService
 			return result;
 		}
 
-	public DataTable GetAllValues(Guid lookupId, Hashtable keys)
-	{
+		public DataTable GetAllValues(Guid lookupId, Hashtable keys)
+		{
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 
 			DataTable result = new OrigamDataTable("LookupValues");
@@ -167,8 +167,8 @@ public class DataLookupService : IDataLookupService
 			return result;
 		}
 
-	public DataView GetList(Guid lookupId, Hashtable parameters, string transactionId)
-	{
+		public DataView GetList(Guid lookupId, Hashtable parameters, string transactionId)
+		{
 			IServiceAgent dataServiceAgent = GetAgent();
 
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
@@ -196,13 +196,13 @@ public class DataLookupService : IDataLookupService
 			return view;
 		}
 
-	public object GetDisplayText(Guid lookupId, object lookupValue, string transactionId)
-	{
+		public object GetDisplayText(Guid lookupId, object lookupValue, string transactionId)
+		{
 			return GetDisplayText(lookupId, lookupValue, true, true, transactionId);
 		}
 
-	public object GetDisplayText(Guid lookupId, object lookupValue, bool useCache, bool returnMessageIfNull, string transactionId)
-	{
+		public object GetDisplayText(Guid lookupId, object lookupValue, bool useCache, bool returnMessageIfNull, string transactionId)
+		{
 			if(lookupValue == DBNull.Value | lookupValue == null)
 			{
 				return "";
@@ -225,8 +225,8 @@ public class DataLookupService : IDataLookupService
 			}
 		}
 
-	public object GetDisplayText(Guid lookupId, Hashtable parameters, bool useCache, bool returnMessageIfNull, string transactionId)
-	{
+		public object GetDisplayText(Guid lookupId, Hashtable parameters, bool useCache, bool returnMessageIfNull, string transactionId)
+		{
 			string internalTransactionId = transactionId;
 
 			if(parameters == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorParametersNull"));
@@ -405,8 +405,8 @@ public class DataLookupService : IDataLookupService
 			return val;
 		}
 
-	public string ValueFromRow(DataRow row, string[] columns)
-	{
+		public string ValueFromRow(DataRow row, string[] columns)
+		{
 			StringBuilder resultBuilder = new StringBuilder();
 
 			foreach(string column in columns)
@@ -442,8 +442,8 @@ public class DataLookupService : IDataLookupService
 			return resultBuilder.ToString();
 		}
 
-	public object LinkTarget(ILookupControl lookupControl, object value)
-	{
+		public object LinkTarget(ILookupControl lookupControl, object value)
+		{
 			DataLookupMenuBinding binding = GetMenuBindingElement(GetLookup(lookupControl.LookupId), value);
 
 			if(binding != null)
@@ -456,8 +456,8 @@ public class DataLookupService : IDataLookupService
 			}
 		}
 		
-	public Hashtable LinkParameters(object linkTarget, object value)
-	{
+		public Hashtable LinkParameters(object linkTarget, object value)
+		{
 			Hashtable result = new Hashtable();
 			AbstractMenuItem menu = linkTarget as AbstractMenuItem;
 
@@ -484,19 +484,19 @@ public class DataLookupService : IDataLookupService
 			return result;
 		}
 
-	#region Private Methods
-	private IServiceAgent GetAgent()
-	{
+		#region Private Methods
+		private IServiceAgent GetAgent()
+		{
 			return (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 		}
 
-	/// <summary>
-	/// Returns lookup schema item
-	/// </summary>
-	/// <param name="lookupId"></param>
-	/// <returns></returns>
-	public AbstractDataLookup GetLookup(Guid lookupId)
-	{
+		/// <summary>
+		/// Returns lookup schema item
+		/// </summary>
+		/// <param name="lookupId"></param>
+		/// <returns></returns>
+		public AbstractDataLookup GetLookup(Guid lookupId)
+		{
 			ModelElementKey key = new ModelElementKey(lookupId);
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			AbstractDataLookup lookup = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), key) as AbstractDataLookup;
@@ -508,8 +508,8 @@ public class DataLookupService : IDataLookupService
 			return lookup;
 		}
 
-	private DataStructureQuery GetQuery(AbstractDataLookup lookup, QueryType queryType)
-	{
+		private DataStructureQuery GetQuery(AbstractDataLookup lookup, QueryType queryType)
+		{
 			DataServiceDataLookup dataLookup = lookup as DataServiceDataLookup;
 
 			if(dataLookup != null)
@@ -530,8 +530,8 @@ public class DataLookupService : IDataLookupService
 			throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorUnknownLookupType"));
 		}
 
-	private bool HasEditListMenuBinding(AbstractDataLookup lookup)
-	{
+		private bool HasEditListMenuBinding(AbstractDataLookup lookup)
+		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
 			
@@ -549,8 +549,8 @@ public class DataLookupService : IDataLookupService
 			return false;
 		}
 
-	private bool HasEditRecordMenuBinding(AbstractDataLookup lookup)
-	{
+		private bool HasEditRecordMenuBinding(AbstractDataLookup lookup)
+		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			foreach(DataLookupMenuBinding binding in lookup.MenuBindings)
 			{
@@ -562,8 +562,8 @@ public class DataLookupService : IDataLookupService
 			return false;
 		}
 
-	private bool HasMenuBindingWithSelection(AbstractDataLookup lookup)
-	{
+		private bool HasMenuBindingWithSelection(AbstractDataLookup lookup)
+		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
 			
@@ -578,16 +578,16 @@ public class DataLookupService : IDataLookupService
 			return false;
 		}
 
-	public bool HasMenuBindingWithSelection(Guid lookupId)
-	{
+		public bool HasMenuBindingWithSelection(Guid lookupId)
+		{
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			AbstractDataLookup lookup = (AbstractDataLookup)ps.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), new ModelElementKey(lookupId));
 
 			return HasMenuBindingWithSelection(lookup);
 		}
 
-	public IMenuBindingResult GetMenuBinding(Guid lookupId, object value)
-	{
+		public IMenuBindingResult GetMenuBinding(Guid lookupId, object value)
+		{
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			AbstractDataLookup lookup = (AbstractDataLookup)ps.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), new ModelElementKey(lookupId));
 
@@ -603,16 +603,16 @@ public class DataLookupService : IDataLookupService
             }
 		}
 
-	public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
-	{
+		public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
+		{
 			return lookup.ChildItems
 				.ToGeneric()
 				.OfType<NewRecordScreenBinding>()
 				.FirstOrDefault(x => x.IsAvailable);
 		}
 
-	public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
-	{
+		public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
+		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
 
@@ -673,8 +673,8 @@ public class DataLookupService : IDataLookupService
 			return null;
 		}
 
-	public bool AuthorizeMenuBinding(IOrigamAuthorizationProvider authorizationProvider, IPrincipal principal, DataLookupMenuBinding binding)
-	{
+	    public bool AuthorizeMenuBinding(IOrigamAuthorizationProvider authorizationProvider, IPrincipal principal, DataLookupMenuBinding binding)
+		{
 			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
 			return(authorizationProvider.Authorize(principal, binding.AuthorizationContext)
@@ -682,11 +682,11 @@ public class DataLookupService : IDataLookupService
 					&& param.IsFeatureOn(binding.MenuItem.Features)
 				);
 		}
-	#endregion
+		#endregion
 
-	#region Lookup Control Event Handlers
-	private void lookupControl_LookupDisplayTextRequested(object sender, EventArgs e)
-	{
+		#region Lookup Control Event Handlers
+		private void lookupControl_LookupDisplayTextRequested(object sender, EventArgs e)
+		{
 			ILookupControl control = sender as ILookupControl;
 
 			control.LookupDisplayText = GetDisplayText(control.LookupId, control.LookupValue, null).ToString();
@@ -694,8 +694,8 @@ public class DataLookupService : IDataLookupService
 
 
 
-	public DataTable GetList(LookupListRequest request)
-	{
+		public DataTable GetList(LookupListRequest request)
+		{
 			DataServiceDataLookup lookup = GetLookup(request.LookupId) as DataServiceDataLookup;
 			DataStructureQuery query = GetQuery(lookup, QueryType.List);
 			if(request.CurrentRow != null)
@@ -798,8 +798,8 @@ public class DataLookupService : IDataLookupService
 			return lookupTable;
 		}
 
-	private void PostProcessLookupList(DataServiceDataLookup lookup, DataTable lookupTable)
-	{
+		private void PostProcessLookupList(DataServiceDataLookup lookup, DataTable lookupTable)
+		{
 			// filter roles
 			if(lookup.RoleFilterMember != "" & lookup.RoleFilterMember != null)
 			{
@@ -841,8 +841,8 @@ public class DataLookupService : IDataLookupService
 			}
 		}
 
-	private void lookupControl_LookupListRefreshRequested(object sender, EventArgs e)
-	{
+		private void lookupControl_LookupListRefreshRequested(object sender, EventArgs e)
+		{
 			ILookupControl control = sender as ILookupControl;
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			if( ! settings.UseProgressiveCaching)
@@ -862,8 +862,8 @@ public class DataLookupService : IDataLookupService
 			control.LookupList = view;
 		}
 
-	private LookupListRequest ILookupControlToLookupListRequest(ILookupControl control)
-	{
+		private LookupListRequest ILookupControlToLookupListRequest(ILookupControl control)
+		{
 			LookupListRequest request = new LookupListRequest();
 			request.LookupId = control.LookupId;
 			request.FieldName = control.ColumnName;
@@ -873,22 +873,22 @@ public class DataLookupService : IDataLookupService
             request.SearchText = ""; // control.SearchText.Replace("*", "%");
 			return request;
 		}
-	#endregion
+		#endregion
 
-	#region IService Members
+		#region IService Members
 
-	public void UnloadService()
-	{
+		public void UnloadService()
+		{
 			_valueCache.Clear();
 		}
 
-	public void InitializeService()
-	{
+		public void InitializeService()
+		{
 			// TODO:  Add LookupManager.InitializeService implementation
 		}
 
-	public object CreateRecord(Guid lookupId, Hashtable values, string transactionId)
-	{
+        public object CreateRecord(Guid lookupId, Hashtable values, string transactionId)
+        {
             Guid newId = Guid.NewGuid();
             var lookup = GetLookup(lookupId);
             DatasetGenerator dg = new DatasetGenerator(true);
@@ -930,13 +930,14 @@ public class DataLookupService : IDataLookupService
             return newId;
         }
 
-	#endregion
+        #endregion
 
-	public void RemoveFromCache(Guid id)
-	{
+	    public void RemoveFromCache(Guid id)
+	    {
 	        if (_valueCache.Contains(id))
 	        {
 	            _valueCache.Remove(id);
             }
 	    }
+	}
 }

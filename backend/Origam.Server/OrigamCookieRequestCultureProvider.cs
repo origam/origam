@@ -26,24 +26,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Origam.Server.Configuration;
 
-namespace Origam.Server;
-
-public class OrigamCookieRequestCultureProvider : RequestCultureProvider
+namespace Origam.Server
 {
-    private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly LanguageConfig languageConfig;
-    private static readonly char cookieSeparator = '|';
-    private static readonly string culturePrefix = "c=";
-    private static readonly string uiCulturePrefix = "uic=";
-    public string CookieName { get;} = "origamCurrentLocale";
-
-    public OrigamCookieRequestCultureProvider(LanguageConfig languageConfig)
+    public class OrigamCookieRequestCultureProvider : RequestCultureProvider
     {
+        private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly LanguageConfig languageConfig;
+        private static readonly char cookieSeparator = '|';
+        private static readonly string culturePrefix = "c=";
+        private static readonly string uiCulturePrefix = "uic=";
+        public string CookieName { get;} = "origamCurrentLocale";
+
+        public OrigamCookieRequestCultureProvider(LanguageConfig languageConfig)
+        {
             this.languageConfig = languageConfig;
         }
         
-    public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
-    {
+        public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        {
             if (httpContext == null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
@@ -61,13 +61,13 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
             return Task.FromResult(providerResultCulture);
         }
 
-    /// <summary>
-    /// Creates a string representation of a <see cref="RequestCulture"/> for placement in a cookie.
-    /// </summary>
-    /// <param name="requestCulture">The <see cref="RequestCulture"/>.</param>
-    /// <returns>The cookie value.</returns>
-    public string MakeCookieValue(RequestCulture requestCulture)
-    {
+        /// <summary>
+        /// Creates a string representation of a <see cref="RequestCulture"/> for placement in a cookie.
+        /// </summary>
+        /// <param name="requestCulture">The <see cref="RequestCulture"/>.</param>
+        /// <returns>The cookie value.</returns>
+        public string MakeCookieValue(RequestCulture requestCulture)
+        {
             if (requestCulture == null)
             {
                 throw new ArgumentNullException(nameof(requestCulture));
@@ -96,14 +96,14 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
             );
         }
 
-    /// <summary>
-    /// Parses a <see cref="RequestCulture"/> from the specified cookie value.
-    /// Returns <c>null</c> if parsing fails.
-    /// </summary>
-    /// <param name="value">The cookie value to parse.</param>
-    /// <returns>The <see cref="RequestCulture"/> or <c>null</c> if parsing fails.</returns>
-    private ProviderCultureResult ParseCookieValue(string value)
-    {
+        /// <summary>
+        /// Parses a <see cref="RequestCulture"/> from the specified cookie value.
+        /// Returns <c>null</c> if parsing fails.
+        /// </summary>
+        /// <param name="value">The cookie value to parse.</param>
+        /// <returns>The <see cref="RequestCulture"/> or <c>null</c> if parsing fails.</returns>
+        private ProviderCultureResult ParseCookieValue(string value)
+        {
             if (string.IsNullOrWhiteSpace(value))
             {
                 return null;
@@ -133,4 +133,5 @@ public class OrigamCookieRequestCultureProvider : RequestCultureProvider
                     languageConfig.DefaultCulture.UICulture.Name);
             }
         }
+    }
 }

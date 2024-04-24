@@ -44,73 +44,74 @@ using System;
 using System.Collections.Generic;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Server;
-
-public class DashboardToolboxItem
+namespace Origam.Server
 {
-    private Guid _id;
-    public Guid Id
+    public class DashboardToolboxItem
     {
-        get
+        private Guid _id;
+        public Guid Id
         {
+            get
+            {
                 return _id;
             }
-        set
-        {
+            set
+            {
                 _id = value;
             }
-    }
+        }
 
-    private string _caption;
-    public string Caption
-    {
-        get
+        private string _caption;
+        public string Caption
         {
+            get
+            {
                 return _caption;
             }
-        set
-        {
+            set
+            {
                 _caption = value;
             }
-    }
+        }
 
-    private DashboardToolboxItemType _type = DashboardToolboxItemType.Component;
-    public DashboardToolboxItemType Type
-    {
-        get
+        private DashboardToolboxItemType _type = DashboardToolboxItemType.Component;
+        public DashboardToolboxItemType Type
         {
+            get
+            {
                 return _type;
             }
-        set
-        {
+            set
+            {
                 _type = value;
             }
-    }
+        }
 
-    IList<DashboardToolboxItem> _childWidgets = new List<DashboardToolboxItem>();
-    public IList<DashboardToolboxItem> ChildWidgets
-    {
-        get
+        IList<DashboardToolboxItem> _childWidgets = new List<DashboardToolboxItem>();
+        public IList<DashboardToolboxItem> ChildWidgets
         {
+            get
+            {
                 return _childWidgets;
             }
-    }
+        }
 
-    IList<DashboardToolboxItemParameter> _parameters = new List<DashboardToolboxItemParameter>();
-    public IList<DashboardToolboxItemParameter> Parameters
-    {
-        get
+        IList<DashboardToolboxItemParameter> _parameters = new List<DashboardToolboxItemParameter>();
+        public IList<DashboardToolboxItemParameter> Parameters
         {
+            get
+            {
                 return _parameters;
             }
-    }
+        }
 
-    private IList<DashboardWidgetProperty> _properties = new List<DashboardWidgetProperty>();
-    public IList<DashboardWidgetProperty> Properties
-    {
-        get
+        private IList<DashboardWidgetProperty> _properties = new List<DashboardWidgetProperty>();
+        public IList<DashboardWidgetProperty> Properties
         {
+            get
+            {
                 return _properties;
             }
+        }
     }
 }

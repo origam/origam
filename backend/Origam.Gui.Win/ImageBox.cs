@@ -24,55 +24,55 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for ImageBox.
-/// </summary>
-public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
+namespace Origam.Gui.Win
 {
-	private ImageBoxSourceType _sourceType = ImageBoxSourceType.Blob;
-
-	public ImageBox() : base()
+	/// <summary>
+	/// Summary description for ImageBox.
+	/// </summary>
+	public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
 	{
+		private ImageBoxSourceType _sourceType = ImageBoxSourceType.Blob;
+
+		public ImageBox() : base()
+		{
 		}
 
-	[Browsable(true)]
-	public new int TabIndex
-	{
-		get
+		[Browsable(true)]
+		public new int TabIndex
 		{
+			get
+			{
 				return base.TabIndex;
 			}
-		set
-		{
+			set
+			{
 				base.TabIndex = value;
 			}
-	}
+		}
 
-	[Browsable(true)]
-	public ImageBoxSourceType SourceType
-	{
-		get
+		[Browsable(true)]
+		public ImageBoxSourceType SourceType
 		{
+			get
+			{
 				return _sourceType;
 			}
-		set
-		{
+			set
+			{
 				_sourceType = value;
 			}
-	}
+		}
 
 
-	private byte[] _imageData;
-	public object ImageData
-	{
-		get
+		private byte[] _imageData;
+		public object ImageData
 		{
+			get
+			{
 				return _imageData;
 			}
-		set
-		{
+			set
+			{
 				if(value == DBNull.Value)
 				{
 					_imageData = null;
@@ -145,113 +145,113 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
 
 				OnImageDataChanged(EventArgs.Empty);
 			}
-	}
+		}
 
-	#region Events
-	public event System.EventHandler imageDataChanged;
-	protected virtual void OnImageDataChanged(EventArgs e)
-	{
+		#region Events
+		public event System.EventHandler imageDataChanged;
+		protected virtual void OnImageDataChanged(EventArgs e)
+		{
 			if (this.imageDataChanged != null)
 			{
 				this.imageDataChanged(this, e);
 			}
 		}
-	#endregion
+		#endregion
 
-	#region IAsControl Members
+		#region IAsControl Members
 
-	public string DefaultBindableProperty
-	{
-		get
+		public string DefaultBindableProperty
 		{
+			get
+			{
 				return "ImageData";
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region IAsCaptionControl Members
+		#region IAsCaptionControl Members
 
-	int _gridColumnWidth;
-	[Category("(ORIGAM)")]
-	[DefaultValue(100)]
-	[Description(CaptionDoc.GridColumnWidthDescription)]
-	public int GridColumnWidth
-	{
-		get
+		int _gridColumnWidth;
+		[Category("(ORIGAM)")]
+		[DefaultValue(100)]
+		[Description(CaptionDoc.GridColumnWidthDescription)]
+		public int GridColumnWidth
 		{
+			get
+			{
 				return _gridColumnWidth;
 			}
-		set
-		{
+			set
+			{
 				_gridColumnWidth = value;
 			}
-	}
+		}
 
 
-	string _gridColumnCaption = "";
-	[Category("(ORIGAM)")]
-	public string GridColumnCaption
-	{
-		get
+		string _gridColumnCaption = "";
+		[Category("(ORIGAM)")]
+		public string GridColumnCaption
 		{
+			get
+			{
 				return _gridColumnCaption;
 			}
-		set
-		{
+			set
+			{
 				_gridColumnCaption = value;
 			}
-	}
+		}
 
 
-	string _caption = "";
-	public string Caption
-	{
-		get
+		string _caption = "";
+		public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value;
 			}
-	}
+		}
 
-	CaptionPosition _captionPosition = CaptionPosition.Left;
-	public CaptionPosition CaptionPosition
-	{
-		get
+		CaptionPosition _captionPosition = CaptionPosition.Left;
+		public CaptionPosition CaptionPosition
 		{
+			get
+			{
 				return _captionPosition;
 			}
-		set
-		{
+			set
+			{
 				_captionPosition = value;
 			}
-	}
-	private int _captionLength = 100;
-	[Category("(ORIGAM)")]
-	public int CaptionLength
-	{
-		get
+		}
+		private int _captionLength = 100;
+		[Category("(ORIGAM)")]
+		public int CaptionLength
 		{
+			get
+			{
 				return _captionLength;
 			}
-		set
-		{
+			set
+			{
 				_captionLength = value;
 			}
-	}
+		}
 
-	private bool _hideOnForm = false;
-	public bool HideOnForm
-	{
-		get
+		private bool _hideOnForm = false;
+		public bool HideOnForm
 		{
+			get
+			{
 				return _hideOnForm;
 			}
-		set
-		{
+			set
+			{
 				_hideOnForm = value;
 
 				if (value && !this.DesignMode)
@@ -259,6 +259,7 @@ public class ImageBox : PictureBox, IAsCaptionControl, IAsControl
 					this.Hide();
 				}
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Service.CustomCommandParser;
-
-interface ICustomCommandParser
+namespace Origam.DA.Service.CustomCommandParser
 {
-    string[] Columns { get; }
-    void SetColumnExpressionsIfMissing(string columnName, string[] expressions);
-    string Sql { get; }
+    interface ICustomCommandParser
+    {
+        string[] Columns { get; }
+        void SetColumnExpressionsIfMissing(string columnName, string[] expressions);
+        string Sql { get; }
+    }
 }

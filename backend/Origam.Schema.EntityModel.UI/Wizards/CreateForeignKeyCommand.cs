@@ -28,30 +28,30 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Commands;
 
-namespace Origam.Schema.EntityModel.UI.Wizards;
-
-/// <summary>
-/// Summary description for CreateNtoNEntityCommand.
-/// </summary>
-public class CreateForeignKeyCommand : AbstractMenuCommand
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
-	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-	ForeignKeyForm keyForm;
-	FieldMappingItem fk;
-	public override bool IsEnabled
+	/// <summary>
+	/// Summary description for CreateNtoNEntityCommand.
+	/// </summary>
+	public class CreateForeignKeyCommand : AbstractMenuCommand
 	{
-		get
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ForeignKeyForm keyForm;
+        FieldMappingItem fk;
+        public override bool IsEnabled
 		{
+			get
+			{
 				return Owner is IDataEntity;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			IDataEntity entity = Owner as IDataEntity;
             ArrayList list = new ArrayList();
             FieldMappingItem fmItem = new FieldMappingItem();
@@ -90,20 +90,20 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
                 GeneratedModelElements.Clear();
             }
 		}
-	public override void Execute()
-	{
+        public override void Execute()
+        {
             fk = EntityHelper.CreateForeignKey(
                     keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
                     keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, true);
             GeneratedModelElements.Add(fk);
         }
 
-	public override int GetImageIndex(string icon)
-	{
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
-	public override void SetSummaryText(object summary)
-	{
+        public override void SetSummaryText(object summary)
+        {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = ResourceUtils.GetString("CreateForeignKeyWizardDescription") + " with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -129,4 +129,5 @@ public class CreateForeignKeyCommand : AbstractMenuCommand
             richTextBoxSummary.AppendText("Allow null : \t");
             richTextBoxSummary.AppendText(keyForm.AllowNulls.ToString());
         }
+    }
 }

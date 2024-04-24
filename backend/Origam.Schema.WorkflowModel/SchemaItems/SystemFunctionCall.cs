@@ -24,56 +24,58 @@ using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel;
-
-public enum SystemFunction
+namespace Origam.Schema.WorkflowModel
 {
-	ActiveProfileId = 0,
-	ResourceIdByActiveProfile = 1
-}
 
-/// <summary>
-/// Summary description for SystemFunctionCall.
-/// </summary>
-[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
-[HelpTopic("System+Function+Call")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class SystemFunctionCall : AbstractSchemaItem
-{
-	public const string CategoryConst = "SystemFunctionCall";
-
-	public SystemFunctionCall() : base() {}
-
-	public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType
+	public enum SystemFunction
 	{
-		get
+		ActiveProfileId = 0,
+		ResourceIdByActiveProfile = 1
+	}
+
+	/// <summary>
+	/// Summary description for SystemFunctionCall.
+	/// </summary>
+	[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
+    [HelpTopic("System+Function+Call")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class SystemFunctionCall : AbstractSchemaItem
+	{
+		public const string CategoryConst = "SystemFunctionCall";
+
+		public SystemFunctionCall() : base() {}
+
+		public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	private SystemFunction _function;
+		#region Properties
+		private SystemFunction _function;
 		
-	[XmlAttribute("function")]
-	public SystemFunction Function
-	{
-		get
+        [XmlAttribute("function")]
+		public SystemFunction Function
 		{
+			get
+			{
 				return _function;
 			}
-		set
-		{
+			set
+			{
 				_function = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

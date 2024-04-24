@@ -30,20 +30,20 @@ using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.Workbench.Services;
 
-namespace Origam.Server;
-
-public class ServerCoreReportManager : IReportManager
+namespace Origam.Server
 {
-    private readonly SessionManager sessionManager;
-
-    public ServerCoreReportManager(SessionManager sessionManager)
+    public class ServerCoreReportManager : IReportManager
     {
+        private readonly SessionManager sessionManager;
+
+        public ServerCoreReportManager(SessionManager sessionManager)
+        {
             this.sessionManager = sessionManager;
         }
-    public string GetReport(
-        string sessionFormIdentifier, string entity, object id, 
-        string reportId, Hashtable parameterMappings)
-    {
+        public string GetReport(
+            string sessionFormIdentifier, string entity, object id, 
+            string reportId, Hashtable parameterMappings)
+        {
             Guid key = Guid.NewGuid();
             SessionStore sessionStore = sessionManager.GetSession(
                 new Guid(sessionFormIdentifier));
@@ -55,8 +55,8 @@ public class ServerCoreReportManager : IReportManager
             return ReportRequestKeyToUrl(key);
         }
 
-    public string GetReportFromMenu(Guid menuId)
-    {
+        public string GetReportFromMenu(Guid menuId)
+        {
             Guid key = Guid.NewGuid();
             IPersistenceService persistenceService = ServiceManager.Services
                 .GetService<IPersistenceService>();
@@ -72,10 +72,10 @@ public class ServerCoreReportManager : IReportManager
             return ReportRequestKeyToUrl(key);
         }
 
-    public string GetReportStandalone(
-        string reportId, Hashtable parameters, 
-        DataReportExportFormatType dataReportExportFormatType)
-    {
+        public string GetReportStandalone(
+            string reportId, Hashtable parameters, 
+            DataReportExportFormatType dataReportExportFormatType)
+        {
             Guid key = Guid.NewGuid();
             sessionManager.AddReportRequest(
                 key, 
@@ -84,8 +84,9 @@ public class ServerCoreReportManager : IReportManager
             return ReportRequestKeyToUrl(key);
         }
 
-    private static string ReportRequestKeyToUrl(Guid key)
-    {
+        private static string ReportRequestKeyToUrl(Guid key)
+        {
             return "internalApi/Report/" + key;
         }
+    }
 }

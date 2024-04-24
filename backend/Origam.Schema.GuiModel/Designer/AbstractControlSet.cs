@@ -22,17 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.UI; 
 
-namespace Origam.Schema.GuiModel;
-
-public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet 
+namespace Origam.Schema.GuiModel
 {
-	public AbstractControlSet() {}
-	public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-	public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
-
-	public BrowserNodeCollection Alternatives
+	public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet 
 	{
-		get {
+		public AbstractControlSet() {}
+		public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
+
+		public BrowserNodeCollection Alternatives
+		{
+			get {
 				var result = new BrowserNodeCollection ();
 				foreach (ControlSetItem item 
 				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
@@ -42,11 +42,11 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
 				}
 				return result;
 			}
-	}
+		}
 
-	public ControlSetItem MainItem
-	{
-		get {
+		public ControlSetItem MainItem
+		{
+			get {
 				foreach (ControlSetItem item 
 				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
 					if(!item.IsAlternative) {
@@ -56,22 +56,25 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
 				throw new Exception (
 					$"Main item was not found for a control set {Path}");
 			}
-	}
+		}
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[]
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(ControlSetItem)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(ControlSetItem) ?
 					"NewComponent" : null);
 		}
 	
-	#endregion
+		#endregion
+	}
+
+	
 }

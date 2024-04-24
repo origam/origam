@@ -26,27 +26,27 @@ using System.Reflection;
 using System.Threading;
 using Origam.Extensions;
 
-namespace Origam.DA.Service;
-
-public class OrigamFileManager: IDisposable
+namespace Origam.DA.Service
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly FilePersistenceIndex index;
-    private readonly OrigamPathFactory origamPathFactory;
-    private readonly FileEventQueue fileEventQueue;
-
-    public OrigamFileManager(FilePersistenceIndex index,
-        OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
+    public class OrigamFileManager: IDisposable
     {
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+                MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly FilePersistenceIndex index;
+        private readonly OrigamPathFactory origamPathFactory;
+        private readonly FileEventQueue fileEventQueue;
+
+        public OrigamFileManager(FilePersistenceIndex index,
+            OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
+        {
             this.index = index;
             this.origamPathFactory = origamPathFactory;
             this.fileEventQueue = fileEventQueue;
         }
 
-    public void WriteReferenceFileToDisc(string fullPath, string contents, ParentFolders parentFolderIds)
-    {
+        public void WriteReferenceFileToDisc(string fullPath, string contents, ParentFolders parentFolderIds)
+        {
             if (File.Exists(fullPath)) return;
             OrigamPath path = origamPathFactory.Create(fullPath);
             
@@ -61,8 +61,8 @@ public class OrigamFileManager: IDisposable
             fileEventQueue.Continue();
         }
         
-    public void RenameDirectory(DirectoryInfo dirToRename, string newName)
-    {
+        public void RenameDirectory(DirectoryInfo dirToRename, string newName)
+        {
             string newDirPath =
                 Path.Combine(dirToRename.Parent.FullName, newName);
             if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
@@ -75,8 +75,8 @@ public class OrigamFileManager: IDisposable
             fileEventQueue.Continue();
         }
         
-    public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
-    {
+        public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
+        {
             string xmlToWrite = OrigamDocumentSorter
                 .CopyAndSort(xmlDocument)
                 .ToBeautifulString();
@@ -88,8 +88,8 @@ public class OrigamFileManager: IDisposable
             fileEventQueue.Continue();
         }
 
-    public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
-    {
+        public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
+        {
             if (!Directory.Exists(oldFullDirectory.FullName))
             {
                 return;
@@ -104,8 +104,8 @@ public class OrigamFileManager: IDisposable
             }
         } 
 
-    public void DeleteFile(OrigamFile origamFile)
-    {
+        public void DeleteFile(OrigamFile origamFile)
+        {
             fileEventQueue.Pause();
             index.RemoveHash(origamFile);
             index.Remove(origamFile);
@@ -114,15 +114,15 @@ public class OrigamFileManager: IDisposable
         }
         
         
-    public void RemoveDirectoryWithContents(DirectoryInfo packageDir)
-    {
+        public void RemoveDirectoryWithContents(DirectoryInfo packageDir)
+        {
             fileEventQueue.Pause();
             packageDir.Delete(true);
             fileEventQueue.Continue();
         }
 
-    private void DeleteFile(String fileToDelete)
-    {
+        private void DeleteFile(String fileToDelete)
+        {
             FileInfo fi = new FileInfo(fileToDelete);
             if (!fi.Exists) return;
             for (int i = 0; i < 10; i++)
@@ -147,9 +147,10 @@ public class OrigamFileManager: IDisposable
             throw new Exception($"Cannot remove file {fileToDelete}");
         }
 
-    public void Dispose()
-    {
+        public void Dispose()
+        {
             index?.Dispose();
             fileEventQueue?.Dispose();
         }
+    }
 }

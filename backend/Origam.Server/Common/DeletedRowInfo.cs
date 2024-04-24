@@ -42,12 +42,12 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Data;
 
-namespace Origam.Server;
-
-class DeletedRowInfo
+namespace Origam.Server
 {
-    public DeletedRowInfo(DataRow row)
+    class DeletedRowInfo
     {
+        public DeletedRowInfo(DataRow row)
+        {
             _rowData = GetRowData(row, DataRowVersion.Default);
 
             if (row.RowState == DataRowState.Modified)
@@ -58,8 +58,8 @@ class DeletedRowInfo
             _state = row.RowState;
         }
 
-    public void ImportData(DataTable table)
-    {
+        public void ImportData(DataTable table)
+        {
             if (_originalRowData != null)
             {
                 // change
@@ -90,8 +90,8 @@ class DeletedRowInfo
 
         }
 
-    private object[] GetRowData(DataRow row, DataRowVersion version)
-    {
+        private object[] GetRowData(DataRow row, DataRowVersion version)
+        {
             int count = row.Table.Columns.Count;
             object[] result = new object[count];
             for (int i = 0; i < count; i++)
@@ -102,7 +102,8 @@ class DeletedRowInfo
             return result;
         }
 
-    private object[] _originalRowData = null;
-    private object[] _rowData = null;
-    private DataRowState _state;
+        private object[] _originalRowData = null;
+        private object[] _rowData = null;
+        private DataRowState _state;
+    }
 }

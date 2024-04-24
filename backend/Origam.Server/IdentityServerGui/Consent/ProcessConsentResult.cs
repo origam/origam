@@ -2,17 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-namespace Origam.Server.IdentityServerGui.Consent;
-
-public class ProcessConsentResult
+namespace Origam.Server.IdentityServerGui.Consent
 {
-    public bool IsRedirect => RedirectUri != null;
-    public string RedirectUri { get; set; }
-    public string ClientId { get; set; }
+    public class ProcessConsentResult
+    {
+        public bool IsRedirect => RedirectUri != null;
+        public string RedirectUri { get; set; }
+        public string ClientId { get; set; }
 
-    public bool ShowView => ViewModel != null;
-    public ConsentViewModel ViewModel { get; set; }
+        public bool ShowView => ViewModel != null;
+        public ConsentViewModel ViewModel { get; set; }
 
-    public bool HasValidationError => ValidationError != null;
-    public string ValidationError { get; set; }
+        public bool HasValidationError => ValidationError != null;
+        public string ValidationError { get; set; }
+    }
 }

@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for Class1.
-/// </summary>
-public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+namespace Origam.Schema.GuiModel
 {
-	public DashboardWidgetsSchemaItemProvider() 
+	/// <summary>
+	/// Summary description for Class1.
+	/// </summary>
+	public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
+		public DashboardWidgetsSchemaItemProvider() 
+		{
 			this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
 			this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
 			this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
@@ -42,54 +42,55 @@ public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, IS
 			this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
 		}
 		
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return AbstractDashboardWidget.CategoryConst;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "UI";
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_15_dashboard-widgets.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Dashboard Widgets";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	public override string NodeToolTipText
-	{
-		get
+		public override string NodeToolTipText
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return "List of Dashboard Widgets";
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

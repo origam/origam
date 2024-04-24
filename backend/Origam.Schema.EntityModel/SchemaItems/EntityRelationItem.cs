@@ -25,34 +25,34 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
-[HelpTopic("Relationships")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("RelatedEntity")]
-[ClassMetaVersion("6.0.0")]
-public class EntityRelationItem : AbstractSchemaItem, IAssociation
+namespace Origam.Schema.EntityModel
 {
-	public EntityRelationItem() {}
-		
-	public EntityRelationItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntityRelationItem(Key primaryKey) : base(primaryKey) {}
-
-	public const string CategoryConst = "EntityRelation";
-
-	#region Properties
-	public Guid RelatedEntityId;
-
-	[TypeConverter(typeof(EntityConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[XmlReference("relatedEntity", "RelatedEntityId")]
-	public IDataEntity RelatedEntity
+	[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
+    [HelpTopic("Relationships")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("RelatedEntity")]
+    [ClassMetaVersion("6.0.0")]
+    public class EntityRelationItem : AbstractSchemaItem, IAssociation
 	{
-		get
+		public EntityRelationItem() {}
+		
+		public EntityRelationItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntityRelationItem(Key primaryKey) : base(primaryKey) {}
+
+		public const string CategoryConst = "EntityRelation";
+
+		#region Properties
+		public Guid RelatedEntityId;
+
+		[TypeConverter(typeof(EntityConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRule()]
+        [XmlReference("relatedEntity", "RelatedEntityId")]
+        public IDataEntity RelatedEntity
 		{
+			get
+			{
 				var key = new ModelElementKey
 				{
 					Id = RelatedEntityId
@@ -60,8 +60,8 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 				return (IDataEntity)PersistenceProvider.RetrieveInstance(
 					typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					RelatedEntityId = Guid.Empty;
@@ -75,41 +75,41 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 				// We have to delete all child items
 				ChildItems.Clear();
 			}
-	}
+		}
 
-	private bool _isParentChild = false;
+		private bool _isParentChild = false;
 		
-	[XmlAttribute("parentChild")]
-	public bool IsParentChild
-	{
-		get => _isParentChild;
-		set => _isParentChild = value;
-	}
+        [XmlAttribute("parentChild")]
+        public bool IsParentChild
+		{
+			get => _isParentChild;
+			set => _isParentChild = value;
+		}
 
 
-	[SelfJoinSameBaseRule]
-	[XmlAttribute("selfJoin")]
-	public bool IsSelfJoin { get; set; }
+        [SelfJoinSameBaseRule]
+        [XmlAttribute("selfJoin")]
+        public bool IsSelfJoin { get; set; }
 
-	private bool _isOR = false;
+        private bool _isOR = false;
 
-	[XmlAttribute("or")]
-	public bool IsOR
-	{
-		get => _isOR;
-		set => _isOR = value;
-	}
-	#endregion
+        [XmlAttribute("or")]
+        public bool IsOR
+		{
+			get => _isOR;
+			set => _isOR = value;
+		}
+		#endregion
 
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 		
-	public override bool UseFolders => false;
+		public override bool UseFolders => false;
 
-	public override string ItemType => CategoryConst;
+		public override string ItemType => CategoryConst;
 
-	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
+		{
 			try
 			{
 				dependencies.Add(RelatedEntity);
@@ -124,36 +124,36 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override bool CanMove(UI.IBrowserNode2 newNode)
-	{
+		public override bool CanMove(UI.IBrowserNode2 newNode)
+		{
 			var item = newNode as ISchemaItem;
 			return (item != null) 
 			       && item.PrimaryKey.Equals(ParentItem.PrimaryKey);
 		}
 
-	#endregion
+		#endregion
 
-	#region IAssociation Members
+		#region IAssociation Members
 
-	[Browsable(false)]
-	public IDataEntity BaseEntity => ParentItem as IDataEntity;
+		[Browsable(false)]
+		public IDataEntity BaseEntity => ParentItem as IDataEntity;
 
-	[Browsable(false)]
-	public IDataEntity AssociatedEntity => RelatedEntity;
+		[Browsable(false)]
+		public IDataEntity AssociatedEntity => RelatedEntity;
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	[Browsable(false)]
-	public override Type[] NewItemTypes => new[] {
+		[Browsable(false)]
+		public override Type[] NewItemTypes => new[] {
 			typeof(EntityRelationColumnPairItem), 
 			typeof(EntityRelationFilter)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{ 
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{ 
 			string itemName = null;
 			if(typeof(T) == typeof(EntityRelationColumnPairItem))
 			{
@@ -166,5 +166,7 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	#endregion
+		#endregion
+	}
 }
+		

@@ -24,21 +24,21 @@ using System;
 using System.Collections;
 using System.Data;
 
-namespace Origam.DA.ObjectPersistence.Attributes;
-
-public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAttribute
+namespace Origam.DA.ObjectPersistence.Attributes
 {
-    public RelationTypeModelElementRuleAttribute()
+    public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAttribute
     {
+        public RelationTypeModelElementRuleAttribute()
+        {
         }
 
-    public override Exception CheckRule(object instance)
-    {
+        public override Exception CheckRule(object instance)
+        {
             return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
         }
 
-    public override Exception CheckRule(object instance, string memberName)
-    {
+        public override Exception CheckRule(object instance, string memberName)
+        {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
 
             var dataStructure = (DataStructureEntity)instance;
@@ -59,4 +59,5 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
             }
             return null;
         }
+    }
 }

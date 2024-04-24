@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Origam.Server.Model.UIService;
-
-public class DestroyInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid FormSessionId { get; set; }
+    public class DestroyInput
+    {
+        public Guid FormSessionId { get; set; }
+    }
 }

@@ -21,45 +21,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Workflow;
-
-public delegate void WorkflowHostMessageEvent(object sender, WorkflowHostMessageEventArgs e);
-
-/// <summary>
-/// Summary description for WorkflowHostMessageEventArgs.
-/// </summary>
-public class WorkflowHostMessageEventArgs : WorkflowHostEventArgs
+namespace Origam.Workflow
 {
-	private string _message;
-	private bool _popup = true;
+	public delegate void WorkflowHostMessageEvent(object sender, WorkflowHostMessageEventArgs e);
 
-	public WorkflowHostMessageEventArgs(WorkflowEngine engine, string message, Exception exception, bool popup) : base(engine, exception)
+	/// <summary>
+	/// Summary description for WorkflowHostMessageEventArgs.
+	/// </summary>
+	public class WorkflowHostMessageEventArgs : WorkflowHostEventArgs
 	{
+		private string _message;
+		private bool _popup = true;
+
+		public WorkflowHostMessageEventArgs(WorkflowEngine engine, string message, Exception exception, bool popup) : base(engine, exception)
+		{
 			_message = message;
 			_popup = popup;
 		}
 
-	public string Message
-	{
-		get
+		public string Message
 		{
+			get
+			{
 				return _message;
 			}
-		set
-		{
+			set
+			{
 				_message = value;
 			}
-	}
+		}
 
-	public bool Popup
-	{
-		get
+		public bool Popup
 		{
+			get
+			{
 				return _popup;
 			}
-		set
-		{
+			set
+			{
 				_popup = value;
 			}
+		}
 	}
 }

@@ -40,23 +40,23 @@ using Origam.Server.Attributes;
 using Origam.Server.Model.Session;
 using Origam.Server.Model;
 
-namespace Origam.Server.Controllers;
-
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-[ApiController]
-[Route("internalApi/[controller]")]
-public class SessionController : ControllerBase
+namespace Origam.Server.Controllers
 {
-    private readonly SessionObjects sessionObjects;
-
-    public SessionController(SessionObjects sessionObjects)
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+    [ApiController]
+    [Route("internalApi/[controller]")]
+    public class SessionController : ControllerBase
     {
+        private readonly SessionObjects sessionObjects;
+
+        public SessionController(SessionObjects sessionObjects)
+        {
             this.sessionObjects = sessionObjects;            
         }
 
-    [HttpPost("[action]")]
-    public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
-    {
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
+        {
             return await RunWithErrorHandlerAsync(async () =>
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
@@ -84,9 +84,9 @@ public class SessionController : ControllerBase
         }
 
 
-    [HttpPost("[action]")]
-    public IActionResult DeleteSession([FromBody]DeleteSessionData sessionData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult DeleteSession([FromBody]DeleteSessionData sessionData)
+        {
             return RunWithErrorHandler(() =>
             {
                 new SessionHelper(sessionObjects.SessionManager)
@@ -96,9 +96,9 @@ public class SessionController : ControllerBase
             });
         }
         
-    [HttpPost("[action]")]
-    public IActionResult DeleteRow([FromBody]DeleteRowData sessionData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult DeleteRow([FromBody]DeleteRowData sessionData)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
@@ -110,9 +110,9 @@ public class SessionController : ControllerBase
             });
         }
 
-    [HttpPost("[action]")]
-    public IActionResult ChangeMasterRecord([FromBody]ChangeMasterRecordData sessionData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult ChangeMasterRecord([FromBody]ChangeMasterRecordData sessionData)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
@@ -125,11 +125,11 @@ public class SessionController : ControllerBase
             });
         }
 
-    [HttpGet("[action]")]
-    public IActionResult Rows([FromQuery][RequiredNonDefault] Guid sessionFormIdentifier, 
-        [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
-        [FromQuery][Required] string rootRecordId)
-    {
+        [HttpGet("[action]")]
+        public IActionResult Rows([FromQuery][RequiredNonDefault] Guid sessionFormIdentifier, 
+            [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
+            [FromQuery][Required] string rootRecordId)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
@@ -139,9 +139,9 @@ public class SessionController : ControllerBase
             });
         }
         
-    [HttpPost("[action]")]
-    public IActionResult SaveData([FromBody]SaveDataData saveData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult SaveData([FromBody]SaveDataData saveData)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(saveData.SessionId);
@@ -151,9 +151,9 @@ public class SessionController : ControllerBase
             });
         }
 
-    [HttpPost("[action]")]
-    public IActionResult CreateRow([FromBody]NewRowData newRowData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult CreateRow([FromBody]NewRowData newRowData)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(newRowData.SessionFormIdentifier);
@@ -167,9 +167,9 @@ public class SessionController : ControllerBase
             });
         }
 
-    [HttpPost("[action]")]
-    public IActionResult UpdateRow([FromBody]UpdateRowData updateData)
-    {
+        [HttpPost("[action]")]
+        public IActionResult UpdateRow([FromBody]UpdateRowData updateData)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore ss = sessionObjects.SessionManager.GetSession(updateData.SessionFormIdentifier);
@@ -183,9 +183,9 @@ public class SessionController : ControllerBase
             });
         }
 
-    [HttpPost("[action]")]
-    public IActionResult CloseSession()
-    {
+        [HttpPost("[action]")]
+        public IActionResult CloseSession()
+        {
             PortalSessionStore pss = 
                 sessionObjects.SessionManager.GetPortalSession();
             if (pss == null)
@@ -200,8 +200,8 @@ public class SessionController : ControllerBase
             }
             return Ok();
         }
-    private IActionResult RunWithErrorHandler(Func<IActionResult> func)
-    {
+        private IActionResult RunWithErrorHandler(Func<IActionResult> func)
+        {
             try
             {
                 return func();
@@ -212,8 +212,8 @@ public class SessionController : ControllerBase
             }
         }
 
-    private async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
-    {
+        private async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
+        {
             try
             {
                 return await func();
@@ -224,8 +224,8 @@ public class SessionController : ControllerBase
             }
         }
 
-    private void CallOrigamUserUpdate()
-    {
+        private void CallOrigamUserUpdate()
+        {
             var principal = SecurityManager.CurrentPrincipal;
             Task.Run(() =>
             {
@@ -235,4 +235,5 @@ public class SessionController : ControllerBase
                     sessionObjects.SessionManager.GetSessionStats());
             });
         }
+    }
 }

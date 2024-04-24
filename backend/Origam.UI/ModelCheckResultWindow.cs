@@ -28,12 +28,12 @@ using System.Linq;
 using System.Windows.Forms;
 using Origam.DA.Service.FileSystemModeCheckers;
 
-namespace Origam.UI;
-
-public partial class ModelCheckResultWindow : Form
+namespace Origam.UI
 {
-    public ModelCheckResultWindow(List<ModelErrorSection> modelErrorSections)
+    public partial class ModelCheckResultWindow : Form
     {
+        public ModelCheckResultWindow(List<ModelErrorSection> modelErrorSections)
+        {
             InitializeComponent();
             ShowIcon = false;
             
@@ -49,13 +49,13 @@ public partial class ModelCheckResultWindow : Form
             }
         }
 
-    private void okButton_Click(object sender, EventArgs e)
-    {
+        private void okButton_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
-    private void errorListBox_DrawItem(object sender, DrawItemEventArgs e)
-    {
+        private void errorListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
                 e = new DrawItemEventArgs(e.Graphics,
                     e.Font,
@@ -109,8 +109,8 @@ public partial class ModelCheckResultWindow : Form
             throw new NotImplementedException();
         }
 
-    private void errorListBox_SelectedIndexChanged(object sender, EventArgs e)
-    {
+        private void errorListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ListBox listBox = sender as ListBox;
             string link = (listBox?.SelectedItem as ErrorMessage)?.Link;
             if (!string.IsNullOrWhiteSpace(link))
@@ -126,4 +126,5 @@ public partial class ModelCheckResultWindow : Form
             }
             listBox.SelectedItem = null;
         }
+    }
 }
