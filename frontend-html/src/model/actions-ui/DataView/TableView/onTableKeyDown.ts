@@ -76,7 +76,7 @@ export function onTableKeyDown(ctx: any) {
           break;
         case "Tab":
           if (event.shiftKey) {
-            selectPrevColumn(ctx)(true);
+            yield*selectPrevColumn(ctx)(true);
           } else {
             yield*selectNextColumn(ctx)(true);
           }

@@ -70,7 +70,7 @@ export function onFieldKeyDown(ctx: any) {
             }
 
             if (event.shiftKey) {
-              selectPrevColumn(ctx)(true);
+              yield*selectPrevColumn(ctx)(true);
             } else {
               yield*selectNextColumn(ctx)(true);
             }
@@ -83,7 +83,7 @@ export function onFieldKeyDown(ctx: any) {
             tablePanelView.triggerOnFocusTable();
           } else {
             if (event.shiftKey) {
-              selectPrevColumn(ctx)(true);
+              yield*selectPrevColumn(ctx)(true);
             } else {
               yield*selectNextColumn(ctx)(true);
             }
