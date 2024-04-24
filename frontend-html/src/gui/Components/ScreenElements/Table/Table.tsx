@@ -51,7 +51,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import cx from 'classnames';
-import {getGridFocusManager} from "model/entities/GridFocusManager";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
