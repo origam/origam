@@ -20,16 +20,16 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace Origam.Windows.Editor;
-
-public class SchemaDocumentation
+namespace Origam.Windows.Editor
 {
-    XmlSchemaAnnotation annotation;
-    StringBuilder documentation = new StringBuilder();
-    StringBuilder documentationWithoutWhitespace = new StringBuilder();
-
-    public SchemaDocumentation(XmlSchemaAnnotation annotation)
+    public class SchemaDocumentation
     {
+        XmlSchemaAnnotation annotation;
+        StringBuilder documentation = new StringBuilder();
+        StringBuilder documentationWithoutWhitespace = new StringBuilder();
+
+        public SchemaDocumentation(XmlSchemaAnnotation annotation)
+        {
             this.annotation = annotation;
             if (annotation != null)
             {
@@ -37,8 +37,8 @@ public class SchemaDocumentation
             }
         }
 
-    void ReadDocumentationFromAnnotation(XmlSchemaObjectCollection annotationItems)
-    {
+        void ReadDocumentationFromAnnotation(XmlSchemaObjectCollection annotationItems)
+        {
             foreach (XmlSchemaObject schemaObject in annotationItems)
             {
                 XmlSchemaDocumentation schemaDocumentation = schemaObject as XmlSchemaDocumentation;
@@ -50,8 +50,8 @@ public class SchemaDocumentation
             RemoveWhitespaceFromDocumentation();
         }
 
-    void ReadSchemaDocumentationFromMarkup(XmlNode[] markup)
-    {
+        void ReadSchemaDocumentationFromMarkup(XmlNode[] markup)
+        {
             foreach (XmlNode node in markup)
             {
                 XmlText textNode = node as XmlText;
@@ -59,8 +59,8 @@ public class SchemaDocumentation
             }
         }
 
-    void AppendTextToDocumentation(XmlText textNode)
-    {
+        void AppendTextToDocumentation(XmlText textNode)
+        {
             if (textNode != null)
             {
                 if (textNode.Data != null)
@@ -70,14 +70,14 @@ public class SchemaDocumentation
             }
         }
 
-    void RemoveWhitespaceFromDocumentation()
-    {
+        void RemoveWhitespaceFromDocumentation()
+        {
             string[] lines = documentation.ToString().Split('\n');
             RemoveWhitespaceFromLines(lines);
         }
 
-    void RemoveWhitespaceFromLines(string[] lines)
-    {
+        void RemoveWhitespaceFromLines(string[] lines)
+        {
             foreach (string line in lines)
             {
                 string lineWithoutWhitespace = line.Trim();
@@ -85,8 +85,9 @@ public class SchemaDocumentation
             }
         }
 
-    public override string ToString()
-    {
+        public override string ToString()
+        {
             return documentationWithoutWhitespace.ToString().Trim();
         }
+    }
 }

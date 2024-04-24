@@ -22,21 +22,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.Attributes;
-
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-public class RequiredNonDefaultAttribute : ValidationAttribute
+namespace Origam.Server.Attributes
 {
-    public RequiredNonDefaultAttribute()
-        : base("The {0} field requires a non-default value.")
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
+    public class RequiredNonDefaultAttribute : ValidationAttribute
     {
+        public RequiredNonDefaultAttribute()
+            : base("The {0} field requires a non-default value.")
+        {
         }
 
-    public override bool IsValid(object value)
-    {
+        public override bool IsValid(object value)
+        {
             if (value is null)
                 return false; 
             var type = value.GetType();
             return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
         }
+    }
 }

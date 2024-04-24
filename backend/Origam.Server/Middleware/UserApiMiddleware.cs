@@ -28,20 +28,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Origam.Server.Pages;
 
-namespace Origam.Server.Middleware;
-
-public class UserApiMiddleware
+namespace Origam.Server.Middleware
 {
-    private readonly RequestLocalizationOptions requestLocalizationOptions;
-
-    public UserApiMiddleware(RequestDelegate next, 
-        IOptions<RequestLocalizationOptions> requestLocalizationOptions)
+    public class UserApiMiddleware
     {
+        private readonly RequestLocalizationOptions requestLocalizationOptions;
+
+        public UserApiMiddleware(RequestDelegate next, 
+            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
+        {
             this.requestLocalizationOptions = requestLocalizationOptions.Value;
         }
 
-    public async Task Invoke(HttpContext context)
-    {
+        public async Task Invoke(HttpContext context)
+        {
             await SetThreadCultureFromCookie(context);
             var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
@@ -49,8 +49,8 @@ public class UserApiMiddleware
             await Task.CompletedTask;
         }
 
-    private async Task SetThreadCultureFromCookie(HttpContext context)
-    {
+        private async Task SetThreadCultureFromCookie(HttpContext context)
+        {
             var cultureProvider = requestLocalizationOptions.RequestCultureProviders
                 .OfType<OrigamCookieRequestCultureProvider>().First();
             var cultureResult =
@@ -70,4 +70,5 @@ public class UserApiMiddleware
                     new CultureInfo(uiCulture.Value.ToString());
             }
         }
+    }
 }

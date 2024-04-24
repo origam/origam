@@ -26,25 +26,25 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using ArgumentException = System.ArgumentException;
 
-namespace Origam.DA.Service.CustomCommandParser;
-
-public class FilterCommandParser: ICustomCommandParser
+namespace Origam.DA.Service.CustomCommandParser
 {
-    private readonly List<ColumnInfo> columns;
-    private FilterNode root = null;
-    private FilterNode currentNode = null;
-    private readonly string whereFilterInput;
-    private readonly SqlRenderer sqlRenderer;
-    private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
-    private readonly AbstractFilterRenderer filterRenderer;
-    private string sql;
-    private string[] columnsNames;
-
-    public List<ParameterData> ParameterDataList { get; } = new List<ParameterData>();
-    public string Sql
+    public class FilterCommandParser: ICustomCommandParser
     {
-        get
+        private readonly List<ColumnInfo> columns;
+        private FilterNode root = null;
+        private FilterNode currentNode = null;
+        private readonly string whereFilterInput;
+        private readonly SqlRenderer sqlRenderer;
+        private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
+        private readonly AbstractFilterRenderer filterRenderer;
+        private string sql;
+        private string[] columnsNames;
+
+        public List<ParameterData> ParameterDataList { get; } = new List<ParameterData>();
+        public string Sql
         {
+            get
+            {
                 if (sql == null && !string.IsNullOrWhiteSpace(whereFilterInput))
                 {
                     var inpValue = GetCheckedInput(whereFilterInput);
@@ -53,11 +53,11 @@ public class FilterCommandParser: ICustomCommandParser
                 }
                 return sql;
             }
-    }
+        }
 
-    public string[] Columns
-    {
-        get {
+        public string[] Columns
+        {
+            get {
                 if (columnsNames == null)
                 {
                     if (string.IsNullOrWhiteSpace(whereFilterInput))
@@ -74,20 +74,20 @@ public class FilterCommandParser: ICustomCommandParser
                 }
                 return columnsNames;
             }
-    }
+        }
 
-    public FilterCommandParser(AbstractFilterRenderer filterRenderer, 
-        string whereFilterInput, SqlRenderer sqlRenderer, List<ColumnInfo> columns)
-    {
+        public FilterCommandParser(AbstractFilterRenderer filterRenderer, 
+            string whereFilterInput, SqlRenderer sqlRenderer, List<ColumnInfo> columns)
+        {
             this.filterRenderer = filterRenderer;
             this.whereFilterInput = whereFilterInput;
             this.sqlRenderer = sqlRenderer;
             this.columns = columns;
         }
 
-    public FilterCommandParser(List<DataStructureColumn> dataStructureColumns,
-        AbstractFilterRenderer filterRenderer, string whereFilterInput, 
-        SqlRenderer sqlRenderer)
+        public FilterCommandParser(List<DataStructureColumn> dataStructureColumns,
+            AbstractFilterRenderer filterRenderer, string whereFilterInput, 
+            SqlRenderer sqlRenderer)
         :this(filterRenderer, whereFilterInput, sqlRenderer,
             dataStructureColumns
                 .Select(column => new ColumnInfo
@@ -97,11 +97,11 @@ public class FilterCommandParser: ICustomCommandParser
                     IsNullable = column.Field.AllowNulls
                 })
                 .ToList())
-    {
+        {
         }
         
-    public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
-    {
+        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
+        {
             if (expressions == null || expressions.Length != 1)
             {
                 throw new NotImplementedException("Can only handle single expression for a single column.");
@@ -109,8 +109,8 @@ public class FilterCommandParser: ICustomCommandParser
             filterColumnExpressions[columnName] = expressions[0];
         }
 
-    private void ParseToNodeTree(string filter)
-    {
+        private void ParseToNodeTree(string filter)
+        {
             root = null;
             currentNode = null;
             foreach (char c in filter)
@@ -134,8 +134,8 @@ public class FilterCommandParser: ICustomCommandParser
             }
         }
 
-    private void AddNode()
-    {
+        private void AddNode()
+        {
             FilterNode newNode = new FilterNode(
                 sqlRenderer, filterColumnExpressions,
                 columns, filterRenderer, ParameterDataList)
@@ -150,8 +150,8 @@ public class FilterCommandParser: ICustomCommandParser
             }
         }
 
-    private static string GetCheckedInput(string strFilter)
-    {
+        private static string GetCheckedInput(string strFilter)
+        {
             if (strFilter == null)
             {
                 throw new ArgumentException(nameof(strFilter) + " cannot be null");
@@ -180,21 +180,22 @@ public class FilterCommandParser: ICustomCommandParser
 
             return inpValue;
         }
-}
+    }
 
-public class ParameterData
-{
-    public string ParameterName { get;  }
-    public string ColumnName { get;  }
-    public object Value { get;  }
-    public OrigamDataType DataType { get; }
-
-    public ParameterData(string parameterName, string columnName, 
-        object value, OrigamDataType dataType)
+    public class ParameterData
     {
+        public string ParameterName { get;  }
+        public string ColumnName { get;  }
+        public object Value { get;  }
+        public OrigamDataType DataType { get; }
+
+        public ParameterData(string parameterName, string columnName, 
+            object value, OrigamDataType dataType)
+        {
             ParameterName = parameterName;
             ColumnName = columnName;
             Value = value;
             DataType = dataType;
         }
+    }
 }

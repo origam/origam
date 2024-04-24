@@ -52,17 +52,17 @@ using Origam.Server.Session_Stores;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Workbench.Services;
 
-namespace Origam.Server;
-
-public class WorkQueueSessionStore : SessionStore
+namespace Origam.Server
 {
-    private object _getRowDataLock = new object();
-    private DataSetBuilder datasetbuilder = new DataSetBuilder();
-        
-    public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
-        Analytics analytics)
-        : base(service, request, name, analytics)
+    public class WorkQueueSessionStore : SessionStore
     {
+        private object _getRowDataLock = new object();
+        private DataSetBuilder datasetbuilder = new DataSetBuilder();
+        
+        public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
+            Analytics analytics)
+            : base(service, request, name, analytics)
+        {
             IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
             Guid workQueueId = new Guid(request.ObjectId);
             this.WQClass = wqs.WQClass(workQueueId) as WorkQueueClass;
@@ -70,23 +70,23 @@ public class WorkQueueSessionStore : SessionStore
             this.RefreshOnInitUI = true;
         }
 
-    #region Overriden SessionStore Methods
+        #region Overriden SessionStore Methods
 
-    private void PrepareData()
-    {
+        private void PrepareData()
+        {
             var data = InitializeFullStructure(null);
             SetDataSource(data);
             IsDelayedLoading = true;
             DataListEntity = "WorkQueueEntry";
         }
 
-    private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
-    {
+        private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+        {
             return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
         }
 
-    public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
-    {
+        public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+        {
             ArrayList result = new ArrayList();
             lock (_getRowDataLock)
             {
@@ -132,8 +132,8 @@ public class WorkQueueSessionStore : SessionStore
             return result;
         }
        
-    private DataSet LoadDataPiece(object parentId)
-    {
+        private DataSet LoadDataPiece(object parentId)
+        {
             Guid? methodId = WQClass
                 .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
                 .FirstOrDefault(x => x.Name == "GetById")
@@ -148,13 +148,13 @@ public class WorkQueueSessionStore : SessionStore
                 "WorkQueueEntry_parId", parentId);
         }
 
-    public override void Init()
-    {
+        public override void Init()
+        {
             PrepareData();
         }
 
-    public override object ExecuteActionInternal(string actionId)
-    {
+        public override object ExecuteActionInternal(string actionId)
+        {
             switch (actionId)
             {
                 case ACTION_REFRESH:
@@ -165,25 +165,26 @@ public class WorkQueueSessionStore : SessionStore
             }
         }
 
-    public override XmlDocument GetFormXml()
-    {
+        public override XmlDocument GetFormXml()
+        {
             XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(WQClass, Data, Request.Caption, new Guid(Request.ObjectId));
 
             return formXml;
         } 
 
-    private object Refresh()
-    {
+        private object Refresh()
+        {
             Init();
             return this.Data;
         }
-    #endregion
+        #endregion
 
-    private WorkQueueClass _wqClass;
+        private WorkQueueClass _wqClass;
 
-    public WorkQueueClass WQClass
-    {
-        get { return _wqClass; }
-        set { _wqClass = value; }
+        public WorkQueueClass WQClass
+        {
+            get { return _wqClass; }
+            set { _wqClass = value; }
+        }
     }
 }

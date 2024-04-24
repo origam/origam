@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-namespace Origam.Server.IdentityServerGui.Account;
-
-public class ExternalProvider
+namespace Origam.Server.IdentityServerGui.Account
 {
-    public string DisplayName { get; set; }
-    public string AuthenticationScheme { get; set; }
+    public class ExternalProvider
+    {
+        public string DisplayName { get; set; }
+        public string AuthenticationScheme { get; set; }
+    }
 }

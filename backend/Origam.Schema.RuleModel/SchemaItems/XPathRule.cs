@@ -27,46 +27,47 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.RuleModel;
-
-/// <summary>
-/// Summary description for XPathRule.
-/// </summary>
-[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
-[ClassMetaVersion("6.0.0")]
-public class XPathRule : AbstractRule
+namespace Origam.Schema.RuleModel
 {
-	public XPathRule() : base() {}
-
-	public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public XPathRule(Key primaryKey) : base(primaryKey)	{}
-
-	public override SchemaItemCollection ChildItems
+	/// <summary>
+	/// Summary description for XPathRule.
+	/// </summary>
+	[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
+    [ClassMetaVersion("6.0.0")]
+	public class XPathRule : AbstractRule
 	{
-		get
+		public XPathRule() : base() {}
+
+		public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public XPathRule(Key primaryKey) : base(primaryKey)	{}
+
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	#region Properties
-	[XmlAttribute("xPath")]
+		#region Properties
+		[XmlAttribute("xPath")]
 #if !NETSTANDARD
         [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
 #endif
-	public string XPath { get; set; } = "";
+        public string XPath { get; set; } = "";
 
-	[DefaultValue(false)] 
-	[XmlAttribute("isPathRelative")]
-	public override bool IsPathRelative { get; set; } = false;
-	#endregion
+		[DefaultValue(false)] 
+        [XmlAttribute("isPathRelative")]
+		public override bool IsPathRelative { get; set; } = false;
+		#endregion
 
+	}
 }

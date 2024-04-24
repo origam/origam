@@ -27,16 +27,16 @@ using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 using Origam.Schema;
 
-namespace Origam.DA.Service;
-
-public class XmlFileData
+namespace Origam.DA.Service
 {
-    public OrigamXmlDocument XmlDocument { get; }
-    public XmlNamespaceManager NamespaceManager{ get; }
-    public FileInfo FileInfo { get;}
-
-    public XmlFileData(OrigamXmlDocument xmlDocument, FileInfo fileInfo)
+    public class XmlFileData
     {
+        public OrigamXmlDocument XmlDocument { get; }
+        public XmlNamespaceManager NamespaceManager{ get; }
+        public FileInfo FileInfo { get;}
+
+        public XmlFileData(OrigamXmlDocument xmlDocument, FileInfo fileInfo)
+        {
             XmlDocument = xmlDocument;
             FileInfo = fileInfo;
             NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);       
@@ -47,11 +47,12 @@ public class XmlFileData
                 XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup)),OrigamFile.GroupUri);
         }
 
-    public XmlFileData(XFileData xFileData)
-        :this(
-            new OrigamXmlDocument(xFileData.Document.XDocument),
-            xFileData.File)
-    {
+        public XmlFileData(XFileData xFileData)
+            :this(
+                new OrigamXmlDocument(xFileData.Document.XDocument),
+                xFileData.File)
+        {
            
         }
+    }
 }

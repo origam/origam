@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System.Drawing;
 using System.Linq;
 using Microsoft.Msagl.Core.Geometry.Curves;
@@ -28,25 +27,25 @@ using Origam.Workbench.Diagram.Extensions;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing;
-
-internal class SubgraphNodePainter : INodeItemPainter
+namespace Origam.Workbench.Diagram.NodeDrawing
 {
-    private readonly InternalPainter painter;
-    private readonly NodePainter nodePainter;
-    private readonly NodeHeaderPainter nodeHeaderPainter;
-    private readonly INodeFooterPainter footerPainter;
-
-    public SubgraphNodePainter(InternalPainter internalPainter)
+    internal class SubgraphNodePainter : INodeItemPainter
     {
+        private readonly InternalPainter painter;
+        private readonly NodePainter nodePainter;
+        private readonly NodeHeaderPainter nodeHeaderPainter;
+        private readonly INodeFooterPainter footerPainter;
+
+        public SubgraphNodePainter(InternalPainter internalPainter)
+        {
             painter = internalPainter;
             nodePainter = new NodePainter(internalPainter);
             nodeHeaderPainter = new NodeHeaderPainter(internalPainter);
             footerPainter = new FooterPainter();
         }
         
-    public ICurve GetBoundary(Node node)
-    {
+        public ICurve GetBoundary(Node node)
+        {
             Subgraph subgraph = (Subgraph) node;
             if (!subgraph.Nodes.Any() && ! subgraph.Subgraphs.Any())
             {
@@ -66,8 +65,8 @@ internal class SubgraphNodePainter : INodeItemPainter
             return CurveFactory.CreateRectangle(width, height, new Point());
         }
 
-    public bool Draw(Node node, object graphicsObj)
-    {
+        public bool Draw(Node node, object graphicsObj)
+        {
             Subgraph subgraph = (Subgraph) node;
             if (!subgraph.Nodes.Any())
             {
@@ -99,22 +98,23 @@ internal class SubgraphNodePainter : INodeItemPainter
             return true;
         }
         
-    private float GetLabelWidth(Node node)
-    {
+        private float GetLabelWidth(Node node)
+        {
             SizeF stringSize = painter.MeasureString(node.LabelText);
             var labelWidth = stringSize.Width + painter.NodeHeaderHeight + painter.Margin + painter.TextSideMargin;
             return labelWidth;
         }
-}
+    }
 
-interface INodeFooterPainter{
-    double GetHeight(Node node);
-}
+    interface INodeFooterPainter{
+        double GetHeight(Node node);
+    }
 
-class FooterPainter: INodeFooterPainter
-{
-    public double GetHeight(Node node)
+    class FooterPainter: INodeFooterPainter
     {
+        public double GetHeight(Node node)
+        {
             return 0;
         }
+    }
 }

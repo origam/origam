@@ -23,175 +23,175 @@ using System;
 using System.Xml.Serialization;
 using System.Globalization;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for TextReaderAgentSeparator.
-/// </summary>
-[Serializable()]
-public class TextReaderOptionsField
+namespace Origam.Workflow
 {
-	private string _name;
-	private string _culture;
-	private string _format;
-	private bool _isQuoted = false;
-	private bool _isOptional = false;
-	private string _quoteChar;
-	private string _decimalSeparator;
-	private int _length = 0;
-	private string _nullValue = null;
-	private bool _isIgnored = false;
-	private string[] _alternativeFormats;
-
-	public TextReaderOptionsField()
+	/// <summary>
+	/// Summary description for TextReaderAgentSeparator.
+	/// </summary>
+	[Serializable()]
+	public class TextReaderOptionsField
 	{
+		private string _name;
+		private string _culture;
+		private string _format;
+		private bool _isQuoted = false;
+		private bool _isOptional = false;
+		private string _quoteChar;
+		private string _decimalSeparator;
+		private int _length = 0;
+		private string _nullValue = null;
+		private bool _isIgnored = false;
+		private string[] _alternativeFormats;
+
+		public TextReaderOptionsField()
+		{
 		}
 
-	[XmlAttribute()]
-	public string Name
-	{
-		get
+		[XmlAttribute()]
+		public string Name
 		{
+			get
+			{
 				return _name;
 			}
-		set
-		{
+			set
+			{
 				_name = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string Format
-	{
-		get
+		[XmlAttribute()]
+		public string Format
 		{
+			get
+			{
 				return _format;
 			}
-		set
-		{
+			set
+			{
 				_format = value;
 			}
-	}
+		}
 
-	[XmlArrayItem("Format", typeof(string))]
-	public string[] AlternativeFormats
-	{
-		get
+		[XmlArrayItem("Format", typeof(string))]
+		public string[] AlternativeFormats
 		{
+			get
+			{
 				return _alternativeFormats;
 			}
-		set
-		{
+			set
+			{
 				_alternativeFormats = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string DecimalSeparator
-	{
-		get
+		[XmlAttribute()]
+		public string DecimalSeparator
 		{
+			get
+			{
 				return _decimalSeparator;
 			}
-		set
-		{
+			set
+			{
 				_decimalSeparator = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string Culture
-	{
-		get
+		[XmlAttribute()]
+		public string Culture
 		{
+			get
+			{
 				return _culture;
 			}
-		set
-		{
+			set
+			{
 				_culture = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public bool IsQuoted
-	{
-		get
+		[XmlAttribute()]
+		public bool IsQuoted
 		{
+			get
+			{
 				return _isQuoted;
 			}
-		set
-		{
+			set
+			{
 				_isQuoted = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public bool IsOptional
-	{
-		get
+		[XmlAttribute()]
+		public bool IsOptional
 		{
+			get
+			{
 				return _isOptional;
 			}
-		set
-		{
+			set
+			{
 				_isOptional = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public bool IsIgnored
-	{
-		get
+		[XmlAttribute()]
+		public bool IsIgnored
 		{
+			get
+			{
 				return _isIgnored;
 			}
-		set
-		{
+			set
+			{
 				_isIgnored = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string QuoteChar
-	{
-		get
+		[XmlAttribute()]
+		public string QuoteChar
 		{
+			get
+			{
 				return _quoteChar;
 			}
-		set
-		{
+			set
+			{
 				_quoteChar = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public int Length
-	{
-		get
+		[XmlAttribute()]
+		public int Length
 		{
+			get
+			{
 				return _length;
 			}
-		set
-		{
+			set
+			{
 				_length = value;
 			}
-	}
+		}
 
-	[XmlAttribute()]
-	public string NullValue
-	{
-		get
+		[XmlAttribute()]
+		public string NullValue
 		{
+			get
+			{
 				return _nullValue;
 			}
-		set
-		{
+			set
+			{
 				_nullValue = value;
 			}
-	}
+		}
 
-	public CultureInfo GetCulture()
-	{
+		public CultureInfo GetCulture()
+		{
 			if(_culture == null)
 			{
 				return CultureInfo.InvariantCulture;
@@ -202,10 +202,10 @@ public class TextReaderOptionsField
 			}
 		}
 
-	public string[] Formats
-	{
-		get
+		public string[] Formats
 		{
+			get
+			{
 				if(this.AlternativeFormats == null || this.AlternativeFormats.Length == 0)
 				{
 					if(this.Format == null)
@@ -234,5 +234,6 @@ public class TextReaderOptionsField
 					}
 				}
 			}
+		}
 	}
 }

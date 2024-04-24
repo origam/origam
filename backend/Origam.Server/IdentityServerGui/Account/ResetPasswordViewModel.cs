@@ -4,23 +4,24 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.IdentityServerGui.Account;
-
-public class ResetPasswordViewModel
+namespace Origam.Server.IdentityServerGui.Account
 {
-    [Required(ErrorMessage = "EmailRequired")]
-    [EmailAddress]
-    public string Email { get; set; }
+    public class ResetPasswordViewModel
+    {
+        [Required(ErrorMessage = "EmailRequired")]
+        [EmailAddress]
+        public string Email { get; set; }
 
-    [Required(ErrorMessage = "PasswordRequired")]
-    [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
-    [DataType(DataType.Password)]
-    public string Password { get; set; }
+        [Required(ErrorMessage = "PasswordRequired")]
+        [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
 
-    [DataType(DataType.Password)]
-    [Display(Name = "Confirm password")]
-    [Compare("Password", ErrorMessage = "PasswordsDontMatch")]
-    public string ConfirmPassword { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "PasswordsDontMatch")]
+        public string ConfirmPassword { get; set; }
 
-    public string Code { get; set; }
+        public string Code { get; set; }
+    }
 }

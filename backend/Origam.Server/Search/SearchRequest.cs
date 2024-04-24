@@ -42,29 +42,30 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Security.Principal;
 
-namespace Origam.Server.Search;
-
-public class SearchRequest
+namespace Origam.Server.Search
 {
-    public SearchRequest(string searchString, IPrincipal princpal)
+    public class SearchRequest
     {
+        public SearchRequest(string searchString, IPrincipal princpal)
+        {
             _searchString = searchString;
             _principal = princpal;
         }
 
-    private string _searchString;
+        private string _searchString;
 
-    public string SearchString
-    {
-        get { return _searchString; }
-        set { _searchString = value; }
-    }
+        public string SearchString
+        {
+            get { return _searchString; }
+            set { _searchString = value; }
+        }
 
-    private IPrincipal _principal;
+        private IPrincipal _principal;
 
-    public IPrincipal Principal
-    {
-        get { return _principal; }
-        set { _principal = value; }
+        public IPrincipal Principal
+        {
+            get { return _principal; }
+            set { _principal = value; }
+        }
     }
 }

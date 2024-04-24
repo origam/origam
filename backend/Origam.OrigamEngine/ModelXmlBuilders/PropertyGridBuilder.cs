@@ -26,72 +26,73 @@ using System.ComponentModel;
 
 using Origam.Schema;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for PropertyGridBuilder.
-/// </summary>
-public class PropertyGridBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static XmlDocument Build(AbstractSchemaItem item)
+	/// <summary>
+	/// Summary description for PropertyGridBuilder.
+	/// </summary>
+	public class PropertyGridBuilder
 	{
-		XmlDocument doc = FormXmlBuilder.GetWindowBaseXml(
-			item.Name, item.Id, 0, false, false, false);
-		XmlElement windowElement = FormXmlBuilder.WindowElement(doc);
-		XmlElement uiRootElement = FormXmlBuilder.UIRootElement(windowElement);
-		XmlElement bindingsElement = FormXmlBuilder.ComponentBindingsElement(windowElement);
-		XmlElement dataSourcesElement = FormXmlBuilder.DataSourcesElement(windowElement);
-
-		CollapsibleContainerBuilder.Build(uiRootElement);
-		XmlElement children = doc.CreateElement("UIChildren");
-		uiRootElement.AppendChild(children);
-
-		PropertyDescriptorCollection properties = GetProperties(item);
-		Hashtable categories = new Hashtable();
-		Hashtable categoryWidths = new Hashtable();
-
-		foreach(PropertyDescriptor prop in properties)
+		public static XmlDocument Build(AbstractSchemaItem item)
 		{
-			XmlElement categoryChildren;
+			XmlDocument doc = FormXmlBuilder.GetWindowBaseXml(
+				item.Name, item.Id, 0, false, false, false);
+			XmlElement windowElement = FormXmlBuilder.WindowElement(doc);
+			XmlElement uiRootElement = FormXmlBuilder.UIRootElement(windowElement);
+			XmlElement bindingsElement = FormXmlBuilder.ComponentBindingsElement(windowElement);
+			XmlElement dataSourcesElement = FormXmlBuilder.DataSourcesElement(windowElement);
 
-			if(categories.Contains(prop.Category))
+			CollapsibleContainerBuilder.Build(uiRootElement);
+			XmlElement children = doc.CreateElement("UIChildren");
+			uiRootElement.AppendChild(children);
+
+			PropertyDescriptorCollection properties = GetProperties(item);
+			Hashtable categories = new Hashtable();
+			Hashtable categoryWidths = new Hashtable();
+
+			foreach(PropertyDescriptor prop in properties)
 			{
-				categoryChildren = categories[prop.Category] as XmlElement;
-			}
-			else
-			{
-				XmlElement categoryElement = doc.CreateElement("UIElement");
-				children.AppendChild(categoryElement);
-				categoryChildren = doc.CreateElement("UIChildren");
-				categoryElement.AppendChild(categoryChildren);
+				XmlElement categoryChildren;
 
-				UIElementRenderData renderData = new UIElementRenderData();
-				renderData.Text = prop.Category;
-				renderData.IndentLevel = 0;
-				renderData.IsHeightFixed = false;
-				renderData.IsOpen = true;
-				CollapsiblePanelBuilder.Build(categoryElement, renderData);
-				categories.Add(prop.Category, categoryChildren);
-				categoryWidths.Add(prop.Category, 0);
+				if(categories.Contains(prop.Category))
+				{
+					categoryChildren = categories[prop.Category] as XmlElement;
+				}
+				else
+				{
+					XmlElement categoryElement = doc.CreateElement("UIElement");
+					children.AppendChild(categoryElement);
+					categoryChildren = doc.CreateElement("UIChildren");
+					categoryElement.AppendChild(categoryChildren);
 
-				XmlElement panelElement = doc.CreateElement("UIElement");
-				categoryChildren.AppendChild(panelElement);
+					UIElementRenderData renderData = new UIElementRenderData();
+					renderData.Text = prop.Category;
+					renderData.IndentLevel = 0;
+					renderData.IsHeightFixed = false;
+					renderData.IsOpen = true;
+					CollapsiblePanelBuilder.Build(categoryElement, renderData);
+					categories.Add(prop.Category, categoryChildren);
+					categoryWidths.Add(prop.Category, 0);
+
+					XmlElement panelElement = doc.CreateElement("UIElement");
+					categoryChildren.AppendChild(panelElement);
 /*
 					AsPanelBuilder.Build(panelElement, prop.Category, item.Id.ToString() + prop.Category, false,
 						false, true, false, false, false, "", "", "", "", "", "", "", "", item.Id.ToString() + prop.Category,
 						table, dataSources, dataMember, 0, primaryKey, false, false, false, "", "", "", "", Guid.Empty,
 						false, 0, item.Id, false, Guid.Empty, Guid.Empty, Guid.Empty, "", false, false, "", "", "", "", "", "", 0, "", "", "");
 */
+				}
 			}
+
+			return doc;
 		}
 
-		return doc;
-	}
+		private static PropertyDescriptorCollection GetProperties(object component)
+		{
+			Attribute[] attributes = new Attribute[] { BrowsableAttribute.Yes };
 
-	private static PropertyDescriptorCollection GetProperties(object component)
-	{
-		Attribute[] attributes = new Attribute[] { BrowsableAttribute.Yes };
-
-		return TypeDescriptor.GetProperties(component, attributes);
+			return TypeDescriptor.GetProperties(component, attributes);
+		}
 	}
 }

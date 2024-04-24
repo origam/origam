@@ -52,20 +52,20 @@ using Origam.DA.Service;
 using System.Collections;
 using Origam.Server;
 
-namespace Origam.Server;
-
-class ParameterSessionStore : SessionStore
+namespace Origam.Server
 {
-    private Guid _dataStructureId;
-    private string _titleName;
-    private IDataLookup _lookup;
-    private DataConstant _constant;
-
-    public ParameterSessionStore(IBasicUIService service, UIRequest request,
-        DataConstant constant, IDataLookup lookup, string titleName, string name,
-        bool refreshPortalAfterSave, Analytics analytics)
-        : base(service, request, name, analytics)
+    class ParameterSessionStore : SessionStore
     {
+        private Guid _dataStructureId;
+        private string _titleName;
+        private IDataLookup _lookup;
+        private DataConstant _constant;
+
+        public ParameterSessionStore(IBasicUIService service, UIRequest request,
+            DataConstant constant, IDataLookup lookup, string titleName, string name,
+            bool refreshPortalAfterSave, Analytics analytics)
+            : base(service, request, name, analytics)
+        {
             this.Constant = constant;
             this.Lookup = lookup;
             this.TitleName = titleName;
@@ -73,36 +73,36 @@ class ParameterSessionStore : SessionStore
         }
 
 
-    #region Properties
-    public Guid DataStructureId
-    {
-        get { return _dataStructureId; }
-        set { _dataStructureId = value; }
-    }
+        #region Properties
+        public Guid DataStructureId
+        {
+            get { return _dataStructureId; }
+            set { _dataStructureId = value; }
+        }
 
-    public IDataLookup Lookup
-    {
-        get { return _lookup; }
-        set { _lookup = value; }
-    }
+        public IDataLookup Lookup
+        {
+            get { return _lookup; }
+            set { _lookup = value; }
+        }
 
-    public string TitleName
-    {
-        get { return _titleName; }
-        set { _titleName = value; }
-    }
+        public string TitleName
+        {
+            get { return _titleName; }
+            set { _titleName = value; }
+        }
 
-    public DataConstant Constant
-    {
-        get { return _constant; }
-        set { _constant = value; }
-    }
-    #endregion
+        public DataConstant Constant
+        {
+            get { return _constant; }
+            set { _constant = value; }
+        }
+        #endregion
 
-    #region Overriden Session Methods
+        #region Overriden Session Methods
 
-    public override void Init()
-    {
+        public override void Init()
+        {
             // resolve the formId for the parameter
             if (Lookup == null)
             {
@@ -158,12 +158,13 @@ class ParameterSessionStore : SessionStore
 
             this.SetDataSource(data);
 
-            // add SD as dirty-enabled otherwise - since it is virtual - the form's dirty flag      // would be reset when editing
+            // add SD as dirty-enabled otherwise - since it is virtual - the form's dirty flag 
+            // would be reset when editing
             this.DirtyEnabledEntities.Add("SD");
         }
 
-    public override object ExecuteActionInternal(string actionId)
-    {
+        public override object ExecuteActionInternal(string actionId)
+        {
             switch (actionId)
             {
                 case ACTION_SAVE:
@@ -177,8 +178,8 @@ class ParameterSessionStore : SessionStore
             }
         }
 
-    public override XmlDocument GetFormXml()
-    {
+        public override XmlDocument GetFormXml()
+        {
             XmlDocument formXml;
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             FormControlSet fcs = ps.SchemaProvider.RetrieveInstance(typeof(FormControlSet), new ModelElementKey(this.FormId), false) as FormControlSet;
@@ -216,11 +217,11 @@ class ParameterSessionStore : SessionStore
 
             return formXml;
         }
-    #endregion
+        #endregion
 
-    #region Private Methods
-    private static void LoadParameterData(DataRow r, Guid parameterId)
-    {
+        #region Private Methods
+        private static void LoadParameterData(DataRow r, Guid parameterId)
+        {
             IParameterService paramSvc = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             object value = paramSvc.GetParameterValue(parameterId);
 
@@ -251,8 +252,8 @@ class ParameterSessionStore : SessionStore
             }
         }
 
-    private object SaveParameterData()
-    {
+        private object SaveParameterData()
+        {
             ArrayList listOfChanges = new ArrayList();
 
             DataRow r = this.Data.Tables["SD"].Rows[0];
@@ -282,11 +283,12 @@ class ParameterSessionStore : SessionStore
             return listOfChanges;
         }
 
-    private object Refresh()
-    {
+        private object Refresh()
+        {
             LoadParameterData(this.Data.Tables["SD"].Rows[0], this.Constant.Id);
 
             return this.Data;
         }
-    #endregion
+        #endregion
+    }
 }

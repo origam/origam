@@ -21,24 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for StringFilterPart.
-/// </summary>
-public class NumberFilterPart : TextBoxFilterPart
+namespace Origam.Gui.Win
 {
-	#region Constructor
-	public NumberFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+	/// <summary>
+	/// Summary description for StringFilterPart.
+	/// </summary>
+	public class NumberFilterPart : TextBoxFilterPart
 	{
-		}
-	#endregion
-
-	#region Overriden Members
-	public override FilterOperator[] AllowedOperators
-	{
-		get
+		#region Constructor
+		public NumberFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 		{
+		}
+		#endregion
+
+		#region Overriden Members
+		public override FilterOperator[] AllowedOperators
+		{
+			get
+			{
 				return new FilterOperator[] {
 												FilterOperator.Equals,
 												FilterOperator.NotEquals,
@@ -51,14 +51,15 @@ public class NumberFilterPart : TextBoxFilterPart
 												FilterOperator.IsNull, 
 												FilterOperator.NotIsNull};
 			}
-	}
+		}
 
-	public override FilterOperator DefaultOperator
-	{
-		get
+		public override FilterOperator DefaultOperator
 		{
+			get
+			{
 				return FilterOperator.Equals;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

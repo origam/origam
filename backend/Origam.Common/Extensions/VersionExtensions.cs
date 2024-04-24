@@ -21,13 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Extensions;
-
-public static class VersionExtensions
+namespace Origam.Extensions
 {
-    public static bool DiffersOnlyInBuildFrom(this Version thisVersion, Version otherVersion)
+    public static class VersionExtensions
     {
+        public static bool DiffersOnlyInBuildFrom(this Version thisVersion, Version otherVersion)
+        {
             return thisVersion.Minor == otherVersion.Minor &&
                    thisVersion.Major == otherVersion.Major;
         }
+    }
 }

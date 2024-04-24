@@ -31,56 +31,56 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.DA.Service;
-
-/// <summary>
-/// Summary description for MsSqlDataService.
-/// </summary>
-public class MsSqlDataService : AbstractSqlDataService
+namespace Origam.DA.Service
 {
-    private const DatabaseType _PlatformName = DatabaseType.MsSql;
-    private string _IISUser;
-    private static readonly log4net.ILog log = 
-        log4net.LogManager.GetLogger(
+    /// <summary>
+	/// Summary description for MsSqlDataService.
+	/// </summary>
+	public class MsSqlDataService : AbstractSqlDataService
+	{
+        private const DatabaseType _PlatformName = DatabaseType.MsSql;
+        private string _IISUser;
+        private static readonly log4net.ILog log = 
+            log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         
-    #region Constructors
-    public MsSqlDataService()
-    {
+        #region Constructors
+		public MsSqlDataService()
+        {
 			Init();
 		}
 
-    public MsSqlDataService(string connection, int bulkInsertThreshold,
-        int updateBatchSize) : base(connection, bulkInsertThreshold,
-        updateBatchSize)
-    {
+		public MsSqlDataService(string connection, int bulkInsertThreshold,
+            int updateBatchSize) : base(connection, bulkInsertThreshold,
+            updateBatchSize)
+		{
 			Init();
 		}
-    #endregion
+		#endregion
 
-    private void Init()
-    {
+		private void Init()
+		{
 			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
 		}
 
-    public override DatabaseType PlatformName
-    {
-        get
+        public override DatabaseType PlatformName
         {
+            get
+            {
                 return _PlatformName;
             }
-    }
-    internal override IDbConnection GetConnection(string connectionString)
-    {
+        }
+        internal override IDbConnection GetConnection(string connectionString)
+		{
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
             sb.ApplicationName = "ORIGAM [" + SecurityManager.CurrentPrincipal.Identity.Name + "]";
             SqlConnection result = new SqlConnection(sb.ToString());
             return result;
 		}
 
-    public override string BuildConnectionString(string serverName, int port,string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
-    {
+        public override string BuildConnectionString(string serverName, int port,string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.IntegratedSecurity = integratedAuthentication;
             builder.UserID = userName;
@@ -95,30 +95,30 @@ public class MsSqlDataService : AbstractSqlDataService
             return builder.ConnectionString;
         }
         
-    public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
-    {
+        public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
+        {
             ExecuteUpdate("ALTER  PROCEDURE [OrigamDatabaseSchemaVersion] AS SELECT '" + version + "'", transactionId);
         }
-    public override void DeleteDatabase(string name)
-    {
+        public override void DeleteDatabase(string name)
+        {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("DROP DATABASE [{0}]", name), null);
         }
-    public override void CreateDatabase(string name)
-    {
+        public override void CreateDatabase(string name)
+        {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("CREATE DATABASE [{0}]", name), null);
         }
-    private static void CheckDatabaseName(string name)
-    {
+        private static void CheckDatabaseName(string name)
+        {
             if (name.Contains("]"))
             {
                 throw new Exception(string.Format("Invalid database name: {0}", name));
             }
         }
 
-    internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
-    {
+        internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
+		{
 			SqlException sqle = ex as SqlException;
             if (log.IsDebugEnabled)
             {
@@ -156,7 +156,8 @@ public class MsSqlDataService : AbstractSqlDataService
 				else if(sqle.Number == 2601)
 				{
                     // check if there is a field name in parentheses, in that case
-                    // we will try to look for a unique index matching with the error      // message so we can give a good error message to the user
+                    // we will try to look for a unique index matching with the error 
+                    // message so we can give a good error message to the user
                     Match match = Regex.Match(sqle.Message, @"\((.*?)\)");
                     if (match != null)
                     {
@@ -178,12 +179,12 @@ public class MsSqlDataService : AbstractSqlDataService
             throw new UserOrigamException(message, ex.Message, ex);
 		}
 
-    internal override void BulkInsert(
-        DataStructureEntity entity, 
-        IDbConnection connection, 
-        IDbTransaction transaction,
-        DataTable table)
-    {
+        internal override void BulkInsert(
+            DataStructureEntity entity, 
+            IDbConnection connection, 
+            IDbTransaction transaction,
+            DataTable table)
+        {
             // batch insert
             using(SqlBulkCopy bulk = new SqlBulkCopy(
                 connection as SqlConnection,
@@ -207,8 +208,8 @@ public class MsSqlDataService : AbstractSqlDataService
             }
         }
 
-    private static string ResolveUniqueFieldNames(DataRow row, SqlException sqle)
-    {
+        private static string ResolveUniqueFieldNames(DataRow row, SqlException sqle)
+        {
             IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
             Guid entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
@@ -243,13 +244,13 @@ public class MsSqlDataService : AbstractSqlDataService
             return fieldNames.ToString();
         }
 
-    public override string[] DatabaseSpecificDatatypes()
-    {
+        public override string[] DatabaseSpecificDatatypes()
+        {
             return Enum.GetNames(typeof(SqlDbType));
         }
 
-    public override void CreateDatabaseUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
-    {
+        public override void CreateDatabaseUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
+        {
             if (DatabaseIntegratedAuthentication)
             {
                 string command1 = string.Format("CREATE LOGIN {0} FROM WINDOWS WITH DEFAULT_DATABASE=[master]", _loginName);
@@ -273,8 +274,8 @@ public class MsSqlDataService : AbstractSqlDataService
             }
         }
 
-    public override void DeleteUser(string _loginName, bool DatabaseIntegratedAuthentication)
-    {
+        public override void DeleteUser(string _loginName, bool DatabaseIntegratedAuthentication)
+        {
             if (DatabaseIntegratedAuthentication)
             {
                 string command1 = string.Format("DROP LOGIN {0}", _loginName);
@@ -282,18 +283,18 @@ public class MsSqlDataService : AbstractSqlDataService
             }
         }
 
-    internal override string GetAllTablesSql()
-    {
+        internal override string GetAllTablesSql()
+        {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
         }
 
-    internal override string GetAllColumnsSQL()
-    {
+        internal override string GetAllColumnsSQL()
+        {
             return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME";
         }
 
-    internal override string GetSqlIndexFields()
-    {
+        internal override string GetSqlIndexFields()
+        {
             return "select	so.name TableName, si.name IndexName, "
                 + "sc.name ColumnName, sik.keyno as OrdinalPosition, "
                 + "indexkey_property(sik.id, sik.indid, sik.keyno, 'IsDescending') as IsDescending "
@@ -307,8 +308,8 @@ public class MsSqlDataService : AbstractSqlDataService
                 + "and si.impid = 0";
         }
 
-    internal override string GetSqlIndexes()
-    {
+        internal override string GetSqlIndexes()
+        {
             return "select	so.name TableName, si.name IndexName "
                 + "from sysindexes si "
                 + "inner join sysobjects so on si.id = so.id "
@@ -319,8 +320,8 @@ public class MsSqlDataService : AbstractSqlDataService
                 + "and si.name is not null";
         }
 
-    internal override string GetSqlFk()
-    {
+        internal override string GetSqlFk()
+        {
             return "select "
                 + "N'PK_Table' = PKT.name, "
                 + "N'FK_Table' = FKT.name, "
@@ -367,13 +368,13 @@ public class MsSqlDataService : AbstractSqlDataService
                 + "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
         }
 
-    internal override string GetPid()
-    {
+        internal override string GetPid()
+        {
             return "SELECT @@SPID";
         }
 
-    public override string CreateSystemRole(string roleName)
-    {
+        public override string CreateSystemRole(string roleName)
+        {
             string roleId = Guid.NewGuid().ToString();
             return string.Format(
 @"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
@@ -384,8 +385,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
-    public override string CreateInsert(int fieldcount)
-    {
+        public override string CreateInsert(int fieldcount)
+        {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("INSERT INTO [{0}] (");
             for (int i = 1; i < fieldcount + 1; i++)
@@ -402,10 +403,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
             stringBuilder.Append(");\r\n");
             return stringBuilder.ToString();
         }
-    public override string Info
-    {
-        get
-        {
+        public override string Info
+		{
+			get
+			{
 				string result = "";
 
 				using (SqlConnection cn = new SqlConnection(this.ConnectionString))
@@ -473,10 +474,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
 
 				return result;
 			}
-    }
+		}
 
-    internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
-    {
+        internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
+        {
             string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
                 .MappedObjectName;
             string indexName = dataEntityIndex.Name;
@@ -494,8 +495,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
             return index.Tables[0].Rows.Count == 1;
         }
 
-    internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
-    {
+        internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
+        {
             Hashtable dbIndexList = new Hashtable();
             foreach (DataRow row in indexes.Tables[0].Rows)
             {
@@ -508,8 +509,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
             return dbIndexList;
         }
 
-    internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
-    {
+        internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+        {
             Hashtable schemaIndexListGenerate = new Hashtable();
             foreach (TableMappingItem t in schemaTables)
             {
@@ -533,9 +534,9 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
             return schemaIndexListGenerate;
         }
 
-    public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
-    internal override object FillParameterArrayData(ICollection ar)
-    {
+        public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
+        internal override object FillParameterArrayData(ICollection ar)
+        {
             DataTable dt = new OrigamDataTable("ListTable");
             dt.Columns.Add("ListValue", typeof(string));
             dt.Columns[0].MaxLength = -1;
@@ -550,8 +551,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
             return dt;
         }
 
-    public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO [dbo].[BusinessPartner] ([FirstName],[UserName],[Name],[Id],[UserEmail]) " +
                 "VALUES ('{0}','{1}','{2}','{3}','{4}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name== "FirstName").Select(param =>param.Value).FirstOrDefault(),
@@ -561,8 +562,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Email").Select(param => param.Value).FirstOrDefault());
         }
 
-    public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO [dbo].[OrigamUser] " +
                 "([UserName],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
                 "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')", 
@@ -573,8 +574,8 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                Guid.NewGuid().ToString(),0,0);
         }
 
-    public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
-    {
+        public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
+        {
             return string.Format("INSERT INTO [dbo].[BusinessPartnerOrigamRole] ([Id],[refBusinessPartnerId],[refOrigamRoleId]) " +
                 "VALUES ('{0}','{1}','{2}')",
                 Guid.NewGuid().ToString(),
@@ -582,13 +583,14 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
         }
 
-    public override string AlreadyCreatedUser(QueryParameterCollection parameters)
-    {
+        public override string AlreadyCreatedUser(QueryParameterCollection parameters)
+        {
             return string.Format("UPDATE [dbo].[OrigamParameters] SET [BooleanValue] = 1 WHERE [Id] = 'e42f864f-5018-4967-abdc-5910439adc9a'");
         }
 
-    protected override void ResetTransactionIsolationLevel(IDbCommand command)
-    {
+        protected override void ResetTransactionIsolationLevel(IDbCommand command)
+        {
             command.Connection = null;
         }
+    }
 }

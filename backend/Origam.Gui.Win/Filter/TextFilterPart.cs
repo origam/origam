@@ -21,51 +21,51 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DropDownFilterPart.
-/// </summary>
-public abstract class TextBoxFilterPart : FilterPart
+namespace Origam.Gui.Win
 {
-	#region Constructor
-	public TextBoxFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
+	/// <summary>
+	/// Summary description for DropDownFilterPart.
+	/// </summary>
+	public abstract class TextBoxFilterPart : FilterPart
 	{
-        }
-	#endregion
-
-	#region Properties
-	private AsTextBox TextBox
-	{
-		get
+		#region Constructor
+		public TextBoxFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 		{
+        }
+		#endregion
+
+		#region Properties
+		private AsTextBox TextBox
+		{
+			get
+			{
 				return (AsTextBox)this.FilteredControl;
 			}
-	}
+		}
 
-	AsTextBox _filterTextBox;
-	private AsTextBox FilterTextBox
-	{
-		get
+        AsTextBox _filterTextBox;
+		private AsTextBox FilterTextBox
 		{
+			get
+			{
 				return _filterTextBox;
 			}
-	}
+		}
 
-	AsTextBox _filterTextBox2;
-	private AsTextBox FilterTextBox2
-	{
-		get
+        AsTextBox _filterTextBox2;
+		private AsTextBox FilterTextBox2
 		{
+			get
+			{
 				return _filterTextBox2;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden Members
+		#region Overriden Members
 
-	public override void CreateFilterControls()
-	{
+		public override void CreateFilterControls()
+		{
             if (_filterTextBox == null)
             {
 				_filterTextBox = new AsTextBox();
@@ -86,22 +86,22 @@ public abstract class TextBoxFilterPart : FilterPart
 			OnControlsChanged();
 		}
 
-	private static void SetControlProperties(AsTextBox template, AsTextBox target)
-	{
+		private static void SetControlProperties(AsTextBox template, AsTextBox target)
+		{
 			target.CaptionPosition = CaptionPosition.None;
 			target.DataType = template.DataType;
             target.CustomFormat = template.CustomFormat;
 			target.TextAlign = template.TextAlign;
 		}
 
-	public override void LoadValues()
-	{
+		public override void LoadValues()
+		{
 			this.FilterTextBox.Value = this.Value1;
 			this.FilterTextBox2.Value = this.Value2;
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(this.FilterTextBox != null)
@@ -120,31 +120,31 @@ public abstract class TextBoxFilterPart : FilterPart
 		}
 
 
-	#endregion
+		#endregion
 
-	#region EventHandlers
-	private void FilterTextBox_TextChanged(object sender, EventArgs e)
-	{
+		#region EventHandlers
+		private void FilterTextBox_TextChanged(object sender, EventArgs e)
+		{
             //this.FilterTextBox.UpdateValueWithCurrentText();
 			this.Value1 = this.FilterTextBox.Value;
 		}
 
-	private void FilterTextBox2_TextChanged(object sender, EventArgs e)
-	{
+		private void FilterTextBox2_TextChanged(object sender, EventArgs e)
+		{
             //this.FilterTextBox2.UpdateValueWithCurrentText();
             this.Value2 = this.FilterTextBox2.Value;
 		}
-	#endregion
+		#endregion
 
-	#region Private Methods
-	private void SubscribeEvents()
-	{
+		#region Private Methods
+		private void SubscribeEvents()
+		{
 			this.FilterTextBox.TextChanged += new EventHandler(FilterTextBox_TextChanged);
             this.FilterTextBox2.TextChanged += new EventHandler(FilterTextBox2_TextChanged);
 		}
 
-	private void UnsubscribeEvents()
-	{
+		private void UnsubscribeEvents()
+		{
             if (FilterTextBox != null)
             {
                 this.FilterTextBox.TextChanged -= new EventHandler(FilterTextBox_TextChanged);
@@ -154,5 +154,6 @@ public abstract class TextBoxFilterPart : FilterPart
                 this.FilterTextBox2.TextChanged -= new EventHandler(FilterTextBox2_TextChanged);
             }
 		}
-	#endregion
+		#endregion
+	}
 }

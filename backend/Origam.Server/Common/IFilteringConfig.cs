@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server;
-
-public interface IFilteringConfig
+namespace Origam.Server
 {
-    bool CaseSensitive { get; set; }
-    bool AccentSensitive { get; set; }
+    public interface IFilteringConfig
+    {
+        bool CaseSensitive { get; set; }
+        bool AccentSensitive { get; set; }
+    }
 }

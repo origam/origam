@@ -42,66 +42,66 @@ using MoreLinq;
 using Origam.Extensions;
 using Origam.Gui.Designer.Extensions;
 
-namespace Origam.Gui.Designer;
-
-/// <summary>
-/// Summary description for Form1.
-/// </summary>
-/// 
-public class ControlSetEditor : AbstractEditor
+namespace Origam.Gui.Designer
 {
-	private static readonly log4net.ILog log 
-		= log4net.LogManager.GetLogger(
-			MethodBase.GetCurrentMethod().DeclaringType);
-		
-	private System.Windows.Forms.PropertyGrid _propertyGrid; 
-	private const string  origamDataSetName="OrigamDataSet";
-	private eDataSource _dataSourceMode;
-	private DataSet _origamData = null;
-	private object[] _selectedComponents;
-	private bool _isEditingMainVersion = false;
-
-	//private Origam.Gui.FormGenerator _generator = new FormGenerator();
-	private ControlItem _panelControlItemRef=null;
-	private bool ReflectChanges=false;
-	private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-	IDocumentationService _documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-	private UserControlSchemaItemProvider _controls;
-	private DataStructureSchemaItemProvider _dsProvider;
-	private EntityModelSchemaItemProvider _deProvider;
-
-	//Object of inerest (Root designer component)
-	private Control _form;
-	private Control _designView;
-	private DesignerHostImpl _host ;
-	private IServiceContainer _serviceContainer;
-	private System.Windows.Forms.Panel designSurfacePanel;
-	private System.Windows.Forms.Splitter splitter2;
-	private System.Windows.Forms.Panel panelProp;
-	private System.Windows.Forms.TextBox txtName;
-	private System.Windows.Forms.TextBox txtFeatures;
-	private System.Windows.Forms.TextBox txtRoles;
-	private System.Windows.Forms.NumericUpDown txtLevel;
-	private System.Windows.Forms.Label lblControlSetName;
-	private System.Windows.Forms.Label lblFeatures;
-	private System.Windows.Forms.Label lblRoles;
-	private System.Windows.Forms.Label lblLevel;
-	private System.Windows.Forms.ComboBox cmbDataSources;
-	private System.Windows.Forms.Label lblDataSource;
-	private System.Windows.Forms.Label lblToolbox;
-	private System.Windows.Forms.Label lblId;
-	private System.Windows.Forms.TextBox txtId;
-	private System.Windows.Forms.Label lblPackage;
-	private System.Windows.Forms.TextBox txtPackage;
-	private Origam.Gui.Designer.ToolboxPane _toolbox;
 	/// <summary>
-	/// Required designer variable.
+	/// Summary description for Form1.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-
-	public ControlSetEditor()
+	/// 
+	public class ControlSetEditor : AbstractEditor
 	{
+		private static readonly log4net.ILog log 
+			= log4net.LogManager.GetLogger(
+				MethodBase.GetCurrentMethod().DeclaringType);
+		
+		private System.Windows.Forms.PropertyGrid _propertyGrid; 
+		private const string  origamDataSetName="OrigamDataSet";
+		private eDataSource _dataSourceMode;
+		private DataSet _origamData = null;
+		private object[] _selectedComponents;
+		private bool _isEditingMainVersion = false;
+
+		//private Origam.Gui.FormGenerator _generator = new FormGenerator();
+		private ControlItem _panelControlItemRef=null;
+		private bool ReflectChanges=false;
+		private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+		IDocumentationService _documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
+		private UserControlSchemaItemProvider _controls;
+		private DataStructureSchemaItemProvider _dsProvider;
+		private EntityModelSchemaItemProvider _deProvider;
+
+		//Object of inerest (Root designer component)
+		private Control _form;
+		private Control _designView;
+		private DesignerHostImpl _host ;
+		private IServiceContainer _serviceContainer;
+		private System.Windows.Forms.Panel designSurfacePanel;
+		private System.Windows.Forms.Splitter splitter2;
+		private System.Windows.Forms.Panel panelProp;
+		private System.Windows.Forms.TextBox txtName;
+		private System.Windows.Forms.TextBox txtFeatures;
+		private System.Windows.Forms.TextBox txtRoles;
+		private System.Windows.Forms.NumericUpDown txtLevel;
+		private System.Windows.Forms.Label lblControlSetName;
+		private System.Windows.Forms.Label lblFeatures;
+		private System.Windows.Forms.Label lblRoles;
+		private System.Windows.Forms.Label lblLevel;
+		private System.Windows.Forms.ComboBox cmbDataSources;
+		private System.Windows.Forms.Label lblDataSource;
+		private System.Windows.Forms.Label lblToolbox;
+		private System.Windows.Forms.Label lblId;
+		private System.Windows.Forms.TextBox txtId;
+		private System.Windows.Forms.Label lblPackage;
+		private System.Windows.Forms.TextBox txtPackage;
+		private Origam.Gui.Designer.ToolboxPane _toolbox;
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+
+		public ControlSetEditor()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -136,12 +136,12 @@ public class ControlSetEditor : AbstractEditor
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
 		}
 
-	bool _disposing = false;
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		bool _disposing = false;
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			_disposing = true;
 			ReflectChanges = false;
 
@@ -193,13 +193,13 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.designSurfacePanel = new System.Windows.Forms.Panel();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panelProp = new System.Windows.Forms.Panel();
@@ -222,22 +222,28 @@ public class ControlSetEditor : AbstractEditor
             this.panelProp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtLevel)).BeginInit();
             this.SuspendLayout();
-            // 	 // designSurfacePanel
-            // 	 this.designSurfacePanel.AutoScroll = true;
+            // 
+            // designSurfacePanel
+            // 
+            this.designSurfacePanel.AutoScroll = true;
             this.designSurfacePanel.BackColor = System.Drawing.Color.White;
             this.designSurfacePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.designSurfacePanel.Location = new System.Drawing.Point(200, 40);
             this.designSurfacePanel.Name = "designSurfacePanel";
             this.designSurfacePanel.Size = new System.Drawing.Size(558, 527);
             this.designSurfacePanel.TabIndex = 1;
-            // 	 // splitter2
-            // 	 this.splitter2.Location = new System.Drawing.Point(200, 40);
+            // 
+            // splitter2
+            // 
+            this.splitter2.Location = new System.Drawing.Point(200, 40);
             this.splitter2.Name = "splitter2";
             this.splitter2.Size = new System.Drawing.Size(4, 527);
             this.splitter2.TabIndex = 5;
             this.splitter2.TabStop = false;
-            // 	 // panelProp
-            // 	 this.panelProp.Controls.Add(this._toolbox);
+            // 
+            // panelProp
+            // 
+            this.panelProp.Controls.Add(this._toolbox);
             this.panelProp.Controls.Add(this.lblToolbox);
             this.panelProp.Controls.Add(this.txtPackage);
             this.panelProp.Controls.Add(this.lblPackage);
@@ -259,46 +265,58 @@ public class ControlSetEditor : AbstractEditor
             this.panelProp.Padding = new System.Windows.Forms.Padding(4, 0, 0, 4);
             this.panelProp.Size = new System.Drawing.Size(200, 527);
             this.panelProp.TabIndex = 4;
-            // 	 // lblToolbox
-            // 	 this.lblToolbox.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblToolbox
+            // 
+            this.lblToolbox.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblToolbox.Location = new System.Drawing.Point(4, 271);
             this.lblToolbox.Name = "lblToolbox";
             this.lblToolbox.Size = new System.Drawing.Size(196, 19);
             this.lblToolbox.TabIndex = 9;
             this.lblToolbox.Text = "Toolbox:";
             this.lblToolbox.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtPackage
-            // 	 this.txtPackage.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtPackage
+            // 
+            this.txtPackage.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtPackage.Location = new System.Drawing.Point(4, 251);
             this.txtPackage.Name = "txtPackage";
             this.txtPackage.ReadOnly = true;
             this.txtPackage.Size = new System.Drawing.Size(196, 20);
             this.txtPackage.TabIndex = 13;
-            // 	 // lblPackage
-            // 	 this.lblPackage.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblPackage
+            // 
+            this.lblPackage.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblPackage.Location = new System.Drawing.Point(4, 232);
             this.lblPackage.Name = "lblPackage";
             this.lblPackage.Size = new System.Drawing.Size(196, 19);
             this.lblPackage.TabIndex = 12;
             this.lblPackage.Text = "Package";
             this.lblPackage.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtId
-            // 	 this.txtId.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtId
+            // 
+            this.txtId.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtId.Location = new System.Drawing.Point(4, 212);
             this.txtId.Name = "txtId";
             this.txtId.ReadOnly = true;
             this.txtId.Size = new System.Drawing.Size(196, 20);
             this.txtId.TabIndex = 11;
-            // 	 // lblId
-            // 	 this.lblId.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblId
+            // 
+            this.lblId.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblId.Location = new System.Drawing.Point(4, 193);
             this.lblId.Name = "lblId";
             this.lblId.Size = new System.Drawing.Size(196, 19);
             this.lblId.TabIndex = 10;
             this.lblId.Text = "Id:";
             this.lblId.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtLevel
-            // 	 this.txtLevel.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtLevel
+            // 
+            this.txtLevel.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtLevel.Location = new System.Drawing.Point(4, 173);
             this.txtLevel.Maximum = new decimal(new int[] {
             2147483647,
@@ -309,61 +327,77 @@ public class ControlSetEditor : AbstractEditor
             this.txtLevel.Size = new System.Drawing.Size(196, 20);
             this.txtLevel.TabIndex = 5;
             this.txtLevel.TextChanged += new System.EventHandler(this.txtLevel_TextChanged);
-            // 	 // lblLevel
-            // 	 this.lblLevel.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblLevel
+            // 
+            this.lblLevel.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblLevel.Location = new System.Drawing.Point(4, 154);
             this.lblLevel.Name = "lblLevel";
             this.lblLevel.Size = new System.Drawing.Size(196, 19);
             this.lblLevel.TabIndex = 6;
             this.lblLevel.Text = "Level:";
             this.lblLevel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtFeatures
-            // 	 this.txtFeatures.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtFeatures
+            // 
+            this.txtFeatures.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtFeatures.Location = new System.Drawing.Point(4, 134);
             this.txtFeatures.Name = "txtFeatures";
             this.txtFeatures.Size = new System.Drawing.Size(196, 20);
             this.txtFeatures.TabIndex = 5;
             this.txtFeatures.TextChanged += new System.EventHandler(this.txtFeatures_TextChanged);
-            // 	 // lblFeatures
-            // 	 this.lblFeatures.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblFeatures
+            // 
+            this.lblFeatures.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblFeatures.Location = new System.Drawing.Point(4, 115);
             this.lblFeatures.Name = "lblFeatures";
             this.lblFeatures.Size = new System.Drawing.Size(196, 19);
             this.lblFeatures.TabIndex = 6;
             this.lblFeatures.Text = "Features:";
             this.lblFeatures.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtRoles
-            // 	 this.txtRoles.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtRoles
+            // 
+            this.txtRoles.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtRoles.Location = new System.Drawing.Point(4, 95);
             this.txtRoles.Name = "txtRoles";
             this.txtRoles.Size = new System.Drawing.Size(196, 20);
             this.txtRoles.TabIndex = 5;
             this.txtRoles.TextChanged += new System.EventHandler(this.txtRoles_TextChanged);
-            // 	 // lblRoles
-            // 	 this.lblRoles.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblRoles
+            // 
+            this.lblRoles.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRoles.Location = new System.Drawing.Point(4, 76);
             this.lblRoles.Name = "lblRoles";
             this.lblRoles.Size = new System.Drawing.Size(196, 19);
             this.lblRoles.TabIndex = 6;
             this.lblRoles.Text = "Roles:";
             this.lblRoles.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // txtName
-            // 	 this.txtName.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // txtName
+            // 
+            this.txtName.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtName.Location = new System.Drawing.Point(4, 56);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(196, 20);
             this.txtName.TabIndex = 5;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 	 // lblControlSetName
-            // 	 this.lblControlSetName.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblControlSetName
+            // 
+            this.lblControlSetName.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblControlSetName.Location = new System.Drawing.Point(4, 37);
             this.lblControlSetName.Name = "lblControlSetName";
             this.lblControlSetName.Size = new System.Drawing.Size(196, 19);
             this.lblControlSetName.TabIndex = 6;
             this.lblControlSetName.Text = "Name:";
             this.lblControlSetName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // cmbDataSources
-            // 	 this.cmbDataSources.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            // 
+            // cmbDataSources
+            // 
+            this.cmbDataSources.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cmbDataSources.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbDataSources.Dock = System.Windows.Forms.DockStyle.Top;
             this.cmbDataSources.Location = new System.Drawing.Point(4, 16);
@@ -371,23 +405,29 @@ public class ControlSetEditor : AbstractEditor
             this.cmbDataSources.Size = new System.Drawing.Size(196, 21);
             this.cmbDataSources.TabIndex = 3;
             this.cmbDataSources.SelectedIndexChanged += new System.EventHandler(this.cmbDataSources_SelectedIndexChanged);
-            // 	 // lblDataSource
-            // 	 this.lblDataSource.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // lblDataSource
+            // 
+            this.lblDataSource.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblDataSource.Location = new System.Drawing.Point(4, 0);
             this.lblDataSource.Name = "lblDataSource";
             this.lblDataSource.Size = new System.Drawing.Size(196, 16);
             this.lblDataSource.TabIndex = 4;
             this.lblDataSource.Text = "Data Source:";
             this.lblDataSource.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 	 // _toolbox
-            // 	 this._toolbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // _toolbox
+            // 
+            this._toolbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this._toolbox.Host = null;
             this._toolbox.Location = new System.Drawing.Point(4, 290);
             this._toolbox.Name = "_toolbox";
             this._toolbox.Size = new System.Drawing.Size(196, 233);
             this._toolbox.TabIndex = 0;
-            // 	 // ControlSetEditor
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 
+            // ControlSetEditor
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(837, 567);
             this.Controls.Add(this.splitter2);
             this.Controls.Add(this.designSurfacePanel);
@@ -411,11 +451,11 @@ public class ControlSetEditor : AbstractEditor
             this.PerformLayout();
 
 		}
-	#endregion
+        #endregion
 
-	#region private methods
-	private void SaveMainItem()
-	{
+        #region private methods
+        private void SaveMainItem()
+        {
             try
             {
                 ModelContent.PersistenceProvider.BeginTransaction();
@@ -487,8 +527,8 @@ public class ControlSetEditor : AbstractEditor
         }
 
 		
-	private Control LoadControl(ControlSetItem cntrlSet)
-	{
+		private Control LoadControl(ControlSetItem cntrlSet)
+		{
 			//create control
 			Control cntrl = CreateInstance(cntrlSet);
 			
@@ -523,8 +563,8 @@ public class ControlSetEditor : AbstractEditor
 			return cntrl;
 		}
 
-	private Control CreateInstance(ControlSetItem cntrlSet)
-	{
+		private Control CreateInstance(ControlSetItem cntrlSet)
+		{
 			object result=null;
 			
 			if( cntrlSet==null || 
@@ -565,8 +605,8 @@ public class ControlSetEditor : AbstractEditor
 			return (result as Control);
 		}
 
-	private void UpdateSpecificControlProperties(object control, AbstractSchemaItem metadata)
-	{
+		private void UpdateSpecificControlProperties(object control, AbstractSchemaItem metadata)
+		{
 			if(control is IOrigamMetadataConsumer)
 			{
 				(control as IOrigamMetadataConsumer).OrigamMetadata = metadata;
@@ -575,8 +615,8 @@ public class ControlSetEditor : AbstractEditor
 			UpdateDataSource(control);
 		}
 
-	private void UpdateDataSource(object control)
-	{
+		private void UpdateDataSource(object control)
+		{
             IAsDataConsumer dataConsumer = control as IAsDataConsumer;
 			if(this.IsForm && dataConsumer != null && _origamData !=null)
 			{
@@ -607,8 +647,8 @@ public class ControlSetEditor : AbstractEditor
             }
 		}
 
-	private void InitDesignerServices()
-	{
+		private void InitDesignerServices()
+		{
 			AddBaseServices();
 
 			if(_form == null)
@@ -620,7 +660,8 @@ public class ControlSetEditor : AbstractEditor
 			_designView.Dock = DockStyle.Fill;
 			designSurfacePanel.Controls.Add(_designView);
 
-			// we need to subscribe to selection changed events so 		// that we can update our properties grid
+			// we need to subscribe to selection changed events so 
+			// that we can update our properties grid
 			ISelectionService selectionService = _host.GetService(typeof(ISelectionService)) as ISelectionService;
 			selectionService.SelectionChanged +=new EventHandler(selectionService_SelectionChanged);
 
@@ -634,8 +675,8 @@ public class ControlSetEditor : AbstractEditor
 			_host.OnLoadComplete();
 		}
 
-	private void AddDataset()
-	{
+		private void AddDataset()
+		{
 			_host.Add(_origamData,origamDataSetName);
 
 			// hide component tray
@@ -649,18 +690,18 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void AddBaseServices()
-	{
+		private void AddBaseServices()
+		{
 			_toolbox.LoadToolbox(LoadToolbox());
 		}
 	
-	/// <summary>
-	/// Loads or saves properties of a control.
-	/// </summary>
-	/// <param name="cntrl">Control of which properties should be loaded/saved.</param>
-	/// <param name="save">True if properties should be saved. False if properties should be loaded.</param>
-	private void ControlProperties(Control cntrl, bool save)
-	{
+		/// <summary>
+		/// Loads or saves properties of a control.
+		/// </summary>
+		/// <param name="cntrl">Control of which properties should be loaded/saved.</param>
+		/// <param name="save">True if properties should be saved. False if properties should be loaded.</param>
+		private void ControlProperties(Control cntrl, bool save)
+		{
 			if(cntrl.Tag is ControlSetItem)
 			{
 				ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
@@ -691,8 +732,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	private void LoadControlBindings(Control cntrl)
-	{
+		private void LoadControlBindings(Control cntrl)
+		{
 			if(cntrl==null || _origamData==null || (!(cntrl.Tag is ControlSetItem)))
 				return;
 
@@ -713,14 +754,15 @@ public class ControlSetEditor : AbstractEditor
 				}
 				catch
 				{
-					//					throw new NullReferenceException("Property" 		//						+ bindItem.ControlPropertyItem.Name
+					//					throw new NullReferenceException("Property" 
+					//						+ bindItem.ControlPropertyItem.Name
 					//						+ "probably doen't exist or wrong argument",ex);
 				}
 			}
 		}
 
-	private void SaveControlBindings(Binding bind, CollectionChangeAction action)
-	{
+		private void SaveControlBindings(Binding bind, CollectionChangeAction action)
+		{
 			if(bind == null)
 				return;
 			
@@ -758,8 +800,8 @@ public class ControlSetEditor : AbstractEditor
 			propertyBind.DesignDataSetPath = bind.BindingMemberInfo.BindingMember;
 		}
 
-	private ControlPropertyItem FindPropertyItem(Control cntrl, string propertyName)
-	{
+		private ControlPropertyItem FindPropertyItem(Control cntrl, string propertyName)
+		{
 			if(!(cntrl.Tag is ControlSetItem))
 				return null;
 
@@ -774,8 +816,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	private AbstractPropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind, bool bind)
-	{
+		private AbstractPropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind, bool bind)
+		{
 			AbstractPropertyValueItem result=null;
 			var strType = //name of property type (property value or binding info)
 				bind 
@@ -813,8 +855,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	private FDToolbox LoadToolbox()
-	{
+		private FDToolbox LoadToolbox()
+		{
 			FDToolbox tools = new FDToolbox();
 			Category[] cats = new Category[2];
 
@@ -864,9 +906,9 @@ public class ControlSetEditor : AbstractEditor
 			return tools;
 		}
 
-	private enum KindOfTool {Basic,Panels};
-	private FDToolboxItem[] LoadTools(ISchemaItemProvider controls, KindOfTool kind)
-	{
+		private enum KindOfTool {Basic,Panels};
+		private FDToolboxItem[] LoadTools(ISchemaItemProvider controls, KindOfTool kind)
+		{
 			if(controls == null){ return null;}
 			FDToolboxItem[] tool = new FDToolboxItem[controls.ChildItems.Count];
 			int i=0;
@@ -932,8 +974,8 @@ public class ControlSetEditor : AbstractEditor
 
 
 
-	private bool CheckControlItemForToolbox(ControlItem control)
-	{
+		private bool CheckControlItemForToolbox(ControlItem control)
+		{
 			
 			if(control.ControlType=="Origam.Gui.Win.AsForm")
 				return false;
@@ -945,8 +987,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	private ControlItem GetControlbyType(Type type)
-	{
+		private ControlItem GetControlbyType(Type type)
+		{
 			ControlItem con=null;
 			if(_controls==null)
 				_controls=_schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
@@ -983,18 +1025,18 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	#endregion
+		#endregion
 
-	public bool IsDesignerHostFocused
-	{
-		get
+		public bool IsDesignerHostFocused
 		{
+			get
+			{
 				return this.ActiveControl.Parent != panelProp;
 			}
-	}
+		}
 
-	protected override object GetService(Type service)
-	{
+		protected override object GetService(Type service)
+		{
 			if(_serviceContainer!=null && _serviceContainer.GetService(service)!=null)
 			{
 				return _serviceContainer.GetService(service);
@@ -1003,39 +1045,39 @@ public class ControlSetEditor : AbstractEditor
 			return _host.GetService(service);
 		}
 
-	private IMenuCommandService MenuService()
-	{
+		private IMenuCommandService MenuService()
+		{
 			return GetService(typeof(IMenuCommandService)) as IMenuCommandService;
 		}
 
-	private void selectionService_SelectionChanged(object sender, EventArgs e)
-	{
-		ISelectionService selectionService = _host.GetService(typeof(ISelectionService)) as ISelectionService;
-
-		if (_propertyGrid != null && selectionService != null)
+		private void selectionService_SelectionChanged(object sender, EventArgs e)
 		{
-			ICollection selection = selectionService.GetSelectedComponents();
-			// if nothing is selected, just select the root component
-			if(selection==null || selection.Count==0)
+			ISelectionService selectionService = _host.GetService(typeof(ISelectionService)) as ISelectionService;
+
+			if (_propertyGrid != null && selectionService != null)
 			{
-				if(! _disposing)
+				ICollection selection = selectionService.GetSelectedComponents();
+				// if nothing is selected, just select the root component
+				if(selection==null || selection.Count==0)
 				{
-					propertyPad.ReadOnlyGetter = () => IsReadOnly;
-					_propertyGrid.SelectedObjects = new object[]{_host.RootComponent};
+					if(! _disposing)
+					{
+						propertyPad.ReadOnlyGetter = () => IsReadOnly;
+						_propertyGrid.SelectedObjects = new object[]{_host.RootComponent};
+					}
 				}
-			}
-			// we have to copy over the selected components list
-			// into an array and then set the selectedObjects property
-			_selectedComponents = new Object[selection.Count];
+				// we have to copy over the selected components list
+				// into an array and then set the selectedObjects property
+				_selectedComponents = new Object[selection.Count];
 				
-			selection.CopyTo(_selectedComponents, 0);
+				selection.CopyTo(_selectedComponents, 0);
 
-			bool rightButton = ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right);
+				bool rightButton = ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right);
 
-			if(rightButton)
-			{
-				this.MenuService().ShowContextMenu(null, Control.MousePosition.X, Control.MousePosition.Y);
-			}
+				if(rightButton)
+				{
+					this.MenuService().ShowContextMenu(null, Control.MousePosition.X, Control.MousePosition.Y);
+				}
 
 #if SPECIAL_GRID
 				Control selectedObject = null;
@@ -1103,20 +1145,20 @@ public class ControlSetEditor : AbstractEditor
 					}	
 				}
 #else
-			if(!_disposing)
-			{
-				propertyPad.ReadOnlyGetter = () => IsReadOnly;
-				_propertyGrid.SelectedObjects = _selectedComponents;
-			}
+				if(!_disposing)
+				{
+					propertyPad.ReadOnlyGetter = () => IsReadOnly;
+					_propertyGrid.SelectedObjects = _selectedComponents;
+				}
 #endif
+			}
 		}
-	}
 
 
-	private bool _initializingCombos = false;
+		private bool _initializingCombos = false;
 
-	private void SettingSelectedItemForDataSourceCombo()
-	{
+		private void SettingSelectedItemForDataSourceCombo()
+		{
 			AbstractSchemaItem schItem = null;
 
 			if(_dataSourceMode == eDataSource.DataStructure) 
@@ -1144,8 +1186,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 
-	private void InitEditor()
-	{
+		private void InitEditor()
+		{
             SettingSelectedItemForDataSourceCombo();
             if (_form == null)
             {
@@ -1181,11 +1223,11 @@ public class ControlSetEditor : AbstractEditor
 			
 		}
 
-	#region Overrides
-	private enum eDataSource{DataEntity, DataStructure};
+		#region Overrides
+		private enum eDataSource{DataEntity, DataStructure};
 				
-	private void LoadComboDataSources(eDataSource type)
-	{
+		private void LoadComboDataSources(eDataSource type)
+		{
 			if(type==eDataSource.DataStructure)
 			{
 				foreach(AbstractSchemaItem  item in _dsProvider.ChildItems)
@@ -1212,8 +1254,8 @@ public class ControlSetEditor : AbstractEditor
 			
 		}
 
-	public override void SaveObject()
-	{
+		public override void SaveObject()
+		{
 			if(cmbDataSources.SelectedItem == null)
 				throw new NullReferenceException("No Datasource selected can't save");
 
@@ -1227,8 +1269,8 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}	
 
-	private ControlItem FindControlItemByPanelRef(PanelControlSet panel)
-	{
+		private ControlItem FindControlItemByPanelRef(PanelControlSet panel)
+		{
 			if(panel==null || _controls==null)
 				return null;
 			
@@ -1240,53 +1282,53 @@ public class ControlSetEditor : AbstractEditor
 			return null;
 
 		}
-	#endregion
+		#endregion
 
-	#region Properties
+		#region Properties
 
-	public bool IsPanel
-	{
-		get
-		{
+        public bool IsPanel
+        {
+            get
+            {
                 return _rootControl.ParentItem is PanelControlSet;
             }
-	}
+        }
 
-	public bool IsForm
-	{
-		get
-		{
+        public bool IsForm
+        {
+            get
+            {
                 return _rootControl.ParentItem is FormControlSet;
             }
-	}
+        }
 
-	public AbstractControlSet ControlSet
-	{
-		get
-		{
+        public AbstractControlSet ControlSet
+        {
+            get
+            {
                 return _rootControl.ParentItem as AbstractControlSet;
             }    
-	}
+        }
         
-	public FormControlSet Form
-	{
-		get { return ControlSet as FormControlSet; }
-	}
+        public FormControlSet Form
+		{
+            get { return ControlSet as FormControlSet; }
+		}
 
-	public PanelControlSet Panel
-	{
-		get { return ControlSet as PanelControlSet; }
-	}
+        public PanelControlSet Panel
+        {
+            get { return ControlSet as PanelControlSet; }
+        }
         
-	private ControlSetItem _rootControl;
-	private IPropertyPad propertyPad;
+        private ControlSetItem _rootControl;
+        private IPropertyPad propertyPad;
 
-	#endregion 
+        #endregion 
 
-	#region Add/Remove/change SchemaItem
+		#region Add/Remove/change SchemaItem
 
-	private void Host_componentChanged(object sender, ComponentChangedEventArgs evtArgs)
-	{
+		private void Host_componentChanged(object sender, ComponentChangedEventArgs evtArgs)
+		{
 			if((evtArgs.Member == null) && (evtArgs.OldValue is Control.ControlCollection))
 			{
 				return;
@@ -1308,8 +1350,8 @@ public class ControlSetEditor : AbstractEditor
 		}
 
 		
-	private void Host_componentAdded(object sender, ComponentEventArgs evtArgs)
-	{
+		private void Host_componentAdded(object sender, ComponentEventArgs evtArgs)
+		{
 			if(ReflectChanges && !IsReadOnly)
 			{
 				this.IsDirty = true;
@@ -1325,7 +1367,9 @@ public class ControlSetEditor : AbstractEditor
 
 					UpdateSpecificControlProperties(control, control.Tag as AbstractSchemaItem);
 
-					// set the newly added TabControl as selected because it adds 2 TabPages immediately 		// after it is constructed and the selected component is the only way how to assign a parent 	 if (control is TabControl)
+					// set the newly added TabControl as selected because it adds 2 TabPages immediately 
+					// after it is constructed and the selected component is the only way how to assign a parent 
+                    if (control is TabControl)
                     {
                         _selectedComponents = new object[1] { control };
                     }
@@ -1353,8 +1397,8 @@ public class ControlSetEditor : AbstractEditor
             }
         }
 
-	private void CreateNewControlSetItem(Control control, string name, ControlSetItem parent)
-	{
+		private void CreateNewControlSetItem(Control control, string name, ControlSetItem parent)
+		{
 
 			ControlSetItem creator=null;
 
@@ -1398,8 +1442,8 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
-	{
+		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
+		{
 			if (IsReadOnly)
 			{
 				return;
@@ -1412,8 +1456,8 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 		
-	private void Host_componentRemoved(object sender, ComponentEventArgs evtArgs)
-	{
+		private void Host_componentRemoved(object sender, ComponentEventArgs evtArgs)
+		{
 			this.IsDirty = true;
 
 			if(evtArgs.Component is Control)
@@ -1433,12 +1477,12 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	#endregion
+		#endregion
 		
-	#region DEBUG
+		#region DEBUG
 
-	private void DebugBindings(object formik)
-	{
+		private void DebugBindings(object formik)
+		{
 			foreach(Control ctrl in ((Control)formik).Controls)
 			{
 				foreach(Binding bind in ctrl.DataBindings)
@@ -1458,21 +1502,21 @@ public class ControlSetEditor : AbstractEditor
 			
 		}
 
-	private void menuItem6_Click(object sender, System.EventArgs e)
-	{
+		private void menuItem6_Click(object sender, System.EventArgs e)
+		{
 			DebugBindings(_form);
 		}
 
-	#endregion
+		#endregion
 
-	private void ControlSetEditor_Load(object sender, System.EventArgs e)
-	{
+		private void ControlSetEditor_Load(object sender, System.EventArgs e)
+		{
             
 		
 		}
 
-	private void cmbDataSources_SelectedIndexChanged(object sender, System.EventArgs e)
-	{   
+		private void cmbDataSources_SelectedIndexChanged(object sender, System.EventArgs e)
+		{   
 
 			if((sender as ComboBox).SelectedItem==null)	return;
 
@@ -1486,7 +1530,8 @@ public class ControlSetEditor : AbstractEditor
 					this.Panel.DataEntity = de;
 				}
 			
-				//Reload Panel 		if(ReflectChanges)
+				//Reload Panel 
+				if(ReflectChanges)
 				{
 					AddBaseServices();
 					_host.DataSet = _origamData;
@@ -1537,8 +1582,8 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void txtName_TextChanged(object sender, System.EventArgs e)
-	{
+		private void txtName_TextChanged(object sender, System.EventArgs e)
+		{
 			string text = (sender as TextBox).Text;
 			AbstractSchemaItem item = this.ModelContent as AbstractSchemaItem;
 			if(item.Name != text)
@@ -1554,29 +1599,29 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void txtRoles_TextChanged(object sender, System.EventArgs e)
-	{
+		private void txtRoles_TextChanged(object sender, System.EventArgs e)
+		{
 			if (_rootControl.Roles != txtRoles.Text) {
 				this.IsDirty = true;
 			}
 		}
 
-	private void txtFeatures_TextChanged(object sender, System.EventArgs e)
-	{
+		private void txtFeatures_TextChanged(object sender, System.EventArgs e)
+		{
 			if (_rootControl.Features != txtFeatures.Text) {
 				this.IsDirty = true;
 			}
 		}
 
-	private void txtLevel_TextChanged(object sender, System.EventArgs e)
-	{
+		private void txtLevel_TextChanged(object sender, System.EventArgs e)
+		{
 			if (_rootControl.Level.ToString() != txtLevel.Text) {
 				this.IsDirty = true;
 			}
 		}
 
-	private void ControlSetEditor_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		private void ControlSetEditor_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			if (IsReadOnly)
 			{
 				return;
@@ -1612,8 +1657,8 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void ControlSetEditor_ContentLoaded(object sender, EventArgs e)
-	{
+		private void ControlSetEditor_ContentLoaded(object sender, EventArgs e)
+		{
             Type type;
             AbstractControlSet controlSet = ModelContent as AbstractControlSet;
             if (controlSet == null)
@@ -1691,8 +1736,8 @@ public class ControlSetEditor : AbstractEditor
 			});
 		}
 
-	private void InitNewItemEditor()
-	{
+		private void InitNewItemEditor()
+        {
             _rootControl.ControlItem = _panelControlItemRef;
             if (_rootControl.ChildItems.Count == 0)
             {
@@ -1705,15 +1750,15 @@ public class ControlSetEditor : AbstractEditor
             }
         }
 
-	private void SetControlItemRef(Type type)
-	{
+        private void SetControlItemRef(Type type)
+        {
             _panelControlItemRef = GetControlbyType(type);
             if (_panelControlItemRef == null)
                 throw new NullReferenceException("Type " + type + " has no reference in Meta model database");
         }
 
-	private Type ResolveType()
-	{
+        private Type ResolveType()
+        {
             Type type;
             if (IsPanel)
             {
@@ -1730,8 +1775,8 @@ public class ControlSetEditor : AbstractEditor
             return type;
         }
 
-	private void ControlSetEditor_Closed(object sender, System.EventArgs e)
-	{
+		private void ControlSetEditor_Closed(object sender, System.EventArgs e)
+		{
 			try
 			{
 				// refresh the model element, e.g. if editing is cancelled, so it reads its original content
@@ -1752,12 +1797,12 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void ControlSetEditor_Leave(object sender, System.EventArgs e)
-	{
+		private void ControlSetEditor_Leave(object sender, System.EventArgs e)
+		{
 		}
 
-	private void ControlSetEditor_Enter(object sender, System.EventArgs e)
-	{
+		private void ControlSetEditor_Enter(object sender, System.EventArgs e)
+		{
 			try
 			{
 				propertyPad.ReadOnlyGetter = () => IsReadOnly;
@@ -1768,8 +1813,11 @@ public class ControlSetEditor : AbstractEditor
 			}
 		}
 
-	private void _host_Activated(object sender, EventArgs e)
-	{
+		private void _host_Activated(object sender, EventArgs e)
+		{
 			designSurfacePanel.Focus();
 		}
+	}
 }
+
+

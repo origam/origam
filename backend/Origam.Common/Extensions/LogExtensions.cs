@@ -23,17 +23,17 @@ using System;
 using log4net;
 using Microsoft.Extensions.Logging;
 
-namespace Origam.Extensions;
-
-public static class LogExtensions
+namespace Origam.Extensions
 {
-    public static readonly string IsLoggedKey = "logged";
-        
-    // Intended for error handling of logging code.
-    // Remember to wrap all calls to this method in if(log.IsXXXEnabled){} 
-    // to minimize performance impact of logging. 
-    public static void RunHandled(this ILog log, Action loggingAction)
+    public static class LogExtensions
     {
+        public static readonly string IsLoggedKey = "logged";
+        
+        // Intended for error handling of logging code.
+        // Remember to wrap all calls to this method in if(log.IsXXXEnabled){} 
+        // to minimize performance impact of logging. 
+        public static void RunHandled(this ILog log, Action loggingAction)
+        {
             try
             {
                 loggingAction();
@@ -44,8 +44,8 @@ public static class LogExtensions
             }
         }
 
-    public static void LogOrigamError(this ILog log, string message, Exception ex)
-    {
+        public static void LogOrigamError(this ILog log, string message, Exception ex)
+        {
             if (ex.Data.Contains(IsLoggedKey) && Equals(ex.Data[IsLoggedKey], true))
             {
                 return;
@@ -53,8 +53,8 @@ public static class LogExtensions
             log.Error(message, ex);
             ex.Data[IsLoggedKey] = true;
         }        
-    public static void LogOrigamError(this ILog log, Exception ex)
-    {
+        public static void LogOrigamError(this ILog log, Exception ex)
+        {
             if (ex.Data.Contains(IsLoggedKey) && Equals(ex.Data[IsLoggedKey], true))
             {
                 return;
@@ -62,12 +62,12 @@ public static class LogExtensions
             log.Error(ex);
             ex.Data[IsLoggedKey] = true;
         }
-}
+    }
 
-public static class ILoggerExtensions
-{
-    public static void LogOrigamError(this ILogger log, Exception ex, string message)
+    public static class ILoggerExtensions
     {
+        public static void LogOrigamError(this ILogger log, Exception ex, string message)
+        {
             if (ex.Data.Contains(LogExtensions.IsLoggedKey) && Equals(ex.Data[LogExtensions.IsLoggedKey], true))
             {
                 return;
@@ -75,4 +75,5 @@ public static class ILoggerExtensions
             log.LogError(ex, message);
             ex.Data[LogExtensions.IsLoggedKey] = true;
         }
+    }
 }

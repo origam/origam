@@ -24,22 +24,22 @@ using System.Collections;
 using System.Data;
 using Origam.DA;
 
-namespace Origam.Workbench.Services.CoreServices;
-
-/// <summary>
-/// Summary description for DataService.
-/// </summary>
-public class DataService : ICoreDataService
+namespace Origam.Workbench.Services.CoreServices
 {
-	public static DataService Instance { get; } = new ();
-
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
+	/// <summary>
+	/// Summary description for DataService.
+	/// </summary>
+	public class DataService : ICoreDataService
 	{
+		public static DataService Instance { get; } = new ();
+
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
+		{
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, null);
 		}
 
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
-	{
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
+		{
 			if (paramName1 == null)
 			{
 				throw new ArgumentNullException(nameof(paramName1));
@@ -50,8 +50,8 @@ public class DataService : ICoreDataService
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
-	{
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
+		{
 			QueryParameterCollection p = new QueryParameterCollection();
 			p.Add(new QueryParameter(paramName1, paramValue1));
 			p.Add(new QueryParameter(paramName2, paramValue2));
@@ -59,23 +59,23 @@ public class DataService : ICoreDataService
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
-		Guid sortSetId, string transactionId, QueryParameterCollection parameters)
-	{
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
+            Guid sortSetId, string transactionId, QueryParameterCollection parameters)
+		{
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, parameters, null);
 		}
 
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
-		Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData)
-	{
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+            Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData)
+        {
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId,
                 parameters, currentData, null, null);
         }
 
-	public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
-		Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData,
-		string entity, string columnName)
-	{
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+            Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData,
+            string entity, string columnName)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			DataStructureQuery q = new DataStructureQuery(dataStructureId, methodId, defaultSetId, sortSetId);
 			q.ColumnsInfo = new ColumnsInfo(columnName);
@@ -102,10 +102,10 @@ public class DataService : ICoreDataService
 			return ds;
 		}
 
-	public DataSet LoadRow(Guid dataStructureEntityId, 
-		Guid filterSetId, QueryParameterCollection parameters, 
-		DataSet currentData, string transactionId)
-	{
+		public DataSet LoadRow(Guid dataStructureEntityId, 
+            Guid filterSetId, QueryParameterCollection parameters, 
+            DataSet currentData, string transactionId)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services
                 .GetService(typeof(IBusinessServicesService)) as IBusinessServicesService)
                 .GetAgent("DataService", null, null);
@@ -128,8 +128,8 @@ public class DataService : ICoreDataService
 			return ds;
 		}
 
-	public DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
-	{
+		public DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
+		{
 			var dataStructureQuery = new DataStructureQuery
 			{
 				DataSourceId = dataStructureId,
@@ -139,8 +139,8 @@ public class DataService : ICoreDataService
 			return StoreData(dataStructureQuery, data,transactionId);
 		}
 
-	public DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
-	{
+		public DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
+		{
 			IServiceAgent dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>()
 				.GetAgent("DataService", null, null);
@@ -158,8 +158,8 @@ public class DataService : ICoreDataService
 			return ds;
 		}
 
-	public DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
-	{
+		public DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
 			Hashtable ht = new Hashtable(parameters.Count);
@@ -181,8 +181,8 @@ public class DataService : ICoreDataService
 			return ds;
 		}
 
-	public long ReferenceCount(Guid entityId, object value, string transactionId)
-	{
+		public long ReferenceCount(Guid entityId, object value, string transactionId)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
 			dataServiceAgent.MethodName = "ReferenceCount";
@@ -198,8 +198,8 @@ public class DataService : ICoreDataService
 			return result;
 		}
 
-	public string EntityDdl(Guid entityId)
-	{
+        public string EntityDdl(Guid entityId)
+        {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "EntityDdl";
             dataServiceAgent.Parameters.Clear();
@@ -209,8 +209,8 @@ public class DataService : ICoreDataService
             return result;
         }
 
-	public string[] FieldDdl(Guid fieldId)
-	{
+        public string[] FieldDdl(Guid fieldId)
+        {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "FieldDdl";
             dataServiceAgent.Parameters.Clear();
@@ -220,8 +220,8 @@ public class DataService : ICoreDataService
             return result;
         }
 
-	public string ExecuteSql(string command)
-	{
+        public string ExecuteSql(string command)
+        {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(
                 typeof(IBusinessServicesService)) 
                 as IBusinessServicesService).GetAgent("DataService", null, null);
@@ -232,4 +232,5 @@ public class DataService : ICoreDataService
             string result = (string)dataServiceAgent.Result;
             return result;
         }
+    }
 }

@@ -23,19 +23,19 @@ using System;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow.Tasks;
-
-/// <summary>
-/// Summary description for CheckRuleTask.
-/// </summary>
-public class CheckRuleEngineTask : AbstractWorkflowEngineTask
+namespace Origam.Workflow.Tasks
 {
-	public CheckRuleEngineTask() : base()
+	/// <summary>
+	/// Summary description for CheckRuleTask.
+	/// </summary>
+	public class CheckRuleEngineTask : AbstractWorkflowEngineTask
 	{
+		public CheckRuleEngineTask() : base()
+		{
 		}
 
-	protected override void OnExecute()
-	{
+		protected override void OnExecute()
+		{
 			CheckRuleStep task = this.Step as CheckRuleStep;
 
 			if(task.ValidationRule == null)
@@ -52,4 +52,5 @@ public class CheckRuleEngineTask : AbstractWorkflowEngineTask
 				if(ruleException.IsSeverityHigh) throw ruleException;
 			}
 		}
+	}
 }

@@ -34,33 +34,33 @@ using Origam.Server;
 using Origam.Service.Core;
 
 
-namespace Origam.Server;
-
-public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
+namespace Origam.Server
 {
-    private readonly SessionManager sessionManager;
-    private readonly SessionStore sessionStore;
-
-    public ServerEntityUIActionRunnerClient(SessionManager sessionManager,
-        string sessionFormIdentifier)
+    public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
     {
+        private readonly SessionManager sessionManager;
+        private readonly SessionStore sessionStore;
+
+        public ServerEntityUIActionRunnerClient(SessionManager sessionManager,
+            string sessionFormIdentifier)
+        {
             this.sessionManager = sessionManager;
             this.sessionStore = 
                 sessionManager.GetSession(new Guid(sessionFormIdentifier));
         }
 
-    public ServerEntityUIActionRunnerClient(SessionManager sessionManager, SessionStore sessionStore)
-    {
+        public ServerEntityUIActionRunnerClient(SessionManager sessionManager, SessionStore sessionStore)
+        {
             this.sessionManager = sessionManager;
             this.sessionStore = sessionStore;
         }
 
-    public ExecuteActionProcessData CreateExecuteActionProcessData(
-        string sessionFormIdentifier, string requestingGrid, 
-        string actionType, string entity, List<string> selectedIds, 
-        string actionId, Hashtable parameterMappings, 
-        Hashtable inputParameters)
-    {
+        public ExecuteActionProcessData CreateExecuteActionProcessData(
+            string sessionFormIdentifier, string requestingGrid, 
+            string actionType, string entity, List<string> selectedIds, 
+            string actionId, Hashtable parameterMappings, 
+            Hashtable inputParameters)
+        {
             ExecuteActionProcessData processData = new ExecuteActionProcessData();
             processData.SessionFormIdentifier = sessionFormIdentifier;
             processData.RequestingGrid = requestingGrid;
@@ -97,8 +97,8 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             return processData;
         }
 
-    public void CheckActionConditions(ExecuteActionProcessData processData)
-    {
+        public void CheckActionConditions(ExecuteActionProcessData processData)
+        {
             if (processData.Action is EntityWorkflowAction ewa)
             {
                 if (ewa.RequestSaveBeforeWorkflow
@@ -138,8 +138,8 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
 
-    public void SetModalDialogSize(ArrayList resultList,ExecuteActionProcessData processData)
-    {
+        public void SetModalDialogSize(ArrayList resultList,ExecuteActionProcessData processData)
+        {
             PanelActionResult result = (PanelActionResult)resultList[0];
             if ((processData.Action != null) 
                 && (result.Request != null))
@@ -167,10 +167,10 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
 
-    public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
-        DataSet sourceData,DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes)
-    {
+        public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
+            DataSet sourceData,DataSet targetData,EntityWorkflowAction entityWorkflowAction,
+            ArrayList changes)
+        {
             try
             {
                 targetData.EnforceConstraints = false;
@@ -342,8 +342,8 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
         
-    private static void AddSavedInfo(ArrayList changes)
-    {
+        private static void AddSavedInfo(ArrayList changes)
+        {
             int i = 0;
             while (changes.Count > i)
             {
@@ -361,9 +361,9 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
         }
 
 
-    public void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes)
-    {
+        public void PostProcessWorkflowAction(DataSet data,
+            EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        {
             if (entityWorkflowAction.SaveAfterWorkflow)
             {
                 ArrayList saveChanges = sessionStore.ExecuteAction(SessionStore.ACTION_SAVE) as ArrayList;
@@ -392,9 +392,9 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
 
-    public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
-        EntityWorkflowAction entityWorkflowAction)
-    {
+        public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
+            EntityWorkflowAction entityWorkflowAction)
+        {
             switch(entityWorkflowAction.CloseType)
             {
                 case ModalDialogCloseType.CloseAndCommit:
@@ -412,4 +412,5 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
                 }
             }
         }
+    }
 }

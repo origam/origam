@@ -25,90 +25,91 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel;
-
-public enum XsltEngineType
+namespace Origam.Schema.EntityModel
 {
-	XslTransform,
-	XslCompiledTransform
-}
+    public enum XsltEngineType
+    {
+        XslTransform,
+        XslCompiledTransform
+    }
 
-[SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
-[HelpTopic("Transformations")]
-[ClassMetaVersion("6.0.0")]
-public class XslTransformation : AbstractTransformation
-{
-	public XslTransformation() : base()
+	[SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
+    [HelpTopic("Transformations")]
+    [ClassMetaVersion("6.0.0")]
+	public class XslTransformation : AbstractTransformation
 	{
+        public XslTransformation() : base()
+        {
             InitializeProperyContainers();
         }
 
-	public XslTransformation(Guid schemaExtensionId) : base(schemaExtensionId)
-	{
+		public XslTransformation(Guid schemaExtensionId) : base(schemaExtensionId)
+        {
             InitializeProperyContainers();
         }
 
-	public XslTransformation(Key primaryKey) : base(primaryKey)
-	{
+        public XslTransformation(Key primaryKey) : base(primaryKey)
+        {
             InitializeProperyContainers();
         }
 
-	private void InitializeProperyContainers()
-	{
+        private void InitializeProperyContainers()
+        {
             text = new PropertyContainer<string>(
                 containerName: nameof(text),
                 containingObject: this);
         }
 
-	public override object Clone()
-	{
+	    public override object Clone()
+	    {
 	        var clone = (XslTransformation)base.Clone();
 	        clone.TextStore = TextStore;
 	        return clone;
 	    }
 
-	#region Overriden AbstractSchemaItem members
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+	    #region Overriden AbstractSchemaItem members
+        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	private PropertyContainer<string> text;
+		#region Properties
+		private PropertyContainer<string> text;
 		
-	[StringNotEmptyModelElementRule()]
-	[XmlExternalFileReference(containerName: nameof(text), 
-		extension: ExternalFileExtension.Xslt)]
-	public string TextStore
-	{
-		get => text.Get();
-		set => text.Set(value);
-	}
-
-	private XsltEngineType _xsltEngineType = XsltEngineType.XslTransform;
-	[DefaultValue(XsltEngineType.XslTransform)]
-	[XmlAttribute("engineType")]
-	public XsltEngineType XsltEngineType
-	{
-		get
+		[StringNotEmptyModelElementRule()]
+        [XmlExternalFileReference(containerName: nameof(text), 
+            extension: ExternalFileExtension.Xslt)]
+        public string TextStore
 		{
+            get => text.Get();
+            set => text.Set(value);
+        }
+
+        private XsltEngineType _xsltEngineType = XsltEngineType.XslTransform;
+        [DefaultValue(XsltEngineType.XslTransform)]
+        [XmlAttribute("engineType")]
+        public XsltEngineType XsltEngineType
+        {
+            get
+            {
                 return _xsltEngineType;
             }
-		set
-		{
+            set
+            {
                 _xsltEngineType = value;
             }
+        }
+		#endregion
 	}
-	#endregion
 }

@@ -20,9 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using Origam.Schema;
 
-namespace Origam.UI.WizardForm;
-
-public class PanelWizardForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    public ISchemaItem Entity { get; set; }
+    public class PanelWizardForm : AbstractWizardForm
+    {
+        public ISchemaItem Entity { get; set; }
+    }
 }

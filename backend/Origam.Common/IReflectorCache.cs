@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam;
-
-public interface IReflectorCache
+namespace Origam
 {
-	object InvokeObject(string classname, string assembly);
-	object InvokeObject(string typeName, object[] args);
-	bool SetValue(object instance, string property, object value);
+	public interface IReflectorCache
+	{
+		object InvokeObject(string classname, string assembly);
+		object InvokeObject(string typeName, object[] args);
+		bool SetValue(object instance, string property, object value);
+	}
 }

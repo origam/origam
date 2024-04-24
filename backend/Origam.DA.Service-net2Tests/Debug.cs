@@ -17,41 +17,44 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Data;
 using System.Windows.Forms;
 
-namespace Origam.DA;
-
-/// <summary>
-/// Summary description for Debug.
-/// </summary>
-public sealed class DebugClass
+namespace Origam.DA
 {
-	private static Form _form;
-	private static DataGrid dataGrid1;
-		
-	private DebugClass()
+	/// <summary>
+	/// Summary description for Debug.
+	/// </summary>
+	public sealed class DebugClass
 	{
+		private static Form _form;
+		private static DataGrid dataGrid1;
+		
+		private DebugClass()
+		{
 		}
 
-	private static void CheckInit()
-	{
+		private static void CheckInit()
+		{
 			if(_form ==null)
 			{
 				_form = new Form();
 				dataGrid1 = new DataGrid();
 				((System.ComponentModel.ISupportInitialize)(dataGrid1)).BeginInit();
 				_form.SuspendLayout();
-				// 		// dataGrid1
-				// 		dataGrid1.DataMember = "";
+				// 
+				// dataGrid1
+				// 
+				dataGrid1.DataMember = "";
 				dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
 				dataGrid1.Name = "dataGrid1";
 				dataGrid1.TabIndex = 0;
-				// 		// Form2
-				// 		_form.Controls.Add(dataGrid1);
+				// 
+				// Form2
+				// 
+				_form.Controls.Add(dataGrid1);
 				_form.Name = "TEST_FORM";
 				_form.Text = "DebugForm";
 				((System.ComponentModel.ISupportInitialize)(dataGrid1)).EndInit();
@@ -60,8 +63,8 @@ public sealed class DebugClass
 			}
 		}
 
-	public static string DataDebug(DataSet dataSet)
-	{
+		public static string DataDebug(DataSet dataSet)
+		{
 			string result = "";
 
 			result = result + "**********************************Begin**ListRowErrors**********************************************" + Environment.NewLine;
@@ -83,15 +86,15 @@ public sealed class DebugClass
 		}
 
 
-	public static void Show(DataSet dataSet)
-	{
+		public static void Show(DataSet dataSet)
+		{
 			CheckInit();
 			dataGrid1.DataSource = dataSet;
 			_form.ShowDialog();
 		}
 
-	public static string ListRowErrors(DataSet dataSet)
-	{
+		public static string ListRowErrors(DataSet dataSet)
+		{
 			string result = "";
 
 			foreach(DataTable table in dataSet.Tables)
@@ -118,8 +121,8 @@ public sealed class DebugClass
 			return result;
 		}
 
-	public static string ListUniqueColumns(DataSet dataSet)
-	{
+		public static string ListUniqueColumns(DataSet dataSet)
+		{
 			string result = "";
 
 			foreach(DataTable table in dataSet.Tables)
@@ -141,8 +144,8 @@ public sealed class DebugClass
 		}
 
 
-	public static string ListConstraints(DataSet dataSet)
-	{
+		public static string ListConstraints(DataSet dataSet)
+		{
 			string result = "";
 
 			foreach(DataTable table in dataSet.Tables)
@@ -158,4 +161,5 @@ public sealed class DebugClass
 
 			return result;
 		}
+	}
 }

@@ -21,51 +21,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.WorkflowModel.WorkQueue;
-
-public class WorkQueueClassSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.WorkflowModel.WorkQueue
 {
-	public WorkQueueClassSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => WorkQueueClass.CategoryConst;
-
-	public override string Group => "BL";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_34_work-queue-classes.png";
-
-	public override string NodeText
+	public class WorkQueueClassSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Work Queue Classes";
-		set => base.NodeText = value;
-	}
+		public WorkQueueClassSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => WorkQueueClass.CategoryConst;
 
-	#endregion
+		public override string Group => "BL";
 
-	#region ISchemaItemFactory Members
+		#endregion
 
-	public override Type[] NewItemTypes => new[]
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_34_work-queue-classes.png";
+
+		public override string NodeText
+		{
+			get => "Work Queue Classes";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(WorkQueueClass)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(WorkQueueClass) ?
 					"NewWorkQueueClass" : null);
 		}
 
-	#endregion
+		#endregion
+	}
 }

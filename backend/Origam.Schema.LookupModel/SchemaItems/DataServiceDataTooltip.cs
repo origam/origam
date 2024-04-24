@@ -22,20 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.LookupModel;
-
-/// <summary>
-/// Summary description for DataServiceDataLookup.
-/// </summary>
-[SchemaItemDescription("Data Service Tooltip", 
-	"icon_data-service-tooltip.png")]
-[HelpTopic("Tooltips")]
-[ClassMetaVersion("6.0.0")]
-public class DataServiceDataTooltip : AbstractDataTooltip
+namespace Origam.Schema.LookupModel
 {
-	public DataServiceDataTooltip() : base() {}
+	/// <summary>
+	/// Summary description for DataServiceDataLookup.
+	/// </summary>
+	[SchemaItemDescription("Data Service Tooltip", 
+        "icon_data-service-tooltip.png")]
+    [HelpTopic("Tooltips")]
+    [ClassMetaVersion("6.0.0")]
+	public class DataServiceDataTooltip : AbstractDataTooltip
+	{
+		public DataServiceDataTooltip() : base() {}
 
-	public DataServiceDataTooltip(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public DataServiceDataTooltip(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-	public DataServiceDataTooltip(Key primaryKey) : base(primaryKey)	{}
+		public DataServiceDataTooltip(Key primaryKey) : base(primaryKey)	{}
+	}
 }

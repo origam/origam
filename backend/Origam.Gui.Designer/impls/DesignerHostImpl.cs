@@ -40,56 +40,56 @@ using Origam.Workbench;
 using Origam.Workbench.PropertyGrid;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Designer;
-
-/// <summary>
-/// the host implementation
-/// </summary>
-public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,IComponentChangeService,IExtenderProviderService,IDesignerEventService, IExtenderListService, IDesignerOptionService
+namespace Origam.Gui.Designer
 {
+	/// <summary>
+	/// the host implementation
+	/// </summary>
+	public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,IComponentChangeService,IExtenderProviderService,IDesignerEventService, IExtenderListService, IDesignerOptionService
+	{
 
 	
-	//		private Guid ControlSet = new    Guid("727d9807-9697-4732-b8d8-e6abd6c2a318");
-	//		private Guid CntrlSetItm = new   Guid ("42eb75c8-c939-459e-995e-2999729c8add");
-	//		private Guid FormControl = new   Guid("00000000-0001-48f1-9da4-a130c04972d1");
-	//		private Guid ButtonControl = new Guid("00000000-0002-4732-b8d8-e6abd6c2a318");
+		//		private Guid ControlSet = new    Guid("727d9807-9697-4732-b8d8-e6abd6c2a318");
+		//		private Guid CntrlSetItm = new   Guid ("42eb75c8-c939-459e-995e-2999729c8add");
+		//		private Guid FormControl = new   Guid("00000000-0001-48f1-9da4-a130c04972d1");
+		//		private Guid ButtonControl = new Guid("00000000-0002-4732-b8d8-e6abd6c2a318");
 
-	private ISelectionService              selectionService;       // selection services
-	private IMenuCommandService            menuCommandService;     // the menu command service
-	private IHelpService                   helpService;            // the help service - UNIMPLEMENTED
-	private IReferenceService              referenceService;       // service to maintain references - UNIMPLEMENTED
-	private IMenuEditorService             menuEditorService;      // Menu editor service - UNIMPLEMENTED
-	private IToolboxService	               toolboxService;         // toolbox service
-	private AmbientProperties			   ambientPropertiesService;
-	private IDesignerOptionService         designerOptionService;
-	private DesignerActionService          designerActionService;
+		private ISelectionService              selectionService;       // selection services
+		private IMenuCommandService            menuCommandService;     // the menu command service
+		private IHelpService                   helpService;            // the help service - UNIMPLEMENTED
+		private IReferenceService              referenceService;       // service to maintain references - UNIMPLEMENTED
+		private IMenuEditorService             menuEditorService;      // Menu editor service - UNIMPLEMENTED
+		private IToolboxService	               toolboxService;         // toolbox service
+		private AmbientProperties			   ambientPropertiesService;
+        private IDesignerOptionService         designerOptionService;
+        private DesignerActionService          designerActionService;
 
-	public DataSet DataSet;
-	public PanelControlSet PanelSet=null;
-	public bool IsComplexControl=false;
-	public bool IsFieldControl=false;
-	public bool IsExternalControl = false;
-	public string FieldName="";
+		public DataSet DataSet;
+		public PanelControlSet PanelSet=null;
+		public bool IsComplexControl=false;
+		public bool IsFieldControl=false;
+		public bool IsExternalControl = false;
+		public string FieldName="";
 
-	//panel generator
-	public Origam.Gui.Win.FormGenerator Generator = new FormGenerator();		
-	// root component
-	private IComponent						rootComponent;
-	private IRootDesigner					rootDesigner;
-	// service container
-	private IServiceContainer               serviceContainer;
-	// site-name to site mapping
-	private IDictionary						sites;
-	// component to designer mapping
-	private Hashtable						designers;
-	// extender provider list
-	private IList							extenderProviders;
-	// transaction list
-	private int                            transactionCount;          // >0 means we're doing a transaction
-	private StringStack                    transactionDescriptions;   // string descriptions of the current transactions
+		//panel generator
+		public Origam.Gui.Win.FormGenerator Generator = new FormGenerator();		
+		// root component
+		private IComponent						rootComponent;
+		private IRootDesigner					rootDesigner;
+		// service container
+		private IServiceContainer               serviceContainer;
+		// site-name to site mapping
+		private IDictionary						sites;
+		// component to designer mapping
+		private Hashtable						designers;
+		// extender provider list
+		private IList							extenderProviders;
+		// transaction list
+		private int                            transactionCount;          // >0 means we're doing a transaction
+		private StringStack                    transactionDescriptions;   // string descriptions of the current transactions
 
-	public DesignerHostImpl(IServiceProvider parentProvider)
-	{
+		public DesignerHostImpl(IServiceProvider parentProvider)
+		{
 			// append to the parentProvider...
 			serviceContainer = new ServiceContainer(parentProvider);
 			// site name to ISite mapping
@@ -123,51 +123,51 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
             extenderProvider.AddExtenderProvider(new RequestSaveAfterChangeExtenderProvider());
 		}
 
-	#region IDesignerHost Members
+		#region IDesignerHost Members
 
-	public IContainer Container
-	{
-		get
+		public IContainer Container
 		{
+			get
+			{
 				return this;
 			}
-	}
+		}
 
-	public event System.EventHandler TransactionOpening;
+		public event System.EventHandler TransactionOpening;
 
-	public event System.EventHandler TransactionOpened;
+		public event System.EventHandler TransactionOpened;
 
-	public event System.EventHandler LoadComplete;
+		public event System.EventHandler LoadComplete;
 
-	public IDesigner GetDesigner(IComponent component)
-	{
+		public IDesigner GetDesigner(IComponent component)
+		{
 			return designers[component] as IDesigner;
 		}
 
-	public event System.EventHandler Activated;
+		public event System.EventHandler Activated;
 
-	public event System.EventHandler Deactivated
-	{
-		add { }
-		remove { }
-	}
-
-	public event System.ComponentModel.Design.DesignerTransactionCloseEventHandler TransactionClosed;
-
-	public bool Loading
-	{
-		get
+		public event System.EventHandler Deactivated
 		{
+			add { }
+			remove { }
+		}
+
+		public event System.ComponentModel.Design.DesignerTransactionCloseEventHandler TransactionClosed;
+
+		public bool Loading
+		{
+			get
+			{
 				return false;
 			}
-	}
-	public IComponent CreateComponent(Type componentClass, string name)
-	{
+		}
+		public IComponent CreateComponent(Type componentClass, string name)
+		{
 			return CreateComponent(componentClass, null, name);
 		}
 
-	public IComponent CreateComponent(Type componentClass, ControlItem controlItem, string name)
-	{
+		public IComponent CreateComponent(Type componentClass, ControlItem controlItem, string name)
+		{
 			try
 			{
 				return TryCreateComponent(componentClass, controlItem, name);
@@ -179,9 +179,9 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 
-	private IComponent TryCreateComponent(Type componentClass, 
-		ControlItem controlItem, string name)
-	{
+		private IComponent TryCreateComponent(Type componentClass, 
+			ControlItem controlItem, string name)
+		{
 			var( newComponent, componentName) = CreateComponentInstance(componentClass, controlItem);
 			Add(newComponent, name ?? componentName);
 			if(this.IsFieldControl && this.DataSet !=null && newComponent is IAsControl)
@@ -218,8 +218,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return newComponent;
 		}
 
-	private (IComponent, string) CreateComponentInstance(Type type, ControlItem controlItem)
-	{
+		private (IComponent, string) CreateComponentInstance(Type type, ControlItem controlItem)
+		{
 			if (IsComplexControl)
 			{
 				Control instance = Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
@@ -281,95 +281,95 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return (component, refControl?.Name);
 		}
 
-	IComponent System.ComponentModel.Design.IDesignerHost.CreateComponent(Type componentClass)
-	{
+		IComponent System.ComponentModel.Design.IDesignerHost.CreateComponent(Type componentClass)
+		{
 			return CreateComponent(componentClass, null, null);
 		}
 
-	// Gets a value indicating whether the designer host is currently in a transaction.
-	public bool InTransaction 
-	{ 
-		get 
-		{
+		// Gets a value indicating whether the designer host is currently in a transaction.
+		public bool InTransaction 
+		{ 
+			get 
+			{
 				return transactionCount > 0;
 			}
-	}
+		}
 
-	// Get descriptions of all of our transactions.
-	internal StringStack TransactionDescriptions 
-	{
-		get 
+		// Get descriptions of all of our transactions.
+		internal StringStack TransactionDescriptions 
 		{
+			get 
+			{
 				if (transactionDescriptions == null) 
 				{
 					transactionDescriptions = new StringStack();
 				}
 				return transactionDescriptions;
 			}
-	}
+		}
 
-	// Gets the description of the current transaction.
-	public string TransactionDescription 
-	{
-		get 
+		// Gets the description of the current transaction.
+		public string TransactionDescription 
 		{
+			get 
+			{
 				if (transactionDescriptions != null) 
 				{
 					return transactionDescriptions.GetNonNull();
 				}
 				return "";
 			}
-	}
+		}
 
-	// Get or set the number of transactions we have.
-	internal int TransactionCount 
-	{
-		get 
+		// Get or set the number of transactions we have.
+		internal int TransactionCount 
 		{
+			get 
+			{
 				return transactionCount;
 			}
-		set 
-		{
+			set 
+			{
 				transactionCount = value ;
 			}
-	}
+		}
 
-	public DesignerTransaction CreateTransaction(string description)
-	{
+		public DesignerTransaction CreateTransaction(string description)
+		{
 			return new DesignerTransactionImpl(this, description);
 		}
 
-	DesignerTransaction System.ComponentModel.Design.IDesignerHost.CreateTransaction()
-	{
+		DesignerTransaction System.ComponentModel.Design.IDesignerHost.CreateTransaction()
+		{
 			return CreateTransaction("");
 		}
 
-	internal void OnTransactionOpened(EventArgs e) 
-	{
+		internal void OnTransactionOpened(EventArgs e) 
+		{
 			if (TransactionOpened != null)
 				TransactionOpened(this, e);
 		}
         
-	internal void OnTransactionOpening(EventArgs e) 
-	{
+		internal void OnTransactionOpening(EventArgs e) 
+		{
 			if (TransactionOpening != null)
 				TransactionOpening(this, e);
 		}
 
-	internal void OnTransactionClosed(DesignerTransactionCloseEventArgs e) 
-	{
+		internal void OnTransactionClosed(DesignerTransactionCloseEventArgs e) 
+		{
 			if (TransactionClosed != null)
 				TransactionClosed(this, e);
 		}
         
-	internal void OnTransactionClosing(DesignerTransactionCloseEventArgs e) 
-	{
+		internal void OnTransactionClosing(DesignerTransactionCloseEventArgs e) 
+		{
 			if (TransactionClosing != null)
 				TransactionClosing(this, e);
 		}
 
-	public void DestroyComponent(IComponent component)
-	{
+		public void DestroyComponent(IComponent component)
+		{
 			string name;
 			if (component == null) 
 			{
@@ -423,8 +423,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 			
-	public void Activate()
-	{
+		public void Activate()
+		{
 			try
 			{
 				if (Activated != null)
@@ -435,8 +435,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			catch{}
 		}
 
-	public void OnLoadComplete()
-	{
+		public void OnLoadComplete()
+		{
 			try
 			{
 				if (LoadComplete != null)
@@ -447,15 +447,15 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			catch{}
 		}
 
-	public string RootComponentClassName
-	{
-		get
+		public string RootComponentClassName
 		{
+			get
+			{
 				return rootComponent.GetType().Name;
 			}
-	}
-	public Type GetType(string typeName)
-	{
+		}
+		public Type GetType(string typeName)
+		{
 			Type type = null;
 			ITypeResolutionService typeResolverService = (ITypeResolutionService)GetService(typeof(ITypeResolutionService));
 			
@@ -470,56 +470,56 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return type;
 		}
 
-	public event System.ComponentModel.Design.DesignerTransactionCloseEventHandler TransactionClosing;
+		public event System.ComponentModel.Design.DesignerTransactionCloseEventHandler TransactionClosing;
 
-	public IComponent RootComponent
-	{
-		get
+		public IComponent RootComponent
 		{
+			get
+			{
 				return rootComponent;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region IServiceContainer Members
+		#region IServiceContainer Members
 
-	public void RemoveService(Type serviceType, bool promote)
-	{
+		public void RemoveService(Type serviceType, bool promote)
+		{
 			serviceContainer.RemoveService(serviceType,promote);
 		}
 
-	void System.ComponentModel.Design.IServiceContainer.RemoveService(Type serviceType)
-	{
+		void System.ComponentModel.Design.IServiceContainer.RemoveService(Type serviceType)
+		{
 			serviceContainer.RemoveService(serviceType);
 		}
 
-	public void AddService(Type serviceType, System.ComponentModel.Design.ServiceCreatorCallback callback, bool promote)
-	{
+		public void AddService(Type serviceType, System.ComponentModel.Design.ServiceCreatorCallback callback, bool promote)
+		{
 			serviceContainer.AddService(serviceType,callback,promote);
 		}
 
-	void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, System.ComponentModel.Design.ServiceCreatorCallback callback)
-	{
+		void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, System.ComponentModel.Design.ServiceCreatorCallback callback)
+		{
 			serviceContainer.AddService(serviceType,callback);
 		}
 
-	void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, object serviceInstance, bool promote)
-	{
+		void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, object serviceInstance, bool promote)
+		{
 			serviceContainer.AddService(serviceType,serviceInstance,promote);
 		}
 
-	void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, object serviceInstance)
-	{
+		void System.ComponentModel.Design.IServiceContainer.AddService(Type serviceType, object serviceInstance)
+		{
 			serviceContainer.AddService(serviceType,serviceInstance);
 		}
 
-	#endregion
+		#endregion
 
-	#region IServiceProvider Members
+		#region IServiceProvider Members
 
-	public object GetService(Type serviceType)
-	{
+		public object GetService(Type serviceType)
+		{
             object service = serviceContainer.GetService(serviceType);
             if (service == null)
             {
@@ -528,20 +528,20 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return serviceContainer.GetService(serviceType);
 		}
 
-	#endregion
+		#endregion
 
-	#region IContainer Members
+		#region IContainer Members
 
-	public ComponentCollection Components
-	{
-		get
+		public ComponentCollection Components
 		{
+			get
+			{
 				return new ComponentCollection(GetAllComponents());
 			}
-	}
+		}
 
-	public void Remove(IComponent component)
-	{
+		public void Remove(IComponent component)
+		{
 			if(component==null)
 			{
 				throw new ArgumentException("component");
@@ -610,8 +610,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 		
-	private bool IsInherited(IComponent component)
-	{
+		private bool IsInherited(IComponent component)
+		{
 			IInheritanceService service = null;
 			if (component != null)
 			{
@@ -624,8 +624,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return false;
 		}
 		
-	public void Add(IComponent component, string name)
-	{
+		public void Add(IComponent component, string name)
+		{
 			// we have to have a component
 			if(component==null)
 			{
@@ -655,7 +655,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 				name!=null && string.Compare(name,component.Site.Name,true)!=0) 
 			{
 				// name validation and component changing/changed events
-				// are fired in the Site.Name property so we don't have 		// to do it here...
+				// are fired in the Site.Name property so we don't have 
+				// to do it here...
 				component.Site.Name=name;
 				// bail out
 				return;
@@ -666,8 +667,10 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			
 			
 			component.Site=site;
-			// the container-component association was established when 		// we created the site through site.host.
-			// we need to fire adding/added events. create a component event args 		// for the component we are adding.
+			// the container-component association was established when 
+			// we created the site through site.host.
+			// we need to fire adding/added events. create a component event args 
+			// for the component we are adding.
 
 			ComponentEventArgs evtArgs = new ComponentEventArgs(component);
 
@@ -716,8 +719,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 
-	private string ModifyNameIfPresent(string componentName)
-	{
+		private string ModifyNameIfPresent(string componentName)
+		{
 			if (!sites.Contains(componentName))
 			{
 				return componentName;
@@ -733,14 +736,14 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			throw new Exception("Could not create a valid name from " + componentName);
 		}
 
-	void System.ComponentModel.IContainer.Add(IComponent component)
-	{
+		void System.ComponentModel.IContainer.Add(IComponent component)
+		{
 			Add(component,null);
 		}
 
-	/// Creates some of the more infrequently used services
-	private object OnCreateService(IServiceContainer container, Type serviceType) 
-	{
+		/// Creates some of the more infrequently used services
+		private object OnCreateService(IServiceContainer container, Type serviceType) 
+		{
             
 			// Create SelectionService
 			if (serviceType == typeof(ISelectionService)) 
@@ -810,13 +813,13 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
             }
             return null;
 		}
-	#endregion
+		#endregion
 
-	#region IDisposable Members
+		#region IDisposable Members
 
-	bool _disposing = false;
-	public void Dispose()
-	{
+		bool _disposing = false;
+		public void Dispose()
+		{
 			_disposing = true;
 
 			// Unload the document.
@@ -873,14 +876,14 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			this.DataSet = null;
 		}
 
-	#endregion
+		#endregion
 
-	#region IComponentChangeService Members
+		#region IComponentChangeService Members
 
-	public event System.ComponentModel.Design.ComponentEventHandler ComponentRemoving;
+		public event System.ComponentModel.Design.ComponentEventHandler ComponentRemoving;
 
-	public void OnComponentChanged(object component, MemberDescriptor member, object oldValue, object newValue)
-	{
+		public void OnComponentChanged(object component, MemberDescriptor member, object oldValue, object newValue)
+		{
             if (ComponentChanged != null) 
 			{
 				ComponentChangedEventArgs ce = new ComponentChangedEventArgs(component, member, oldValue, newValue);
@@ -892,8 +895,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 
-	public void OnComponentChanging(object component, MemberDescriptor member)
-	{
+		public void OnComponentChanging(object component, MemberDescriptor member)
+		{
 			if (ComponentChanging != null) 
 			{
 				ComponentChangingEventArgs ce = new ComponentChangingEventArgs(component, member);
@@ -905,8 +908,8 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 
-	internal void OnComponentRename(object component, string oldName, string newName)
-	{
+		internal void OnComponentRename(object component, string oldName, string newName)
+		{
 			if (ComponentRename != null)
 			{
 				try
@@ -916,25 +919,25 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 				catch{}
 			}
 		}
-	public event System.ComponentModel.Design.ComponentEventHandler ComponentAdded;
+		public event System.ComponentModel.Design.ComponentEventHandler ComponentAdded;
 
-	public event System.ComponentModel.Design.ComponentRenameEventHandler ComponentRename;
+		public event System.ComponentModel.Design.ComponentRenameEventHandler ComponentRename;
 
-	public event System.ComponentModel.Design.ComponentEventHandler ComponentAdding;
+		public event System.ComponentModel.Design.ComponentEventHandler ComponentAdding;
 
-	public event System.ComponentModel.Design.ComponentEventHandler ComponentRemoved;
+		public event System.ComponentModel.Design.ComponentEventHandler ComponentRemoved;
 
-	public event System.ComponentModel.Design.ComponentChangingEventHandler ComponentChanging;
+		public event System.ComponentModel.Design.ComponentChangingEventHandler ComponentChanging;
 
-	public event System.ComponentModel.Design.ComponentChangedEventHandler ComponentChanged;
+		public event System.ComponentModel.Design.ComponentChangedEventHandler ComponentChanged;
 
-	#endregion
+		#endregion
 
 
-	#region Private Helper Methods
+		#region Private Helper Methods
 
-	private IComponent[] GetAllComponents()
-	{
+		private IComponent[] GetAllComponents()
+		{
 			IComponent[] components = new IComponent[sites.Count];
 			// loop over the sites and get all the components
 			IEnumerator ie = sites.Values.GetEnumerator();
@@ -947,9 +950,9 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			return components;
 		}
 
-	// This is called during Dispose and Reload methods to unload the current designer.
-	private void UnloadDocument() 
-	{
+		// This is called during Dispose and Reload methods to unload the current designer.
+		private void UnloadDocument() 
+		{
 
 			if (helpService != null && rootDesigner != null) 
 			{
@@ -1078,101 +1081,101 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 				trans.Commit();
 			}
 		}
-	#endregion
+		#endregion
 
-	#region IExtenderProviderService Members
+		#region IExtenderProviderService Members
 
-	public void RemoveExtenderProvider(IExtenderProvider provider)
-	{
+		public void RemoveExtenderProvider(IExtenderProvider provider)
+		{
 			extenderProviders.Remove(provider);
 		}
 
-	public void AddExtenderProvider(IExtenderProvider provider)
-	{
+		public void AddExtenderProvider(IExtenderProvider provider)
+		{
 			extenderProviders.Add(provider);
 		}
 
-	#endregion
+		#endregion
 
-	#region IDesignerEventService Members
+		#region IDesignerEventService Members
 
-	public DesignerCollection Designers
-	{
-		get
+		public DesignerCollection Designers
 		{
+			get
+			{
 				// we just have one designer
 				IDesignerHost[] designers = new IDesignerHost[]{this};
 				return new DesignerCollection(designers);
 			}
-	}
+		}
 
-	public event System.ComponentModel.Design.DesignerEventHandler DesignerDisposed
-	{
-		add { }
-		remove { }
-	}
-
-	public IDesignerHost ActiveDesigner
-	{
-		get
+		public event System.ComponentModel.Design.DesignerEventHandler DesignerDisposed
 		{
+			add { }
+			remove { }
+		}
+
+		public IDesignerHost ActiveDesigner
+		{
+			get
+			{
 				// always this designer
 				return this;
 			}
-	}
+		}
 
-	public event System.ComponentModel.Design.DesignerEventHandler DesignerCreated
-	{
-		add { }
-		remove { }
-	}
+		public event System.ComponentModel.Design.DesignerEventHandler DesignerCreated
+		{
+			add { }
+			remove { }
+		}
 
-	public event System.ComponentModel.Design.ActiveDesignerEventHandler ActiveDesignerChanged
-	{
-		add { }
-		remove { }
-	}
+		public event System.ComponentModel.Design.ActiveDesignerEventHandler ActiveDesignerChanged
+		{
+			add { }
+			remove { }
+		}
 
-	public event System.EventHandler SelectionChanged
-	{
-		add { }
-		remove { }
-	}
+		public event System.EventHandler SelectionChanged
+		{
+			add { }
+			remove { }
+		}
 
-	#endregion
+		#endregion
 
-	#region IExtenderListService Members
+		#region IExtenderListService Members
 
-	public IExtenderProvider[] GetExtenderProviders()
-	{
+		public IExtenderProvider[] GetExtenderProviders()
+		{
 			IExtenderProvider[] e = new IExtenderProvider[extenderProviders.Count];
 			extenderProviders.CopyTo(e, 0);
 			return e;
 		}
 
-	#endregion
+		#endregion
 
-	private Control _parentControl;
-	public Control ParentControl
-	{
-		get
+		private Control _parentControl;
+		public Control ParentControl
 		{
+			get
+			{
 				return _parentControl;
 			}
-		set
-		{
+			set
+			{
 				_parentControl = value;
 			}
-	}
-	#region IDesignerOptionService Members
+		}
+		#region IDesignerOptionService Members
 
-	public void SetOptionValue(string pageName, string valueName, object value)
-	{
+		public void SetOptionValue(string pageName, string valueName, object value)
+		{
 			// TODO:  Add DesignerHostImpl.SetOptionValue implementation
 		}
 
-	public object GetOptionValue(string pageName, string valueName)
-	{
+		public object GetOptionValue(string pageName, string valueName)
+		{
 			switch(pageName)
 			{
 				case @"WindowsFormsDesigner\General":
@@ -1189,5 +1192,6 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

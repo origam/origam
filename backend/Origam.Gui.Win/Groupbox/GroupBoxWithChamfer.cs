@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 // Copyright 2004 Shouvik - https://www.codeproject.com/Articles/8103/Creating-some-cool-buttons-and-groupboxes
 #endregion
@@ -32,99 +31,100 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for GroupBoxWithChamfer.
-/// </summary>
-[ToolboxBitmap(typeof(GroupBoxWithChamfer))]
-public class GroupBoxWithChamfer : BaseContainer
+namespace Origam.Gui.Win
 {
-	#region Private Data Members
-	// The enum object to store the colorscheme value
-	private EnmColorScheme meColorScheme = EnmColorScheme.Origam;
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	#endregion
-
-	public GroupBoxWithChamfer():base()
+	/// <summary>
+	/// Summary description for GroupBoxWithChamfer.
+	/// </summary>
+	[ToolboxBitmap(typeof(GroupBoxWithChamfer))]
+	public class GroupBoxWithChamfer : BaseContainer
 	{
+		#region Private Data Members
+        // The enum object to store the colorscheme value
+		private EnmColorScheme meColorScheme = EnmColorScheme.Origam;
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		#endregion
+
+		public GroupBoxWithChamfer():base()
+		{
 			this.ColorScheme = meColorScheme;
 		}
 
-	private Guid _styleId;
-	[Browsable(false)]
-	public Guid StyleId
-	{
-		get
+		private Guid _styleId;
+		[Browsable(false)]
+		public Guid StyleId
 		{
+			get
+			{
 				return _styleId;
 			}
-		set
-		{
+			set
+			{
 				_styleId = value;
 			}
-	}
+		}
 
-	[TypeConverter(typeof(StylesConverter))]
-	public UIStyle Style
-	{
-		get
+		[TypeConverter(typeof(StylesConverter))]
+		public UIStyle Style
 		{
+			get
+			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-		set
-		{
+			set
+			{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	#region Overridden Properties
-	public override EnmColorScheme ColorScheme
-	{
-		get
+		#region Overridden Properties
+		public override EnmColorScheme ColorScheme
 		{
+			get
+			{
 				return meColorScheme;
 			}
-		set
-		{
+			set
+			{
 				// Create object of ColorScheme Class
 				ColorScheme oColor = new ColorScheme(value);
 				
-				// Set the controls Diffrent color properties depending on the 			// Color Scheme selected
+				// Set the controls Diffrent color properties depending on the 
+				// Color Scheme selected
 				oColor.SetColorScheme(this);
 				meColorScheme=value;
 			}
-	}
+		}
 
-	// This property is being used in the BaseClass's OnPaint method to 
-	// get the drawing path of the control
-	protected override GraphicsPath InteriorRegionPath
-	{
-		get
+        // This property is being used in the BaseClass's OnPaint method to 
+		// get the drawing path of the control
+		protected override GraphicsPath InteriorRegionPath
 		{
+			get
+			{
 				Rectangle oRectangle = new Rectangle(this.BorderRectangle.X + 1, this.BorderRectangle.Y + 1, this.BorderRectangle.Width - 2, this.BorderRectangle.Height - 2);
 				Size oSize = new Size(mosizeBorderPixelIndent.Width - 2, mosizeBorderPixelIndent.Height - 2);
 				return this.GetRoundedRectanglarPath(oRectangle, moTextSize, oSize); 
 			}
-	}
+		}
 
-	// This property is being used in the Base Class's OnPaint method to
-	// get the region path of the control to shape the control that way
-	protected override GraphicsPath ExteriorRegionPath
-	{
-		get
+		// This property is being used in the Base Class's OnPaint method to
+		// get the region path of the control to shape the control that way
+		protected override GraphicsPath ExteriorRegionPath
 		{
+			get
+			{
 				Rectangle oRectangle = new Rectangle(this.BorderRectangle.X, this.BorderRectangle.Y, this.BorderRectangle.Width + 3, this.BorderRectangle.Height + 3);
 				Size oSize = new Size(mosizeBorderPixelIndent.Width + 2, mosizeBorderPixelIndent.Width + 2);
 				return this.GetRoundedRectanglarPath(oRectangle, new SizeF(moTextSize.Width + 3, moTextSize.Height), oSize);
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Private Methods
-	// This Function Gets the Graphic Path to draw the Rectangle with Chamfer
-	private GraphicsPath GetRoundedRectanglarPath(Rectangle aoRectangle, SizeF aoTextSize, Size aoCurveSize)
-	{
+		#region Private Methods
+		// This Function Gets the Graphic Path to draw the Rectangle with Chamfer
+		private GraphicsPath GetRoundedRectanglarPath(Rectangle aoRectangle, SizeF aoTextSize, Size aoCurveSize)
+		{
 			GraphicsPath oGraphicPath = new GraphicsPath();
 
 			//=======================================================================
@@ -181,13 +181,13 @@ public class GroupBoxWithChamfer : BaseContainer
 				aoRectangle.Left, aoRectangle.Top + (Single)(aoCurveSize.Height / 2));
 			return oGraphicPath;
 		}
-	#endregion
+		#endregion
 
-	#region Overridden Methods
+		#region Overridden Methods
 
-	// This method is called in the OnPaint Method of the base class
-	protected override void DrawBorder(System.Drawing.Graphics aoGraphics, Rectangle aoRectangle)
-	{
+		// This method is called in the OnPaint Method of the base class
+		protected override void DrawBorder(System.Drawing.Graphics aoGraphics, Rectangle aoRectangle)
+		{
 			Pen oPen;
 			Size oSize = new Size(mosizeBorderPixelIndent.Width, mosizeBorderPixelIndent.Height);
             
@@ -245,5 +245,6 @@ public class GroupBoxWithChamfer : BaseContainer
 				oPen.Dispose();
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

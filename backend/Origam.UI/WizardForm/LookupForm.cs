@@ -2,25 +2,25 @@
 using System;
 using System.Windows.Forms;
 
-namespace Origam.UI.WizardForm;
-
-public class LookupForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    public IDataEntity Entity { get; set; }
-
-    public string LookupName { get; set; }
-
-    public IDataEntityColumn NameColumn { get; set; }
-        
-    public IDataEntityColumn IdColumn { get; private set; } = null;
-
-    public EntityFilter IdFilter { get; set; }
-        
-    public EntityFilter ListFilter { get; set; }
-        
-
-    internal void SetUpForm(ComboBox cboIdFilter, ComboBox cboListFilter, ComboBox cboDisplayField, TextBox txtName)
+    public class LookupForm : AbstractWizardForm
     {
+        public IDataEntity Entity { get; set; }
+
+        public string LookupName { get; set; }
+
+        public IDataEntityColumn NameColumn { get; set; }
+        
+        public IDataEntityColumn IdColumn { get; private set; } = null;
+
+        public EntityFilter IdFilter { get; set; }
+        
+        public EntityFilter ListFilter { get; set; }
+        
+
+        internal void SetUpForm(ComboBox cboIdFilter, ComboBox cboListFilter, ComboBox cboDisplayField, TextBox txtName)
+        {
             cboIdFilter.Items.Clear();
             cboListFilter.Items.Clear();
             cboDisplayField.Items.Clear();
@@ -55,4 +55,5 @@ public class LookupForm : AbstractWizardForm
 
             if (IdColumn == null) throw new Exception("Entity has no primary key defined. Cannot create lookup.");
         }
+    }
 }

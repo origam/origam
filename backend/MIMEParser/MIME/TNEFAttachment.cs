@@ -31,67 +31,69 @@
 *					1.Adding descriptions to every public functions/property/void
 */
 
-namespace OpenPOP.MIMEParser;
-
-/// <summary>
-/// TNEFAttachment
-/// </summary>
-public class TNEFAttachment
+namespace OpenPOP.MIMEParser
 {
-
-	#region Member Variables
-	private string _fileName="";
-	private long _fileLength=0;
-	private string _subject="";
-	private byte[] _fileContent=null;
-	#endregion
-
-
-	#region Properties
 	/// <summary>
-	/// attachment subject
+	/// TNEFAttachment
 	/// </summary>
-	public string Subject
+	public class TNEFAttachment
 	{
-		get{return _subject;}
-		set{_subject=value;}
-	}
 
-	/// <summary>
-	/// attachment file length
-	/// </summary>
-	public long FileLength
-	{
-		get{return _fileLength;}
-		set{_fileLength=value;}
-	}
-
-	/// <summary>
-	/// attachment file name
-	/// </summary>
-	public string FileName
-	{
-		get{return _fileName;}
-		set{_fileName=value;}
-	}
-
-	/// <summary>
-	/// attachment file content
-	/// </summary>
-	public byte[] FileContent
-	{
-		get{return _fileContent;}
-		set{_fileContent=value;}
-	}
-	#endregion
+		#region Member Variables
+		private string _fileName="";
+		private long _fileLength=0;
+		private string _subject="";
+		private byte[] _fileContent=null;
+		#endregion
 
 
-	public TNEFAttachment()
-	{
+		#region Properties
+		/// <summary>
+		/// attachment subject
+		/// </summary>
+		public string Subject
+		{
+			get{return _subject;}
+			set{_subject=value;}
 		}
 
-	~TNEFAttachment()
-	{
+		/// <summary>
+		/// attachment file length
+		/// </summary>
+		public long FileLength
+		{
+			get{return _fileLength;}
+			set{_fileLength=value;}
+		}
+
+		/// <summary>
+		/// attachment file name
+		/// </summary>
+		public string FileName
+		{
+			get{return _fileName;}
+			set{_fileName=value;}
+		}
+
+		/// <summary>
+		/// attachment file content
+		/// </summary>
+		public byte[] FileContent
+		{
+			get{return _fileContent;}
+			set{_fileContent=value;}
+		}
+		#endregion
+
+
+		public TNEFAttachment()
+		{
+		}
+
+		~TNEFAttachment()
+		{
 			_fileContent=null;
 		}
+	}
 }
+

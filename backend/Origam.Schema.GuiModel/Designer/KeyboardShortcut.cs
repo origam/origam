@@ -25,95 +25,96 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for Graphics.
-/// </summary>
-[SchemaItemDescription("Keyboard Shortcut", "icon_shortcut.png")]
-[HelpTopic("Keyboard+Shortcuts")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class KeyboardShortcut : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "KeyboardShortcut";
-
-	public KeyboardShortcut() : base(){}
-
-	public KeyboardShortcut(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public KeyboardShortcut(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-
-	public override string ItemType
+	/// <summary>
+	/// Summary description for Graphics.
+	/// </summary>
+	[SchemaItemDescription("Keyboard Shortcut", "icon_shortcut.png")]
+    [HelpTopic("Keyboard+Shortcuts")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class KeyboardShortcut : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "KeyboardShortcut";
+
+		public KeyboardShortcut() : base(){}
+
+		public KeyboardShortcut(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public KeyboardShortcut(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	private bool _isShift = false;
-	[DefaultValue(false)]
-	[XmlAttribute("shift")]
-	public bool IsShift
-	{
-		get
+		#region Properties
+		private bool _isShift = false;
+		[DefaultValue(false)]
+		[XmlAttribute("shift")]
+		public bool IsShift
 		{
+			get
+			{
 				return _isShift;
 			}
-		set
-		{
+			set
+			{
 				_isShift = value;
 			}
-	}
+		}
 
-	private bool _isControl = false;
-	[DefaultValue(false)]
-	[XmlAttribute("control")]
-	public bool IsControl
-	{
-		get
+		private bool _isControl = false;
+		[DefaultValue(false)]
+		[XmlAttribute("control")]
+		public bool IsControl
 		{
+			get
+			{
 				return _isControl;
 			}
-		set
-		{
+			set
+			{
 				_isControl = value;
 			}
-	}
+		}
 
-	private bool _isAlt = false;
-	[DefaultValue(false)]
-	[XmlAttribute("alt")]
-	public bool IsAlt
-	{
-		get
+		private bool _isAlt = false;
+		[DefaultValue(false)]
+		[XmlAttribute("alt")]
+		public bool IsAlt
 		{
+			get
+			{
 				return _isAlt;
 			}
-		set
-		{
+			set
+			{
 				_isAlt = value;
 			}
-	}
+		}
 
-	private int _keyCode = 0;
-	[DefaultValue(false)]
-	[XmlAttribute("keyCode")]
-	public int KeyCode
-	{
-		get
+		private int _keyCode = 0;
+		[DefaultValue(false)]
+		[XmlAttribute("keyCode")]
+		public int KeyCode
 		{
+			get
+			{
 				return _keyCode;
 			}
-		set
-		{
+			set
+			{
 				_keyCode = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

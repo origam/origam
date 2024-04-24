@@ -22,21 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for AbstractWorkflowBlock.
-/// </summary>
-public abstract class AbstractWorkflowBlock : AbstractWorkflowStep, IWorkflowBlock
+namespace Origam.Schema.WorkflowModel
 {
-	public AbstractWorkflowBlock() : base() {Init();}
-
-	public AbstractWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-
-	public AbstractWorkflowBlock(Key primaryKey) : base(primaryKey)	{Init();}
-
-	private void Init()
+	/// <summary>
+	/// Summary description for AbstractWorkflowBlock.
+	/// </summary>
+	public abstract class AbstractWorkflowBlock : AbstractWorkflowStep, IWorkflowBlock
 	{
+		public AbstractWorkflowBlock() : base() {Init();}
+
+		public AbstractWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+
+		public AbstractWorkflowBlock(Key primaryKey) : base(primaryKey)	{Init();}
+
+		private void Init()
+		{
 			this.ChildItemTypes.Add(typeof(ServiceMethodCallTask));
 			this.ChildItemTypes.Add(typeof(UIFormTask));
 			this.ChildItemTypes.Add(typeof(WorkflowCallTask));
@@ -51,14 +51,15 @@ public abstract class AbstractWorkflowBlock : AbstractWorkflowStep, IWorkflowBlo
 			this.ChildItemTypes.Add(typeof(WaitTask));
 		}
 
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 		
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

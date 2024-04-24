@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for IOrigamMetadataConsumer.
-/// </summary>
-public interface IOrigamMetadataConsumer
+namespace Origam.Schema
 {
-	AbstractSchemaItem OrigamMetadata {get; set;}
+	/// <summary>
+	/// Summary description for IOrigamMetadataConsumer.
+	/// </summary>
+	public interface IOrigamMetadataConsumer
+	{
+		AbstractSchemaItem OrigamMetadata {get; set;}
+	}
 }

@@ -23,11 +23,12 @@ using System;
 using System.Collections.Generic;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.Session;
-
-public class CreateSessionData
+namespace Origam.Server.Model.Session
 {
-    [RequiredNonDefault]
-    public Guid MenuId { get; set; }
-    public Dictionary<string, string> Parameters { get; set; }
+    public class CreateSessionData
+    {
+        [RequiredNonDefault]
+        public Guid MenuId { get; set; }
+        public Dictionary<string, string> Parameters { get; set; }
+    }
 }

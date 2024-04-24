@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI.Commands;
-
-public interface IRunCommand
+namespace Origam.UI.Commands
 {
-    void Execute();
-    int GetImageIndex(string icon);
-    void SetSummaryText(object summary);
+    public interface IRunCommand
+    {
+        void Execute();
+        int GetImageIndex(string icon);
+        void SetSummaryText(object summary);
+    }
 }

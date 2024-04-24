@@ -21,16 +21,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for IWorkflowEngineTask.
-/// </summary>
-public interface IWorkflowEngineTask
+namespace Origam.Workflow
 {
-	event WorkflowEngineTaskFinished Finished;
-	WorkflowEngine Engine {get; set;}
-	IWorkflowStep Step {get; set;}
-	object Result {get;}
-	void Execute();
+	/// <summary>
+	/// Summary description for IWorkflowEngineTask.
+	/// </summary>
+	public interface IWorkflowEngineTask
+	{
+		event WorkflowEngineTaskFinished Finished;
+		WorkflowEngine Engine {get; set;}
+		IWorkflowStep Step {get; set;}
+		object Result {get;}
+		void Execute();
+	}
 }

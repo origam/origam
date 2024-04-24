@@ -25,31 +25,31 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.UI;
 
-namespace Origam.Workbench;
-
-public class SchemaBrowser : AbstractPadContent, IBrowserPad
+namespace Origam.Workbench
 {
-	public ExpressionBrowser EbrSchemaBrowser;
-	private readonly System.ComponentModel.Container components = null;
-	private readonly SchemaService schemaService = 
-		ServiceManager.Services.GetService<SchemaService>();
-
-	public ImageList ImageList => EbrSchemaBrowser.imgList;
-
-	public SchemaBrowser()
+	public class SchemaBrowser : AbstractPadContent, IBrowserPad
 	{
+		public ExpressionBrowser EbrSchemaBrowser;
+		private readonly System.ComponentModel.Container components = null;
+		private readonly SchemaService schemaService = 
+			ServiceManager.Services.GetService<SchemaService>();
+
+        public ImageList ImageList => EbrSchemaBrowser.imgList;
+
+		public SchemaBrowser()
+		{
 			InitializeComponent();
 			schemaService.SchemaLoaded += _schemaService_SchemaLoaded;
             schemaService.SchemaUnloaded += SchemaService_SchemaUnloaded;
 		}
 
-	private void SchemaService_SchemaUnloaded(object sender, EventArgs e)
-	{
+        private void SchemaService_SchemaUnloaded(object sender, EventArgs e)
+        {
             EbrSchemaBrowser.RemoveAllNodes();
         }
 
-	protected override void Dispose( bool disposing )
-	{
+        protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				components?.Dispose();
@@ -57,18 +57,20 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaBrowser));
             this.EbrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
             this.SuspendLayout();
-            // 	 // EbrSchemaBrowser
-            // 	 this.EbrSchemaBrowser.AllowEdit = true;
+            // 
+            // EbrSchemaBrowser
+            // 
+            this.EbrSchemaBrowser.AllowEdit = true;
             this.EbrSchemaBrowser.CheckSecurity = false;
             this.EbrSchemaBrowser.DisableOtherExtensionNodes = true;
             this.EbrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -78,8 +80,10 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
             this.EbrSchemaBrowser.ShowFilter = false;
             this.EbrSchemaBrowser.Size = new System.Drawing.Size(292, 271);
             this.EbrSchemaBrowser.TabIndex = 1;
-            // 	 // SchemaBrowser
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 
+            // SchemaBrowser
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(292, 271);
             this.Controls.Add(this.EbrSchemaBrowser);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
@@ -96,21 +100,22 @@ public class SchemaBrowser : AbstractPadContent, IBrowserPad
             this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	private void _schemaService_SchemaLoaded(object sender, bool isInteractive)
-	{
+		private void _schemaService_SchemaLoaded(object sender, bool isInteractive)
+		{
             EbrSchemaBrowser.RemoveAllNodes();
             EbrSchemaBrowser.AddRootNode(schemaService.ActiveExtension);
 		}
 		
-	public override void RedrawContent()
-	{
+		public override void RedrawContent()
+		{
 			EbrSchemaBrowser.Redraw();
 		}
 
-	public int ImageIndex(string icon)
-	{
+        public int ImageIndex(string icon)
+        {
              return this.ImageList.ImageIndex(icon);
         }
+    }
 }

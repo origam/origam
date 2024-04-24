@@ -25,51 +25,51 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for EntityFilterReference.
-/// </summary>
-[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
-[HelpTopic("Filter+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Filter")]
-[ClassMetaVersion("6.0.0")]
-public class EntityFilterReference : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "EntityFilterReference";
-
-	public EntityFilterReference() : base() {}
-
-	public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-
-	public override string ItemType
+	/// <summary>
+	/// Summary description for EntityFilterReference.
+	/// </summary>
+	[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
+    [HelpTopic("Filter+Reference")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Filter")]
+    [ClassMetaVersion("6.0.0")]
+    public class EntityFilterReference : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "EntityFilterReference";
+
+		public EntityFilterReference() : base() {}
+
+		public EntityFilterReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntityFilterReference(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-	{
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		{
 			if(this.Filter != null)
 				base.GetParameterReferences(this.Filter as AbstractSchemaItem, list);
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Filter);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -85,33 +85,33 @@ public class EntityFilterReference : AbstractSchemaItem
 			base.UpdateReferences ();
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	public Guid FilterId;
+		#region Properties
+		public Guid FilterId;
 
-	[TypeConverter(typeof(EntityFilterConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRuleAttribute()]
-	[XmlReference("filter", "FilterId")]
-	public EntityFilter Filter
-	{
-		get
+		[TypeConverter(typeof(EntityFilterConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRuleAttribute()]
+        [XmlReference("filter", "FilterId")]
+        public EntityFilter Filter
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.FilterId;
 
 				return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					this.FilterId = Guid.Empty;
@@ -125,21 +125,22 @@ public class EntityFilterReference : AbstractSchemaItem
 					this.Name = this.Filter.Name;
 				}
 			}
-	}
+		}
 
-	private string _roles;
-	[Category("Security")]
-	[XmlAttribute("roles")]
-	public string Roles
-	{
-		get
+		private string _roles;
+		[Category("Security")]
+		[XmlAttribute("roles")]
+        public string Roles
 		{
+			get
+			{
 				return _roles;
 			}
-		set
-		{
+			set
+			{
 				_roles = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

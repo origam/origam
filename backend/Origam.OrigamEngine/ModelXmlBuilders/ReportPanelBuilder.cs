@@ -27,16 +27,16 @@ using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using Origam.Schema;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for ReportPanelBuilder.
-/// </summary>
-public class ReportPanelBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement parentNode, UIElementRenderData renderData, 
-		DataTable table, ControlSetItem control)
+	/// <summary>
+	/// Summary description for ReportPanelBuilder.
+	/// </summary>
+	public class ReportPanelBuilder
 	{
+		public static void Build(XmlElement parentNode, UIElementRenderData renderData, 
+			DataTable table, ControlSetItem control)
+		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService))
 				as IPersistenceService;
 			AbstractReport report = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractReport), 
@@ -59,4 +59,5 @@ public class ReportPanelBuilder
 				reportParamElement.SetAttribute("FieldName", mapping.ColumnName);
 			}
 		}
+	}
 }

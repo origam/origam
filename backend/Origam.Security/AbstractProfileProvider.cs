@@ -26,21 +26,21 @@ using Origam.DA;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Security;
-
-public abstract class AbstractProfileProvider 
-	: IOrigamProfileProvider
+namespace Origam.Security
 {
-	protected ISchemaService _schemaService 
-		= ServiceManager.Services.GetService(typeof(ISchemaService)) 
+	public abstract class AbstractProfileProvider 
+						: IOrigamProfileProvider
+	{
+		protected ISchemaService _schemaService 
+			= ServiceManager.Services.GetService(typeof(ISchemaService)) 
 			as ISchemaService;
-	protected static readonly log4net.ILog log 
-		= log4net.LogManager.GetLogger(
+		protected static readonly log4net.ILog log 
+			= log4net.LogManager.GetLogger(
 			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-	#region IProfileProvider Members
-	public object GetProfile(Guid profileId)
-	{
+		#region IProfileProvider Members
+		public object GetProfile(Guid profileId)
+		{
 			Hashtable profileCacheById = GetCacheById();
 			if(profileCacheById.Contains(profileId))
 			{
@@ -74,11 +74,11 @@ public abstract class AbstractProfileProvider
 			}
 		}
 
-	public abstract object GetProfile(string userName);
-	public abstract void AddUser(string name, string userName);
+		public abstract object GetProfile(string userName);
+        public abstract void AddUser(string name, string userName);
 
-	public object GetProfile(IIdentity identity)
-	{
+		public object GetProfile(IIdentity identity)
+		{
 			string name = identity.Name;
 			if(! identity.IsAuthenticated)
 			{
@@ -87,15 +87,15 @@ public abstract class AbstractProfileProvider
 			return GetProfile(name);
 		}
 
-	public void SetProfile(IIdentity identity, object profile)
-	{
+		public void SetProfile(IIdentity identity, object profile)
+		{
 			throw new NotImplementedException(
 				"AbstractProfileProvider.SetProfile not implemented");
 		}
-	#endregion
+		#endregion
 
-	protected static IServiceAgent GetAgent()
-	{
+		protected static IServiceAgent GetAgent()
+		{
 			IBusinessServicesService bus = ServiceManager.Services.GetService(
 				typeof(IBusinessServicesService)) as IBusinessServicesService;
 			if(bus == null)
@@ -109,8 +109,8 @@ public abstract class AbstractProfileProvider
 			}
 		}
 
-	protected Hashtable GetCacheById()
-	{
+		protected Hashtable GetCacheById()
+		{
 			string cacheName = "ProfileCacheById";
 			Hashtable context = OrigamUserContext.Context;
 			if(! context.Contains(cacheName))
@@ -120,8 +120,9 @@ public abstract class AbstractProfileProvider
 			return (Hashtable)OrigamUserContext.Context[cacheName];
 		}
 
-	protected Hashtable GetCacheByName()
-	{
+		protected Hashtable GetCacheByName()
+		{
 			return OrigamUserContext.GetContextItem("ProfileCacheByName");
 		}
+	}
 }

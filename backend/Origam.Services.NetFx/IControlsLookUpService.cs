@@ -23,11 +23,12 @@ using System;
 using System.Windows.Forms;
 using Origam.UI;
 
-namespace Origam.Workbench.Services;
-
-public interface IControlsLookUpService: IWorkbenchService
+namespace Origam.Workbench.Services
 {
-    void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
-    void RemoveLookupControl(ILookupControl lookupControl);
-    void RemoveLookupControlsByForm(Form form);
+    public interface IControlsLookUpService: IWorkbenchService
+    {
+        void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
+        void RemoveLookupControl(ILookupControl lookupControl);
+        void RemoveLookupControlsByForm(Form form);
+    }
 }

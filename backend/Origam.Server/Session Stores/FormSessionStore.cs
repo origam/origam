@@ -35,28 +35,28 @@ using System.Collections.Generic;
 using Origam.Server;
 using Origam.Server.Session_Stores;
 
-namespace Origam.Server;
-
-public class FormSessionStore : SaveableSessionStore
+namespace Origam.Server
 {
-    private string _delayedLoadingParameterName;
-    private FormReferenceMenuItem _menuItem;
-    private object _getRowDataLock = new object();
-    private XmlDocument _preparedFormXml = null;
-
-    public FormReferenceMenuItem MenuItem => _menuItem;
-
-    public FormSessionStore(IBasicUIService service, UIRequest request, string name, 
-        FormReferenceMenuItem menuItem, Analytics analytics)
-        : base(service, request, name, analytics)
+    public class FormSessionStore : SaveableSessionStore
     {
+        private string _delayedLoadingParameterName;
+        private FormReferenceMenuItem _menuItem;
+        private object _getRowDataLock = new object();
+        private XmlDocument _preparedFormXml = null;
+
+        public FormReferenceMenuItem MenuItem => _menuItem;
+
+        public FormSessionStore(IBasicUIService service, UIRequest request, string name, 
+            FormReferenceMenuItem menuItem, Analytics analytics)
+            : base(service, request, name, analytics)
+        {
             _menuItem = menuItem;
             SetMenuProperties();
         }
 
-    public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
-        : base(service, request, name, analytics)
-    {
+        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+            : base(service, request, name, analytics)
+        {
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             FormReferenceMenuItem fr = (FormReferenceMenuItem)ps.SchemaProvider.RetrieveInstance(typeof(FormReferenceMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)));
             _menuItem = fr;
@@ -65,8 +65,8 @@ public class FormSessionStore : SaveableSessionStore
             SetMenuProperties();
         }
 
-    private void SetMenuProperties()
-    {
+        private void SetMenuProperties()
+        {
             RuleSet = _menuItem.RuleSet;
             Template = _menuItem.DefaultTemplate;
             SortSet = _menuItem.SortSet;
@@ -75,16 +75,16 @@ public class FormSessionStore : SaveableSessionStore
             RefreshPortalAfterSave = _menuItem.RefreshPortalAfterSave;
         }
 
-    #region Overriden SessionStore Methods
-    public override bool SupportsFormXmlAsync => true;
+        #region Overriden SessionStore Methods
+        public override bool SupportsFormXmlAsync => true;
 
-    public override void Init()
-    {
+        public override void Init()
+        {
             LoadData();
         }
 
-    private void LoadData()
-    {
+        private void LoadData()
+        {
             if(dataRequested)
             {
                 LoadDataFxServer();
@@ -95,8 +95,8 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    private void PrepareDataCore()
-    {
+        private void PrepareDataCore()
+        {
             var data = InitializeFullStructure(_menuItem.DefaultSet);
             SetDataSource(data);
             SetDelayedLoadingParameter(_menuItem.Method);
@@ -104,8 +104,8 @@ public class FormSessionStore : SaveableSessionStore
             this.DataListEntity = _menuItem.ListEntity.Name;
         }
 
-    private void LoadDataFxServer()
-    {
+        private void LoadDataFxServer()
+        {
             DataSet data = null;
             if (this.Request.IsSingleRecordEdit && _menuItem.RecordEditMethod != null)
             {
@@ -135,20 +135,20 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    private void SetDelayedLoadingParameter(DataStructureMethod method)
-    {
+        private void SetDelayedLoadingParameter(DataStructureMethod method)
+        {
             // set the parameter for delayed data loading - there should be just 1
             DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
         }
        
 
-    private string ListPrimaryKeyColumns(DataSet data, string listEntity)
-    {
+        private string ListPrimaryKeyColumns(DataSet data, string listEntity)
+        {
             return GetDataSetBuilder().ListPrimaryKeyColumns(data, listEntity);
         }
 
-    private DataSet LoadCompleteData()
-    {
+        private DataSet LoadCompleteData()
+        {
             if (_menuItem.Method != null)
             {
                 ResolveFormMethodParameters(_menuItem.Method);
@@ -161,8 +161,8 @@ public class FormSessionStore : SaveableSessionStore
             return data;
         }
 
-    public override void LoadColumns(IList<string> columns)
-    {
+        public override void LoadColumns(IList<string> columns)
+        {
             QueryParameterCollection qparams = Request.QueryParameters;
             ArrayList finalColumns = new ArrayList();
             ArrayList arrayColumns = new ArrayList();
@@ -184,9 +184,9 @@ public class FormSessionStore : SaveableSessionStore
             LoadArrayColumns(this.DataList, this.DataListEntity, qparams, arrayColumns);
         }
 
-    private void LoadArrayColumns(DataSet dataset, string entity,
-        QueryParameterCollection qparams, ArrayList arrayColumns)
-    {
+        private void LoadArrayColumns(DataSet dataset, string entity,
+            QueryParameterCollection qparams, ArrayList arrayColumns)
+        {
             lock (_lock)
             {
                 foreach (string column in arrayColumns)
@@ -204,8 +204,8 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    private void LoadStandardColumns(QueryParameterCollection qparams, ArrayList finalColumns)
-    {
+        private void LoadStandardColumns(QueryParameterCollection qparams, ArrayList finalColumns)
+        {
             lock (_lock)
             {
                 if (finalColumns.Count == 0)
@@ -248,8 +248,8 @@ public class FormSessionStore : SaveableSessionStore
 
         
 
-    private DataSet LoadSingleRecord()
-    {
+        private DataSet LoadSingleRecord()
+        {
             DataSet data;
             // We use the RecordEdit filter set for single record editing.
             ResolveFormMethodParameters(_menuItem.RecordEditMethod);
@@ -259,8 +259,8 @@ public class FormSessionStore : SaveableSessionStore
             return data;
         }
 
-    private void ResolveFormMethodParameters(DataStructureMethod method)
-    {
+        private void ResolveFormMethodParameters(DataStructureMethod method)
+        {
             // And we have to get the real parameter names from the filters/defaults instead of the "id"
             // set by the client.
             if (this.Request.Parameters.Contains("id"))
@@ -279,8 +279,8 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    internal override object Save()
-    {
+        internal override object Save()
+        {
             if (MenuItem.ReadOnlyAccess)
             {
                 throw new Exception("Read only session cannot be saved");
@@ -289,8 +289,8 @@ public class FormSessionStore : SaveableSessionStore
             return base.Save();
         }
 
-    public override object ExecuteActionInternal(string actionId)
-    {
+        public override object ExecuteActionInternal(string actionId)
+        {
             switch (actionId)
             {
                 case ACTION_SAVE:
@@ -309,15 +309,15 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    /// <summary>
-    /// Called when moving to a new row to load the actual data from the data source
-    /// (delayed loading).
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
-    {
+        /// <summary>
+        /// Called when moving to a new row to load the actual data from the data source
+        /// (delayed loading).
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+        {
             ArrayList result = new ArrayList();
             lock (_getRowDataLock)
             {
@@ -361,8 +361,8 @@ public class FormSessionStore : SaveableSessionStore
             return result;
         } 
         
-    public override ChangeInfo GetRow(string entity, object id)
-    {
+        public override ChangeInfo GetRow(string entity, object id)
+        {
             lock (_getRowDataLock)
             {
                 if (id == null)
@@ -375,16 +375,16 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
         
-    public override void RevertChanges()
-    {
+        public override void RevertChanges()
+        {
             lock (_getRowDataLock)
             {
                 Data.RejectChanges();
             }
         }
 
-    public override ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
-    {
+        public override ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
+        {
             // check validity of the request
             if (!rootRecordId.Equals(this.CurrentRecordId))
             {
@@ -417,8 +417,8 @@ public class FormSessionStore : SaveableSessionStore
             return result;
         }
 
-    internal override void OnNewRecord(string entity, object id)
-    {
+        internal override void OnNewRecord(string entity, object id)
+        {
             if (IsLazyLoadedEntity(entity))
             {
                 this.CurrentRecordId = null;
@@ -434,16 +434,17 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    public override bool HasChanges()
-    {
+        public override bool HasChanges()
+        {
             return !MenuItem.ReadOnlyAccess && Data != null && Data.HasChanges();
         }
 
-    public override IList RestoreData(object recordId)
-    {
+        public override IList RestoreData(object recordId)
+        {
             ArrayList result = new ArrayList();
 
-            // get the original row and return it to the client, so it updates to      // the original state
+            // get the original row and return it to the client, so it updates to 
+            // the original state
             DataRow originalRow = this.GetSessionRow(this.DataListEntity, recordId);
 
             if (originalRow.RowState == DataRowState.Added)
@@ -475,15 +476,15 @@ public class FormSessionStore : SaveableSessionStore
             return result;
         }
 
-    private DataSet LoadDataPiece(object parentId)
-    {
+        private DataSet LoadDataPiece(object parentId)
+        {
             return core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, Guid.Empty, null, 
                 DelayedLoadingParameterName, parentId);
         }
 
-    public override XmlDocument GetFormXml()
-    {
+        public override XmlDocument GetFormXml()
+        {
             // asynchronously prepared xml
             if (_preparedFormXml != null)
             {
@@ -509,8 +510,8 @@ public class FormSessionStore : SaveableSessionStore
             return formXml;
         }
 
-    public override void PrepareFormXml()
-    {
+        public override void PrepareFormXml()
+        {
             if (log.IsDebugEnabled)
             {
                 log.Debug("Preparing XML...");
@@ -522,8 +523,8 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
 
-    private object Refresh()
-    {
+        private object Refresh()
+        {
             object currentRecordId = this.CurrentRecordId;
             this.CurrentRecordId = null;
             this.Clear();
@@ -554,21 +555,22 @@ public class FormSessionStore : SaveableSessionStore
                 return this.Data;
             }
         }
-    #endregion
+        #endregion
 
-    #region Properties
+        #region Properties
 
-    public string DelayedLoadingParameterName
-    {
-        get { return _delayedLoadingParameterName; }
-        set { _delayedLoadingParameterName = value; }
-    }
-    #endregion
+        public string DelayedLoadingParameterName
+        {
+            get { return _delayedLoadingParameterName; }
+            set { _delayedLoadingParameterName = value; }
+        }
+        #endregion
 
-    public override void OnDispose()
-    {
+        public override void OnDispose()
+        {
             base.OnDispose();
 
             this.CurrentRecordId = null;
         }
+    }
 }

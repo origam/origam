@@ -28,20 +28,20 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for AsTextBox.
-/// </summary>
-[ToolboxBitmap(typeof(AsTextBox))]
-public class AsTreeView2 : TextBox
+namespace Origam.Gui.Win
 {
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-	#region Handling base events
-
-	protected override void InitLayout()
+	/// <summary>
+	/// Summary description for AsTextBox.
+	/// </summary>
+	[ToolboxBitmap(typeof(AsTextBox))]
+	public class AsTreeView2 : TextBox
 	{
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+		#region Handling base events
+
+		protected override void InitLayout()
+		{
 			if(this.Disposing) return;
 
 			this.BorderStyle = BorderStyle.Fixed3D;
@@ -52,72 +52,73 @@ public class AsTreeView2 : TextBox
 			base.InitLayout ();
 
 		}
-	#endregion
+		#endregion
 
-	private Guid _styleId;
-	[Browsable(false)]
-	public Guid StyleId
-	{
-		get
+		private Guid _styleId;
+		[Browsable(false)]
+		public Guid StyleId
 		{
+			get
+			{
 				return _styleId;
 			}
-		set
-		{
+			set
+			{
 				_styleId = value;
 			}
-	}
+		}
 
-	private Guid _treeId;
-	[Browsable(false)]
-	public Guid TreeId
-	{
-		get
+		private Guid _treeId;
+		[Browsable(false)]
+		public Guid TreeId
 		{
+			get
+			{
 				return _treeId;
 			}
-		set
-		{
+			set
+			{
 				_treeId = value;
 			}
-	}
+		}
 
-	[TypeConverter(typeof(TreeStructureConverter))]
-	public TreeStructure Tree
-	{
-		get
+		[TypeConverter(typeof(TreeStructureConverter))]
+		public TreeStructure Tree
 		{
+			get
+			{
 				return (TreeStructure)_persistence.SchemaProvider.RetrieveInstance(typeof(TreeStructure), new ModelElementKey(this.TreeId));
 			}
-		set
-		{
+			set
+			{
 				this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	[TypeConverter(typeof(StylesConverter))]
-	public UIStyle Style
-	{
-		get
+		[TypeConverter(typeof(StylesConverter))]
+		public UIStyle Style
 		{
+			get
+			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-		set
-		{
+			set
+			{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	private string _formParameterName;
-	public string FormParameterName
-	{
-		get
+		private string _formParameterName;
+		public string FormParameterName
 		{
+			get
+			{
 				return _formParameterName;
 			}
-		set
-		{
+			set
+			{
 				_formParameterName = value;
 			}
+		}
 	}
 }

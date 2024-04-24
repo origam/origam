@@ -32,12 +32,12 @@ using Origam.Server.Middleware;
 using Origam.Service.Core;
 using SoapCore;
 
-namespace Origam.Server;
-
-public static class IApplicationBuilderExtensions
+namespace Origam.Server
 {
-    public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
+    public static class IApplicationBuilderExtensions
     {
+        public static void UseCustomSpa(this IApplicationBuilder app, string pathToClientApp)
+        {
    
             app.Use((context, next) =>
             {
@@ -57,9 +57,9 @@ public static class IApplicationBuilderExtensions
             });
         }  
         
-    public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
-        IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
-    {
+        public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
+             IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        {
             foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
             {
                 var customControllerAssembly = Assembly.LoadFrom(
@@ -72,10 +72,10 @@ public static class IApplicationBuilderExtensions
             }
         }  
         
-    public static void UseUserApi(this IApplicationBuilder app,
-        StartUpConfiguration startUpConfiguration,
-        IdentityServerConfig identityServerConfig)
-    {
+        public static void UseUserApi(this IApplicationBuilder app,
+            StartUpConfiguration startUpConfiguration,
+            IdentityServerConfig identityServerConfig)
+        {
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
                 publicBranch => {
@@ -102,9 +102,9 @@ public static class IApplicationBuilderExtensions
                 });
         }
 
-    private static void UseUserApiAuthentication(this IApplicationBuilder app,
-        IdentityServerConfig identityServerConfig)
-    {
+        private static void UseUserApiAuthentication(this IApplicationBuilder app,
+            IdentityServerConfig identityServerConfig)
+        {
             if (identityServerConfig.PrivateApiAuthentication ==
                 AuthenticationMethod.Token)
             {
@@ -116,8 +116,8 @@ public static class IApplicationBuilderExtensions
             }
         }
 
-    public static void UseWorkQueueApi(this IApplicationBuilder app)
-    {
+        public static void UseWorkQueueApi(this IApplicationBuilder app)
+        {
             app.MapWhen(
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
                 apiBranch =>
@@ -131,26 +131,26 @@ public static class IApplicationBuilderExtensions
             );
         } 
         
-    private static bool IsRestrictedUserApiRoute(
-        StartUpConfiguration startUpConfiguration, HttpContext context)
-    {
+        private static bool IsRestrictedUserApiRoute(
+            StartUpConfiguration startUpConfiguration, HttpContext context)
+        {
             return startUpConfiguration
                 .UserApiRestrictedRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
         
-    private static bool IsPublicUserApiRoute(
-        StartUpConfiguration startUpConfiguration, HttpContext context)
-    {
+        private static bool IsPublicUserApiRoute(
+            StartUpConfiguration startUpConfiguration, HttpContext context)
+        {
             return startUpConfiguration
                 .UserApiPublicRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
         
-    public static void UseSoapApi(this IApplicationBuilder app,
-        bool authenticationRequired,
-        bool expectAndReturnOldDotNetAssemblyReferences)
-    {
+        public static void UseSoapApi(this IApplicationBuilder app,
+            bool authenticationRequired,
+            bool expectAndReturnOldDotNetAssemblyReferences)
+        {
             app.MapWhen(IsSoapApiRoute, apiBranch =>
             {
                 apiBranch.Use(async (context, next) =>
@@ -173,8 +173,9 @@ public static class IApplicationBuilderExtensions
             });
         }
         
-    private static bool IsSoapApiRoute(HttpContext context)
-    {
+        private static bool IsSoapApiRoute(HttpContext context)
+        {
             return context.Request.Path.ToString().StartsWith("/soap");
         }
+    }
 }

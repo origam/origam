@@ -8,21 +8,21 @@
 ///
 /// </copyright>
 //------------------------------------------------------------------------------
-namespace Origam.Gui.Designer;
-
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-
-/// Designer transactions offer a mechanism to improve performance by wrapping around
-/// a series of component changes. The changes are not actually committed until the
-/// entire batch is processed. They can be aborted if the transaction is canceled.
-internal class DesignerTransactionImpl : DesignerTransaction 
+namespace Origam.Gui.Designer
 {
-	private DesignerHostImpl host;
+	using System;
+	using System.ComponentModel.Design;
+	using System.Diagnostics;
 
-	public DesignerTransactionImpl(DesignerHostImpl host, string description) : base(description) 
+	/// Designer transactions offer a mechanism to improve performance by wrapping around
+	/// a series of component changes. The changes are not actually committed until the
+	/// entire batch is processed. They can be aborted if the transaction is canceled.
+	internal class DesignerTransactionImpl : DesignerTransaction 
 	{
+		private DesignerHostImpl host;
+
+		public DesignerTransactionImpl(DesignerHostImpl host, string description) : base(description) 
+		{
 			this.host = host;
 
 			// The host keeps a string stack of the transaction descriptions.
@@ -38,8 +38,8 @@ internal class DesignerTransactionImpl : DesignerTransaction
 			}
 		}
 
-	protected override void OnCancel() 
-	{
+		protected override void OnCancel() 
+		{
 			if (host != null) 
 			{
 				Debug.Assert(host.TransactionDescriptions != null, "End batch operation with no desription?!?");
@@ -58,8 +58,8 @@ internal class DesignerTransactionImpl : DesignerTransaction
 			}
 		}
 
-	protected override void OnCommit() 
-	{
+		protected override void OnCommit() 
+		{
 			if (host != null) 
 			{
 				Debug.Assert(host.TransactionDescriptions != null, "End batch operation with no desription?!?");
@@ -77,4 +77,5 @@ internal class DesignerTransactionImpl : DesignerTransaction
 				host = null;
 			}
 		}
+	}
 }

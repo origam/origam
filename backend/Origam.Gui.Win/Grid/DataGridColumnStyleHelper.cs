@@ -25,19 +25,19 @@ using System.Data;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DataGridColumnStyleHelper.
-/// </summary>
-public class DataGridColumnStyleHelper
+namespace Origam.Gui.Win
 {
-	private DataGridColumnStyleHelper()
+	/// <summary>
+	/// Summary description for DataGridColumnStyleHelper.
+	/// </summary>
+	public class DataGridColumnStyleHelper
 	{
+		private DataGridColumnStyleHelper()
+		{
 		}
 
-	public static EntityFormatting Formatting(DataGridColumnStyle columnStyle, CurrencyManager source, int rowNum)
-	{
+		public static EntityFormatting Formatting(DataGridColumnStyle columnStyle, CurrencyManager source, int rowNum)
+		{
 			try
 			{
 				if(columnStyle.DataGridTableStyle == null) return null;
@@ -60,4 +60,5 @@ public class DataGridColumnStyleHelper
 
 			return null;
 		}
+	}
 }

@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.Model.User;
-
-public class VerifyEmailData
+namespace Origam.Server.Model.User
 {
-    [Required]
-    public string Id { get; set; }
-    [Required]
-    public string Token { get; set; }
+    public class VerifyEmailData
+    {
+        [Required]
+        public string Id { get; set; }
+        [Required]
+        public string Token { get; set; }
+    }
 }

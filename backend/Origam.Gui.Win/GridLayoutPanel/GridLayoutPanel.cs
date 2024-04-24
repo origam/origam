@@ -21,17 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for GridLayoutPanel.
-/// </summary>
-[Designer(typeof(GridLayoutPanelDesigner))]
-public class GridLayoutPanel : AsTabControl
+namespace Origam.Gui.Win
 {
-	public GridLayoutPanel() : base()
+	/// <summary>
+	/// Summary description for GridLayoutPanel.
+	/// </summary>
+	[Designer(typeof(GridLayoutPanelDesigner))]
+	public class GridLayoutPanel : AsTabControl
 	{
+		public GridLayoutPanel() : base()
+		{
 		}
 
 		
+	}
 }

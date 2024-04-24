@@ -23,11 +23,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Origam.Server.Model.Blob;
-
-public class BlobDownloadTokenInput : AmbiguousInput
+namespace Origam.Server.Model.Blob
 {
-    public string Property { get; set; }
-    public bool IsPreview { get; set; }
-    public IDictionary Parameters { get; set; }
+    public class BlobDownloadTokenInput : AmbiguousInput
+    {
+        public string Property { get; set; }
+        public bool IsPreview { get; set; }
+        public IDictionary Parameters { get; set; }
+    }
 }

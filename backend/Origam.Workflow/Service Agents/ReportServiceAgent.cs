@@ -29,35 +29,35 @@ using Origam.Schema;
 using Origam.BI;
 using Origam.Service.Core;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for ReportServiceAgent.
-/// </summary>
-public class ReportServiceAgent : AbstractServiceAgent
+namespace Origam.Workflow
 {
-	public ReportServiceAgent()
+	/// <summary>
+	/// Summary description for ReportServiceAgent.
+	/// </summary>
+	public class ReportServiceAgent : AbstractServiceAgent
 	{
+		public ReportServiceAgent()
+		{
 		}
 
-	private void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
-	{
+		private void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+		{
             AbstractReport report = GetReport(reportId);
             IReportService service = GetService(report);
             service.SetTraceTaskInfo(TraceTaskInfo);
             service.PrintReport(reportId, data, printerName, copies, parameters);
 		}
 
-	private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
-	{
+		private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
+		{
             AbstractReport report = GetReport(reportId);
             IReportService service = GetService(report);
             service.SetTraceTaskInfo(TraceTaskInfo);
             return service.GetReport(reportId, data, format, parameters, this.TransactionId);
 		}
 
-	private static AbstractReport GetReport(Guid reportId)
-	{
+        private static AbstractReport GetReport(Guid reportId)
+        {
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             AbstractReport report = persistence.SchemaProvider.RetrieveInstance(
                 typeof(AbstractReport), new ModelElementKey(reportId))
@@ -65,8 +65,8 @@ public class ReportServiceAgent : AbstractServiceAgent
             return report;
         }
 
-	public static IReportService GetService(AbstractReport report)
-	{
+        public static IReportService GetService(AbstractReport report)
+        {
             string serviceName;
             if (report is CrystalReport)
             {
@@ -95,18 +95,18 @@ public class ReportServiceAgent : AbstractServiceAgent
             string[] split = serviceName.Split(",".ToCharArray());
             return Reflector.InvokeObject(split[0], split[1]) as IReportService;
         }
-	#region IServiceAgent Members
-	private object _result;
-	public override object Result
-	{
-		get
+		#region IServiceAgent Members
+		private object _result;
+		public override object Result
 		{
+			get
+			{
 				return _result;
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			switch(this.MethodName)
 			{
 				case "PrintReport":
@@ -164,5 +164,6 @@ public class ReportServiceAgent : AbstractServiceAgent
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

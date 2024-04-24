@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 
-namespace Origam.Rule.XsltFunctions;
-
-public class FileSystemXsltFunctionContainer
+namespace Origam.Rule.XsltFunctions
 {
-    public bool FileExists(string path)
+    public class FileSystemXsltFunctionContainer
     {
+        public bool FileExists(string path)
+        {
             return File.Exists(path);
         }
+    }
 }

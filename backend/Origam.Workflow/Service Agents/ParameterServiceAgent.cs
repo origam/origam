@@ -22,22 +22,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Workbench.Services;
 using System;
 
-namespace Origam.Workflow;
-
-public class ParameterServiceAgent : AbstractServiceAgent
+namespace Origam.Workflow
 {
-    object _result = null;
-
-    public override object Result
+    public class ParameterServiceAgent : AbstractServiceAgent
     {
-        get
+        object _result = null;
+
+        public override object Result
         {
+            get
+            {
                 return _result;
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             switch (this.MethodName)
             {
                 case "SetCustomParameterValue":
@@ -104,4 +104,5 @@ public class ParameterServiceAgent : AbstractServiceAgent
                     throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
             }
         }
+    }
 }

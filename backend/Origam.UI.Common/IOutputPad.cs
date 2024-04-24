@@ -20,9 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-namespace Origam.UI.Common;
-
-public interface IOutputPad
+namespace Origam.UI.Common
 {
-	//void AddText(string sText);
+	public interface IOutputPad
+	{
+		//void AddText(string sText);
+	}
 }

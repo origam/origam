@@ -21,34 +21,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 //using System.IdentityModel.Clients.ActiveDirectory;
 //using Microsoft.WindowsAzure.Management;
-namespace Origam.ProjectAutomation;
-
-public class ConfigureAzureWebServerBuilder : AbstractBuilder
+namespace Origam.ProjectAutomation
 {
-    public override string Name
+    public class ConfigureAzureWebServerBuilder : AbstractBuilder
     {
-        get
+        public override string Name
         {
+            get
+            {
                 return "Configure Web Server";
             }
-    }
-
-    public override void Execute(Project project)
-    {
         }
 
-    public override void Rollback()
-    {
+        public override void Execute(Project project)
+        {
         }
 
-    public string WebSiteUrl(string webSiteName)
-    {
+        public override void Rollback()
+        {
+        }
+
+        public string WebSiteUrl(string webSiteName)
+        {
             return null;
         }
 
-    public void TryConnect(string userName, string password, string tenantId,
-        string clientId, string subscriptionId)
-    {
+        public void TryConnect(string userName, string password, string tenantId,
+            string clientId, string subscriptionId)
+        {
 
         }
+    }
 }

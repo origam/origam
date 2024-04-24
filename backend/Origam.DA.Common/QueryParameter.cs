@@ -21,55 +21,56 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml.Serialization;
 
-namespace Origam.DA;
-
-/// <summary>
-/// Reference to the parameter in the data structure.
-/// </summary>
-[XmlType("parameter")]
-public class QueryParameter
+namespace Origam.DA
 {
-	public QueryParameter()
+	/// <summary>
+	/// Reference to the parameter in the data structure.
+	/// </summary>
+	[XmlType("parameter")]
+	public class QueryParameter
 	{
+		public QueryParameter()
+		{
 		}
 
-	public QueryParameter(string _parameterName, object value)
-	{
+		public QueryParameter(string _parameterName, object value)
+		{
 			this._parameterName = _parameterName;
 			this.Value = value;
 		}
 
-	string _parameterName = "";
-	/// <summary>
-	/// Gets or sets name of the parameter we will be setting on the query.
-	/// </summary>
-	[XmlAttribute("name")]
-	public string Name
-	{
-		get
+		string _parameterName = "";
+		/// <summary>
+		/// Gets or sets name of the parameter we will be setting on the query.
+		/// </summary>
+		[XmlAttribute("name")]
+		public string Name
 		{
+			get
+			{
 				return _parameterName;
 			}
-		set
-		{
+			set
+			{
 				_parameterName = value;
 			}
-	}
+		}
 
-	object _value = null;
-	/// <summary>
-	/// Gets or sets value of the parameter.
-	/// </summary>
-	[XmlElement("value")]
-	public object Value
-	{
-		get
+		object _value = null;
+		/// <summary>
+		/// Gets or sets value of the parameter.
+		/// </summary>
+		[XmlElement("value")]
+		public object Value
 		{
+			get
+			{
 				return _value;
 			}
-		set
-		{
+			set
+			{
 				_value = value;
 			}
+		}
 	}
 }

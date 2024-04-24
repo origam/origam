@@ -33,20 +33,20 @@ using Origam.Workbench.Services;
 using MimeKit;
 using MimeTypes;
 
-namespace Origam.workflow.mail;
-
-class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
+namespace Origam.workflow.mail
 {
-    private ImapClient client;
-    private IMailFolder inbox;
-    private string _dropbox = "DROPBOX";
-    private int _totalMessages = 0;
-    private int _lastMessage = 1;
-    private bool _attachHtml = false;
-    private string _badmail = "BADMAIL";
-
-    public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
+    class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
     {
+        private ImapClient client;
+        private IMailFolder inbox;
+        private string _dropbox = "DROPBOX";
+        private int _totalMessages = 0;
+        private int _lastMessage = 1;
+        private bool _attachHtml = false;
+        private string _badmail = "BADMAIL";
+
+        public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
+        {
             string url = "";
             int port = 143;
             string mailbox = "INBOX";
@@ -100,13 +100,13 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             _totalMessages = inbox.Count;
         }
 
-    public override void Disconnect()
-    {
+        public override void Disconnect()
+        {
             client.Disconnect(true);
         }
 
-    public override WorkQueueAdapterResult GetItem(string lastState)
-    {
+        public override WorkQueueAdapterResult GetItem(string lastState)
+        {
             if (_totalMessages == 0) return null;
             if (_totalMessages < _lastMessage)
             {
@@ -170,8 +170,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             return result;
         }
 
-    private static string GetMessageBody(MimeMessage lastMessage)
-    {
+        private static string GetMessageBody(MimeMessage lastMessage)
+        {
             if (!string.IsNullOrEmpty(lastMessage.TextBody))
             {
                 return lastMessage.TextBody;
@@ -190,8 +190,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             return null;
         }
 
-    private byte[] GetHtmlAttachment(MimeMessage lastMessage)
-    {
+        private byte[] GetHtmlAttachment(MimeMessage lastMessage)
+        {
             if (!string.IsNullOrEmpty(lastMessage.HtmlBody) && _attachHtml)
             {
                 return new UTF8Encoding().GetBytes(lastMessage.HtmlBody);
@@ -202,13 +202,13 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             }
         }
 
-    private void FlagAsSeen(MailKit.UniqueId messageid)
-    {
+        private void FlagAsSeen(MailKit.UniqueId messageid)
+        {
             inbox.AddFlags(new List<MailKit.UniqueId> { messageid }, MessageFlags.Seen, true);
         }
 
-    private static string GetSubject(MimeMessage lastMessage, MailData mailData)
-    {
+        private static string GetSubject(MimeMessage lastMessage, MailData mailData)
+        {
             if (lastMessage.Subject.Length > mailData.Mail.SubjectColumn.MaxLength)
             {
                 return String.Format("{0} ...",
@@ -221,8 +221,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             }
         }
 
-    private List<WorkQueueAttachment> GetAttachments(MimeMessage lastMessage, byte[] htmlAttachment)
-    {
+        private List<WorkQueueAttachment> GetAttachments(MimeMessage lastMessage, byte[] htmlAttachment)
+        {
             List<WorkQueueAttachment> attachments = new List<WorkQueueAttachment>();
 
             int nonameCount = 1;
@@ -249,8 +249,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             return attachments;
         }
 
-    private void DeleteAllMessages()
-    {
+        private void DeleteAllMessages()
+        {
             var allMsgSummaries = inbox.Fetch(0, -1, MessageSummaryItems.UniqueId)
                 .Select(x => x.UniqueId)
                 .ToList();
@@ -260,14 +260,14 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             }
         }
 
-    IMailFolder FindFolder(string name)
-    {
+        IMailFolder FindFolder(string name)
+        {
             var toplevel = client.GetFolder(client.PersonalNamespaces[0]);
             return FindSubFolder(toplevel, name);
         }
 
-    IMailFolder FindSubFolder(IMailFolder toplevel, string name)
-    {
+        IMailFolder FindSubFolder(IMailFolder toplevel, string name)
+        {
             var subfolders = toplevel.GetSubfolders().ToList();
 
             foreach (var subfolder in subfolders)
@@ -286,8 +286,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             return null;
         }
 
-    private byte[] GetAttachmentData(MimeEntity attachment)
-    {
+        private byte[] GetAttachmentData(MimeEntity attachment)
+        {
             using (MemoryStream stream = new MemoryStream())
             {
                 if (attachment is MessagePart)
@@ -304,8 +304,8 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             }
         }
 
-    private static void AppendAttachment(List<WorkQueueAttachment> attachments, string fileName, byte[] data)
-    {
+        private static void AppendAttachment(List<WorkQueueAttachment> attachments, string fileName, byte[] data)
+        {
             WorkQueueAttachment att = new WorkQueueAttachment();
             att.Data = data;
             att.Name = fileName;
@@ -313,10 +313,11 @@ class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
             attachments.Add(att);
         }
 
-    private static string GetDefaultExtension(string mimeType)
-    {
+        private static string GetDefaultExtension(string mimeType)
+        {
             var value = MimeTypeMap.GetExtension(mimeType);
             var result = value != null ? value.ToString() : string.Empty;
             return result;
         }
+    }
 }

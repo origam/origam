@@ -27,106 +27,107 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Parameter", "Parameters", 29)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class DashboardWidgetParameter : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "DashboardWidgetParameter";
-
-	public DashboardWidgetParameter() : base() {Init();}
-	public DashboardWidgetParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public DashboardWidgetParameter(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Parameter", "Parameters", 29)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class DashboardWidgetParameter : AbstractSchemaItem
 	{
+		public const string CategoryConst = "DashboardWidgetParameter";
+
+		public DashboardWidgetParameter() : base() {Init();}
+		public DashboardWidgetParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public DashboardWidgetParameter(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 		}
 
-	#region Properties
-	private string _caption = "";
-	[Category("User Interface")]
-	[StringNotEmptyModelElementRule()]
-	[Localizable(true)]
-	[XmlAttribute("label")]
-	public string Caption
-	{
-		get
+		#region Properties
+		private string _caption = "";
+		[Category("User Interface")]
+		[StringNotEmptyModelElementRule()]
+		[Localizable(true)]
+        [XmlAttribute("label")]
+		public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value;
 			}
-	}
+		}
 
-	private OrigamDataType _dataType = OrigamDataType.String;
-	[Category("Mapping")]
-	[XmlAttribute("dataType")]
-	public OrigamDataType DataType
-	{
-		get
+		private OrigamDataType _dataType = OrigamDataType.String;
+		[Category("Mapping")]
+        [XmlAttribute("dataType")]
+		public OrigamDataType DataType
 		{
+			get
+			{
 				return _dataType;
 			}
-		set
-		{
+			set
+			{
 				_dataType = value;
 			}
-	}
+		}
 
-	public Guid DataConstantId;
+		public Guid DataConstantId;
 
-	[Category("Mapping")]
-	[TypeConverter(typeof(DataConstantConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("defaultValue", "DataConstantId")]
-	public DataConstant DefaultValue
-	{
-		get
+		[Category("Mapping")]
+		[TypeConverter(typeof(DataConstantConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("defaultValue", "DataConstantId")]
+		public DataConstant DefaultValue
 		{
+			get
+			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
 			}
-		set
-		{
+			set
+			{
 				this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
  
-	public Guid LookupId;
+		public Guid LookupId;
 
-	[Category("Mapping")]
-	[TypeConverter(typeof(DataLookupConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("lookup", "LookupId")]
-	public IDataLookup Lookup
-	{
-		get
+		[Category("Mapping")]
+		[TypeConverter(typeof(DataLookupConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("lookup", "LookupId")]
+		public IDataLookup Lookup
 		{
+			get
+			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
 			}
-		set
-		{
+			set
+			{
 				this.LookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "29";
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

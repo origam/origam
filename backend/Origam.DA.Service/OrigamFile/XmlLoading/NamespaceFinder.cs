@@ -25,35 +25,35 @@ using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
 
-namespace Origam.DA.Service;
-
-internal interface INamespaceFinder
+namespace Origam.DA.Service
 {
-    IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned { get; }
-}
+    internal interface INamespaceFinder
+    {
+        IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned { get; }
+    }
 
-internal class NullNamespaceFinder: INamespaceFinder
-{
-    public IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned =>
-        new List<ObjectFileData>();
-}
-internal class PreLoadedNamespaceFinder: INamespaceFinder
-{
-    private readonly List<ObjectFileData> objectFileData =
-        new List<ObjectFileData>();
+    internal class NullNamespaceFinder: INamespaceFinder
+    {
+        public IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned =>
+            new List<ObjectFileData>();
+    }
+    internal class PreLoadedNamespaceFinder: INamespaceFinder
+    {
+        private readonly List<ObjectFileData> objectFileData =
+            new List<ObjectFileData>();
 
-    private readonly List<PackageFileData> packageFiles = 
-        new List<PackageFileData>();
-    private readonly Dictionary<Folder,GroupFileData> groupFileDict=
-        new Dictionary<Folder, GroupFileData>();
-    private readonly Dictionary<Folder,ReferenceFileData> referenceFileDict=
-        new Dictionary<Folder, ReferenceFileData>();
-    private readonly ObjectFileDataFactory objectFileDataFactory;
-    private readonly List<XmlFileData> filesToLoad;
+        private readonly List<PackageFileData> packageFiles = 
+            new List<PackageFileData>();
+        private readonly Dictionary<Folder,GroupFileData> groupFileDict=
+            new Dictionary<Folder, GroupFileData>();
+        private readonly Dictionary<Folder,ReferenceFileData> referenceFileDict=
+            new Dictionary<Folder, ReferenceFileData>();
+        private readonly ObjectFileDataFactory objectFileDataFactory;
+        private readonly List<XmlFileData> filesToLoad;
 
-    public IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned {
-        get
-        {
+        public IEnumerable<ObjectFileData> FileDataWithNamespacesAssigned {
+            get
+            {
                 FillDataFileLists(filesToLoad);
                 AssignAllocationAttributes();
                 
@@ -74,16 +74,16 @@ internal class PreLoadedNamespaceFinder: INamespaceFinder
                     yield return referenceFileData;
                 }
             }
-    }
+        }
 
-    public PreLoadedNamespaceFinder(List<XmlFileData> filesToLoad, ObjectFileDataFactory objectFileDataFactory)
-    {
+        public PreLoadedNamespaceFinder(List<XmlFileData> filesToLoad, ObjectFileDataFactory objectFileDataFactory)
+        {
             this.objectFileDataFactory = objectFileDataFactory;
             this.filesToLoad = filesToLoad;
         }
 
-    private void FillDataFileLists(List<XmlFileData> allFiles)
-    {
+        private void FillDataFileLists(List<XmlFileData> allFiles)
+        {
             foreach (XmlFileData xmlData in allFiles)
             {
                 switch (xmlData.FileInfo.Name)
@@ -108,16 +108,16 @@ internal class PreLoadedNamespaceFinder: INamespaceFinder
             }
         }
 
-    private void AssignAllocationAttributes()
-    {
+        private void AssignAllocationAttributes()
+        {
             objectFileData
                 .AsParallel()
                 .ForEach(AssignLocationAttributes);
             groupFileDict.Values.ForEach(AssignLocationAttributes);
         }
 
-    private void AssignLocationAttributes(ObjectFileData data)
-    {
+        private void AssignLocationAttributes(ObjectFileData data)
+        {
             ReferenceFileData refFile = FindReferenceFile(data);
             if (refFile != null)
             {
@@ -142,25 +142,26 @@ internal class PreLoadedNamespaceFinder: INamespaceFinder
             data.ParentFolderIds.CheckIsValid();
         }
 
-    protected virtual GroupFileData FindGroupFile(ObjectFileData data)
-    {
+        protected virtual GroupFileData FindGroupFile(ObjectFileData data)
+        {
             groupFileDict.TryGetValue(
                 data.FolderToDetermineParentGroup,
                 out var groupFileData);
             return groupFileData != data ? groupFileData : null;
         }
 
-    protected virtual Guid? FindPackageId(ObjectFileData data)
-    {          
+        protected virtual Guid? FindPackageId(ObjectFileData data)
+        {          
             return packageFiles
                 .FirstOrDefault(package => package.Folder.IsParentOf(data.Folder))    
                 ?.PackageId;
         }
 
-    protected virtual ReferenceFileData FindReferenceFile(ObjectFileData data)
-    {
+        protected virtual ReferenceFileData FindReferenceFile(ObjectFileData data)
+        {
             referenceFileDict.TryGetValue(
                 data.FolderToDetermineReferenceGroup, out var refFileData);
             return refFileData;
         }
+    }
 }

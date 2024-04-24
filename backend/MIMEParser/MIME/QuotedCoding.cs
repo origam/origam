@@ -26,22 +26,22 @@
 using System;
 using System.Text;
 
-namespace iOfficeMail.MIMEParser;
-
-/// <summary>
-/// Summary description for Coding.
-/// </summary>
-public class QuotedCoding
+namespace iOfficeMail.MIMEParser
 {
 	/// <summary>
-	/// zwraca tablice bajtow
-	/// zamienia 3 znaki np '=A9' na odp wartosc.
-	/// zamienia '_' na znak 32
+	/// Summary description for Coding.
 	/// </summary>
-	/// <param name="s">Kupis_Pawe=B3</param>
-	/// <returns>Kupis Pawe?/returns>
-	public static byte[] GetByteArray(string s)
+	public class QuotedCoding
 	{
+		/// <summary>
+		/// zwraca tablice bajtow
+		/// zamienia 3 znaki np '=A9' na odp wartosc.
+		/// zamienia '_' na znak 32
+		/// </summary>
+		/// <param name="s">Kupis_Pawe=B3</param>
+		/// <returns>Kupis Pawe?/returns>
+		public static byte[] GetByteArray(string s)
+		{
 			byte[] buffer=new byte[s.Length];
 
 			int bufferPosition=0;
@@ -74,15 +74,15 @@ public class QuotedCoding
 			return newArray;
 		}
 
-	/// <summary>
-	/// Decoduje string "=?iso-8859-2?Q?Kupis_Pawe=B3?=" 
-	/// lub zakodowany base64
-	/// na poprawny
-	/// </summary>
-	/// <param name="s">"=?iso-8859-2?Q?Kupis_Pawe=B3?="</param>
-	/// <returns>Kupis Pawe?/returns>
-	public static string DecodeOne(string s)
-	{
+		/// <summary>
+		/// Decoduje string "=?iso-8859-2?Q?Kupis_Pawe=B3?=" 
+		/// lub zakodowany base64
+		/// na poprawny
+		/// </summary>
+		/// <param name="s">"=?iso-8859-2?Q?Kupis_Pawe=B3?="</param>
+		/// <returns>Kupis Pawe?/returns>
+		public static string DecodeOne(string s)
+		{
 			char[] separator={'?'};
 			string[] sArray=s.Split(separator);
 			if (sArray[0].Equals("=")==false)
@@ -101,13 +101,13 @@ public class QuotedCoding
 			return encoding.GetString(bArray);
 		}
 
-	/// <summary>
-	/// decoduje string zamienia wpisy (=?...?=) na odp wartosci
-	/// </summary>
-	/// <param name="s">"ala i =?iso-8859-2?Q?Kupis_Pawe=B3?= ma kota"</param>
-	/// <returns>"ala i Pawe?Kupis ma kota"</returns>
-	public static string Decode(string s)
-	{
+		/// <summary>
+		/// decoduje string zamienia wpisy (=?...?=) na odp wartosci
+		/// </summary>
+		/// <param name="s">"ala i =?iso-8859-2?Q?Kupis_Pawe=B3?= ma kota"</param>
+		/// <returns>"ala i Pawe?Kupis ma kota"</returns>
+		public static string Decode(string s)
+		{
 			StringBuilder retstring=new StringBuilder();
 			int old=0,start=0,stop;
 			for(;;)
@@ -128,4 +128,6 @@ public class QuotedCoding
 			}
 		}
 
+	}
 }
+

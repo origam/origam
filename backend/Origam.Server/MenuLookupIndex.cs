@@ -22,27 +22,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Server;
-
-public class MenuLookupIndex
+namespace Origam.Server
 {
-    private readonly Dictionary<Guid, ICollection<Guid>> menuToAllowedLookups = 
-        new Dictionary<Guid, ICollection<Guid>>();
-            
-    public void AddIfNotPresent(Guid menuId, HashSet<Guid> containedLookups)
+    public class MenuLookupIndex
     {
+        private readonly Dictionary<Guid, ICollection<Guid>> menuToAllowedLookups = 
+            new Dictionary<Guid, ICollection<Guid>>();
+            
+        public void AddIfNotPresent(Guid menuId, HashSet<Guid> containedLookups)
+        {
             if (menuToAllowedLookups.ContainsKey(menuId)) return;
             menuToAllowedLookups.Add(menuId, containedLookups);
         }
 
-    public bool IsAllowed(Guid menuItemId, Guid lookupId)
-    {
+        public bool IsAllowed(Guid menuItemId, Guid lookupId)
+        {
             if (!menuToAllowedLookups.ContainsKey(menuItemId)) return false;
             return menuToAllowedLookups[menuItemId].Contains(lookupId);
         }
 
-    public bool HasDataFor(Guid menuItemId)
-    {
+        public bool HasDataFor(Guid menuItemId)
+        {
             return menuToAllowedLookups.ContainsKey(menuItemId);
         }
+    }
 }

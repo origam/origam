@@ -22,9 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.Session;
-
-public class SaveDataData
+namespace Origam.Server.Model.Session
 {
-    public Guid SessionId { get; set; }
+    public class SaveDataData
+    {
+        public Guid SessionId { get; set; }
+    }
 }

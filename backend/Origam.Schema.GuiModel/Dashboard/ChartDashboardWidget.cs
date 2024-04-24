@@ -24,42 +24,43 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Chart Widget", "icon_chart-widget.png")]
-public class ChartDashboardWidget : AbstractDataDashboardWidget
+namespace Origam.Schema.GuiModel
 {
-	public ChartDashboardWidget() : base() {Init();}
-	public ChartDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public ChartDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Chart Widget", "icon_chart-widget.png")]
+	public class ChartDashboardWidget : AbstractDataDashboardWidget
 	{
+		public ChartDashboardWidget() : base() {Init();}
+		public ChartDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public ChartDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Chart);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	#region Properties
-	public Guid ChartId;
+		#region Properties
+		public Guid ChartId;
 
-	[Category("UI")]
-	[TypeConverter(typeof(ChartsConverter))]
-	[XmlReference("chart", "ChartId")]
-	public AbstractChart Chart
-	{
-		get
+		[Category("UI")]
+		[TypeConverter(typeof(ChartsConverter))]
+        [XmlReference("chart", "ChartId")]
+		public AbstractChart Chart
 		{
+			get
+			{
 				return (AbstractChart)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ChartId));
 			}
-		set
-		{
+			set
+			{
 				this.ChartId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

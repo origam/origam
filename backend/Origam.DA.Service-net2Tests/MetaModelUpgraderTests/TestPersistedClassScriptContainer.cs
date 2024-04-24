@@ -7,16 +7,16 @@ using Origam.DA.Common;
 using Origam.DA.ServiceTests;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.MetaModelUpgrade;
-
-class TestPersistedClassScriptContainer : UpgradeScriptContainer
+namespace Origam.DA.Service.MetaModelUpgrade
 {
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-
-    public TestPersistedClassScriptContainer() 
+    class TestPersistedClassScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+
+        public TestPersistedClassScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -32,16 +32,16 @@ class TestPersistedClassScriptContainer : UpgradeScriptContainer
                     AddAttribute(node, "newProperty2", "");
                 }));
         }
-}     
+    }     
     
-class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
-    public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestTestRenamedClassScriptContainer() 
+    class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
+        public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestTestRenamedClassScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -58,16 +58,16 @@ class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
                     doc.FileElement.Add(new XAttribute(trcNamespace + "trc", trcNamespace));
                 }));
         }
-}    
+    }    
     
-class TestDeadClassScriptContainer : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestDeadClassScriptContainer() 
+    class TestDeadClassScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestDeadClassScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -94,16 +94,16 @@ class TestDeadClassScriptContainer : UpgradeScriptContainer
                     
                 }));
         }
-}        
+    }        
     
-class TestDeadClass2ScriptContainer : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestDeadClass2ScriptContainer() 
+    class TestDeadClass2ScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestDeadClass2ScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -119,15 +119,15 @@ class TestDeadClass2ScriptContainer : UpgradeScriptContainer
                     node.Remove();
                 }));
         }
-}       
-class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestTestDeadBaseClassScriptContainer() 
+    }       
+    class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestTestDeadBaseClassScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -144,16 +144,16 @@ class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
                     node.Attribute(deadNamespace.GetName("deadClassProperty")).Remove();
                 }));
         }
-}   
+    }   
     
-class TestBaseClassScriptContainer : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestBaseClass";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestBaseClassScriptContainer() 
+    class TestBaseClassScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestBaseClass";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestBaseClassScriptContainer() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -162,16 +162,16 @@ class TestBaseClassScriptContainer : UpgradeScriptContainer
                     AddAttribute(node, "TestBaseClassProperty", "");
                 }));
         }
-}
+    }
     
-class TestPersistedClassScriptContainer2 : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass2";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestPersistedClassScriptContainer2() 
+    class TestPersistedClassScriptContainer2 : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass2";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestPersistedClassScriptContainer2() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -194,16 +194,16 @@ class TestPersistedClassScriptContainer2 : UpgradeScriptContainer
                     AddAttribute(node, "newProperty4", "");
                 }));
         }
-} 
+    } 
     
-class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
-{
-    public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-        
-    public TestPersistedClassScriptContainer4() 
+    class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+        
+        public TestPersistedClassScriptContainer4() 
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"), 
                 new Version("6.0.1"),
@@ -212,4 +212,5 @@ class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
                     AddAttribute(node, "newProperty1", "");
                 }));
         }
+    }
 }

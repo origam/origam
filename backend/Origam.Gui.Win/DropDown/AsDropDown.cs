@@ -35,27 +35,27 @@ using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for AsDropDown.
-/// </summary>
-[ToolboxBitmap(typeof(AsDropDown))]
-public class AsDropDown : BaseDropDownControl, ILookupControl,
-	IOrigamMetadataConsumer, INotifyPropertyChanged
+namespace Origam.Gui.Win
 {
-	private const int WM_KEYUP = 0x101;
-
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	private DataTable _currentTable;
-	private bool resetParameterMappings = true;
-	private readonly ToolStripMenuItem mnuEdit;
-	private readonly ToolStripMenuItem mnuEditList;
-	private readonly ToolStripMenuItem mnuDelete;
-	private ToolStripMenuItem mnuRefresh;
-
-	public AsDropDown()
+	/// <summary>
+	/// Summary description for AsDropDown.
+	/// </summary>
+	[ToolboxBitmap(typeof(AsDropDown))]
+	public class AsDropDown : BaseDropDownControl, ILookupControl,
+		IOrigamMetadataConsumer, INotifyPropertyChanged
 	{
+		private const int WM_KEYUP = 0x101;
+
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		private DataTable _currentTable;
+		private bool resetParameterMappings = true;
+        private readonly ToolStripMenuItem mnuEdit;
+        private readonly ToolStripMenuItem mnuEditList;
+        private readonly ToolStripMenuItem mnuDelete;
+        private ToolStripMenuItem mnuRefresh;
+
+		public AsDropDown()
+		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -100,12 +100,12 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			
 		}
 
-	#region Overrides
-	/// <summary> 
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		#region Overrides
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				this.DataBindings.CollectionChanged -= DataBindings_CollectionChanged;
@@ -147,13 +147,13 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			base.Dispose( disposing );
 		}
 
-	public override string DefaultBindableProperty => "LookupValue";
+		public override string DefaultBindableProperty => "LookupValue";
 
-	private object _selectedValue = null;
-	public override object SelectedValue
-	{
-		get
+		private object _selectedValue = null;
+		public override object SelectedValue
 		{
+			get
+			{
 				if(_selectedValue == null)
 				{
 					return DBNull.Value;
@@ -163,8 +163,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 					return _selectedValue;
 				}
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					_selectedValue = DBNull.Value;
@@ -176,21 +176,21 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				this.LookupValue = _selectedValue;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region Properties
-	[TypeConverter(typeof(DataLookupConverter))]
-	[RefreshProperties(RefreshProperties.All)]
-	public AbstractDataLookup DataLookup
-	{
-		get => (AbstractDataLookup)_persistence
-			.SchemaProvider
-			.RetrieveInstance(
-				typeof(AbstractDataLookup), new ModelElementKey(this.LookupId));
-		set
+		#region Properties
+		[TypeConverter(typeof(DataLookupConverter))]
+		[RefreshProperties(RefreshProperties.All)]
+		public AbstractDataLookup DataLookup
 		{
+			get => (AbstractDataLookup)_persistence
+				.SchemaProvider
+				.RetrieveInstance(
+					typeof(AbstractDataLookup), new ModelElementKey(this.LookupId));
+			set
+			{
 				if(value == null)
 				{
 					this.LookupId = Guid.Empty;
@@ -207,65 +207,67 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 				}
 				resetParameterMappings = true;
 			}
-	}
+		}
 
-	private bool _showUniqueValues = false;
-	public bool ShowUniqueValues
-	{
-		get => _showUniqueValues;
-		set
+		private bool _showUniqueValues = false;
+		public bool ShowUniqueValues
 		{
+			get => _showUniqueValues;
+			set
+			{
 				_showUniqueValues = value;
 
 				if(value) this.CacheList = false;
 			}
-	}
+		}
 
-	public string SearchText => EditControl.Text;
+        public string SearchText => EditControl.Text;
 
-	public bool SuppressEmptyColumns { get; set; } = false;
+		public bool SuppressEmptyColumns { get; set; } = false;
 
-	#endregion
+		#endregion
 
-	#region Component Designer generated code
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Component Designer generated code
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(AsDropDown));
 
 			this.SuspendLayout();
-			// 		// AsDropDown
-			// 		this.ForeColor = System.Drawing.Color.White;
+			// 
+			// AsDropDown
+			// 
+			this.ForeColor = System.Drawing.Color.White;
 			this.Name = "AsDropDown";
 			this.Size = new System.Drawing.Size(168, 20);
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region ILookupControl Events
-	public event EventHandler lookupValueChanged;
-	public event EventHandler LookupDisplayTextRequested;
-	public event EventHandler LookupListRefreshRequested;
-	public event EventHandler LookupShowSourceListRequested;
-	public event EventHandler LookupEditSourceRecordRequested;
-	public event EventHandler LookupValueChangingByUser;
+		#region ILookupControl Events
+		public event EventHandler lookupValueChanged;
+		public event EventHandler LookupDisplayTextRequested;
+		public event EventHandler LookupListRefreshRequested;
+		public event EventHandler LookupShowSourceListRequested;
+		public event EventHandler LookupEditSourceRecordRequested;
+		public event EventHandler LookupValueChangingByUser;
 
-	protected virtual void OnLookupValueChanged(EventArgs e)
-	{
+		protected virtual void OnLookupValueChanged(EventArgs e)
+		{
 			lookupValueChanged?.Invoke(this, e);
 		}
 
-	protected virtual void OnLookupDisplayTextRequested(EventArgs e)
-	{
+		protected virtual void OnLookupDisplayTextRequested(EventArgs e)
+		{
 			LookupDisplayTextRequested?.Invoke(this, e);
 		}
 
-	protected virtual void OnLookupListRefreshRequested(EventArgs e)
-	{
+		protected virtual void OnLookupListRefreshRequested(EventArgs e)
+		{
 			try
 			{
 				if(! (this.Parent is FilterPanel))
@@ -290,10 +292,10 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	private string TableName
-	{
-		get
+		private string TableName
 		{
+			get
+			{
 				if(this.Parent is AsDataGrid)
 				{
 					AsDataGrid grid = this.Parent as AsDataGrid;
@@ -303,35 +305,35 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				return null;
 			}
-	}
+		}
 
-	public DataRow CurrentRow => 
-		DataBindingTools.CurrentRow(this, DefaultBindableProperty);
+		public DataRow CurrentRow => 
+			DataBindingTools.CurrentRow(this, DefaultBindableProperty);
 
-	protected virtual void OnLookupShowSourceListRequested(EventArgs e)
-	{
+		protected virtual void OnLookupShowSourceListRequested(EventArgs e)
+		{
 			LookupShowSourceListRequested?.Invoke(this, e);
 		}
 
-	protected virtual void OnLookupEditSourceRecordRequested(EventArgs e)
-	{
+		protected virtual void OnLookupEditSourceRecordRequested(EventArgs e)
+		{
 			LookupEditSourceRecordRequested?.Invoke(this, e);
 		}
 
-	protected virtual void OnLookupValueChangingByUser(EventArgs e)
-	{
+		protected virtual void OnLookupValueChangingByUser(EventArgs e)
+		{
 			LookupValueChangingByUser?.Invoke(this, e);
 		}
-	#endregion
+		#endregion
 
-	#region ILookupControl Members
+		#region ILookupControl Members
 
-	public bool CacheList { get; set; } = true;
+		public bool CacheList { get; set; } = true;
 
-	public object OriginalLookupValue
-	{
-		get
+		public object OriginalLookupValue
 		{
+			get
+			{
 				DataRow row = CurrentRow;
 				if(row == null) return null;
 
@@ -352,13 +354,13 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				return row[ColumnName, version];
 			}
-	}
+		}
 
-	public object LookupValue
-	{
-		get => this.SelectedValue;
-		set
+		public object LookupValue
 		{
+			get => this.SelectedValue;
+			set
+			{
 				_selectedValue = value;
 
 				OnLookupDisplayTextRequested(EventArgs.Empty);
@@ -379,27 +381,27 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 					this.EditControl.ForeColor = SystemColors.ControlText;
 				}
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public string LookupDisplayText
-	{
-		get => this.DisplayText;
-		set
+		[Browsable(false)]
+		public string LookupDisplayText
 		{
+			get => this.DisplayText;
+			set
+			{
 				if(! _typing)
 				{
 					this.DisplayText = value;
 				}
 			}
-	}
+		}
 
-	private bool _lookupShowEditButton = false;
-	public bool LookupShowEditButton
-	{
-		get => _lookupShowEditButton;
-		set
+		private bool _lookupShowEditButton = false;
+		public bool LookupShowEditButton
 		{
+			get => _lookupShowEditButton;
+			set
+			{
 				if(this.ReadOnly)
 				{
 					_lookupShowEditButton = false;
@@ -411,46 +413,46 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 					this.OpenListButton.Visible = value;
 				}
 			}
-	}
+		}
 
-	public string LookupListValueMember { get; set; }
+		public string LookupListValueMember { get; set; }
 
-	private string _lookupListDisplayMember;
-	public string LookupListDisplayMember
-	{
-		get => _lookupListDisplayMember;
-		set
+		private string _lookupListDisplayMember;
+		public string LookupListDisplayMember
 		{
+			get => _lookupListDisplayMember;
+			set
+			{
 				_lookupListDisplayMember = value;
 				SortDataSource();
 			}
-	}
+		}
 
-	public string LookupListTreeParentMember { get; set; }
+		public string LookupListTreeParentMember { get; set; }
 
-	[Browsable(false)]
-	public Guid LookupId { get; set; }
+		[Browsable(false)]
+		public Guid LookupId { get; set; }
 
-	[Browsable(false)]
-	private Guid _entityId;
-	public Guid EntityId => _entityId;
+		[Browsable(false)]
+		private Guid _entityId;
+		public Guid EntityId => _entityId;
 
-	[Browsable(false)]
-	private Guid _valueFieldId;
-	public Guid ValueFieldId => _valueFieldId;
+		[Browsable(false)]
+		private Guid _valueFieldId;
+		public Guid ValueFieldId => _valueFieldId;
 
-	[Browsable(false)]
-	public string ColumnName { get; set; }
+		[Browsable(false)]
+		public string ColumnName { get; set; }
 
-	private DataView _lookupList;
+		private DataView _lookupList;
 	
-	private bool _typing = false;
+		private bool _typing = false;
 
-	[Browsable(false)]
-	public DataView LookupList
-	{
-		get
+		[Browsable(false)]
+		public DataView LookupList
 		{
+			get
+			{
 				if(_lookupList == null | CacheList == false)
 				{
 					OnLookupListRefreshRequested(EventArgs.Empty);
@@ -463,21 +465,21 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				return _lookupList;
 			}
-		set
-		{
+			set
+			{
 				_lookupList = value;
 				SortDataSource();
 			}
-	}
+		}
 
-	private Hashtable _lookupListParameters = new Hashtable();
-	public Hashtable LookupListParameters => _lookupListParameters;
+		private Hashtable _lookupListParameters = new Hashtable();
+		public Hashtable LookupListParameters => _lookupListParameters;
 
-	#endregion
+		#endregion
 
-	#region Methods
-	private void SortDataSource()
-	{
+		#region Methods
+		private void SortDataSource()
+		{
 			if(_lookupListDisplayMember == "" 
 				| _lookupListDisplayMember == null
 				| _lookupList == null)
@@ -489,8 +491,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			_lookupList.Sort = firstColumn;
 		}
 
-	public override IDropDownPart CreatePopup()
-	{
+		public override IDropDownPart CreatePopup()
+		{
 			ILookupDropDownPart popup;
 
 			if(this.ParameterMappings.Count > 0)
@@ -530,9 +532,9 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			return popup;
 		}
 
-	private bool _itemsLoaded = false;
-	private void ClearMappingItems()
-	{
+		private bool _itemsLoaded = false;
+		private void ClearMappingItems()
+		{
 			try
 			{
 				if(!_itemsLoaded)
@@ -551,8 +553,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	public void CreateMappingItemsCollection()
-	{
+		public void CreateMappingItemsCollection()
+		{
 			if(!_itemsLoaded)
 				return;
 
@@ -582,8 +584,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			FillParameterCache(this._origamMetadata as ControlSetItem);
 		}
 
-	private void FillParameterCache(ControlSetItem controlItem)
-	{
+		private void FillParameterCache(ControlSetItem controlItem)
+		{
 			if( controlItem ==null)
 				return;
 			
@@ -597,11 +599,11 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 				}
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Event Handlers
-	private void txtEdit_KeyUp(object sender, KeyEventArgs e)
-	{
+		#region Event Handlers
+		private void txtEdit_KeyUp(object sender, KeyEventArgs e)
+		{
 			if(this.ReadOnly) return;
 
 			bool pasting = false;
@@ -763,8 +765,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	private void FilterClientSide(string sTypedText)
-	{
+        private void FilterClientSide(string sTypedText)
+        {
             string rowFilter = "";
             int i = 0;
             foreach (DataColumn col in _lookupList.Table.Columns)
@@ -787,13 +789,13 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
             _lookupList.RowFilter = rowFilter;
         }
 
-	private void btnOpenList_Enter(object sender, EventArgs e)
-	{
+		private void btnOpenList_Enter(object sender, EventArgs e)
+		{
 			this.EditControl.Focus();
 		}
 
-	private void _currentTable_ColumnChanging(object sender, DataColumnChangeEventArgs e)
-	{
+		private void _currentTable_ColumnChanging(object sender, DataColumnChangeEventArgs e)
+		{
 			if(!(this.FindForm() is AsForm form)) return;
 			if(form.FormGenerator.IgnoreDataChanges) return;
             OrigamDataRow row = e.Row as OrigamDataRow;
@@ -827,13 +829,13 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 		}
 
-	private void AsDropDown_BindingContextChanged(object sender, EventArgs e)
-	{
+		private void AsDropDown_BindingContextChanged(object sender, EventArgs e)
+		{
 			UpdateBindings();
 		}
 
-	private void UpdateBindings()
-	{
+		private void UpdateBindings()
+		{
 			Binding binding = this.DataBindings[this.DefaultBindableProperty];
 			if(binding == null) return;
 
@@ -858,8 +860,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	private void SetEntityAndField(DataRow row, string columnName)
-	{
+		private void SetEntityAndField(DataRow row, string columnName)
+		{
 			if(columnName == null)
 			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorDropDownNotBound"));
@@ -884,8 +886,8 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	private void refreshMenu_Click(object sender, EventArgs e)
-	{
+		private void refreshMenu_Click(object sender, EventArgs e)
+		{
 			OnLookupListRefreshRequested(EventArgs.Empty);
 
 			ILookupDropDownPart popup = this.Popup as ILookupDropDownPart;
@@ -896,11 +898,11 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 				popup.SelectedValue = this.LookupValue;
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Popup Event Handlers
-	private void popupHelper_PopupClosed(object sender, PopupClosedEventArgs e)
-	{
+		#region Popup Event Handlers
+		private void popupHelper_PopupClosed(object sender, PopupClosedEventArgs e)
+		{
 			if(e.Popup != null)
 			{
 				if(!(e.Popup as IDropDownPart).Canceled)
@@ -917,16 +919,16 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			this.EditControl.SelectAll();
 		}
 
-	#endregion
+		#endregion
 
-	#region IColumnParameterMappingConsumer Members
+		#region IColumnParameterMappingConsumer Members
 
-	ColumnParameterMappingCollection parameterMappings = new ColumnParameterMappingCollection();
-	[TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
-	public ColumnParameterMappingCollection ParameterMappings
-	{
-		get
+		ColumnParameterMappingCollection parameterMappings = new ColumnParameterMappingCollection();
+		[TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+		public ColumnParameterMappingCollection ParameterMappings
 		{
+			get
+			{
 				if(this.DesignMode && resetParameterMappings)
 				{
 					Hashtable oldMappings = new Hashtable();
@@ -950,12 +952,12 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				return parameterMappings;
 			}
-	}
+		}
 
-	public Hashtable ParameterMappingsHashtable
-	{
-		get
+		public Hashtable ParameterMappingsHashtable
 		{
+			get
+			{
 				Hashtable result = new Hashtable(this.ParameterMappings.Count);
 				foreach(ColumnParameterMapping mapping in this.ParameterMappings)
 				{
@@ -964,17 +966,17 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 
 				return result;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region IOrigamMetadataConsumer Members
+		#region IOrigamMetadataConsumer Members
 
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
-	{
-		get
+		private AbstractSchemaItem _origamMetadata;
+		public AbstractSchemaItem OrigamMetadata
 		{
+			get
+			{
 				if(_origamMetadata == null) return null;
 
 				try
@@ -986,40 +988,40 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 					return _origamMetadata;
 				}
 			}
-		set
-		{
+			set
+			{
 				_origamMetadata = value;
 				_itemsLoaded = true;
 
 				FillParameterCache(_origamMetadata as ControlSetItem);
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
 
-	private void txtEdit_CursorDownPressed(object sender, EventArgs e)
-	{
+		private void txtEdit_CursorDownPressed(object sender, EventArgs e)
+		{
 			if(this.DroppedDown) Popup.MoveDown();
 		}
 
-	private void txtEdit_CursorUpPressed(object sender, EventArgs e)
-	{
+		private void txtEdit_CursorUpPressed(object sender, EventArgs e)
+		{
 			if(this.DroppedDown) Popup.MoveUp();
 		}
 
-	private void txtEdit_MouseHover(object sender, EventArgs e)
-	{
+		private void txtEdit_MouseHover(object sender, EventArgs e)
+		{
 			this.OnMouseHover(e);
 		}
 
-	private void txtEdit_MouseEnter(object sender, EventArgs e)
-	{
+		private void txtEdit_MouseEnter(object sender, EventArgs e)
+		{
 			this.OnMouseEnter(e);
 		}
 
-	private void txtEdit_MouseMove(object sender, MouseEventArgs e)
-	{
+		private void txtEdit_MouseMove(object sender, MouseEventArgs e)
+		{
 			if(PreparedForEditingSourceRecord)
 			{
 				this.EditControl.Cursor = Cursors.Hand;
@@ -1032,18 +1034,18 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			this.OnMouseMove(e);
 		}
 
-	private void btnOpenList_Click(object sender, EventArgs e)
-	{
+		private void btnOpenList_Click(object sender, EventArgs e)
+		{
 			this.OnLookupShowSourceListRequested(EventArgs.Empty);
 		}
 
-	private void mnuDelete_Click(object sender, EventArgs e)
-	{
+		private void mnuDelete_Click(object sender, EventArgs e)
+		{
 			DeleteSelectedValue();
 		}
 
-	private void DeleteSelectedValue()
-	{
+		private void DeleteSelectedValue()
+		{
 			if(! this.ReadOnly)
 			{
 				OnLookupValueChangingByUser(EventArgs.Empty);
@@ -1051,48 +1053,49 @@ public class AsDropDown : BaseDropDownControl, ILookupControl,
 			}
 		}
 
-	void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
-	{
+        void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
 			mnuEdit.Visible = LookupCanEditSourceRecord;
 			mnuEdit.Enabled = this.LookupValue != DBNull.Value;
 			mnuDelete.Visible = ! this.ReadOnly;
 			mnuEditList.Visible = this.OpenListButton.Visible;
 		}
 
-	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
-	{
+		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
+		{
 			UpdateBindings();
 		}
 
-	private static bool IsControlPressed => (ModifierKeys & Keys.Control) == Keys.Control;
+		private static bool IsControlPressed => (ModifierKeys & Keys.Control) == Keys.Control;
 
-	public bool LookupCanEditSourceRecord { get; set; } = false;
+		public bool LookupCanEditSourceRecord { get; set; } = false;
 
-	private bool PreparedForEditingSourceRecord 
-		=> this.LookupCanEditSourceRecord &&
-		   IsControlPressed && 
-		   this.LookupValue != DBNull.Value;
+		private bool PreparedForEditingSourceRecord 
+			=> this.LookupCanEditSourceRecord &&
+			   IsControlPressed && 
+			   this.LookupValue != DBNull.Value;
 
-	private void mnuEdit_Click(object sender, EventArgs e)
-	{
+		private void mnuEdit_Click(object sender, EventArgs e)
+		{
 			OnLookupEditSourceRecordRequested(EventArgs.Empty);
 		}
 
-	private void txtEdit_MouseDown(object sender, MouseEventArgs e)
-	{
+		private void txtEdit_MouseDown(object sender, MouseEventArgs e)
+		{
 			if(PreparedForEditingSourceRecord)
 			{
 				OnLookupEditSourceRecordRequested(EventArgs.Empty);
 			}
 		}
 
-	private void AsDropDown_readOnlyChanged(object sender, EventArgs e)
-	{
+		private void AsDropDown_readOnlyChanged(object sender, EventArgs e)
+		{
 			if(ReadOnly)
 			{
 				this.LookupShowEditButton = false;
 			}
 		}
 
-	public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+	}
 }

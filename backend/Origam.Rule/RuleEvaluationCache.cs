@@ -23,17 +23,17 @@ using Origam.Schema.EntityModel;
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Rule;
-
-public class RuleEvaluationCache
+namespace Origam.Rule
 {
-    private readonly Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> 
-        rules = new();
-    private readonly Dictionary<Tuple<Guid, CredentialType>, bool>
-        rulelessFieldSecurityRuleResults = new();
-
-    public bool? Get(AbstractEntitySecurityRule rule, Guid entityId)
+    public class RuleEvaluationCache
     {
+        private readonly Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> 
+            rules = new();
+        private readonly Dictionary<Tuple<Guid, CredentialType>, bool>
+            rulelessFieldSecurityRuleResults = new();
+
+        public bool? Get(AbstractEntitySecurityRule rule, Guid entityId)
+        {
             if (rules.TryGetValue(new Tuple<Guid, CredentialValueType,
                     Guid>(rule.Id, rule.ValueType, entityId), out var result))
             {
@@ -41,15 +41,15 @@ public class RuleEvaluationCache
             }
             return null;
         }
-    public void Put(AbstractEntitySecurityRule rule, Guid entityId,
-        bool value)
-    {
+        public void Put(AbstractEntitySecurityRule rule, Guid entityId,
+            bool value)
+        {
             rules.Add(new Tuple<Guid, CredentialValueType, Guid>
                 (rule.Id, rule.ValueType, entityId), value);
         }
 
-    public bool? GetRulelessFieldResult(Guid entityId, CredentialType type)
-    {
+        public bool? GetRulelessFieldResult(Guid entityId, CredentialType type)
+        {
             if (rulelessFieldSecurityRuleResults.TryGetValue(
                     new Tuple<Guid, CredentialType>(entityId, type), 
                     out var result))
@@ -59,10 +59,11 @@ public class RuleEvaluationCache
             return null;
         }
 
-    public void PutRulelessFieldResult(Guid entityId, CredentialType type,
-        bool value)
-    {
+        public void PutRulelessFieldResult(Guid entityId, CredentialType type,
+            bool value)
+        {
             rulelessFieldSecurityRuleResults.Add(
                 new Tuple<Guid, CredentialType>(entityId, type), value);
         }
+    }
 }

@@ -22,16 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Workbench.Editors;
-
-public class MemoryListBox : ListBox
+namespace Origam.Workbench.Editors
 {
-    private object previouslySelectedItem;
-
-    public object PreviouslySelectedItem
+    public class MemoryListBox : ListBox
     {
-        get
+        private object previouslySelectedItem;
+
+        public object PreviouslySelectedItem
         {
+            get
+            {
                 if (previouslySelectedItem == null) return null;
                 if (!Items.Contains(previouslySelectedItem))
                 {
@@ -39,29 +39,30 @@ public class MemoryListBox : ListBox
                 }
                 return previouslySelectedItem; 
             }
-        private set => previouslySelectedItem = value;
-    }
+            private set => previouslySelectedItem = value;
+        }
 
-    protected override void OnSelectedIndexChanged(EventArgs e)
-    {
+        protected override void OnSelectedIndexChanged(EventArgs e)
+        {
             base.OnSelectedIndexChanged(e);
             PreviouslySelectedItem = SelectedItem;
         }
 
-    public void SelectFirstIfAny()
-    {
+        public void SelectFirstIfAny()
+        {
             if (Items.Count > 0)
             {
                 SelectedIndex = 0;
             }
         }
 
-    public void RemoveAndKeepSomeSelected(object item)
-    {
+        public void RemoveAndKeepSomeSelected(object item)
+        {
             Items.Remove(item);
             if (SelectedItem == null)
             {
                 SelectFirstIfAny();
             }
         }
+    }
 }

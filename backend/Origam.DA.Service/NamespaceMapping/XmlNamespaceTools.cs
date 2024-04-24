@@ -7,18 +7,18 @@ using System.Text.RegularExpressions;
 using Origam.DA.Common;
 using Origam.DA.Common.ObjectPersistence.Attributes;
 
-namespace Origam.DA.Service.NamespaceMapping;
-
-public static class XmlNamespaceTools
+namespace Origam.DA.Service.NamespaceMapping
 {
-    private static readonly ConcurrentDictionary<Type, OrigamNameSpace> namespaces 
-        =  new ConcurrentDictionary<Type, OrigamNameSpace>();
-    private static readonly Dictionary<Type, string> namespaceNames
-        =  new Dictionary<Type, string>();
-        
-        
-    public static OrigamNameSpace GetXmlNameSpace(Type type)
+    public static class XmlNamespaceTools
     {
+        private static readonly ConcurrentDictionary<Type, OrigamNameSpace> namespaces 
+            =  new ConcurrentDictionary<Type, OrigamNameSpace>();
+        private static readonly Dictionary<Type, string> namespaceNames
+            =  new Dictionary<Type, string>();
+        
+        
+        public static OrigamNameSpace GetXmlNameSpace(Type type)
+        {
             if (!namespaces.ContainsKey(type))
             {
                 Version currentClassVersion = Versions.GetCurrentClassVersion(type);
@@ -27,8 +27,8 @@ public static class XmlNamespaceTools
             return namespaces[type];
         }
 
-    public static string GetXmlNamespaceName(Type type)
-    {
+        public static string GetXmlNamespaceName(Type type)
+        {
             if (!namespaceNames.ContainsKey(type))
             {
                 namespaceNames[type] = GetNamespaceName(type, namespaceNames);
@@ -36,8 +36,8 @@ public static class XmlNamespaceTools
             return namespaceNames[type];
         }
 
-    public static string GetXmlNamespaceName(string typeName)
-    {
+        public static string GetXmlNamespaceName(string typeName)
+        {
             var charArray = typeName
                 .Where(char.IsUpper)
                 .Select(char.ToLower)
@@ -45,8 +45,8 @@ public static class XmlNamespaceTools
             return new string(charArray);
         }
 
-    private static string GetNamespaceName(Type type, Dictionary<Type, string> namespaceDict)
-    {
+        private static string GetNamespaceName(Type type, Dictionary<Type, string> namespaceDict)
+        {
             if (type.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
                 is XmlNamespaceNameAttribute attribute)
             {
@@ -73,4 +73,5 @@ public static class XmlNamespaceTools
                 ? namespaceName
                 : $"{namespaceName}{orderNumbers.Last() + 1}";
         }
+    }
 }

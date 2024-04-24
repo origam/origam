@@ -36,23 +36,23 @@ using Origam.Workbench.Services;
 using Origam.Workflow;
 
 
-namespace Origam.Gui;
-
-public abstract class EntityUIActionRunner
+namespace Origam.Gui
 {
-    protected readonly IEntityUIActionRunnerClient actionRunnerClient;
-    protected readonly ArrayList resultList = new ArrayList();
-
-    public EntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
+    public abstract class EntityUIActionRunner
     {
+        protected readonly IEntityUIActionRunnerClient actionRunnerClient;
+        protected readonly ArrayList resultList = new ArrayList();
+
+        public EntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
+        {
             this.actionRunnerClient = actionRunnerClient;
         }
 
-    public IList ExecuteAction(
-        string sessionFormIdentifier, string requestingGrid, string entity, 
-        string actionType, string actionId, Hashtable parameterMappings, 
-        List<string> selectedIds, Hashtable inputParameters)
-    {
+        public IList ExecuteAction(
+            string sessionFormIdentifier, string requestingGrid, string entity, 
+            string actionType, string actionId, Hashtable parameterMappings, 
+            List<string> selectedIds, Hashtable inputParameters)
+        {
             ExecuteActionProcessData processData 
                 = actionRunnerClient.CreateExecuteActionProcessData(
                 sessionFormIdentifier, requestingGrid, actionType, entity, 
@@ -63,8 +63,8 @@ public abstract class EntityUIActionRunner
             return resultList;
         }
 
-    protected virtual void PerformAppropriateAction(ExecuteActionProcessData processData)
-    {
+        protected virtual void PerformAppropriateAction(ExecuteActionProcessData processData)
+        {
             switch (processData.Type)
             {
                 case PanelActionType.Workflow:
@@ -85,12 +85,12 @@ public abstract class EntityUIActionRunner
             }
         }
 
-    protected abstract void ExecuteOpenFormAction(
-        ExecuteActionProcessData processData);
+        protected abstract void ExecuteOpenFormAction(
+            ExecuteActionProcessData processData);
 
-    protected void ExecuteWorkflowAction(
-        ExecuteActionProcessData processData)
-    {
+        protected void ExecuteWorkflowAction(
+            ExecuteActionProcessData processData)
+        {
             if((processData.Action == null)
             || (processData.Action.Mode != PanelActionMode.Always))
             {
@@ -193,19 +193,19 @@ public abstract class EntityUIActionRunner
             }
         }
 
-    protected virtual ActionResult MakeActionResult(ActionResultType type)
-    {
+        protected virtual ActionResult MakeActionResult(ActionResultType type)
+        {
             return new ActionResult(type);
         }
 
-    protected abstract void SetTransactionId(
-        ExecuteActionProcessData processData,
-        string transactionId);
+        protected abstract void SetTransactionId(
+            ExecuteActionProcessData processData,
+            string transactionId);
 
-    protected void AppendScriptCalls(
-        EntityWorkflowAction entityWorkflowAction,
-        ExecuteActionProcessData processData)
-    {
+        protected void AppendScriptCalls(
+            EntityWorkflowAction entityWorkflowAction,
+            ExecuteActionProcessData processData)
+        {
             ArrayList scriptCalls = entityWorkflowAction.ChildItemsByType(
                 EntityWorkflowActionScriptCall.CategoryConst);
             if(scriptCalls.Count == 0)
@@ -225,8 +225,8 @@ public abstract class EntityUIActionRunner
             }
         }
 
-    private static void CheckSelectedRowsCountPositive(int count)
-    {
+        private static void CheckSelectedRowsCountPositive(int count)
+        {
             if(count == 0)
             {
                 throw new RuleException(
@@ -234,10 +234,10 @@ public abstract class EntityUIActionRunner
             }
         }
 
-    private bool IsScriptAllowed(
-        EntityWorkflowActionScriptCall scriptCall, 
-        ExecuteActionProcessData processData)
-    {
+        private bool IsScriptAllowed(
+            EntityWorkflowActionScriptCall scriptCall, 
+            ExecuteActionProcessData processData)
+        {
             // check features
             IParameterService param = ServiceManager.Services.GetService(
                 typeof(IParameterService)) as IParameterService;
@@ -275,4 +275,5 @@ public abstract class EntityUIActionRunner
             }
             return true;
         }
+    }
 }

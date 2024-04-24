@@ -23,17 +23,17 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Designer;
-
-[ProvideProperty("RequestSaveAfterChange", typeof(Control))]
-public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
+namespace Origam.Gui.Designer
 {
+    [ProvideProperty("RequestSaveAfterChange", typeof(Control))]
+    public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
+    {
 
-	[Category("Behavior")]
-	[Description("If set to true, client will attempt to send save request after each change, if there are no errors.")]
-	[ExtenderProvidedProperty()]
-	public bool GetRequestSaveAfterChange(Control acontrol)
-	{
+		[Category("Behavior")]
+        [Description("If set to true, client will attempt to send save request after each change, if there are no errors.")]
+        [ExtenderProvidedProperty()]
+		public bool GetRequestSaveAfterChange(Control acontrol)
+		{
 			ControlSetItem csi = acontrol.Tag as ControlSetItem;
 			if(csi != null)
 			{
@@ -44,8 +44,8 @@ public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
 				return false;
 			}
 		}
-	public void SetRequestSaveAfterChange(Control acontrol, bool value)
-	{
+		public void SetRequestSaveAfterChange(Control acontrol, bool value)
+		{
 			ControlSetItem csi = acontrol.Tag as ControlSetItem;
 			if(csi != null)
 			{
@@ -54,9 +54,9 @@ public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
 		}
 
 
-	#region IExtenderProvider Members
-	public bool CanExtend(object extendee) 
-	{
+		#region IExtenderProvider Members
+		public bool CanExtend(object extendee) 
+		{
             if (extendee is Control 
             && (extendee as Control).Tag is ControlSetItem) {
                 return ((extendee as Control).Tag as ControlSetItem).ControlItem
@@ -67,5 +67,6 @@ public class RequestSaveAfterChangeExtenderProvider : IExtenderProvider
                 return false;
             }
 		}
-	#endregion
+		#endregion
+    }
 }

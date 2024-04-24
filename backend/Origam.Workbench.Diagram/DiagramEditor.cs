@@ -36,21 +36,21 @@ using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Editors;
-
-public class DiagramEditor : AbstractViewContent, IToolStripContainer
+namespace Origam.Workbench.Editors
 {
-	private GViewer gViewer;
-	private readonly IPersistenceProvider persistenceProvider;
-	private IDiagramEditor internalEditor;
-	private HScrollBar hScrollBar;
-	private TableLayoutPanel tableLayoutPanel1;
-	private readonly NodeSelector nodeSelector;
-	private System.Drawing.Point lastMouseLocation;
-	private WorkbenchSchemaService schemaService;
-
-	public DiagramEditor()
+	public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	{
+        private GViewer gViewer;
+        private readonly IPersistenceProvider persistenceProvider;
+        private IDiagramEditor internalEditor;
+        private HScrollBar hScrollBar;
+        private TableLayoutPanel tableLayoutPanel1;
+        private readonly NodeSelector nodeSelector;
+        private System.Drawing.Point lastMouseLocation;
+        private WorkbenchSchemaService schemaService;
+
+        public DiagramEditor()
+		{
 			schemaService = ServiceManager.Services
 				.GetService<WorkbenchSchemaService>();
 			nodeSelector = new NodeSelector();
@@ -69,13 +69,13 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 			gViewer.MouseLeave += OnMouseLeave;
 		}
 
-	private void OnMouseLeave(object sender, EventArgs args)
-	{
+        private void OnMouseLeave(object sender, EventArgs args)
+        {
 	        lastMouseLocation = System.Drawing.Point.Empty;
         }
 
-	private void OnMouseMove(object sender, MouseEventArgs args)
-	{
+        private void OnMouseMove(object sender, MouseEventArgs args)
+        {
 	        if (args.Button == MouseButtons.Left && 
 	            lastMouseLocation != System.Drawing.Point.Empty && 
 	            !gViewer.InsertingEdge)
@@ -88,8 +88,8 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	        lastMouseLocation = args.Location;
         }
 
-	protected override void Dispose(bool disposing)
-	{
+        protected override void Dispose(bool disposing)
+        {
 	        if (disposing)
 	        {
 		        internalEditor.Dispose();
@@ -98,28 +98,32 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	        base.Dispose(disposing);
         }
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation planeTransformation1 = new Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation();
             this.hScrollBar = new System.Windows.Forms.HScrollBar();
             this.gViewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 	 // hScrollBar
-            // 	 this.hScrollBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // hScrollBar
+            // 
+            this.hScrollBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.hScrollBar.Location = new System.Drawing.Point(0, 325);
             this.hScrollBar.Name = "hScrollBar";
             this.hScrollBar.Size = new System.Drawing.Size(548, 20);
             this.hScrollBar.TabIndex = 1;
             this.hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HScrollBar_Scroll);
-            // 	 // gViewer
-            // 	 this.gViewer.ArrowheadLength = 10D;
+            // 
+            // gViewer
+            // 
+            this.gViewer.ArrowheadLength = 10D;
             this.gViewer.AsyncLayout = false;
             this.gViewer.AutoScroll = true;
             this.gViewer.BackwardEnabled = false;
@@ -158,8 +162,10 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
             this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWhenMouseWheelScroll = true;
             this.gViewer.ZoomWindowThreshold = 0.05D;
-            // 	 // tableLayoutPanel1
-            // 	 this.tableLayoutPanel1.ColumnCount = 2;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 0F));
             this.tableLayoutPanel1.Controls.Add(this.gViewer, 0, 0);
@@ -172,8 +178,10 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(548, 345);
             this.tableLayoutPanel1.TabIndex = 2;
-            // 	 // DiagramEditor
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(7, 16);
+            // 
+            // DiagramEditor
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(7, 16);
             this.ClientSize = new System.Drawing.Size(548, 345);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -183,17 +191,17 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 
 		}
 
-	#endregion
+		#endregion
 
-	void GViewerMouseWheel(object sender, MouseEventArgs e) {
+		void GViewerMouseWheel(object sender, MouseEventArgs e) {
 			int delta = e.Delta / 3;
 			if (delta != 0) {
 				gViewer.Pan(0,delta);
 			}
 		}
 
-	protected override void ViewSpecificLoad(object objectToLoad)
-	{
+		protected override void ViewSpecificLoad(object objectToLoad)
+		{
 			switch (objectToLoad)
 			{
 				case IWorkflowBlock workflowBlock:
@@ -224,8 +232,8 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 			}
 		}
 
-	public List<ToolStrip> GetToolStrips(int maxWidth = -1)
-	{
+		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+		{
 			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
 			toolStrip.Text = Diagram.Strings.DiagramEditor_ToolStrip_Title;
 			
@@ -256,34 +264,34 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 			return new List<ToolStrip>{toolStrip};
 		}
 		
-	private void ToggleInsertEdge(object sender, EventArgs e)
-	{
+		private void ToggleInsertEdge(object sender, EventArgs e)
+		{
 			gViewer.InsertingEdge = !gViewer.InsertingEdge;
 		}
 
-	private void ZoomHome(object sender, EventArgs e) {
+		private void ZoomHome(object sender, EventArgs e) {
 			gViewer.Transform = null;
 			gViewer.Invalidate();
 		}
 		
-	public event EventHandler ToolStripsLoaded
-	{
-		add { }
-		remove { }
-	}
-	public event EventHandler AllToolStripsRemoved
-	{
-		add { }
-		remove { }
-	}
-	public event EventHandler ToolStripsNeedUpdate
-	{
-		add { }
-		remove { }
-	}
+		public event EventHandler ToolStripsLoaded
+		{
+			add { }
+			remove { }
+		}
+		public event EventHandler AllToolStripsRemoved
+		{
+			add { }
+			remove { }
+		}
+		public event EventHandler ToolStripsNeedUpdate
+		{
+			add { }
+			remove { }
+		}
 
-	private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
-	{
+		private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
             if (e.NewValue == e.OldValue) return;
             var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
             if (focusSubgraph == null) return;
@@ -301,4 +309,5 @@ public class DiagramEditor : AbstractViewContent, IToolStripContainer
 //	        double distanceFromCenter = -(focusSubgraph.Height / 100 * (100 - e.NewValue) - focusSubgraph.Height / 2);
 //	        gViewer.CenterToYCoordinate(focusSubgraph.Pos.Y + distanceFromCenter);
 //        }
+    }
 }

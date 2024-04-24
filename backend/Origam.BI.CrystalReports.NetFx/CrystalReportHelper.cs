@@ -31,27 +31,27 @@ using CrystalDecisions.CrystalReports.Engine;
 using log4net.Core;
 using Origam.Extensions;
 
-namespace Origam.BI.CrystalReports;
-
-/// <summary>
-/// Summary description for CrystalReportHelper.
-/// </summary>
-public class CrystalReportHelper
+namespace Origam.BI.CrystalReports
 {
-	private IServiceAgent _dataServiceAgent;
-	private static readonly log4net.ILog log
-		= log4net.LogManager.GetLogger(
-			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-	public CrystalReportHelper()
+	/// <summary>
+	/// Summary description for CrystalReportHelper.
+	/// </summary>
+	public class CrystalReportHelper
 	{
+		private IServiceAgent _dataServiceAgent;
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public CrystalReportHelper()
+		{
 			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 			_dataServiceAgent = services.GetAgent("DataService", null, null);
 		}
 		
-	#region Public Functions
-	public ReportDocument CreateReport(Guid reportId, Hashtable parameters, string transactionId)
-	{
+		#region Public Functions
+		public ReportDocument CreateReport(Guid reportId, Hashtable parameters, string transactionId)
+		{
 			if(parameters == null) parameters = new Hashtable();
 			// get report model element
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
@@ -68,8 +68,8 @@ public class CrystalReportHelper
 			return CreateReport(report.ReportFileName, data, parameters, report);
 		}
 
-	private void TraceReportData(DataSet data, string reportName)
-	{
+		private void TraceReportData(DataSet data, string reportName)
+		{
 			try
 			{
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -88,8 +88,8 @@ public class CrystalReportHelper
 			}
 		}
 
-	public ReportDocument CreateReport(Guid reportId, DataSet data, Hashtable parameters)
-	{
+		public ReportDocument CreateReport(Guid reportId, DataSet data, Hashtable parameters)
+		{
 			if(parameters == null) parameters = new Hashtable();
 			// get report model element
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
@@ -100,14 +100,14 @@ public class CrystalReportHelper
             return CreateReport(report.ReportFileName, data, parameters, report);
 		}
 
-	public ReportDocument CreateReport(string fileName, DataSet data)
-	{
+		public ReportDocument CreateReport(string fileName, DataSet data)
+		{
 			return this.CreateReport(fileName, data, new Hashtable(), null);
 		}
-	#endregion
+		#endregion
 		
-	private ReportDocument CreateReport(string fileName, DataSet data, Hashtable parameters, CrystalReport reportElement)
-	{
+		private ReportDocument CreateReport(string fileName, DataSet data, Hashtable parameters, CrystalReport reportElement)
+		{
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report started");
@@ -179,8 +179,8 @@ public class CrystalReportHelper
             return result;
 		}
 
-	private void WriteInfoLog(CrystalReport reportElement, string message)
-	{
+        private void WriteInfoLog(CrystalReport reportElement, string message)
+        {
             LoggingEvent loggingEvent = new LoggingEvent(
               this.GetType(),
               log.Logger.Repository,
@@ -192,8 +192,8 @@ public class CrystalReportHelper
             log.Logger.Log(loggingEvent);
         }
 
-	private void SetLogonInfo(ReportDocument report, Hashtable connection)
-	{
+        private void SetLogonInfo(ReportDocument report, Hashtable connection)
+		{
 			foreach(CrystalDecisions.CrystalReports.Engine.Table table in report.Database.Tables)
 			{
 				CrystalDecisions.Shared.TableLogOnInfo logon = table.LogOnInfo;
@@ -206,8 +206,8 @@ public class CrystalReportHelper
 			}
 		}
 
-	private void SetReportParameters(Hashtable parameters, ReportDocument report, CrystalReport reportElement)
-	{
+		private void SetReportParameters(Hashtable parameters, ReportDocument report, CrystalReport reportElement)
+		{
 			if(parameters != null)
 			{
 				foreach(CrystalDecisions.Shared.ParameterField paramDef in report.ParameterFields)
@@ -225,8 +225,8 @@ public class CrystalReportHelper
 			}
 		}
 
-	private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid sortSetId, Hashtable parameters, string transactionId)
-	{
+		private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid sortSetId, Hashtable parameters, string transactionId)
+		{
 			DataStructureQuery query = new DataStructureQuery(dataStructureId, methodId, Guid.Empty, sortSetId);
 			foreach(DictionaryEntry entry in parameters)
 			{
@@ -235,8 +235,8 @@ public class CrystalReportHelper
 			return LoadData(query, transactionId);
 		}
 
-	private DataSet LoadData(DataStructureQuery query, string transactionId)
-	{
+		private DataSet LoadData(DataStructureQuery query, string transactionId)
+		{
 			_dataServiceAgent.MethodName = "LoadDataByQuery";
 			_dataServiceAgent.Parameters.Clear();
 			_dataServiceAgent.Parameters.Add("Query", query);
@@ -245,12 +245,13 @@ public class CrystalReportHelper
 			DataSet reportData = _dataServiceAgent.Result as DataSet;
 			return reportData;
 		}
-}
+	}
 
-public class AsReportDocument : ReportDocument
-{
-	protected override bool CheckLicenseStatus()
+	public class AsReportDocument : ReportDocument
 	{
+		protected override bool CheckLicenseStatus()
+		{
 			return true;
 		}
+	}
 }

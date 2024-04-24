@@ -23,21 +23,21 @@ using System;
 using System.Collections;
 using System.Linq;
 
-namespace Origam.Schema.GuiModel;
-
-public class ChartSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.GuiModel
 {
-	public ChartSchemaItemProvider() {}
-		
-	#region ISchemaItemProvider Members
-	public override string RootItemType => AbstractChart.CategoryConst;
-
-	public override string Group => "UI";
-
-	#endregion
-
-	public ArrayList Charts(Guid formId, string entity)
+	public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 	{
+		public ChartSchemaItemProvider() {}
+		
+		#region ISchemaItemProvider Members
+		public override string RootItemType => AbstractChart.CategoryConst;
+
+		public override string Group => "UI";
+
+		#endregion
+
+		public ArrayList Charts(Guid formId, string entity)
+		{
 			var result = new ArrayList();
 			foreach(var abstractSchemaItem in ChildItems)
 			{
@@ -53,34 +53,34 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 			return result;
 		}
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_14_charts.png";
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_14_charts.png";
 
-	public override string NodeText
-	{
-		get => "Charts";
-		set => base.NodeText = value;
-	}
+		public override string NodeText
+		{
+			get => "Charts";
+			set => base.NodeText = value;
+		}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		"List of Charts";
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Charts";
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[]
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(CartesianChart), typeof(PieChart), typeof(SvgChart)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			string itemName = null;
 			if(typeof(T) == typeof(CartesianChart))
 			{
@@ -97,7 +97,8 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	#endregion
+		#endregion
 
 
+	}
 }

@@ -25,26 +25,26 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui;
-
-public enum OrigamPanelViewMode
+namespace Origam.Gui
 {
-	Form = 0,
-	Grid = 1,
-	Calendar = 2,
-	Pipeline = 3,
-	Chart = 4,
-	Map = 5,
-	VisualEditor = 6
+	public enum OrigamPanelViewMode
+	{
+		Form = 0,
+		Grid = 1,
+		Calendar = 2,
+		Pipeline = 3,
+		Chart = 4,
+		Map = 5,
+		VisualEditor = 6
 }
 
-/// <summary>
-/// Summary description for OrigamPanelConfigDA.
-/// </summary>
-public class OrigamPanelConfigDA
-{
-	public static DataRow CreatePanelConfigRow(DataTable configTable, Guid panelInstanceId, Guid workflowId, Guid profileId, OrigamPanelViewMode defaultView)
+	/// <summary>
+	/// Summary description for OrigamPanelConfigDA.
+	/// </summary>
+	public class OrigamPanelConfigDA
 	{
+		public static DataRow CreatePanelConfigRow(DataTable configTable, Guid panelInstanceId, Guid workflowId, Guid profileId, OrigamPanelViewMode defaultView)
+		{
 			DataRow row = configTable.NewRow();
 			row["Id"] = Guid.NewGuid();
 			row["RecordCreated"] = DateTime.Now;
@@ -59,8 +59,8 @@ public class OrigamPanelConfigDA
 			return row;
 		}
 
-	public static DataSet LoadConfigData(Guid panelInstanceId, Guid workflowId, Guid profileId)
-	{
+		public static DataSet LoadConfigData(Guid panelInstanceId, Guid workflowId, Guid profileId)
+		{
 			// here we load the user's defaults
 			// DS: 218890ad-cd12-43a9-9166-4a02028d6125
 			// Filter Form: 59d68a5a-0f9c-405b-957b-1d698535310e (OrigamFormPanelConfig_parFormPanelId, OrigamFormPanelConfig_parProfileId)
@@ -99,8 +99,8 @@ public class OrigamPanelConfigDA
 			return dataServiceAgent.Result as DataSet;
 		}
 
-	public static void SaveUserConfig(DataSet userConfig, Guid panelInstanceId, Guid workflowId, Guid profileId)
-	{
+		public static void SaveUserConfig(DataSet userConfig, Guid panelInstanceId, Guid workflowId, Guid profileId)
+		{
 			try
 			{
 				if (userConfig == null) return;
@@ -118,8 +118,8 @@ public class OrigamPanelConfigDA
 			catch { }
 		}
 
-	public static void DeleteUserConfig(Guid screenSectionId, Guid workflowId, Guid profileId)
-	{
+		public static void DeleteUserConfig(Guid screenSectionId, Guid workflowId, Guid profileId)
+		{
 			DataSet actualConfig = LoadConfigData(screenSectionId, workflowId, profileId);
 			if (actualConfig.Tables["OrigamFormPanelConfig"].Rows.Count > 0)
 			{
@@ -128,8 +128,8 @@ public class OrigamPanelConfigDA
 			SaveConfigData(actualConfig);
 		}
 
-	private static void SaveConfigData(DataSet userConfig)
-	{
+		private static void SaveConfigData(DataSet userConfig)
+		{
 			try
 			{
 				DataStructureQuery query = new DataStructureQuery(
@@ -145,4 +145,5 @@ public class OrigamPanelConfigDA
 			}
 			catch { }
 		}
+	}
 }

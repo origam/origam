@@ -26,15 +26,15 @@ using System.Windows.Forms;
 using Origam.Workbench;
 using Origam.Gui.Win;
 
-namespace Origam.Workflow.Gui.Win;
-
-/// <summary>
-/// Summary description for WorkflowHelper.
-/// </summary>
-public class WorkflowHelper
+namespace Origam.Workflow.Gui.Win
 {
-	public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
+	/// <summary>
+	/// Summary description for WorkflowHelper.
+	/// </summary>
+	public class WorkflowHelper
 	{
+		public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
+		{
 			// Initialize view for this workflow
 			WorkflowForm form = new WorkflowForm(host);
 
@@ -51,4 +51,5 @@ public class WorkflowHelper
 
 			return form;
 		}
+	}
 }

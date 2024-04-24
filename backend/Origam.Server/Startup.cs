@@ -55,19 +55,19 @@ using Origam.Service.Core;
 using SoapCore;
 
 
-namespace Origam.Server;
-
-public class Startup
+namespace Origam.Server
 {
-    private readonly StartUpConfiguration startUpConfiguration;
-    private IConfiguration Configuration { get; }
-    private readonly PasswordConfiguration passwordConfiguration;
-    private readonly IdentityServerConfig identityServerConfig;
-    private readonly UserLockoutConfig lockoutConfig;
-    private readonly LanguageConfig languageConfig;
-
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
+        private readonly StartUpConfiguration startUpConfiguration;
+        private IConfiguration Configuration { get; }
+        private readonly PasswordConfiguration passwordConfiguration;
+        private readonly IdentityServerConfig identityServerConfig;
+        private readonly UserLockoutConfig lockoutConfig;
+        private readonly LanguageConfig languageConfig;
+
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
             startUpConfiguration = new StartUpConfiguration(configuration);
             passwordConfiguration = new PasswordConfiguration(configuration);
@@ -76,146 +76,146 @@ public class Startup
             languageConfig = new LanguageConfig(configuration);
         }
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.Configure<KestrelServerOptions>(options =>
+        public void ConfigureServices(IServiceCollection services)
         {
-            options.AllowSynchronousIO = true;
-        });
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
 
-        // If using IIS:
-        services.Configure<IISServerOptions>(options =>
-        {
-            options.AllowSynchronousIO = true;
-            options.AuthenticationDisplayName = "Windows";
-            options.AutomaticAuthentication = true;
-        });
+            // If using IIS:
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+                options.AuthenticationDisplayName = "Windows";
+                options.AutomaticAuthentication = true;
+            });
 
-        services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
-        var builder = services.AddMvc().AddNewtonsoftJson();
+            services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
+            var builder = services.AddMvc().AddNewtonsoftJson();
 #if DEBUG
-        builder.AddRazorRuntimeCompilation();
+            builder.AddRazorRuntimeCompilation();
 #endif
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
-            options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
-        });
-        services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
-        services.AddScoped<IManager, CoreManagerAdapter>();
-        services.AddSingleton<IMailService, MailService>();
-        services.AddSingleton<SearchHandler>();
-        services.AddSingleton<SessionObjects, SessionObjects>();
-        services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
-        services.AddScoped<SignInManager<IOrigamUser>>();
-        services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
-        services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
-        services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
-        services.AddSingleton<LanguageConfig>();
-        services.AddLocalization();
-        services.AddIdentity<IOrigamUser, Role>()
-            .AddDefaultTokenProviders()
-            .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Password.RequireDigit = passwordConfiguration.RequireDigit;
-            options.Password.RequiredLength = passwordConfiguration.RequiredLength;
-            options.Password.RequireNonAlphanumeric = passwordConfiguration.RequireNonAlphanumeric;
-            options.Password.RequireUppercase = passwordConfiguration.RequireUppercase;
-            options.Password.RequireLowercase = passwordConfiguration.RequireLowercase;
-            var userConfig = new UserConfig();
-            Configuration.GetSection("UserConfig").Bind(userConfig);
-            if (!string.IsNullOrEmpty(userConfig.AllowedUserNameCharacters))
+            services.Configure<IdentityOptions>(options =>
             {
-                options.User.AllowedUserNameCharacters = userConfig.AllowedUserNameCharacters;                    
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
+                options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
+            });
+            services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
+            services.AddScoped<IManager, CoreManagerAdapter>();
+            services.AddSingleton<IMailService, MailService>();
+            services.AddSingleton<SearchHandler>();
+            services.AddSingleton<SessionObjects, SessionObjects>();
+            services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
+            services.AddScoped<SignInManager<IOrigamUser>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
+            services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
+            services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
+            services.AddSingleton<LanguageConfig>();
+            services.AddLocalization();
+            services.AddIdentity<IOrigamUser, Role>()
+                .AddDefaultTokenProviders()
+                .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = passwordConfiguration.RequireDigit;
+                options.Password.RequiredLength = passwordConfiguration.RequiredLength;
+                options.Password.RequireNonAlphanumeric = passwordConfiguration.RequireNonAlphanumeric;
+                options.Password.RequireUppercase = passwordConfiguration.RequireUppercase;
+                options.Password.RequireLowercase = passwordConfiguration.RequireLowercase;
+                var userConfig = new UserConfig();
+                Configuration.GetSection("UserConfig").Bind(userConfig);
+                if (!string.IsNullOrEmpty(userConfig.AllowedUserNameCharacters))
+                {
+                    options.User.AllowedUserNameCharacters = userConfig.AllowedUserNameCharacters;                    
+                }
+            });
+            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPrincipal>(provider 
+                => provider.GetService<IHttpContextAccessor>()
+                    .HttpContext?.User);
+            services.Configure<UserConfig>(options 
+                => Configuration.GetSection("UserConfig").Bind(options));
+            services.Configure<ClientFilteringConfig>(options 
+                => Configuration.GetSection("ClientFilteringConfig")
+                    .Bind(options));
+            services.Configure<IdentityGuiConfig>(options 
+                => Configuration.GetSection("IdentityGuiConfig")
+                    .Bind(options));
+            services.Configure<CustomAssetsConfig>(options 
+                => Configuration.GetSection("CustomAssetsConfig")
+                    .Bind(options));
+            services.Configure<UserLockoutConfig>(options 
+                => Configuration.GetSection("UserLockoutConfig")
+                    .Bind(options));
+            services.Configure<ChatConfig>(options 
+                => Configuration.GetSection("ChatConfig").Bind(options));
+            services.Configure<HtmlClientConfig>(options 
+                => Configuration.GetSection("HtmlClientConfig")
+                    .Bind(options));
+
+            services.AddIdentityServer()
+                .AddInMemoryApiResources(Settings.GetIdentityApiResources())
+                .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
+                .AddInMemoryIdentityResources(Settings.GetIdentityResources())
+                .AddAspNetIdentity<IOrigamUser>()
+                .AddSigningCredential(new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate))
+                .AddInMemoryApiScopes(Settings.GetApiScopes())
+                .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
+            
+            if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
+            {
+                services.ConfigureApplicationCookie(options =>
+                {
+                    options.ExpireTimeSpan = 
+                        TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
+                    options.SlidingExpiration = 
+                        identityServerConfig.CookieSlidingExpiration;
+                });
             }
-        });
-            
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddTransient<IPrincipal>(provider 
-            => provider.GetService<IHttpContextAccessor>()
-                .HttpContext?.User);
-        services.Configure<UserConfig>(options 
-            => Configuration.GetSection("UserConfig").Bind(options));
-        services.Configure<ClientFilteringConfig>(options 
-            => Configuration.GetSection("ClientFilteringConfig")
-                .Bind(options));
-        services.Configure<IdentityGuiConfig>(options 
-            => Configuration.GetSection("IdentityGuiConfig")
-                .Bind(options));
-        services.Configure<CustomAssetsConfig>(options 
-            => Configuration.GetSection("CustomAssetsConfig")
-                .Bind(options));
-        services.Configure<UserLockoutConfig>(options 
-            => Configuration.GetSection("UserLockoutConfig")
-                .Bind(options));
-        services.Configure<ChatConfig>(options 
-            => Configuration.GetSection("ChatConfig").Bind(options));
-        services.Configure<HtmlClientConfig>(options 
-            => Configuration.GetSection("HtmlClientConfig")
-                .Bind(options));
+            services.AddSoapCore();
+            services.AddSingleton<DataServiceSoap>();
+            services.AddSingleton<WorkflowServiceSoap>();
 
-        services.AddIdentityServer()
-            .AddInMemoryApiResources(Settings.GetIdentityApiResources())
-            .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
-            .AddInMemoryIdentityResources(Settings.GetIdentityResources())
-            .AddAspNetIdentity<IOrigamUser>()
-            .AddSigningCredential(new X509Certificate2(
-                identityServerConfig.PathToJwtCertificate,
-                identityServerConfig.PasswordForJwtCertificate))
-            .AddInMemoryApiScopes(Settings.GetApiScopes())
-            .AddResourceOwnerValidator<OrigamResourceOwnerPasswordValidator>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(options => {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                        factory.Create(typeof(SharedResources));
+                });
             
-        if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
-        {
-            services.ConfigureApplicationCookie(options =>
+            ConfigureAuthentication(services);
+            
+            services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.ExpireTimeSpan = 
-                    TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
-                options.SlidingExpiration = 
-                    identityServerConfig.CookieSlidingExpiration;
+                options.DefaultRequestCulture = languageConfig.DefaultCulture;
+                options.SupportedCultures = languageConfig.AllowedCultures;
+                options.SupportedUICultures = languageConfig.AllowedCultures;
+                options.RequestCultureProviders.Clear();
+                options.RequestCultureProviders.Insert(0, 
+                    new OrigamCookieRequestCultureProvider(languageConfig));
             });
-        }
-        services.AddSoapCore();
-        services.AddSingleton<DataServiceSoap>();
-        services.AddSingleton<WorkflowServiceSoap>();
+            foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
+            {
+                var customControllerAssembly = Assembly.LoadFrom(
+                    controllerDllName);
+                services.AddControllers()
+                    .AddApplicationPart(customControllerAssembly);
+            }
 
-        services.AddScoped<IProfileService, ProfileService>();
-        services.AddMvc(options => options.EnableEndpointRouting = false)
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization(options => {
-                options.DataAnnotationLocalizerProvider = (type, factory) =>
-                    factory.Create(typeof(SharedResources));
-            });
-            
-        ConfigureAuthentication(services);
-            
-        services.Configure<RequestLocalizationOptions>(options =>
-        {
-            options.DefaultRequestCulture = languageConfig.DefaultCulture;
-            options.SupportedCultures = languageConfig.AllowedCultures;
-            options.SupportedUICultures = languageConfig.AllowedCultures;
-            options.RequestCultureProviders.Clear();
-            options.RequestCultureProviders.Insert(0, 
-                new OrigamCookieRequestCultureProvider(languageConfig));
-        });
-        foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
-        {
-            var customControllerAssembly = Assembly.LoadFrom(
-                controllerDllName);
-            services.AddControllers()
-                .AddApplicationPart(customControllerAssembly);
+            var providerFactory = 
+                LoadClientAuthenticationProviders(Configuration, startUpConfiguration);
+            services.AddSingleton(providerFactory);
         }
 
-        var providerFactory = 
-            LoadClientAuthenticationProviders(Configuration, startUpConfiguration);
-        services.AddSingleton(providerFactory);
-    }
-
-    private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders( 
-        IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
-    {
+        private static ClientAuthenticationProviderContainer LoadClientAuthenticationProviders( 
+            IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        {
             var providerFactory = new ClientAuthenticationProviderContainer();
             foreach (var providerDllName in startUpConfiguration.ExtensionDlls)
             {
@@ -235,8 +235,8 @@ public class Startup
             return providerFactory;
         }  
 
-    private void ConfigureAuthentication(IServiceCollection services)
-    {
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
             var authenticationBuilder = services
                 .AddLocalApiAuthentication()
                 .AddAuthentication();
@@ -319,10 +319,10 @@ public class Startup
             }
         }
 
-    public void Configure(
-        IApplicationBuilder app, IWebHostEnvironment env, 
-        ILoggerFactory loggerFactory)
-    {
+        public void Configure(
+            IApplicationBuilder app, IWebHostEnvironment env, 
+            ILoggerFactory loggerFactory)
+        {
             loggerFactory.AddLog4Net();
             
             if (env.IsDevelopment())
@@ -389,4 +389,5 @@ public class Startup
             HttpTools.SetDIServiceProvider(app.ApplicationServices);
             OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
         }
+    }
 }

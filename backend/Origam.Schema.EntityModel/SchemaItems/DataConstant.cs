@@ -27,151 +27,151 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for DataConstant.
-/// </summary>
-[SchemaItemDescription("Data Constant", "icon_data-constant.png")]
-[HelpTopic("Data+Constants")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class DataConstant : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "DataConstant";
-
-	public DataConstant() : base() {}
-
-	public DataConstant(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DataConstant(Key primaryKey) : base(primaryKey)	{}
-
-	#region Properties
-
-	[Category("(Schema Item)")]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[StringNotEmptyModelElementRule]
-	[XmlAttribute("name")]
-	[Description("Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations).")]
-	[NoDuplicateNamesInDataConstantRuleAtribute]
-	public override string Name
+	/// <summary>
+	/// Summary description for DataConstant.
+	/// </summary>
+	[SchemaItemDescription("Data Constant", "icon_data-constant.png")]
+    [HelpTopic("Data+Constants")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class DataConstant : AbstractSchemaItem
 	{
-		get => base.Name;
-		set => base.Name = value;
-	}
+		public const string CategoryConst = "DataConstant";
 
-	OrigamDataType _dataType = OrigamDataType.String;
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[Category("Data Constant")]
-	[XmlAttribute("dataType")]
-	public OrigamDataType DataType
-	{
-		get
+		public DataConstant() : base() {}
+
+		public DataConstant(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataConstant(Key primaryKey) : base(primaryKey)	{}
+
+        #region Properties
+
+        [Category("(Schema Item)")]
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [StringNotEmptyModelElementRule]
+        [XmlAttribute("name")]
+        [Description("Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations).")]
+        [NoDuplicateNamesInDataConstantRuleAtribute]
+        public override string Name
+        {
+            get => base.Name;
+            set => base.Name = value;
+        }
+
+        OrigamDataType _dataType = OrigamDataType.String;
+        [RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRule()]
+		[Category("Data Constant")]
+        [XmlAttribute("dataType")]
+		public OrigamDataType DataType
 		{
+			get
+			{
 				return _dataType;
 			}
-		set
-		{
+			set
+			{
 				_dataType = value;
 			}
-	}
+		}
 
-	Guid _guidValue = Guid.Empty;
-	//		[RefreshProperties(RefreshProperties.Repaint)]
-	[Browsable(false)]
-	public Guid GuidValue
-	{
-		get
+		Guid _guidValue = Guid.Empty;
+		//		[RefreshProperties(RefreshProperties.Repaint)]
+        [Browsable(false)]
+		public Guid GuidValue
 		{
+			get
+			{
 				return _guidValue;
 			}
-		set
-		{
+			set
+			{
 				_guidValue = value;
 			}
-	}
+		}
 
-	string _stringValue = "";
-	[Browsable(false)]
-	public string StringValue
-	{
-		get
+		string _stringValue = "";
+		[Browsable(false)]
+        public string StringValue
 		{
+			get
+			{
 				return _stringValue;
 			}
-		set
-		{
+			set
+			{
 				_stringValue = value;
 			}
-	}
+		}
 
-	bool _booleanValue = false;
-	[Browsable(false)]
-	public bool BooleanValue
-	{
-		get
+		bool _booleanValue = false;
+		[Browsable(false)]
+        public bool BooleanValue
 		{
+			get
+			{
 				return _booleanValue;
 			}
-		set
-		{
+			set
+			{
 				_booleanValue = value;
 			}
-	}
+		}
 
-	int _intValue = 0;
-	[Browsable(false)]
-	public int IntValue
-	{
-		get
+		int _intValue = 0;
+		[Browsable(false)]
+        public int IntValue
 		{
+			get
+			{
 				return _intValue;
 			}
-		set
-		{
+			set
+			{
 				_intValue = value;
 			}
-	}
+		}
 
-	decimal _currencyValue = 0;
-	[Browsable(false)]
-	public decimal CurrencyValue
-	{
-		get
+		decimal _currencyValue = 0;
+		[Browsable(false)]
+        public decimal CurrencyValue
 		{
+			get
+			{
 				return _currencyValue;
 			}
-		set
-		{
+			set
+			{
 				_currencyValue = value;
 			}
-	}
+		}
 
-	decimal _floatValue = 0;
-	[Browsable(false)]
-	public decimal FloatValue
-	{
-		get
+		decimal _floatValue = 0;
+		[Browsable(false)]
+        public decimal FloatValue
 		{
+			get
+			{
 				return _floatValue;
 			}
-		set
-		{
+			set
+			{
 				_floatValue = value;
 			}
-	}
+		}
 
-	object _dateValue = null;
-	[Browsable(false)]
-	public object DateValue
-	{
-		get
+		object _dateValue = null;
+		[Browsable(false)]
+        public object DateValue
 		{
+			get
+			{
 				return _dateValue;
 			}
-		set
-		{
+			set
+			{
 				if(value == null | value is DateTime)
 				{
 					_dateValue = value;
@@ -181,25 +181,25 @@ public class DataConstant : AbstractSchemaItem
 					throw new ArgumentOutOfRangeException("DateValue", value, ResourceUtils.GetString("ErrorNotDateTime"));
 				}
 			}
-	}
+		}
 
-	public Guid DataLookupId;
+        public Guid DataLookupId;
 
-	[Category("Data Constant")]
-	[TypeConverter(typeof(DataLookupConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("lookup", "DataLookupId")]
-	public IDataLookup DataLookup
-	{
-		get
+		[Category("Data Constant")]
+		[TypeConverter(typeof(DataLookupConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("lookup", "DataLookupId")]
+        public IDataLookup DataLookup
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataLookupId;
 
 				return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					this.DataLookupId = Guid.Empty;
@@ -209,15 +209,15 @@ public class DataConstant : AbstractSchemaItem
 					this.DataLookupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-	}
+		}
 
-	[XmlAttribute("value")]
-	[Browsable(false)]
-	public string XmlValue
-	{
-		get => XmlTools.ConvertToString(Value);
-		set
-		{
+        [XmlAttribute("value")]
+        [Browsable(false)]
+        public string XmlValue
+        {
+            get => XmlTools.ConvertToString(Value);
+	        set
+            {
                 if (string.IsNullOrEmpty(value))
                 {
                     Value = null;
@@ -252,19 +252,19 @@ public class DataConstant : AbstractSchemaItem
                     }
                 }
             }
-	}
+        }
 
-	[Category("Value")]
-	[TypeConverter(typeof(DataConstantLookupReaderConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	public object Value
-	{
-		get
+		[Category("Value")]
+		[TypeConverter(typeof(DataConstantLookupReaderConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        public object Value
 		{
+			get
+			{
 				return ConvertValue(this.DataType, this.StringValue, this.IntValue, this.GuidValue, this.CurrencyValue, this.FloatValue, this.BooleanValue, this.DateValue);
 			}
-		set
-		{
+			set
+			{
 				switch(this.DataType)
 				{
 					case OrigamDataType.Xml:
@@ -345,10 +345,10 @@ public class DataConstant : AbstractSchemaItem
 //						break;
 //				}
 			}
-	}
+		}
 
-	public static object ConvertValue(OrigamDataType dataType, string stringValue, int intValue, Guid guidValue, decimal currencyValue, decimal floatValue, bool booleanValue, object dateValue)
-	{
+		public static object ConvertValue(OrigamDataType dataType, string stringValue, int intValue, Guid guidValue, decimal currencyValue, decimal floatValue, bool booleanValue, object dateValue)
+		{
 			switch(dataType)
 			{
 				case OrigamDataType.Xml:
@@ -378,66 +378,67 @@ public class DataConstant : AbstractSchemaItem
 			return null;
 		}
 
-	bool _isUserDefinable = false;
-	[Category("User Definition")]
-	[Description("When True and when the constant is included as a menu item a different value will be stored for each user.")]
-	[DefaultValue(false)]
-	[XmlAttribute("userDefinable")]
-	public bool IsUserDefinable
-	{
-		get
-		{
+        bool _isUserDefinable = false;
+        [Category("User Definition")]
+        [Description("When True and when the constant is included as a menu item a different value will be stored for each user.")]
+        [DefaultValue(false)]
+        [XmlAttribute("userDefinable")]
+        public bool IsUserDefinable
+        {
+            get
+            {
                 return _isUserDefinable;
             }
-		set
-		{
+            set
+            {
                 _isUserDefinable = value;
             }
-	}
+        }
         
-	public Guid UserDefinableDefaultConstantId;
+        public Guid UserDefinableDefaultConstantId;
 
-	[TypeConverter(typeof(DataConstantConverter))]
-	[Category("User Definition")]
-	[Description("A value that will be used by default when IsUserDefinable = true and the user did not save a value yet.")]
-	[XmlReference("userDefinableDefaultConstant", "UserDefinableDefaultConstantId")]
-	public DataConstant UserDefinableDefaultConstant
-	{
-		get
-		{
+        [TypeConverter(typeof(DataConstantConverter))]
+        [Category("User Definition")]
+        [Description("A value that will be used by default when IsUserDefinable = true and the user did not save a value yet.")]
+        [XmlReference("userDefinableDefaultConstant", "UserDefinableDefaultConstantId")]
+        public DataConstant UserDefinableDefaultConstant
+        {
+            get
+            {
                 return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(EntityFilter), new ModelElementKey(this.UserDefinableDefaultConstantId));
             }
-		set
-		{
+            set
+            {
                 this.UserDefinableDefaultConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
-	}
-	#endregion
+        }
+        #endregion
 
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 		
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			if(this.DataLookup != null) dependencies.Add(this.DataLookup);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
+	}
 }

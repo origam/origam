@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for SvgChartType.
-/// </summary>
-public enum SvgChartType
+namespace Origam.Schema.GuiModel
 {
-	HeatMap = 0
+	/// <summary>
+	/// Summary description for SvgChartType.
+	/// </summary>
+	public enum SvgChartType
+	{
+		HeatMap = 0
+	}
 }

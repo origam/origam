@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workbench.Services;
-
-public enum ServiceOutputMethod
+namespace Origam.Workbench.Services
 {
-	AppendMergeExisting,
-	Ignore,
-	FullMerge,
-	DeleteMatches
+	public enum ServiceOutputMethod
+	{
+		AppendMergeExisting,
+		Ignore,
+		FullMerge,
+		DeleteMatches
+	}
 }

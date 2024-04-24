@@ -22,44 +22,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.TestModel;
-
-[SchemaItemDescription("Test Case", 26)]
-[ClassMetaVersion("6.0.0")]
-public class TestCase : AbstractSchemaItem
+namespace Origam.Schema.TestModel
 {
-	public const string CategoryConst = "TestCase";
-
-	public TestCase() {}
-
-	public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public TestCase(Key primaryKey) : base(primaryKey) {}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType => CategoryConst;
-
-	public override string Icon => "26";
-
-	public override bool CanMove(UI.IBrowserNode2 newNode)
+	[SchemaItemDescription("Test Case", 26)]
+    [ClassMetaVersion("6.0.0")]
+	public class TestCase : AbstractSchemaItem
 	{
+		public const string CategoryConst = "TestCase";
+
+		public TestCase() {}
+
+		public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TestCase(Key primaryKey) : base(primaryKey) {}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType => CategoryConst;
+
+		public override string Icon => "26";
+
+		public override bool CanMove(UI.IBrowserNode2 newNode)
+		{
 			// can move test cases between scenarios
 			return newNode is TestScenario;
 		}
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[]
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(TestCaseAlternative), typeof(TestCaseStep)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			string itemName = null;
 			if(typeof(T) == typeof(TestCaseAlternative))
 			{
@@ -72,16 +72,17 @@ public class TestCase : AbstractSchemaItem
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	#endregion
+		#endregion
 
-	#region Properties
-	private string _role;
+		#region Properties
+		private string _role;
 		
-	public string Role
-	{
-		get => _role;
-		set => _role = value;
-	}
-	#endregion
+		public string Role
+		{
+			get => _role;
+			set => _role = value;
+		}
+		#endregion
 
+	}
 }

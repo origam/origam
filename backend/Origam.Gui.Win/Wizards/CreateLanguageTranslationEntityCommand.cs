@@ -31,27 +31,27 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Wizards;
-
-class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
+namespace Origam.Gui.Win.Wizards
 {
-    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-    ScreenWizardForm wizardForm;
-    public override bool IsEnabled
-    {
-        get
-        {				
+    class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
+	{
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
+        public override bool IsEnabled
+		{
+			get
+			{				
 				return Owner is TableMappingItem;
 			}
-        set
-        {
+			set
+			{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");				
 			}
-    }
+		}
 
 
-    public override void Run()
-    {
+		public override void Run()
+		{
             ArrayList list = new ArrayList();
             TableMappingItem mappingItem = new TableMappingItem();
             list.Add(new ListViewItem(mappingItem.GetType().SchemaItemDescription().Name, mappingItem.Icon));
@@ -81,8 +81,8 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
                 GeneratedModelElements.Clear();
             }
         }
-    public override void Execute()
-    {
+        public override void Execute()
+        {
             List<AbstractSchemaItem> generatedElements = new List<AbstractSchemaItem>();
             var table = EntityHelper.CreateLanguageTranslationChildEntity(
                 wizardForm.Entity as TableMappingItem, wizardForm.SelectedFields, generatedElements);
@@ -94,12 +94,12 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
                 table.Name, table.Id);
             GeneratedModelElements.Add(script);
         }
-    public override int GetImageIndex(string icon)
-    {
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
-    public override void SetSummaryText(object summary)
-    {
+        public override void SetSummaryText(object summary)
+        {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = ResourceUtils.GetString("CreateLanguageTranslationEntityWizardDescription") + " with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -107,4 +107,5 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
             richTextBoxSummary.AppendText("Language Entity: \t");
             richTextBoxSummary.AppendText(string.Format("{0}_l10n", (wizardForm.Entity as TableMappingItem).Name));
         }
+    }
 }

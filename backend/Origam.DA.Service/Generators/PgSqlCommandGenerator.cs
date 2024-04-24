@@ -32,54 +32,54 @@ using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service;
-
-public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
+namespace Origam.DA.Service
 {
-
-	public PgSqlCommandGenerator() 
-		: base(
-			trueValue: "true",
-			falseValue: "false",
-			sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
-			filterRenderer: new PgSqlFilterRenderer(),
-			new PgSqlRenderer())
+    public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
+
+		public PgSqlCommandGenerator() 
+			: base(
+				trueValue: "true",
+				falseValue: "false",
+				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
+                filterRenderer: new PgSqlFilterRenderer(),
+				new PgSqlRenderer())
+		{
 
 		}
 
-	public override IDbCommand GetCommand(string cmdText)
-	{
+		public override IDbCommand GetCommand(string cmdText)
+		{
 			return new NpgsqlCommand(cmdText);
 		}
 
-	public override IDbCommand GetCommand(string cmdText, IDbConnection connection)
-	{
+		public override IDbCommand GetCommand(string cmdText, IDbConnection connection)
+		{
 			return new NpgsqlCommand(cmdText, connection as NpgsqlConnection);
 		}
 
-	public override DbDataAdapter GetAdapter()
-	{
+		public override DbDataAdapter GetAdapter()
+		{
 			return new NpgsqlDataAdapter();
 		}
 
-	public override IDbDataParameter GetParameter()
-	{
+		public override IDbDataParameter GetParameter()
+		{
 			return new NpgsqlParameter();
 		}
 
-	public override DbDataAdapter GetAdapter(IDbCommand command)
-	{
+		public override DbDataAdapter GetAdapter(IDbCommand command)
+		{
 			return new NpgsqlDataAdapter(command as NpgsqlCommand);
 		}
 
-	public override IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction)
-	{
+		public override IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction)
+		{
 			return new NpgsqlCommand(cmdText, connection as NpgsqlConnection, transaction as NpgsqlTransaction);
 		}
 
-	public override void DeriveStoredProcedureParameters(IDbCommand command)
-	{
+		public override void DeriveStoredProcedureParameters(IDbCommand command)
+		{
 			NpgsqlCommandBuilder.DeriveParameters(command as NpgsqlCommand);
 			// add ParameterDeclarationChar to all input parameters
 			command.Parameters.
@@ -88,9 +88,9 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 				ForEach(param => param.ParameterName = ParameterDeclarationChar + param.ParameterName);
         }
 
-	#region Cloning
-	public override DbDataAdapter CloneAdapter(DbDataAdapter adapter)
-	{
+		#region Cloning
+		public override DbDataAdapter CloneAdapter(DbDataAdapter adapter)
+		{
 			NpgsqlDataAdapter newa = GetAdapter() as NpgsqlDataAdapter;
 			NpgsqlDataAdapter sqla = adapter as NpgsqlDataAdapter;
 			if(sqla == null) throw new ArgumentOutOfRangeException("adapter", adapter, ResourceUtils.GetString("InvalidAdapterType"));
@@ -118,8 +118,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 			return newa;
 		}
 
-	public override IDbCommand CloneCommand(IDbCommand command)
-	{
+		public override IDbCommand CloneCommand(IDbCommand command)
+		{
 			if(command == null) return null;
 
 			NpgsqlCommand newc = GetCommand(command.CommandText) as NpgsqlCommand;
@@ -135,8 +135,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 			return newc;
 		}
 
-	private IDbDataParameter CloneParameter(IDbDataParameter param)
-	{
+		private IDbDataParameter CloneParameter(IDbDataParameter param)
+		{
 			NpgsqlParameter newp = GetParameter() as NpgsqlParameter;
 			newp.DbType = param.DbType;
 			newp.Direction = param.Direction;
@@ -150,10 +150,10 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 
 			return newp;
 		}
-	#endregion
+        #endregion
 
-	public override OrigamDataType ToOrigamDataType(string ddlType)
-	{
+        public override OrigamDataType ToOrigamDataType(string ddlType)
+        {
             switch (ddlType.ToUpper())
             {
                 case "IMAGE":
@@ -199,13 +199,13 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             }
         }
 
-	public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
-	{
+		public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
+		{
 			return entity.Name + "_" + index.Name;
 		}
 
-	internal override string SqlDataType(IDataParameter Iparam)
-	{
+        internal override string SqlDataType(IDataParameter Iparam)
+        {
             NpgsqlParameter param = Iparam as Npgsql.NpgsqlParameter;
             string result = param.NpgsqlDbType.ToString();
             if(param.NpgsqlDbType == (NpgsqlDbType.Array| NpgsqlDbType.Text))
@@ -220,8 +220,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             return result;
         }
 
-	internal override string FixAggregationDataType(OrigamDataType dataType, string expression)
-	{
+        internal override string FixAggregationDataType(OrigamDataType dataType, string expression)
+        {
             switch (dataType)
             {
                 case OrigamDataType.UniqueIdentifier:
@@ -233,8 +233,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             }
         }
         
-	internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
-	{
+        internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
+        {
             StringBuilder sqlExpression = new StringBuilder();
             return sqlExpression.AppendFormat(
                 "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT ({3}) DO UPDATE SET {4};",
@@ -246,19 +246,19 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
                 ).ToString(); 
         }
         
-	public override object Clone()
-	{
+        public override object Clone()
+        {
             PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
             return gen;
         }
 
-	public override string CreateOutputTableSql(string tmpTable)
-	{
+        public override string CreateOutputTableSql(string tmpTable)
+        {
             return string.Format("CREATE TEMP TABLE {0} ON COMMIT DROP AS {1}",
 	            sqlRenderer.NameLeftBracket + tmpTable + sqlRenderer.NameRightBracket, Environment.NewLine);
         }
-	public override string CreateDataStructureFooterSql(List<string> tmpTables)
-	{
+        public override string CreateDataStructureFooterSql(List<string> tmpTables)
+        {
             StringBuilder output = new StringBuilder();
             output.Append(string.Format("{0}END $$;", Environment.NewLine));
             foreach (string tmpTable in tmpTables)
@@ -269,8 +269,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             return output.ToString();
         }
       
-	internal override string ChangeColumnDef(FieldMappingItem field)
-	{
+        internal override string ChangeColumnDef(FieldMappingItem field)
+        {
             StringBuilder ddl = new StringBuilder();
             if (field.AllowNulls)
             {
@@ -284,15 +284,15 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
             return ddl.ToString();
         }
 
-	internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
-	{
+        internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
+        {
             return string.Format("ALTER TABLE {0} ALTER COLUMN {1} DROP DEFAULT;",
                     RenderExpression(field.ParentItem as TableMappingItem),
                     sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket);
         }
         
-	public override string FunctionDefinitionDdl(Function function)
-	{
+        public override string FunctionDefinitionDdl(Function function)
+        {
 	        if (function.FunctionType == OrigamFunctionType.Database)
 	        {
 		        StringBuilder builder = new StringBuilder("CREATE FUNCTION ");
@@ -328,8 +328,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 			        ResourceUtils.GetString("DDLForFunctionsOnly"));
 	        }
         }
-	public override string DefaultDdlDataType(OrigamDataType columnType)
-	{
+        public override string DefaultDdlDataType(OrigamDataType columnType)
+        {
 	        switch (columnType)
 	        {
 		        case OrigamDataType.Date:
@@ -340,11 +340,11 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	        }
         }
 
-	public override IDbDataParameter BuildParameter(string paramName,
-		string sourceColumn, OrigamDataType dataType,
-		DatabaseDataType dbDataType,
-		int dataLength, bool allowNulls)
-	{
+        public override IDbDataParameter BuildParameter(string paramName,
+	        string sourceColumn, OrigamDataType dataType,
+	        DatabaseDataType dbDataType,
+	        int dataLength, bool allowNulls)
+        {
 	        NpgsqlDbType convDataType = ConvertDataType(dataType, dbDataType);
 	        if (dataType == OrigamDataType.Array)
 	        {
@@ -375,9 +375,9 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 
 	        return sqlParam;
         }
-	private NpgsqlDbType ConvertDataType(OrigamDataType columnType,
-		DatabaseDataType dbDataType)
-	{
+        private NpgsqlDbType ConvertDataType(OrigamDataType columnType,
+	        DatabaseDataType dbDataType)
+        {
 	        if (dbDataType != null)
 	        {
 		        return (NpgsqlDbType)Enum.Parse(typeof(NpgsqlDbType),
@@ -390,7 +390,8 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 		        case OrigamDataType.Boolean:
 			        return NpgsqlDbType.Boolean;
 		        case OrigamDataType.Byte:
-			        //TODO: check right 	 return NpgsqlDbType.Smallint;
+			        //TODO: check right 
+			        return NpgsqlDbType.Smallint;
 		        case OrigamDataType.Currency:
 			        return NpgsqlDbType.Money;
 		        case OrigamDataType.Date:
@@ -416,13 +417,14 @@ public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 			        throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
 	        }
         }
-	protected override string SqlPrimaryIndex()
-	{
+        protected override string SqlPrimaryIndex()
+        {
 			return " PRIMARY KEY";
 
 		}
-	protected override string RenderUpsertKey(string paramName, string fieldName)
-	{
+        protected override string RenderUpsertKey(string paramName, string fieldName)
+        {
 			return fieldName;
         }
+    }
 }

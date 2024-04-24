@@ -24,45 +24,45 @@ using System.Data;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Origam.Rule.Xslt;
-
-public class DataReaderXPathNavigator : XPathNavigator
+namespace Origam.Rule.Xslt
 {
-    private XmlNameTable nameTable = new NameTable();
-    private IDataReader dataReader = null;
-    private string entityName = null;
-    private int position = -1; // -1 root, 0 - entity element, 1... attribute
-    public int Position => position;
-    private bool wasMoveToFirstChildInvoked = false;
-    public bool WasMoveToFirstChildInvoked => wasMoveToFirstChildInvoked;
-    public DataReaderXPathNavigator(
-        IDataReader dataReader, string entityName, int position, 
-        bool wasMoveToFirstChildInvoked)
+    public class DataReaderXPathNavigator : XPathNavigator
     {
+        private XmlNameTable nameTable = new NameTable();
+        private IDataReader dataReader = null;
+        private string entityName = null;
+        private int position = -1; // -1 root, 0 - entity element, 1... attribute
+        public int Position => position;
+        private bool wasMoveToFirstChildInvoked = false;
+        public bool WasMoveToFirstChildInvoked => wasMoveToFirstChildInvoked;
+        public DataReaderXPathNavigator(
+            IDataReader dataReader, string entityName, int position, 
+            bool wasMoveToFirstChildInvoked)
+        {
             this.dataReader = dataReader;
             this.entityName = entityName;
             this.position = position;
             this.wasMoveToFirstChildInvoked = wasMoveToFirstChildInvoked;
         }
 
-    public override XmlNameTable NameTable => nameTable;
+        public override XmlNameTable NameTable => nameTable;
 
-    public override XPathNodeType NodeType
-    {
-        get
+        public override XPathNodeType NodeType
         {
+            get
+            {
                 if(position < 1)
                 {
                     return XPathNodeType.Element;
                 }
                 return XPathNodeType.Attribute;
             }
-    }
+        }
 
-    public override string LocalName
-    {
-        get
+        public override string LocalName
         {
+            get
+            {
                 if(position == -1)
                 {
                     return "ROOT";
@@ -73,12 +73,12 @@ public class DataReaderXPathNavigator : XPathNavigator
                 }
                 return dataReader.GetName(position - 1);
             }
-    }
+        }
 
-    public override string Name
-    {
-        get
+        public override string Name
         {
+            get
+            {
                 if(position == -1)
                 {
                     return "ROOT";
@@ -89,20 +89,20 @@ public class DataReaderXPathNavigator : XPathNavigator
                 }
                 return dataReader.GetName(position - 1);
             }
-    }
+        }
 
-    public override string NamespaceURI => String.Empty;
+        public override string NamespaceURI => String.Empty;
 
-    public override string Prefix => throw new NotImplementedException();
+        public override string Prefix => throw new NotImplementedException();
 
-    public override string BaseURI => throw new NotImplementedException();
+        public override string BaseURI => throw new NotImplementedException();
 
-    public override bool IsEmptyElement => throw new NotImplementedException();
+        public override bool IsEmptyElement => throw new NotImplementedException();
 
-    public override string Value
-    {
-        get
+        public override string Value
         {
+            get
+            {
                 if((position < 1) || (dataReader.IsDBNull(position -1)))
                 {
                     return string.Empty;
@@ -144,21 +144,21 @@ public class DataReaderXPathNavigator : XPathNavigator
                     return dataReader.GetValue(position - 1).ToString();
                 }
             }
-    }
+        }
 
-    public override XPathNavigator Clone()
-    {
+        public override XPathNavigator Clone()
+        {
             return new DataReaderXPathNavigator(
                 dataReader, entityName, position, wasMoveToFirstChildInvoked);
         }
 
-    public override bool IsSamePosition(XPathNavigator other)
-    {
+        public override bool IsSamePosition(XPathNavigator other)
+        {
             throw new NotImplementedException();
         }
 
-    public override bool MoveTo(XPathNavigator other)
-    {
+        public override bool MoveTo(XPathNavigator other)
+        {
             if((other as DataReaderXPathNavigator) == null)
             {
                 return false;
@@ -169,8 +169,8 @@ public class DataReaderXPathNavigator : XPathNavigator
             return true;
         }
 
-    public override bool MoveToFirstAttribute()
-    {
+        public override bool MoveToFirstAttribute()
+        {
             if(position == -1)
             {
                 return false;
@@ -183,8 +183,8 @@ public class DataReaderXPathNavigator : XPathNavigator
             return false;
         }
 
-    public override bool MoveToFirstChild()
-    {
+        public override bool MoveToFirstChild()
+        {
             if((position == -1) 
             && (wasMoveToFirstChildInvoked || dataReader.Read()))
             {
@@ -195,18 +195,18 @@ public class DataReaderXPathNavigator : XPathNavigator
             return false;
         }
 
-    public override bool MoveToFirstNamespace(XPathNamespaceScope namespaceScope)
-    {
+        public override bool MoveToFirstNamespace(XPathNamespaceScope namespaceScope)
+        {
             throw new NotImplementedException();
         }
 
-    public override bool MoveToId(string id)
-    {
+        public override bool MoveToId(string id)
+        {
             throw new NotImplementedException();
         }
 
-    public override bool MoveToNext()
-    {
+        public override bool MoveToNext()
+        {
             if(position == 0)
             {
                 return dataReader.Read();
@@ -214,8 +214,8 @@ public class DataReaderXPathNavigator : XPathNavigator
             return false;
         }
 
-    public override bool MoveToNextAttribute()
-    {
+        public override bool MoveToNextAttribute()
+        {
             if(position < 1)
             {
                 return false;
@@ -228,13 +228,13 @@ public class DataReaderXPathNavigator : XPathNavigator
             return false;
         }
 
-    public override bool MoveToNextNamespace(XPathNamespaceScope namespaceScope)
-    {
+        public override bool MoveToNextNamespace(XPathNamespaceScope namespaceScope)
+        {
             return false;
         }
 
-    public override bool MoveToParent()
-    {
+        public override bool MoveToParent()
+        {
             if(position == -1)
             {
                 return false;
@@ -243,8 +243,9 @@ public class DataReaderXPathNavigator : XPathNavigator
             return true;
         }
 
-    public override bool MoveToPrevious()
-    {
+        public override bool MoveToPrevious()
+        {
             return false;
         }
+    }
 }

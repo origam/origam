@@ -21,9 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService;
-
-public class ExecuteActionInput : ExecuteActionQueryInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid RequestingGrid { get; set; }
+    public class ExecuteActionInput : ExecuteActionQueryInput
+    {
+        public Guid RequestingGrid { get; set; }
+    }
 }

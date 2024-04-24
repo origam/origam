@@ -34,19 +34,19 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BrockAllen.IdentityReboot.Internal;
-
-internal static class Crypto
+namespace BrockAllen.IdentityReboot.Internal
 {
-    private const int PBKDF2_ITERATION_COUNT = 1000; // default for Rfc2898DeriveBytes
-    private const int PBKDF2_SUBKEY_LENGTH = 256 / 8; // 256 bits
-    private const int SALT_SIZE = 128 / 8; // 128 bits
-
-    [SuppressMessage("Microsoft.Naming", 
-        "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "byte", 
-        Justification = "It really is a byte length")]
-    internal static byte[] GenerateSaltInternal(int byteLength = SALT_SIZE)
+    internal static class Crypto
     {
+        private const int PBKDF2_ITERATION_COUNT = 1000; // default for Rfc2898DeriveBytes
+        private const int PBKDF2_SUBKEY_LENGTH = 256 / 8; // 256 bits
+        private const int SALT_SIZE = 128 / 8; // 128 bits
+
+        [SuppressMessage("Microsoft.Naming", 
+            "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "byte", 
+            Justification = "It really is a byte length")]
+        internal static byte[] GenerateSaltInternal(int byteLength = SALT_SIZE)
+        {
             byte[] buf = new byte[byteLength];
             using (var rng = new RNGCryptoServiceProvider())
             {
@@ -55,16 +55,16 @@ internal static class Crypto
             return buf;
         }
 
-    [SuppressMessage("Microsoft.Naming", 
-        "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "byte", 
-        Justification = "It really is a byte length")]
-    public static string GenerateSalt(int byteLength = SALT_SIZE)
-    {
+        [SuppressMessage("Microsoft.Naming", 
+            "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "byte", 
+            Justification = "It really is a byte length")]
+        public static string GenerateSalt(int byteLength = SALT_SIZE)
+        {
             return Convert.ToBase64String(GenerateSaltInternal(byteLength));
         }
 
-    public static string Hash(string input, string algorithm = "sha256")
-    {
+        public static string Hash(string input, string algorithm = "sha256")
+        {
             if (input == null)
             {
                 throw new ArgumentNullException("input");
@@ -72,8 +72,8 @@ internal static class Crypto
             return Hash(Encoding.UTF8.GetBytes(input), algorithm);
         }
 
-    public static string Hash(byte[] input, string algorithm = "sha256")
-    {
+        public static string Hash(byte[] input, string algorithm = "sha256")
+        {
             if (input == null)
             {
                 throw new ArgumentNullException("input");
@@ -92,35 +92,35 @@ internal static class Crypto
             }
         }
 
-    [SuppressMessage("Microsoft.Naming", 
-        "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", 
-        Justification = "Consistent with the Framework, which uses SHA")]
-    public static string SHA1(string input)
-    {
+        [SuppressMessage("Microsoft.Naming", 
+            "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", 
+            Justification = "Consistent with the Framework, which uses SHA")]
+        public static string SHA1(string input)
+        {
             return Hash(input, "sha1");
         }
 
-    [SuppressMessage("Microsoft.Naming", 
-        "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", 
-        Justification = "Consistent with the Framework, which uses SHA")]
-    public static string SHA256(string input)
-    {
+        [SuppressMessage("Microsoft.Naming", 
+            "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "SHA", 
+            Justification = "Consistent with the Framework, which uses SHA")]
+        public static string SHA256(string input)
+        {
             return Hash(input, "sha256");
         }
 
-    /* =======================
-     * HASHED PASSWORD FORMATS
-     * =======================
-     *
-     * Version 0:
-     * PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subkey, 1000 iterations.
-     * (See also: SDL crypto guidelines v5.1, Part III)
-     * Format: { 0x00, salt, subkey }
-     */
+        /* =======================
+         * HASHED PASSWORD FORMATS
+         * =======================
+         * 
+         * Version 0:
+         * PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subkey, 1000 iterations.
+         * (See also: SDL crypto guidelines v5.1, Part III)
+         * Format: { 0x00, salt, subkey }
+         */
 
-    public static string HashPassword(
-        string password, int iterationCount = PBKDF2_ITERATION_COUNT)
-    {
+        public static string HashPassword(
+            string password, int iterationCount = PBKDF2_ITERATION_COUNT)
+        {
             if (password == null)
             {
                 throw new ArgumentNullException("password");
@@ -141,11 +141,11 @@ internal static class Crypto
             return Convert.ToBase64String(outputBytes);
         }
 
-    // hashedPassword must be of the format of HashWithPassword (salt + Hash(salt+input)
-    public static bool VerifyHashedPassword(
-        string hashedPassword, string password, 
-        int iterationCount = PBKDF2_ITERATION_COUNT)
-    {
+        // hashedPassword must be of the format of HashWithPassword (salt + Hash(salt+input)
+        public static bool VerifyHashedPassword(
+            string hashedPassword, string password, 
+            int iterationCount = PBKDF2_ITERATION_COUNT)
+        {
             if (hashedPassword == null)
             {
                 throw new ArgumentNullException("hashedPassword");
@@ -178,8 +178,8 @@ internal static class Crypto
             return ByteArraysEqual(storedSubkey, generatedSubkey);
         }
 
-    internal static string BinaryToHex(byte[] data)
-    {
+        internal static string BinaryToHex(byte[] data)
+        {
             char[] hex = new char[data.Length * 2];
             for (int iter = 0; iter < data.Length; iter++)
             {
@@ -193,11 +193,11 @@ internal static class Crypto
             return new string(hex);
         }
 
-    // Compares two byte arrays for equality. 
-    // The method is specifically written so that the loop is not optimized.
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    private static bool ByteArraysEqual(byte[] a, byte[] b)
-    {
+        // Compares two byte arrays for equality. 
+        // The method is specifically written so that the loop is not optimized.
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        private static bool ByteArraysEqual(byte[] a, byte[] b)
+        {
             if (ReferenceEquals(a, b))
             {
                 return true;
@@ -213,4 +213,5 @@ internal static class Crypto
             }
             return areSame;
         }
+    }
 }

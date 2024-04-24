@@ -29,13 +29,13 @@ using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.ServiceTests;
-
-[TestFixture]
-class FilterCommandParserTests
+namespace Origam.DA.ServiceTests
 {
+    [TestFixture]
+    class FilterCommandParserTests
+    {
         
-    static object[] filterCases =
+        static object[] filterCases =
         {
             new object[] {
                 "[\"name\",\"gt\",\"John Doe\"]",
@@ -442,10 +442,10 @@ class FilterCommandParserTests
             },
         };
         
-    [Test, TestCaseSource(nameof(filterCases))]
-    public void ShouldParseFilter(string filter, string expectedSqlWhere,
-        List<ParameterData> expectedParameters)
-    {
+        [Test, TestCaseSource(nameof(filterCases))]
+        public void ShouldParseFilter(string filter, string expectedSqlWhere,
+            List<ParameterData> expectedParameters)
+        {
             var sut = new FilterCommandParser(
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter, 
@@ -472,7 +472,7 @@ class FilterCommandParserTests
             }
         }
 
-    private static object[] filterCasesNullableColumns =
+        private static object[] filterCasesNullableColumns =
         {
             new object[]
             {
@@ -501,10 +501,10 @@ class FilterCommandParserTests
                 } 
             },
         };
-    [Test, TestCaseSource(nameof(filterCasesNullableColumns))]
-    public void ShouldParseFilterOnNullableColumn(string filter, string expectedSqlWhere,
-        List<ParameterData> expectedParameters)
-    {
+        [Test, TestCaseSource(nameof(filterCasesNullableColumns))]
+        public void ShouldParseFilterOnNullableColumn(string filter, string expectedSqlWhere,
+            List<ParameterData> expectedParameters)
+        {
             var sut = new FilterCommandParser(
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter, 
@@ -525,12 +525,12 @@ class FilterCommandParserTests
             }
         }
 
-    [TestCase(
-        "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
-        new [] {"city_name", "name", "age", "id"})]
-    public void ShouldParseColumnNames(string filter,
-        string[] expectedColumnNames)
-    {
+        [TestCase(
+            "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
+            new [] {"city_name", "name", "age", "id"})]
+        public void ShouldParseColumnNames(string filter,
+            string[] expectedColumnNames)
+        {
             var sut = new FilterCommandParser(
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter,
@@ -548,12 +548,12 @@ class FilterCommandParserTests
             Assert.That(sut.Columns, Is.EquivalentTo(expectedColumnNames));
         }
 
-    [TestCase("bla")]
-    [TestCase("\"name\",\"gt\",\"John Doe\"]")] // "[" is missing
-    [TestCase("[\"name\",\"gt\",\"John Doe\"")] // "]" is missing
-    [TestCase("[\"name\"\"gt\",\"John Doe\"")] // "," is missing
-    public void ShouldThrowArgumentExceptionWhenParsingFilter(string filter)
-    {
+        [TestCase("bla")]
+        [TestCase("\"name\",\"gt\",\"John Doe\"]")] // "[" is missing
+        [TestCase("[\"name\",\"gt\",\"John Doe\"")] // "]" is missing
+        [TestCase("[\"name\"\"gt\",\"John Doe\"")] // "," is missing
+        public void ShouldThrowArgumentExceptionWhenParsingFilter(string filter)
+        {
             Assert.Throws<ArgumentException>(() =>
             {
                 var test = new FilterCommandParser(
@@ -564,4 +564,5 @@ class FilterCommandParserTests
                     .Sql;
             });
         }
+    }
 }

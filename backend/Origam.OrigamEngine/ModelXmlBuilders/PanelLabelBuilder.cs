@@ -21,15 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for TextBoxBuilder.
-/// </summary>
-public class PanelLabelBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement childrenElement, string text, int top, int left, int height, int width)
+	/// <summary>
+	/// Summary description for TextBoxBuilder.
+	/// </summary>
+	public class PanelLabelBuilder
 	{
+		public static void Build(XmlElement childrenElement, string text, int top, int left, int height, int width)
+		{
 			XmlElement formElement = childrenElement.OwnerDocument.CreateElement("FormElement");
 			childrenElement.AppendChild(formElement);
 
@@ -41,4 +41,5 @@ public class PanelLabelBuilder
 			formElement.SetAttribute("Width", XmlConvert.ToString(width));
 			formElement.SetAttribute("Height", XmlConvert.ToString(height));
 		}
+	}
 }

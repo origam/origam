@@ -24,34 +24,35 @@ using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
 
-namespace Origam.UI;
-
-// Step 1. Derive a custom column style from DataGridTextBoxColumn
-//	a) add a ComboBox member
-//  b) track when the combobox has focus in Enter and Leave events
-//  c) override Edit to allow the ComboBox to replace the TextBox
-//  d) override Commit to save the changed data
-public class DataGridComboBoxColumn : DataGridTextBoxColumn
+namespace Origam.UI
 {
-	public NoKeyUpCombo ColumnComboBox;
-	private bool _isEditing;
-		
-	public DataGridComboBoxColumn() : base()
+
+	// Step 1. Derive a custom column style from DataGridTextBoxColumn
+	//	a) add a ComboBox member
+	//  b) track when the combobox has focus in Enter and Leave events
+	//  c) override Edit to allow the ComboBox to replace the TextBox
+	//  d) override Commit to save the changed data
+	public class DataGridComboBoxColumn : DataGridTextBoxColumn
 	{
+		public NoKeyUpCombo ColumnComboBox;
+		private bool _isEditing;
+		
+		public DataGridComboBoxColumn() : base()
+		{
 			_isEditing = false;
 	
 			ColumnComboBox = new NoKeyUpCombo();
 			ColumnComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
 		}
 		
-	private void ComboStartEditing(object sender, EventArgs e)
-	{
+		private void ComboStartEditing(object sender, EventArgs e)
+		{
 			_isEditing = true;
 			base.ColumnStartedEditing((Control) sender);
 		}
 
-	protected override void Edit(System.Windows.Forms.CurrencyManager source, int rowNum, System.Drawing.Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(System.Windows.Forms.CurrencyManager source, int rowNum, System.Drawing.Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			if(cellIsVisible)
 			{
 				this.ColumnComboBox.Enabled = true;
@@ -77,8 +78,8 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override bool Commit(System.Windows.Forms.CurrencyManager dataSource, int rowNum)
-	{
+		protected override bool Commit(System.Windows.Forms.CurrencyManager dataSource, int rowNum)
+		{
 			ColumnComboBox.SelectedValueChanged -= new EventHandler(ComboStartEditing);
 
 			if(_isEditing)
@@ -104,21 +105,21 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			return true;
 		}
 
-	protected override void ReleaseHostedControl()
-	{
+		protected override void ReleaseHostedControl()
+		{
 			base.ReleaseHostedControl ();
 
 			this.ColumnComboBox.Parent = null;
 		}
 
-	protected override void ConcedeFocus()
-	{
+		protected override void ConcedeFocus()
+		{
 			this.ColumnComboBox.Hide();
 			base.ConcedeFocus();
 		}
 
-	protected override void Abort(int rowNum)
-	{
+		protected override void Abort(int rowNum)
+		{
 			_isEditing = false;
 			ColumnComboBox.SelectedValueChanged -= new EventHandler(ComboStartEditing);
 			Invalidate();
@@ -126,8 +127,8 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			base.Abort(rowNum);
 		}
 
-	protected override object GetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum)
-	{
+		protected override object GetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum)
+		{
 
 			object s =  base.GetColumnValueAtRow(source, rowNum);
 			DataView dv = (DataView)this.ColumnComboBox.DataSource;
@@ -150,8 +151,8 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			return DBNull.Value;
 		}
 
-	protected override void SetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum, object value)
-	{
+		protected override void SetColumnValueAtRow(System.Windows.Forms.CurrencyManager source, int rowNum, object value)
+		{
 			if(_isEditing)
 			{
 				object s = value;
@@ -176,8 +177,8 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 				if(this.ColumnComboBox != null)
@@ -191,15 +192,15 @@ public class DataGridComboBoxColumn : DataGridTextBoxColumn
 			base.Dispose (disposing);
 		}
 
-}
+	}
 
-public class NoKeyUpCombo : ComboBox 
-{
-	private const int WM_KEYUP = 0x101;
-	private const int WM_KEYDOWN = 0x100;
-
-	protected override bool ProcessKeyMessage(ref Message m)
+	public class NoKeyUpCombo : ComboBox 
 	{
+		private const int WM_KEYUP = 0x101;
+		private const int WM_KEYDOWN = 0x100;
+
+		protected override bool ProcessKeyMessage(ref Message m)
+		{
 			// ignore cursor keys and tab key
 			if(m.Msg == WM_KEYDOWN)
 			{
@@ -233,4 +234,5 @@ public class NoKeyUpCombo : ComboBox
 
 			return base.ProcessKeyMessage (ref m);
 		}
+	}
 }

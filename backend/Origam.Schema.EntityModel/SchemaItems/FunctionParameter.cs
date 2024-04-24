@@ -24,64 +24,65 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for FunctionParameter.
-/// </summary>
-[SchemaItemDescription("Parameter", 15)]
-[HelpTopic("Function+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class FunctionParameter : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "FunctionParameter";
-
-	public FunctionParameter() : base() {}
-
-	public FunctionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-	
-	public override string ItemType
+	/// <summary>
+	/// Summary description for FunctionParameter.
+	/// </summary>
+	[SchemaItemDescription("Parameter", 15)]
+    [HelpTopic("Function+Parameter")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class FunctionParameter : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "FunctionParameter";
+
+		public FunctionParameter() : base() {}
+
+		public FunctionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+	
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "15";
 			}
-	}
+		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	private int _ordinalPosition;
-	[XmlAttribute("ordinalPosition")]
-	public int OrdinalPosition
-	{
-		get
+		private int _ordinalPosition;
+		[XmlAttribute("ordinalPosition")]
+        public int OrdinalPosition
 		{
+			get
+			{
 				return _ordinalPosition;
 			}
-		set
-		{
+			set
+			{
 				_ordinalPosition = value;
 			}
-	}
+		}
 
+	}
 }

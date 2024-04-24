@@ -21,29 +21,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.Schema.EntityModel.Wizards;
-
-/// <summary>
-/// Summary description for CreateNtoNEntityWizard.
-/// </summary>
-public class CreateChildEntityWizard : System.Windows.Forms.Form
+namespace Origam.Schema.EntityModel.Wizards
 {
-	private System.Windows.Forms.Label lblName;
-	private System.Windows.Forms.TextBox txtName;
-	private System.Windows.Forms.Button btnCancel;
-	private System.Windows.Forms.Button btnOK;
-	private System.Windows.Forms.Label lblEntity1;
-	private System.Windows.Forms.ComboBox cboEntity1;
-	private System.Windows.Forms.Label lblEntity2;
-	private System.Windows.Forms.ComboBox cboEntity2;
-	private System.Windows.Forms.Label label1;
 	/// <summary>
-	/// Required designer variable.
+	/// Summary description for CreateNtoNEntityWizard.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-	public CreateChildEntityWizard()
+	public class CreateChildEntityWizard : System.Windows.Forms.Form
 	{
+		private System.Windows.Forms.Label lblName;
+		private System.Windows.Forms.TextBox txtName;
+		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.Button btnOK;
+		private System.Windows.Forms.Label lblEntity1;
+		private System.Windows.Forms.ComboBox cboEntity1;
+		private System.Windows.Forms.Label lblEntity2;
+		private System.Windows.Forms.ComboBox cboEntity2;
+		private System.Windows.Forms.Label label1;
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+		public CreateChildEntityWizard()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -54,11 +54,11 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			//
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -69,13 +69,13 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.lblName = new System.Windows.Forms.Label();
 			this.txtName = new System.Windows.Forms.TextBox();
 			this.lblEntity1 = new System.Windows.Forms.Label();
@@ -86,48 +86,62 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			this.btnOK = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
-			// 		// lblName
-			// 		this.lblName.Location = new System.Drawing.Point(8, 16);
+			// 
+			// lblName
+			// 
+			this.lblName.Location = new System.Drawing.Point(8, 16);
 			this.lblName.Name = "lblName";
 			this.lblName.Size = new System.Drawing.Size(104, 16);
 			this.lblName.TabIndex = 3;
 			this.lblName.Text = ResourceUtils.GetString("ChildEntityNameLabel");
-			// 		// txtName
-			// 		this.txtName.Location = new System.Drawing.Point(120, 16);
+			// 
+			// txtName
+			// 
+			this.txtName.Location = new System.Drawing.Point(120, 16);
 			this.txtName.Name = "txtName";
 			this.txtName.Size = new System.Drawing.Size(248, 20);
 			this.txtName.TabIndex = 3;
 			this.txtName.Text = "";
-			// 		// lblEntity1
-			// 		this.lblEntity1.Location = new System.Drawing.Point(8, 40);
+			// 
+			// lblEntity1
+			// 
+			this.lblEntity1.Location = new System.Drawing.Point(8, 40);
 			this.lblEntity1.Name = "lblEntity1";
 			this.lblEntity1.Size = new System.Drawing.Size(96, 16);
 			this.lblEntity1.TabIndex = 7;
 			this.lblEntity1.Text = ResourceUtils.GetString("MasterEntityLabel");
-			// 		// cboEntity1
-			// 		this.cboEntity1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			// 
+			// cboEntity1
+			// 
+			this.cboEntity1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboEntity1.Location = new System.Drawing.Point(120, 40);
 			this.cboEntity1.Name = "cboEntity1";
 			this.cboEntity1.Size = new System.Drawing.Size(248, 21);
 			this.cboEntity1.Sorted = true;
 			this.cboEntity1.TabIndex = 4;
 			this.cboEntity1.SelectedIndexChanged += new System.EventHandler(this.cboEntity1_SelectedIndexChanged);
-			// 		// lblEntity2
-			// 		this.lblEntity2.Location = new System.Drawing.Point(8, 96);
+			// 
+			// lblEntity2
+			// 
+			this.lblEntity2.Location = new System.Drawing.Point(8, 96);
 			this.lblEntity2.Name = "lblEntity2";
 			this.lblEntity2.Size = new System.Drawing.Size(96, 16);
 			this.lblEntity2.TabIndex = 9;
 			this.lblEntity2.Text = ResourceUtils.GetString("ForeignEntityLabel");
-			// 		// cboEntity2
-			// 		this.cboEntity2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			// 
+			// cboEntity2
+			// 
+			this.cboEntity2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboEntity2.Location = new System.Drawing.Point(120, 96);
 			this.cboEntity2.Name = "cboEntity2";
 			this.cboEntity2.Size = new System.Drawing.Size(248, 21);
 			this.cboEntity2.Sorted = true;
 			this.cboEntity2.TabIndex = 0;
 			this.cboEntity2.SelectedIndexChanged += new System.EventHandler(this.cboEntity2_SelectedIndexChanged);
-			// 		// btnCancel
-			// 		this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.btnCancel.Location = new System.Drawing.Point(264, 136);
 			this.btnCancel.Name = "btnCancel";
@@ -135,22 +149,28 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			this.btnCancel.TabIndex = 2;
 			this.btnCancel.Text = ResourceUtils.GetString("ButtonCancel");
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-			// 		// btnOK
-			// 		this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
+			// 
+			// btnOK
+			// 
+			this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.btnOK.Location = new System.Drawing.Point(160, 136);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(96, 24);
 			this.btnOK.TabIndex = 1;
 			this.btnOK.Text = ResourceUtils.GetString("ButtonOK");
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 		// label1
-			// 		this.label1.Location = new System.Drawing.Point(8, 72);
+			// 
+			// label1
+			// 
+			this.label1.Location = new System.Drawing.Point(8, 72);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(360, 16);
 			this.label1.TabIndex = 10;
 			this.label1.Text = ResourceUtils.GetString("OptionalForeignEntity");
-			// 		// CreateChildEntityWizard
-			// 		this.AcceptButton = this.btnOK;
+			// 
+			// CreateChildEntityWizard
+			// 
+			this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(376, 167);
@@ -171,11 +191,11 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region Event Handlers
-	private void btnOK_Click(object sender, System.EventArgs e)
-	{
+		#region Event Handlers
+		private void btnOK_Click(object sender, System.EventArgs e)
+		{
 			if(this.txtName.Text == ""
 				| this.Entity1 == null 
 				) 
@@ -189,57 +209,57 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			this.Close();
 		}
 
-	private void btnCancel_Click(object sender, System.EventArgs e)
-	{
+		private void btnCancel_Click(object sender, System.EventArgs e)
+		{
 			this.Close();
 		}
 		
-	private void cboEntity1_SelectedIndexChanged(object sender, System.EventArgs e)
-	{
-			RefreshName();
-		}
-
-	private void cboEntity2_SelectedIndexChanged(object sender, System.EventArgs e)
-	{
-			RefreshName();
-		}
-	#endregion
-
-	#region Public Properties
-	private IDataEntity _entity;
-	public IDataEntity Entity1
-	{
-		get
+		private void cboEntity1_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
+			RefreshName();
+		}
+
+		private void cboEntity2_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			RefreshName();
+		}
+		#endregion
+
+		#region Public Properties
+		private IDataEntity _entity;
+		public IDataEntity Entity1
+		{
+			get
+			{
 				return _entity;
 			}
-		set
-		{
+			set
+			{
 				_entity = value;
 				SetUpForm();
 			}
-	}
+		}
 
-	public IDataEntity Entity2
-	{
-		get
+		public IDataEntity Entity2
 		{
+			get
+			{
 				return cboEntity2.SelectedItem as IDataEntity;
 			}
-	}
+		}
 
-	public string EntityName
-	{
-		get
+		public string EntityName
 		{
+			get
+			{
 				return txtName.Text;
 			}
-	}
-	#endregion
+		}
+		#endregion
 		
-	#region Private Methods
-	private void SetUpForm()
-	{
+		#region Private Methods
+		private void SetUpForm()
+		{
 			this.txtName.Text = "";
 
 			cboEntity1.Items.Clear();
@@ -261,12 +281,13 @@ public class CreateChildEntityWizard : System.Windows.Forms.Form
 			cboEntity1.SelectedItem = selectedItem;
 		}
 
-	private void RefreshName()
-	{
+		private void RefreshName()
+		{
 			if(cboEntity1.SelectedItem != null & cboEntity2.SelectedItem != null)
 			{
 				txtName.Text = this.Entity1.Name + this.Entity2.Name;
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

@@ -31,16 +31,16 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.Service_net2Tests;
-
-internal class PersitHelper
+namespace Origam.DA.Service_net2Tests
 {
-    private readonly IPersistenceService persistenceService;
-
-    public IList<string> DefaultFolders { get; }
-        
-    public PersitHelper(string testFolderPath)
+    internal class PersitHelper
     {
+        private readonly IPersistenceService persistenceService;
+
+        public IList<string> DefaultFolders { get; }
+        
+        public PersitHelper(string testFolderPath)
+        {
             DefaultFolders = new List<string>
             {
                 CategoryFactory.Create(typeof(Package)),
@@ -53,12 +53,12 @@ internal class PersitHelper
                 pathToRuntimeModelConfig: "runtimeConfig.json" ,
                 basePath: testFolderPath);
         }
-    public IPersistenceProvider GetPersistenceProvider()
-    {
+        public IPersistenceProvider GetPersistenceProvider()
+        {
             return persistenceService.SchemaProvider;
         }
-    public void PersistAll()
-    {
+        public void PersistAll()
+        {
             PersistFolders<Package>();
             PersistFolders<SchemaItemGroup>();
 
@@ -73,14 +73,14 @@ internal class PersitHelper
             filePresProvider.PersistIndex();
         }
 
-    public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
-    {
+        public IFilePersistent RetrieveSingle(Type type, Key primaryKey)
+        {
             return (IFilePersistent)persistenceService.SchemaProvider
                 .RetrieveInstance(type, primaryKey);
         }
 
-    public List<AbstractSchemaItem> RetrieveAll()
-    {
+        public List<AbstractSchemaItem> RetrieveAll()
+        {
             List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
                 .Select(TypeTools.GetAllItems)
                 .SelectMany(itemCollection => itemCollection.ToGeneric())
@@ -89,8 +89,8 @@ internal class PersitHelper
             return abstractSchemaItems;
         }
     
-    private void PersistFolders<T>()
-    {
+        private void PersistFolders<T>()
+        {
             IPersistenceService dbSvc = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
             var listOfItems = dbSvc.SchemaProvider.RetrieveList<T>(null);
@@ -101,8 +101,8 @@ internal class PersitHelper
             }
         }
 
-    private void PersistAllProviderItems(Type providerType)
-    {
+        private void PersistAllProviderItems(Type providerType)
+        {
             var allItems = TypeTools.GetAllItems(providerType); 
             foreach (AbstractSchemaItem item in allItems)
             {
@@ -114,8 +114,8 @@ internal class PersitHelper
             Console.WriteLine("ProviderType:" + providerType +", items: "+allItems.Count);
         }
 
-    public void Persist(List<IFilePersistent> items)
-    {
+        public void Persist(List<IFilePersistent> items)
+        {
             persistenceService.SchemaProvider.BeginTransaction();
             foreach (var item in items)
             {
@@ -124,15 +124,15 @@ internal class PersitHelper
             persistenceService.SchemaProvider.EndTransaction();
         }
         
-    public void PersistSingle(IFilePersistent item)
-    {
+        public void PersistSingle(IFilePersistent item)
+        {
             persistenceService.SchemaProvider.BeginTransaction();
             persistenceService.SchemaProvider.Persist(item); 
             persistenceService.SchemaProvider.EndTransaction();
         }
 
-    private void Persist( AbstractSchemaItem item)
-    {
+        private void Persist( AbstractSchemaItem item)
+        {
             persistenceService.SchemaProvider.Persist(item);
             foreach (var ancestor in item.Ancestors)
             {
@@ -146,4 +146,5 @@ internal class PersitHelper
                 }
             }
         }
+    }
 }

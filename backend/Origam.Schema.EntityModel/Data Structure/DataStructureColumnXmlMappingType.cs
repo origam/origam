@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel;
-
-public enum DataStructureColumnXmlMappingType
+namespace Origam.Schema.EntityModel
 {
-	Default = 0,
-	Element = 1,
-	Attribute = 2,
+	public enum DataStructureColumnXmlMappingType
+	{
+		Default = 0,
+		Element = 1,
+		Attribute = 2,
+	}
 }

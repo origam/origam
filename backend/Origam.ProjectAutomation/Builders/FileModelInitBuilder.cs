@@ -22,19 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Workbench.Services;
 
-namespace Origam.ProjectAutomation;
-
-public class FileModelInitBuilder:AbstractBuilder
+namespace Origam.ProjectAutomation
 {
-    public override string Name => "Initialize model";
-    private SchemaService schema = null;
-    public override void Execute(Project project)
+    public class FileModelInitBuilder:AbstractBuilder
     {
+        public override string Name => "Initialize model";
+        private SchemaService schema = null;
+        public override void Execute(Project project)
+        {
             OrigamEngine.OrigamEngine.InitializeRuntimeServices();
             LoadBaseSchema(project);
         }
-    private void LoadBaseSchema(Project project)
-    {
+        private void LoadBaseSchema(Project project)
+        {
             schema =
                 ServiceManager.Services.GetService<SchemaService>();
             try
@@ -58,9 +58,10 @@ public class FileModelInitBuilder:AbstractBuilder
             }
         }
 
-    public override void Rollback()
-    {
+        public override void Rollback()
+        {
             schema.UnloadSchema();
             OrigamEngine.OrigamEngine.UnloadConnectedServices();
         }
+    }
 }

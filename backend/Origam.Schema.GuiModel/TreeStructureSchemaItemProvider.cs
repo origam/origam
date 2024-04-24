@@ -19,67 +19,68 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for EntityModelSchemaItemProvider.
-/// </summary>
-public class TreeStructureSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+namespace Origam.Schema.GuiModel
 {
-	public TreeStructureSchemaItemProvider()
+	/// <summary>
+	/// Summary description for EntityModelSchemaItemProvider.
+	/// </summary>
+	public class TreeStructureSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
+		public TreeStructureSchemaItemProvider()
+		{
 			this.ChildItemTypes.Add(typeof(TreeStructure));
 		}
 
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return TreeStructure.CategoryConst;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "DATA";
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_12_tree-structures.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Tree Structures";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	public override string NodeToolTipText
-	{
-		get
+		public override string NodeToolTipText
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
+		}
+
+		#endregion
+
 	}
-
-	#endregion
-
 }

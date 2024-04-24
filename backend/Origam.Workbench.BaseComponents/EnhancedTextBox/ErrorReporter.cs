@@ -22,21 +22,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.UI;
-
-public class ErrorReporter: IErrorReporter
+namespace Origam.Gui.UI
 {
-        
-    private const int ErrorToolTipDuration = 2000;
-    private readonly Control control;
-
-    public ErrorReporter(Control control)
+    public class ErrorReporter: IErrorReporter
     {
+        
+        private const int ErrorToolTipDuration = 2000;
+        private readonly Control control;
+
+        public ErrorReporter(Control control)
+        {
             this.control = control;
         }
 
-    public void NotifyInputError(string message)
-    {
+        public void NotifyInputError(string message)
+        {
             Console.WriteLine(message);
             
             //control.Focus();
@@ -45,4 +45,5 @@ public class ErrorReporter: IErrorReporter
             toolTip.Show(message,control,ErrorToolTipDuration);             
             
         }
+    }
 }

@@ -30,31 +30,31 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Pads;
 
-namespace Origam.Gui.Win.Commands;
-
-/// <summary>
-/// Summary description for SetInheritanceOff.
-/// </summary>
-public class ShowModelElementXmlCommand : AbstractMenuCommand
+namespace Origam.Gui.Win.Commands
 {
-	public override bool IsEnabled
+    /// <summary>
+    /// Summary description for SetInheritanceOff.
+    /// </summary>
+    public class ShowModelElementXmlCommand : AbstractMenuCommand
 	{
-		get
+		public override bool IsEnabled
 		{
+			get
+			{
 				return Owner is FormControlSet 
 					|| Owner is Schema.MenuModel.Menu
 					|| Owner is WorkQueueClass
 					|| Owner is Schema.MenuModel.FormReferenceMenuItem
 					|| (Owner is AbstractDashboardWidget && ! (Owner is DashboardWidgetFolder));
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
             Origam.Workbench.Commands.ViewOutputPad outputPad =
                 new Origam.Workbench.Commands.ViewOutputPad();
             outputPad.Run();
@@ -95,4 +95,5 @@ public class ShowModelElementXmlCommand : AbstractMenuCommand
 			doc.WriteTo(xw);
 			o.SetOutputText(sb.ToString());
 		}
+	}
 }

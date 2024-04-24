@@ -30,34 +30,34 @@ using System.Data;
 using Origam.Service.Core;
 using Directory = System.IO.Directory;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for FileSystemServiceAgent.
-/// </summary>
-public class FileSystemServiceAgent : AbstractServiceAgent
+namespace Origam.Workflow
 {
-    public void LoadBlob(string path)
-    {
+	/// <summary>
+	/// Summary description for FileSystemServiceAgent.
+	/// </summary>
+	public class FileSystemServiceAgent : AbstractServiceAgent
+	{
+        public void LoadBlob(string path)
+        {
             _result = File.ReadAllBytes(path);
         }
 
-    public void LoadXml(string path)
-    {
+		public void LoadXml(string path)
+		{
 			var xmlDocument = new XmlDocument();
 			xmlDocument.Load(path);
 			_result = new XmlContainer(xmlDocument);
 		}
 
-    public void LoadText(string path, string encodingName)
-    {
+        public void LoadText(string path, string encodingName)
+        {
             _result = File.ReadAllText(path, GetEncoding(encodingName));
         }
         
-    public void SaveXml(
-        string path, XmlDocument outXml, string encodingName, 
-        bool createDirectory)
-    {
+        public void SaveXml(
+            string path, XmlDocument outXml, string encodingName, 
+            bool createDirectory)
+		{
             if (createDirectory)
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -70,10 +70,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			_result = null;
 		}
 
-    public void SaveText(
-        string path, string output, string encodingName, 
-        bool createDirectory)
-    {
+		public void SaveText(
+            string path, string output, string encodingName, 
+            bool createDirectory)
+		{
             if (createDirectory)
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -87,8 +87,8 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			_result = null;
 		}
 
-    public void SaveBlob(string path, byte[] blob, bool createDirectory)
-    {
+		public void SaveBlob(string path, byte[] blob, bool createDirectory)
+		{
             if (createDirectory)
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -102,10 +102,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			_result = null;
 		}
 
-    public void CopyFile(
-        string sourcePath, string destinationPath, 
-        bool createDirectory, bool overwrite)
-    {
+        public void CopyFile(
+            string sourcePath, string destinationPath, 
+            bool createDirectory, bool overwrite)
+        {
             if (createDirectory)
             {
                 Directory.CreateDirectory(
@@ -115,10 +115,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			_result = null;
         }
 
-    public void MoveFile(
-        string sourcePath, string destinationPath, 
-        bool createDirectory, bool overwrite)
-    {
+        public void MoveFile(
+            string sourcePath, string destinationPath, 
+            bool createDirectory, bool overwrite)
+        {
             if (createDirectory)
             {
                 Directory.CreateDirectory(
@@ -132,25 +132,25 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			_result = null;
         }
 
-    public void DeleteFile(string path)
-    {
+        public void DeleteFile(string path)
+        {
             File.Delete(path);
 			_result = null;
         }
         
-    public void CreateDirectory(string path)
-    {
+        public void CreateDirectory(string path)
+        {
             Directory.CreateDirectory(path);
             _result = null;
         }
 
-    public string[] GetFileList(string path, string searchPattern)
-    {
+		public string[] GetFileList(string path, string searchPattern)
+		{
 			return Directory.GetFiles(path, searchPattern);
 		}
 
-    public static Encoding GetEncoding(string encoding)
-    {
+		public static Encoding GetEncoding(string encoding)
+		{
 			if(encoding == null)
 			{
 				encoding = "utf-8";
@@ -158,9 +158,9 @@ public class FileSystemServiceAgent : AbstractServiceAgent
 			return Encoding.GetEncoding(encoding);
 		}
 
-    private IDataDocument GetFileSystemInfo(
-        string path, string mask, bool recursive)
-    {
+        private IDataDocument GetFileSystemInfo(
+            string path, string mask, bool recursive)
+        {
             if (this.OutputStructure.PrimaryKey["Id"].ToString()
             != "2aaaed07-bd5e-41d3-858e-288eca4bbcfc")
             {
@@ -177,10 +177,10 @@ public class FileSystemServiceAgent : AbstractServiceAgent
             return DataDocumentFactory.New(dataSet);
         }
 
-    private void ProcessFileSystemInfoForFolder(
-        DirectoryInfo parentDirectoryInfo, string mask, bool recursive, 
-        DataTable table, Guid parentFolderId)
-    {
+        private void ProcessFileSystemInfoForFolder(
+            DirectoryInfo parentDirectoryInfo, string mask, bool recursive, 
+            DataTable table, Guid parentFolderId)
+        {
             DataRow row;
             var fileInfos = parentDirectoryInfo.EnumerateFiles(mask);
             foreach (FileInfo fileInfo in fileInfos)
@@ -229,22 +229,22 @@ public class FileSystemServiceAgent : AbstractServiceAgent
             }
         }
 
-    #region IServiceAgent Members
+		#region IServiceAgent Members
 
-    private object _result;
-    public override object Result
-    {
-        get
-        {
+		private object _result;
+		public override object Result
+		{
+			get
+			{
 				object temp = _result;
 				_result = null;
 				
 				return temp;
 			}
-    }
+		}
 
-    public override void Run()
-    {
+		public override void Run()
+		{
             string encoding, outPath, inPath;
             bool createDirectory = false;
             bool overwrite = false;
@@ -426,5 +426,6 @@ public class FileSystemServiceAgent : AbstractServiceAgent
                         ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
-    #endregion
+		#endregion
+    }
 }

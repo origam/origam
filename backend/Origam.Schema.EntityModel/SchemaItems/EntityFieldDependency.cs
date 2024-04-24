@@ -26,78 +26,79 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for EntityFilter.
-/// </summary>
-[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
-[HelpTopic("Field+Dependencies")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.0")]
-public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "EntityFieldDependency";
-
-	public EntityFieldDependency() : base() {}
-
-	public EntityFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntityFieldDependency(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	/// <summary>
+	/// Summary description for EntityFilter.
+	/// </summary>
+	[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
+    [HelpTopic("Field+Dependencies")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.0")]
+    public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 	{
+		public const string CategoryConst = "EntityFieldDependency";
+
+		public EntityFieldDependency() : base() {}
+
+		public EntityFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntityFieldDependency(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		{
 			return newNode is IDataEntity;
 		}
 		
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override bool UseFolders
-	{
-		get
+		public override bool UseFolders
 		{
+			get
+			{
 				return false;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(ArrayList dependencies)
-	{
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
             dependencies.Add(this.Field);
             base.GetExtraDependencies(dependencies);
         }
-	#endregion
+		#endregion
 
-	#region Properties
-	public Guid FieldId;
+		#region Properties
+		public Guid FieldId;
 
-	[Category("Reference")]
-	[TypeConverter(typeof(EntityColumnReferenceConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[XmlReference("field", "FieldId")]
-	public IDataEntityColumn Field
-	{
-		get
+		[Category("Reference")]
+		[TypeConverter(typeof(EntityColumnReferenceConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRule()]
+        [XmlReference("field", "FieldId")]
+        public IDataEntityColumn Field
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.FieldId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
 			}
-		set
-		{
+			set
+			{
 				this.FieldId = (Guid)value.PrimaryKey["Id"];
 
 				this.Name = this.Field.Name;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

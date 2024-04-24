@@ -32,32 +32,32 @@ using System.Windows.Forms;
 using Origam.Extensions;
 using System.Linq;
 
-namespace Origam.Workbench.PropertyGrid;
-
-class PropertyGridEx : System.Windows.Forms.PropertyGrid
+namespace Origam.Workbench.PropertyGrid
 {
-    private static readonly PropertyValueUIItemInvokeHandler
-        UIItemNullHandler = delegate { };
-    private static readonly Image UIItemErrorImage =
-        Properties.Resources.Exclamation_8x;
-    private static readonly Image UIItemNavigateImage =
-        Properties.Resources.Search_8x;
-    private static readonly Image UIItemEditImage =
-        Properties.Resources.Editor_8x;
-
-    public event EventHandler LinkClicked;
-
-    public PropertyGridEx()
+    class PropertyGridEx : System.Windows.Forms.PropertyGrid
     {
+        private static readonly PropertyValueUIItemInvokeHandler
+            UIItemNullHandler = delegate { };
+        private static readonly Image UIItemErrorImage =
+            Properties.Resources.Exclamation_8x;
+        private static readonly Image UIItemNavigateImage =
+            Properties.Resources.Search_8x;
+        private static readonly Image UIItemEditImage =
+            Properties.Resources.Editor_8x;
+
+        public event EventHandler LinkClicked;
+
+        public PropertyGridEx()
+        {
             Site = new SimpleSiteImpl();
             PropertyValueServiceImpl svc = new PropertyValueServiceImpl();
             svc.QueryPropertyUIValueItems += VerifyDataErrorInfo;
             ((SimpleSiteImpl)Site).AddService<IPropertyValueUIService>(svc);
         }
 
-    void VerifyDataErrorInfo(ITypeDescriptorContext context,
-        PropertyDescriptor propDesc, ArrayList valueUIItemList)
-    {
+        void VerifyDataErrorInfo(ITypeDescriptorContext context,
+            PropertyDescriptor propDesc, ArrayList valueUIItemList)
+        {
             foreach (var item in propDesc.Attributes)
             {
                 IModelElementRule rule = item as IModelElementRule;
@@ -84,13 +84,13 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             }
         }
 
-    class ModelElementEditHandler
-    {
-        public event EventHandler LinkClicked;
-
-        public void Run(ITypeDescriptorContext context,
-            PropertyDescriptor descriptor, PropertyValueUIItem invokedItem)
+        class ModelElementEditHandler
         {
+            public event EventHandler LinkClicked;
+
+            public void Run(ITypeDescriptorContext context,
+                PropertyDescriptor descriptor, PropertyValueUIItem invokedItem)
+            {
                 try
                 {
                     // navigate in model browser
@@ -110,11 +110,11 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
                 }
             }
             
-    }
+        }
 
 
-    internal void SetSplitter()
-    {
+        internal void SetSplitter()
+        {
             var flags = BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Public;
             FieldInfo View = this.GetType().BaseType.GetField("gridView", flags);
             Control controll = (Control)View.GetValue(this);
@@ -128,4 +128,5 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             if (methodInfo != null)
                 methodInfo.Invoke(controll, new object[] { maxwidth });
         }
+    }
 }

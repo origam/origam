@@ -21,51 +21,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.TestModel;
-
-public class TestScenarioSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.TestModel
 {
-	public TestScenarioSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => TestScenario.CategoryConst;
-
-	public override string Group => "COMMON";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"30";
-
-	public override string NodeText
+	public class TestScenarioSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Test Scenarios";
-		set => base.NodeText = value;
-	}
+		public TestScenarioSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => TestScenario.CategoryConst;
 
-	#endregion
+		public override string Group => "COMMON";
 
-	#region ISchemaItemFactory Members
+		#endregion
 
-	public override Type[] NewItemTypes => new[]
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"30";
+
+		public override string NodeText
+		{
+			get => "Test Scenarios";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(TestScenario)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group,
 				typeof(T) == typeof(TestScenario)
 					? "NewTestScenario" : null);
 		}
 
-	#endregion
+		#endregion
+	}
 }

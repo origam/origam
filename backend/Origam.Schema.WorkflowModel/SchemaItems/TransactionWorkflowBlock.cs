@@ -25,32 +25,34 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel;
-
-public enum TransactionTypes
+namespace Origam.Schema.WorkflowModel
 {
-	None = 0,
-	Atomic = 1
+	public enum TransactionTypes
+	{
+		None = 0,
+		Atomic = 1
+	}
+
+	/// <summary>
+	/// Summary description for TransactionWorkflowBlock.
+	/// </summary>
+	[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
+    [HelpTopic("Transaction+Block")]
+    [ClassMetaVersion("6.0.0")]
+	public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
+	{
+		public TransactionWorkflowBlock() : base() {}
+
+		public TransactionWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TransactionWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
+
+		#region Properties
+		[Category("Transaction"), DefaultValue(TransactionTypes.None)]
+		[XmlAttribute ("transactionType")]
+		public TransactionTypes TransactionType { get; set; } 
+			= TransactionTypes.None;
+		#endregion
+	}
 }
-
-/// <summary>
-/// Summary description for TransactionWorkflowBlock.
-/// </summary>
-[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
-[HelpTopic("Transaction+Block")]
-[ClassMetaVersion("6.0.0")]
-public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
-{
-	public TransactionWorkflowBlock() : base() {}
-
-	public TransactionWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public TransactionWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-
-	#region Properties
-	[Category("Transaction"), DefaultValue(TransactionTypes.None)]
-	[XmlAttribute ("transactionType")]
-	public TransactionTypes TransactionType { get; set; } 
-		= TransactionTypes.None;
-	#endregion
-}
+ 

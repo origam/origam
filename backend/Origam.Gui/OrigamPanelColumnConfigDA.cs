@@ -25,15 +25,15 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui;
-
-/// <summary>
-/// Summary description for OrigamPanelColumnConfigDA.
-/// </summary>
-public class OrigamPanelColumnConfigDA
+namespace Origam.Gui
 {
-	public static void PersistColumnConfig(Guid panelId, string columnName, int position, int width, bool hidden)
+	/// <summary>
+	/// Summary description for OrigamPanelColumnConfigDA.
+	/// </summary>
+	public class OrigamPanelColumnConfigDA
 	{
+		public static void PersistColumnConfig(Guid panelId, string columnName, int position, int width, bool hidden)
+		{
 			try
 			{
 				// store column width to the database
@@ -75,8 +75,8 @@ public class OrigamPanelColumnConfigDA
 			}
 		}
 
-	public static void PersistColumnConfig(OrigamPanelColumnConfig config)
-	{
+		public static void PersistColumnConfig(OrigamPanelColumnConfig config)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
 			// persist filters to the database
@@ -91,8 +91,8 @@ public class OrigamPanelColumnConfigDA
 			dataServiceAgent.Run();
 		}
 
-	public static OrigamPanelColumnConfig LoadColumnConfig(string columnName, Guid profileId, Guid panelId)
-	{
+		public static OrigamPanelColumnConfig LoadColumnConfig(string columnName, Guid profileId, Guid panelId)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			OrigamPanelColumnConfig result = new OrigamPanelColumnConfig();
 
@@ -116,8 +116,8 @@ public class OrigamPanelColumnConfigDA
 			return result;
 		}
 
-	public static OrigamPanelColumnConfig LoadUserConfig(Guid panelId, Guid profileId)
-	{
+		public static OrigamPanelColumnConfig LoadUserConfig(Guid panelId, Guid profileId)
+		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			OrigamPanelColumnConfig result = new OrigamPanelColumnConfig();
 
@@ -143,4 +143,5 @@ public class OrigamPanelColumnConfigDA
 
 			return result;
 		}
+	}
 }

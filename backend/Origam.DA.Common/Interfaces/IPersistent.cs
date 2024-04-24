@@ -22,79 +22,80 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.DA.ObjectPersistence;
-
-/// <summary>
-/// All persistable items implement this interface.
-/// </summary>
-public interface IPersistent : IDisposable
+namespace Origam.DA.ObjectPersistence
 {
-	event EventHandler Changed;
-	event EventHandler Deleted;
-
 	/// <summary>
-	/// Gets or sets persistence provider to this object.
+	/// All persistable items implement this interface.
 	/// </summary>
-	IPersistenceProvider PersistenceProvider {get; set;}
+	public interface IPersistent : IDisposable
+	{
+		event EventHandler Changed;
+		event EventHandler Deleted;
 
-	/// <summary>
-	/// Gets primary key of the object.
-	/// </summary>
-	Key PrimaryKey {get;}
+		/// <summary>
+		/// Gets or sets persistence provider to this object.
+		/// </summary>
+		IPersistenceProvider PersistenceProvider {get; set;}
 
-	Guid Id { get; }
+		/// <summary>
+		/// Gets primary key of the object.
+		/// </summary>
+		Key PrimaryKey {get;}
 
-	/// <summary>
-	/// Insert or update the current object instance.
-	/// </summary>
-	void Persist();
+		Guid Id { get; }
+
+		/// <summary>
+		/// Insert or update the current object instance.
+		/// </summary>
+		void Persist();
 		
-	/// <summary>
-	/// Select the current object instance and initialize all properties/fields with
-	/// the values of the retrieved data. This method can be used in place of static
-	/// constructors in implementations of IPersistant as it allows constructors to
-	/// merely take a Key parameter (and then call this method to initialize all fields).
-	/// </summary>
-	void Refresh();
+		/// <summary>
+		/// Select the current object instance and initialize all properties/fields with
+		/// the values of the retrieved data. This method can be used in place of static
+		/// constructors in implementations of IPersistant as it allows constructors to
+		/// merely take a Key parameter (and then call this method to initialize all fields).
+		/// </summary>
+		void Refresh();
 
-	/// <summary>
-	/// Returns freshly retrieved copy from the persistence provider keeping the existing one
-	/// as it is.
-	/// </summary>
-	/// <returns></returns>
-	IPersistent GetFreshItem();
+		/// <summary>
+		/// Returns freshly retrieved copy from the persistence provider keeping the existing one
+		/// as it is.
+		/// </summary>
+		/// <returns></returns>
+		IPersistent GetFreshItem();
 
-	/// <summary>
-	/// True if the object is supposed to be deleted from the database whe Persist() is called. 
-	/// Note: This does not destroy or invalidate the current object instance.
-	/// </summary>
-	bool IsDeleted
-	{
-		get;
-		set;
-	}
+		/// <summary>
+		/// True if the object is supposed to be deleted from the database whe Persist() is called. 
+		/// Note: This does not destroy or invalidate the current object instance.
+		/// </summary>
+		bool IsDeleted
+		{
+			get;
+			set;
+		}
 		
 
-	/// <summary>
-	/// True if the current instance has been persisted to the database.
-	/// </summary>
-	bool IsPersisted
-	{
-		get;
-		set;
-	}
+		/// <summary>
+		/// True if the current instance has been persisted to the database.
+		/// </summary>
+		bool IsPersisted
+		{
+			get;
+			set;
+		}
 
-	/// <summary>
-	/// True if persistence provider's object cache can be used with this object.
-	/// </summary>
-	bool UseObjectCache
-	{
-		get;
-		set;
-	}
+		/// <summary>
+		/// True if persistence provider's object cache can be used with this object.
+		/// </summary>
+		bool UseObjectCache
+		{
+			get;
+			set;
+		}
 
-	List<string> Files
-	{
-		get;
-	}
+        List<string> Files
+        {
+            get;
+        }
+    }
 }

@@ -28,25 +28,27 @@ using System.ComponentModel.Design;
 using Origam.UI;
 using Origam.Schema;
 
-namespace Origam.Workbench.Pads;
-
-/// <summary>
-/// Summary description for PropertyPad.
-/// </summary>
-public class PropertyPad : AbstractPadContent, IPropertyPad
+namespace Origam.Workbench.Pads
 {
-	private System.Windows.Forms.ComboBox cboComponents;
-	private PropertyGrid.PropertyGridEx pgrid;
-	private bool _selectComponent = true;
-
-	private void InitializeComponent()
+	/// <summary>
+	/// Summary description for PropertyPad.
+	/// </summary>
+	public class PropertyPad : AbstractPadContent, IPropertyPad
 	{
+		private System.Windows.Forms.ComboBox cboComponents;
+		private PropertyGrid.PropertyGridEx pgrid;
+		private bool _selectComponent = true;
+
+		private void InitializeComponent()
+		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropertyPad));
             this.pgrid = new Origam.Workbench.PropertyGrid.PropertyGridEx();
             this.cboComponents = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
-            // 	 // pgrid
-            // 	 this.pgrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // pgrid
+            // 
+            this.pgrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pgrid.HelpBackColor = System.Drawing.Color.LightYellow;
             this.pgrid.LineColor = System.Drawing.SystemColors.ScrollBar;
             this.pgrid.Location = new System.Drawing.Point(0, 21);
@@ -54,8 +56,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
             this.pgrid.Size = new System.Drawing.Size(292, 252);
             this.pgrid.TabIndex = 0;
             this.pgrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgrid_PropertyValueChanged);
-            // 	 // cboComponents
-            // 	 this.cboComponents.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // cboComponents
+            // 
+            this.cboComponents.Dock = System.Windows.Forms.DockStyle.Top;
             this.cboComponents.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboComponents.Location = new System.Drawing.Point(0, 0);
             this.cboComponents.Name = "cboComponents";
@@ -63,8 +67,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
             this.cboComponents.Sorted = true;
             this.cboComponents.TabIndex = 1;
             this.cboComponents.SelectedIndexChanged += new System.EventHandler(this.cboComponents_SelectedIndexChanged);
-            // 	 // PropertyPad
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 
+            // PropertyPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(292, 273);
             this.Controls.Add(this.pgrid);
             this.Controls.Add(this.cboComponents);
@@ -82,8 +88,8 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 
 		}
 	
-	public PropertyPad()
-	{
+		public PropertyPad()
+		{
 			InitializeComponent();
 
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
@@ -95,27 +101,27 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 			this.pgrid.SelectedObjectsChanged += new EventHandler(pgrid_SelectedObjectsChanged);
 		}
 
-	#region IPropertyPad Members
+		#region IPropertyPad Members
 
-	public System.Windows.Forms.PropertyGrid PropertyGrid
-	{
-		get
+		public System.Windows.Forms.PropertyGrid PropertyGrid
 		{
+			get
+			{
 				return this.pgrid;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	private void pgrid_SelectedObjectsChanged(object sender, EventArgs e)
-	{
+		private void pgrid_SelectedObjectsChanged(object sender, EventArgs e)
+		{
 			_selectComponent = false;
 			RefreshControlList();
 			_selectComponent = true;
 		}
 
-	private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
-	{
+		private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
 			if(! _selectComponent) return;
 
 			PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
@@ -130,10 +136,10 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 			}
 		}
 
-	public Func<bool> ReadOnlyGetter { get; set; } = null;
+		public Func<bool> ReadOnlyGetter { get; set; } = null;
 
-	private void pgrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-	{
+		private void pgrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+		{
 			if(ReadOnlyGetter != null && 
 			   ReadOnlyGetter() && 
 			   !Equals(e.OldValue, e.ChangedItem.Value))
@@ -148,8 +154,8 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 			RefreshControlList();
 		}
 
-	private void RefreshControlList()
-	{
+		private void RefreshControlList()
+		{
 			cboComponents.Items.Clear();
 			Component selectedItem = null;
 			
@@ -180,4 +186,5 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 				}
 			}
 		}
+	}
 }

@@ -24,19 +24,19 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
 
-namespace Origam.Gui.Designer;
-
-/// <summary>
-/// Summary description for SiteImpl.
-/// </summary>
-public class SiteImpl:ISite,IDictionaryService
+namespace Origam.Gui.Designer
 {
-	private IComponent component;
-	private string name;
-	private DesignerHostImpl host;
-	private DictionaryServiceImpl dictionaryService;
-	public SiteImpl(IComponent comp,string name,DesignerHostImpl host)
+	/// <summary>
+	/// Summary description for SiteImpl.
+	/// </summary>
+	public class SiteImpl:ISite,IDictionaryService
 	{
+		private IComponent component;
+		private string name;
+		private DesignerHostImpl host;
+		private DictionaryServiceImpl dictionaryService;
+		public SiteImpl(IComponent comp,string name,DesignerHostImpl host)
+		{
 			if(comp==null)
 			{
 				throw new ArgumentException("comp");
@@ -56,40 +56,40 @@ public class SiteImpl:ISite,IDictionaryService
 			dictionaryService = new DictionaryServiceImpl();
 		}
 		
-	#region ISite Members
+		#region ISite Members
 
-	public IComponent Component
-	{
-		get
+		public IComponent Component
 		{
+			get
+			{
 				return component;
 			}
-	}
+		}
 
-	public IContainer Container
-	{
-		get
+		public IContainer Container
 		{
+			get
+			{
 				return host.Container;
 			}
-	}
+		}
 
-	public bool DesignMode
-	{
-		get
+		public bool DesignMode
 		{
+			get
+			{
 				return true;
 			}
-	}
+		}
 
-	public string Name
-	{
-		get
+		public string Name
 		{
+			get
+			{
 				return name;
 			}
-		set
-		{
+			set
+			{
 				// null name is not valid
 				if (value == null)
 				{
@@ -123,14 +123,14 @@ public class SiteImpl:ISite,IDictionaryService
 				}
 				
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region IServiceProvider Members
+		#region IServiceProvider Members
 
-	public object GetService(Type service) 
-	{
+		public object GetService(Type service) 
+		{
 			if (service == typeof(IDictionaryService)) 
 			{
 				return this;
@@ -139,24 +139,25 @@ public class SiteImpl:ISite,IDictionaryService
 			return host.GetService(service);
 		}
 
-	#endregion
+		#endregion
 		
-	#region IDictionaryService Implementation
+		#region IDictionaryService Implementation
 		
-	public object GetKey(object value)
-	{
+		public object GetKey(object value)
+		{
 			return dictionaryService.GetKey(value);
 		}
 		
-	public object GetValue(object key)
-	{
+		public object GetValue(object key)
+		{
 			return dictionaryService.GetValue(key);
 		}
 		
-	public void SetValue(object key, object value)
-	{
+		public void SetValue(object key, object value)
+		{
 			dictionaryService.SetValue(key,value);
 		}
 		
-	#endregion
+		#endregion
+	}
 }

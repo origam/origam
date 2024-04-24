@@ -27,21 +27,21 @@ using System.Drawing.Design;
 using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace Origam.Schema.DeploymentModel;
-
-/// <summary>
-/// Summary description for FileSelectionUIEditor.
-/// </summary>
-public class FileSelectionUITypeEditor : UITypeEditor
+namespace Origam.Schema.DeploymentModel
 {
-	private OpenFileDialog _dialog = new OpenFileDialog();
-
-	public FileSelectionUITypeEditor()
+	/// <summary>
+	/// Summary description for FileSelectionUIEditor.
+	/// </summary>
+	public class FileSelectionUITypeEditor : UITypeEditor
 	{
+		private OpenFileDialog _dialog = new OpenFileDialog();
+
+		public FileSelectionUITypeEditor()
+		{
 		}
 
-	public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
-	{
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+		{
 			_dialog.Filter = "All files (*.*)|*.*";
 
 			_dialog.Title = ResourceUtils.GetString("LoadFile");
@@ -111,13 +111,14 @@ public class FileSelectionUITypeEditor : UITypeEditor
 			return value;
 		}
 
-	public override bool GetPaintValueSupported(ITypeDescriptorContext context)
-	{
+		public override bool GetPaintValueSupported(ITypeDescriptorContext context)
+		{
 			return false;
 		}
 
-	public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
-	{
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+		{
 			return UITypeEditorEditStyle.Modal;
 		}
+	}
 }

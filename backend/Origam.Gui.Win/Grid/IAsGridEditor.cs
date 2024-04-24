@@ -21,10 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win;
-
-public interface IAsGridEditor
+namespace Origam.Gui.Win
 {
-    event EventHandler EditorClick;
-    event EventHandler EditorDoubleClick;
+    public interface IAsGridEditor
+    {
+        event EventHandler EditorClick;
+        event EventHandler EditorDoubleClick;
+    }
 }

@@ -23,64 +23,65 @@ using System.Collections;
 
 using Origam.DA;
 
-namespace Origam.Schema.EntityModel;
-
-public enum EntityColumnXmlMapping
+namespace Origam.Schema.EntityModel
 {
-	Element = 0,
-	Attribute = 1,
-	Hidden = 2,
-}
-/// <summary>
-/// Interface for entity columns. Any expression that can represent a column will
-/// implement this interface.
-/// </summary>
-public interface IDataEntityColumn : ISchemaItem, ICaptionSchemaItem
-{
+	public enum EntityColumnXmlMapping
+	{
+		Element = 0,
+		Attribute = 1,
+		Hidden = 2,
+	}
 	/// <summary>
-	/// Tells if this column is read only.
+	/// Interface for entity columns. Any expression that can represent a column will
+	/// implement this interface.
 	/// </summary>
-	bool ReadOnly{get;} 
+	public interface IDataEntityColumn : ISchemaItem, ICaptionSchemaItem
+	{
+		/// <summary>
+		/// Tells if this column is read only.
+		/// </summary>
+		bool ReadOnly{get;} 
 
-	bool ExcludeFromAllFields{get;} 
+		bool ExcludeFromAllFields{get;} 
 
-	OrigamDataType DataType{get; set;}
+		OrigamDataType DataType{get; set;}
 
-	int DataLength{get; set;}
+		int DataLength{get; set;}
 
-	bool AllowNulls{get; set;}
+		bool AllowNulls{get; set;}
 
-	bool IsPrimaryKey{get; set;}
+		bool IsPrimaryKey{get; set;}
 
-	//string Caption{get; set;}
+		//string Caption{get; set;}
 
-	IDataLookup DefaultLookup{get; set;}
+		IDataLookup DefaultLookup{get; set;}
 
-	IDataEntity ForeignKeyEntity{get; set;}
+		IDataEntity ForeignKeyEntity{get; set;}
 
-	IDataEntityColumn ForeignKeyField{get; set;}
+		IDataEntityColumn ForeignKeyField{get; set;}
 
-	bool AutoIncrement {get; set;}
+		bool AutoIncrement {get; set;}
 
-	long AutoIncrementSeed {get; set;}
+		long AutoIncrementSeed {get; set;}
 
-	long AutoIncrementStep {get; set;}
+		long AutoIncrementStep {get; set;}
 
-	DataConstant DefaultValue {get; set;}
+		DataConstant DefaultValue {get; set;}
 
-	SchemaItemParameter DefaultValueParameter {get; set;}
+		SchemaItemParameter DefaultValueParameter {get; set;}
 
-	EntityColumnXmlMapping XmlMappingType {get; set;}
+		EntityColumnXmlMapping XmlMappingType {get; set;}
 
-	OnCopyActionType OnCopyAction{get; set;}
+		OnCopyActionType OnCopyAction{get; set;}
 
-	ArrayList RowLevelSecurityRules{get;}
+		ArrayList RowLevelSecurityRules{get;}
 
-	ArrayList ConditionalFormattingRules{get;}
+		ArrayList ConditionalFormattingRules{get;}
 
-	ArrayList DynamicLabels{get;}
+		ArrayList DynamicLabels{get;}
 
-	DataEntityConstraint ForeignKeyConstraint { get;  }
+        DataEntityConstraint ForeignKeyConstraint { get;  }
         
-	string FieldType { get; }
+        string FieldType { get; }
+	}
 }

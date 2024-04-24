@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI;
-
-/// <summary>
-/// Summary description for IDebugInfoProvider.
-/// </summary>
-public interface IDebugInfoProvider
+namespace Origam.UI
 {
-	string GetInfo();
+	/// <summary>
+	/// Summary description for IDebugInfoProvider.
+	/// </summary>
+	public interface IDebugInfoProvider
+	{
+		string GetInfo();
+	}
 }

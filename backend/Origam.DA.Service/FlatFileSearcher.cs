@@ -29,27 +29,27 @@ using System.Xml;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
-namespace Origam.DA.Service;
-
-public class FlatFileSearcher
+namespace Origam.DA.Service
 {
-    private readonly string keyWord;
-
-    public FlatFileSearcher(string keyWord)
+    public class FlatFileSearcher
     {
+        private readonly string keyWord;
+
+        public FlatFileSearcher(string keyWord)
+        {
             this.keyWord = keyWord;
         }
 
-    public List<Guid> SearchIn(IEnumerable<DirectoryInfo> loadedPackageDirectories)
-    {
+        public List<Guid> SearchIn(IEnumerable<DirectoryInfo> loadedPackageDirectories)
+        {
             return GetFilesContainingKeyword(loadedPackageDirectories)
                 .Select(GetFileSearcher)
                 .SelectMany(searcher => searcher.FindObjectsContainingKeyWord())
                 .ToList();
         }
 
-    private IFileSearcher GetFileSearcher(FileInfo fileInfo)
-    {
+        private IFileSearcher GetFileSearcher(FileInfo fileInfo)
+        {
             if (IsExternalSearchableFile(fileInfo))
             {
                 return new PlainTextFileSearcher(keyWord, fileInfo);
@@ -61,9 +61,9 @@ public class FlatFileSearcher
             throw new NotImplementedException("File cannot be searched because no suitable method is implemented: "+fileInfo);
         }
         
-    private List<FileInfo> GetFilesContainingKeyword(
-        IEnumerable<DirectoryInfo> loadedPackageDirectories)
-    {
+        private List<FileInfo> GetFilesContainingKeyword(
+            IEnumerable<DirectoryInfo> loadedPackageDirectories)
+        {
             return loadedPackageDirectories
                 .AsParallel()
                 .SelectMany(packageDir => packageDir.GetAllFilesInSubDirectories())
@@ -72,42 +72,42 @@ public class FlatFileSearcher
                 .ToList();
         }
 
-    private bool IsSearchableFile(FileInfo file) =>
-        OrigamFile.IsPersistenceFile(file)|| IsExternalSearchableFile(file);
+        private bool IsSearchableFile(FileInfo file) =>
+            OrigamFile.IsPersistenceFile(file)|| IsExternalSearchableFile(file);
 
-    private static bool IsExternalSearchableFile(FileInfo fileInfo) =>
-        ExternalFileExtensionTools.TryParse(fileInfo, out var extension)
-        && extension.IsSearchable();
+        private static bool IsExternalSearchableFile(FileInfo fileInfo) =>
+            ExternalFileExtensionTools.TryParse(fileInfo, out var extension)
+            && extension.IsSearchable();
 
-    private bool FileContainsKeyword(FileInfo file)
-    {   
+        private bool FileContainsKeyword(FileInfo file)
+        {   
             string asteriskFreeKeyWord = keyWord.Replace("*", "");
             return File
                 .ReadAllText(file.FullName)
                 .IndexOf(asteriskFreeKeyWord, StringComparison.OrdinalIgnoreCase) >= 0;
         }
-}
+    }
 
-internal interface IFileSearcher
-{
-    IEnumerable<Guid> FindObjectsContainingKeyWord();
-}
-
-internal abstract class FileSearcher : IFileSearcher
-{
-    public abstract IEnumerable<Guid> FindObjectsContainingKeyWord();
-
-    protected readonly string regExString;
-    protected readonly FileInfo FileInfo;
-
-    protected FileSearcher(string keyWord, FileInfo fileInfo)
+    internal interface IFileSearcher
     {
+        IEnumerable<Guid> FindObjectsContainingKeyWord();
+    }
+
+    internal abstract class FileSearcher : IFileSearcher
+    {
+        public abstract IEnumerable<Guid> FindObjectsContainingKeyWord();
+
+        protected readonly string regExString;
+        protected readonly FileInfo FileInfo;
+
+        protected FileSearcher(string keyWord, FileInfo fileInfo)
+        {
             regExString = BuildRegExString(keyWord);
             this.FileInfo = fileInfo;
         }
 
-    private string BuildRegExString(string keyWord)
-    {
+        private string BuildRegExString(string keyWord)
+        {
             string regEx = keyWord;
             if (!keyWord.StartsWith("*"))
             {
@@ -119,16 +119,16 @@ internal abstract class FileSearcher : IFileSearcher
             }
             return regEx.Replace("*","");
         }
-}
+    }
 
-internal class OrigamFileSearcher: FileSearcher
-{
-    public OrigamFileSearcher(string keyWord, FileInfo fileInfo) : base(keyWord, fileInfo)
+    internal class OrigamFileSearcher: FileSearcher
     {
+        public OrigamFileSearcher(string keyWord, FileInfo fileInfo) : base(keyWord, fileInfo)
+        {
         }
 
-    public override IEnumerable<Guid> FindObjectsContainingKeyWord()
-    {
+        public override IEnumerable<Guid> FindObjectsContainingKeyWord()
+        {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(FileInfo.FullName);
             XmlNodeList allNodes = xmlDoc.SelectNodes("//*");
@@ -143,50 +143,51 @@ internal class OrigamFileSearcher: FileSearcher
                 .ToList();             
         }
 
-    private bool HasKeyWordInAttributes(XmlNode node)
-    {
+        private bool HasKeyWordInAttributes(XmlNode node)
+        {
             return node.Attributes
                 .Cast<XmlAttribute>()
                 .Any(attr => ContainsAMatch(attr.Value));
         }
-    private bool HasIdAttribute(XmlNode node)
-    {
+        private bool HasIdAttribute(XmlNode node)
+        {
             return node.Attributes
                 .Cast<XmlAttribute>()
                 .Any(attr => attr.Name == "x:id");
         }
 
-    private bool ContainsAMatch(string text) =>
-        Regex
-            .Match(text, regExString, RegexOptions.IgnoreCase)
-            .Success;
+        private bool ContainsAMatch(string text) =>
+            Regex
+                .Match(text, regExString, RegexOptions.IgnoreCase)
+                .Success;
         
-    private XmlNode GetIdItemOrThrow(XmlNode node, FileInfo pathToXml)
-    {
+        private XmlNode GetIdItemOrThrow(XmlNode node, FileInfo pathToXml)
+        {
             return node.Attributes.GetNamedItem("x:id")??
                    throw new ArgumentNullException(
                        $"{pathToXml} is malformed. Node {node.Name} node id");
         }
-}
+    }
 
-internal class PlainTextFileSearcher: FileSearcher
-{
-    public PlainTextFileSearcher(string keyWord, FileInfo fileInfo) : base(keyWord, fileInfo)
+    internal class PlainTextFileSearcher: FileSearcher
     {
+        public PlainTextFileSearcher(string keyWord, FileInfo fileInfo) : base(keyWord, fileInfo)
+        {
         }
 
-    public override IEnumerable<Guid> FindObjectsContainingKeyWord()
-    {
+        public override IEnumerable<Guid> FindObjectsContainingKeyWord()
+        {
             if (!FileContainsKeyword()) yield break;
             Guid? id = ExternalFilePath.ParseOwnerId(FileInfo.FullName);
             if (!id.HasValue) yield break;
             yield return id.Value;
         }
-    private bool FileContainsKeyword()
-    {
+        private bool FileContainsKeyword()
+        {
             string text = File.ReadAllText(FileInfo.FullName);
             return Regex
                 .Match(text, regExString, RegexOptions.IgnoreCase)
                 .Success;
         }
+    }
 }

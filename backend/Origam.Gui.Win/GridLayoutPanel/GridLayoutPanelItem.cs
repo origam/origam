@@ -21,67 +21,68 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for GridLayoutPanelItem.
-/// </summary>
-public class GridLayoutPanelItem : TabPage
+namespace Origam.Gui.Win
 {
-	private int _topCell = 0;
-	private int _leftCell = 0;
-	private int _widthCells = 1;
-	private int _heightCells = 1;
-
-	public GridLayoutPanelItem() : base()
+	/// <summary>
+	/// Summary description for GridLayoutPanelItem.
+	/// </summary>
+	public class GridLayoutPanelItem : TabPage
 	{
+		private int _topCell = 0;
+		private int _leftCell = 0;
+		private int _widthCells = 1;
+		private int _heightCells = 1;
+
+		public GridLayoutPanelItem() : base()
+		{
 		}
 
-	public int TopCell
-	{
-		get
+		public int TopCell
 		{
+			get
+			{
 				return _topCell;
 			}
-		set
-		{
+			set
+			{
 				_topCell = value;
 			}
-	}
+		}
 
-	public int LeftCell
-	{
-		get
+		public int LeftCell
 		{
+			get
+			{
 				return _leftCell;
 			}
-		set
-		{
+			set
+			{
 				_leftCell = value;
 			}
-	}
+		}
 
-	public int WidthCells
-	{
-		get
+		public int WidthCells
 		{
+			get
+			{
 				return _widthCells;
 			}
-		set
-		{
+			set
+			{
 				_widthCells = value;
 			}
-	}
+		}
 
-	public int HeightCells
-	{
-		get
+		public int HeightCells
 		{
+			get
+			{
 				return _heightCells;
 			}
-		set
-		{
+			set
+			{
 				_heightCells = value;
 			}
+		}
 	}
 }

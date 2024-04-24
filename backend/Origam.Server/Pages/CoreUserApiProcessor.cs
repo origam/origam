@@ -24,16 +24,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Server;
 using Origam.Server.Pages;
 
-namespace Origam.Server.Pages;
-
-public class CoreUserApiProcessor: UserApiProcessor
+namespace Origam.Server.Pages
 {
-    public CoreUserApiProcessor(IHttpTools httpTools) : base(httpTools)
+    public class CoreUserApiProcessor: UserApiProcessor
     {
+        public CoreUserApiProcessor(IHttpTools httpTools) : base(httpTools)
+        {
         }
 
-    protected override void Handle404(IHttpContextWrapper context)
-    {
+        protected override void Handle404(IHttpContextWrapper context)
+        {
             context.Response.StatusCode = 404;
         }
+    }
 }

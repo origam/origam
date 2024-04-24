@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for IRule.
-/// </summary>
-public interface IRule : ISchemaItem, ITraceable
+namespace Origam.Schema.EntityModel
 {
-	bool IsPathRelative{get;set;}
+	/// <summary>
+	/// Summary description for IRule.
+	/// </summary>
+	public interface IRule : ISchemaItem, ITraceable
+	{
+		bool IsPathRelative{get;set;}
+	}
 }

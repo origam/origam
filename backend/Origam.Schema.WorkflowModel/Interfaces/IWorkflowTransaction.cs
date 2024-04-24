@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for IWorkflowTransaction.
-/// </summary>
-public interface IWorkflowTransaction : IWorkflowBlock
+namespace Origam.Schema.WorkflowModel
 {
+	/// <summary>
+	/// Summary description for IWorkflowTransaction.
+	/// </summary>
+	public interface IWorkflowTransaction : IWorkflowBlock
+	{
+	}
 }

@@ -3,54 +3,55 @@ using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.Common.Extensiosn;
 
-namespace Origam.Server;
-
-/// <remarks/>
-[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-[System.Diagnostics.DebuggerStepThroughAttribute()]
-[XmlType(TypeName = "parameter",Namespace = "http://asapenginewebapi.advantages.cz/")]
-public partial class Parameter
+namespace Origam.Server
 {
-    
-    private object valueField;
-    
-    private string nameField;
-    
     /// <remarks/>
-    [XmlElement(Order=0)]
-    public object value
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [XmlType(TypeName = "parameter",Namespace = "http://asapenginewebapi.advantages.cz/")]
+    public partial class Parameter
     {
-        get
+    
+        private object valueField;
+    
+        private string nameField;
+    
+        /// <remarks/>
+        [XmlElement(Order=0)]
+        public object value
         {
+            get
+            {
                 return this.valueField;
             }
-        set
-        {
+            set
+            {
                 this.valueField = value;
             }
-    }
+        }
     
-    /// <remarks/>
-    [XmlAttribute()]
-    public string name
-    {
-        get
+        /// <remarks/>
+        [XmlAttribute()]
+        public string name
         {
+            get
+            {
                 return this.nameField;
             }
-        set
-        {
+            set
+            {
                 this.nameField = value;
             }
+        }
     }
-}
     
-public static class ParameterUtils
-{
-    public static QueryParameterCollection ToQueryParameterCollection(Parameter[] parameters)
+    public static class ParameterUtils
     {
+        public static QueryParameterCollection ToQueryParameterCollection(Parameter[] parameters)
+        {
             return (parameters ?? new Parameter[0])
                 .Select(x => new QueryParameter(x.name, x.value))
                 .ToQueryParameterCollection();
         }
+    }
 }

@@ -26,28 +26,28 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Collections;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for DataStructureWorkflowMethod.
-/// </summary>
-[SchemaItemDescription("Workflow Method", "Workflow Methods",
-	"icon_workflow-method.png")]
-[HelpTopic("Data+Structure+Workflow+Method")]
-[DefaultProperty("LoadWorkflow")]
-[ClassMetaVersion("6.0.0")]
-public class DataStructureWorkflowMethod : DataStructureMethod
+namespace Origam.Schema.WorkflowModel
 {
-	public DataStructureWorkflowMethod() : base() {}
-
-	public DataStructureWorkflowMethod(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DataStructureWorkflowMethod(Key primaryKey) : base(primaryKey)	{}
-	
-	// with workflow method we consider all the workflows
-	// as input parameters except context stores marked with `IsReturnValue'
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	/// <summary>
+	/// Summary description for DataStructureWorkflowMethod.
+	/// </summary>
+	[SchemaItemDescription("Workflow Method", "Workflow Methods",
+        "icon_workflow-method.png")]
+    [HelpTopic("Data+Structure+Workflow+Method")]
+    [DefaultProperty("LoadWorkflow")]
+    [ClassMetaVersion("6.0.0")]
+	public class DataStructureWorkflowMethod : DataStructureMethod
 	{
+		public DataStructureWorkflowMethod() : base() {}
+
+		public DataStructureWorkflowMethod(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataStructureWorkflowMethod(Key primaryKey) : base(primaryKey)	{}
+	
+		// with workflow method we consider all the workflows
+		// as input parameters except context stores marked with `IsReturnValue'
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+		{
 			foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
 			{
 				if(context.IsReturnValue == false && context.isScalar())
@@ -64,33 +64,34 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 			}
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.LoadWorkflow);
 			base.GetExtraDependencies (dependencies);
 		}
 
 		
-	#region Properties
+		#region Properties
 		
-	public Guid LoadWorkflowId;
+		public Guid LoadWorkflowId;
 
-	[Category("Reference")]
-	[TypeConverter(typeof(WorkflowConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[Description("Select a workflow to load data into the structure. This schema item will Be extended later with `SaveWorkflow' and `SaveWorkflowInputContext' properties to be able to save the datastructure with a workflow.")]
-	[NotNullModelElementRule()]
-	[XmlReference("loadWorkflow", "LoadWorkflowId")]
-	public Workflow LoadWorkflow
-	{
-		get
+		[Category("Reference")]
+		[TypeConverter(typeof(WorkflowConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[Description("Select a workflow to load data into the structure. This schema item will Be extended later with `SaveWorkflow' and `SaveWorkflowInputContext' properties to be able to save the datastructure with a workflow.")]
+		[NotNullModelElementRule()]
+        [XmlReference("loadWorkflow", "LoadWorkflowId")]
+		public Workflow LoadWorkflow
 		{
+			get
+			{
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LoadWorkflowId)) as Workflow;
 			}
-		set
-		{
+			set
+			{
 				this.LoadWorkflowId = (Guid)value.PrimaryKey["Id"];
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

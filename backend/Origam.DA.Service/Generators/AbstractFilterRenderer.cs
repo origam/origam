@@ -24,17 +24,17 @@ using System.Collections.Generic;
 using System.Text;
 using CSharpFunctionalExtensions;
 
-namespace Origam.DA.Service;
-
-public abstract class AbstractFilterRenderer
+namespace Origam.DA.Service
 {
-    public string In(string leftOperand, IEnumerable<string> options)
+    public abstract class AbstractFilterRenderer
     {
+        public string In(string leftOperand, IEnumerable<string> options)
+        {
             return leftOperand+" IN (" + string.Join(", ",options) + ")";
         }
 
-    public string LogicalAndOr(string functionName, IList<string> arguments)
-    {
+        public string LogicalAndOr(string functionName, IList<string> arguments)
+        {
             if (arguments.Count < 2)
             {
                 throw new ArgumentOutOfRangeException("At least 2 arguments must be present fpr AND/OR.");
@@ -58,12 +58,12 @@ public abstract class AbstractFilterRenderer
             return logicalBuilder.ToString();
         }
         
-    public string BinaryOperator(
-        string columnName,
-        string leftValue,
-        string[] rightValues, string operatorName,
-        bool isColumnArray)
-    {
+        public string BinaryOperator(
+            string columnName,
+            string leftValue,
+            string[] rightValues, string operatorName,
+            bool isColumnArray)
+        {
             switch (operatorName)
             {
                 case "Between":
@@ -99,11 +99,11 @@ public abstract class AbstractFilterRenderer
             }
         }
 
-    protected abstract string ColumnArray(string columnName, string operand, string[] rightValues);
+        protected abstract string ColumnArray(string columnName, string operand, string[] rightValues);
 
-    public string BinaryOperator(string leftValue,
-        string rightValue, string operatorName)
-    {
+        public string BinaryOperator(string leftValue,
+            string rightValue, string operatorName)
+        {
             switch (operatorName)
             {
                 case "Equal":
@@ -118,8 +118,8 @@ public abstract class AbstractFilterRenderer
             }
         }
 
-    public string NotEqual(string leftValue, string rightValue)
-    {
+        public string NotEqual(string leftValue, string rightValue)
+        {
             CheckArgumentEmpty("leftValue", leftValue);
             if (rightValue == null)
             {
@@ -131,8 +131,8 @@ public abstract class AbstractFilterRenderer
             }
         }
 
-    public string Equal(string leftValue, string rightValue)
-    {
+        public string Equal(string leftValue, string rightValue)
+        {
             CheckArgumentEmpty("leftValue", leftValue);
             if (rightValue == null || rightValue.ToLower() == "null")
             {
@@ -144,14 +144,14 @@ public abstract class AbstractFilterRenderer
             }
         }
 
-    public string Not(string argument)
-    {
+        public string Not(string argument)
+        {
             CheckArgumentEmpty("argument", argument);
             return string.Format("NOT({0})", argument);
         }
 
-    private string GetOperator(string functionName)
-    {
+        private string GetOperator(string functionName)
+        {
             switch (functionName)
             {
                 case "NotEqual":
@@ -189,22 +189,23 @@ public abstract class AbstractFilterRenderer
             }
         }
 
-    protected abstract string LikeOperator();
+        protected abstract string LikeOperator();
 
-    public abstract string StringConcatenationChar { get; }
+        public abstract string StringConcatenationChar { get; }
 
-    private static void CheckArgumentEmpty(string name, string argument)
-    {
+        private static void CheckArgumentEmpty(string name, string argument)
+        {
             if (argument == null)
             {
                 throw new ArgumentOutOfRangeException("name", name, "Argument cannot be empty.");
             }
         }
-    private static void CheckArgumentLength(string operatorName, string[] arguments, int length)
-    {
+        private static void CheckArgumentLength(string operatorName, string[] arguments, int length)
+        {
             if (arguments?.Length != length)
             {
                 throw new ArgumentOutOfRangeException("operator", operatorName, $"Operator needs exactly {length} number of right hand arguments.");
             }
         }
+    }
 }

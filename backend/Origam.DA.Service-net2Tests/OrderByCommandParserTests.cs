@@ -4,14 +4,14 @@ using NUnit.Framework;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 
-namespace Origam.DA.Service_net2Tests;
-
-[TestFixture]
-class OrderByCommandParserTests
-{       
-    [Test]
-    public void ShouldParseOrderBy()
-    {
+namespace Origam.DA.Service_net2Tests
+{
+    [TestFixture]
+    class OrderByCommandParserTests
+    {       
+        [Test]
+        public void ShouldParseOrderBy()
+        {
             List<Ordering> ordering = new List<Ordering>
             {
                 new Ordering("col1", "desc",100),
@@ -24,13 +24,13 @@ class OrderByCommandParserTests
             Assert.That(orderBy, Is.EqualTo("[col1] DESC, [col2] ASC"));
         }
         
-    [TestCase("col1, ")]
-    [TestCase("col1,")]
-    [TestCase(" ,desc")]
-    [TestCase(",desc")]
-    public void ShouldThrowArgumentExceptionWhenParsingOrderBy(
-        string orderingStr)
-    {
+        [TestCase("col1, ")]
+        [TestCase("col1,")]
+        [TestCase(" ,desc")]
+        [TestCase(",desc")]
+        public void ShouldThrowArgumentExceptionWhenParsingOrderBy(
+            string orderingStr)
+        {
             Assert.Throws<ArgumentException>(() =>
             {
                 new OrderByCommandParser(
@@ -38,8 +38,8 @@ class OrderByCommandParserTests
             });
         }
 
-    private List<Ordering> ToListOfOrderings(string orderingStr)
-    {
+        private List<Ordering> ToListOfOrderings(string orderingStr)
+        {
             if (orderingStr == null) return null;
             string[] strings = orderingStr.Split(',');
             return new List<Ordering>
@@ -47,4 +47,5 @@ class OrderByCommandParserTests
                 new Ordering(strings[0], strings [1],100)
             };
         }
+    }
 }

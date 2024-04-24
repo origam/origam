@@ -22,34 +22,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
-
-/// <summary>
-/// Summary description for RuleEngineService.
-/// </summary>
-public class RuleEngineService : IWorkbenchService, IRuleEngineService
+namespace Origam.Rule
 {
-	public RuleEngineService()
+	/// <summary>
+	/// Summary description for RuleEngineService.
+	/// </summary>
+	public class RuleEngineService : IWorkbenchService, IRuleEngineService
 	{
+		public RuleEngineService()
+		{
 		}
-	#region IWorkbenchService Members
+		#region IWorkbenchService Members
 		
-	public void UnloadService()
-	{
+		public void UnloadService()
+		{
 		}
 
-	public void InitializeService()
-	{
+		public void InitializeService()
+		{
 		}
 
-	#endregion
+		#endregion
 
-	#region IRuleEngineService Members
+		#region IRuleEngineService Members
 
-	public string EvaluateExpression(string expression)
-	{
+		public string EvaluateExpression(string expression)
+		{
 			return XpathEvaluator.Instance.Evaluate(new XmlDocument().CreateNavigator(), expression);
 		}
 
-	#endregion
+		#endregion
+	}
 }

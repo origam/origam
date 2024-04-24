@@ -28,28 +28,28 @@ using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Gui.Win.Commands;
-
-public class ShowDataStructureEntitySql : AbstractMenuCommand
+namespace Origam.Gui.Win.Commands
 {
-    private WorkbenchSchemaService _schema =
-        ServiceManager.Services.GetService(
-            typeof(SchemaService)) as WorkbenchSchemaService;
-
-    public override bool IsEnabled
+    public class ShowDataStructureEntitySql : AbstractMenuCommand
     {
-        get
+        private WorkbenchSchemaService _schema =
+            ServiceManager.Services.GetService(
+                typeof(SchemaService)) as WorkbenchSchemaService;
+
+        public override bool IsEnabled
         {
+            get
+            {
                 return Owner is DataStructureEntity;
             }
-        set
-        {
+            set
+            {
                 base.IsEnabled = value;
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureEntity entity = Owner as DataStructureEntity;
@@ -132,4 +132,5 @@ public class ShowDataStructureEntitySql : AbstractMenuCommand
             }
             new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
         }
+    }
 }

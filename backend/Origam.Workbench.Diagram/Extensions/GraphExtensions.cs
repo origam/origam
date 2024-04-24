@@ -24,13 +24,13 @@ using System.Linq;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Graphs;
 
-namespace Origam.Workbench.Diagram.Extensions;
-
-public static class GraphExtensions
+namespace Origam.Workbench.Diagram.Extensions
 {
+    public static class GraphExtensions
+    {
 
-	public static void RemoveNodeEverywhere(this Graph graph, Node node)
-	{
+	    public static void RemoveNodeEverywhere(this Graph graph, Node node)
+	    {
 		    graph.RemoveNode(node);
 		    foreach ( var keyValPair in graph.SubgraphMap)
 		    {
@@ -43,8 +43,8 @@ public static class GraphExtensions
 		    }
 	    }
 
-	public static Subgraph FindParentSubGraph(this Graph graph, Node node)
-	{
+	    public static Subgraph FindParentSubGraph(this Graph graph, Node node)
+	    {
 		    if (node == null) return null;
 
 		    IEnumerable<Subgraph> blockInnerSubgraphs = graph
@@ -63,8 +63,8 @@ public static class GraphExtensions
 
 	    }
 
-	public static Node FindNodeOrSubgraph(this Graph graph, string id)
-	{
+	    public static Node FindNodeOrSubgraph(this Graph graph, string id)
+	    {
 		    if (string.IsNullOrWhiteSpace(id)) return null;
 		    if (graph.RootSubgraph.Id == id) return graph.RootSubgraph;
 		    Node node = graph.FindNode(id);
@@ -74,8 +74,8 @@ public static class GraphExtensions
 			    : null;
 	    }
 
-	public static bool AreRelatives(this Graph graph, Node node1, Node node2)
-	{
+	    public static bool AreRelatives(this Graph graph, Node node1, Node node2)
+	    {
 		    if (node1 == null || node2 == null) return false;
 		    if (Equals(node1, node2)) return true;
 		    if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(node2))
@@ -93,8 +93,8 @@ public static class GraphExtensions
 		    return false;
 	    }
 	    
-	public static IEnumerable<Node> GetAllNodes(this Subgraph subGraph)
-	{
+	    public static IEnumerable<Node> GetAllNodes(this Subgraph subGraph)
+	    {
 		    foreach (Subgraph childSubGraph in subGraph.Subgraphs)
 		    {
 			    foreach (Node childNode in GetAllNodes(childSubGraph))
@@ -111,8 +111,8 @@ public static class GraphExtensions
 		    yield return subGraph;
 	    }
 	    
-	public static IEnumerable<Subgraph> GetAllSubgraphs(this Subgraph subGraph)
-	{
+	    public static IEnumerable<Subgraph> GetAllSubgraphs(this Subgraph subGraph)
+	    {
 		    foreach (Subgraph childSubgraph in subGraph.Subgraphs)
 		    {
 			    foreach (Subgraph childSubgraph1 in GetAllSubgraphs(childSubgraph))
@@ -122,4 +122,5 @@ public static class GraphExtensions
 			    yield return childSubgraph;
 		    }
 	    }
+    }
 }

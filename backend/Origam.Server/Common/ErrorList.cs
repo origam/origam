@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -42,21 +41,22 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 
-namespace Origam.Server;
-
-class ErrorList
+namespace Origam.Server
 {
-    private Dictionary<int, string> _fieldErrors = new Dictionary<int,string>();
-    private string _rowError;
-
-    public Dictionary<int, string> FieldErrors
+    class ErrorList
     {
-        get { return _fieldErrors; }
-    }
+        private Dictionary<int, string> _fieldErrors = new Dictionary<int,string>();
+        private string _rowError;
 
-    public string RowError
-    {
-        get { return _rowError; }
-        set { _rowError = value; }
+        public Dictionary<int, string> FieldErrors
+        {
+            get { return _fieldErrors; }
+        }
+
+        public string RowError
+        {
+            get { return _rowError; }
+            set { _rowError = value; }
+        }
     }
 }

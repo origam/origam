@@ -25,20 +25,20 @@ using Origam.Services;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.GuiModel;
-
-public class GuiHelper
+namespace Origam.Schema.GuiModel
 {
-	public const string CONTROL_NAME_PANEL = "AsPanel";
-	public const string CONTROL_NAME_TEXTBOX = "AsTextBox";
-	public const string CONTROL_NAME_COMBOBOX = "AsCombo";
-	public const string CONTROL_NAME_CHECKBOX = "AsCheckBox";
-	public const string CONTROL_NAME_DATEBOX = "AsDateBox";
-	public const string CONTROL_NAME_FORM = "AsForm";
-	public const string CONTROL_NAME_MULTICOLUMNADAPTERFIELD = "MultiColumnAdapterFieldWrapper";
-
-	public static FormControlSet CreateForm(DataStructure dataSource, string groupName, PanelControlSet defaultPanel)
+	public class GuiHelper
 	{
+		public const string CONTROL_NAME_PANEL = "AsPanel";
+		public const string CONTROL_NAME_TEXTBOX = "AsTextBox";
+		public const string CONTROL_NAME_COMBOBOX = "AsCombo";
+		public const string CONTROL_NAME_CHECKBOX = "AsCheckBox";
+		public const string CONTROL_NAME_DATEBOX = "AsDateBox";
+		public const string CONTROL_NAME_FORM = "AsForm";
+		public const string CONTROL_NAME_MULTICOLUMNADAPTERFIELD = "MultiColumnAdapterFieldWrapper";
+
+		public static FormControlSet CreateForm(DataStructure dataSource, string groupName, PanelControlSet defaultPanel)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var formSchemaItemProvider 
@@ -86,19 +86,19 @@ public class GuiHelper
 			return form;
 		}
 
-	public static PanelControlSet CreatePanel(
-		string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
-	{
+        public static PanelControlSet CreatePanel(
+	        string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
+        {
             return CreatePanel(groupName, entity, fieldsToPopulate,
 	            entity.Name);
         }
 
-	public static PanelControlSet CreatePanel(
-		string groupName, 
-		IDataEntity entity, 
-		Hashtable fieldsToPopulate,
-		string name)
-	{
+        public static PanelControlSet CreatePanel(
+	        string groupName, 
+	        IDataEntity entity, 
+	        Hashtable fieldsToPopulate,
+	        string name)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var panelSchemaItemProvider 
@@ -138,14 +138,14 @@ public class GuiHelper
 			return panel;
 		}
 
-	private static void BuildDefaultControl(
-		ControlSetItem parentControl, 
-		IDataEntity entity, 
-		IDataEntityColumn column, 
-		int x, 
-		int y, 
-		int tabIndex)
-	{
+		private static void BuildDefaultControl(
+			ControlSetItem parentControl, 
+			IDataEntity entity, 
+			IDataEntityColumn column, 
+			int x, 
+			int y, 
+			int tabIndex)
+		{
 			var properties = new Hashtable
 			{
 				["Left"] = x,
@@ -235,10 +235,10 @@ public class GuiHelper
 			}
 		}
 
-	public static ControlSetItem CreateControl(
-		AbstractSchemaItem parentControl, 
-		ControlItem controlType)
-	{
+		public static ControlSetItem CreateControl(
+			AbstractSchemaItem parentControl, 
+			ControlItem controlType)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var control = parentControl.NewItem<ControlSetItem>(
@@ -247,8 +247,8 @@ public class GuiHelper
 			return control;
 		}
 
-	public static ControlItem CreatePanelControl(PanelControlSet panel)
-	{
+		public static ControlItem CreatePanelControl(PanelControlSet panel)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var userControlSchemaItemProvider 
@@ -274,43 +274,43 @@ public class GuiHelper
 			return newControl;
 		}
 
-	public static ControlItem GetPanelControl()
-	{
+		public static ControlItem GetPanelControl()
+		{
 			return GetControlByName(CONTROL_NAME_PANEL);
 		}
 
-	public static ControlItem GetFormControl()
-	{
+		public static ControlItem GetFormControl()
+		{
 			return GetControlByName(CONTROL_NAME_FORM);
 		}
 
-	public static ControlItem GetTextBoxControl()
-	{
+		public static ControlItem GetTextBoxControl()
+		{
 			return GetControlByName(CONTROL_NAME_TEXTBOX);
 		}
 
-	public static ControlItem GetCheckBoxControl()
-	{
+		public static ControlItem GetCheckBoxControl()
+		{
 			return GetControlByName(CONTROL_NAME_CHECKBOX);
 		}
 
-	public static ControlItem GetDateBoxControl()
-	{
+		public static ControlItem GetDateBoxControl()
+		{
 			return GetControlByName(CONTROL_NAME_DATEBOX);
 		}
 
-	public static ControlItem GetMultiColumnAdapterFieldWrapperControl()
-	{
+		public static ControlItem GetMultiColumnAdapterFieldWrapperControl()
+		{
 			return GetControlByName(CONTROL_NAME_MULTICOLUMNADAPTERFIELD);
 		}
 		
-	public static ControlItem GetComboBoxControl()
-	{
+		public static ControlItem GetComboBoxControl()
+		{
 			return GetControlByName(CONTROL_NAME_COMBOBOX);
 		}
 		
-	public static ControlItem GetControlByName(string name)
-	{
+		public static ControlItem GetControlByName(string name)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var userControlSchemaItemProvider 
@@ -319,8 +319,8 @@ public class GuiHelper
 				name, ControlItem.CategoryConst) as ControlItem;
 		}
 
-	private static void PopulateControlBindings(ControlSetItem control, string entity, string field, string property)
-	{
+		private static void PopulateControlBindings(ControlSetItem control, string entity, string field, string property)
+		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var propertyBindingInfo = control.NewItem<PropertyBindingInfo>(
@@ -332,9 +332,9 @@ public class GuiHelper
 			propertyBindingInfo.DesignDataSetPath = entity + "." + field;
 		}
 
-	private static void PopulateControlProperties(
-		ControlSetItem control, Hashtable properties)
-	{
+		private static void PopulateControlProperties(
+			ControlSetItem control, Hashtable properties)
+		{
 			var schema 
 				= ServiceManager.Services.GetService<ISchemaService>();
 			foreach(ControlPropertyItem propertyDef 
@@ -350,4 +350,5 @@ public class GuiHelper
 				}
 			}
 		}
+	}
 }

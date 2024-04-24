@@ -24,20 +24,20 @@ using System.Data;
 using System.Collections;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DropDownList.
-/// </summary>
-public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
+namespace Origam.Gui.Win
 {
-	private System.Windows.Forms.TreeView tree;
-	private System.ComponentModel.IContainer components;
-	private System.Windows.Forms.Timer timer1;
-	private SortedList items_Identifiers;
-
-	public DropDownTree()
+	/// <summary>
+	/// Summary description for DropDownList.
+	/// </summary>
+	public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 	{
+		private System.Windows.Forms.TreeView tree;
+		private System.ComponentModel.IContainer components;
+		private System.Windows.Forms.Timer timer1;
+		private SortedList items_Identifiers;
+
+		public DropDownTree()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -46,11 +46,11 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			this.items_Identifiers = new SortedList();
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -76,19 +76,21 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 //			e.Graphics.DrawRectangle(SystemPens.ControlDark, borderRect);			
 //		}
 //
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.components = new System.ComponentModel.Container();
 			this.tree = new System.Windows.Forms.TreeView();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
-			// 		// tree
-			// 		this.tree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			// 
+			// tree
+			// 
+			this.tree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.tree.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tree.FullRowSelect = true;
 			this.tree.HideSelection = false;
@@ -102,11 +104,15 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			this.tree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.List_KeyDown);
 			this.tree.DoubleClick += new System.EventHandler(this.tree_DoubleClick);
 			this.tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
-			// 		// timer1
-			// 		this.timer1.Enabled = true;
+			// 
+			// timer1
+			// 
+			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 		// DropDownTree
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// DropDownTree
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 336);
 			this.ControlBox = false;
 			this.Controls.Add(this.tree);
@@ -119,13 +125,13 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public override bool Focused
-	{
-		get
+		#region Properties
+		public override bool Focused
 		{
+			get
+			{
 				if(base.Focused | tree.Focused) 
 				{
 					return true;
@@ -135,20 +141,20 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 					return false;
 				}
 			}
-	}
+		}
 
-	private bool _canceled = false;
-	public bool Canceled
-	{
-		get
+		private bool _canceled = false;
+		public bool Canceled
 		{
+			get
+			{
 				return _canceled;
 			}
-		set
-		{
+			set
+			{
 				_canceled = value;
 			}
-	}
+		}
 
 //		private ILookupControl _lookupControl;
 //		public ILookupControl LookupControl
@@ -163,15 +169,15 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 //			}
 //		}
 
-	private DataView _dataSource;
-	public DataView DataSource
-	{
-		get
+		private DataView _dataSource;
+		public DataView DataSource
 		{
+			get
+			{
 				return _dataSource;
 			}
-		set
-		{
+			set
+			{
 				_dataSource = value;
 
 				if(_dataSource != null)
@@ -180,70 +186,70 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 					FillTree();
 				}
 			}
-	}
+		}
 
-	private string _valueMember;
-	public string ValueMember
-	{
-		get
+		private string _valueMember;
+		public string ValueMember
 		{
+			get
+			{
 				return _valueMember;
 			}
-		set
-		{
+			set
+			{
 				_valueMember = value;
 			}
-	}
+		}
 
-	private string _displayMember;
-	public string DisplayMember
-	{
-		get
+		private string _displayMember;
+		public string DisplayMember
 		{
+			get
+			{
 				return _displayMember;
 			}
-		set
-		{
+			set
+			{
 				_displayMember = value;
 			}
-	}
+		}
 
-	private string _parentMember;
-	public string ParentMember
-	{
-		get
+		private string _parentMember;
+		public string ParentMember
 		{
+			get
+			{
 				return _parentMember;
 			}
-		set
-		{
+			set
+			{
 				_parentMember = value;
 			}
-	}
+		}
 
-	private string _selectedText = "";
-	public string SelectedText
-	{
-		get
+		private string _selectedText = "";
+		public string SelectedText
 		{
+			get
+			{
 				return _selectedText;
 			}
-		set
-		{
+			set
+			{
 				throw new NotImplementedException();
 			}
-	}
+		}
 
-	private bool _selectingValue = false;
-	private object _selectedValue;
-	public object SelectedValue
-	{
-		get
+		private bool _selectingValue = false;
+		private object _selectedValue;
+		public object SelectedValue
 		{
+			get
+			{
 				return _selectedValue;
 			}
-		set
-		{
+			set
+			{
 				_selectedValue = value;
 
 				if(value != DBNull.Value)
@@ -256,25 +262,25 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 					}
 				}
 			}
-	}
+		}
 
-	private BaseDropDownControl _dropDownControl;
-	public BaseDropDownControl DropDownControl
-	{
-		get
+		private BaseDropDownControl _dropDownControl;
+		public BaseDropDownControl DropDownControl
 		{
+			get
+			{
 				return _dropDownControl;
 			}
-		set
-		{
+			set
+			{
 				_dropDownControl = value;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Methods
-	public void SelectItem()
-	{
+		#region Methods
+		public void SelectItem()
+		{
 			if(tree.SelectedNode is DataTreeViewNode)
 			{
 				_selectedValue = (tree.SelectedNode as DataTreeViewNode).ID;
@@ -287,21 +293,21 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 		}
 
-	public void MoveUp()
-	{
+		public void MoveUp()
+		{
 			this.tree.Focus();
 		}
 
-	public void MoveDown()
-	{
+		public void MoveDown()
+		{
 			this.tree.Focus();
 		}
 
-	#endregion
+		#endregion
 
-	#region Event Handlers
-	private void List_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		#region Event Handlers
+		private void List_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			switch(e.KeyCode)
 			{
 				case Keys.Up:
@@ -318,18 +324,18 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 					break;
 			}
 		}
-	#endregion
+		#endregion
 
 
-	private void tree_AfterSelect(object sender, TreeViewEventArgs e)
-	{
+		private void tree_AfterSelect(object sender, TreeViewEventArgs e)
+		{
 //			if(_selectingValue) return;
 //
 //			_readyToClose = true;
 		}
 
-	private void FillTree()
-	{
+		private void FillTree()
+		{
 			tree.Nodes.Clear();
 			tree.BeginUpdate();
 
@@ -368,8 +374,8 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			tree.EndUpdate();
 		}
 
-	private bool TryAddNode(DataTreeViewNode node)
-	{
+		private bool TryAddNode(DataTreeViewNode node)
+		{
 			if (node.ParentID == DBNull.Value)
 			{
 				this.AddNode(this.tree.Nodes, node);				
@@ -392,8 +398,8 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			return false;
 		}
 
-	private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
-	{
+		private void CheckRecursion(DataTreeViewNode node, DataTreeViewNode parentNode)
+		{
 			if(node.ID.Equals(parentNode.ID))
 			{
 				throw new NotSupportedException("Stromové zobrazení: Není možné pøidat položku pod sebe sama.");
@@ -409,8 +415,8 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 		}
 		
 
-	private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
-	{
+		private void AddNode(TreeNodeCollection nodes, DataTreeViewNode node)
+		{
 			if(node.ID == null | node.ID == DBNull.Value) return;
 
 			if(!this.items_Identifiers.ContainsKey(node.ID))
@@ -420,14 +426,14 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 		}
 
-	private bool _readyToClose = false;
-	private void timer1_Tick(object sender, System.EventArgs e)
-	{
+		private bool _readyToClose = false;
+		private void timer1_Tick(object sender, System.EventArgs e)
+		{
 			if(_readyToClose) this.SelectItem();
 		}
 
-	private void DropDownTree_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		private void DropDownTree_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			if(e.KeyCode == Keys.Escape)
 			{
 				this.Canceled = true;
@@ -435,89 +441,90 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			}
 		}
 
-	private void tree_DoubleClick(object sender, System.EventArgs e)
-	{
+		private void tree_DoubleClick(object sender, System.EventArgs e)
+		{
 			if(_selectingValue) return;
 			_readyToClose = true;
 		}
 
 
 
-	public class DataTreeViewNode : TreeNode
-	{
-		#region Fields
-		
-		private int position;		
-
-		private object parentID;
-
-		#endregion
-
-		#region Constructors
-
-		/// <summary>
-		/// Default constructor of the node.
-		/// </summary>
-		public DataTreeViewNode(object id, object parentId, string text)
+		public class DataTreeViewNode : TreeNode
 		{
+			#region Fields
+		
+			private int position;		
+
+			private object parentID;
+
+			#endregion
+
+			#region Constructors
+
+			/// <summary>
+			/// Default constructor of the node.
+			/// </summary>
+			public DataTreeViewNode(object id, object parentId, string text)
+			{
 				this.ID = id;
 				this.ParentID = parentId;
 				this.Text = text;
 			}
 
-		#endregion
+			#endregion
 
-		#region Implementation
+			#region Implementation
 
-		#endregion
+			#endregion
 
-		#region Properties
+			#region Properties
 
-		/// <summary>
-		/// Identifier of the node.
-		/// </summary>
-		public object ID
-		{
-			get
-			{				
+			/// <summary>
+			/// Identifier of the node.
+			/// </summary>
+			public object ID
+			{
+				get
+				{				
 					return this.Tag;				
 				}
-			set
-			{
+				set
+				{
 					this.Tag = value;
 				}
-		}
+			}
 
-		/// <summary>
-		/// Identifier of the parent node.
-		/// </summary>
-		public object ParentID
-		{
-			get
+			/// <summary>
+			/// Identifier of the parent node.
+			/// </summary>
+			public object ParentID
 			{
+				get
+				{
 					return this.parentID;
 				}
-			set
-			{
+				set
+				{
 					this.parentID = value;
 				}
-		}
+			}
 	
-		/// <summary>
-		/// Position in the current currency manager.
-		/// </summary>
-		public int Position
-		{
-			get
+			/// <summary>
+			/// Position in the current currency manager.
+			/// </summary>
+			public int Position
 			{
+				get
+				{
 					return this.position;
 				}
-			set
-			{
+				set
+				{
 					this.position = value;
 				}
-		}
+			}
 
-		#endregion
+			#endregion
+		}
 	}
 }

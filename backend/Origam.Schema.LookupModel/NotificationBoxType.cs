@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.LookupModel;
-
-/// <summary>
-/// Summary description for NotificationBoxType.
-/// </summary>
-public enum NotificationBoxType
+namespace Origam.Schema.LookupModel
 {
-	Logo = 0
+	/// <summary>
+	/// Summary description for NotificationBoxType.
+	/// </summary>
+	public enum NotificationBoxType
+	{
+		Logo = 0
+	}
 }

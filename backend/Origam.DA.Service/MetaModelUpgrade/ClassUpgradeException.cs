@@ -23,15 +23,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.Service.MetaModelUpgrade;
-
-public class ClassUpgradeException: Exception
+namespace Origam.DA.Service.MetaModelUpgrade
 {
-    public ClassUpgradeException(string message) : base(message)
+    public class ClassUpgradeException: Exception
     {
+        public ClassUpgradeException(string message) : base(message)
+        {
         }
 
-    public ClassUpgradeException(string message, Exception innerException) : base(message, innerException)
-    {
+        public ClassUpgradeException(string message, Exception innerException) : base(message, innerException)
+        {
         }
+    }
 }

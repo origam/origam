@@ -41,63 +41,63 @@ using Origam.Workbench.Editors;
 using Origam.Workbench.Services;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Origam.Workbench.Commands;
-
-/// <summary>
-/// Creates a new schema item and displays it in editor.
-/// </summary>
-public class AddNewSchemaItem : AbstractMenuCommand
+namespace Origam.Workbench.Commands
 {
-	public AddNewSchemaItem(bool showDialog)
+	/// <summary>
+	/// Creates a new schema item and displays it in editor.
+	/// </summary>
+	public class AddNewSchemaItem : AbstractMenuCommand
 	{
+        public AddNewSchemaItem(bool showDialog)
+        {
             ShowDialog = showDialog;
         }
 
-	public bool ShowDialog { get; set; }
-	string _name = null;
-	ISchemaItemFactory _parentElement = null;
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(
-		typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        public bool ShowDialog { get; set; }
+        string _name = null;
+        ISchemaItemFactory _parentElement = null;
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(
+            typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 
-	public override bool IsEnabled
-	{
-		get
+		public override bool IsEnabled
 		{
+			get
+			{
 				return _parentElement != null;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public ISchemaItemFactory ParentElement
-	{
-		get
-		{
+        public ISchemaItemFactory ParentElement
+        {
+            get
+            {
                 return _parentElement;
             }
-		set
-		{
+            set
+            {
                 _parentElement = value;
             }
-	}
+        }
 
-	public string Name
-	{
-		get
+        public string Name
 		{
+			get
+			{
 				return _name;
 			}
-		set
-		{
+			set
+			{
 				_name = value;
 			}
-	}
+		}
 
-	public event EventHandler<AbstractSchemaItem> ItemCreated ;
-	public override void Run()
-	{
+        public event EventHandler<AbstractSchemaItem> ItemCreated ;
+        public override void Run()
+		{
 			var newItemMethodInfo 
 				= typeof(ISchemaItemFactory).GetMethod("NewItem");
 			var newItemGenericMethodInfo
@@ -124,34 +124,34 @@ public class AddNewSchemaItem : AbstractMenuCommand
 			cmd.Run();
 		}
 	
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema= null;
 		}
 
-}
-
-/// <summary>
-/// Creates a new schema item of same type and under the same parent as last added schema item and displays it in editor.
-/// </summary>
-public class AddRepeatingSchemaItem : AbstractMenuCommand
-{
-	SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.LastAddedNodeParent != null;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+	/// <summary>
+	/// Creates a new schema item of same type and under the same parent as last added schema item and displays it in editor.
+	/// </summary>
+	public class AddRepeatingSchemaItem : AbstractMenuCommand
 	{
+		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.LastAddedNodeParent != null;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			var newItemMethodInfo 
 				= typeof(ISchemaItemFactory).GetMethod("NewItem");
 			var newItemGenericMethodInfo
@@ -171,34 +171,34 @@ public class AddRepeatingSchemaItem : AbstractMenuCommand
 			cmd.Run();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 		}
 
-}
-
-/// <summary>
-/// Converts existing schema item to a new type and displays it in editor. Before it delets the existing item.
-/// </summary>
-public class ConvertSchemaItem : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.ActiveNode is ISchemaItemConvertible;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+	/// <summary>
+	/// Converts existing schema item to a new type and displays it in editor. Before it delets the existing item.
+	/// </summary>
+	public class ConvertSchemaItem : AbstractMenuCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.ActiveNode is ISchemaItemConvertible;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			ISchemaItemConvertible activeItem = _schema.ActiveNode as ISchemaItemConvertible;
 
 			ISchemaItem converted = activeItem.ConvertTo(this.Owner as Type);
@@ -210,60 +210,60 @@ public class ConvertSchemaItem : AbstractMenuCommand
 			cmd.Run();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
-
-
-/// <summary>
-/// Creates a new group and displays it in editor.
-/// </summary>
-public class AddNewGroup : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.ActiveNode is AbstractSchemaItemProvider || _schema.ActiveNode is SchemaItemGroup;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+
+	/// <summary>
+	/// Creates a new group and displays it in editor.
+	/// </summary>
+	public class AddNewGroup : AbstractMenuCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.ActiveNode is AbstractSchemaItemProvider || _schema.ActiveNode is SchemaItemGroup;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			SchemaItemGroup item = (_schema.ActiveNode as ISchemaItemFactory).NewGroup(_schema.ActiveSchemaExtensionId);
 			_schema.SchemaBrowser.EbrSchemaBrowser.RefreshActiveNode();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
+	}
 
-/// <summary>
-/// Edits an active schema item in a diagram editor.
-/// </summary>
-public class EditDiagramActiveSchemaItem : AbstractCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-	IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-	public override void Run()
+	/// <summary>
+	/// Edits an active schema item in a diagram editor.
+	/// </summary>
+	public class EditDiagramActiveSchemaItem : AbstractCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+		public override void Run()
+		{
             AbstractSchemaItem item = this.Owner as AbstractSchemaItem;
 
             // First we test, if the item is not opened already
@@ -301,19 +301,19 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
 			System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
 
 		}
-}
+	}
 
-/// <summary>
-/// Edits an active schema item in an editor.
-/// </summary>
-public class EditActiveSchemaItem : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
+	/// <summary>
+	/// Edits an active schema item in an editor.
+	/// </summary>
+	public class EditActiveSchemaItem : AbstractMenuCommand
 	{
-		get
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
 		{
+			get
+			{
 				if(_schema.IsSchemaLoaded)
 				{
 					return _schema.CanEditItem(_schema.ActiveNode);
@@ -323,46 +323,46 @@ public class EditActiveSchemaItem : AbstractMenuCommand
 					return false;
 				}
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			EditSchemaItem cmd = new EditSchemaItem();
 			cmd.Owner = _schema.ActiveNode;
 			cmd.Run();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
-
-
-public class ExpandAllActiveSchemaItem : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-	public override bool IsEnabled
-	{
-		get
-		{
-                return _schema.ActiveNode is AbstractSchemaItem;
-            }
-		set
-		{
-                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-            }
 	}
 
-	public override void Run()
-	{
+
+    public class ExpandAllActiveSchemaItem : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveNode is AbstractSchemaItem;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
             if(_schema.ActiveNode.HasChildNodes)
             {
                 ExpressionBrowser schemaBrowser = _schema.SchemaBrowser.EbrSchemaBrowser;
@@ -370,38 +370,38 @@ public class ExpandAllActiveSchemaItem : AbstractMenuCommand
             }
         }
 
-	public override void Dispose()
-	{
+        public override void Dispose()
+        {
             _schema = null;
 
             base.Dispose();
         }
 
-}
+    }
 
-/// <summary>
-/// Edits a schema item in an editor. Schema item is passed as Owner.
-/// </summary>
-public class EditSchemaItem : AbstractCommand
-{
-	public EditSchemaItem()
-	{
+    /// <summary>
+    /// Edits a schema item in an editor. Schema item is passed as Owner.
+    /// </summary>
+    public class EditSchemaItem : AbstractCommand
+    {
+        public EditSchemaItem()
+        {
             
         }
 
-	public EditSchemaItem(bool showDialog)
-	{
+        public EditSchemaItem(bool showDialog)
+        {
             ShowDialog = showDialog;
         }
 
-	public bool ShowDialog { get; set; }
-	public bool ShowDiagramEditorAfterSave { get; set; }
-	IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        public bool ShowDialog { get; set; }
+        public bool ShowDiagramEditorAfterSave { get; set; }
+        IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 //		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
-	public override void Run()
-	{	
+		public override void Run()
+		{	
 			// First we test, if the item is not opened already
 			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
 			{
@@ -543,20 +543,20 @@ public class EditSchemaItem : AbstractCommand
             }
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
 		}
-}
+	}
 
-/// <summary>
-/// Delets the currently selected node.
-/// </summary>
-public class DeleteActiveNode : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-	public event EventHandler BeforeDelete;
-	public event EventHandler AfterDelete;
-	public override bool IsEnabled
+	/// <summary>
+	/// Delets the currently selected node.
+	/// </summary>
+	public class DeleteActiveNode : AbstractMenuCommand
 	{
-		get
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+		public event EventHandler BeforeDelete;
+		public event EventHandler AfterDelete;
+		public override bool IsEnabled
 		{
+			get
+			{
 				if(_schema.IsSchemaLoaded && _schema.ActiveNode != null)
 				{
 					if(! (_schema.CanDeleteItem(_schema.ActiveNode)))
@@ -569,14 +569,14 @@ public class DeleteActiveNode : AbstractMenuCommand
 				
 				return false;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			if((_schema.ActiveNode is AbstractSchemaItem && (_schema.ActiveNode as AbstractSchemaItem).SchemaExtensionId != _schema.ActiveSchemaExtensionId)
 				| (_schema.ActiveNode is SchemaItemGroup && (_schema.ActiveNode as SchemaItemGroup).SchemaExtensionId != _schema.ActiveSchemaExtensionId))
 			{
@@ -615,21 +615,21 @@ public class DeleteActiveNode : AbstractMenuCommand
             }
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 		}
 
-}
+	}
 	
-public class MoveToAnotherPackage : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
+	public class MoveToAnotherPackage : AbstractMenuCommand
 	{
-		get
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
 		{
+			get
+			{
                 if ((_schema.ActiveNode is not AbstractSchemaItem &&
 					_schema.ActiveNode is not SchemaItemGroup)  || 
 					!_schema.IsSchemaLoaded ||
@@ -640,79 +640,79 @@ public class MoveToAnotherPackage : AbstractMenuCommand
                 }
                 return true;
             }
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
             var selectForm = new MoveToPackageForm();
 			selectForm.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 		}
-}
-
-/// <summary>
-/// Displays the documentation for the active schema item in the documentation pad
-/// </summary>
-public class ShowDocumentation : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.ActiveSchemaItem != null;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+	/// <summary>
+	/// Displays the documentation for the active schema item in the documentation pad
+	/// </summary>
+	public class ShowDocumentation : AbstractMenuCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.ActiveSchemaItem != null;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			Pads.DocumentationPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.DocumentationPad)) as Pads.DocumentationPad;
 			pad.ShowDocumentation(_schema.ActiveSchemaItem.Id);
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
-
-/// <summary>
-/// Displays list of items on which currently selected item is dependent
-/// </summary>
-public class ShowDependencies : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.ActiveSchemaItem != null;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+	/// <summary>
+	/// Displays list of items on which currently selected item is dependent
+	/// </summary>
+	public class ShowDependencies : AbstractMenuCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.ActiveSchemaItem != null;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			Pads.FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
 
 			var dependencies =_schema.ActiveSchemaItem
@@ -728,36 +728,36 @@ public class ShowDependencies : AbstractMenuCommand
 			cmd.Dispose();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
-
-/// <summary>
-/// Displays list of items on which currently selected item is dependent
-/// </summary>
-public class ShowUsage : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-				return _schema.ActiveSchemaItem != null;
-			}
-		set
-		{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
 	}
 
-	public override void Run()
+	/// <summary>
+	/// Displays list of items on which currently selected item is dependent
+	/// </summary>
+	public class ShowUsage : AbstractMenuCommand
 	{
+		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schema.ActiveSchemaItem != null;
+			}
+			set
+			{
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+			}
+		}
+
+		public override void Run()
+		{
 			Pads.FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
             var referenceList = _schema.ActiveSchemaItem.GetUsage();
             if (referenceList != null)
@@ -770,36 +770,36 @@ public class ShowUsage : AbstractMenuCommand
 			cmd.Dispose();
 		}
 
-	public override void Dispose()
-	{
+		public override void Dispose()
+		{
 			_schema = null;
 
 			base.Dispose ();
 		}
 
-}
-
-/// <summary>
-/// Show file in directory in explorer.
-/// </summary>
-public class ShowExplorerXml : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-	public override bool IsEnabled
-	{
-		get
-		{
-                return _schema.ActiveSchemaItem != null;
-            }
-		set
-		{
-                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-            }
 	}
 
-	public override void Run()
-	{
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowExplorerXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveSchemaItem != null;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             foreach (string file in _schema.ActiveSchemaItem.Files)
             {
@@ -812,36 +812,36 @@ public class ShowExplorerXml : AbstractMenuCommand
             }
         }
 
-	public override void Dispose()
-	{
+        public override void Dispose()
+        {
             _schema = null;
 
             base.Dispose();
         }
 
-}
+    }
 
-/// <summary>
-/// Show file in directory in explorer.
-/// </summary>
-public class ShowConsoleXml : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowConsoleXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 
-	public override bool IsEnabled
-	{
-		get
-		{
+        public override bool IsEnabled
+        {
+            get
+            {
                 return _schema.ActiveSchemaItem != null;
             }
-		set
-		{
+            set
+            {
                 throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
             }
-	}
+        }
 
-	public override void Run()
-	{
+        public override void Run()
+        {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             foreach (string file in _schema.ActiveSchemaItem.Files)
             {
@@ -872,37 +872,37 @@ public class ShowConsoleXml : AbstractMenuCommand
             }
         }
 
-	public override void Dispose()
-	{
+        public override void Dispose()
+        {
             _schema = null;
 
             base.Dispose();
         }
 
-}
+    }
 
-/// <summary>
-/// Show file in directory in explorer.
-/// </summary>
-public class ShowFileDiffXml : AbstractMenuCommand
-{
-	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowFileDiffXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
        
 
-	public override bool IsEnabled
-	{
-		get
-		{
+        public override bool IsEnabled
+        {
+            get
+            {
                 return _schema.ActiveSchemaItem != null;
             }
-		set
-		{
+            set
+            {
                 throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
             }
-	}
+        }
 
-	public override void Run()
-	{
+        public override void Run()
+        {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             string activefile = Path.Combine(settings.ModelSourceControlLocation, _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
             var provider = (FilePersistenceProvider)_schema.ActiveSchemaItem.PersistenceProvider;
@@ -938,10 +938,11 @@ public class ShowFileDiffXml : AbstractMenuCommand
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-	public override void Dispose()
-	{
+        public override void Dispose()
+        {
             _schema = null;
 
             base.Dispose();
         }
+    }
 }

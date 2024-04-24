@@ -23,43 +23,44 @@ using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence; 
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for XsdDataStructure.
-/// </summary>
-[SchemaItemDescription("XSD Data Structure", "icon_xsd-data-structure.png")]
-[HelpTopic("Data+Structures")]
-public class XsdDataStructure : AbstractDataStructure
+namespace Origam.Schema.EntityModel
 {
-	public XsdDataStructure() : base(){}
-		
-	public XsdDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public XsdDataStructure(Key primaryKey) : base(primaryKey)	{}
-
-	public override SchemaItemCollection ChildItems
+	/// <summary>
+	/// Summary description for XsdDataStructure.
+	/// </summary>
+	[SchemaItemDescription("XSD Data Structure", "icon_xsd-data-structure.png")]
+    [HelpTopic("Data+Structures")]
+	public class XsdDataStructure : AbstractDataStructure
 	{
-		get
+		public XsdDataStructure() : base(){}
+		
+		public XsdDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public XsdDataStructure(Key primaryKey) : base(primaryKey)	{}
+
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
+		}
 
-	#region Properties
-	private string _xsd = "";
+		#region Properties
+		private string _xsd = "";
 		
-	[XmlAttribute("xsd")]
-	public string Xsd
-	{
-		get
+        [XmlAttribute("xsd")]
+		public string Xsd
 		{
+			get
+			{
 				return _xsd;
 			}
-		set
-		{
+			set
+			{
 				_xsd = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

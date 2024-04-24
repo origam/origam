@@ -23,12 +23,12 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using System;
 
-namespace Origam.Workbench.Services;
-
-public class PackageHelper
+namespace Origam.Workbench.Services
 {
-    public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
+    public class PackageHelper
     {
+        public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
+        {
             IPersistenceService persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
             RunWithInactiveFileEventQueue(
                 persistenceService: persistenceService, 
@@ -38,9 +38,9 @@ public class PackageHelper
                 });
         }
 
-    private static void CreatePackage(string packageName, Guid packageId,
-        Guid referencePackageId, IPersistenceService persistenceService)
-    {
+        private static void CreatePackage(string packageName, Guid packageId,
+            Guid referencePackageId, IPersistenceService persistenceService)
+        {
             string versionNumber = "1.0.0";
             Package newExtension = new Package(new ModelElementKey(packageId));
             newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
@@ -81,8 +81,8 @@ public class PackageHelper
             deployment.Deploy();
         }
 
-    private static void RunWithInactiveFileEventQueue(IPersistenceService persistenceService, Action action)
-    {
+        private static void RunWithInactiveFileEventQueue(IPersistenceService persistenceService, Action action)
+        {
             if (persistenceService is FilePersistenceService service)
             {
                 service.FileEventQueue.IgnoreChanges(action);
@@ -92,4 +92,5 @@ public class PackageHelper
                 action();
             }
         }
+    }
 }

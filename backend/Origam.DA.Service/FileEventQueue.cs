@@ -32,25 +32,25 @@ using System.Timers;
 using log4net;
 using Origam.Services;
 
-namespace Origam.DA.Service;
-
-public sealed class FileEventQueue: IDisposable
+namespace Origam.DA.Service
 {
-    private static readonly ILog log
-        = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly FilePersistenceIndex index;
-    private IFileChangesWatchDog watchDog;
-    private readonly Queue<FileSystemChangeEventArgs> fileChangeQueue 
-        = new Queue<FileSystemChangeEventArgs>();
-    private FileSystemChangeEventArgs lastChange = null;
-    private bool processEvents = true;
-    private readonly object lockObj = new object();
-    private System.Timers.Timer timer = new System.Timers.Timer();
-
-    public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
-
-    public FileEventQueue(FilePersistenceIndex index, IFileChangesWatchDog watchDog)
+    public sealed class FileEventQueue: IDisposable
     {
+        private static readonly ILog log
+            = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly FilePersistenceIndex index;
+        private IFileChangesWatchDog watchDog;
+        private readonly Queue<FileSystemChangeEventArgs> fileChangeQueue 
+            = new Queue<FileSystemChangeEventArgs>();
+        private FileSystemChangeEventArgs lastChange = null;
+        private bool processEvents = true;
+        private readonly object lockObj = new object();
+        private System.Timers.Timer timer = new System.Timers.Timer();
+
+        public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
+
+        public FileEventQueue(FilePersistenceIndex index, IFileChangesWatchDog watchDog)
+        {
             this.index = index;
             this.watchDog = watchDog;
             this.watchDog.FileChanged += (sender, args) =>
@@ -65,19 +65,19 @@ public sealed class FileEventQueue: IDisposable
             timer.Elapsed += OnTimerOnElapsed;
         }
 
-    private void OnTimerOnElapsed(object sender, ElapsedEventArgs e)
-    {
+        private void OnTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
             TimerElapsedHandler();
         }
 
-    public void Start()
-    {
+        public void Start()
+        {
             watchDog.Start();
             timer.Start();
         }
 
-    public void IgnoreChanges(Action action)
-    {
+        public void IgnoreChanges(Action action)
+        {
             try
             {
                 Stop();
@@ -89,24 +89,24 @@ public sealed class FileEventQueue: IDisposable
             }
         }
 
-    public void Stop()
-    {
+        public void Stop()
+        {
             watchDog.Stop();
             timer.Stop();
         }
 
-    /// Underlying timer will not process elapsed events.
-    public void Pause()
-    {
+        /// Underlying timer will not process elapsed events.
+        public void Pause()
+        {
             lock (lockObj)
             {
                 processEvents = false;
             }
         }
 
-    /// Underlying timer will process elapsed events.
-    public void Continue()
-    {
+        /// Underlying timer will process elapsed events.
+        public void Continue()
+        {
             lock (lockObj)
             {
                 fileChangeQueue.Clear();
@@ -114,8 +114,8 @@ public sealed class FileEventQueue: IDisposable
             }
         }
 
-    private void TimerElapsedHandler()
-    {
+        private void TimerElapsedHandler()
+        {
             try
             {
                 lock (lockObj)
@@ -138,8 +138,8 @@ public sealed class FileEventQueue: IDisposable
             }
         }
 
-    private void ProcessAccumulatedEvents()
-    {
+        private void ProcessAccumulatedEvents()
+        {
             while (fileChangeQueue.Count > 0)
             {
                 FileSystemChangeEventArgs eventArgs = fileChangeQueue.Dequeue();
@@ -152,30 +152,30 @@ public sealed class FileEventQueue: IDisposable
             lastChange = null;
         }
 
-    private bool IsDirectoryChangeAndNeedsUpdate(FileSystemChangeEventArgs eventArgs)
-    {
+        private bool IsDirectoryChangeAndNeedsUpdate(FileSystemChangeEventArgs eventArgs)
+        {
             if(!eventArgs.IsDirectoryChange) return false;
             if (FilesInIndexNeedUpdate(eventArgs)) return true;
             if (ExistingFilesNeedUpdate(eventArgs)) return true;
             return false;
         }
 
-    private bool ExistingFilesNeedUpdate(FileSystemChangeEventArgs eventArgs)
-    {
+        private bool ExistingFilesNeedUpdate(FileSystemChangeEventArgs eventArgs)
+        {
             return eventArgs.Folder
                 .GetAllFilesInSubDirectories()
                 .Any(ShouldBeUpdated);
         }
 
-    private bool FilesInIndexNeedUpdate(FileSystemChangeEventArgs eventArgs)
-    {
+        private bool FilesInIndexNeedUpdate(FileSystemChangeEventArgs eventArgs)
+        {
            return index
                 .GetByDirectory(eventArgs.Folder)
                 .Any(ShouldBeUpdated);
         }
 
-    private bool ShouldBeUpdated(FileInfo file)
-    {
+        private bool ShouldBeUpdated(FileInfo file)
+        {
             bool needsUpdate = NeedsUpdate(file);
             if (needsUpdate && log.IsInfoEnabled)
             {
@@ -184,8 +184,8 @@ public sealed class FileEventQueue: IDisposable
             return needsUpdate;
         }
 
-    private bool NeedsUpdate(FileInfo file)
-    {
+        private bool NeedsUpdate(FileInfo file)
+        {
             Maybe<string> maybeHash = FindPersistenceFileHash(file);
 
             file.Refresh();
@@ -202,8 +202,8 @@ public sealed class FileEventQueue: IDisposable
             return false;
         }
 
-    private Maybe<string> FindPersistenceFileHash(FileInfo file)
-    {
+        private Maybe<string> FindPersistenceFileHash(FileInfo file)
+        {
             if (OrigamFile.IsPersistenceFile(file))
             {
                 return index.GetFileHash(file);
@@ -217,10 +217,11 @@ public sealed class FileEventQueue: IDisposable
             return documentationService.GetDocumentationFileHash(file);
         }
 
-    public void Dispose()
-    {
+        public void Dispose()
+        {
             timer.Elapsed -= OnTimerOnElapsed;
             index?.Dispose();
             timer?.Dispose();
         }
+    }
 }

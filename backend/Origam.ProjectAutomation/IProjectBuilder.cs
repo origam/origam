@@ -21,13 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.ProjectAutomation;
-
-public interface IProjectBuilder
+namespace Origam.ProjectAutomation
 {
-    TaskState State  {get; set;}
-    void Execute(Project project);
-    void Rollback();
-    event EventHandler StateChanged;
-    string Name { get; }
+    public interface IProjectBuilder
+    {
+        TaskState State  {get; set;}
+        void Execute(Project project);
+        void Rollback();
+        event EventHandler StateChanged;
+        string Name { get; }
+    }
 }

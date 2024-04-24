@@ -28,249 +28,249 @@ using Origam.DA.ObjectPersistence;
 using System.Collections.Generic;
 using Origam.DA;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for Schema.
-/// </summary>
-[XmlPackageRoot("packageReference")]
-[ClassMetaVersion("6.0.0")]
-public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
+namespace Origam.Schema
 {
-	public PackageReference()
+	/// <summary>
+	/// Summary description for Schema.
+	/// </summary>
+	[XmlPackageRoot("packageReference")]
+    [ClassMetaVersion("6.0.0")]
+    public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
+		public PackageReference()
+		{
 			this.PrimaryKey = new ModelElementKey();
 		}
 
-	public PackageReference(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) {}
+		public PackageReference(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) {}
 
-	public override string ToString()
-	{
+		public override string ToString()
+		{
 			return this.Package.Name + " -> " + this.ReferencedPackage.Name;
 		}
 
-	#region Properties
+		#region Properties
 		
-	public bool IsFileRootElement => FileParentId == Guid.Empty;
+		public bool IsFileRootElement => FileParentId == Guid.Empty;
 		 
-	public Guid PackageId;
+		public Guid PackageId;
 
-	public Package Package
-	{
-		get
+		public Package Package
 		{
+			get
+			{
 				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.PackageId));
 			}
-		set
-		{
+			set
+			{
 				this.PackageId = (Guid)value.PrimaryKey["Id"];
 			}
-	}
+		}
 
-	public Guid ReferencedPackageId;
+		public Guid ReferencedPackageId;
 
-	[XmlPackageReference("referencedPackage", "ReferencedPackageId")]
-	public Package ReferencedPackage
-	{
-		get
+        [XmlPackageReference("referencedPackage", "ReferencedPackageId")]
+        public Package ReferencedPackage
 		{
+			get
+			{
 				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.ReferencedPackageId));
 			}
-		set
-		{
+			set
+			{
 				this.ReferencedPackageId = (Guid)value.PrimaryKey["Id"];
 			}
-	}
+		}
 
-	public int ReferenceType
-	{
-		get
+		public int ReferenceType
 		{
+			get
+			{
 				return 1;
 			}
-		set
-		{
+			set
+			{
 				
 			}
-	}
+		}
 
-	public bool IncludeAllElements
-	{
-		get
+		public bool IncludeAllElements
 		{
+			get
+			{
 				return true;
 			}
-		set
-		{
+			set
+			{
 				
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IBrowserNode2 Members
-	[Browsable(false)] 
-	public bool Hide
-	{
-		get
+		#region IBrowserNode2 Members
+		[Browsable(false)] 
+		public bool Hide
 		{
+			get
+			{
 				return !this.IsPersisted;
 			}
-		set
-		{
+			set
+			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
 			}
-	}
+		}
 		
-	public bool CanDelete
-	{
-		get
+		public bool CanDelete
 		{
+			get
+			{
 				// TODO:  Add SchemaExtension.CanDelete getter implementation
 				return false;
 			}
-	}
+		}
 
-	public void Delete()
-	{
+		public void Delete()
+		{
 			this.IsDeleted = true;
 			this.Persist();
 		}
 
-	public bool CanMove(IBrowserNode2 newNode)
-	{
+		public bool CanMove(IBrowserNode2 newNode)
+		{
 			return false;
 		}
 
-	[Browsable(false)]
-	public IBrowserNode2 ParentNode
-	{
-		get
+		[Browsable(false)]
+		public IBrowserNode2 ParentNode
 		{
+			get
+			{
 				return null;
 			}
-		set
-		{
+			set
+			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension"));
 			}
-	}
+		}
 
-	public byte[] NodeImage
-	{
-		get
+		public byte[] NodeImage
 		{
+			get
+			{
 				return null;
 			}
-	}
+		}
 
-	[Browsable(false)] 
-	public string NodeId
-	{
-		get
+		[Browsable(false)] 
+		public string NodeId
 		{
+			get
+			{
 				return this.PrimaryKey["Id"].ToString();
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public virtual string FontStyle
-	{
-		get
-		{
+        [Browsable(false)]
+        public virtual string FontStyle
+        {
+            get
+            {
                 return "Regular";
             }
-	}
-	#endregion
+        }
+        #endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public bool HasChildNodes
-	{
-		get
+		public bool HasChildNodes
 		{
+			get
+			{
 				return this.ChildNodes().Count > 0;
 			}
-	}
+		}
 
-	public bool CanRename
-	{
-		get
+		public bool CanRename
 		{
+			get
+			{
 				return false;
 			}
-	}
+		}
 
-	public BrowserNodeCollection ChildNodes()
-	{
+		public BrowserNodeCollection ChildNodes()
+		{
 			// Get children
 			return new BrowserNodeCollection() ; //this.ChildExtensions.ToArray(typeof(IBrowserNode)) as IBrowserNode[]);
 		}
 
-	public string NodeText
-	{
-		get
+		public string NodeText
 		{
+			get
+			{
 				return this.ReferencedPackage.Name;
 			}
-		set
-		{
+			set
+			{
 			}
-	}
+		}
 
-	public string NodeToolTipText
-	{
-		get
+		public string NodeToolTipText
 		{
+			get
+			{
 				// TODO:  Add SchemaExtension.NodeToolTipText getter implementation
 				return null;
 			}
-	}
+		}
 
-	public string Icon => "09_packages-1.ico";
+        public string Icon => "09_packages-1.ico";
 
-	public string RelativeFilePath
-	{
-		get
-		{
+        public string RelativeFilePath
+        {
+            get
+            {
                 return Package.RelativeFilePath;
             }
-	}
+        }
 
-	public Guid FileParentId
-	{
-		get => PackageId;
-		set => PackageId = value;
-	}
+        public Guid FileParentId
+        {
+            get => PackageId;
+	        set => PackageId = value;
+        }
 
-	public bool IsFolder
-	{
-		get
-		{
+        public bool IsFolder
+        {
+            get
+            {
                 return false;
             }
-	}
+        }
 
-	public IDictionary<string, Guid> ParentFolderIds =>
-		new Dictionary<string, Guid>
-		{
-			{
-				CategoryFactory.Create(typeof(Package)),
-				PackageId
-			}
-		};
+        public IDictionary<string, Guid> ParentFolderIds =>
+	        new Dictionary<string, Guid>
+	        {
+		        {
+			        CategoryFactory.Create(typeof(Package)),
+			        PackageId
+		        }
+	        };
 
-	public string Path
-	{
-		get
-		{
+		public string Path
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-	}
+        }
 
-	#endregion
+        #endregion
 
-	#region IComparable Members
-	public int CompareTo(object obj)
-	{
+        #region IComparable Members
+        public int CompareTo(object obj)
+		{
 			IBrowserNode bn = obj as IBrowserNode;
 
 			if(bn != null)
@@ -282,5 +282,6 @@ public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, 
 				throw new InvalidCastException();
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

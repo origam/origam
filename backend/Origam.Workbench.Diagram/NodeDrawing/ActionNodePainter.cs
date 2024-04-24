@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Drawing;
 using System.Linq;
@@ -28,33 +27,33 @@ using Origam.Extensions;
 using Origam.Workbench.Diagram.Extensions;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
-namespace Origam.Workbench.Diagram.NodeDrawing;
-
-class ActionNodePainter: INodeItemPainter
+namespace Origam.Workbench.Diagram.NodeDrawing
 {
-    private readonly InternalPainter painter;
-    private readonly int preferedTextWidth = 35;
-    private readonly int imageSize = 12;
-    private readonly int textSideMargin = 3;
-    private readonly int imageTopMargin = 10;
-    private readonly int imageTextGap = 8;
-    private readonly int textBottomMargin = 5;
-
-    public ActionNodePainter(InternalPainter internalPainter)
+    class ActionNodePainter: INodeItemPainter
     {
+        private readonly InternalPainter painter;
+        private readonly int preferedTextWidth = 35;
+        private readonly int imageSize = 12;
+        private readonly int textSideMargin = 3;
+        private readonly int imageTopMargin = 10;
+        private readonly int imageTextGap = 8;
+        private readonly int textBottomMargin = 5;
+
+        public ActionNodePainter(InternalPainter internalPainter)
+        {
             painter = internalPainter;
         }
 
-    public ICurve GetBoundary(Node node)
-    {
+        public ICurve GetBoundary(Node node)
+        {
             INodeData nodeData = (INodeData) node.UserData;
             var borderSize = CalculateBorder(node);
             return CurveFactory.CreateRectangle(borderSize.Width + nodeData.LeftMargin,
                 borderSize.Height, new Point());
         }
         
-    private Size CalculateBorder(Node node)
-    {
+        private Size CalculateBorder(Node node)
+        {
             var nodeData = (INodeData)node.UserData;
 
             int actualTextWidth = GetTextLines(nodeData)
@@ -69,8 +68,8 @@ class ActionNodePainter: INodeItemPainter
             return new Size(totalWidth, totalHeight);
         }
 
-    private Tuple<int,int> CalculateLabelPointOffsets(int[] lineWidths)
-    {
+        private Tuple<int,int> CalculateLabelPointOffsets(int[] lineWidths)
+        {
             int width0 = 0;
             int width1 = 0;
             if (lineWidths.Length > 0)
@@ -89,8 +88,8 @@ class ActionNodePainter: INodeItemPainter
                 : new Tuple<int, int>(offset, 0);
         }
 
-    public bool Draw(Node node, object graphicsObj)
-    {
+        public bool Draw(Node node, object graphicsObj)
+        {
             INodeData nodeData = (INodeData) node.UserData;
             Graphics editorGraphics = (Graphics) graphicsObj;
             var image = nodeData.PrimaryImage;
@@ -144,12 +143,13 @@ class ActionNodePainter: INodeItemPainter
             return true;
         }
 
-    private string[] GetTextLines(INodeData nodeData)
-    {
+        private string[] GetTextLines(INodeData nodeData)
+        {
             return nodeData.Text
                 .Wrap(preferedTextWidth, painter.Font)
                 .Split("\n")
                 .Select(x => x.Trim())
                 .ToArray();
         }
+    }
 }

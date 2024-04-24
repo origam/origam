@@ -16,22 +16,22 @@
 using System;
 using System.Collections;
 
-namespace Schedule;
-
-/// <summary>
-/// This class will be used to implement a filter that enables a repeating window of activity.  For cases where you want to 
-/// run every 15 minutes between 6:00 AM and 5:00 PM.  Or just on weekdays or weekends.
-/// </summary>
-public class BlockWrapper : IScheduledItem
+namespace Schedule
 {
-	public BlockWrapper(IScheduledItem item, string StrBase, string BeginOffset, string EndOffset)
+	/// <summary>
+	/// This class will be used to implement a filter that enables a repeating window of activity.  For cases where you want to 
+	/// run every 15 minutes between 6:00 AM and 5:00 PM.  Or just on weekdays or weekends.
+	/// </summary>
+	public class BlockWrapper : IScheduledItem
 	{
+		public BlockWrapper(IScheduledItem item, string StrBase, string BeginOffset, string EndOffset)
+		{
 			_Item = item;
 			_Begin = new ScheduledTime(StrBase, BeginOffset);
 			_End = new ScheduledTime(StrBase, EndOffset);
 		}
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
-	{
+		public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+		{
 			DateTime Next = NextRunTime(Begin, true);
 			while (Next < End)
 			{
@@ -40,13 +40,13 @@ public class BlockWrapper : IScheduledItem
 			}
 		}
 
-	public DateTime NextRunTime(DateTime time, bool AllowExact)
-	{
+		public DateTime NextRunTime(DateTime time, bool AllowExact)
+		{
 			return NextRunTime(time, 100, AllowExact);
 		}
 
-	DateTime NextRunTime(DateTime time, int count, bool AllowExact)
-	{
+		DateTime NextRunTime(DateTime time, int count, bool AllowExact)
+		{
 			if (count == 0)
 				throw new Exception("Invalid block wrapper combination.");
 
@@ -74,6 +74,7 @@ public class BlockWrapper : IScheduledItem
 					return NextRunTime(end, --count, false);
 			}
 		}
-	private IScheduledItem _Item;
-	private ScheduledTime _Begin, _End;
+		private IScheduledItem _Item;
+		private ScheduledTime _Begin, _End;
+	}
 }

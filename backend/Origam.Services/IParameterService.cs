@@ -23,42 +23,43 @@ using System;
 
 using Origam.Schema;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for IParameterService.
-/// </summary>
-public interface IParameterService : IWorkbenchService
+namespace Origam.Workbench.Services
 {
-	string GetString(string name, params object[] args);
-	string GetString(string name, bool throwException, params object[] args);
-	object GetCustomParameterValue(Guid id);
-	object GetCustomParameterValue(string parameterName);
-	object GetParameterValue(Guid id, Guid? overridenProfileId = null);
-	object GetParameterValue(Guid id, OrigamDataType targetType, Guid? overridenProfileId = null);
-	object GetParameterValue(string parameterName, Guid? overridenProfileId = null);
-	object GetParameterValue(string parameterName, OrigamDataType targetType, Guid? overridenProfileId = null);
-	void SetFeatureStatus(string featureCode, bool status);
-	bool IsFeatureOn(string featureCode);
-	void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
-		int intValue, string stringValue, bool boolValue, decimal floatValue, 
-		decimal currencyValue, object dateValue);
-	void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
-		int intValue, string stringValue, bool boolValue, decimal floatValue, 
-		decimal currencyValue, object dateValue, bool useIdentity);
-	void SetCustomParameterValue(Guid id, object value, Guid guidValue,
-		int intValue, string stringValue, bool boolValue, decimal floatValue,
-		decimal currencyValue, object dateValue, Guid? overridenProfileId);
-	void SetCustomParameterValue(string parameterName, object value, 
-		Guid guidValue, int intValue, string stringValue, bool boolValue, 
-		decimal floatValue, decimal currencyValue, object dateValue);
-	void SetCustomParameterValue(string parameterName, object value, 
-		Guid guidValue, int intValue, string stringValue, bool boolValue, 
-		decimal floatValue, decimal currencyValue, object dateValue, bool useIdentity);
-	void SetCustomParameterValue(string parameterName, object value,
-		Guid guidValue, int intValue, string stringValue, bool boolValue,
-		decimal floatValue, decimal currencyValue, object dateValue, Guid? overridenProfileId);
-	void RefreshParameters();
-	Guid ResolveLanguageId(String cultureString);
-	void PrepareParameters();
+	/// <summary>
+	/// Summary description for IParameterService.
+	/// </summary>
+	public interface IParameterService : IWorkbenchService
+	{
+		string GetString(string name, params object[] args);
+        string GetString(string name, bool throwException, params object[] args);
+		object GetCustomParameterValue(Guid id);
+		object GetCustomParameterValue(string parameterName);
+		object GetParameterValue(Guid id, Guid? overridenProfileId = null);
+		object GetParameterValue(Guid id, OrigamDataType targetType, Guid? overridenProfileId = null);
+		object GetParameterValue(string parameterName, Guid? overridenProfileId = null);
+		object GetParameterValue(string parameterName, OrigamDataType targetType, Guid? overridenProfileId = null);
+		void SetFeatureStatus(string featureCode, bool status);
+		bool IsFeatureOn(string featureCode);
+		void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
+            int intValue, string stringValue, bool boolValue, decimal floatValue, 
+            decimal currencyValue, object dateValue);
+		void SetCustomParameterValue(Guid id, object value, Guid guidValue, 
+            int intValue, string stringValue, bool boolValue, decimal floatValue, 
+            decimal currencyValue, object dateValue, bool useIdentity);
+        void SetCustomParameterValue(Guid id, object value, Guid guidValue,
+            int intValue, string stringValue, bool boolValue, decimal floatValue,
+            decimal currencyValue, object dateValue, Guid? overridenProfileId);
+        void SetCustomParameterValue(string parameterName, object value, 
+            Guid guidValue, int intValue, string stringValue, bool boolValue, 
+            decimal floatValue, decimal currencyValue, object dateValue);
+		void SetCustomParameterValue(string parameterName, object value, 
+            Guid guidValue, int intValue, string stringValue, bool boolValue, 
+            decimal floatValue, decimal currencyValue, object dateValue, bool useIdentity);
+        void SetCustomParameterValue(string parameterName, object value,
+            Guid guidValue, int intValue, string stringValue, bool boolValue,
+            decimal floatValue, decimal currencyValue, object dateValue, Guid? overridenProfileId);
+        void RefreshParameters();
+		Guid ResolveLanguageId(String cultureString);
+        void PrepareParameters();
+    }
 }

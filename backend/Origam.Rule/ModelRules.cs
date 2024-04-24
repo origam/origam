@@ -27,15 +27,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Origam.Rule;
-
-public class ModelRules
+namespace Origam.Rule
 {
-    public static List<Dictionary<IFilePersistent, string>> GetErrors(
-        List<AbstractSchemaItemProvider> schemaProviders,
-        FilePersistenceService independentPersistenceService,
-        CancellationToken cancellationToken)
+    public class ModelRules
     {
+        public static List<Dictionary<IFilePersistent, string>> GetErrors(
+            List<AbstractSchemaItemProvider> schemaProviders,
+            FilePersistenceService independentPersistenceService,
+            CancellationToken cancellationToken)
+        {
             List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
@@ -65,12 +65,13 @@ public class ModelRules
             return errorFragments;
         }
 
-    private static bool BelongsToProvider(
-        ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
-    {
+        private static bool BelongsToProvider(
+            ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
+        {
             return String.Compare(
                 retrievedObj.ItemType, 
                 ((AbstractSchemaItemProvider)provider).RootItemType,
                 true) == 0;
         }
+    }
 }

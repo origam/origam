@@ -23,18 +23,18 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.Collections;
 
-namespace Origam.Schema.EntityModel;
-
-internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
+namespace Origam.Schema.EntityModel
 {
-    public override Exception CheckRule(object instance)
+    internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
     {
+        public override Exception CheckRule(object instance)
+        {
             return new NotSupportedException(
                 ResourceUtils.GetString("MemberNameRequired"));
         }
 
-    public override Exception CheckRule(object instance, string memberName)
-    {
+        public override Exception CheckRule(object instance, string memberName)
+        {
             if (string.IsNullOrEmpty(memberName))
             {
                 CheckRule(instance);
@@ -54,4 +54,5 @@ internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttrib
             }
             return null;
         }
+    }
 }

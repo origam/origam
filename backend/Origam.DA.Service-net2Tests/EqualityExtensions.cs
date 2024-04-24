@@ -30,13 +30,13 @@ using System.Runtime.InteropServices;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service_net2Tests;
-
-internal static class EqualityExtensions
+namespace Origam.DA.Service_net2Tests
 {
-    public static Dictionary<string, object> GetAllProperies(
-        this object atype)
+    internal static class EqualityExtensions
     {
+        public static Dictionary<string, object> GetAllProperies(
+            this object atype)
+        {
             if (atype == null) return new Dictionary<string, object>();
             Type t = atype.GetType();
             PropertyInfo[] props = t.GetProperties();
@@ -49,17 +49,17 @@ internal static class EqualityExtensions
             return dict;
         }
 
-    private static bool ContainsEqualObject(this ICollection thisCollection,
-        object testObject)
-    {
+        private static bool ContainsEqualObject(this ICollection thisCollection,
+            object testObject)
+        {
             return thisCollection
                 .Cast<object>()
                 .Any(item => IsEqualTo(item, testObject));
         }
 
-    private static bool IsEqualTo(this ICollection collection,
-        object testObject)
-    {
+        private static bool IsEqualTo(this ICollection collection,
+            object testObject)
+        {
             if (!(testObject is ICollection testCollection)) return false;
             return collection
                 .Cast<object>()
@@ -67,16 +67,16 @@ internal static class EqualityExtensions
                     testCollection.ContainsEqualObject(itemFromDb));
         }
 
-    private static bool IsEqualTo(this AbstractSchemaItem item,
-        object testObject)
-    {
+        private static bool IsEqualTo(this AbstractSchemaItem item,
+            object testObject)
+        {
             if (!(testObject is AbstractSchemaItem testItem)) return false;
             return item.Id == testItem.Id;
         }
 
-    private static bool IsEqualTo(this DataEntityConstraint dataConstraint,
-        object testObject)
-    {
+        private static bool IsEqualTo(this DataEntityConstraint dataConstraint,
+            object testObject)
+        {
             if (!(testObject is DataEntityConstraint)) return false;
             var testEntityConstraint = (DataEntityConstraint) testObject;
             return testEntityConstraint.Fields
@@ -85,11 +85,11 @@ internal static class EqualityExtensions
                     dataConstraint.Fields.ContainsEqualObject(field));
         }
 
-    [DllImport("msvcrt.dll")]
-    private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
+        [DllImport("msvcrt.dll")]
+        private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
 
-    private static bool IsEqualTo(this Bitmap b1, object obj)
-    {
+        private static bool IsEqualTo(this Bitmap b1, object obj)
+        {
             Bitmap b2 = obj as Bitmap;
             if ((b1 == null) != (b2 == null)) return false;
             if (b1.Size != b2.Size) return false;
@@ -117,24 +117,24 @@ internal static class EqualityExtensions
             }
         }
 
-    private static bool IsEqualTo(this SchemaItemAncestor ancestor,
-        object testObject)
-    {
+        private static bool IsEqualTo(this SchemaItemAncestor ancestor,
+            object testObject)
+        {
             if (!(testObject is SchemaItemAncestor testAncestor)) return false;
             return ancestor.SchemaItem.Id ==
                    testAncestor.SchemaItem.Id;
         }
 
-    private static bool IsEqualTo(this DictionaryEntry entry,
-        object testObject)
-    {
+        private static bool IsEqualTo(this DictionaryEntry entry,
+            object testObject)
+        {
             if (!(testObject is DictionaryEntry testEntry)) return false;
             return IsEqualTo(entry.Key, testEntry.Key) &&
                    IsEqualTo(entry.Value, testEntry.Value);
         }
 
-    public static bool IsEqualTo(this object item, object testObject)
-    {
+        public static bool IsEqualTo(this object item, object testObject)
+        {
             switch (item)
             {
                 case AbstractSchemaItem schemaItem:
@@ -154,4 +154,5 @@ internal static class EqualityExtensions
             }
             return Equals(testObject, item);
         }
+    }
 }

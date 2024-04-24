@@ -21,18 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for ITracingService.
-/// </summary>
-public interface ITracingService : IWorkbenchService
+namespace Origam.Workbench.Services
 {
-	void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName);
-	void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId, string category, string subCategory, string remark, string data1, string data2, string message);
-	void TraceRule(Guid ruleId, string ruleName, string ruleInput,
-		string ruleResult,  Guid workflowInstanceId);		
-	void TraceRule(Guid ruleId, string ruleName, string ruleInput,
-		string ruleResult);
-	bool Enabled { get; set; }
+	/// <summary>
+	/// Summary description for ITracingService.
+	/// </summary>
+	public interface ITracingService : IWorkbenchService
+	{
+		void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName);
+		void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId, string category, string subCategory, string remark, string data1, string data2, string message);
+		void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+			string ruleResult,  Guid workflowInstanceId);		
+		void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+			string ruleResult);
+		bool Enabled { get; set; }
+	}
 }

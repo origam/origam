@@ -24,25 +24,25 @@ using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Services;
 
-namespace Origam.Schema.EntityModel.UI.Wizards;
-
-public class LocalizeDatastructureCommand : AbstractMenuCommand
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
-	public override bool IsEnabled
+	public class LocalizeDatastructureCommand : AbstractMenuCommand
 	{
-		get
+		public override bool IsEnabled
 		{
+			get
+			{
                 DataStructure ds = Owner as DataStructure;
 				return ds != null && !ds.IsLocalized && ds.LocalizableEntities.Count > 0;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			DataStructure ds = Owner as DataStructure;
 			ds.IsLocalized = true;
 			// find all entities in datastructure and create language relations for them if they are localized
@@ -63,4 +63,5 @@ public class LocalizeDatastructureCommand : AbstractMenuCommand
 			}
 			ds.Persist();
 		}		
+	}
 }

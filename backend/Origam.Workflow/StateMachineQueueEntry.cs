@@ -23,57 +23,58 @@ using System;
 using System.Data;
 using System.Collections;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for StateMachineQueueEntry.
-/// </summary>
-public class StateMachineQueueEntry
+namespace Origam.Workflow
 {
-	private DataRow _row;
-	private ArrayList _stateColumns;
-	private Guid _entityId;
-
-	public StateMachineQueueEntry(DataRow row, ArrayList stateColumns, Guid entityId)
+	/// <summary>
+	/// Summary description for StateMachineQueueEntry.
+	/// </summary>
+	public class StateMachineQueueEntry
 	{
+		private DataRow _row;
+		private ArrayList _stateColumns;
+		private Guid _entityId;
+
+		public StateMachineQueueEntry(DataRow row, ArrayList stateColumns, Guid entityId)
+		{
 			_row = row;
 			_stateColumns = stateColumns;
 			_entityId = entityId;
 		}
 
-	public Guid EntityId
-	{
-		get
+		public Guid EntityId
 		{
+			get
+			{
 				return _entityId;
 			}
-		set
-		{
+			set
+			{
 				_entityId = value;
 			}
-	}
+		}
 
-	public DataRow Row
-	{
-		get
+		public DataRow Row
 		{
+			get
+			{
 				return _row;
 			}
-		set
-		{
+			set
+			{
 				_row = value;
 			}
-	}
+		}
 
-	public ArrayList StateColumns
-	{
-		get
+		public ArrayList StateColumns
 		{
+			get
+			{
 				return _stateColumns;
 			}
-		set
-		{
+			set
+			{
 				_stateColumns = value;
 			}
+		}
 	}
 }

@@ -21,52 +21,53 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.TestModel;
-
-public class TestChecklistRuleSchemaItemProvider 
-	: AbstractSchemaItemProvider
+namespace Origam.Schema.TestModel
 {
-	public TestChecklistRuleSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => TestChecklistRule.CategoryConst;
-
-	public override string Group => "COMMON";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"7";
-
-	public override string NodeText
+	public class TestChecklistRuleSchemaItemProvider 
+		: AbstractSchemaItemProvider
 	{
-		get => "Test Checklist Rules";
-		set => base.NodeText = value;
-	}
+		public TestChecklistRuleSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => TestChecklistRule.CategoryConst;
 
-	#endregion
+		public override string Group => "COMMON";
 
-	#region ISchemaItemFactory Members
+		#endregion
 
-	public override Type[] NewItemTypes => new[]
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"7";
+
+		public override string NodeText
+		{
+			get => "Test Checklist Rules";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(TestChecklistRule)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group,
 				typeof(T) == typeof(TestChecklistRule)
 					? "NewTestChecklistRule" : null);
 		}
 
-	#endregion
+		#endregion
+	}
 }

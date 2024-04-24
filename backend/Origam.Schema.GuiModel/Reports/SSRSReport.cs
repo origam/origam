@@ -25,32 +25,33 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("SQL Server Report", "icon_sql-server-report.png")]
-[HelpTopic("SQL+Server+Report")]
-[ClassMetaVersion("6.0.0")]
-public class SSRSReport : AbstractReport
+namespace Origam.Schema.GuiModel
 {
-	public SSRSReport() : base() { }
+	[SchemaItemDescription("SQL Server Report", "icon_sql-server-report.png")]
+    [HelpTopic("SQL+Server+Report")]
+    [ClassMetaVersion("6.0.0")]
+    public class SSRSReport : AbstractReport
+    {
+		public SSRSReport() : base() { }
 
-	public SSRSReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+		public SSRSReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
 
-	public SSRSReport(Key primaryKey) : base(primaryKey) { }
+		public SSRSReport(Key primaryKey) : base(primaryKey) { }
 
-	private string _reportPath;
+        private string _reportPath;
 
-	[Description("Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter.")]
-	[XmlAttribute("reportPath")]
-	public string ReportPath
-	{
-		get
+        [Description("Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter.")]
+        [XmlAttribute("reportPath")]
+		public string ReportPath
 		{
+			get
+			{
 				return _reportPath;
 			}
-		set
-		{
+			set
+			{
 				_reportPath = value;
 			}
-	}
+		}
+    }
 }

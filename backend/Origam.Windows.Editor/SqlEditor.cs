@@ -27,14 +27,14 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Origam.Windows.Editor;
-
-public partial class SqlEditor : UserControl
+namespace Origam.Windows.Editor
 {
-    public delegate void ChangedEventHandler(object sender, EventArgs e);
-
-    public SqlEditor()
+    public partial class SqlEditor : UserControl
     {
+        public delegate void ChangedEventHandler(object sender, EventArgs e);
+
+        public SqlEditor()
+        {
             InitializeComponent();
             editor.FontFamily = new System.Windows.Media.FontFamily("Courier New");
             editor.FontSize = 12;
@@ -93,49 +93,49 @@ public partial class SqlEditor : UserControl
             }
         }
 
-    public event ChangedEventHandler ContentChanged;
+        public event ChangedEventHandler ContentChanged;
 
-    // Invoke the Changed event; called whenever list changes
-    protected virtual void OnContentChanged(EventArgs e)
-    {
+        // Invoke the Changed event; called whenever list changes
+        protected virtual void OnContentChanged(EventArgs e)
+        {
             if (ContentChanged != null)
             {
                 ContentChanged(this, e);
             }
         }
 
-    private void Document_TextChanged(object sender, System.EventArgs e)
-    {
+        private void Document_TextChanged(object sender, System.EventArgs e)
+        {
             OnContentChanged(EventArgs.Empty);
         }
 
-    public new string Text
-    {
-        get
+        public new string Text
         {
+            get
+            {
                 return editor.Document.Text;
             }
-        set
-        {
+            set
+            {
                 editor.Document.Text = value ?? "";
                 editor.Document.UndoStack.ClearAll();
             }
-    }
+        }
 
-    public bool IsReadOnly
-    {
-        get
+        public bool IsReadOnly
         {
+            get
+            {
                 return editor.IsReadOnly;
             }
-        set
-        {
+            set
+            {
                 editor.IsReadOnly = value;
             }
-    }
+        }
 
-    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-    {
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
             if (keyData == (Keys.H | Keys.Control))
             {
                 FindReplaceForm frm = new FindReplaceForm();
@@ -147,4 +147,6 @@ public partial class SqlEditor : UserControl
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+    }
 }
+

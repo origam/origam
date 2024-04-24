@@ -22,20 +22,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Workbench.Services;
 using Origam;
 
-namespace Origam.ProjectAutomation;
-
-public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
+namespace Origam.ProjectAutomation
 {
-    public override string Name
+    public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
     {
-        get
+        public override string Name
         {
+            get
+            {
                 return "Create Data Database Structure";
             }
-    }
+        }
 
-    public override void Execute(Project project)
-    {
+        public override void Execute(Project project)
+        {
             IDeploymentService deployment =
                 ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
             deployment.Deploy();
@@ -46,7 +46,8 @@ public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
             profileProvider.AddUser("Architect (" + project.ArchitectUserName + ")", project.ArchitectUserName);
         }
 
-    public override void Rollback()
-    {
+        public override void Rollback()
+        {
         }
+    }
 }

@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 /* All code is written my me,Ben Ratzlaff and is available for any free use except where noted. 
  *I assume no responsibility for how anyone uses the information available*/
 
@@ -33,41 +32,41 @@ using System.Reflection.Emit;
 using System.Threading;
 using System.Reflection;
 
-namespace Origam.Gui.Designer.PropertyGrid;
-
-/// <summary>
-/// A property grid that dynamically generates a Type to conform to desired input
-/// </summary>
-public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
+namespace Origam.Gui.Designer.PropertyGrid
 {
-	private Hashtable typeHash;
-	private string typeName="DefType";
-	private Settings settings;
-	private bool instantUpdate=true;
+	/// <summary>
+	/// A property grid that dynamically generates a Type to conform to desired input
+	/// </summary>
+	public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
+	{
+		private Hashtable typeHash;
+		private string typeName="DefType";
+		private Settings settings;
+		private bool instantUpdate=true;
 
-	public CustomPropertyGrid()
-	{		
+		public CustomPropertyGrid()
+		{		
 			initTypes();
 		}
 
-	[Description("Name of the type that will be internally created")]
-	[DefaultValue("DefType")]
-	public string TypeName
-	{
-		get{return typeName;}
-		set{typeName=value;}
-	}
+		[Description("Name of the type that will be internally created")]
+		[DefaultValue("DefType")]
+		public string TypeName
+		{
+			get{return typeName;}
+			set{typeName=value;}
+		}
 
-	[DefaultValue(true)]
-	[Description("If true, the Setting.Update() event will be called when a property changes")]
-	public bool InstantUpdate
-	{
-		get{return instantUpdate;}
-		set{instantUpdate=value;}
-	}
+		[DefaultValue(true)]
+		[Description("If true, the Setting.Update() event will be called when a property changes")]
+		public bool InstantUpdate
+		{
+			get{return instantUpdate;}
+			set{instantUpdate=value;}
+		}
 
-	protected override void OnPropertyValueChanged(PropertyValueChangedEventArgs e)
-	{
+		protected override void OnPropertyValueChanged(PropertyValueChangedEventArgs e)
+		{
 			base.OnPropertyValueChanged(e);
 
 			if(settings == null) return;
@@ -78,64 +77,64 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 				((Setting)settings[e.ChangedItem.Label]).FireUpdate(e);
 		}
 
-	[Browsable(false)]
-	public Settings Settings
-	{
-		set
+		[Browsable(false)]
+		public Settings Settings
 		{
-			settings=value;
+			set
+			{
+				settings=value;
 
-			//Reflection.Emit code below copied and modified from http://longhorn.msdn.microsoft.com/lhsdk/ref/ns/system.reflection.emit/c/propertybuilder/propertybuilder.aspx
+				//Reflection.Emit code below copied and modified from http://longhorn.msdn.microsoft.com/lhsdk/ref/ns/system.reflection.emit/c/propertybuilder/propertybuilder.aspx
 
-			AppDomain myDomain = Thread.GetDomain();
-			AssemblyName myAsmName = new AssemblyName();
-			myAsmName.Name = "TempAssembly";
+				AppDomain myDomain = Thread.GetDomain();
+				AssemblyName myAsmName = new AssemblyName();
+				myAsmName.Name = "TempAssembly";
 
-			//Only save the custom-type dll while debugging
+				//Only save the custom-type dll while debugging
 #if SaveDLL && DEBUG
-			AssemblyBuilder assemblyBuilder = myDomain.DefineDynamicAssembly(myAsmName,AssemblyBuilderAccess.RunAndSave);
-			ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("TempModule","Test.dll");
+				AssemblyBuilder assemblyBuilder = myDomain.DefineDynamicAssembly(myAsmName,AssemblyBuilderAccess.RunAndSave);
+				ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("TempModule","Test.dll");
 #else
 				AssemblyBuilder assemblyBuilder = myDomain.DefineDynamicAssembly(myAsmName,AssemblyBuilderAccess.Run);
 				ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("TempModule");
 #endif
 
-			//create our type
-			TypeBuilder newType = moduleBuilder.DefineType(typeName, TypeAttributes.Public, typeof(System.ComponentModel.Component));
+				//create our type
+				TypeBuilder newType = moduleBuilder.DefineType(typeName, TypeAttributes.Public, typeof(System.ComponentModel.Component));
 
-			//create the hashtable used to store property values
-			FieldBuilder hashField = newType.DefineField("table",typeof(Hashtable),FieldAttributes.Private);            
-			createHashMethod(newType.DefineProperty("Hash",PropertyAttributes.None,typeof(Hashtable),new Type[] {}),
-				newType,hashField);  
+				//create the hashtable used to store property values
+				FieldBuilder hashField = newType.DefineField("table",typeof(Hashtable),FieldAttributes.Private);            
+				createHashMethod(newType.DefineProperty("Hash",PropertyAttributes.None,typeof(Hashtable),new Type[] {}),
+					newType,hashField);  
           
-			Hashtable h = new Hashtable();
-			foreach(string key in settings.Keys)
-			{
-				Setting s = settings[key];
-				h[key]=s.Value;
-				emitProperty(newType, hashField, s, key);			
-			}
+				Hashtable h = new Hashtable();
+				foreach(string key in settings.Keys)
+				{
+					Setting s = settings[key];
+					h[key]=s.Value;
+					emitProperty(newType, hashField, s, key);			
+				}
 
-			Type myType = newType.CreateType();
+				Type myType = newType.CreateType();
 #if SaveDLL && DEBUG
-			assemblyBuilder.Save("Test.dll");
+				assemblyBuilder.Save("Test.dll");
 #endif
-			ConstructorInfo ci = myType.GetConstructor(new Type[]{});
-			System.ComponentModel.Component o = ci.Invoke(new Object[]{}) as System.ComponentModel.Component;
+				ConstructorInfo ci = myType.GetConstructor(new Type[]{});
+				System.ComponentModel.Component o = ci.Invoke(new Object[]{}) as System.ComponentModel.Component;
 
-			//set the object's hashtable - in the future i would like to do this in the emitted object's constructor
-			PropertyInfo pi = myType.GetProperty("Hash");			
-			pi.SetValue(o,h,null);
+				//set the object's hashtable - in the future i would like to do this in the emitted object's constructor
+				PropertyInfo pi = myType.GetProperty("Hash");			
+				pi.SetValue(o,h,null);
 
-			//o.Site = new Origam.Gui.Designer.SiteImpl(o, "propertyComponent", settings.DesignerHost);
-			//settings.DesignerHost.Add(o, "propertyComponent");
+				//o.Site = new Origam.Gui.Designer.SiteImpl(o, "propertyComponent", settings.DesignerHost);
+				//settings.DesignerHost.Add(o, "propertyComponent");
 
-			SelectedObject=o;
+				SelectedObject=o;
+			}
 		}
-	}
 
-	private void createHashMethod(PropertyBuilder propBuild,TypeBuilder typeBuild,FieldBuilder hash)
-	{
+		private void createHashMethod(PropertyBuilder propBuild,TypeBuilder typeBuild,FieldBuilder hash)
+		{
 			// First, we'll define the behavior of the "get" property for Hash as a method.
 			MethodBuilder typeHashGet = typeBuild.DefineMethod("GetHash",
 				MethodAttributes.Public,	
@@ -168,11 +167,11 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 			propBuild.SetCustomAttribute(cab);
 		}
 
-	/// <summary>
-	/// Initialize a private hashtable with type-opCode pairs so i dont have to write a long if/else statement when outputting msil
-	/// </summary>
-	private void initTypes()
-	{
+		/// <summary>
+		/// Initialize a private hashtable with type-opCode pairs so i dont have to write a long if/else statement when outputting msil
+		/// </summary>
+		private void initTypes()
+		{
 			typeHash=new Hashtable();
 			typeHash[typeof(sbyte)]=OpCodes.Ldind_I1;
 			typeHash[typeof(byte)]=OpCodes.Ldind_U1;
@@ -188,18 +187,19 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 			typeHash[typeof(float)]=OpCodes.Ldind_R4;
 		}
 
-	/// <summary>
-	/// emits a generic get/set property in which the result returned resides in a hashtable whos key is the name of the property
-	/// </summary>
-	/// <param name="pb">PropertyBuilder used to emit</param>
-	/// <param name="tb">TypeBuilder of the class</param>
-	/// <param name="hash">FieldBuilder of the hashtable used to store the object</param>
-	/// <param name="po">PropertyObject of this property</param>
-	private void emitProperty(TypeBuilder tb, FieldBuilder hash, Setting s, string name)
-	{
+		/// <summary>
+		/// emits a generic get/set property in which the result returned resides in a hashtable whos key is the name of the property
+		/// </summary>
+		/// <param name="pb">PropertyBuilder used to emit</param>
+		/// <param name="tb">TypeBuilder of the class</param>
+		/// <param name="hash">FieldBuilder of the hashtable used to store the object</param>
+		/// <param name="po">PropertyObject of this property</param>
+		private void emitProperty(TypeBuilder tb, FieldBuilder hash, Setting s, string name)
+		{
 			//to figure out what opcodes to emit, i would compile a small class having the functionality i wanted, and viewed it with ildasm.
 			//peverify is also kinda nice to use to see what errors there are. 
-					//define the property first
+			
+			//define the property first
 			PropertyBuilder pb = tb.DefineProperty(name,PropertyAttributes.None,s.Type,new Type[] {});
 			Type objType = s.Type;
 
@@ -274,4 +274,5 @@ public class CustomPropertyGrid : System.Windows.Forms.PropertyGrid
 				pb.SetCustomAttribute(cab);
 			}
 		}
+	}
 }

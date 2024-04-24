@@ -23,20 +23,20 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Origam.Server.Middleware;
-
-public class FatalErrorMiddleware
+namespace Origam.Server.Middleware
 {
-    private readonly RequestDelegate next;
-    public static string ErrorMessage { get; set; }
-
-    public FatalErrorMiddleware(RequestDelegate next)
+    public class FatalErrorMiddleware
     {
+        private readonly RequestDelegate next;
+        public static string ErrorMessage { get; set; }
+
+        public FatalErrorMiddleware(RequestDelegate next)
+        {
             this.next = next;
         }
 
-    public async Task Invoke(HttpContext context)
-    {
+        public async Task Invoke(HttpContext context)
+        {
             if (!string.IsNullOrWhiteSpace(ErrorMessage))
             {
                 throw new Exception(ErrorMessage);
@@ -46,4 +46,5 @@ public class FatalErrorMiddleware
                 await next(context);
             }
         }
+    }
 }

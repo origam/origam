@@ -16,63 +16,63 @@
 using System;
 using System.Collections;
 
-namespace Schedule;
-
-public enum EventTimeBase
+namespace Schedule
 {
-	BySecond = 1,
-	ByMinute = 2,
-	Hourly = 3,
-	Daily = 4,
-	Weekly = 5,
-	Monthly = 6,
-}
-
-/// <summary>
-/// This class represents a simple schedule.  It can represent a repeating event that occurs anywhere from every
-/// second to once a month.  It consists of an enumeration to mark the interval and an offset from that interval.
-/// For example new ScheduledTime(Hourly, new TimeSpan(0, 15, 0)) would represent an event that fired 15 minutes
-/// after the hour every hour.
-/// </summary>
-[Serializable]
-public class ScheduledTime : IScheduledItem
-{
-	public ScheduledTime(EventTimeBase Base, TimeSpan Offset)
+	public enum EventTimeBase
 	{
+		BySecond = 1,
+		ByMinute = 2,
+		Hourly = 3,
+		Daily = 4,
+		Weekly = 5,
+		Monthly = 6,
+	}
+
+	/// <summary>
+	/// This class represents a simple schedule.  It can represent a repeating event that occurs anywhere from every
+	/// second to once a month.  It consists of an enumeration to mark the interval and an offset from that interval.
+	/// For example new ScheduledTime(Hourly, new TimeSpan(0, 15, 0)) would represent an event that fired 15 minutes
+	/// after the hour every hour.
+	/// </summary>
+	[Serializable]
+	public class ScheduledTime : IScheduledItem
+	{
+		public ScheduledTime(EventTimeBase Base, TimeSpan Offset)
+		{
 			_Base = Base;
 			_Offset = Offset;
 		}
 
-	/// <summary>
-	/// intializes a simple scheduled time element from a pair of strings.  
-	/// Here are the supported formats
-	/// 
-	/// BySecond - single integer representing the offset in ms value must be less then 1000
-	/// ByMinute - A comma seperated list of integers representing the number of seconds and ms
-	/// Hourly - A comma seperated list of integers representing the number of minutes, seconds and ms
-	/// Daily - A time in hh:mm:ss AM/PM format
-	/// Weekly - n, time where n represents an integer and time is a time in the Daily format
-	/// Monthly - the same format as weekly.
-	/// 
-	/// </summary>
-	/// <param name="StrBase">A string representing the base enumeration for the scheduled time</param>
-	/// <param name="StrOffset">A string representing the offset for the time.</param>
-	public ScheduledTime(string StrBase, string StrOffset)
-	{
+		/// <summary>
+		/// intializes a simple scheduled time element from a pair of strings.  
+		/// Here are the supported formats
+		/// 
+		/// BySecond - single integer representing the offset in ms value must be less then 1000
+		/// ByMinute - A comma seperated list of integers representing the number of seconds and ms
+		/// Hourly - A comma seperated list of integers representing the number of minutes, seconds and ms
+		/// Daily - A time in hh:mm:ss AM/PM format
+		/// Weekly - n, time where n represents an integer and time is a time in the Daily format
+		/// Monthly - the same format as weekly.
+		/// 
+		/// </summary>
+		/// <param name="StrBase">A string representing the base enumeration for the scheduled time</param>
+		/// <param name="StrOffset">A string representing the offset for the time.</param>
+		public ScheduledTime(string StrBase, string StrOffset)
+		{
 			//TODO:Create an IScheduled time factory method.
 			_Base = (EventTimeBase)Enum.Parse(typeof(EventTimeBase), StrBase, true);
 			Init(StrOffset);
 		}
 
-	public int ArrayAccess(string[] Arr, int i)
-	{
+		public int ArrayAccess(string[] Arr, int i)
+		{
 			if (i >= Arr.Length)
 				return 0;
 			return int.Parse(Arr[i]);
 		}
 
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
-	{
+		public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+		{
 			DateTime Next = NextRunTime(Begin, true);
 			
 			System.Diagnostics.Debug.WriteLine("Testing event. Next: " + Next.ToString() + ", Current: " + End.ToString());
@@ -84,8 +84,8 @@ public class ScheduledTime : IScheduledItem
 			}
 		}
 
-	public DateTime NextRunTime(DateTime time, bool AllowExact)
-	{
+		public DateTime NextRunTime(DateTime time, bool AllowExact)
+		{
 			DateTime NextRun = LastSyncForTime(time) + _Offset;
 			if (NextRun == time && AllowExact)
 				return time;
@@ -95,8 +95,8 @@ public class ScheduledTime : IScheduledItem
 		}
 
 
-	private DateTime LastSyncForTime(DateTime time)
-	{
+		private DateTime LastSyncForTime(DateTime time)
+		{
 			switch (_Base)
 			{
 				case EventTimeBase.BySecond:
@@ -115,8 +115,8 @@ public class ScheduledTime : IScheduledItem
 			throw new Exception("Invalid base specified for timer.");
 		}
 	 
-	private DateTime IncInterval(DateTime Last)
-	{
+		private DateTime IncInterval(DateTime Last)
+		{
 			switch (_Base)
 			{
 				case EventTimeBase.BySecond:
@@ -135,8 +135,8 @@ public class ScheduledTime : IScheduledItem
 			throw new Exception("Invalid base specified for timer.");
 		}
 
-	private void Init(string StrOffset)
-	{
+		private void Init(string StrOffset)
+		{
 			switch (_Base)
 			{
 				case EventTimeBase.BySecond:
@@ -200,6 +200,7 @@ public class ScheduledTime : IScheduledItem
 			}
 		}
 	 
-	private EventTimeBase _Base;
-	private TimeSpan _Offset;
+		private EventTimeBase _Base;
+		private TimeSpan _Offset;
+	}
 }

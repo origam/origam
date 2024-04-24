@@ -22,16 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for IGridBuilder.
-/// </summary>
-public interface IGridBuilder : IDisposable
+namespace Origam.Gui.Win
 {
-	AsDataGrid CreateGrid(object dataSource, string dataMember, Control control, Guid panelId, Rule.RuleEngine ruleEngine);
-	DataGridFilterFactory FilterFactory {get; set;}
-	void UpdateDataSource(Control grid, object dataSource, string dataMember);
-	string GetSortColumn(string columnName);
-	object Grid {get;}
+	/// <summary>
+	/// Summary description for IGridBuilder.
+	/// </summary>
+	public interface IGridBuilder : IDisposable
+	{
+		AsDataGrid CreateGrid(object dataSource, string dataMember, Control control, Guid panelId, Rule.RuleEngine ruleEngine);
+		DataGridFilterFactory FilterFactory {get; set;}
+		void UpdateDataSource(Control grid, object dataSource, string dataMember);
+		string GetSortColumn(string columnName);
+		object Grid {get;}
+	}
 }

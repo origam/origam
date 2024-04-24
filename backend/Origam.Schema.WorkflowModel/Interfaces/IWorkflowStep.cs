@@ -23,41 +23,42 @@ using System.Collections;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 
-namespace Origam.Schema.WorkflowModel;
-
-public enum WorkflowStepStartEvent
+namespace Origam.Schema.WorkflowModel
 {
-	Success,
-	Failure,
-	Finish
-}
+	public enum WorkflowStepStartEvent
+	{
+		Success,
+		Failure,
+		Finish
+	}
 
-public enum WorkflowStepResult
-{
-	Ready,
-	Success,
-	Failure,
-	NotRun,
-	FailureNotRun,
-	Running
-}
+	public enum WorkflowStepResult
+	{
+		Ready,
+		Success,
+		Failure,
+		NotRun,
+		FailureNotRun,
+		Running
+	}
 
-/// <summary>
-/// Summary description for IWorkflowStep.
-/// </summary>
-public interface IWorkflowStep : ISchemaItem, ITraceable
-{
-	StartRule StartConditionRule{get; set;}
-	IContextStore StartConditionRuleContextStore{get; set;}
-	IEndRule ValidationRule{get; set;}
-	IContextStore ValidationRuleContextStore{get; set;}
-	string Roles{get;set;}
-	string Features{get;set;}
-	ArrayList Dependencies{get;}
-	StepFailureMode OnFailure { set; get; }
-}
+	/// <summary>
+	/// Summary description for IWorkflowStep.
+	/// </summary>
+	public interface IWorkflowStep : ISchemaItem, ITraceable
+	{
+		StartRule StartConditionRule{get; set;}
+		IContextStore StartConditionRuleContextStore{get; set;}
+		IEndRule ValidationRule{get; set;}
+		IContextStore ValidationRuleContextStore{get; set;}
+		string Roles{get;set;}
+		string Features{get;set;}
+		ArrayList Dependencies{get;}
+		StepFailureMode OnFailure { set; get; }
+	}
 
-public enum StepFailureMode
-{
-	WorkflowFails, Suppress
+	public enum StepFailureMode
+	{
+		WorkflowFails, Suppress
+	}
 }

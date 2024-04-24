@@ -25,105 +25,106 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-public enum ControlToolBoxVisibility {Nowhere, PanelDesigner, FormDesigner, PanelAndFormDesigner};
-
-
-/// <summary>
-/// Summary description for ControlItem.
-/// </summary>
-[SchemaItemDescription("Widget", "icon_widget.png")]
-[HelpTopic("Widgets")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "Control";
 
-	public ControlItem() : base() { Init(); }
+	public enum ControlToolBoxVisibility {Nowhere, PanelDesigner, FormDesigner, PanelAndFormDesigner};
 
-	public ControlItem(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
 
-	public ControlItem(Key primaryKey) : base(primaryKey) { Init(); }
-
-	private void Init()
+	/// <summary>
+	/// Summary description for ControlItem.
+	/// </summary>
+	[SchemaItemDescription("Widget", "icon_widget.png")]
+    [HelpTopic("Widgets")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 	{
+		public const string CategoryConst = "Control";
+
+        public ControlItem() : base() { Init(); }
+
+        public ControlItem(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+
+        public ControlItem(Key primaryKey) : base(primaryKey) { Init(); }
+
+        private void Init()
+        {
             this.ChildItemTypes.Add(typeof(ControlPropertyItem));
             this.ChildItemTypes.Add(typeof(ControlStyleProperty));
         }
 
-	#region Properties
+		#region Properties
 
 
-	private ControlToolBoxVisibility _controlToolBoxVisibility;
+		private ControlToolBoxVisibility _controlToolBoxVisibility;
 
-	[XmlAttribute("toolboxVisibility")]
-	public ControlToolBoxVisibility ControlToolBoxVisibility
-	{
-		get
+        [XmlAttribute("toolboxVisibility")]
+		public ControlToolBoxVisibility ControlToolBoxVisibility
 		{
+			get
+			{
 				return _controlToolBoxVisibility;
 			}
-		set
-		{
+			set
+			{
 				_controlToolBoxVisibility = value;
 			}
 	
-	}
+		}
 
-	private string _controlType;
+		private string _controlType;
 
-	[XmlAttribute("typeName")]
-	public string ControlType
-	{
-		get
+        [XmlAttribute("typeName")]
+		public string ControlType
 		{
+			get
+			{
 				return _controlType;
 			}
-		set
-		{
+			set
+			{
 				_controlType = value;
 			}
-	}
+		}
 
-	private string _controlNamespace;
+		private string _controlNamespace;
 
-	[XmlAttribute("namespace")]
-	public string ControlNamespace
-	{
-		get
+        [XmlAttribute("namespace")]
+		public string ControlNamespace
 		{
+			get
+			{
 				return _controlNamespace;
 			}
-		set
-		{
+			set
+			{
 				_controlNamespace = value;
 			}
-	}
+		}
 
-	private bool _isComplexType;
+		private bool _isComplexType;
 
-	[XmlAttribute("isComplex")]
-	public bool IsComplexType
-	{
-		get
+        [XmlAttribute("isComplex")]
+		public bool IsComplexType
 		{
+			get
+			{
 				return _isComplexType;
 			}
-		set
-		{
+			set
+			{
 				_isComplexType = value;
 			}
-	}
+		}
 
-	public Guid PanelControlSetId;
+		public Guid PanelControlSetId;
 
-	[XmlReference("screenSection", "PanelControlSetId")]
-	public PanelControlSet PanelControlSet
-	{
-		get
+        [XmlReference("screenSection", "PanelControlSetId")]
+        public PanelControlSet PanelControlSet
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.PanelControlSetId;
 				
@@ -136,8 +137,8 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 					return null;
 				}
 			}
-		set
-		{
+			set
+			{
 				if(value!=null)
 				{
 					this.PanelControlSetId = (Guid)value.PrimaryKey["Id"];
@@ -147,50 +148,50 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 					this.PanelControlSetId = System.Guid.Empty;
 				}
 			}
-	}
+		}
 
-	private bool _requestSaveAfterChangeAllowed;
+        private bool _requestSaveAfterChangeAllowed;
 
-	[XmlAttribute("requestSaveAfterChangeAllowed")]
-	public bool RequestSaveAfterChangeAllowed
-	{
-		get
-		{
+        [XmlAttribute("requestSaveAfterChangeAllowed")]
+        public bool RequestSaveAfterChangeAllowed
+        {
+            get
+            {
                 return _requestSaveAfterChangeAllowed;
             }
-		set
-		{
+            set
+            {
                 _requestSaveAfterChangeAllowed = value;
             }
-	}
+        }
 
-	#endregion
+		#endregion
 
 	#region Overriden AbstractSchemaItem Members
 
 
-	[Browsable(false)] 
-	public override bool CanDelete
-	{
-		get
+		[Browsable(false)] 
+		public override bool CanDelete
 		{
+			get
+			{
 				if(this.PanelControlSet == null)
                     return true;
 				else
 					return false;
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return ControlItem.CategoryConst;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			// we will not add panel control set, because panel handles deletion of this control,
 			// instead, ControlSetItem references directly the Panel definition
 
@@ -199,5 +200,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 			base.GetExtraDependencies (dependencies);
 		}
 
-	#endregion
+		#endregion
+	}
+	
 }

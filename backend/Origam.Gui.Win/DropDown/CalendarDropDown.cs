@@ -24,21 +24,21 @@ using System.Windows.Forms;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for CalendarDropDown.
-/// </summary>
-public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
+namespace Origam.Gui.Win
 {
-	private Origam.Gui.Win.AsMonthCalendar monthCalendar1;
 	/// <summary>
-	/// Required designer variable.
+	/// Summary description for CalendarDropDown.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-	public CalendarDropDown()
+	public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 	{
+		private Origam.Gui.Win.AsMonthCalendar monthCalendar1;
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+		public CalendarDropDown()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -54,11 +54,11 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 			monthCalendar1.TrailingForeColor = OrigamColorScheme.DateTimePickerTrailingForeColor;
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -69,17 +69,19 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.monthCalendar1 = new Origam.Gui.Win.AsMonthCalendar();
 			this.SuspendLayout();
-			// 		// monthCalendar1
-			// 		this.monthCalendar1.BackColor = System.Drawing.SystemColors.Window;
+			// 
+			// monthCalendar1
+			// 
+			this.monthCalendar1.BackColor = System.Drawing.SystemColors.Window;
 			this.monthCalendar1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.monthCalendar1.Location = new System.Drawing.Point(1, 1);
 			this.monthCalendar1.MaxSelectionCount = 1;
@@ -88,8 +90,10 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 			this.monthCalendar1.TabIndex = 0;
 			this.monthCalendar1.SizeChanged += new System.EventHandler(this.monthCalendar1_SizeChanged);
 			this.monthCalendar1.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateSelected);
-			// 		// CalendarDropDown
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// CalendarDropDown
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.BackColor = System.Drawing.Color.Black;
 			this.ClientSize = new System.Drawing.Size(166, 159);
 			this.Controls.Add(this.monthCalendar1);
@@ -103,43 +107,43 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region IDropDownPart Members
+		#region IDropDownPart Members
 
-	private BaseDropDownControl _dropDownControl;
-	public BaseDropDownControl DropDownControl
-	{
-		get
+		private BaseDropDownControl _dropDownControl;
+		public BaseDropDownControl DropDownControl
 		{
+			get
+			{
 				return _dropDownControl;
 			}
-		set
-		{
+			set
+			{
 				_dropDownControl = value;
 			}
-	}
+		}
 
-	public string SelectedText
-	{
-		get
+		public string SelectedText
 		{
+			get
+			{
 				return monthCalendar1.SelectionStart.ToString(this.DropDownControl.EditControl.CustomFormat);
 			}
-		set
-		{
+			set
+			{
 				throw new NotImplementedException();
 			}
-	}
+		}
 
-	public object SelectedValue
-	{
-		get
+		public object SelectedValue
 		{
+			get
+			{
 				return monthCalendar1.SelectionStart;
 			}
-		set
-		{
+			set
+			{
 				DateTime dt;
 
 				if(value is DateTime)
@@ -150,25 +154,25 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 					monthCalendar1.SelectionEnd = dt;
 				}
 			}
-	}
+		}
 
-	private bool _canceled = false;
-	public bool Canceled
-	{
-		get
+		private bool _canceled = false;
+		public bool Canceled
 		{
+			get
+			{
 				return _canceled;
 			}
-		set
-		{
+			set
+			{
 				_canceled = value;
 			}
-	}
+		}
 
-	public override bool Focused
-	{
-		get
+		public override bool Focused
 		{
+			get
+			{
 				if(base.Focused | monthCalendar1.Focused) 
 				{
 					return true;
@@ -178,25 +182,25 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 					return false;
 				}
 			}
-	}
+		}
 
-	public void MoveUp()
-	{
+		public void MoveUp()
+		{
 			// TODO:  Add CalendarDropDown.MoveUp implementation
 		}
 
-	public void MoveDown()
-	{
+		public void MoveDown()
+		{
 			// TODO:  Add CalendarDropDown.MoveDown implementation
 		}
 
-	public void SelectItem()
-	{
+		public void SelectItem()
+		{
 			this.Close();
 		}
 
-	private void CalendarDropDown_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		private void CalendarDropDown_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			switch(e.KeyCode)
 			{
 				case Keys.Escape:
@@ -210,27 +214,28 @@ public class CalendarDropDown : System.Windows.Forms.Form, IDropDownPart
 					break;
 			}
 		}
-	#endregion
+		#endregion
 
-	private void monthCalendar1_DateSelected(object sender, System.Windows.Forms.DateRangeEventArgs e)
-	{
+		private void monthCalendar1_DateSelected(object sender, System.Windows.Forms.DateRangeEventArgs e)
+		{
 			SelectItem();
 		}
 
-	protected override bool ProcessTabKey(bool forward)
-	{
+		protected override bool ProcessTabKey(bool forward)
+		{
 			this.SelectItem();
 			return true;
 		}
 
-	private void monthCalendar1_SizeChanged(object sender, System.EventArgs e)
-	{
+		private void monthCalendar1_SizeChanged(object sender, System.EventArgs e)
+		{
 			ResizeMe();
 		}
 
-	private void ResizeMe()
-	{
+		private void ResizeMe()
+		{
 			this.Width = monthCalendar1.Width + 2;
 			this.Height = monthCalendar1.Height + 2;
 		}
+	}
 }

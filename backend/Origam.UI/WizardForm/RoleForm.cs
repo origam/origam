@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI.WizardForm;
-
-public class RoleForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    public string Roles { get; set; }
-    public string NameOfMenu { get; set; }
+    public class RoleForm : AbstractWizardForm
+    {
+        public string Roles { get; set; }
+        public string NameOfMenu { get; set; }
+    }
 }

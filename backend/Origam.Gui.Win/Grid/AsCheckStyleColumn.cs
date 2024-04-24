@@ -25,41 +25,41 @@ using System.Data;
 
 using Origam.Rule;
 
-namespace Origam.Gui.Win;
-
-public class AsCheckStyleColumn : DataGridBoolColumn
+namespace Origam.Gui.Win
 {
-	private bool _readOnly = false;
-
-	public override bool ReadOnly
+	public class AsCheckStyleColumn : DataGridBoolColumn
 	{
-		get
+		private bool _readOnly = false;
+
+		public override bool ReadOnly
 		{
+			get
+			{
 				return _readOnly;
 			}
-		set
-		{
+			set
+			{
 				_readOnly = value;
 				base.ReadOnly = value;
 			}
-	}
+		}
 
-	private bool _alwaysReadOnly = false;
-	public bool AlwaysReadOnly
-	{
-		get
+		private bool _alwaysReadOnly = false;
+		public bool AlwaysReadOnly
 		{
+			get
+			{
 				return _alwaysReadOnly;
 			}
-		set
-		{
+			set
+			{
 				_alwaysReadOnly = value;
 				this.ReadOnly = value;
 			}
-	}
+		}
 
-	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			if(cellIsVisible)
 			{
 				if(! AlwaysReadOnly)
@@ -80,4 +80,5 @@ public class AsCheckStyleColumn : DataGridBoolColumn
 		}
 
 
+	}
 }

@@ -32,30 +32,30 @@ using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Schema.WorkflowModel;
 
-namespace OrigamArchitect;
-
-/// <summary>
-/// Summary description for WorkQueuePad.
-/// </summary>
-public class WorkQueuePad : AbstractPadContent
+namespace OrigamArchitect
 {
-	private System.Windows.Forms.Timer WQTimer;
-	private System.ComponentModel.IContainer components;
-	private System.Windows.Forms.DataGridTableStyle WorkQueue;
-	private System.Windows.Forms.DataGridTextBoxColumn colReferenceCode;
-	private System.Windows.Forms.DataGridTextBoxColumn colName;
-	private System.Windows.Forms.DataGridTextBoxColumn colCntTotal;
-	private System.Windows.Forms.ToolBar toolBar1;
-	private System.Windows.Forms.ImageList imageList1;
-	private System.Windows.Forms.ToolBarButton btnShow;
-	private System.Windows.Forms.ToolBarButton btnRefresh;
-	private System.Windows.Forms.DataGrid dataGrid1;
-	private System.Windows.Forms.Label errorLabel;
-	
-	private DataSet _data = new DataSet();
-
-	public WorkQueuePad()
+	/// <summary>
+	/// Summary description for WorkQueuePad.
+	/// </summary>
+	public class WorkQueuePad : AbstractPadContent
 	{
+		private System.Windows.Forms.Timer WQTimer;
+		private System.ComponentModel.IContainer components;
+		private System.Windows.Forms.DataGridTableStyle WorkQueue;
+		private System.Windows.Forms.DataGridTextBoxColumn colReferenceCode;
+		private System.Windows.Forms.DataGridTextBoxColumn colName;
+		private System.Windows.Forms.DataGridTextBoxColumn colCntTotal;
+		private System.Windows.Forms.ToolBar toolBar1;
+		private System.Windows.Forms.ImageList imageList1;
+		private System.Windows.Forms.ToolBarButton btnShow;
+		private System.Windows.Forms.ToolBarButton btnRefresh;
+		private System.Windows.Forms.DataGrid dataGrid1;
+		private System.Windows.Forms.Label errorLabel;
+	
+		private DataSet _data = new DataSet();
+
+		public WorkQueuePad()
+		{
 			InitializeComponent();
 
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
@@ -76,9 +76,9 @@ public class WorkQueuePad : AbstractPadContent
 			schema.SchemaLoaded += schema_SchemaLoaded;
         }
 	   
-	#region Windows Form Designer generated code
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		private void InitializeComponent()
+		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkQueuePad));
             this.dataGrid1 = new System.Windows.Forms.DataGrid();
@@ -94,8 +94,10 @@ public class WorkQueuePad : AbstractPadContent
             this.errorLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.SuspendLayout();
-            // 	 // dataGrid1
-            // 	 this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // 
+            // dataGrid1
+            // 
+            this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGrid1.CaptionVisible = false;
             this.dataGrid1.DataMember = "";
             this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -110,8 +112,10 @@ public class WorkQueuePad : AbstractPadContent
             this.dataGrid1.TabIndex = 0;
             this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
             this.WorkQueue});
-            // 	 // WorkQueue
-            // 	 this.WorkQueue.DataGrid = this.dataGrid1;
+            // 
+            // WorkQueue
+            // 
+            this.WorkQueue.DataGrid = this.dataGrid1;
             this.WorkQueue.GridColumnStyles.AddRange(new System.Windows.Forms.DataGridColumnStyle[] {
             this.colReferenceCode,
             this.colName,
@@ -119,32 +123,42 @@ public class WorkQueuePad : AbstractPadContent
             this.WorkQueue.HeaderForeColor = System.Drawing.SystemColors.ControlText;
             this.WorkQueue.MappingName = "WorkQueue";
             this.WorkQueue.RowHeadersVisible = false;
-            // 	 // colReferenceCode
-            // 	 this.colReferenceCode.Format = "";
+            // 
+            // colReferenceCode
+            // 
+            this.colReferenceCode.Format = "";
             this.colReferenceCode.FormatInfo = null;
             this.colReferenceCode.HeaderText = global::OrigamArchitect.strings.Code_TableColumn;
             this.colReferenceCode.MappingName = "ReferenceCode";
             this.colReferenceCode.Width = 60;
-            // 	 // colName
-            // 	 this.colName.Format = "";
+            // 
+            // colName
+            // 
+            this.colName.Format = "";
             this.colName.FormatInfo = null;
             this.colName.HeaderText = global::OrigamArchitect.strings.Name_TableColumn;
             this.colName.MappingName = "Name";
             this.colName.Width = 150;
-            // 	 // colCntTotal
-            // 	 this.colCntTotal.Alignment = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // colCntTotal
+            // 
+            this.colCntTotal.Alignment = System.Windows.Forms.HorizontalAlignment.Right;
             this.colCntTotal.Format = "";
             this.colCntTotal.FormatInfo = null;
             this.colCntTotal.HeaderText = global::OrigamArchitect.strings.Count_TableColumn;
             this.colCntTotal.MappingName = "CntTotal";
             this.colCntTotal.NullText = "";
             this.colCntTotal.Width = 50;
-            // 	 // WQTimer
-            // 	 this.WQTimer.Enabled = true;
+            // 
+            // WQTimer
+            // 
+            this.WQTimer.Enabled = true;
             this.WQTimer.Interval = 60000;
             this.WQTimer.Tick += new System.EventHandler(this.WQTimer_Tick);
-            // 	 // toolBar1
-            // 	 this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            // 
+            // toolBar1
+            // 
+            this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
             this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
             this.btnShow,
             this.btnRefresh});
@@ -158,21 +172,29 @@ public class WorkQueuePad : AbstractPadContent
             this.toolBar1.TabIndex = 1;
             this.toolBar1.TextAlign = System.Windows.Forms.ToolBarTextAlign.Right;
             this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
-            // 	 // btnShow
-            // 	 this.btnShow.ImageIndex = 0;
+            // 
+            // btnShow
+            // 
+            this.btnShow.ImageIndex = 0;
             this.btnShow.Name = "btnShow";
             this.btnShow.Text = global::OrigamArchitect.strings.Open_Button;
-            // 	 // btnRefresh
-            // 	 this.btnRefresh.ImageIndex = 1;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.ImageIndex = 1;
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Text = global::OrigamArchitect.strings.Refresh_Button;
-            // 	 // imageList1
-            // 	 this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
             this.imageList1.Images.SetKeyName(0, "");
             this.imageList1.Images.SetKeyName(1, "");
-            // 	 // errorLabel
-            // 	 this.errorLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            // 
+            // errorLabel
+            // 
+            this.errorLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.errorLabel.Location = new System.Drawing.Point(192, 30);
             this.errorLabel.Name = "errorLabel";
             this.errorLabel.Size = new System.Drawing.Size(144, 52);
@@ -180,8 +202,10 @@ public class WorkQueuePad : AbstractPadContent
             this.errorLabel.Text = "error text";
             this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.errorLabel.Visible = false;
-            // 	 // WorkQueuePad
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
+            // 
+            // WorkQueuePad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(944, 420);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.dataGrid1);
@@ -204,10 +228,10 @@ public class WorkQueuePad : AbstractPadContent
 
 		}
 
-	#endregion
+		#endregion
 
-	private void RefreshData()
-	{
+		private void RefreshData()
+		{
 			try
 			{
 				this.errorLabel.Hide();
@@ -266,8 +290,8 @@ public class WorkQueuePad : AbstractPadContent
 			}
 		}
 
-	private void GetCounts()
-	{
+		private void GetCounts()
+		{
 			try
 			{
 				IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
@@ -306,13 +330,13 @@ public class WorkQueuePad : AbstractPadContent
 			}
 		}
 
-	private void WQTimer_Tick(object sender, System.EventArgs e)
-	{
+		private void WQTimer_Tick(object sender, System.EventArgs e)
+		{
 			RefreshData();
 		}
 
-	private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
-	{
+		private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
+		{
 			try
 			{
 				if(e.Button == btnShow)
@@ -354,8 +378,9 @@ public class WorkQueuePad : AbstractPadContent
             }
 		}
 
-	private void schema_SchemaLoaded(object sender, bool isInteractive)
-	{
+		private void schema_SchemaLoaded(object sender, bool isInteractive)
+		{
 			RefreshData();
 		}
+	}
 }

@@ -28,40 +28,40 @@ using System;
 using System.Text;
 using System.Globalization;
 
-namespace OpenPOP.MIMEParser;
-
-/// <summary>
-/// Decoding Quoted-Printable text
-/// 
-/// </summary>
-public class DecodeQP
+namespace OpenPOP.MIMEParser
 {
-	public DecodeQP()
+	/// <summary>
+	/// Decoding Quoted-Printable text
+	/// 
+	/// </summary>
+	public class DecodeQP
 	{
+		public DecodeQP()
+		{
 		}
 
-	/// <summary>
-	/// Decoding Quoted-Printable string
-	/// </summary>
-	/// <param name="Hexstring">Quoted-Printable encoded string</param>
-	/// <param name="encode">encoding method</param>
-	/// <returns>decoded string</returns>
-	public static string ConvertHexToString(string Hexstring,string Encoding)
-	{
+		/// <summary>
+		/// Decoding Quoted-Printable string
+		/// </summary>
+		/// <param name="Hexstring">Quoted-Printable encoded string</param>
+		/// <param name="encode">encoding method</param>
+		/// <returns>decoded string</returns>
+		public static string ConvertHexToString(string Hexstring,string Encoding)
+		{
 			try
 			{return ConvertHexToString(Hexstring, System.Text.Encoding.GetEncoding(Encoding));}
 			catch
 			{return ConvertHexContent(Hexstring);}
 		}
 
-	/// <summary>
-	/// Decoding Quoted-Printable string
-	/// </summary>
-	/// <param name="Hexstring">Quoted-Printable encoded string</param>
-	/// <param name="encode">encoding method</param>
-	/// <returns>decoded string</returns>
-	public static string ConvertHexToString(string Hexstring,Encoding encode)
-	{			
+		/// <summary>
+		/// Decoding Quoted-Printable string
+		/// </summary>
+		/// <param name="Hexstring">Quoted-Printable encoded string</param>
+		/// <param name="encode">encoding method</param>
+		/// <returns>decoded string</returns>
+		public static string ConvertHexToString(string Hexstring,Encoding encode)
+		{			
 			try
 			{
 				if(Hexstring==null||Hexstring.Equals("")) return "";
@@ -83,15 +83,15 @@ public class DecodeQP
 			}
 		}
 
-	/// <summary>
-	/// Decoding Quoted-Printable string at a position
-	/// </summary>
-	/// <param name="Hexstring">Quoted-Printable encoded string</param>
-	/// <param name="encode">encoding method, "Default" is suggested</param>
-	/// <param name="nStart">position to start, normally 0</param>
-	/// <returns>decoded string</returns>
-	public static string ConvertHexContent(string Hexstring,Encoding encode,long nStart)
-	{			
+		/// <summary>
+		/// Decoding Quoted-Printable string at a position
+		/// </summary>
+		/// <param name="Hexstring">Quoted-Printable encoded string</param>
+		/// <param name="encode">encoding method, "Default" is suggested</param>
+		/// <param name="nStart">position to start, normally 0</param>
+		/// <returns>decoded string</returns>
+		public static string ConvertHexContent(string Hexstring,Encoding encode,long nStart)
+		{			
 			if(nStart>=Hexstring.Length) return Hexstring;
 
 			//to hold string to be decoded
@@ -159,23 +159,24 @@ public class DecodeQP
 		}
 
 
-	/// <summary>
-	/// Decoding Quoted-Printable string using default encoding and begin at 0
-	/// </summary>
-	/// <param name="Hexstring">Quoted-Printable encoded string</param>
-	/// <returns>decoded string</returns>
-	public static string ConvertHexContent(string Hexstring)
-	{
+		/// <summary>
+		/// Decoding Quoted-Printable string using default encoding and begin at 0
+		/// </summary>
+		/// <param name="Hexstring">Quoted-Printable encoded string</param>
+		/// <returns>decoded string</returns>
+		public static string ConvertHexContent(string Hexstring)
+		{
 			if(Hexstring==null || Hexstring.Equals("")) return Hexstring;
 
 			return ConvertHexContent(Hexstring,Encoding.Default,0);
 			
 		}
 
-	public static string ConvertHexContent(string Hexstring, string encoding)
-	{
+		public static string ConvertHexContent(string Hexstring, string encoding)
+		{
 			Encoding enc = Encoding.GetEncoding(encoding);
 
 			return ConvertHexContent(Hexstring, enc, 0);			
 		}
+	}
 }

@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema;
-
-public class PersistenceFiles
+namespace Origam.Schema
 {
-    public const string PackageFileName = ".origamPackage";
-    public const string ReferenceFileName = ".origamGroupReference";
-    public const string GroupFileName = ".origamGroup";
-    public static string Extension => ".origam";
+    public class PersistenceFiles
+    {
+        public const string PackageFileName = ".origamPackage";
+        public const string ReferenceFileName = ".origamGroupReference";
+        public const string GroupFileName = ".origamGroup";
+        public static string Extension => ".origam";
+    }
 }

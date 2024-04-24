@@ -25,83 +25,83 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for EntitySecurityRule.
-/// </summary>
-[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 
-	"icon_row-level-security-rule.png")]
-[HelpTopic("Row+Level+Security+Rules")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class EntitySecurityRule : AbstractEntitySecurityRule
+namespace Origam.Schema.EntityModel
 {
-	public EntitySecurityRule() : base() {}
-
-	public EntitySecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntitySecurityRule(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Properties
-	private bool _create = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to create operation.")]
-	[XmlAttribute("createCredential")]
-	public bool CreateCredential
+	/// <summary>
+	/// Summary description for EntitySecurityRule.
+	/// </summary>
+	[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 
+        "icon_row-level-security-rule.png")]
+    [HelpTopic("Row+Level+Security+Rules")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class EntitySecurityRule : AbstractEntitySecurityRule
 	{
-		get
+		public EntitySecurityRule() : base() {}
+
+		public EntitySecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntitySecurityRule(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Properties
+		private bool _create = true;
+		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+		[Description("If set to true, the rule is applied to create operation.")]
+		[XmlAttribute("createCredential")]
+        public bool CreateCredential
 		{
+			get
+			{
 				return _create;
 			}
-		set
-		{
+			set
+			{
 				_create = value;
 
 				this.CredentialsChanged();
 			}
-	}
+		}
 
-	private bool _update = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to update operation.")]
-	[XmlAttribute("updateCredential")]
-	public bool UpdateCredential
-	{
-		get
+		private bool _update = true;
+		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+		[Description("If set to true, the rule is applied to update operation.")]
+		[XmlAttribute("updateCredential")]
+        public bool UpdateCredential
 		{
+			get
+			{
 				return _update;
 			}
-		set
-		{
+			set
+			{
 				_update = value;
 
 				this.CredentialsChanged();
 			}
-	}
+		}
 
-	private bool _delete = true;
-	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-	[Description("If set to true, the rule is applied to delete operation.")]
-	[XmlAttribute("deleteCredential")]
-	public bool DeleteCredential
-	{
-		get
+		private bool _delete = true;
+		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+		[Description("If set to true, the rule is applied to delete operation.")]
+		[XmlAttribute("deleteCredential")]
+        public bool DeleteCredential
 		{
+			get
+			{
 				return _delete;
 			}
-		set
-		{
+			set
+			{
 				_delete = value;
 
 				this.CredentialsChanged();
 			}
-	}
+		}
 
-	internal override string CredentialsShortcut
-	{
-		get
+		internal override string CredentialsShortcut
 		{
+			get
+			{
 				string result = "";
 				result += (this.CreateCredential ? "Create" : "");
 				result += (this.UpdateCredential ? "Update" : "");
@@ -109,7 +109,8 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 
 				return result;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

@@ -30,29 +30,29 @@ using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Server.Controller;
-
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-public class UIController: AbstractController
+namespace Origam.Server.Controller
 {
-    private readonly IPersistenceService persistenceService;
-
-    public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
-        : base(log, sessionObjects)
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+    public class UIController: AbstractController
     {
+        private readonly IPersistenceService persistenceService;
+
+        public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
+            : base(log, sessionObjects)
+        {
             persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         }
 
-    [HttpGet("[action]")]
-    public IActionResult GetMenu()
-    {
+        [HttpGet("[action]")]
+        public IActionResult GetMenu()
+        {
             var claimsPrincipal = User;
             return Ok(MenuXmlBuilder.GetMenu());
         }
 
-    [HttpGet("[action]")]
-    public IActionResult GetUI([FromQuery] [Required] Guid id)
-    {
+        [HttpGet("[action]")]
+        public IActionResult GetUI([FromQuery] [Required] Guid id)
+        {
             FormReferenceMenuItem menuItem = persistenceService.SchemaProvider.RetrieveInstance(
                 typeof(FormReferenceMenuItem), new ModelElementKey(id)) as FormReferenceMenuItem;
 
@@ -62,4 +62,5 @@ public class UIController: AbstractController
             MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
             return Ok(xmlOutput.Document.OuterXml);
         }
+    }
 }

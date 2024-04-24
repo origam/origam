@@ -24,37 +24,38 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
-[HelpTopic("Styles")]
-[XmlModelRoot(CategoryConst)]
-public class ControlStyleProperty : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-    public const string CategoryConst = "ControlStyleProperty";
-
-    public ControlStyleProperty() : base() { }
-
-    public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
-
-    public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
-
-    #region Overriden AbstractSchemaItem Members
-    public override string ItemType
+    [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
+    [HelpTopic("Styles")]
+    [XmlModelRoot(CategoryConst)]
+    public class ControlStyleProperty : AbstractSchemaItem
     {
-        get
+        public const string CategoryConst = "ControlStyleProperty";
+
+        public ControlStyleProperty() : base() { }
+
+        public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
+
+        public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
+
+        #region Overriden AbstractSchemaItem Members
+        public override string ItemType
         {
+            get
+            {
                 return ControlStyleProperty.CategoryConst;
             }
-    }
+        }
 
-    public override SchemaItemCollection ChildItems
-    {
-        get
+        public override SchemaItemCollection ChildItems
         {
+            get
+            {
                 return new SchemaItemCollection();
             }
-    }
-    #endregion
+        }
+        #endregion
 
+    }
 }

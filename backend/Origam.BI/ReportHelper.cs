@@ -31,12 +31,12 @@ using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.BI;
-
-public static class ReportHelper
+namespace Origam.BI
 {
-    public static void LogInfo(Type type, string message)
-    {
+	public static class ReportHelper
+	{
+		public static void LogInfo(Type type, string message)
+		{
 			var log = log4net.LogManager.GetLogger(type);
 			if(log.IsInfoEnabled)
 			{
@@ -44,11 +44,11 @@ public static class ReportHelper
 			}
 		}
 
-    public static void ComputeXsltValueParameters(
-        AbstractReport report, 
-        Hashtable parameters, 
-        TraceTaskInfo traceTaskInfo = null)
-    {
+        public static void ComputeXsltValueParameters(
+            AbstractReport report, 
+            Hashtable parameters, 
+            TraceTaskInfo traceTaskInfo = null)
+        {
             if(parameters == null)
             {
                 return;
@@ -124,9 +124,9 @@ public static class ReportHelper
             }
         }
 
-    public static string BuildFileSystemReportFilePath(
-        string filePath, Hashtable parameters)
-    {
+        public static string BuildFileSystemReportFilePath(
+            string filePath, Hashtable parameters)
+        {
             foreach(DictionaryEntry entry in parameters)
             {
                 var key = entry.Key.ToString();
@@ -149,9 +149,9 @@ public static class ReportHelper
             return filePath;
         }
 
-    public static string ExpandCurlyBracketPlaceholdersWithParameters(
-        string input, Hashtable parameters)
-    {
+        public static string ExpandCurlyBracketPlaceholdersWithParameters(
+            string input, Hashtable parameters)
+        {
             var output = input;
             foreach(DictionaryEntry entry in parameters)
             {
@@ -170,8 +170,8 @@ public static class ReportHelper
             return output;
         }
 
-    public static void LogError(Type type, string message)
-    {
+        public static void LogError(Type type, string message)
+		{
 			var log = log4net.LogManager.GetLogger(type);
 			if(log.IsErrorEnabled)
 			{
@@ -179,9 +179,9 @@ public static class ReportHelper
 			}
 		}
 
-    public static void PopulateDefaultValues(AbstractReport report, 
-        Hashtable parameters)
-    {
+		public static void PopulateDefaultValues(AbstractReport report, 
+            Hashtable parameters)
+        {
             var parameterService = ServiceManager.Services
                 .GetService<IParameterService>();
 			foreach(var parameter in report.Parameters)
@@ -207,8 +207,8 @@ public static class ReportHelper
                 }
             }
 		}
-    public static T GetReportElement<T>(Guid reportId)
-    {
+		public static T GetReportElement<T>(Guid reportId)
+		{
 			var persistence = ServiceManager.Services
                 .GetService<IPersistenceService>();
 			var report = persistence.SchemaProvider
@@ -222,9 +222,9 @@ public static class ReportHelper
 			return report;
 		}
 
-    public static string ResolveLanguage(
-        IXmlContainer doc, AbstractDataReport reportElement)
-    {
+		public static string ResolveLanguage(
+            IXmlContainer doc, AbstractDataReport reportElement)
+		{
             if(string.IsNullOrEmpty(reportElement.LocaleXPath))
             {
                 return null;
@@ -235,12 +235,12 @@ public static class ReportHelper
 			return cultureString;
 		}
 
-    public static IDataDocument LoadOrUseReportData(
-        AbstractDataReport report,
-        IXmlContainer data, 
-        Hashtable parameters, 
-        string dbTransaction)
-    {
+		public static IDataDocument LoadOrUseReportData(
+            AbstractDataReport report,
+		    IXmlContainer data, 
+            Hashtable parameters, 
+            string dbTransaction)
+		{
 			switch(data)
             {
                 case null when report.DataStructure != null:
@@ -273,4 +273,5 @@ public static class ReportHelper
                         ResourceUtils.GetString("OnlyXmlDocSupported"));
             }
         }
+	}	
 }

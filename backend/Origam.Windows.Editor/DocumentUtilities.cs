@@ -22,35 +22,35 @@ using System.Windows.Documents;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace Origam.Windows.Editor;
-
-/// <summary>
-/// Extension methods for ITextEditor and IDocument.
-/// </summary>
-public static class DocumentUtilities
+namespace Origam.Windows.Editor
 {
     /// <summary>
-    /// Creates a new mutable document from the specified text buffer.
+    /// Extension methods for ITextEditor and IDocument.
     /// </summary>
-    /// <remarks>
-    /// Use the more efficient <see cref="LoadReadOnlyDocumentFromBuffer"/> if you only need a read-only document.
-    /// </remarks>
-    [Obsolete("Use the TextDocument constructor instead")]
-    public static IDocument LoadDocumentFromBuffer(ITextSource buffer)
+    public static class DocumentUtilities
     {
+        /// <summary>
+        /// Creates a new mutable document from the specified text buffer.
+        /// </summary>
+        /// <remarks>
+        /// Use the more efficient <see cref="LoadReadOnlyDocumentFromBuffer"/> if you only need a read-only document.
+        /// </remarks>
+        [Obsolete("Use the TextDocument constructor instead")]
+        public static IDocument LoadDocumentFromBuffer(ITextSource buffer)
+        {
             return new TextDocument(buffer);
         }
 
-    public static void ClearSelection(this TextEditor editor)
-    {
+        public static void ClearSelection(this TextEditor editor)
+        {
             editor.Select(editor.Document.GetOffset(editor.TextArea.Caret.Location), 0);
         }
 
-    /// <summary>
-    /// Gets the word in front of the caret.
-    /// </summary>
-    public static string GetWordBeforeCaret(this TextEditor editor)
-    {
+        /// <summary>
+        /// Gets the word in front of the caret.
+        /// </summary>
+        public static string GetWordBeforeCaret(this TextEditor editor)
+        {
             if (editor == null)
                 throw new ArgumentNullException("editor");
             int endOffset = editor.TextArea.Caret.Offset;
@@ -61,15 +61,15 @@ public static class DocumentUtilities
                 return editor.Document.GetText(startOffset, endOffset - startOffset);
         }
 
-    static readonly char[] whitespaceChars = { ' ', '\t' };
+        static readonly char[] whitespaceChars = { ' ', '\t' };
 
-    /// <summary>
-    /// Replaces the text in a line.
-    /// If only whitespace at the beginning and end of the line was changed, this method
-    /// only adjusts the whitespace and doesn't replace the other text.
-    /// </summary>
-    public static void SmartReplaceLine(this IDocument document, IDocumentLine line, string newLineText)
-    {
+        /// <summary>
+        /// Replaces the text in a line.
+        /// If only whitespace at the beginning and end of the line was changed, this method
+        /// only adjusts the whitespace and doesn't replace the other text.
+        /// </summary>
+        public static void SmartReplaceLine(this IDocument document, IDocumentLine line, string newLineText)
+        {
             if (document == null)
                 throw new ArgumentNullException("document");
             if (line == null)
@@ -109,29 +109,29 @@ public static class DocumentUtilities
             }
         }
 
-    /// <summary>
-    /// Finds the first word start in the document before offset.
-    /// </summary>
-    /// <returns>The offset of the word start, or -1 if there is no word start before the specified offset.</returns>
-    public static int FindPrevWordStart(this ITextSource textSource, int offset)
-    {
+        /// <summary>
+        /// Finds the first word start in the document before offset.
+        /// </summary>
+        /// <returns>The offset of the word start, or -1 if there is no word start before the specified offset.</returns>
+        public static int FindPrevWordStart(this ITextSource textSource, int offset)
+        {
             return TextUtilities.GetNextCaretPosition(textSource, offset, LogicalDirection.Backward, CaretPositioningMode.WordStart);
         }
 
-    /// <summary>
-    /// Finds the first word start in the document before offset.
-    /// </summary>
-    /// <returns>The offset of the word start, or -1 if there is no word start before the specified offset.</returns>
-    public static int FindNextWordStart(this ITextSource textSource, int offset)
-    {
+        /// <summary>
+        /// Finds the first word start in the document before offset.
+        /// </summary>
+        /// <returns>The offset of the word start, or -1 if there is no word start before the specified offset.</returns>
+        public static int FindNextWordStart(this ITextSource textSource, int offset)
+        {
             return TextUtilities.GetNextCaretPosition(textSource, offset, LogicalDirection.Forward, CaretPositioningMode.WordStart);
         }
 
-    /// <summary>
-    /// Gets the word at the specified position.
-    /// </summary>
-    public static string GetWordAt(this ITextSource document, int offset)
-    {
+        /// <summary>
+        /// Gets the word at the specified position.
+        /// </summary>
+        public static string GetWordAt(this ITextSource document, int offset)
+        {
             if (offset < 0 || offset >= document.TextLength || !IsWordPart(document.GetCharAt(offset)))
             {
                 return String.Empty;
@@ -152,55 +152,55 @@ public static class DocumentUtilities
             return document.GetText(startOffset, endOffset - startOffset + 1);
         }
 
-    static bool IsWordPart(char ch)
-    {
+        static bool IsWordPart(char ch)
+        {
             return char.IsLetterOrDigit(ch) || ch == '_';
         }
 
-    public static string GetIndentation(IDocument document, int line)
-    {
+        public static string GetIndentation(IDocument document, int line)
+        {
             return DocumentUtilities.GetWhitespaceAfter(document, document.GetLineByNumber(line).Offset);
         }
 
-    /// <summary>
-    /// Gets whether the specified document line is empty or contains only whitespace.
-    /// </summary>
-    public static bool IsEmptyLine(IDocument document, int lineNumber)
-    {
+        /// <summary>
+        /// Gets whether the specified document line is empty or contains only whitespace.
+        /// </summary>
+        public static bool IsEmptyLine(IDocument document, int lineNumber)
+        {
             var line = document.GetLineByNumber(lineNumber);
             ISegment segment = TextUtilities.GetWhitespaceAfter(document, line.Offset);
             return segment.Length == line.Length;
         }
 
-    /// <summary>
-    /// Gets all indentation starting at offset.
-    /// </summary>
-    /// <param name="textSource">The document.</param>
-    /// <param name="offset">The offset where the indentation starts.</param>
-    /// <returns>The indentation text.</returns>
-    public static string GetWhitespaceAfter(ITextSource textSource, int offset)
-    {
+        /// <summary>
+        /// Gets all indentation starting at offset.
+        /// </summary>
+        /// <param name="textSource">The document.</param>
+        /// <param name="offset">The offset where the indentation starts.</param>
+        /// <returns>The indentation text.</returns>
+        public static string GetWhitespaceAfter(ITextSource textSource, int offset)
+        {
             ISegment segment = TextUtilities.GetWhitespaceAfter(textSource, offset);
             return textSource.GetText(segment.Offset, segment.Length);
         }
 
-    /// <summary>
-    /// Gets all indentation before the offset.
-    /// </summary>
-    /// <param name="textSource">The document.</param>
-    /// <param name="offset">The offset where the indentation ends.</param>
-    /// <returns>The indentation text.</returns>
-    public static string GetWhitespaceBefore(ITextSource textSource, int offset)
-    {
+        /// <summary>
+        /// Gets all indentation before the offset.
+        /// </summary>
+        /// <param name="textSource">The document.</param>
+        /// <param name="offset">The offset where the indentation ends.</param>
+        /// <returns>The indentation text.</returns>
+        public static string GetWhitespaceBefore(ITextSource textSource, int offset)
+        {
             ISegment segment = TextUtilities.GetWhitespaceBefore(textSource, offset);
             return textSource.GetText(segment.Offset, segment.Length);
         }
 
-    /// <summary>
-    /// Gets the line terminator for the document around the specified line number.
-    /// </summary>
-    public static string GetLineTerminator(IDocument document, int lineNumber)
-    {
+        /// <summary>
+        /// Gets the line terminator for the document around the specified line number.
+        /// </summary>
+        public static string GetLineTerminator(IDocument document, int lineNumber)
+        {
             IDocumentLine line = document.GetLineByNumber(lineNumber);
             if (line.DelimiterLength == 0)
             {
@@ -213,18 +213,18 @@ public static class DocumentUtilities
             return document.GetText(line.Offset + line.Length, line.DelimiterLength);
         }
 
-    public static string NormalizeNewLines(string input, string newLine)
-    {
+        public static string NormalizeNewLines(string input, string newLine)
+        {
             return input.Replace("\r\n", "\n").Replace('\r', '\n').Replace("\n", newLine);
         }
 
-    public static string NormalizeNewLines(string input, IDocument document, int lineNumber)
-    {
+        public static string NormalizeNewLines(string input, IDocument document, int lineNumber)
+        {
             return NormalizeNewLines(input, GetLineTerminator(document, lineNumber));
         }
 
-    public static void InsertNormalized(this IDocument document, int offset, string text)
-    {
+        public static void InsertNormalized(this IDocument document, int offset, string text)
+        {
             if (document == null)
                 throw new ArgumentNullException("document");
             IDocumentLine line = document.GetLineByOffset(offset);
@@ -232,11 +232,12 @@ public static class DocumentUtilities
             document.Insert(offset, text);
         }
 
-    #region ITextSource implementation
-    [Obsolete("We now directly use ITextSource everywhere, no need for adapters")]
-    public static ITextSource GetTextSource(ITextSource textBuffer)
-    {
+        #region ITextSource implementation
+        [Obsolete("We now directly use ITextSource everywhere, no need for adapters")]
+        public static ITextSource GetTextSource(ITextSource textBuffer)
+        {
             return textBuffer;
         }
-    #endregion
+        #endregion
+    }
 }

@@ -34,25 +34,25 @@ using Origam.Gui;
 using System.Linq;
 using Origam.Service.Core;
 
-namespace Origam.Gui.Win;
-
-public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
+namespace Origam.Gui.Win
 {
-    private readonly FormGenerator generator;
-    private readonly DataSet dataSource;
-
-    public DesktopEntityUIActionRunnerClient(FormGenerator generator, DataSet dataSource)
+    public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     {
+        private readonly FormGenerator generator;
+        private readonly DataSet dataSource;
+
+        public DesktopEntityUIActionRunnerClient(FormGenerator generator, DataSet dataSource)
+        {
             this.generator = generator;
             this.dataSource = dataSource;
         }
 
-    public ExecuteActionProcessData CreateExecuteActionProcessData(
-        string sessionFormIdentifier, string requestingGrid,
-        string actionType, string entity, List<string> selectedIds,
-        string actionId, Hashtable parameterMappings,
-        Hashtable inputParameters)
-    {
+        public ExecuteActionProcessData CreateExecuteActionProcessData(
+            string sessionFormIdentifier, string requestingGrid,
+            string actionType, string entity, List<string> selectedIds,
+            string actionId, Hashtable parameterMappings,
+            Hashtable inputParameters)
+        {
             string dataTableName = entity.Split(".".ToCharArray()).Last();
             var processData = new ExecuteActionProcessData();
             processData.SessionFormIdentifier = sessionFormIdentifier;
@@ -102,19 +102,19 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             return processData;
         }
 
-    public void CheckActionConditions(ExecuteActionProcessData processData)
-    {
+        public void CheckActionConditions(ExecuteActionProcessData processData)
+        {
         }
 
-    public void SetModalDialogSize(ArrayList resultList,
-        ExecuteActionProcessData processData)
-    {
+        public void SetModalDialogSize(ArrayList resultList,
+            ExecuteActionProcessData processData)
+        {
         }
 
-    public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
-        DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes)
-    {
+        public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
+            DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
+            ArrayList changes)
+        {
             EntityWorkflowAction action 
                 = processData.Action as EntityWorkflowAction;
             try
@@ -168,12 +168,12 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             }
         }
 
-    private void ProcessRulesForWorkflowResults(
-        IDictionary<string, IList<KeyValuePair<object, DataMergeChange>>> 
-            changeList,
-        DataSet targetData, 
-        Dictionary<DataRow, List<DataRow>> deletedRowsParents)
-    {
+        private void ProcessRulesForWorkflowResults(
+            IDictionary<string, IList<KeyValuePair<object, DataMergeChange>>> 
+                changeList,
+            DataSet targetData, 
+            Dictionary<DataRow, List<DataRow>> deletedRowsParents)
+        {
             // is rule handler right way, is conversion to xml data correct?
             DatasetRuleHandler ruleHandler = new DatasetRuleHandler();
             IDataDocument xmlData = DataDocumentFactory.New(targetData);
@@ -239,13 +239,14 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
                 }
         }
 
-    public void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes)
-    {
+        public void PostProcessWorkflowAction(DataSet data,
+            EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        {
         }       
        
-    public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
-        EntityWorkflowAction entityWorkflowAction)
-    {
+        public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
+            EntityWorkflowAction entityWorkflowAction)
+        {
         }
+    }
 }

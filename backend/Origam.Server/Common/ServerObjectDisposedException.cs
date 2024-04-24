@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Origam.Server;
-
-public class ServerObjectDisposedException: Exception
+namespace Origam.Server
 {
-    public ServerObjectDisposedException(string message) : base(message)
+    public class ServerObjectDisposedException: Exception
     {
+        public ServerObjectDisposedException(string message) : base(message)
+        {
         }
+    }
 }

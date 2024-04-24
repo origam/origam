@@ -27,23 +27,23 @@ using System.Threading.Tasks;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation;
-
-public class ProjectBuilder
+namespace Origam.ProjectAutomation
 {
-    private readonly List<IProjectBuilder> tasks = new List<IProjectBuilder>();
-    private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
-    private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
-    private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
-    private readonly DockerBuilder dockerBuilder = new DockerBuilder();
+    public class ProjectBuilder
+    {
+        private readonly List<IProjectBuilder> tasks = new List<IProjectBuilder>();
+        private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
+        private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
+        private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
+        private readonly DockerBuilder dockerBuilder = new DockerBuilder();
 
-    public ProjectBuilder()
-    {           
+        public ProjectBuilder()
+        {           
             
         }
 
-    public void Create(Project project)
-    {
+        public void Create(Project project)
+        {
             dataDatabaseBuilder.ResetDataservice();
             //Wizard connection
             project.DataConnectionString =
@@ -90,8 +90,8 @@ public class ProjectBuilder
             }
         }
 
-    public void CreateTasks(Project _project)
-    {
+        public void CreateTasks(Project _project)
+        {
             tasks.Clear();
             if (_project.DatabaseType == DatabaseType.MsSql)
             {
@@ -137,8 +137,8 @@ public class ProjectBuilder
             AddGitTasks(_project);
         }
 
-    private void AddGitTasks(Project _project)
-    {
+        private void AddGitTasks(Project _project)
+        {
             switch (_project.TypeTemplate)
             {
                 case TypeTemplate.Default:
@@ -163,22 +163,22 @@ public class ProjectBuilder
             }
         }
 
-    private void CreateGit(Project _project)
-    {
+        private void CreateGit(Project _project)
+        {
             if (_project.GitRepository)
             {
                 tasks.Add(new CreateGitRepository());
             }
         }
 
-    #region Properties
-    public List<IProjectBuilder> Tasks => tasks;
+        #region Properties
+        public List<IProjectBuilder> Tasks => tasks;
 
-    public string[] WebSites() => configureWebServerBuilder.WebSites();
-    #endregion
+        public string[] WebSites() => configureWebServerBuilder.WebSites();
+        #endregion
 
-    private void Rollback(IProjectBuilder builder)
-    {
+        private void Rollback(IProjectBuilder builder)
+        {
             try
             {
                 if(builder.State == TaskState.Finished)
@@ -193,4 +193,5 @@ public class ProjectBuilder
                 builder.State = TaskState.RollbackFailed;
             }
         }
+    }
 }

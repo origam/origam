@@ -23,45 +23,46 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for DataQuery.
-/// </summary>
-[XmlModelRoot(CategoryConst)]
-public abstract class DataStructureMethod : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "DataStructureFilterSet";
-
-	public DataStructureMethod() : base() {}
-
-	public DataStructureMethod(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DataStructureMethod(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType
+    /// <summary>
+    /// Summary description for DataQuery.
+    /// </summary>
+    [XmlModelRoot(CategoryConst)]
+    public abstract class DataStructureMethod : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "DataStructureFilterSet";
+
+		public DataStructureMethod() : base() {}
+
+		public DataStructureMethod(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataStructureMethod(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override bool UseFolders
-	{
-		get
+		public override bool UseFolders
 		{
+			get
+			{
 				return false;
 			}
-	}
+		}
 
-	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-	{
+		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		{
 			return (newNode as ISchemaItem).PrimaryKey.Equals(this.ParentItem.PrimaryKey);
 		}
 
 
-	#endregion
+		#endregion
+	}
 }

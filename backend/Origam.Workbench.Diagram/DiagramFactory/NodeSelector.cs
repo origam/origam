@@ -24,30 +24,30 @@ using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Diagram.NodeDrawing;
 
-namespace Origam.Workbench.Diagram;
-
-public interface INodeSelector
+namespace Origam.Workbench.Diagram
 {
-    Node Selected { get; }  
-}
-
-public class NodeSelector: INodeSelector
-{
-    private Node selected;
-    public Guid SelectedNodeId { get; private set; }
-
-    public Node Selected
+    public interface INodeSelector
     {
-        get => selected;
-        set
+        Node Selected { get; }  
+    }
+
+    public class NodeSelector: INodeSelector
+    {
+        private Node selected;
+        public Guid SelectedNodeId { get; private set; }
+
+        public Node Selected
         {
+            get => selected;
+            set
+            {
                 SelectedNodeId = GetSelectedNodeId(value);
                 selected = value;
             }
-    }
+        }
 
-    private Guid GetSelectedNodeId(Node node)
-    {
+        private Guid GetSelectedNodeId(Node node)
+        {
             if (node is InfrastructureSubgraph infrastructureSubgraph)
             {
                return infrastructureSubgraph.WorkflowItemId;
@@ -55,5 +55,6 @@ public class NodeSelector: INodeSelector
             return IdTranslator.NodeToSchema(node?.Id);
         }
 
-    public bool MarkedForExpansion { get; set; }
+        public bool MarkedForExpansion { get; set; }
+    }
 }

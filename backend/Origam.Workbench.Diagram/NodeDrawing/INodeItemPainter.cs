@@ -17,15 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
 
-namespace Origam.Workbench.Diagram.NodeDrawing;
-
-internal interface INodeItemPainter
+namespace Origam.Workbench.Diagram.NodeDrawing
 {
-    ICurve GetBoundary(Node node);
-    bool Draw(Node node, object graphicsObj);
+    internal interface INodeItemPainter
+    {
+        ICurve GetBoundary(Node node);
+        bool Draw(Node node, object graphicsObj);
+    }
 }

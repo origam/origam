@@ -24,19 +24,19 @@ using System.Collections;
 using System.Collections.Specialized;
 using Origam.Extensions;
 
-namespace Origam;
-
-/// <summary>
-/// Summary description for ResourceMonitor.
-/// </summary>
-public class ResourceMonitor
+namespace Origam
 {
-	private static Hashtable _transactionStore = new Hashtable();
-	private static Hashtable _savePoints = new Hashtable();
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	private static object _obj = new object();
-	public static void RegisterTransaction(string transactionId, string resourceManagerId, OrigamTransaction transaction)
+	/// <summary>
+	/// Summary description for ResourceMonitor.
+	/// </summary>
+	public class ResourceMonitor
 	{
+		private static Hashtable _transactionStore = new Hashtable();
+		private static Hashtable _savePoints = new Hashtable();
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static object _obj = new object();
+		public static void RegisterTransaction(string transactionId, string resourceManagerId, OrigamTransaction transaction)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Registering transaction id " + transactionId);
@@ -64,8 +64,8 @@ public class ResourceMonitor
 			}
 		}
 
-	public static OrigamTransaction GetTransaction(string transactionId, string resourceManagerId)
-	{
+		public static OrigamTransaction GetTransaction(string transactionId, string resourceManagerId)
+		{
             OrderedDictionary  transactions = Transactions(transactionId); 
 
 			if(transactions.Contains(resourceManagerId))
@@ -78,8 +78,8 @@ public class ResourceMonitor
 			}
 		}
 
-	public static void Commit(string transactionId)
-	{
+		public static void Commit(string transactionId)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Committing transaction id " + transactionId);
@@ -116,8 +116,8 @@ public class ResourceMonitor
 			}
 		}
 
-	public static void Rollback(string transactionId)
-	{
+		public static void Rollback(string transactionId)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Rolling back transaction id " + transactionId);
@@ -158,8 +158,8 @@ public class ResourceMonitor
 			}
 		}
 
-	public static void Rollback(string transactionId, string savePointName)
-	{
+		public static void Rollback(string transactionId, string savePointName)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Rolling back transaction id " + transactionId + " to save point " + savePointName);
@@ -204,8 +204,8 @@ public class ResourceMonitor
 			}
 		}
 
-	public static void Save(string transactionId, string savePointName)
-	{
+		public static void Save(string transactionId, string savePointName)
+		{
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Saving transaction id " + transactionId + ", save point " + savePointName);
@@ -227,10 +227,10 @@ public class ResourceMonitor
 			}
 		}
 
-	#region Private Methods
-	private static OrderedDictionary Transactions(string transactionId)
+		#region Private Methods
+        private static OrderedDictionary Transactions(string transactionId)
 
-	{
+		{
 			if(_transactionStore.Contains(transactionId))
 			{
                 return _transactionStore[transactionId] as OrderedDictionary;
@@ -246,8 +246,8 @@ public class ResourceMonitor
 			}
 		}
 
-	private static ArrayList SavePoints(string transactionId)
-	{
+		private static ArrayList SavePoints(string transactionId)
+		{
 			if(_savePoints.Contains(transactionId))
 			{
 				return _savePoints[transactionId] as ArrayList;
@@ -263,5 +263,6 @@ public class ResourceMonitor
 				}
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

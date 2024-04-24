@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
@@ -40,42 +39,43 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server;
-
-public class WorkQueueInfo
+namespace Origam.Server
 {
-    public WorkQueueInfo()
+    public class WorkQueueInfo
     {
+        public WorkQueueInfo()
+        {
         }
 
-    public WorkQueueInfo(string id, string name, long countTotal)
-    {
+        public WorkQueueInfo(string id, string name, long countTotal)
+        {
             Id = id;
             Name = name;
             CountTotal = countTotal;
         }
 
-    private string _id;
+        private string _id;
 
-    public string Id
-    {
-        get { return _id; }
-        set { _id = value; }
-    }
+        public string Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
 	
-    private string _name;
+        private string _name;
 
-    public string Name
-    {
-        get { return _name; }
-        set { _name = value; }
-    }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
-    private long _countTotal;
+        private long _countTotal;
 
-    public long CountTotal
-    {
-        get { return _countTotal; }
-        set { _countTotal = value; }
+        public long CountTotal
+        {
+            get { return _countTotal; }
+            set { _countTotal = value; }
+        }
     }
 }
