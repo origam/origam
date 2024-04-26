@@ -307,8 +307,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			Hashtable dataSources = new Hashtable();
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 			DataTable table = dataset.Tables["WorkQueueEntry"];
+            var parameterService = ServiceManager.Services.GetService<IParameterService>();
 
-			QueryParameterCollection pms = new QueryParameterCollection();
+            QueryParameterCollection pms = new QueryParameterCollection();
 			pms.Add(new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId));
 			DataSet commands = core.DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
 
@@ -322,10 +323,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 }
                 commandRows.Add(cmdRow);
             }
+
             bool showCheckboxes = commandRows.Any(cmdRow =>
             {
-                WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
-                return cmd.Mode == PanelActionMode.MultipleCheckboxes;
+				if ((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand"))
+				{
+					WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
+					return cmd.Mode == PanelActionMode.MultipleCheckboxes;
+				}
+				else
+				{
+					return true;
+				}
             });
 
             // Window
@@ -463,8 +472,6 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				// binding from the parent grid to the memo grid (same entity)
 				CreateComponentBinding(doc, bindingsElement, queueId.ToString(), "Id", "WorkQueueEntry", "65DF44F9-C050-4554-AD9A-896445314279", "Id", "WorkQueueEntry", false);
 			}
-
-			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
 			foreach(DataRow cmdRow in commandRows)
 			{
