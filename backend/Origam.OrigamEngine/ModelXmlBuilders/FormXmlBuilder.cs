@@ -312,20 +312,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			pms.Add(new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId));
 			DataSet commands = core.DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
 
-			ArrayList commandRows = new ArrayList();
+            var commandRows = new List<DataRow>();
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-			foreach (DataRow cmdRow in commands.Tables["WorkQueueCommand"].Rows)
-			{
-				if (cmdRow.IsNull("Roles") || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)cmdRow["Roles"]))
-				{
-					continue;
-				}
-				commandRows.Add(cmdRow);
-			}
-			bool showCheckboxes = commandRows.Count > 0;
+            foreach (DataRow cmdRow in commands.Tables["WorkQueueCommand"].Rows)
+            {
+                if (cmdRow.IsNull("Roles") || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)cmdRow["Roles"]))
+                {
+                    continue;
+                }
+                commandRows.Add(cmdRow);
+            }
+            bool showCheckboxes = commandRows.Any(cmdRow =>
+            {
+                WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
+                return cmd.Mode == PanelActionMode.MultipleCheckboxes;
+            });
 
-			// Window
-			XmlDocument doc = GetWindowBaseXml(
+            // Window
+            XmlDocument doc = GetWindowBaseXml(
 				name, Guid.Empty, settings.WorkQueueListRefreshPeriod, false, false, false);
 			XmlElement windowElement = WindowElement(doc);
 			XmlElement uiRootElement = UIRootElement(windowElement);
