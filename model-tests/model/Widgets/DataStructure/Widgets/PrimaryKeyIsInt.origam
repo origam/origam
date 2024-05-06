@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dst="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureTemplate/6.0.0"
+  xmlns:dsts="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureTemplateSet/6.0.0"
+  xmlns:dstt="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureTransformationTemplate/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="904b4934-b03c-43f0-8980-f61af624d269"
+    ds1:localized="false"
+    asi:name="PrimaryKeyIsInt">
+    <dsds:DataStructureDefaultSet
+      asi:abstract="false"
+      x:id="2abb0400-4299-4430-b977-c531bba023a1"
+      asi:name="Defaults" />
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/PrimaryKeyIsInt.origam#PrimaryKeyIsInt/8418c566-ed9b-4e34-a9bb-1b486bdab7cb"
+      x:id="f4b2f0fc-dbcd-4530-9d1f-1cc308ba94bf"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="PrimaryKeyIsInt"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsts:DataStructureTemplateSet
+      asi:abstract="false"
+      x:id="67b80487-eabc-4666-9cea-ae25024a2162"
+      asi:name="Template">
+      <dstt:DataStructureTemplate
+        asi:abstract="false"
+        dst:entity="Widgets/DataStructure/Widgets/PrimaryKeyIsInt.origam#PrimaryKeyIsInt/PrimaryKeyIsInt/f4b2f0fc-dbcd-4530-9d1f-1cc308ba94bf"
+        x:id="f3d36974-5d5e-46ef-8a1b-78101bfa2857"
+        asi:name="PrimaryKeyIsInt_SetId"
+        dstt:transformation="Widgets/Transformation/Widgets/PrimaryKeyIsInt_SetId.origam#PrimaryKeyIsInt_SetId/11c18402-b632-4149-bc87-2cd6d294431b" />
+    </dsts:DataStructureTemplateSet>
+  </ds1:DataStructure>
+</x:file>

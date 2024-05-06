@@ -21,6 +21,22 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.5.4.origam___commandText___52d02ac0-7157-4c5b-aeb2-66a124f65128.txt"
+      x:id="52d02ac0-7157-4c5b-aeb2-66a124f65128"
+      asi:name="00040_Database_Entity_PrimaryKeyIsInt"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:1.5.4.origam___commandText___e1e0cf10-318c-42a1-a3a6-cf8ee4b45029.txt"
+      x:id="e1e0cf10-318c-42a1-a3a6-cf8ee4b45029"
+      asi:name="00030_AddRole_PrimaryKeyIsInt"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:1.5.4.origam___commandText___eaf6ad39-73b6-4d2e-9a2e-bd434d204193.txt"
       x:id="eaf6ad39-73b6-4d2e-9a2e-bd434d204193"
