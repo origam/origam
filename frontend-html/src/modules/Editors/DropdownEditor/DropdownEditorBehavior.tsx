@@ -276,7 +276,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
           this.onAddNewRecordClick?.(this.userEnteredValue);
         }
         if (this.isDropped && !this.isWorking) {
-          this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+          await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           this.dropUp();
         }
         if (wasDropped) {
