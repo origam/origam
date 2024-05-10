@@ -29,7 +29,7 @@ export interface IDropdownEditorData {
   text: string;
   isResolving: boolean;
 
-  chooseNewValue(value: any): void;
+  chooseNewValue(value: any): Promise<void>;
 
   remove(value: any): void;
 
@@ -64,9 +64,9 @@ export class DropdownEditorData implements IDropdownEditorData {
     return this.dataTable.getIsCellTextLoading(this.setup().propertyId, this.value);
   }
 
-  @action.bound chooseNewValue(value: any) {
+  @action.bound async chooseNewValue(value: any) {
     if (this.rowCursor.selectedId) {
-      this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, value);
+      await this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, value);
     }
   }
 
