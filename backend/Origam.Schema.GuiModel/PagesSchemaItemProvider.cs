@@ -19,68 +19,69 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for Class1.
-/// </summary>
-public class PagesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+namespace Origam.Schema.GuiModel
 {
-	public PagesSchemaItemProvider() 
+	/// <summary>
+	/// Summary description for Class1.
+	/// </summary>
+	public class PagesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
+		public PagesSchemaItemProvider() 
+		{
 			this.ChildItemTypes.Add(typeof(XsltDataPage));
 			this.ChildItemTypes.Add(typeof(FileDownloadPage));
 			this.ChildItemTypes.Add(typeof(ReportPage));
 		}
 		
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return AbstractPage.CategoryConst;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "API";
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_36_web-api-pages.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Web API/Pages";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	public override string NodeToolTipText
-	{
-		get
+		public override string NodeToolTipText
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return "List of Pages";
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

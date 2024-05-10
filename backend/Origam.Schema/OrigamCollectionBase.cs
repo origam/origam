@@ -22,79 +22,80 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 
-namespace Origam.Schema;
-
-[Serializable]
-public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
+namespace Origam.Schema
 {
-	// Fields
-	private ArrayList list;
 
-	// Methods
-	protected OrigamCollectionBase()
+	[Serializable]
+	public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 	{
+		// Fields
+		private ArrayList list;
+
+		// Methods
+		protected OrigamCollectionBase()
+		{
 			this.list = new ArrayList();
 		}
 
-	protected OrigamCollectionBase(int capacity)
-	{
+		protected OrigamCollectionBase(int capacity)
+		{
 			this.list = new ArrayList(capacity);
 		}
 
-	public void Clear()
-	{
+		public void Clear()
+		{
 			this.OnClear();
 			this.InnerList.Clear();
 			this.OnClearComplete();
 		}
 
-	public IEnumerator GetEnumerator()
-	{
+		public IEnumerator GetEnumerator()
+		{
 			return this.InnerList.GetEnumerator();
 		}
 
-	protected virtual void OnClear()
-	{
+		protected virtual void OnClear()
+		{
 		}
 
-	protected virtual void OnClearComplete()
-	{
+		protected virtual void OnClearComplete()
+		{
 		}
 
-	protected virtual void OnInsert(int index, object value)
-	{
+		protected virtual void OnInsert(int index, object value)
+		{
 		}
 
-	protected virtual void OnInsertComplete(int index, object value)
-	{
+		protected virtual void OnInsertComplete(int index, object value)
+		{
 		}
 
-	protected virtual void OnRemove(int index, object value)
-	{
+		protected virtual void OnRemove(int index, object value)
+		{
 		}
 
-	protected virtual void OnRemoveComplete(int index, object value)
-	{
+		protected virtual void OnRemoveComplete(int index, object value)
+		{
 		}
 
-	protected virtual void OnSet(int index, object oldValue, object newValue)
-	{
+		protected virtual void OnSet(int index, object oldValue, object newValue)
+		{
 		}
 
-	protected virtual void OnSetComplete(int index, object oldValue, object newValue)
-	{
+		protected virtual void OnSetComplete(int index, object oldValue, object newValue)
+		{
 		}
 
-	protected virtual void OnValidate(object value)
-	{
+		protected virtual void OnValidate(object value)
+		{
 			if (value == null)
 			{
 				throw new ArgumentNullException("value");
 			}
 		}
 
-	public void RemoveAt(int index)
-	{
+		public void RemoveAt(int index)
+		{
 			if ((index < 0) || (index >= this.InnerList.Count))
 			{
 				throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
@@ -114,13 +115,13 @@ public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 			}
 		}
 
-	void ICollection.CopyTo(Array array, int index)
-	{
+		void ICollection.CopyTo(Array array, int index)
+		{
 			this.InnerList.CopyTo(array, index);
 		}
 
-	int IList.Add(object value)
-	{
+		int IList.Add(object value)
+		{
 			this.OnValidate(value);
 			this.OnInsert(this.InnerList.Count, value);
 			int index = this.InnerList.Add(value);
@@ -136,18 +137,18 @@ public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 			return index;
 		}
 
-	bool IList.Contains(object value)
-	{
+		bool IList.Contains(object value)
+		{
 			return this.InnerList.Contains(value);
 		}
 
-	int IList.IndexOf(object value)
-	{
+		int IList.IndexOf(object value)
+		{
 			return this.InnerList.IndexOf(value);
 		}
 
-	void IList.Insert(int index, object value)
-	{
+		void IList.Insert(int index, object value)
+		{
 			if ((index < 0) || (index > this.InnerList.Count))
 			{
 				throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
@@ -166,8 +167,8 @@ public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 			}
 		}
 
-	void IList.Remove(object value)
-	{
+		void IList.Remove(object value)
+		{
 			this.OnValidate(value);
 			int index = this.InnerList.IndexOf(value);
 			if (index < 0)
@@ -187,95 +188,95 @@ public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 			}
 		}
 
-	// Properties
-	public int Capacity
-	{
-		get
+		// Properties
+		public int Capacity
 		{
+			get
+			{
 				return this.InnerList.Capacity;
 			}
-		set
-		{
+			set
+			{
 				this.InnerList.Capacity = value;
 			}
-	}
+		}
 
-	public int Count
-	{
-		get
+		public int Count
 		{
+			get
+			{
 				if (this.list != null)
 				{
 					return this.list.Count;
 				}
 				return 0;
 			}
-	}
+		}
 
-	protected ArrayList InnerList
-	{
-		get
+		protected ArrayList InnerList
 		{
+			get
+			{
 				if (this.list == null)
 				{
 					this.list = new ArrayList();
 				}
 				return this.list;
 			}
-	}
+		}
 
-	protected IList List
-	{
-		get
+		protected IList List
 		{
+			get
+			{
 				return this;
 			}
-	}
+		}
 
-	bool ICollection.IsSynchronized
-	{
-		get
+		bool ICollection.IsSynchronized
 		{
+			get
+			{
 				return this.InnerList.IsSynchronized;
 			}
-	}
+		}
 
-	object ICollection.SyncRoot
-	{
-		get
+		object ICollection.SyncRoot
 		{
+			get
+			{
 				return this.InnerList.SyncRoot;
 			}
-	}
+		}
 
-	bool IList.IsFixedSize
-	{
-		get
+		bool IList.IsFixedSize
 		{
+			get
+			{
 				return this.InnerList.IsFixedSize;
 			}
-	}
+		}
 
-	bool IList.IsReadOnly
-	{
-		get
+		bool IList.IsReadOnly
 		{
+			get
+			{
 				return this.InnerList.IsReadOnly;
 			}
-	}
+		}
 
-	object IList.this[int index]
-	{
-		get
+		object IList.this[int index]
 		{
+			get
+			{
 				if ((index < 0) || (index >= this.InnerList.Count))
 				{
 					throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
 				}
 				return this.InnerList[index];
 			}
-		set
-		{
+			set
+			{
 				if ((index < 0) || (index >= this.InnerList.Count))
 				{
 					throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
@@ -294,5 +295,6 @@ public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 					throw;
 				}
 			}
+		}
 	}
 }

@@ -30,29 +30,29 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Schema.LookupModel.UI.Wizards;
-
-/// <summary>
-/// Summary description for CreateLookupFromEntityCommand.
-/// </summary>
-public class CreateLookupFromEntityCommand : AbstractMenuCommand
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
-	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-	LookupForm lookupForm;
-	public override bool IsEnabled
+    /// <summary>
+    /// Summary description for CreateLookupFromEntityCommand.
+    /// </summary>
+    public class CreateLookupFromEntityCommand : AbstractMenuCommand
 	{
-		get
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        LookupForm lookupForm;
+        public override bool IsEnabled
 		{
+			get
+			{
 				return Owner is IDataEntity;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
             DataServiceDataLookup dd = new DataServiceDataLookup();
             ArrayList list = new ArrayList();
             list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
@@ -84,8 +84,8 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
             }
         }
 
-	public override void Execute()
-	{
+        public override void Execute()
+        {
             var result = LookupHelper.CreateDataServiceLookup(
                     lookupForm.LookupName, lookupForm.Entity, lookupForm.IdColumn, lookupForm.NameColumn,
                     null, lookupForm.IdFilter, lookupForm.ListFilter, null);
@@ -96,13 +96,13 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
             GeneratedModelElements.Add(result);
         }
 
-	public override int GetImageIndex(string icon)
-	{
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
 
-	public override void SetSummaryText(object summary)
-	{
+        public override void SetSummaryText(object summary)
+        {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -120,4 +120,5 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
             richTextBoxSummary.AppendText(lookupForm.IdFilter.Name);
             richTextBoxSummary.AppendText(Environment.NewLine);
         }
+    }
 }

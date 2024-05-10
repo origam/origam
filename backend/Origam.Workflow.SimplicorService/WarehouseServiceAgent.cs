@@ -30,30 +30,30 @@ using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workflow.SimplicorService;
-
-/// <summary>
-/// Summary description for TransformationAgent.
-/// </summary>
-public class WarehouseServiceAgent : AbstractServiceAgent
+namespace Origam.Workflow.SimplicorService
 {
-	private static Guid _weightedAveragePricingMethodId;
-	readonly IParameterService parameterService = ServiceManager.Services.GetService<IParameterService>();
-
-	public WarehouseServiceAgent()
+	/// <summary>
+	/// Summary description for TransformationAgent.
+	/// </summary>
+	public class WarehouseServiceAgent : AbstractServiceAgent
 	{
+		private static Guid _weightedAveragePricingMethodId;
+		readonly IParameterService parameterService = ServiceManager.Services.GetService<IParameterService>();
+
+		public WarehouseServiceAgent()
+		{
 			_weightedAveragePricingMethodId = (Guid)parameterService.GetParameterValue("WarehousePricingMethod_WeightedAverage");
 		}
 
-	#region Private Methods
+		#region Private Methods
 
-	private string GetConstant(string name)
-	{
+		private string GetConstant(string name)
+		{
 			return (string)parameterService.GetParameterValue(name,
 				OrigamDataType.String);
 		}
-	private IXmlContainer RecalculateWeightedAverage(PriceRecalculationData data)
-	{
+		private IXmlContainer RecalculateWeightedAverage(PriceRecalculationData data)
+		{
 			Hashtable inventory = new Hashtable();
 
 			data.InventoryOperationDetail.Columns.Add("OperationDate", typeof(System.DateTime), "Parent.Date");
@@ -298,14 +298,14 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			return DataDocumentFactory.New(data);
 		}
 
-	/// <summary>
-	/// Loads initial inventory balances from the database.
-	/// </summary>
-	/// <param name="inventoryId"></param>
-	/// <param name="date"></param>
-	/// <returns></returns>
-	private static object[] InitialBalance(Guid inventoryId, DateTime date)
-	{
+		/// <summary>
+		/// Loads initial inventory balances from the database.
+		/// </summary>
+		/// <param name="inventoryId"></param>
+		/// <param name="date"></param>
+		/// <returns></returns>
+		private static object[] InitialBalance(Guid inventoryId, DateTime date)
+		{
 			// we load the balance for a day-1 so we get the
 			// final quantity/price for the beginning of the requested date
 			object balanceId = GetInventoryBalanceId(inventoryId, date.AddDays(-1));
@@ -326,9 +326,9 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			}
 		}
 
-	private static void UpdateBalances(PriceRecalculationData data, Guid inventoryId, 
-		DateTime date, decimal lastPrice, decimal totalPrice)
-	{
+		private static void UpdateBalances(PriceRecalculationData data, Guid inventoryId, 
+			DateTime date, decimal lastPrice, decimal totalPrice)
+		{
 			// update the balance for the operation's date
 			PriceRecalculationData.InventoryBalanceRow[] balances = 
 				(PriceRecalculationData.InventoryBalanceRow[])data.InventoryBalance.Select(
@@ -346,8 +346,8 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			balance.PriceLocalTotal = totalPrice;
 		}
 
-	private static Guid GetInventoryId(Guid warehouseId, Guid productId)
-	{
+		private static Guid GetInventoryId(Guid warehouseId, Guid productId)
+		{
 			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
 
 			Hashtable pms = new Hashtable(2);
@@ -358,8 +358,8 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			return (Guid)ls.GetDisplayText(new Guid("b198e1b2-be96-42ed-8602-43e19d443685"), pms, false, false, null);
 		}
 
-	private static object GetInventoryBalanceId(Guid inventoryId, DateTime date)
-	{
+		private static object GetInventoryBalanceId(Guid inventoryId, DateTime date)
+		{
 			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
 
 			Hashtable pms = new Hashtable(2);
@@ -370,25 +370,25 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			return ls.GetDisplayText(new Guid("11ba7945-5e11-4bc5-8424-d1d7600439fb"), pms, false, false, null);
 		}
 
-	private static bool IsWarehouseWeightedAverage(PriceRecalculationData data, Guid warehouseId)
-	{
+		private static bool IsWarehouseWeightedAverage(PriceRecalculationData data, Guid warehouseId)
+		{
 			PriceRecalculationData.WarehouseRow warehouse = data.Warehouse.FindById(warehouseId);
 			return warehouse.refWarehousePricingMethodId == _weightedAveragePricingMethodId;
 		}
-	#endregion
+		#endregion
 
-	#region IServiceAgent Members
-	private object _result;
-	public override object Result
-	{
-		get
+		#region IServiceAgent Members
+		private object _result;
+		public override object Result
 		{
+			get
+			{
 				return _result;
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			switch(this.MethodName)
 			{
 				case "RecalculatePrices":
@@ -405,5 +405,6 @@ public class WarehouseServiceAgent : AbstractServiceAgent
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

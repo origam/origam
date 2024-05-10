@@ -29,22 +29,22 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for BaseCaptionControl.
-/// </summary>
-public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionControl, IAsControl
+namespace Origam.Gui.Win
 {
-	/// <summary> 
-	/// Required designer variable.
+	/// <summary>
+	/// Summary description for BaseCaptionControl.
 	/// </summary>
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	private System.ComponentModel.Container components = null;
-	Label _captionLabel = new Label();
-
-	public BaseCaptionControl()
+	public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionControl, IAsControl
 	{
+		/// <summary> 
+		/// Required designer variable.
+		/// </summary>
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		private System.ComponentModel.Container components = null;
+		Label _captionLabel = new Label();
+
+		public BaseCaptionControl()
+		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -52,11 +52,11 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 
 		}
 
-	/// <summary> 
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(this.Parent != null && this.Parent.Controls.Contains(_captionLabel) && _captionLabel.IsDisposed == false)
@@ -74,8 +74,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			base.Dispose( disposing );
 		}
 
-	protected override void InitLayout()
-	{
+		protected override void InitLayout()
+		{
 			base.InitLayout ();
 
 			PaintCaption();
@@ -87,153 +87,153 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			this.DataBindings.CollectionChanged += new CollectionChangeEventHandler(DataBindings_CollectionChanged);
 		}
 
-	protected override void OnMove(EventArgs e)
-	{
+		protected override void OnMove(EventArgs e)
+		{
 			base.OnMove (e);
 
 			PaintCaption();
 		}
 
-	public void OnControlMouseWheel(MouseEventArgs e)
-	{
+		public void OnControlMouseWheel(MouseEventArgs e)
+		{
 			base.OnMouseWheel (e);
 		}
 
-	private bool _hideOnForm = false;
-	public bool HideOnForm
-	{
-		get
+		private bool _hideOnForm = false;
+		public bool HideOnForm
 		{
+			get
+			{
 				return _hideOnForm;
 			}
-		set
-		{
+			set
+			{
 				_hideOnForm = value;
 			}
-	}
+		}
 
-	#region Component Designer generated code
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Component Designer generated code
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			components = new System.ComponentModel.Container();
 		}
-	#endregion
+		#endregion
 
-	#region IAsCaptionControl Members
+		#region IAsCaptionControl Members
 
-	int _gridColumnWidth;
-	[Category("(ORIGAM)")]
-	[DefaultValue(100)]
-	[Description(CaptionDoc.GridColumnWidthDescription)]
-	public int GridColumnWidth
-	{
-		get
+		int _gridColumnWidth;
+		[Category("(ORIGAM)")]
+		[DefaultValue(100)]
+		[Description(CaptionDoc.GridColumnWidthDescription)]
+		public int GridColumnWidth
 		{
+			get
+			{
 				return _gridColumnWidth;
 			}
-		set
-		{
+			set
+			{
 				_gridColumnWidth = value;
 			}
-	}
+		}
 
 
-	string _gridColumnCaption = "";
-	[Category("(ORIGAM)")]
-	public string GridColumnCaption
-	{
-		get
+		string _gridColumnCaption = "";
+		[Category("(ORIGAM)")]
+		public string GridColumnCaption
 		{
+			get
+			{
 				return _gridColumnCaption;
 			}
-		set
-		{
+			set
+			{
 				_gridColumnCaption = value;
 			}
-	}
+		}
 
 
-	string _caption = "";
-	[Category("(ORIGAM)")]
-	public string Caption
-	{
-		get
+		string _caption = "";
+		[Category("(ORIGAM)")]
+		public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value ?? "";
 				this._captionLabel.Text = _caption;
 				ResetCaption();
 			}
-	}
+		}
 
-	CaptionPosition _captionPosition = CaptionPosition.Left;
-	[Category("(ORIGAM)")]
-	public CaptionPosition CaptionPosition
-	{
-		get
+		CaptionPosition _captionPosition = CaptionPosition.Left;
+		[Category("(ORIGAM)")]
+		public CaptionPosition CaptionPosition
 		{
+			get
+			{
 				return _captionPosition;
 			} 
-		set
-		{
+			set
+			{
 				_captionPosition = value;
 				PaintCaption();
 			}
-	}
+		}
 
-	private int _captionLength = 100;
-	[Category("(ORIGAM)")]
-	public int CaptionLength
-	{
-		get
+		private int _captionLength = 100;
+		[Category("(ORIGAM)")]
+		public int CaptionLength
 		{
+			get
+			{
 				return _captionLength ;
 			}
-		set
-		{
+			set
+			{
 				_captionLength = value;
 				PaintCaption();
 			}
-	}
+		}
 
-	private Guid _styleId;
-	[Browsable(false)]
-	public Guid StyleId
-	{
-		get
+		private Guid _styleId;
+		[Browsable(false)]
+		public Guid StyleId
 		{
+			get
+			{
 				return _styleId;
 			}
-		set
-		{
+			set
+			{
 				_styleId = value;
 			}
-	}
+		}
 
-	[TypeConverter(typeof(StylesConverter))]
-	public UIStyle Style
-	{
-		get
+		[TypeConverter(typeof(StylesConverter))]
+		public UIStyle Style
 		{
+			get
+			{
 				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
 			}
-		set
-		{
+			set
+			{
 				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region private methods
-	private void PaintCaption()
-	{
+		#region private methods
+		private void PaintCaption()
+		{
 			if(_captionLabel == null | this.Parent == null | this.IsDisposed | this.Disposing) return;
 
 			this._captionLabel.Width = this.CaptionLength;
@@ -272,8 +272,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			}
 		}
 
-	private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
-	{
+		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
+		{
 			if(this.DesignMode)
 			{
 				if(this.Caption == "")
@@ -303,8 +303,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			}
 		}
 
-	private void ResetCaption()
-	{
+		private void ResetCaption()
+		{
 			if(this.Caption == "")
 			{
 				foreach(Binding binding in this.DataBindings)
@@ -322,8 +322,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			}
 		}
 
-	private string TableName(DataSet ds, string dataMember)
-	{
+		private string TableName(DataSet ds, string dataMember)
+		{
 			// In case that dataMember is a path through relations, we find the last table
 			// so we can take a caption out of it
 			string tableName = "";
@@ -347,8 +347,8 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			return tableName;
 		}
 
-	private string ColumnCaption(Binding binding)
-	{
+		private string ColumnCaption(Binding binding)
+		{
 			if(binding.DataSource is DataSet)
 			{
 				DataSet dataset = binding.DataSource as DataSet;
@@ -365,17 +365,18 @@ public class BaseCaptionControl : System.Windows.Forms.UserControl, IAsCaptionCo
 			return binding.BindingMemberInfo.BindingField;
 		}
 
-	#endregion
+		#endregion
 
-	#region IAsControl Members
+		#region IAsControl Members
 
-	public virtual string DefaultBindableProperty
-	{
-		get
+		public virtual string DefaultBindableProperty
 		{
+			get
+			{
 				throw new InvalidOperationException();
 			}
-	}
+		}
 		
-	#endregion
+		#endregion
+	}
 }

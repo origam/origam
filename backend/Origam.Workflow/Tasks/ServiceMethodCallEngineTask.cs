@@ -26,21 +26,21 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks;
-
-/// <summary>
-/// Summary description for ServiceMethodCallTask.
-/// </summary>
-public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
+namespace Origam.Workflow.Tasks
 {
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
-	private IServiceAgent serviceAgent;
-	private IServiceAgent ServiceAgent
+	/// <summary>
+	/// Summary description for ServiceMethodCallTask.
+	/// </summary>
+	public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 	{
-		get
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
+		private IServiceAgent serviceAgent;
+		private IServiceAgent ServiceAgent
 		{
+			get
+			{
 				if (serviceAgent == null)
 				{
 					ServiceMethodCallTask task = Step as ServiceMethodCallTask;
@@ -52,14 +52,14 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 
 				return serviceAgent;
 			}
-	}
+		}
 		
-	public ServiceMethodCallEngineTask() : base()
-	{
+		public ServiceMethodCallEngineTask() : base()
+		{
 		}
 
-	public override void Execute()
-	{
+		public override void Execute()
+		{
 			Exception exception = null;
 
 			if (ServiceAgent is IAsyncAgent asyncAgent)
@@ -93,8 +93,8 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 				disposableServiceAgent.Dispose();
 			}
 		}
-	private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
-	{
+		private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
+		{
 			if (ServiceAgent is IAsyncAgent asyncAgent)
 			{
 				asyncAgent.AsyncCallFinished -= OnAsyncAgentOnAsyncCallFinished;
@@ -103,8 +103,8 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 			OnFinished(new WorkflowEngineTaskEventArgs(args.Exception));
 		}
 
-	protected override void OnExecute()
-	{
+		protected override void OnExecute()
+		{
 			ServiceMethodCallTask task = Step as ServiceMethodCallTask;
 			IServiceAgent agent = ServiceAgent;
 			
@@ -224,4 +224,5 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 
 			this.Result = agent.Result;
 		}
+	}
 }

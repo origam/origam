@@ -40,32 +40,32 @@ using System.Linq;
 using Origam.Extensions;
 using Origam.Service.Core;
 
-namespace Origam.Workflow;
-
-/// <summary>
-/// Summary description for StateMachineService.
-/// </summary>
-public class StateMachineService : AbstractService, IStateMachineService
+namespace Origam.Workflow
 {
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-    private static WorkQueueData _WorkQueueCache;
-    private static DateTime _WorkQueueLastRefreshed;
-
-    public StateMachineService()
+    /// <summary>
+    /// Summary description for StateMachineService.
+    /// </summary>
+    public class StateMachineService : AbstractService, IStateMachineService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        private static WorkQueueData _WorkQueueCache;
+        private static DateTime _WorkQueueLastRefreshed;
+
+        public StateMachineService()
+        {
             this.Initialize += new EventHandler(StateMachineService_Initialize);
             this.Unload += new EventHandler(StateMachineService_Unload);
         }
 
-    private void StateMachineService_Unload(object sender, EventArgs e)
-    {
+        private void StateMachineService_Unload(object sender, EventArgs e)
+        {
             _persistence = null;
         }
 
-    #region IStateMachineService Members
-    public bool IsInState(Guid entityId, Guid fieldId, object currentStateValue, Guid targetStateId)
-    {
+        #region IStateMachineService Members
+        public bool IsInState(Guid entityId, Guid fieldId, object currentStateValue, Guid targetStateId)
+        {
             StateMachine sm = GetMachine(entityId, fieldId, false);
 
             StateMachineState targetStateObj = sm.GetChildByIdRecursive(targetStateId) as StateMachineState;
@@ -84,14 +84,14 @@ public class StateMachineService : AbstractService, IStateMachineService
             return targetStateObj.IsState(convertedStateValue);
         }
 
-    public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId)
-    {
+        public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId)
+        {
             IXmlContainer dataDocument = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
             return AllowedStateValues(entityId, fieldId, currentStateValue, dataDocument, transactionId);
         }
 
-    public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IXmlContainer data, string transactionId)
-    {
+        public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IXmlContainer data, string transactionId)
+        {
             StateMachine sm = GetMachine(entityId, fieldId, false);
             if (sm == null)
             {
@@ -181,14 +181,14 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId)
-    {
+        public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId)
+        {
             IXmlContainer data = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
             return IsStateAllowed(entityId, fieldId, currentStateValue, newStateValue, data, transactionId);
         }
 
-    public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, IXmlContainer data, string transactionId)
-    {
+        public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, IXmlContainer data, string transactionId)
+        {
             foreach (object allowedValue in this.AllowedStateValues(entityId, fieldId, currentStateValue, data, transactionId))
             {
                 if (newStateValue.Equals(allowedValue))
@@ -200,8 +200,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    public void OnDataChanging(DataTable changedTable, string transactionId)
-    {
+        public void OnDataChanging(DataTable changedTable, string transactionId)
+        {
             if (changedTable.ExtendedProperties.Contains("EntityId"))
             {
                 ArrayList stateColumns = new ArrayList();
@@ -252,8 +252,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    public void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId)
-    {
+        public void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId)
+        {
             ArrayList rows = new ArrayList();
 
             foreach (string tableName in changedTables)
@@ -302,8 +302,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private void ProcessRecordCreated(DataRow row, Guid entityId, string transactionId)
-    {
+        private void ProcessRecordCreated(DataRow row, Guid entityId, string transactionId)
+        {
             // recordCreated
             if (row.RowState == DataRowState.Added)
             {
@@ -312,8 +312,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private void ProcessRecordStateTransition(DataRow row, ArrayList stateColumns, Guid entityId, string transactionId)
-    {
+        private void ProcessRecordStateTransition(DataRow row, ArrayList stateColumns, Guid entityId, string transactionId)
+        {
             if (row.RowState != DataRowState.Deleted)
             {
                 IXmlContainer data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
@@ -344,8 +344,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private void ProcessRecordModifiedDeleted(DataRow row, Guid entityId, string transactionId)
-    {
+        private void ProcessRecordModifiedDeleted(DataRow row, Guid entityId, string transactionId)
+        {
             // record updated/deleted
             switch (row.RowState)
             {
@@ -359,8 +359,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private bool ExecutePostEvents(StateMachine sm, object currentStateValue, object newStateValue, DataRow dataRow, IXmlContainer data, string transactionId)
-    {
+        private bool ExecutePostEvents(StateMachine sm, object currentStateValue, object newStateValue, DataRow dataRow, IXmlContainer data, string transactionId)
+        {
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);
             if (keys.Length == 1) rowKey = keys[0];
@@ -394,8 +394,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    private void ThrowStateTransitionInvalidException(StateMachine sm, object currentStateValue, object newStateValue, string transactionId)
-    {
+        private void ThrowStateTransitionInvalidException(StateMachine sm, object currentStateValue, object newStateValue, string transactionId)
+        {
             string newStateName = StateValueName(sm, newStateValue, transactionId);
             string currentStateName = StateValueName(sm, currentStateValue, transactionId);
 
@@ -405,8 +405,8 @@ public class StateMachineService : AbstractService, IStateMachineService
         }
 
 
-    private void ExecutePostWorkQueue(StateMachine sm, StateMachineServiceStatelessEventType eventType, object newStateValue, DataRow dataRow, IXmlContainer data, string transactionId)
-    {
+        private void ExecutePostWorkQueue(StateMachine sm, StateMachineServiceStatelessEventType eventType, object newStateValue, DataRow dataRow, IXmlContainer data, string transactionId)
+        {
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);
             if (keys.Length == 1) rowKey = keys[0];
@@ -460,8 +460,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private string ReverseLookupWorkQueueFieldValue(StateMachine sm, WorkQueueData.WorkQueueRow wq, string originalValue, string transactionId)
-    {
+        private string ReverseLookupWorkQueueFieldValue(StateMachine sm, WorkQueueData.WorkQueueRow wq, string originalValue, string transactionId)
+        {
             // convert the user entry to lower-case in case it is a guid because
             // often the strings are upper-case as returned by an SQL Server
             if (originalValue != null && sm.Field.DataType == OrigamDataType.UniqueIdentifier)
@@ -490,9 +490,9 @@ public class StateMachineService : AbstractService, IStateMachineService
             return result;
         }
 
-    public bool ExecutePreEvents(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, 
-        DataRow dataRow, string transactionId)
-    {
+        public bool ExecutePreEvents(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, 
+            DataRow dataRow, string transactionId)
+        {
             StateMachine sm = GetMachine(entityId, fieldId, true);
             IXmlContainer data = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
 
@@ -530,8 +530,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    private void ExecutePreWorkQueue(Guid entityId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId, StateMachine sm, IXmlContainer data, object rowKey)
-    {
+        private void ExecutePreWorkQueue(Guid entityId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId, StateMachine sm, IXmlContainer data, object rowKey)
+        {
             IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
             string newStateValueString = XmlTools.ConvertToString(newStateValue);
@@ -632,8 +632,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    public bool ExecuteStatelessEvents(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId)
-    {
+        public bool ExecuteStatelessEvents(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId)
+        {
             ArrayList stateMachines = GetMachines(entityId, false);
             ArrayList eventsSorted = new ArrayList();
 
@@ -692,8 +692,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    private static void ExecuteStatelessWorkQueue(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId, object rowKey, WorkQueueData workQueueList)
-    {
+        private static void ExecuteStatelessWorkQueue(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId, object rowKey, WorkQueueData workQueueList)
+        {
             if (workQueueList.WorkQueue.Rows.Count > 0)
             {
                 IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -776,7 +776,8 @@ public class StateMachineService : AbstractService, IStateMachineService
                     }
                 }
 
-                // removal (as last because to evaluate eventual XPath conditions      // records have to be updated before deleting them
+                // removal (as last because to evaluate eventual XPath conditions 
+                // records have to be updated before deleting them
                 WorkQueueData.WorkQueueRow[] removalQueues = WorkQueuesRemoval(workQueueList, eventType, entityId, dataRow);
                 foreach (WorkQueueData.WorkQueueRow wq in removalQueues)
                 {
@@ -803,20 +804,20 @@ public class StateMachineService : AbstractService, IStateMachineService
                 }
             }
         }
-    #endregion
+        #endregion
 
-    /// <summary>
-    /// Test if any of the field dependencies were updated in the data.
-    /// </summary>
-    /// <param name="fields">List of fields to test.</param>
-    /// <param name="row">Data row with the data on which the test will be done.</param>
-    /// <param name="type">State machine event type.</param>
-    /// <returns>True if the field changed (on update) or if the field has a value (on create).
-    /// For deletes this function will always return True because on delete operation basically 
-    /// all fields were changed, no matter if there are any dependencies or not. Also if there are
-    /// no dependencies True is always returned.</returns>
-    private bool FieldsChanged(ArrayList fields, DataRow row, StateMachineServiceStatelessEventType type)
-    {
+        /// <summary>
+        /// Test if any of the field dependencies were updated in the data.
+        /// </summary>
+        /// <param name="fields">List of fields to test.</param>
+        /// <param name="row">Data row with the data on which the test will be done.</param>
+        /// <param name="type">State machine event type.</param>
+        /// <returns>True if the field changed (on update) or if the field has a value (on create).
+        /// For deletes this function will always return True because on delete operation basically 
+        /// all fields were changed, no matter if there are any dependencies or not. Also if there are
+        /// no dependencies True is always returned.</returns>
+        private bool FieldsChanged(ArrayList fields, DataRow row, StateMachineServiceStatelessEventType type)
+        {
             // if there are no field dependencies all fields changed
             if (fields.Count == 0) return true;
 
@@ -837,9 +838,9 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    private static bool FieldChanged(DataRow row, StateMachineServiceStatelessEventType eventType,
-        string fieldName)
-    {
+        private static bool FieldChanged(DataRow row, StateMachineServiceStatelessEventType eventType,
+            string fieldName)
+        {
             if (row.Table.Columns.Contains(fieldName))
             {
                 // when new record we test if the value is not empty, then we execute the events
@@ -867,8 +868,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return false;
         }
 
-    private StateMachine GetMachine(Guid entityId, Guid fieldId, bool throwException)
-    {
+        private StateMachine GetMachine(Guid entityId, Guid fieldId, bool throwException)
+        {
             StateMachineSchemaItemProvider stateMachines = (ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService).GetProvider(typeof(StateMachineSchemaItemProvider)) as StateMachineSchemaItemProvider;
 
             if (stateMachines == null)
@@ -883,8 +884,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private ArrayList GetMachines(Guid entityId, bool throwException)
-    {
+        private ArrayList GetMachines(Guid entityId, bool throwException)
+        {
             StateMachineSchemaItemProvider stateMachines = (ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService).GetProvider(typeof(StateMachineSchemaItemProvider)) as StateMachineSchemaItemProvider;
 
             if (stateMachines == null)
@@ -899,8 +900,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private string StateValueName(StateMachine sm, object stateValue, string transactionId)
-    {
+        private string StateValueName(StateMachine sm, object stateValue, string transactionId)
+        {
             IDataLookupService lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
             if (sm.Field.DefaultLookup == null) return stateValue.ToString();
 
@@ -909,8 +910,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return result.ToString();
         }
 
-    private bool IsOperationAllowed(StateMachineOperation operation, IXmlContainer data, string transactionId)
-    {
+        private bool IsOperationAllowed(StateMachineOperation operation, IXmlContainer data, string transactionId)
+        {
             // check features
             IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             if (!param.IsFeatureOn(operation.Features))
@@ -946,8 +947,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return true;
         }
 
-    private bool IsEventAllowed(StateMachineEvent ev)
-    {
+        private bool IsEventAllowed(StateMachineEvent ev)
+        {
             IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
             if (!authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, ev.Roles))
             {
@@ -959,8 +960,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return param.IsFeatureOn(ev.Features);
         }
 
-    private void ExecuteWorkflow(IWorkflow workflow, StateMachineEvent ev, DataRow dataRow, string transactionId)
-    {
+        private void ExecuteWorkflow(IWorkflow workflow, StateMachineEvent ev, DataRow dataRow, string transactionId)
+        {
             if (transactionId == null)
             {
                 throw new ArgumentNullException("transactionId", ResourceUtils.GetString("ErrorNoTransaction"));
@@ -1053,8 +1054,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
 
-    private static WorkQueueData WorkQueueList(string transactionId)
-    {
+        private static WorkQueueData WorkQueueList(string transactionId)
+        {
             if (_WorkQueueLastRefreshed.AddMinutes(1).CompareTo(DateTime.Now) < 0)
             {
                 _WorkQueueCache = (WQService as WorkQueueService).GetQueues(
@@ -1065,47 +1066,47 @@ public class StateMachineService : AbstractService, IStateMachineService
             return _WorkQueueCache;
         }
 
-    private static bool AnyWorkQueueClassBasedOnEntity(Guid entityId)
-    {
+        private static bool AnyWorkQueueClassBasedOnEntity(Guid entityId)
+        {
             return ServiceManager.Services.GetService<SchemaService>()
                 .GetProvider<WorkQueueClassSchemaItemProvider>()
                 .ChildItemsByType("WorkQueueClass").Cast<WorkQueueClass>()
                 .Any(workQueueClass => workQueueClass.EntityId == entityId);
         }
 
-    private static bool AnyStateMachineBasedOnEntity(Guid entityId)
-    {
+        private static bool AnyStateMachineBasedOnEntity(Guid entityId)
+        {
             return ServiceManager.Services.GetService<SchemaService>()
                 .GetProvider<StateMachineSchemaItemProvider>()
                 .ChildItemsByType("WorkflowStateMachine").Cast<StateMachine>()
                 .Any(stateMachine => stateMachine.EntityId == entityId);
         }
 
-    private static WorkQueueClass WQClass(string name)
-    {
+        private static WorkQueueClass WQClass(string name)
+        {
             return (WorkQueueClass)WQService.WQClass(name);
         }
 
-    private static IWorkQueueService WQService
-    {
-        get
+        private static IWorkQueueService WQService
         {
+            get
+            {
                 return ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
             }
-    }
+        }
 
-    private static WorkQueueData.WorkQueueRow[] WorkQueuesCreation(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row)
-    {
+        private static WorkQueueData.WorkQueueRow[] WorkQueuesCreation(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row)
+        {
             return WorkQueues(workQueueList, eventType, entityId, row, false);
         }
 
-    private static WorkQueueData.WorkQueueRow[] WorkQueuesRemoval(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row)
-    {
+        private static WorkQueueData.WorkQueueRow[] WorkQueuesRemoval(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row)
+        {
             return WorkQueues(workQueueList, eventType, entityId, row, true);
         }
 
-    private static WorkQueueData.WorkQueueRow[] WorkQueues(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row, bool isRemoval)
-    {
+        private static WorkQueueData.WorkQueueRow[] WorkQueues(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row, bool isRemoval)
+        {
             ArrayList result = new ArrayList();
             DatasetGenerator dg = new DatasetGenerator(true);
 
@@ -1221,7 +1222,8 @@ public class StateMachineService : AbstractService, IStateMachineService
             return result.ToArray(typeof(WorkQueueData.WorkQueueRow)) as WorkQueueData.WorkQueueRow[];
         }
 
-    private void StateMachineService_Initialize(object sender, EventArgs e)
-    {
+        private void StateMachineService_Initialize(object sender, EventArgs e)
+        {
         }
+    }
 }

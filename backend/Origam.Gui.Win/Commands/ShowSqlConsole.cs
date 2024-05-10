@@ -24,27 +24,27 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands;
-
-public class ShowSqlConsole : AbstractMenuCommand
+namespace Origam.Gui.Win.Commands
 {
-    public ShowSqlConsole(SqlConsoleParameters owner)
+    public class ShowSqlConsole : AbstractMenuCommand
     {
+        public ShowSqlConsole(SqlConsoleParameters owner)
+        {
             Owner = owner;
         }
 
-    public override bool IsEnabled
-    {
-        get { return WorkbenchSingleton.Workbench.IsConnected; }
-        set
+        public override bool IsEnabled
         {
+            get { return WorkbenchSingleton.Workbench.IsConnected; }
+            set
+            {
                 throw new ArgumentException("Cannot set this property",
                     "IsEnabled");
             }
-    }
+        }
 
-    public override void Run()
-    {
+        public override void Run()
+        {
             SqlConsoleParameters parameters = Owner as SqlConsoleParameters;
             if(parameters == null)
             {
@@ -58,4 +58,5 @@ public class ShowSqlConsole : AbstractMenuCommand
             viewer.LoadObject(parameters.Command);
             WorkbenchSingleton.Workbench.ShowView(viewer);
         }
+    }
 }

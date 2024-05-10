@@ -25,16 +25,16 @@ using System.Xml;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace Origam.Windows.Editor;
-
-/// <summary>
-/// This class currently inserts the closing tags to typed openening tags
-/// and does smart indentation for xml files.
-/// </summary>
-public class XmlFormattingStrategy
+namespace Origam.Windows.Editor
 {
-    public void FormatLine(TextEditor editor, char charTyped)
+    /// <summary>
+    /// This class currently inserts the closing tags to typed openening tags
+    /// and does smart indentation for xml files.
+    /// </summary>
+    public class XmlFormattingStrategy
     {
+        public void FormatLine(TextEditor editor, char charTyped)
+        {
             //editor.Document.StartUndoableAction();
             try
             {
@@ -99,8 +99,8 @@ public class XmlFormattingStrategy
             //editor.Document.EndUndoableAction();
         }
 
-    public void IndentLine(TextEditor editor, DocumentLine line)
-    {
+        public void IndentLine(TextEditor editor, DocumentLine line)
+        {
             //editor.Document.StartUndoableAction();
             try
             {
@@ -116,11 +116,11 @@ public class XmlFormattingStrategy
             }
         }
 
-    /// <summary>
-    /// This function sets the indentlevel in a range of lines.
-    /// </summary>
-    public void IndentLines(TextEditor editor, int begin, int end)
-    {
+        /// <summary>
+        /// This function sets the indentlevel in a range of lines.
+        /// </summary>
+        public void IndentLines(TextEditor editor, int begin, int end)
+        {
             //editor.Document.StartUndoableAction();
             try
             {
@@ -136,13 +136,13 @@ public class XmlFormattingStrategy
             }
         }
 
-    public void SurroundSelectionWithComment(TextEditor editor)
-    {
+        public void SurroundSelectionWithComment(TextEditor editor)
+        {
             SurroundSelectionWithBlockComment(editor, "<!--", "-->");
         }
 
-    static void TryIndent(TextEditor editor, int begin, int end)
-    {
+        static void TryIndent(TextEditor editor, int begin, int end)
+        {
             string currentIndentation = "";
             Stack<string> tagStack = new Stack<string>();
             IDocument document = editor.Document;
@@ -233,11 +233,11 @@ public class XmlFormattingStrategy
             }
         }
 
-    /// <summary>
-    /// Default implementation for multiline comments.
-    /// </summary>
-    protected void SurroundSelectionWithBlockComment(TextEditor editor, string blockStart, string blockEnd)
-    {
+        /// <summary>
+        /// Default implementation for multiline comments.
+        /// </summary>
+        protected void SurroundSelectionWithBlockComment(TextEditor editor, string blockStart, string blockEnd)
+        {
             editor.Document.UndoStack.StartUndoGroup();
             try {
                 int startOffset = editor.SelectionStart;
@@ -285,8 +285,8 @@ public class XmlFormattingStrategy
                 editor.Document.UndoStack.EndUndoGroup();    
             }
         }
-    public static BlockCommentRegion FindSelectedCommentRegion(TextEditor editor, string commentStart, string commentEnd)
-    {
+        public static BlockCommentRegion FindSelectedCommentRegion(TextEditor editor, string commentStart, string commentEnd)
+        {
             IDocument document = editor.Document;
 
             if (document.TextLength == 0)
@@ -384,28 +384,28 @@ public class XmlFormattingStrategy
 
             return null;
         }
-}
+    }
 
-public class BlockCommentRegion
-{
-    public string CommentStart { get; private set; }
-    public string CommentEnd { get; private set; }
-    public int StartOffset { get; private set; }
-    public int EndOffset { get; private set; }
-
-    /// <summary>
-    /// The end offset is the offset where the comment end string starts from.
-    /// </summary>
-    public BlockCommentRegion(string commentStart, string commentEnd, int startOffset, int endOffset)
+    public class BlockCommentRegion
     {
+        public string CommentStart { get; private set; }
+        public string CommentEnd { get; private set; }
+        public int StartOffset { get; private set; }
+        public int EndOffset { get; private set; }
+
+        /// <summary>
+        /// The end offset is the offset where the comment end string starts from.
+        /// </summary>
+        public BlockCommentRegion(string commentStart, string commentEnd, int startOffset, int endOffset)
+        {
             this.CommentStart = commentStart;
             this.CommentEnd = commentEnd;
             this.StartOffset = startOffset;
             this.EndOffset = endOffset;
         }
 
-    public override int GetHashCode()
-    {
+        public override int GetHashCode()
+        {
             int hashCode = 0;
             unchecked
             {
@@ -417,8 +417,8 @@ public class BlockCommentRegion
             return hashCode;
         }
 
-    public override bool Equals(object obj)
-    {
+        public override bool Equals(object obj)
+        {
             BlockCommentRegion other = obj as BlockCommentRegion;
             if (other == null) return false;
             return this.CommentStart == other.CommentStart &&
@@ -426,4 +426,6 @@ public class BlockCommentRegion
                 this.StartOffset == other.StartOffset &&
                 this.EndOffset == other.EndOffset;
         }
+    }
 }
+

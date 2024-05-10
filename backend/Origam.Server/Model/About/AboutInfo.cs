@@ -19,11 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server.Model.About;
-
-public class AboutInfo
+namespace Origam.Server.Model.About
 {
-    public string ServerVersion { get; set; }
-    public string LinkToCommit { get; set; }
-    public string CommitId { get; set; }
+    public class AboutInfo
+    {
+        public string ServerVersion { get; set; }
+        public string LinkToCommit { get; set; }
+        public string CommitId { get; set; }
+    }
 }

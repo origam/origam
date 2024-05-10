@@ -23,169 +23,169 @@ using System;
 using WeifenLuo.WinFormsUI.Docking;
 using Origam.UI;
 
-namespace Origam.Workbench;
-
-public class AbstractViewContent : AbstractBaseViewContent, IViewContent
+namespace Origam.Workbench
 {
-	string _untitledName = String.Empty;
-	string _titleName    = null;
-	Guid displayedItemId ;
-		
-	bool   _isDirty  = false;
-	bool   _isViewOnly = false;
-	bool _canRefresh = false;
-		
-	public virtual bool CanRefreshContent
+	public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 	{
-		get 
+		string _untitledName = String.Empty;
+		string _titleName    = null;
+		Guid displayedItemId ;
+		
+		bool   _isDirty  = false;
+		bool   _isViewOnly = false;
+		bool _canRefresh = false;
+		
+		public virtual bool CanRefreshContent
 		{
+			get 
+			{
 				return _canRefresh;
 			}
-		set 
-		{
+			set 
+			{
 				_canRefresh = value;
 			}
-	}
+		}
 
-	public virtual string UntitledName 
-	{
-		get 
+		public virtual string UntitledName 
 		{
+			get 
+			{
 				return _untitledName;
 			}
-		set 
-		{
+			set 
+			{
 				_untitledName = value;
 			}
-	}
+		}
 		
-	public virtual string TitleName 
-	{
-		get 
+		public virtual string TitleName 
 		{
+			get 
+			{
 				return IsUntitled ? _untitledName : _titleName;
 			}
-		set 
-		{
+			set 
+			{
 				_titleName = value;
 				OnTitleNameChanged(EventArgs.Empty);
 			}
-	}
+		}
 		
-	private string _statusText;
-	public string StatusText
-	{
-		get
+		private string _statusText;
+		public string StatusText
 		{
+			get
+			{
 				return _statusText;
 			}
-		set
-		{
+			set
+			{
 				_statusText = value;
 				OnStatusTextChanged(EventArgs.Empty);
 			}
-	}
+		}
 
-	public event EventHandler StatusTextChanged;
-	void OnStatusTextChanged(EventArgs e)
-	{
+		public event EventHandler StatusTextChanged;
+		void OnStatusTextChanged(EventArgs e)
+		{
 			if (StatusTextChanged != null) 
 			{
 				StatusTextChanged(this, e);
 			}
 		}
 
-	public virtual Guid DisplayedItemId 
-	{
-		get => displayedItemId;
-		set 
+		public virtual Guid DisplayedItemId 
 		{
+			get => displayedItemId;
+			set 
+			{
 				displayedItemId = value;
 				OnFileNameChanged(EventArgs.Empty);
 			}
-	}
+		}
 
-	public virtual string HelpTopic
-	{
-		get
-		{
+        public virtual string HelpTopic
+        {
+            get
+            {
                 return "";
             }
-	}
+        }
 		
-	public virtual bool CreateAsSubViewContent 
-	{
-		get 
+		public virtual bool CreateAsSubViewContent 
 		{
+			get 
+			{
 				return false;
 			}
-	}
+		}
 
-	public AbstractViewContent()
-	{
+		public AbstractViewContent()
+		{
 		}
 		
-	public virtual void RefreshContent()
-	{
+		public virtual void RefreshContent()
+		{
 		}
 
-	public AbstractViewContent(string titleName)
-	{
+		public AbstractViewContent(string titleName)
+		{
 			_titleName = titleName;
 		}
 		
-	public AbstractViewContent(string titleName, string fileName)
-	{
+		public AbstractViewContent(string titleName, string fileName)
+		{
 			_titleName = titleName;
 			displayedItemId  = Guid.Parse(fileName);
 		}
 		
-	public bool IsUntitled 
-	{
-		get 
+		public bool IsUntitled 
 		{
+			get 
+			{
 				return _titleName == null;
 			}
-	}
+		}
 
-	public virtual string Test()
-	{
+		public virtual string Test()
+		{
 			return "";
 		}
 
-	public virtual bool IsDirty 
-	{
-		get 
+		public virtual bool IsDirty 
 		{
+			get 
+			{
 				return _isDirty;
 			}
-		set 
-		{
+			set 
+			{
 				if(_isDirty != value)
 				{
 					_isDirty = value;
 					OnDirtyChanged(EventArgs.Empty);
 				}
 			}
-	}
+		}
 		
-	private bool _isReadOnly = false;
-	public virtual bool IsReadOnly 
-	{
-		get 
+		private bool _isReadOnly = false;
+		public virtual bool IsReadOnly 
 		{
+			get 
+			{
 				return _isReadOnly;
 			}
-		set
-		{
+			set
+			{
 				_isReadOnly = value;
 			}
-	}		
+		}		
 		
-	public virtual bool IsViewOnly 
-	{
-		get 
+		public virtual bool IsViewOnly 
 		{
+			get 
+			{
 				if(IsReadOnly)
 				{
 					return true;
@@ -195,35 +195,35 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 					return _isViewOnly;
 				}
 			}
-		set 
-		{
+			set 
+			{
 				_isViewOnly = value;
 			}
-	}
+		}
 		
-	public virtual void SaveObject()
-	{
+		public virtual void SaveObject()
+		{
 			if (IsDirty) 
 			{
 				throw new System.NotImplementedException();
 			}
 		}
 
-	public object LoadedObject { get; private set; }
+		public object LoadedObject { get; private set; }
 
-	protected virtual void ViewSpecificLoad(object objectToLoad)
-	{
+		protected virtual void ViewSpecificLoad(object objectToLoad)
+		{
 			
 		}
 
-	public void LoadObject(object objectToLoad)
-	{
+		public void LoadObject(object objectToLoad)
+		{
 			ViewSpecificLoad(objectToLoad);
 			LoadedObject = objectToLoad;
 		}
 		
-	protected virtual void OnDirtyChanged(EventArgs e)
-	{
+		protected virtual void OnDirtyChanged(EventArgs e)
+		{
 			OnTitleNameChanged(new EventArgs());
 
 			if (DirtyChanged != null) 
@@ -232,8 +232,8 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 			}
 		}
 		
-	protected virtual void OnTitleNameChanged(EventArgs e)
-	{	
+		protected virtual void OnTitleNameChanged(EventArgs e)
+		{	
 			this.Text = (IsDirty ? "*" : "") + _titleName;
 			//this.TabText = this.TitleName;
 
@@ -243,8 +243,8 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 			}
 		}
 		
-	protected virtual void OnFileNameChanged(EventArgs e)
-	{
+		protected virtual void OnFileNameChanged(EventArgs e)
+		{
 			if (FileNameChanged != null) 
 			{
 				FileNameChanged(this, e);
@@ -252,36 +252,39 @@ public class AbstractViewContent : AbstractBaseViewContent, IViewContent
 		}
 		
 		
-	protected virtual void OnSaving(EventArgs e)
-	{
+		protected virtual void OnSaving(EventArgs e)
+		{
 			if (Saving != null) 
 			{
 				Saving(this, e);
 			}
 		}
 
-	private void InitializeComponent()
-	{
-			// 		// AbstractViewContent
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+		private void InitializeComponent()
+		{
+			// 
+			// AbstractViewContent
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(292, 273);
 			this.DockAreas = DockAreas.Document;
 			this.Name = "AbstractViewContent";
 
 		}
 		
-	protected virtual void OnSaved(SaveEventArgs e)
-	{
+		protected virtual void OnSaved(SaveEventArgs e)
+		{
 			if (Saved != null) 
 			{
 				Saved(this, e);
 			}
 		}
 		
-	public virtual object Content { get; set; }
-	public event EventHandler TitleNameChanged;
-	public event EventHandler FileNameChanged;
-	public event EventHandler DirtyChanged;
-	public event EventHandler     Saving;
-	public event SaveEventHandler Saved;
+        public virtual object Content { get; set; }
+		public event EventHandler TitleNameChanged;
+		public event EventHandler FileNameChanged;
+		public event EventHandler DirtyChanged;
+		public event EventHandler     Saving;
+		public event SaveEventHandler Saved;
+	}
 }

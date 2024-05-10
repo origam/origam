@@ -23,17 +23,18 @@ using System;
 using System.Collections.Generic;
 using Origam.Server;
 
-namespace Origam.Server;
-
-public interface ILazyRowLoadInput: IEntityIdentification
+namespace Origam.Server
 {
-    string Filter { get; set; }
-    Dictionary<string, Guid> FilterLookups { get; set; }
-    List<IRowOrdering> OrderingList { get; }
-    Dictionary<string, string> Parameters { get; set; }
-    int RowLimit { get; set; }        
-    int RowOffset { get; set; }
+    public interface ILazyRowLoadInput: IEntityIdentification
+    {
+        string Filter { get; set; }
+        Dictionary<string, Guid> FilterLookups { get; set; }
+        List<IRowOrdering> OrderingList { get; }
+        Dictionary<string, string> Parameters { get; set; }
+        int RowLimit { get; set; }        
+        int RowOffset { get; set; }
 
-    string[] ColumnNames { get; set; }
-    Guid MasterRowId { get; set; }
+        string[] ColumnNames { get; set; }
+        Guid MasterRowId { get; set; }
+    }
 }

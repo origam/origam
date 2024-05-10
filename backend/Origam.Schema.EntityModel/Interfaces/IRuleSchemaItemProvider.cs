@@ -21,15 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for IRuleSchemaItemProvider.
-/// </summary>
-public interface IRuleSchemaItemProvider : ISchemaItemProvider
+namespace Origam.Schema.EntityModel
 {
-	ArrayList EndRules { get; }
-	ArrayList StartRules { get; }
-	ArrayList DataRules { get; }
-	ArrayList EntityRules { get; }
+	/// <summary>
+	/// Summary description for IRuleSchemaItemProvider.
+	/// </summary>
+	public interface IRuleSchemaItemProvider : ISchemaItemProvider
+	{
+        ArrayList EndRules { get; }
+        ArrayList StartRules { get; }
+        ArrayList DataRules { get; }
+        ArrayList EntityRules { get; }
+    }
 }

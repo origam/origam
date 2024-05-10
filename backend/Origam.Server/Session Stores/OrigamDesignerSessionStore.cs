@@ -31,19 +31,19 @@ using Origam.Schema.EntityModel;
 using System.Collections.Generic;
 using Origam.Server;
 
-namespace Origam.Server;
-
-public class OrigamDesignerSessionStore : FormSessionStore
+namespace Origam.Server
 {
-    private static IDictionary<string, DataStructure> _dataStructures =
-        new Dictionary<string, DataStructure>();
-    private static object _dataStructureslock = new object();
-    SimpleModelData _modelData;
-
-    public OrigamDesignerSessionStore(IBasicUIService service, UIRequest request, 
-        string name, FormReferenceMenuItem menuItem, Guid entityId, Analytics analytics)
-        : base(service, request, name, menuItem, analytics)
+    public class OrigamDesignerSessionStore : FormSessionStore
     {
+        private static IDictionary<string, DataStructure> _dataStructures =
+            new Dictionary<string, DataStructure>();
+        private static object _dataStructureslock = new object();
+        SimpleModelData _modelData;
+
+        public OrigamDesignerSessionStore(IBasicUIService service, UIRequest request, 
+            string name, FormReferenceMenuItem menuItem, Guid entityId, Analytics analytics)
+            : base(service, request, name, menuItem, analytics)
+        {
             FormId = entityId;
             GetModelData();
             SimpleModelData.OrigamEntityRow entityRow = _modelData.OrigamEntity.Rows[0]
@@ -56,16 +56,16 @@ public class OrigamDesignerSessionStore : FormSessionStore
             DataStructureId = new Guid("1240e912-2c96-4bb7-800c-6b6649541efc"); //GenerateDataStructure();
         }
 
-    public override string HelpTooltipFormId
-    {
-        get
+        public override string HelpTooltipFormId
         {
+            get
+            {
                 return "d7822ba7-a353-4612-ac5d-d1b10b381671";
             }
-    }
+        }
 
-    private void GetModelData()
-    {
+        private void GetModelData()
+        {
             _modelData = core.DataService.Instance.LoadData(
                 new Guid("3aaec7cd-5e40-40af-b4ad-1edd0e0fdade"),
                 new Guid("b3cc44d5-aa9f-4ff5-b078-15dd2f7af46f"),
@@ -74,8 +74,8 @@ public class OrigamDesignerSessionStore : FormSessionStore
                 as SimpleModelData;
         }
 
-    public override XmlDocument GetFormXml()
-    {
+        public override XmlDocument GetFormXml()
+        {
             if (_modelData == null)
             {
                 GetModelData();
@@ -86,8 +86,8 @@ public class OrigamDesignerSessionStore : FormSessionStore
             return result;
         }
 
-    private Guid GenerateDataStructure()
-    {
+        private Guid GenerateDataStructure()
+        {
             string name = "xxx";
             lock (_dataStructureslock)
             {
@@ -106,4 +106,5 @@ public class OrigamDesignerSessionStore : FormSessionStore
                 }
             }
         }
+    }
 }

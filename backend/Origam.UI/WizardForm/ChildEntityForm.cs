@@ -22,19 +22,19 @@ using System;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
-namespace Origam.UI.WizardForm;
-
-public class ChildEntityForm : AbstractWizardForm
+namespace Origam.UI.WizardForm
 {
-    public IDataEntity Entity2 { get; set; }
-
-    public IDataEntity Entity1 { get; set; }
-    public string EntityName { get; set; }
-    public string EnterAllInfo { get; set; }
-    public string ChildEntityWiz { get; set; }
-
-    internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
+    public class ChildEntityForm : AbstractWizardForm
     {
+        public IDataEntity Entity2 { get; set; }
+
+        public IDataEntity Entity1 { get; set; }
+        public string EntityName { get; set; }
+        public string EnterAllInfo { get; set; }
+        public string ChildEntityWiz { get; set; }
+
+        internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
+        {
             if (cboEntity1.Items.Count == 0)
             {
                 txtchildEntityName.Text = "";
@@ -58,4 +58,5 @@ public class ChildEntityForm : AbstractWizardForm
                 cboEntity1.SelectedItem = selectedItem;
             }
         }
+    }
 }

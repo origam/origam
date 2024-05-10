@@ -22,45 +22,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.TestModel;
-
-[SchemaItemDescription("Test Scenario", 16)]
-[ClassMetaVersion("6.0.0")]
-public class TestScenario : AbstractSchemaItem
+namespace Origam.Schema.TestModel
 {
-	public const string CategoryConst = "TestScenario";
+	[SchemaItemDescription("Test Scenario", 16)]
+    [ClassMetaVersion("6.0.0")]
+	public class TestScenario : AbstractSchemaItem
+	{
+		public const string CategoryConst = "TestScenario";
 
-	public TestScenario() {}
+		public TestScenario() {}
 
-	public TestScenario(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public TestScenario(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-	public TestScenario(Key primaryKey) : base(primaryKey) {}
+		public TestScenario(Key primaryKey) : base(primaryKey) {}
 
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 		
-	public override string ItemType => CategoryConst;
+		public override string ItemType => CategoryConst;
 
-	public override string Icon => "16";
+		public override string Icon => "16";
 
-	public override bool UseFolders => false;
+		public override bool UseFolders => false;
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[]
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(TestCase)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group,
 				typeof(T) == typeof(TestCase)
 					? "NewTestCase" : null);
 		}
 
-	#endregion
+		#endregion
 
+	}
 }

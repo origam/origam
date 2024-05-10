@@ -25,13 +25,13 @@ using System.Data;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Origam.JSON;
-
-class DataRowConverter : JsonConverter
+namespace Origam.JSON
 {
-    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-        Newtonsoft.Json.JsonSerializer serializer)
+    class DataRowConverter : JsonConverter
     {
+        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+            Newtonsoft.Json.JsonSerializer serializer)
+        {
             DataRow row = (DataRow)value;
             DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
 
@@ -71,13 +71,14 @@ class DataRowConverter : JsonConverter
             writer.WriteEndObject();
         }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-    {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
             throw new NotImplementedException();
         }
 
-    public override bool CanConvert(Type objectType)
-    {
+        public override bool CanConvert(Type objectType)
+        {
             return typeof(DataRow).IsAssignableFrom(objectType);
         }
+    }
 }

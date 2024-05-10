@@ -26,27 +26,27 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for EntityRelationItem.
-/// </summary>
-[SchemaItemDescription("Data Structure", "icon_data-structure.png")]
-[HelpTopic("Data+Structures")]
-public class DataStructure : AbstractDataStructure, ISchemaItemFactory
+namespace Origam.Schema.EntityModel
 {
-	public DataStructure() : base(){ Init(); }
-		
-	public DataStructure(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-	public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
-
-	#region Properties
-	[Browsable(false)]
-	public ArrayList Entities
+	/// <summary>
+	/// Summary description for EntityRelationItem.
+	/// </summary>
+	[SchemaItemDescription("Data Structure", "icon_data-structure.png")]
+    [HelpTopic("Data+Structures")]
+	public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 	{
-		get
+		public DataStructure() : base(){ Init(); }
+		
+		public DataStructure(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+
+		public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
+
+		#region Properties
+		[Browsable(false)]
+		public ArrayList Entities
 		{
+			get
+			{
 				ArrayList entities = new ArrayList();
 
 				foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
@@ -57,13 +57,13 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 
 				return entities;
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public IList<DataStructureEntity> LocalizableEntities
-	{
-		get
-		{
+		[Browsable(false)]
+        public IList<DataStructureEntity> LocalizableEntities
+        {
+            get
+            {
                 List<DataStructureEntity> result = new List<DataStructureEntity>();
                 foreach (DataStructureEntity dsEntity in Entities)
                 {
@@ -75,55 +75,55 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
                 }
                 return result;
             }
-	}
+        }
 
-	[Browsable(false)]
-	public ArrayList DefaultSets
-	{
-		get
+		[Browsable(false)]
+		public ArrayList DefaultSets
 		{
+			get
+			{
 				return this.ChildItemsByType(DataStructureDefaultSet.CategoryConst);
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public ArrayList TemplateSets
-	{
-		get
+		[Browsable(false)]
+		public ArrayList TemplateSets
 		{
+			get
+			{
 				return this.ChildItemsByType(DataStructureTemplateSet.CategoryConst);
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public ArrayList Methods
-	{
-		get
+		[Browsable(false)]
+		public ArrayList Methods
 		{
+			get
+			{
 				return this.ChildItemsByType(DataStructureMethod.CategoryConst);
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public ArrayList RuleSets
-	{
-		get
+		[Browsable(false)]
+		public ArrayList RuleSets
 		{
+			get
+			{
 				return this.ChildItemsByType(DataStructureRuleSet.CategoryConst);
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public ArrayList SortSets
-	{
-		get
+		[Browsable(false)]
+		public ArrayList SortSets
 		{
+			get
+			{
 				return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
 			}
-	}
+		}
 
-	private ArrayList GetChildEntities(DataStructureEntity entity)
-	{
+		private ArrayList GetChildEntities(DataStructureEntity entity)
+		{
 			ArrayList entities = new ArrayList();
 
 			foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
@@ -135,40 +135,40 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 			return entities;
 		}
 
-	private bool _isLocalized = false;
-	[Description("Translate data for all entities, that has realtion marked with IsMultilingual='true'. If set to true, any read-write operation will fail.")]
-	[XmlAttribute("localized")]
-	public bool IsLocalized
-	{
-		get
+		private bool _isLocalized = false;
+		[Description("Translate data for all entities, that has realtion marked with IsMultilingual='true'. If set to true, any read-write operation will fail.")]
+        [XmlAttribute("localized")]
+		public bool IsLocalized
 		{
+			get
+			{
 				return _isLocalized;
 			}
-		set
-		{
+			set
+			{
 				_isLocalized = value;
 			}
-	}
+		}
 
-	private string _dataSetClass;
-	[Description("A fully qualified name of a class followed by an assembly name which has a class in it. A class should correspond (should have same xsd) as a xsd of a current datastructure. A class will be used everytime a dataset is to be created from a datastructure. A class is worth defining when we need to seamlessly pass a dataset between origam and a service agent (library) code.")]
-	[XmlAttribute("dataSetClass")]
-	public string DataSetClass
-	{
-		get
+		private string _dataSetClass;
+		[Description("A fully qualified name of a class followed by an assembly name which has a class in it. A class should correspond (should have same xsd) as a xsd of a current datastructure. A class will be used everytime a dataset is to be created from a datastructure. A class is worth defining when we need to seamlessly pass a dataset between origam and a service agent (library) code.")]
+        [XmlAttribute("dataSetClass")]
+        public string DataSetClass
 		{
+			get
+			{
 				return _dataSetClass;
 			}
-		set
-		{
+			set
+			{
 				_dataSetClass = value;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden AbstractSchemaItem Members
-	private void Init()
-	{
+		#region Overriden AbstractSchemaItem Members
+		private void Init()
+		{
 			this.ChildItemTypes.InsertRange(0,
 				new Type[] {
 							   typeof(DataStructureEntity),
@@ -182,8 +182,8 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 				   );                        
 		}
 
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
-	{
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+		{
 			foreach(DataStructureEntity item in this.Entities)
 			{
 				item.GetParameterReferences(item, list);
@@ -194,5 +194,6 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 				defset.GetParameterReferences(defset, list);
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

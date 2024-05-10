@@ -34,17 +34,17 @@ using log4net;
 using Origam.BI.SSRS.SSRSWebReference;
 using Origam.Service.Core;
 
-namespace Origam.BI.SSRS;
-
-public class SSRSService : IReportService
+namespace Origam.BI.SSRS
 {
-    private TraceTaskInfo traceTaskInfo = null;
-    private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
-
-    public object GetReport(Guid reportId, IXmlContainer data, string format, 
-        Hashtable parameters, string dbTransaction)
+    public class SSRSService : IReportService
     {
+        private TraceTaskInfo traceTaskInfo = null;
+        private static readonly ILog log = LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
+		public object GetReport(Guid reportId, IXmlContainer data, string format, 
+            Hashtable parameters, string dbTransaction)
+        {
 			IPersistenceService persistenceService = ServiceManager.Services
                 .GetService(typeof(IPersistenceService)) as IPersistenceService;
 			SSRSReport report = persistenceService.SchemaProvider
@@ -116,21 +116,22 @@ public class SSRSService : IReportService
             return result;
         }
 
-    public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
-        int copies, Hashtable parameters)
-    {
+		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
+            int copies, Hashtable parameters)
+		{
 			throw new NotSupportedException();
 		}
 
-    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-    {
+        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        {
             this.traceTaskInfo = traceTaskInfo;
         }
 
-    public string PrepareExternalReportViewer(Guid reportId,
-        IXmlContainer data, string format,
-        Hashtable parameters, string dbTransaction)
-    {
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format,
+            Hashtable parameters, string dbTransaction)
+        {
             throw new NotImplementedException();
         }
+    }
 }

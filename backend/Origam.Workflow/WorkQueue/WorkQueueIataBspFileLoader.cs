@@ -30,23 +30,23 @@ using Origam.Workbench.Services;
 using log4net;
 using Origam.Extensions;
 
-namespace Origam.Workflow.WorkQueue;
-
-public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
+namespace Origam.Workflow.WorkQueue
 {
-    private class PeekableStreamReaderAdapter
+    public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
     {
-        private StreamReader streamReader;
-        private Queue<string> buffer;
-
-        public PeekableStreamReaderAdapter(StreamReader streamReader)
+        private class PeekableStreamReaderAdapter
         {
+            private StreamReader streamReader;
+            private Queue<string> buffer;
+
+            public PeekableStreamReaderAdapter(StreamReader streamReader)
+            {
                 this.streamReader = streamReader;
                 buffer = new Queue<string>();
             }
 
-        public string PeekLine()
-        {
+            public string PeekLine()
+            {
                 string line = streamReader.ReadLine();
                 if(line == null)
                 {
@@ -56,40 +56,40 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
                 return line;
             }
 
-        public string ReadLine()
-        {
+            public string ReadLine()
+            {
                 if(buffer.Count > 0)
                 {
                     return buffer.Dequeue();
                 }
                 return streamReader.ReadLine();
             }
-    }
+        }
 
-    private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
-    private string transactionId;
-    private bool isLocalTransaction = false;
-    private string path = null;
-    private string indexFile = null;
-    private string searchPattern = null;
-    private string segmentMarker = null;
-    private string footerMarker = null;
-    private string lastRowMarker = null;
-    private bool addLastRowToQueue = false;
-    private StreamReader streamReader = null;
-    private PeekableStreamReaderAdapter adapter = null;
-    private FileInfo fileInfo = null;
-    private int segmentsCounter = 0;
-    private bool lastRowMarkerReached = false;
-    private HashIndexFile hashIndexFile;
+        private static readonly ILog log = LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+        private string transactionId;
+        private bool isLocalTransaction = false;
+        private string path = null;
+        private string indexFile = null;
+        private string searchPattern = null;
+        private string segmentMarker = null;
+        private string footerMarker = null;
+        private string lastRowMarker = null;
+        private bool addLastRowToQueue = false;
+        private StreamReader streamReader = null;
+        private PeekableStreamReaderAdapter adapter = null;
+        private FileInfo fileInfo = null;
+        private int segmentsCounter = 0;
+        private bool lastRowMarkerReached = false;
+        private HashIndexFile hashIndexFile;
 
-    public override void Connect(
-        IWorkQueueService service, Guid queueId, 
-        string workQueueClass, string connection, 
-        string userName, string password, 
-        string transactionId)
-    {
+        public override void Connect(
+            IWorkQueueService service, Guid queueId, 
+            string workQueueClass, string connection, 
+            string userName, string password, 
+            string transactionId)
+        {
             if(log.IsInfoEnabled)
             {
                 log.Info("Connecting " + connection);
@@ -99,8 +99,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             InitializeStream(connection);
         }
 
-    private void InitializeStream(string connection)
-    {
+        private void InitializeStream(string connection)
+        {
             try
             {
                 hashIndexFile = new HashIndexFile(indexFile);
@@ -125,14 +125,14 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
         }
 
 
-    private Stream OpenFileExclusively(string fileName)
-    {
+        private Stream OpenFileExclusively(string fileName)
+        {
             return File.Open(
                 fileName, FileMode.Open, FileAccess.Read, FileShare.None);
         }
 
-    private void ParseParameters(string connection)
-    {
+        private void ParseParameters(string connection)
+        {
             string[] cnParts = connection.Split(";".ToCharArray());
             foreach(string part in cnParts)
             {
@@ -202,8 +202,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             }
         }
 
-    private void SetupTransaction(string transactionId)
-    {
+        private void SetupTransaction(string transactionId)
+        {
             this.transactionId = transactionId;
             if(this.transactionId == null)
             {
@@ -212,8 +212,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             }
         }
 
-    public override void Disconnect()
-    {
+        public override void Disconnect()
+        {
             if(fileInfo != null)
             {
                 CheckLastRowMarker();
@@ -228,8 +228,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             hashIndexFile.Dispose();
         }
 
-    private void CheckLastRowMarker()
-    {
+        private void CheckLastRowMarker()
+        {
             if((segmentsCounter > 0) && !lastRowMarkerReached)
             {
                 throw new Exception(
@@ -237,8 +237,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             }
         }
 
-    public override WorkQueueAdapterResult GetItem(string lastState)
-    {
+        public override WorkQueueAdapterResult GetItem(string lastState)
+        {
             if(streamReader == null)
             {
                 return null;
@@ -265,15 +265,16 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             return ReadSegmentAndReturnAsWQResult(firstLine);
         }
 
-    private WorkQueueAdapterResult ReadSegmentAndReturnAsWQResult(
-        string firstLine)
-    {
+        private WorkQueueAdapterResult ReadSegmentAndReturnAsWQResult(
+            string firstLine)
+        {
             string fileSegment = ReadFileSegment(firstLine);
             DataTable dataTable = CreateFileDataset();
             DataRow row = dataTable.NewRow();
             try
             {
-                // Add file metadata (times)			     row["CreationTime"] = fileInfo.CreationTime;
+                // Add file metadata (times)			
+                row["CreationTime"] = fileInfo.CreationTime;
                 row["LastWriteTime"] = fileInfo.LastWriteTime;
                 row["LastAccessTime"] = fileInfo.LastAccessTime;
             }
@@ -288,8 +289,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
                 DataDocumentFactory.New(dataTable.DataSet));
         }
 
-    private string ReadFileSegment(string firstLine)
-    {
+        private string ReadFileSegment(string firstLine)
+        {
             StringBuilder output = new StringBuilder();
             output.AppendLine(firstLine);
             string line = adapter.PeekLine();
@@ -303,8 +304,8 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             return output.ToString();
         }
 
-    private void MoveToFirstTransaction()
-    {
+        private void MoveToFirstTransaction()
+        {
             string line = adapter.PeekLine();
             while((line != null) 
             && !(line.StartsWith(segmentMarker)))
@@ -314,16 +315,18 @@ public class WorkQueueIataBspFileLoader : WorkQueueLoaderAdapter
             }
         }
 
-    private DataTable CreateFileDataset()
-    {
+        private DataTable CreateFileDataset()
+        {
             DataSet dataSet = new DataSet("ROOT");
             DataTable dataTable = dataSet.Tables.Add("File");
             dataTable.Columns.Add("Name", typeof(string));
             dataTable.Columns.Add("Data", typeof(string));
-            // Add file metadata (times)			     dataTable.Columns.Add("CreationTime", typeof(DateTime));
+            // Add file metadata (times)			
+            dataTable.Columns.Add("CreationTime", typeof(DateTime));
             dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
             dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
             dataTable.Columns.Add("SequenceNumber", typeof(int));
             return dataTable;
         }
+    }
 }

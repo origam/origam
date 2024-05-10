@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Data;
 using System.Drawing;
@@ -30,20 +29,20 @@ using Origam.Workbench.Services;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DataGridDropdownColumn.
-/// </summary>
-public class DataGridDropdownColumn : DataGridTextBoxColumn
+namespace Origam.Gui.Win
 {
-	private AsDropDown _dropDown;
-	private bool _isEditing = false;
-	private RuleEngine _ruleEngine;
-	private DataTable _handledTable;
-
-	public DataGridDropdownColumn(AsDropDown dropDown, string columnName, RuleEngine ruleEngine)
+	/// <summary>
+	/// Summary description for DataGridDropdownColumn.
+	/// </summary>
+	public class DataGridDropdownColumn : DataGridTextBoxColumn
 	{
+		private AsDropDown _dropDown;
+		private bool _isEditing = false;
+		private RuleEngine _ruleEngine;
+		private DataTable _handledTable;
+
+		public DataGridDropdownColumn(AsDropDown dropDown, string columnName, RuleEngine ruleEngine)
+		{
 			_dropDown = new AsDropDown();
 			_dropDown.NoKeyUp = true;	// filter key-up events, so tabbing inside grid works correctly
 			_dropDown.Hide();
@@ -64,36 +63,36 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			this.TextBox.VisibleChanged += new EventHandler(TextBox_VisibleChanged);
 		}
 
-	private bool _alwaysReadOnly = false;
-	public bool AlwaysReadOnly
-	{
-		get
+		private bool _alwaysReadOnly = false;
+		public bool AlwaysReadOnly
 		{
+			get
+			{
 				return _alwaysReadOnly;
 			}
-		set
-		{
+			set
+			{
 				_alwaysReadOnly = value;
 				_dropDown.ReadOnly = value;
 			}
-	}
+		}
 
-	public AsDropDown DropDown
-	{
-		get
+		public AsDropDown DropDown
 		{
+			get
+			{
 				return _dropDown;
 			}
-	}
-	#region Event Handlers
-	private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
-	{
+		}
+		#region Event Handlers
+		private void _dropDown_LookupValueChangingByUser(object sender, EventArgs e)
+		{
 			_isEditing = true;
 			this.ColumnStartedEditing(sender as Control);
 		}
 
-	private void Table_ColumnChanging(object sender, DataColumnChangeEventArgs e)
-	{
+		private void Table_ColumnChanging(object sender, DataColumnChangeEventArgs e)
+		{
             OrigamDataRow row = e.Row as OrigamDataRow;
             if (!row.IsColumnWithValidChange(e.Column)) return;
 			if(! row.Equals(this.DropDown.CurrentRow)) return;
@@ -116,16 +115,16 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 				}
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Column Overrides
-	protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
-	{
+		#region Column Overrides
+		protected override void SetColumnValueAtRow(CurrencyManager source, int rowNum, object value)
+		{
 			base.SetColumnValueAtRow (source, rowNum, value);
 		}
 
-	protected override void Abort(int rowNum)
-	{
+		protected override void Abort(int rowNum)
+		{
 			_isEditing = false;
 			_dropDown.LookupValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
 
@@ -133,8 +132,8 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			base.Abort(rowNum);
 		}
 
-	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-	{
+		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+		{
 			//base.Edit(source, rowNum, bounds, readOnly, instantText , cellIsVisible);
 
 			if(cellIsVisible)
@@ -176,16 +175,16 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
-	{
+		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
+		{
 			object val = base.GetColumnValueAtRow(source, rowNum);
 
 			IDataLookupService lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
 			return lookupManager.GetDisplayText(_dropDown.LookupId, val, null);
 		}
 
-	protected override bool Commit(CurrencyManager dataSource, int rowNum)
-	{
+		protected override bool Commit(CurrencyManager dataSource, int rowNum)
+		{
 			if(_dropDown.Bounds.X != 0 | _dropDown.Bounds.Y != 0 | _dropDown.Width != 0) _dropDown.Bounds = Rectangle.Empty;
 
 			_dropDown.LookupValueChangingByUser -= new EventHandler(_dropDown_LookupValueChangingByUser);
@@ -218,22 +217,22 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 		}
 
 
-	protected override void ReleaseHostedControl()
-	{
+		protected override void ReleaseHostedControl()
+		{
 			base.ReleaseHostedControl ();
 
 			_dropDown.Parent = null;
 		}
 
-	protected override void ConcedeFocus()
-	{
+		protected override void ConcedeFocus()
+		{
 			_dropDown.Bounds = Rectangle.Empty;
 
 			base.ConcedeFocus();
 		}
 
-	protected override void SetDataGridInColumn(DataGrid value) 
-	{
+		protected override void SetDataGridInColumn(DataGrid value) 
+		{
 			//base.SetDataGridInColumn(value);
 			if (_dropDown.Parent != null) 
 			{
@@ -261,18 +260,18 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			}
 		}
 
-	private void grid_BindingContextChanged(object sender, EventArgs e)
-	{
+		private void grid_BindingContextChanged(object sender, EventArgs e)
+		{
 			CatchGridContext();
 		}
 
-	private void grid_DataSourceChanged(object sender, EventArgs e)
-	{
+		private void grid_DataSourceChanged(object sender, EventArgs e)
+		{
 			CatchGridContext();
 		}
 
-	private void CatchGridContext()
-	{
+		private void CatchGridContext()
+		{
 			if(this.DataGridTableStyle == null) return;
 
 			DataGrid grid = this.DataGridTableStyle.DataGrid;
@@ -289,10 +288,10 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			_handledTable = (cm.List as DataView).Table;
 			_handledTable.ColumnChanging += new DataColumnChangeEventHandler(Table_ColumnChanging); 
 		}
-	#endregion
+		#endregion
 
-	protected override void Paint(System.Drawing.Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
-	{
+		protected override void Paint(System.Drawing.Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, Brush backBrush, Brush foreBrush, bool alignToRight)
+		{
 			Brush myBackBrush = backBrush;
 			Brush myForeBrush = (DropDown.LookupCanEditSourceRecord ? new SolidBrush(OrigamColorScheme.LinkColor) : foreBrush);
 
@@ -328,8 +327,8 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			}
 		}
 
-	protected override void Dispose(bool disposing)
-	{
+		protected override void Dispose(bool disposing)
+		{
 			if(disposing)
 			{
 			    ServiceManager.Services
@@ -348,8 +347,9 @@ public class DataGridDropdownColumn : DataGridTextBoxColumn
 			base.Dispose (disposing);
 		}
 
-	private void TextBox_VisibleChanged(object sender, EventArgs e)
-	{
+		private void TextBox_VisibleChanged(object sender, EventArgs e)
+		{
 			this.TextBox.Bounds = Rectangle.Empty;
 		}
+	}
 }

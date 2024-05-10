@@ -21,47 +21,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.WorkflowModel;
-
-public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.WorkflowModel
 {
-	public ScheduleTimeSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => AbstractScheduleTime.CategoryConst;
-
-	public override string Group => "BL";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_28_schedule-times.png";
-
-	public override string NodeText
+	public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Schedule Times";
-		set => base.NodeText = value;
-	}
+		public ScheduleTimeSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => AbstractScheduleTime.CategoryConst;
 
-	#endregion
+		public override string Group => "BL";
 
-	#region ISchemaItemFactory Members
+		#endregion
 
-	public override Type[] NewItemTypes => new[]
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_28_schedule-times.png";
+
+		public override string NodeText
+		{
+			get => "Schedule Times";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(SimpleScheduleTime), typeof(ScheduleGroup)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			string itemName = null;
 			if(typeof(T) == typeof(SimpleScheduleTime))
 			{
@@ -74,5 +74,6 @@ public class ScheduleTimeSchemaItemProvider : AbstractSchemaItemProvider
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	#endregion
+		#endregion
+	}
 }

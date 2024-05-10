@@ -29,28 +29,28 @@ using System.Net;
 using Origam.Extensions;
 using Origam.Service.Core;
 
-namespace Origam.Mail;
-
-public class NetStandardMailService : AbstractMailService
+namespace Origam.Mail
 {
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
-    private readonly string username;
-    private readonly string password;
-    private readonly bool useSsl;
-    private readonly string defaultServer;
-    private readonly int defaultPort;
-    private readonly string pickupDirectoryLocation;
-
-    protected NetStandardMailService()
+    public class NetStandardMailService : AbstractMailService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
+        private readonly string username;
+        private readonly string password;
+        private readonly bool useSsl;
+        private readonly string defaultServer;
+        private readonly int defaultPort;
+        private readonly string pickupDirectoryLocation;
+
+        protected NetStandardMailService()
+        {
         }
 
-    public NetStandardMailService(
-        string server, int port, string pickupDirectoryLocation,
-        string username = null, string password = null, bool useSsl = true)
-    {
+        public NetStandardMailService(
+            string server, int port, string pickupDirectoryLocation,
+            string username = null, string password = null, bool useSsl = true)
+        {
             if(!string.IsNullOrWhiteSpace(pickupDirectoryLocation)
             && !string.IsNullOrWhiteSpace(server))
             {
@@ -79,8 +79,8 @@ public class NetStandardMailService : AbstractMailService
             this.pickupDirectoryLocation = pickupDirectoryLocation;
         }
 
-    public override int SendMail1(IXmlContainer mailDocument, string server, int port)
-    {
+        public override int SendMail1(IXmlContainer mailDocument, string server, int port)
+        {
             //return Value positive number (include 0zero) indicates OK result, negative -1 means error
             int retVal = 0;
 
@@ -137,8 +137,8 @@ public class NetStandardMailService : AbstractMailService
             return retVal;
         }
 
-    public override int SendMail2(MailData mailData, string server, int port)
-    {
+        public override int SendMail2(MailData mailData, string server, int port)
+        {
             //return Value positive number (include 0zero) indicates OK result, negative -1 means error
             int retVal = 0;
 
@@ -240,8 +240,8 @@ public class NetStandardMailService : AbstractMailService
             return retVal;
         }
 
-    private SmtpClient BuildSmtpClient(string server, int port)
-    {
+        private SmtpClient BuildSmtpClient(string server, int port)
+        {
             var smtpClient = new SmtpClient();
             if (!string.IsNullOrEmpty(server))
             {
@@ -262,8 +262,8 @@ public class NetStandardMailService : AbstractMailService
             return smtpClient;
         }
 
-    protected virtual void SetConfigValues(SmtpClient smtpClient)
-    {
+        protected virtual void SetConfigValues(SmtpClient smtpClient)
+        {
             smtpClient.Host = defaultServer;
             smtpClient.Port = defaultPort;
             smtpClient.EnableSsl = useSsl;
@@ -271,4 +271,5 @@ public class NetStandardMailService : AbstractMailService
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(username, password);
         }
+    }
 }

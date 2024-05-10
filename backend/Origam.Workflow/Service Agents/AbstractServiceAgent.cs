@@ -30,25 +30,25 @@ using Origam.DA.Service;
 using System.Data;
 using System.Collections.Generic;
 
-namespace Origam.Workflow;
-
-public abstract class AbstractServiceAgent : IServiceAgent
+namespace Origam.Workflow
 {
-	public event EventHandler PersistenceProviderChanged;
-	public event ServiceFinished Finished;
+	public abstract class AbstractServiceAgent : IServiceAgent
+	{
+		public event EventHandler PersistenceProviderChanged;
+		public event ServiceFinished Finished;
 
-	public AbstractServiceAgent()
-	{
+		public AbstractServiceAgent()
+		{
 		}
-	public virtual void SetDataService(DA.IDataService dataService)
-	{
+        public virtual void SetDataService(DA.IDataService dataService)
+        {
 
         }
 
-	protected TraceTaskInfo TraceTaskInfo
-	{
-		get
-		{
+        protected TraceTaskInfo TraceTaskInfo
+        {
+            get
+            {
                 TraceTaskInfo traceTaskInfo = new TraceTaskInfo();
                 traceTaskInfo.Trace = Trace;
                 traceTaskInfo.TraceStepName = TraceStepName;
@@ -56,99 +56,99 @@ public abstract class AbstractServiceAgent : IServiceAgent
                 traceTaskInfo.TraceWorkflowId = TraceWorkflowId;
                 return traceTaskInfo;
             }
-	}
+        }
 
-	public DataSet CreateEmptyOutputData()
-	{
+        public DataSet CreateEmptyOutputData()
+        {
             DatasetGenerator dg = new DatasetGenerator(true);
             DataSet data = dg.CreateDataSet(OutputStructure as DataStructure);
             data.EnforceConstraints = !DisableOutputStructureConstraints;
             return data;
         }
 
-	#region IServiceAgent Members
-	public virtual string Info => this.ToString();
+        #region IServiceAgent Members
+        public virtual string Info => this.ToString();
 
-	Origam.DA.ObjectPersistence.IPersistenceProvider _persistence;
-	public Origam.DA.ObjectPersistence.IPersistenceProvider PersistenceProvider
-	{
-		get => _persistence;
-		set
+        Origam.DA.ObjectPersistence.IPersistenceProvider _persistence;
+		public Origam.DA.ObjectPersistence.IPersistenceProvider PersistenceProvider
 		{
+			get => _persistence;
+			set
+			{
 				_persistence = value;
 				OnPersistenceProviderChanged(EventArgs.Empty);
 			}
-	}
+		}
 
-	RuleEngine _ruleEngine;
-	public object RuleEngine
-	{
-		get
+		RuleEngine _ruleEngine;
+		public object RuleEngine
 		{
+			get
+			{
 				return _ruleEngine;
 			}
-		set
-		{
+			set
+			{
 				_ruleEngine = value as RuleEngine;
 			}
-	}
+		}
 
-	WorkflowEngine _workflowEngine;
-	public object WorkflowEngine
-	{
-		get
+		WorkflowEngine _workflowEngine;
+		public object WorkflowEngine
 		{
+			get
+			{
 				return _workflowEngine;
 			}
-		set
-		{
+			set
+			{
 				_workflowEngine = value as WorkflowEngine;
 			}
-	}
+		}
 
-	public virtual Hashtable Parameters { get; } = new Hashtable();
+		public virtual Hashtable Parameters { get; } = new Hashtable();
 
-	public virtual string MethodName { get; set; }
+		public virtual string MethodName { get; set; }
 
-	public virtual string TransactionId { get; set; } = null;
+		public virtual string TransactionId { get; set; } = null;
 
-	private AbstractDataStructure _outputStructure;
-	public ISchemaItem OutputStructure
-	{
-		get
+		private AbstractDataStructure _outputStructure;
+		public ISchemaItem OutputStructure
 		{
+			get
+			{
 				return _outputStructure;
 			}
-		set
-		{
+			set
+			{
 				_outputStructure = value as AbstractDataStructure;
 			}
-	}
+		}
 
-	public bool DisableOutputStructureConstraints { get; set; }
+		public bool DisableOutputStructureConstraints { get; set; }
 
-	public ServiceOutputMethod OutputMethod { get; set; }
+		public ServiceOutputMethod OutputMethod { get; set; }
 
 
-	public string TraceStepName { get; set; }
+		public string TraceStepName { get; set; }
 
-	public Guid TraceStepId { get; set; }
+		public Guid TraceStepId { get; set; }
 
-	public Guid TraceWorkflowId { get; set; }
+		public Guid TraceWorkflowId { get; set; }
 
-	public bool Trace { get; set; }
+		public bool Trace { get; set; }
 
-	public virtual string ExecuteUpdate(string command, string transactionId)
-	{
+		public virtual string ExecuteUpdate(string command, string transactionId)
+		{
 			throw new Exception("ExecuteUpdate not implemented by the service.");
 		}
 
-	public abstract object Result	{get;}
+		public abstract object Result	{get;}
 
-	public abstract void Run();
+		public abstract void Run();
 
-	public void RunAsync()
-	{
+		public void RunAsync()
+		{
 			Exception exception = null;
 			try
 			{
@@ -162,27 +162,28 @@ public abstract class AbstractServiceAgent : IServiceAgent
 			OnFinished(new ServiceFinishedEventArgs(exception));
 		}
 
-	public virtual IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
-	{
+		public virtual IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+		{
 			return new List<string>();
 		}
-	#endregion
+		#endregion
 
-	#region Event
-	void OnPersistenceProviderChanged(EventArgs e)
-	{
+		#region Event
+		void OnPersistenceProviderChanged(EventArgs e)
+		{
 			if (PersistenceProviderChanged != null) 
 			{
 				PersistenceProviderChanged(this, e);
 			}
 		}
 
-	void OnFinished(ServiceFinishedEventArgs e)
-	{
+		void OnFinished(ServiceFinishedEventArgs e)
+		{
 			if (Finished != null) 
 			{
 				Finished(this, e);
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

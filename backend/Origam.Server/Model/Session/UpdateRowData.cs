@@ -21,13 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.Session;
-
-public class UpdateRowData
+namespace Origam.Server.Model.Session
 {
-    public Guid SessionFormIdentifier { get; set; }
-    public string Entity { get; set; }
-    public Guid Id { get; set; }
-    public string Property { get; set; }
-    public string NewValue { get; set; }
+    public class UpdateRowData
+    {
+        public Guid SessionFormIdentifier { get; set; }
+        public string Entity { get; set; }
+        public Guid Id { get; set; }
+        public string Property { get; set; }
+        public string NewValue { get; set; }
+    }
 }

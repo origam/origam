@@ -24,36 +24,36 @@ using System.Reflection;
 using System.Xml.Linq;
 using Origam.DA.Common;
 
-namespace Origam.DA.Service.MetaModelUpgrade;
-
-public interface IMetaModelUpgrader
+namespace Origam.DA.Service.MetaModelUpgrade
 {
-    bool RunUpgradeScripts(XElement classNode,
-        DocumentContainer documentContainer, string className,
-        Version persistedClassVersion,
-        Version currentClassVersion);
-
-    void UpgradeToVersion6(OrigamXDocument document);
-}
-    
-public class MetaModelUpgrader: IMetaModelUpgrader
-{
-    private readonly ScriptContainerLocator scriptLocator;
-
-    public MetaModelUpgrader()
+    public interface IMetaModelUpgrader
     {
+        bool RunUpgradeScripts(XElement classNode,
+            DocumentContainer documentContainer, string className,
+            Version persistedClassVersion,
+            Version currentClassVersion);
+
+        void UpgradeToVersion6(OrigamXDocument document);
+    }
+    
+    public class MetaModelUpgrader: IMetaModelUpgrader
+    {
+        private readonly ScriptContainerLocator scriptLocator;
+
+        public MetaModelUpgrader()
+        {
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }        
-    public MetaModelUpgrader(Assembly scriptAssembly)
-    {
+        public MetaModelUpgrader(Assembly scriptAssembly)
+        {
             scriptLocator = new ScriptContainerLocator(scriptAssembly);
         }
 
-    public bool RunUpgradeScripts(XElement classNode,
-        DocumentContainer documentContainer, string className,
-        Version persistedClassVersion,
-        Version currentClassVersion)
-    {
+        public bool RunUpgradeScripts(XElement classNode,
+            DocumentContainer documentContainer, string className,
+            Version persistedClassVersion,
+            Version currentClassVersion)
+        {
             var upgradeScriptContainer = scriptLocator.TryFindByTypeName(className);
             if (upgradeScriptContainer == null)
             {
@@ -67,24 +67,25 @@ public class MetaModelUpgrader: IMetaModelUpgrader
             return upgradeScriptContainer.Upgrade(documentContainer, classNode, persistedClassVersion, currentClassVersion);
         }
 
-    public void UpgradeToVersion6(OrigamXDocument document)
-    {
+        public void UpgradeToVersion6(OrigamXDocument document)
+        {
             new Version6Upgrader(scriptLocator, document).Run();
         }
-}
+    }
     
-public class DisabledMetaModelUpgrader: IMetaModelUpgrader
-{
-    public bool RunUpgradeScripts(XElement classNode,
-        DocumentContainer documentContainer, string className,
-        Version persistedClassVersion,
-        Version currentClassVersion)
+    public class DisabledMetaModelUpgrader: IMetaModelUpgrader
     {
+        public bool RunUpgradeScripts(XElement classNode,
+            DocumentContainer documentContainer, string className,
+            Version persistedClassVersion,
+            Version currentClassVersion)
+        {
             throw new Exception($"An instance of class {className} with version: {persistedClassVersion} was found. This class version is outdated, the current version is {currentClassVersion}. Please open the model in Architect to solve the issue.");
         }
 
-    public void UpgradeToVersion6(OrigamXDocument document)
-    {
+        public void UpgradeToVersion6(OrigamXDocument document)
+        {
             throw new Exception($"File contains pre version 6 classes. Please open the model in Architect to solve the issue.");
         }
+    }
 }

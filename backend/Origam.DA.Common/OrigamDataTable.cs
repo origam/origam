@@ -22,30 +22,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 
-namespace Origam.DA;
-
-public class OrigamDataTable : DataTable
+namespace Origam.DA
 {
-    public OrigamDataTable()
+    public class OrigamDataTable : DataTable
     {
+        public OrigamDataTable()
+        {
            
         }
-    public OrigamDataTable(string tableName) : base(tableName)
-    {
+        public OrigamDataTable(string tableName) : base(tableName)
+        {
         }
 
-    override protected Type GetRowType()
-    {
+        override protected Type GetRowType()
+        {
             return typeof(OrigamDataRow);
         }
 
-    override protected DataRow NewRowFromBuilder(DataRowBuilder builder)
-    {
+        override protected DataRow NewRowFromBuilder(DataRowBuilder builder)
+        {
             return new OrigamDataRow(builder);
         }
 
-    protected override void OnRowChanged(DataRowChangeEventArgs e)
-    {
+        protected override void OnRowChanged(DataRowChangeEventArgs e)
+        {
             if (e.Action == DataRowAction.Commit)
             {
                 ((OrigamDataRow)e.Row).HasChangedOnce = false;
@@ -61,5 +61,6 @@ public class OrigamDataTable : DataTable
             }
         }
 
-    public bool IsLoading { get; set; }
+        public bool IsLoading { get; set; }
+    }
 }

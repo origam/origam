@@ -26,73 +26,73 @@ using Origam.DA.ObjectPersistence;
 using System.Collections;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for Graphics.
-/// </summary>
-[SchemaItemDescription("Style Property", "icon_style-property.png")]
-[HelpTopic("Styles")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class UIStyleProperty : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-    public const string CategoryConst = "StyleProperty";
-
-    public UIStyleProperty() : base() { Init(); }
-
-    public UIStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-    public UIStyleProperty(Key primaryKey) : base(primaryKey) { Init(); }
-
-    private void Init()
+    /// <summary>
+    /// Summary description for Graphics.
+    /// </summary>
+    [SchemaItemDescription("Style Property", "icon_style-property.png")]
+    [HelpTopic("Styles")]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public class UIStyleProperty : AbstractSchemaItem
     {
+        public const string CategoryConst = "StyleProperty";
+
+        public UIStyleProperty() : base() { Init(); }
+
+        public UIStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+
+        public UIStyleProperty(Key primaryKey) : base(primaryKey) { Init(); }
+
+        private void Init()
+        {
 
         }
 
-    #region Properties
-    public Guid ControlStylePropertyId;
+        #region Properties
+        public Guid ControlStylePropertyId;
 
-    [TypeConverter(typeof(ControlStylePropertyConverter))]
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [NotNullModelElementRule()]
-    [XmlReference("property", "ControlStylePropertyId")]
-    public ControlStyleProperty Property
-    {
-        get
+        [TypeConverter(typeof(ControlStylePropertyConverter))]
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [NotNullModelElementRule()]
+        [XmlReference("property", "ControlStylePropertyId")]
+        public ControlStyleProperty Property
         {
+            get
+            {
                 return (ControlStyleProperty)this.PersistenceProvider.RetrieveInstance(
                     typeof(ControlStyleProperty), new ModelElementKey(this.ControlStylePropertyId));
             }
-        set
-        {
+            set
+            {
                 this.ControlStylePropertyId = (Guid)value.PrimaryKey["Id"];
                 UpdateName();
             }
-    }
+        }
 
-    private string _value;
-    [RefreshProperties(RefreshProperties.Repaint)]
-    [NotNullModelElementRule()]
-    [XmlAttribute("value")]
-    public string Value
-    {
-        get
+        private string _value;
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [NotNullModelElementRule()]
+        [XmlAttribute("value")]
+        public string Value
         {
+            get
+            {
                 if (_value == null) return null;
                 return _value.Trim();
             }
-        set
-        {
+            set
+            {
                 _value = value;
                 UpdateName();
             }
-    }
-    #endregion
+        }
+        #endregion
 
-    #region Overriden AbstractSchemaItem Members
-    public override void GetExtraDependencies(ArrayList dependencies)
-    {
+        #region Overriden AbstractSchemaItem Members
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
             if (this.Property != null)
             {
                 dependencies.Add(this.Property);
@@ -100,20 +100,21 @@ public class UIStyleProperty : AbstractSchemaItem
             base.GetExtraDependencies(dependencies);
         }
 
-    public override string ItemType
-    {
-        get
+        public override string ItemType
         {
+            get
+            {
                 return CategoryConst;
             }
-    }
-    #endregion
+        }
+        #endregion
 
-    private void UpdateName()
-    {
+        private void UpdateName()
+        {
             if (this.Property != null && this.Value != null)
             {
                 this.Name = this.Property.Name + ": " + this.Value;
             }
         }
+    }
 }

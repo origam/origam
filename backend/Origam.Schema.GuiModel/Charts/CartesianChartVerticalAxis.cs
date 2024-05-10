@@ -26,108 +26,109 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
-[HelpTopic("Vertical+Axis")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class CartesianChartVerticalAxis : AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-	public const string CategoryConst = "CartesianChartVerticalAxis";
-
-	public CartesianChartVerticalAxis() : base() {Init();}
-	public CartesianChartVerticalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public CartesianChartVerticalAxis(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
+    [HelpTopic("Vertical+Axis")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public class CartesianChartVerticalAxis : AbstractSchemaItem
 	{
+		public const string CategoryConst = "CartesianChartVerticalAxis";
+
+		public CartesianChartVerticalAxis() : base() {Init();}
+		public CartesianChartVerticalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public CartesianChartVerticalAxis(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 			
 		}
 
-	#region Properties
-	private string _caption = "";
-	[Category("Axis")]
-	[Localizable(true)]
-	[XmlAttribute("label")]
-	public string Caption
-	{
-		get
+		#region Properties
+		private string _caption = "";
+		[Category("Axis")]
+		[Localizable(true)]
+        [XmlAttribute("label")]
+		public string Caption
 		{
+			get
+			{
 				return _caption;
 			}
-		set
-		{
+			set
+			{
 				_caption = value;
 			}
-	}
+		}
 
-	private int _min = 0;
-	[Category("Limits"), DefaultValue(0)]
-	[XmlAttribute("minimum")]
-	public int Min
-	{
-		get
+		private int _min = 0;
+		[Category("Limits"), DefaultValue(0)]
+		[XmlAttribute("minimum")]
+		public int Min
 		{
+			get
+			{
 				return _min;
 			}
-		set
-		{
+			set
+			{
 				_min = value;
 			}
-	}
+		}
 
-	private int _max = 0;
-	[Category("Limits"), DefaultValue(0)]
-	[XmlAttribute("maximum")]
-	public int Max
-	{
-		get
+		private int _max = 0;
+		[Category("Limits"), DefaultValue(0)]
+		[XmlAttribute("maximum")]
+		public int Max
 		{
+			get
+			{
 				return _max;
 			}
-		set
-		{
+			set
+			{
 				_max = value;
 			}
-	}
+		}
 
-	private bool _applyMin = false;
-	[Category("Limits"), DefaultValue(false)]
-	[XmlAttribute("applyMinimumLimit")]
-	public bool ApplyMinLimit
-	{
-		get
+		private bool _applyMin = false;
+		[Category("Limits"), DefaultValue(false)]
+		[XmlAttribute("applyMinimumLimit")]
+		public bool ApplyMinLimit
 		{
+			get
+			{
 				return _applyMin;
 			}
-		set
-		{
+			set
+			{
 				_applyMin = value;
 			}
-	}
+		}
 
-	private bool _applyMax = false;
-	[Category("Limits"), DefaultValue(false)]
-	[XmlAttribute("applyMaximumLimit")]
-	public bool ApplyMaxLimit
-	{
-		get
+		private bool _applyMax = false;
+		[Category("Limits"), DefaultValue(false)]
+		[XmlAttribute("applyMaximumLimit")]
+		public bool ApplyMaxLimit
 		{
+			get
+			{
 				return _applyMax;
 			}
-		set
-		{
+			set
+			{
 				_applyMax = value;
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

@@ -26,14 +26,14 @@ using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.ServiceTests;
-
-[TestFixture]
-public class InstanceWriterTests
+namespace Origam.DA.ServiceTests
 {
-    [Test]
-    public void ShouldWriteFile()
+    [TestFixture]
+    public class InstanceWriterTests
     {
+        [Test]
+        public void ShouldWriteFile()
+        {
             var itemToWrite = new TableMappingItem();
             itemToWrite.Name = "TestName";
             itemToWrite.PersistenceProvider = new NullPersistenceProvider();
@@ -43,4 +43,5 @@ public class InstanceWriterTests
             
             Assert.That(!document.IsEmpty);
         }
+    }
 }

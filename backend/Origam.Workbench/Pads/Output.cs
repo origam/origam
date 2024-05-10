@@ -25,33 +25,33 @@ using System.Windows.Forms;
 using Origam.UI.Common;
 
 
-namespace Origam.Workbench.Pads;
-
-/// <summary>
-/// Summary description for Output.
-/// </summary>
-public class OutputPad : AbstractPadContent, IOutputPad
+namespace Origam.Workbench.Pads
 {
-	private System.Windows.Forms.TextBox txtOutput;
-	private System.ComponentModel.IContainer components;
-	private StringBuilder _queue = new StringBuilder();
-	public Panel toolBar;
-	private Timer timer;
-	private object _lock = new object();
-
-	public OutputPad()
+	/// <summary>
+	/// Summary description for Output.
+	/// </summary>
+	public class OutputPad : AbstractPadContent, IOutputPad
 	{
+		private System.Windows.Forms.TextBox txtOutput;
+        private System.ComponentModel.IContainer components;
+        private StringBuilder _queue = new StringBuilder();
+        public Panel toolBar;
+        private Timer timer;
+        private object _lock = new object();
+
+		public OutputPad()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -62,21 +62,23 @@ public class OutputPad : AbstractPadContent, IOutputPad
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OutputPad));
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.toolBar = new System.Windows.Forms.Panel();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
-            // 	 // txtOutput
-            // 	 this.txtOutput.AcceptsTab = true;
+            // 
+            // txtOutput
+            // 
+            this.txtOutput.AcceptsTab = true;
             this.txtOutput.BackColor = System.Drawing.SystemColors.Window;
             this.txtOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -91,18 +93,24 @@ public class OutputPad : AbstractPadContent, IOutputPad
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             this.txtOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOutput_KeyDown);
-            // 	 // toolBar
-            // 	 this.toolBar.Dock = System.Windows.Forms.DockStyle.Top;
+            // 
+            // toolBar
+            // 
+            this.toolBar.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolBar.Location = new System.Drawing.Point(0, 0);
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(352, 27);
             this.toolBar.TabIndex = 1;
             this.toolBar.Visible = false;
-            // 	 // timer
-            // 	 this.timer.Interval = 200;
+            // 
+            // timer
+            // 
+            this.timer.Interval = 200;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 	 // OutputPad
-            // 	 this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            // 
+            // OutputPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(352, 271);
             this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.toolBar);
@@ -121,15 +129,15 @@ public class OutputPad : AbstractPadContent, IOutputPad
             this.PerformLayout();
 
 		}
-	#endregion
+		#endregion
 
-	public void SetOutputText(string sText)
-	{
+		public void SetOutputText(string sText)
+		{
 			txtOutput.Text = sText;
 		}
 
-	private void AddTextInternal(string sText)
-	{
+        private void AddTextInternal(string sText)
+        {
             if (IsDisposed) return;
 
             int startPosition = 0;
@@ -142,7 +150,8 @@ public class OutputPad : AbstractPadContent, IOutputPad
             int originalPosition = txtOutput.SelectionStart;
             bool shouldScroll = txtOutput.SelectionStart == pos;
 
-            // scroll to the end after adding the text in case the caret 	 // was at the end before adding
+            // scroll to the end after adding the text in case the caret 
+            // was at the end before adding
             if (shouldScroll)
             {
                 txtOutput.SelectionStart = txtOutput.Text.Length;
@@ -154,13 +163,13 @@ public class OutputPad : AbstractPadContent, IOutputPad
             txtOutput.ScrollToCaret();
         }
 
-	public void AppendText(string sText)
-	{
+		public void AppendText(string sText)
+		{
 			AddText(sText + Environment.NewLine);
 		}
 
-	public void AddText(string sText)
-	{
+		public void AddText(string sText)
+		{
 			if(this.txtOutput.InvokeRequired)
 			{
 				lock(_lock)
@@ -175,8 +184,8 @@ public class OutputPad : AbstractPadContent, IOutputPad
 			}
 		}
 
-	private void txtOutput_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-	{
+		private void txtOutput_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
 			if(e.KeyCode == Keys.Delete)
 			{
 				txtOutput.Text = "";
@@ -187,8 +196,8 @@ public class OutputPad : AbstractPadContent, IOutputPad
 			}
 		}
 
-	private void FlushQueue()
-	{
+		private void FlushQueue()
+		{
 			lock(_lock)
 			{
 				if(_queue.Length != 0)
@@ -199,8 +208,9 @@ public class OutputPad : AbstractPadContent, IOutputPad
 			}
 		}
 
-	private void timer_Tick(object sender, EventArgs e)
-	{
+        private void timer_Tick(object sender, EventArgs e)
+        {
             FlushQueue();
         }
+    }
 }

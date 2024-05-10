@@ -26,25 +26,25 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using log4net;
 
-namespace Origam.Workflow.Tasks;
+namespace Origam.Workflow.Tasks
+{
+	/// <summary>
+	/// Summary description for CheckRuleTask.
+	/// </summary>
+	public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
+	{		
+		private WorkflowEngine _engine;
+		private IWorkflowStep _step;
+		private object _result;
 
-/// <summary>
-/// Summary description for CheckRuleTask.
-/// </summary>
-public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
-{		
-	private WorkflowEngine _engine;
-	private IWorkflowStep _step;
-	private object _result;
-
-	public AbstractWorkflowEngineTask()
-	{
+		public AbstractWorkflowEngineTask()
+		{
 		}
 		
-	#region IWorkflowEngineTask Members
-	public event WorkflowEngineTaskFinished Finished;
-	protected virtual void OnFinished(WorkflowEngineTaskEventArgs e)
-	{
+		#region IWorkflowEngineTask Members
+		public event WorkflowEngineTaskFinished Finished;
+		protected virtual void OnFinished(WorkflowEngineTaskEventArgs e)
+		{
 			if (Step == null)
 			{
 				// if e.Exception is not null, it was handled in ServiceMethodCallEngineTask
@@ -62,48 +62,48 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 			}
 		}
 
-	public WorkflowEngine Engine
-	{
-		get
+		public WorkflowEngine Engine
 		{
+			get
+			{
 				return _engine;
 			}
-		set 
-		{
+			set 
+			{
 				_engine = value;
 			}
-	}
+		}
 
-	public IWorkflowStep Step
-	{
-		get
+		public IWorkflowStep Step
 		{
+			get
+			{
 				return _step;
 			}
-		set
-		{
+			set
+			{
 				_step = value;
 			}
-	}
+		}
 
-	public object Result
-	{
-		get
+		public object Result
 		{
+			get
+			{
 				return _result;
 			}
-		set
-		{
+			set
+			{
 				_result = value;
 			}
-	}
+		}
 
-	protected virtual string WorkflowItemType => "Task";
+		protected virtual string WorkflowItemType => "Task";
 
-	protected abstract void OnExecute();
+		protected abstract void OnExecute();
 
-	protected virtual void MeasuredExecution()
-	{
+		protected virtual void MeasuredExecution()
+		{
 			ProfilingTools.ExecuteAndLogDuration(
 				action: OnExecute,
 				logEntryType: WorkflowItemType,
@@ -111,8 +111,8 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 				id: _step.NodeId);
 		}
 
-	public virtual void Execute()
-	{
+		public virtual void Execute()
+		{
 			Exception exception = null;
 
 			try
@@ -127,8 +127,8 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 			OnFinished(new WorkflowEngineTaskEventArgs(exception));	
 		}
 
-	internal object Evaluate(AbstractSchemaItem item)
-	{
+		internal object Evaluate(AbstractSchemaItem item)
+		{
 			try
 			{
 				ContextReference contextReference = item as ContextReference;
@@ -156,6 +156,7 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 				throw new Exception("Failed evaluating " + item.Path, ex);
 			}
 		}
-	#endregion
+		#endregion
 
+	}
 }

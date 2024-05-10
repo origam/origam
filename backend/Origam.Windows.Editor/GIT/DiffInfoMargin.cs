@@ -9,25 +9,25 @@ using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 using Origam.UI;
 
-namespace Origam.Windows.Editor.GIT;
-
-public class DiffInfoMargin : AbstractMargin
+namespace Origam.Windows.Editor.GIT
 {
-    static readonly Brush AddedBackground;
-    static readonly Brush DeletedBackground;
-    static readonly Brush BlankBackground;
-
-    static readonly SolidColorBrush BackBrush;
-    static readonly SolidColorBrush ForegroundBrush;
-
-    static readonly Pen BorderlessPen;
-
-    const double TextHorizontalMargin = 4.0;
-
-    FormattedText _lineFt, _plusMinusFt;
-
-    static DiffInfoMargin()
+    public class DiffInfoMargin : AbstractMargin
     {
+        static readonly Brush AddedBackground;
+        static readonly Brush DeletedBackground;
+        static readonly Brush BlankBackground;
+
+        static readonly SolidColorBrush BackBrush;
+        static readonly SolidColorBrush ForegroundBrush;
+
+        static readonly Pen BorderlessPen;
+
+        const double TextHorizontalMargin = 4.0;
+
+        FormattedText _lineFt, _plusMinusFt;
+
+        static DiffInfoMargin()
+        {
             AddedBackground = new SolidColorBrush(Color.FromRgb(0x6e, 0xff, 0x6e));
             AddedBackground.Opacity = 0.5;
             AddedBackground.Freeze();
@@ -55,8 +55,8 @@ public class DiffInfoMargin : AbstractMargin
             ForegroundBrush.Freeze();
         }
 
-    protected override Size MeasureOverride(Size availableSize)
-    {
+        protected override Size MeasureOverride(Size availableSize)
+        {
             if (Lines == null || Lines.Count == 0) return new Size(0.0, 0.0);
 
             var textToUse = Lines.Last().LineNumber.ToString();
@@ -83,8 +83,8 @@ public class DiffInfoMargin : AbstractMargin
                 0.0);
         }
 
-    protected override void OnRender(DrawingContext drawingContext)
-    {
+        protected override void OnRender(DrawingContext drawingContext)
+        {
             base.OnRender(drawingContext);
             if (Lines == null || Lines.Count == 0) return;
 
@@ -149,14 +149,15 @@ public class DiffInfoMargin : AbstractMargin
             }
         }
 
-    public List<DiffLineViewModel> Lines { get; set; }
+        public List<DiffLineViewModel> Lines { get; set; }
 
-    Typeface CreateTypeface()
-    {
+        Typeface CreateTypeface()
+        {
             var fe = TextView;
             return new Typeface((FontFamily)fe.GetValue(TextBlock.FontFamilyProperty),
                 (FontStyle)fe.GetValue(TextBlock.FontStyleProperty),
                 (FontWeight)fe.GetValue(TextBlock.FontWeightProperty),
                 (FontStretch)fe.GetValue(TextBlock.FontStretchProperty));
         }
+    }
 }

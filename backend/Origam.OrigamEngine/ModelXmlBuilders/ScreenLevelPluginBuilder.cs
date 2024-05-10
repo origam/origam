@@ -26,14 +26,14 @@ using System.Linq;
 using System.Xml;
 using Origam.Schema.EntityModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-public class ScreenLevelPluginBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-    public static void Build(XmlElement parentNode, string text,
-        Hashtable dataSources,  DataSet dataset, DataStructure dataStructure,
-        string dataMember)
+    public class ScreenLevelPluginBuilder
     {
+        public static void Build(XmlElement parentNode, string text,
+            Hashtable dataSources,  DataSet dataset, DataStructure dataStructure,
+            string dataMember)
+        {
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
             parentNode.SetAttribute("Type", "ScreenLevelPlugin");
             parentNode.SetAttribute("Name", text);
@@ -52,9 +52,9 @@ public class ScreenLevelPluginBuilder
             }
         }
 
-    private static void AddDataNode(XmlElement parentNode, DataTable table, 
-        Hashtable dataSources, string dataMember, DataStructureEntity entity)
-    {
+        private static void AddDataNode(XmlElement parentNode, DataTable table, 
+            Hashtable dataSources, string dataMember, DataStructureEntity entity)
+        {
             string modelId = Guid.NewGuid().ToString();
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
             parentNode.SetAttribute("Type", "ScreenLevelPluginData");
@@ -89,4 +89,5 @@ public class ScreenLevelPluginBuilder
                     ref lastPos, propertiesElement,	propertyNamesElement, table, null);
             }
         }
+    }
 }

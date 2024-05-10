@@ -49,19 +49,19 @@ using Origam.Rule;
 using Origam.Schema.GuiModel;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Pages;
-
-class FileDownloadPageRequestHandler : AbstractPageRequestHandler
+namespace Origam.Server.Pages
 {
-    private readonly IHttpTools httpTools;
-
-    public FileDownloadPageRequestHandler(IHttpTools httpTools)
+    class FileDownloadPageRequestHandler : AbstractPageRequestHandler
     {
+        private readonly IHttpTools httpTools;
+
+        public FileDownloadPageRequestHandler(IHttpTools httpTools)
+        {
             this.httpTools = httpTools;
         }
 
-    public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
-    {
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+        {
             FileDownloadPage fdPage = page as FileDownloadPage;
 
             QueryParameterCollection qparams = new QueryParameterCollection();
@@ -123,4 +123,5 @@ class FileDownloadPageRequestHandler : AbstractPageRequestHandler
                 response.StatusCode = 404;
             }
         }
+    }
 }

@@ -21,12 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 
-namespace Origam;
-
-public class FileTools
+namespace Origam
 {
-    public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+    public class FileTools
     {
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
@@ -38,7 +38,8 @@ public class FileTools
                     + sourceDirName);
             }
 
-            // If the destination directory doesn't exist, create it.      if (!Directory.Exists(destDirName))
+            // If the destination directory doesn't exist, create it. 
+            if (!Directory.Exists(destDirName))
             {
                 Directory.CreateDirectory(destDirName);
             }
@@ -51,7 +52,8 @@ public class FileTools
                 file.CopyTo(temppath, false);
             }
 
-            // If copying subdirectories, copy them and their contents to new location.      if (copySubDirs)
+            // If copying subdirectories, copy them and their contents to new location. 
+            if (copySubDirs)
             {
                 foreach (DirectoryInfo subdir in dirs)
                 {
@@ -60,4 +62,5 @@ public class FileTools
                 }
             }
         }
+    }
 }

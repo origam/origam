@@ -23,18 +23,19 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using Origam.Schema;
 
-namespace Origam.Gui.Win;
-
-public class ScreenLevelPlugin : Label,
-    IOrigamMetadataConsumer, ISupportInitialize
+namespace Origam.Gui.Win
 {
-    public AbstractSchemaItem OrigamMetadata { get; set; }
-    public void BeginInit()
+    public class ScreenLevelPlugin : Label,
+        IOrigamMetadataConsumer, ISupportInitialize
     {
+        public AbstractSchemaItem OrigamMetadata { get; set; }
+        public void BeginInit()
+        {
         }
 	    
 
-    public void EndInit()
-    {
+        public void EndInit()
+        {
         }
+    }
 }

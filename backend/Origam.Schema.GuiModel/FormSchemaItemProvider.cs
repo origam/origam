@@ -21,53 +21,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.GuiModel;
-
-public class FormSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.GuiModel
 {
-	public FormSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => FormControlSet.CategoryConst;
-
-	public override bool AutoCreateFolder => true;
-
-	public override string Group => "UI";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_22_screens.png";
-
-	public override string NodeText
+	public class FormSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Screens";
-		set => base.NodeText = value;
-	}
+		public FormSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => FormControlSet.CategoryConst;
 
-	#endregion
+		public override bool AutoCreateFolder => true;
 
-	#region ISchemaItemFactory Members
+		public override string Group => "UI";
 
-	public override Type[] NewItemTypes => new[]
+		#endregion
+
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_22_screens.png";
+
+		public override string NodeText
+		{
+			get => "Screens";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(FormControlSet)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(FormControlSet) ?
 					"NewForm" : null);
 		}
 
-	#endregion
+		#endregion
+	}
 }

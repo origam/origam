@@ -22,22 +22,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Windows.Forms;
 
 
-namespace Origam.Gui.Designer;
-
-/// <summary>
-/// TreeNode is used for identifying Combra objects in ToolBox 
-/// </summary>
-public class AsTreeNode : TreeNode
+namespace Origam.Gui.Designer
 {
-	public AsTreeNode(string name) : base(name){}
+	/// <summary>
+	/// TreeNode is used for identifying Combra objects in ToolBox 
+	/// </summary>
+	public class AsTreeNode : TreeNode
+	{
+		public AsTreeNode(string name) : base(name){}
 		
-	public bool IsComplexType;
+		public bool IsComplexType;
 
-	public bool IsExternal;
+		public bool IsExternal;
 
-	public bool IsFieldControl;
+		public bool IsFieldControl;
 
-	public string FieldName;
+		public string FieldName;
         
-	public Origam.Schema.GuiModel.PanelControlSet  PanelControlSet;
+		public Origam.Schema.GuiModel.PanelControlSet  PanelControlSet;
+	}
 }

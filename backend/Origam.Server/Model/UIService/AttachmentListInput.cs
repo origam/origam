@@ -21,11 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService;
-
-public class AttachmentListInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid SessionFormIdentifier { get; set; }
-    public string Entity { get; set; }
-    public object Id { get; set; }
+    public class AttachmentListInput
+    {
+        public Guid SessionFormIdentifier { get; set; }
+        public string Entity { get; set; }
+        public object Id { get; set; }
+    }
 }

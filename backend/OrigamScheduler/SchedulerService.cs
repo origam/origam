@@ -35,39 +35,39 @@ using Schedule;
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
-namespace OrigamScheduler;
-
-public class SchedulerService : System.ServiceProcess.ServiceBase
+namespace OrigamScheduler
 {
-	private static readonly log4net.ILog log = 
-		log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	private ScheduleTimer _timer = new ScheduleTimer();
-	private ISchemaService _schema;
-	private IPersistenceService _persistence;
-	private WorkflowScheduleSchemaItemProvider _schedules;
-	private int _numberOfWorkflowsRunning = 0;
-	private string _logPath = "";
-	private System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
-	private bool restarting;
-
-	private delegate void RunWorkflowDelegate(WorkflowSchedule schedule);
-
-	/// <summary> 
-	/// Required designer variable.
-	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-	public SchedulerService()
+	public class SchedulerService : System.ServiceProcess.ServiceBase
 	{
+        private static readonly log4net.ILog log = 
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private ScheduleTimer _timer = new ScheduleTimer();
+		private ISchemaService _schema;
+		private IPersistenceService _persistence;
+		private WorkflowScheduleSchemaItemProvider _schedules;
+		private int _numberOfWorkflowsRunning = 0;
+		private string _logPath = "";
+        private System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
+        private bool restarting;
+
+        private delegate void RunWorkflowDelegate(WorkflowSchedule schedule);
+
+		/// <summary> 
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+		public SchedulerService()
+		{
 			// This call is required by the Windows.Forms Component Designer.
 			InitializeComponent();
 
 			_logPath = Path.Combine(System.Windows.Forms.Application.StartupPath,  @"Debug\SchedulerLog.txt");
 		}
 
-	// The main entry point for the process
-	static void Main()
-	{
+		// The main entry point for the process
+		static void Main()
+		{
 			System.ServiceProcess.ServiceBase[] ServicesToRun;
 	
 			// More than one user Service may run within the same process. To add
@@ -82,21 +82,23 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
             //new SchedulerService().OnStart(null); System.Threading.Thread.Sleep(99999999);
 		}
 
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
-			// 		// SchedulerService
-			// 		this.ServiceName = "OrigamSchedulerService";
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			// 
+			// SchedulerService
+			// 
+			this.ServiceName = "OrigamSchedulerService";
 		}
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if (components != null) 
@@ -107,11 +109,11 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
 			base.Dispose( disposing );
 		}
 
-	/// <summary>
-	/// Set things in motion so your service can do its work.
-	/// </summary>
-	protected override void OnStart(string[] args)
-	{
+		/// <summary>
+		/// Set things in motion so your service can do its work.
+		/// </summary>
+		protected override void OnStart(string[] args)
+		{
             if (log.IsInfoEnabled)
             {
                 log.InfoFormat("Starting ORIGAM Scheduler version {0}", System.Windows.Forms.Application.ProductVersion);
@@ -147,8 +149,8 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
 			}
 		}
 
-	private void InitSchedules()
-	{
+		private void InitSchedules()
+		{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if (log.IsInfoEnabled)
             {
@@ -192,13 +194,13 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
 			}
 		}
 
-	private IScheduledItem GetScheduledTime(AbstractScheduleTime scheduleTime)
-	{
+		private IScheduledItem GetScheduledTime(AbstractScheduleTime scheduleTime)
+		{
 			return scheduleTime.GetScheduledTime();
 		}
 
-	private void RunWorkflow(WorkflowSchedule schedule)
-	{
+		private void RunWorkflow(WorkflowSchedule schedule)
+		{
 			IWorkflow workflow = schedule.Workflow;
 
             if (log.IsInfoEnabled)
@@ -256,11 +258,11 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
 			}
 		}
 
-	/// <summary>
-	/// Stop this service.
-	/// </summary>
-	protected override void OnStop()
-	{
+		/// <summary>
+		/// Stop this service.
+		/// </summary>
+		protected override void OnStop()
+		{
             if (log.IsInfoEnabled)
             {
                 log.InfoFormat("Stopping Scheduler. Number of workflows running: {0}", _numberOfWorkflowsRunning.ToString());
@@ -281,16 +283,16 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
             }
 		}
 
-	private void _timer_Error(object sender, ExceptionEventArgs Args)
-	{
+		private void _timer_Error(object sender, ExceptionEventArgs Args)
+		{
             if (log.IsErrorEnabled)
             {
                 log.Error("Schedule workflow error", Args?.Error);
             }
 		}
 
-	private void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-	{
+        private void RestartTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
             if (restarting) return;
             try
             {
@@ -366,4 +368,5 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
                 throw;
             }
         }
+    }
 }

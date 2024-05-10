@@ -22,19 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel.Design;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for SchemaItemAncestorCollectionEditor.
-/// </summary>
-public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.CollectionEditor
+namespace Origam.Schema
 {
-	public SchemaItemAncestorCollectionEditor(Type type) : base(type)
+	/// <summary>
+	/// Summary description for SchemaItemAncestorCollectionEditor.
+	/// </summary>
+	public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.CollectionEditor
 	{
+		public SchemaItemAncestorCollectionEditor(Type type) : base(type)
+		{
 		}
 
-	protected override object CreateInstance(Type itemType)
-	{	
+		protected override object CreateInstance(Type itemType)
+		{	
 			if(itemType != typeof(SchemaItemAncestor))
 				throw new ArgumentOutOfRangeException("itemType", itemType, ResourceUtils.GetString("ErrorSchemaItemAncestorOnly"));
 
@@ -48,8 +48,8 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
 			return ancestor;
 		}
 
-	protected override void DestroyInstance(object instance)
-	{
+		protected override void DestroyInstance(object instance)
+		{
 			if(! (instance is SchemaItemAncestor))
 				throw new ArgumentOutOfRangeException("instance", instance, ResourceUtils.GetString("ErrorSchemaItemAncestorOnly"));
 			if(!(instance as SchemaItemAncestor).IsPersisted)
@@ -60,8 +60,8 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
 			//base.DestroyInstance (instance);
 		}
 
-	protected override object[] GetItems(object editValue)
-	{
+		protected override object[] GetItems(object editValue)
+		{
 			// we have to filter out all deleted items
 		
 			object[] result = new object[(editValue as SchemaItemAncestorCollection).Count];
@@ -77,8 +77,8 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
 			return result;
 		}
 
-	public override object EditValue(System.ComponentModel.ITypeDescriptorContext context, IServiceProvider provider, object value)
-	{
+		public override object EditValue(System.ComponentModel.ITypeDescriptorContext context, IServiceProvider provider, object value)
+		{
 			IDesignerHost des = provider.GetService(typeof(IDesignerHost)) as IDesignerHost;
 			object win = provider.GetService(typeof(System.Windows.Forms.Design.IWindowsFormsEditorService)) as System.Windows.Forms.Design.IWindowsFormsEditorService;
 			System.Windows.Forms.PropertyGrid grid = win.GetType().GetProperty("Parent").GetValue(win, null) as System.Windows.Forms.PropertyGrid;
@@ -88,4 +88,5 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
 
 			return base.EditValue (context, provider, value);
 		}
+	}
 }

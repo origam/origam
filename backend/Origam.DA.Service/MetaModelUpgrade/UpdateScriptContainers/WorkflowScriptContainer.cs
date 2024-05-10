@@ -24,18 +24,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
-
-public class WorkflowScriptContainer : UpgradeScriptContainer
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    public override string FullTypeName { get; } =
-        typeof(Schema.WorkflowModel.Workflow).FullName;
-
-    public override List<string> OldFullTypeNames { get; }
-    public override string[] OldPropertyXmlNames { get; }
-
-    public WorkflowScriptContainer()
+    public class WorkflowScriptContainer : UpgradeScriptContainer
     {
+        public override string FullTypeName { get; } =
+            typeof(Schema.WorkflowModel.Workflow).FullName;
+
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+
+        public WorkflowScriptContainer()
+        {
             upgradeScripts.Add(new UpgradeScript(
                 new Version("6.0.0"),
                 new Version("6.0.1"),
@@ -47,4 +47,5 @@ public class WorkflowScriptContainer : UpgradeScriptContainer
                 (node, doc) =>
                     AddAttribute(node, "onFailure","WorkflowFails")));
         }
+    }
 }

@@ -27,128 +27,129 @@ using Origam.DA.ObjectPersistence;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for ServiceMethod.
-/// </summary>
-[SchemaItemDescription("Action", "Actions", 18)]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class AbstractWorkflowPageAction : AbstractSchemaItem
+namespace Origam.Schema.WorkflowModel
 {
-	public const string CategoryConst = "WorkflowPageAction";
-
-	public AbstractWorkflowPageAction() : base() {Init();}
-	public AbstractWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public AbstractWorkflowPageAction(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	/// <summary>
+	/// Summary description for ServiceMethod.
+	/// </summary>
+	[SchemaItemDescription("Action", "Actions", 18)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public class AbstractWorkflowPageAction : AbstractSchemaItem
 	{
+		public const string CategoryConst = "WorkflowPageAction";
+
+		public AbstractWorkflowPageAction() : base() {Init();}
+		public AbstractWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public AbstractWorkflowPageAction(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 			this.ChildItemTypes.Add(typeof(WorkflowPageActionParameter));
 		}
 
-	#region Properties
-	public Guid ConditionRuleId;
+		#region Properties
+		public Guid ConditionRuleId;
 
-	[Category("Conditions")]
-	[TypeConverter(typeof(StartRuleConverter))]
-	[XmlReference("conditionRule", "ConditionRuleId")]
-	public IStartRule ConditionRule
-	{
-		get
+		[Category("Conditions")]
+		[TypeConverter(typeof(StartRuleConverter))]
+        [XmlReference("conditionRule", "ConditionRuleId")]
+		public IStartRule ConditionRule
 		{
+			get
+			{
                 return (IStartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConditionRuleId));
 			}
-		set
-		{
+			set
+			{
 				this.ConditionRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	private int _sortOrder = 100;
-	[DefaultValue(100)]
-	[XmlAttribute("sortOrder")]
-	public int SortOrder
-	{
-		get
+		private int _sortOrder = 100;
+		[DefaultValue(100)]
+        [XmlAttribute("sortOrder")]
+		public int SortOrder
 		{
+			get
+			{
 				return _sortOrder;
 			}
-		set
-		{
+			set
+			{
 				_sortOrder = value;
 			}
-	}		
+		}		
 
-	private string _roles = "*";
-	[Category("Conditions")]
-	[NotNullModelElementRule()]
-	[DefaultValue("*")]
-	[XmlAttribute("roles")]
-	public string Roles
-	{
-		get
+		private string _roles = "*";
+		[Category("Conditions")]
+		[NotNullModelElementRule()]
+        [DefaultValue("*")]
+        [XmlAttribute("roles")]
+        public string Roles
 		{
+			get
+			{
 				return _roles;
 			}
-		set
-		{
+			set
+			{
 				_roles = value;
 			}
-	}
+		}
 
-	private string _features;
-	[Category("Conditions")]
-	[XmlAttribute("features")]
-	public string Features
-	{
-		get
+		private string _features;
+		[Category("Conditions")]
+		[XmlAttribute("features")]
+		public string Features
 		{
+			get
+			{
 				return _features;
 			}
-		set
-		{
+			set
+			{
 				_features = value;
 			}
-	}		
-	#endregion
+		}		
+		#endregion
 
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override bool UseFolders
-	{
-		get
+		public override bool UseFolders
 		{
+			get
+			{
 				return false;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			base.GetExtraDependencies (dependencies);
 
 			if(this.ConditionRule != null) dependencies.Add(this.ConditionRule);
 		}
 
-	#endregion
+		#endregion
 
-	#region IComparable Members
-	public override int CompareTo(object obj)
-	{
+		#region IComparable Members
+		public override int CompareTo(object obj)
+		{
 			AbstractWorkflowPageAction compareItem = obj as AbstractWorkflowPageAction;
 
 			if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareAbstractWorkflowPageAction"));
 
 			return this.SortOrder.CompareTo(compareItem.SortOrder);
 		}
-	#endregion
+		#endregion
+	}
 }

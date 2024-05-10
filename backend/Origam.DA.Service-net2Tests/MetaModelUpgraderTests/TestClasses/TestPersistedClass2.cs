@@ -24,20 +24,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml.Serialization;
 using Origam.DA.Common;
 
-namespace Origam.DA.ServiceTests;
-
-[ClassMetaVersion("6.0.4")]
-public class TestPersistedClass2
+namespace Origam.DA.ServiceTests
 {
-    [XmlAttribute("name")]
-    public string Name { get; set; }
+    [ClassMetaVersion("6.0.4")]
+    public class TestPersistedClass2
+    {
+        [XmlAttribute("name")]
+        public string Name { get; set; }
         
-    [XmlAttribute("NewProperty1")]
-    public string NewProperty1 { get; set; }
+        [XmlAttribute("NewProperty1")]
+        public string NewProperty1 { get; set; }
         
-    [XmlAttribute("NewProperty2")]
-    public string NewProperty2 { get; set; }
+        [XmlAttribute("NewProperty2")]
+        public string NewProperty2 { get; set; }
         
-    [XmlAttribute("NewProperty4")]
-    public string NewProperty4 { get; set; }
+        [XmlAttribute("NewProperty4")]
+        public string NewProperty4 { get; set; }
+    }
 }

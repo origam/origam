@@ -23,53 +23,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.DA.Service.CustomCommandParser;
-
-public class OrderByCommandParser : ICustomCommandParser
+namespace Origam.DA.Service.CustomCommandParser
 {
-    private readonly ColumnOrderingRenderer columnOrderingRenderer;
-    private readonly List<Ordering> orderingsInput;
-
-    public OrderByCommandParser(List<Ordering> orderingsInput)
+    public class OrderByCommandParser : ICustomCommandParser
     {
+        private readonly ColumnOrderingRenderer columnOrderingRenderer;
+        private readonly List<Ordering> orderingsInput;
+
+        public OrderByCommandParser(List<Ordering> orderingsInput)
+        {
             this.orderingsInput = orderingsInput ?? new List<Ordering>();
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer();
         }
 
-    public string[] Columns => orderingsInput 
-        .Select(ordering => ordering.ColumnName)
-        .ToArray();
+        public string[] Columns => orderingsInput 
+            .Select(ordering => ordering.ColumnName)
+            .ToArray();
         
-    public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
-    {
+        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
+        {
             columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expressions);
         }
 
-    public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
-}
+        public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+    }
     
-class ColumnOrderingRenderer
-{
-    private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
-        
-    public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
+    class ColumnOrderingRenderer
     {
+        private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
+        
+        public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
+        {
             if (!columnExpressions.ContainsKey(columnName))
             {
                 columnExpressions[columnName] = expressions;
             }
         }
 
-    internal string ToSqlOrderBy(List<Ordering> orderings)
-    {
+        internal string ToSqlOrderBy(List<Ordering> orderings)
+        {
             if (orderings == null) return "";
             return string.Join(", ", orderings.Select(ToSql)
             );
         }
 
-    private string ToSql(Ordering ordering)
-    {
+        private string ToSql(Ordering ordering)
+        {
             string directionSql = DirectionToSQLName(ordering.Direction);
             if (!columnExpressions.ContainsKey(ordering.ColumnName))
             {
@@ -81,8 +81,8 @@ class ColumnOrderingRenderer
             return string.Join(", ", orderByExpressions);
         }
 
-    private string DirectionToSQLName(string orderingName)
-    {
+        private string DirectionToSQLName(string orderingName)
+        {
             switch (orderingName.ToLower())
             {
                 case "asc": return "ASC";
@@ -90,4 +90,5 @@ class ColumnOrderingRenderer
                 default: throw new NotImplementedException(orderingName);
             }
         }
+    }
 }

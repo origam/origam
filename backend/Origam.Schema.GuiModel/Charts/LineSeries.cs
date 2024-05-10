@@ -26,44 +26,45 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Line Series", "Data Series", "icon_line-series-2.png")]
-[HelpTopic("Line+Series")]
-[ClassMetaVersion("6.0.0")]
-public class LineSeries : AbstractCartesianSeries
+namespace Origam.Schema.GuiModel
 {
-	public LineSeries() : base() {Init();}
-	public LineSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public LineSeries(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Line Series", "Data Series", "icon_line-series-2.png")]
+    [HelpTopic("Line+Series")]
+    [ClassMetaVersion("6.0.0")]
+	public class LineSeries : AbstractCartesianSeries
 	{
+		public LineSeries() : base() {Init();}
+		public LineSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public LineSeries(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 			
 		}
 
-	#region Properties
-	private LineSeriesForm _form = LineSeriesForm.Segment;
-	[Category("Series"), DefaultValue(LineSeriesForm.Segment)]
-	[XmlAttribute("form")]
-	public LineSeriesForm Form
-	{
-		get
+		#region Properties
+		private LineSeriesForm _form = LineSeriesForm.Segment;
+		[Category("Series"), DefaultValue(LineSeriesForm.Segment)]
+		[XmlAttribute("form")]
+		public LineSeriesForm Form
 		{
+			get
+			{
 				return _form;
 			}
-		set
-		{
+			set
+			{
 				_form = value;
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "74";
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

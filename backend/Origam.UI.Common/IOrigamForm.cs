@@ -19,13 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI;
-
-/// <summary>
-/// Summary description for INavigatableForm.
-/// </summary>
-public interface IOrigamForm
+namespace Origam.UI
 {
-	Key PrimaryKey{get;}
-	bool SetPosition(object[] key);
+	/// <summary>
+	/// Summary description for INavigatableForm.
+	/// </summary>
+	public interface IOrigamForm
+	{
+		Key PrimaryKey{get;}
+		bool SetPosition(object[] key);
+	}
 }

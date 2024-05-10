@@ -26,15 +26,15 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for ChartBuilder.
-/// </summary>
-public class ChartBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static XmlElement Build(XmlDocument doc, AbstractChart chart, DataTable table)
+	/// <summary>
+	/// Summary description for ChartBuilder.
+	/// </summary>
+	public class ChartBuilder
 	{
+		public static XmlElement Build(XmlDocument doc, AbstractChart chart, DataTable table)
+		{
 			XmlElement chartElement = doc.CreateElement("Chart");
 			chartElement.SetAttribute("Type", chart.GetType().Name);
 			chartElement.SetAttribute("Name", chart.Caption);
@@ -64,8 +64,8 @@ public class ChartBuilder
 			return chartElement;
 		}
 
-	private static void BuildCartesianChart(XmlDocument doc, XmlElement chartElement, CartesianChart chart, DataTable table)
-	{
+		private static void BuildCartesianChart(XmlDocument doc, XmlElement chartElement, CartesianChart chart, DataTable table)
+		{
 			XmlElement axesElement = doc.CreateElement("Axes");
 			chartElement.AppendChild(axesElement);
 
@@ -93,8 +93,8 @@ public class ChartBuilder
 			}
 		}
 
-	private static void BuildPieChart(XmlDocument doc, XmlElement chartElement, PieChart chart, DataTable table)
-	{
+		private static void BuildPieChart(XmlDocument doc, XmlElement chartElement, PieChart chart, DataTable table)
+		{
 			XmlElement seriesElement = doc.CreateElement("Series");
 			chartElement.AppendChild(seriesElement);
 
@@ -107,8 +107,8 @@ public class ChartBuilder
 			}
 		}
 
-	private static void BuildSvgChart(XmlDocument doc, XmlElement chartElement, SvgChart chart, DataTable table)
-	{
+		private static void BuildSvgChart(XmlDocument doc, XmlElement chartElement, SvgChart chart, DataTable table)
+		{
 			chartElement.SetAttribute("SvgFileName", chart.SvgFileName);
 			chartElement.SetAttribute("SvgChartType", chart.Type.ToString());
 			chartElement.SetAttribute("TitleField", chart.TitleField);
@@ -122,8 +122,8 @@ public class ChartBuilder
 			if(svgObjectLookupId != null) chartElement.SetAttribute("SvgObjectFieldLookupId", svgObjectLookupId);
 		}
 
-	private static void BuildCartesianChartHorizontalAxis(XmlElement axesElement, CartesianChartHorizontalAxis item, DataTable table)
-	{
+		private static void BuildCartesianChartHorizontalAxis(XmlElement axesElement, CartesianChartHorizontalAxis item, DataTable table)
+		{
 			XmlElement axis = axesElement.OwnerDocument.CreateElement("HorizontalAxis");
 			axesElement.AppendChild(axis);
 
@@ -137,8 +137,8 @@ public class ChartBuilder
 			axis.SetAttribute("AggregationType", item.AggregationType.ToString());
 		}
 
-	private static string GetLookupId (DataTable table, string fieldName, AbstractSchemaItem item)
-	{
+		private static string GetLookupId (DataTable table, string fieldName, AbstractSchemaItem item)
+		{
 			if(fieldName != "" && fieldName != null)
 			{
 				if(!table.Columns.Contains(fieldName))
@@ -156,8 +156,8 @@ public class ChartBuilder
 			return null;
 		}
 
-	private static void BuildCartesianChartVerticalAxis(XmlElement axesElement, CartesianChartVerticalAxis item)
-	{
+		private static void BuildCartesianChartVerticalAxis(XmlElement axesElement, CartesianChartVerticalAxis item)
+		{
 			XmlElement axis = axesElement.OwnerDocument.CreateElement("VerticalAxis");
 			axesElement.AppendChild(axis);
 
@@ -167,8 +167,8 @@ public class ChartBuilder
 			if(item.ApplyMaxLimit) axis.SetAttribute("Max", item.Max.ToString());
 		}
 
-	private static XmlElement BuildBasicSeries(XmlElement seriesElement, AbstractSeries item, DataTable table)
-	{
+		private static XmlElement BuildBasicSeries(XmlElement seriesElement, AbstractSeries item, DataTable table)
+		{
 			XmlElement series = seriesElement.OwnerDocument.CreateElement("Series");
 			seriesElement.AppendChild(series);
 
@@ -183,8 +183,8 @@ public class ChartBuilder
 			return series;
 		}
 
-	private static void BuildColumnSeries(XmlElement seriesElement, ColumnSeries item, DataTable table)
-	{
+		private static void BuildColumnSeries(XmlElement seriesElement, ColumnSeries item, DataTable table)
+		{
 			XmlElement series = BuildBasicSeries(seriesElement, item, table);
 			series.SetAttribute("ColumnSeriesType", item.Type.ToString());			
 			series.SetAttribute("ZAxisField", item.ZAxisField);
@@ -192,8 +192,8 @@ public class ChartBuilder
 			if(zAxisFieldLookupId != null) series.SetAttribute("ZAxisFieldLookupId", zAxisFieldLookupId);
 		}
 
-	private static void BuildLineSeries(XmlElement seriesElement, LineSeries item, DataTable table)
-	{
+		private static void BuildLineSeries(XmlElement seriesElement, LineSeries item, DataTable table)
+		{
 			XmlElement series = BuildBasicSeries(seriesElement, item, table);
 			series.SetAttribute("Type", item.GetType().Name);
 			series.SetAttribute("LineSeriesForm", item.Form.ToString());
@@ -202,12 +202,13 @@ public class ChartBuilder
 			if(zAxisFieldLookupId != null) series.SetAttribute("ZAxisFieldLookupId", zAxisFieldLookupId);
 		}
 
-	private static void BuildPieSeries(XmlElement seriesElement, PieSeries item, DataTable table)
-	{
+		private static void BuildPieSeries(XmlElement seriesElement, PieSeries item, DataTable table)
+		{
 			XmlElement series = BuildBasicSeries(seriesElement, item, table);
 			series.SetAttribute("Type", item.GetType().Name);
 			series.SetAttribute("NameField", item.NameField);
 			string nameFieldLookupId = GetLookupId(table, item.NameField, item);
 			if(nameFieldLookupId  != null) series.SetAttribute("NameFieldLookupId", nameFieldLookupId);
 		}
+	}
 }

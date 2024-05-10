@@ -22,9 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService;
-
-public class RevertChangesInput
+namespace Origam.Server.Model.UIService
 {
-    [RequiredNonDefault] public Guid SessionFormIdentifier { get; set; }
+    public class RevertChangesInput
+    {
+        [RequiredNonDefault] public Guid SessionFormIdentifier { get; set; }
+    }
 }

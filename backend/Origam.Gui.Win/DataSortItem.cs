@@ -23,63 +23,63 @@ using System;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for DataGridSortItem.
-/// </summary>
-public class DataSortItem : IComparable
+namespace Origam.Gui.Win
 {
-	public DataSortItem(string columnName, DataStructureColumnSortDirection sortDirection, int sortOrder)
+	/// <summary>
+	/// Summary description for DataGridSortItem.
+	/// </summary>
+	public class DataSortItem : IComparable
 	{
+		public DataSortItem(string columnName, DataStructureColumnSortDirection sortDirection, int sortOrder)
+		{
 			this.ColumnName = columnName;
 			this.SortDirection = sortDirection;
 			this.SortOrder = sortOrder;
 		}
 
-	private DataStructureColumnSortDirection _sortDirection;
-	public DataStructureColumnSortDirection SortDirection
-	{
-		get
+		private DataStructureColumnSortDirection _sortDirection;
+		public DataStructureColumnSortDirection SortDirection
 		{
+			get
+			{
 				return _sortDirection;
 			}
-		set
-		{
+			set
+			{
 				_sortDirection = value;
 			}
-	}
+		}
 
-	private string _columnName;
-	public string ColumnName
-	{
-		get
+		private string _columnName;
+		public string ColumnName
 		{
+			get
+			{
 				return _columnName;
 			}
-		set
-		{
+			set
+			{
 				_columnName = value;
 			}
-	}
+		}
 
-	private int _sortOrder;
-	public int SortOrder
-	{
-		get
+		private int _sortOrder;
+		public int SortOrder
 		{
+			get
+			{
 				return _sortOrder;
 			}
-		set
-		{
+			set
+			{
 				_sortOrder = value;
 			}
-	}
+		}
 
-	#region IComparable Members
+		#region IComparable Members
 
-	public int CompareTo(object obj)
-	{
+		public int CompareTo(object obj)
+		{
 			DataSortItem compareItem = obj as DataSortItem;
 
 			if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
@@ -87,5 +87,6 @@ public class DataSortItem : IComparable
 			return this.SortOrder.CompareTo(compareItem.SortOrder);
 		}
 
-	#endregion
+		#endregion
+	}
 }

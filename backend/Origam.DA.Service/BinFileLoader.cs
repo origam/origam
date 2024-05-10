@@ -31,34 +31,34 @@ using Origam.DA.Common;
 using Origam.Extensions;
 using ProtoBuf;
 
-namespace Origam.DA.Service;
-
-internal interface IBinFileLoader 
+namespace Origam.DA.Service
 {
-    void LoadInto(ItemTracker itemTracker);
-    void Persist(ItemTracker itemTracker);
-    void MarkToSave(ItemTracker itemTracker);
-    void StopTask();
-}
-
-internal class BinFileLoader : IBinFileLoader 
-{
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly OrigamFileFactory origamFileFactory;
-    private readonly DirectoryInfo topDirectory;
-    private readonly FileInfo indexFile;
-    private readonly object Lock = new object();
-    private readonly Queue<ItemTracker> fileSaveQueue
-        = new Queue<ItemTracker>();
-    private readonly FilePersistenceIndex filePersistenceIndex;
-    private readonly Task task;
-    private readonly CancellationTokenSource IndexTaskCancellationTokenSource = new CancellationTokenSource();
-
-    public BinFileLoader(OrigamFileFactory origamFileFactory,
-        DirectoryInfo topDirectory, FileInfo indexFile, FilePersistenceIndex filePersistenceIdx)
+    internal interface IBinFileLoader 
     {
+        void LoadInto(ItemTracker itemTracker);
+        void Persist(ItemTracker itemTracker);
+        void MarkToSave(ItemTracker itemTracker);
+        void StopTask();
+    }
+
+    internal class BinFileLoader : IBinFileLoader 
+    {
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+                MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly OrigamFileFactory origamFileFactory;
+        private readonly DirectoryInfo topDirectory;
+        private readonly FileInfo indexFile;
+        private readonly object Lock = new object();
+        private readonly Queue<ItemTracker> fileSaveQueue
+            = new Queue<ItemTracker>();
+        private readonly FilePersistenceIndex filePersistenceIndex;
+        private readonly Task task;
+        private readonly CancellationTokenSource IndexTaskCancellationTokenSource = new CancellationTokenSource();
+
+        public BinFileLoader(OrigamFileFactory origamFileFactory,
+            DirectoryInfo topDirectory, FileInfo indexFile, FilePersistenceIndex filePersistenceIdx)
+        {
             this.origamFileFactory = origamFileFactory;
             this.topDirectory = topDirectory;
             this.indexFile = indexFile;
@@ -68,8 +68,8 @@ internal class BinFileLoader : IBinFileLoader
                 () => SaveIndex(cancellationToken), cancellationToken);
 
         }
-    private void SaveIndex(CancellationToken cancellationToken)
-    {
+        private void SaveIndex(CancellationToken cancellationToken)
+        {
             while (!cancellationToken.IsCancellationRequested)
             {
                 if (fileSaveQueue.Count > 0)
@@ -88,13 +88,13 @@ internal class BinFileLoader : IBinFileLoader
             }
         }
 
-    private enum Operation
-    {
-        clear,
-        add
-    }
-    private void QueueOperation(Operation operation, ItemTracker itemTracker)
-    {
+        private enum Operation
+        {
+            clear,
+            add
+        }
+        private void QueueOperation(Operation operation, ItemTracker itemTracker)
+        {
             lock (fileSaveQueue)
             {
                 switch (operation)
@@ -108,29 +108,29 @@ internal class BinFileLoader : IBinFileLoader
                 }
             }
         }
-    public void Persist(ItemTracker itemTracker)
-    {
-#if DEBUG
-        // The CheckDataConsistency method was originally a debugging tool.
-        // Running this method on a medium size project takes about 300 ms
-        // which seemed like a lot for something that is not necessary anymore.
-        // That is why was this call removed from the production builds. 
-        CheckDataConsistency(itemTracker);
-#endif
-        itemTracker.CleanUp();
-        var serializationData = new TrackerSerializationData(
-            itemTracker.AllFiles, itemTracker.GetStats());
-        using (var file = indexFile.Create())
+        public void Persist(ItemTracker itemTracker)
         {
-            Serializer.Serialize(file, serializationData);
+#if DEBUG
+            // The CheckDataConsistency method was originally a debugging tool.
+            // Running this method on a medium size project takes about 300 ms
+            // which seemed like a lot for something that is not necessary anymore.
+            // That is why was this call removed from the production builds. 
+            CheckDataConsistency(itemTracker);
+#endif
+            itemTracker.CleanUp();
+            var serializationData = new TrackerSerializationData(
+                itemTracker.AllFiles, itemTracker.GetStats());
+            using (var file = indexFile.Create())
+            {
+                Serializer.Serialize(file, serializationData);
+            }
         }
-    }
-    public void MarkToSave(ItemTracker itemTracker)
-    {
+        public void MarkToSave(ItemTracker itemTracker)
+        {
             QueueOperation(Operation.add, itemTracker);
         }
-    public void LoadInto(ItemTracker itemTracker)
-    {
+        public void LoadInto(ItemTracker itemTracker)
+        {
             if (!indexFile.ExistsNow()) return;
             lock (Lock)
             {
@@ -160,8 +160,8 @@ internal class BinFileLoader : IBinFileLoader
             }
         }
 
-    private void LoadInternal(ItemTracker itemTracker)
-    {
+        private void LoadInternal(ItemTracker itemTracker)
+        {
             var serializationData = new TrackerSerializationData(
                 new List<ITrackeableFile>(), new Dictionary<string, int>());
             using (var file = indexFile.OpenRead())
@@ -205,8 +205,8 @@ internal class BinFileLoader : IBinFileLoader
             }
         }
 
-    private bool HashesAreUpToDate(ItemTracker itemTracker)
-    {
+        private bool HashesAreUpToDate(ItemTracker itemTracker)
+        {
             var trackerFiles = itemTracker
                 .AllFiles
                 .ToDictionary(
@@ -229,9 +229,9 @@ internal class BinFileLoader : IBinFileLoader
             return trackerFiles.Count == 0;
         }
 
-    private void CheckItemTrackerDataIsConsistentOrThrow(ItemTracker itemTracker,
-        TrackerSerializationData serializationData)
-    {
+        private void CheckItemTrackerDataIsConsistentOrThrow(ItemTracker itemTracker,
+            TrackerSerializationData serializationData)
+        {
             Dictionary<string, int> newStats = itemTracker.GetStats();
             Dictionary<string, int> loadedStats = serializationData.ItemTrackerStats;
             if (!AreTrackerStatsEqual(newStats, loadedStats))
@@ -240,8 +240,8 @@ internal class BinFileLoader : IBinFileLoader
             }
         }
 
-    private bool AreTrackerStatsEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats)
-    {
+        private bool AreTrackerStatsEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats)
+        {
             foreach (string statName in newStats.Keys)
             {
                 if (newStats[statName] != loadedStats[statName])
@@ -252,7 +252,7 @@ internal class BinFileLoader : IBinFileLoader
             return true;
         }
         
-    private void HandleTrackerStatsAreNotEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
+        private void HandleTrackerStatsAreNotEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
             log.Error(
                 $"Error when loading index file:{indexFile}, data is inconsistent." +
                 " ItemTracker stats now: " + newStats.Print(inLine: true) +
@@ -262,8 +262,8 @@ internal class BinFileLoader : IBinFileLoader
             throw new Exception(
                 "Error when loading index file, data is inconsistent.");
         }
-    private void CheckDataConsistency(ItemTracker originalTracker)
-    {
+        private void CheckDataConsistency(ItemTracker originalTracker)
+        {
             ItemTracker testTracker = new ItemTracker(null);
             originalTracker.AllFiles
                    .ForEach(x =>
@@ -278,8 +278,8 @@ internal class BinFileLoader : IBinFileLoader
             }
         }
 
-    private void SaveItemTrackersForDebugging(ItemTracker originalTracker, ItemTracker testTracker)
-    {
+        private void SaveItemTrackersForDebugging(ItemTracker originalTracker, ItemTracker testTracker)
+        {
             FileInfo originalTrackerTxt = indexFile.MakeNew("originalTracker");
             File.WriteAllText(originalTrackerTxt.FullName,  originalTracker.Print());
             
@@ -287,15 +287,15 @@ internal class BinFileLoader : IBinFileLoader
             File.WriteAllText(testTrackerTxt.FullName, testTracker.Print());
         }
         
-    private void SaveIndexToTxtForDebugging(
-        TrackerSerializationData serializationData)
-    {
+        private void SaveIndexToTxtForDebugging(
+            TrackerSerializationData serializationData)
+        {
             FileInfo txtFileInfo = indexFile.MakeNew("debug");
             File.WriteAllText(txtFileInfo.FullName, serializationData.ToString());
         }
 
-    public void StopTask()
-    {
+        public void StopTask()
+        {
             IndexTaskCancellationTokenSource.Cancel();
             try
             {
@@ -310,23 +310,24 @@ internal class BinFileLoader : IBinFileLoader
                 }
             }
         }
-}
+    }
 
-class NullBinFileLoader : IBinFileLoader
-{
-    public void MarkToSave(ItemTracker itemTracker)
+    class NullBinFileLoader : IBinFileLoader
     {
+        public void MarkToSave(ItemTracker itemTracker)
+        {
         }
 
-    public void LoadInto(ItemTracker itemTracker)
-    {   
+        public void LoadInto(ItemTracker itemTracker)
+        {   
         }
 
-    public void Persist(ItemTracker itemTracker)
-    {
+        public void Persist(ItemTracker itemTracker)
+        {
         }
 
-    public void StopTask()
-    {
+        public void StopTask()
+        {
         }
+    }
 }

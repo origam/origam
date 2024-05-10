@@ -27,27 +27,27 @@ using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Screen Condition", "Screen Condition", 
-    "icon_parameter-mapping.png")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class ScreenCondition: AbstractSchemaItem
+namespace Origam.Schema.GuiModel
 {
-    public const string CategoryConst = "ScreenCondition";
-
-    public override string ItemType => CategoryConst;
-
-    public Guid ScreenId;
-
-    [TypeConverter(typeof(FormControlSetConverter))]
-    [XmlReference("screen", "ScreenId")]
-    public FormControlSet Screen
+    [SchemaItemDescription("Screen Condition", "Screen Condition", 
+        "icon_parameter-mapping.png")]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+    public class ScreenCondition: AbstractSchemaItem
     {
-        get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
-        set 
+        public const string CategoryConst = "ScreenCondition";
+
+        public override string ItemType => CategoryConst;
+
+        public Guid ScreenId;
+
+        [TypeConverter(typeof(FormControlSetConverter))]
+        [XmlReference("screen", "ScreenId")]
+        public FormControlSet Screen
         {
+            get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+            set 
+            {
                 ScreenId = value?.Id ?? Guid.Empty;
                 if(ScreenId != null && ScreenId != Guid.Empty)
                 {
@@ -56,22 +56,23 @@ public class ScreenCondition: AbstractSchemaItem
                     Name = formControl.Name;
                 }
             }
-    }
-        
-    public ScreenCondition(Guid extensionId) : base(extensionId)
-    {
-        }
-
-    public ScreenCondition(Key primaryKey) : base(primaryKey)
-    {
-        }
-
-    public ScreenCondition()
-    {
         }
         
-    public override void GetExtraDependencies(ArrayList dependencies)
-    {
+        public ScreenCondition(Guid extensionId) : base(extensionId)
+        {
+        }
+
+        public ScreenCondition(Key primaryKey) : base(primaryKey)
+        {
+        }
+
+        public ScreenCondition()
+        {
+        }
+        
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
             dependencies.Add(Screen);
         }
+    }
 }

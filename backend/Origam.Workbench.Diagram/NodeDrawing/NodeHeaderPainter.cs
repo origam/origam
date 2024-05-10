@@ -17,25 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System.Drawing;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
 
-namespace Origam.Workbench.Diagram.NodeDrawing;
-
-class NodeHeaderPainter
+namespace Origam.Workbench.Diagram.NodeDrawing
 {
-    private readonly InternalPainter painter;
-
-    public NodeHeaderPainter(InternalPainter painter)
+    class NodeHeaderPainter
     {
+        private readonly InternalPainter painter;
+
+        public NodeHeaderPainter(InternalPainter painter)
+        {
             this.painter = painter;
         }
 
-    public void Draw(Node node, Graphics editorGraphics, Rectangle border)
-    {
+        public void Draw(Node node, Graphics editorGraphics, Rectangle border)
+        {
             INodeData nodeData = (INodeData)node.UserData;
 
             SizeF stringSize =
@@ -79,4 +78,5 @@ class NodeHeaderPainter
                 },
                 yAxisCoordinate: headerCenter.Y);
         }
+    }
 }

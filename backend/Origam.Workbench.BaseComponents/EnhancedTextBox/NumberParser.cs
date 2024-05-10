@@ -21,31 +21,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.UI;
-
-public class NumberParser
+namespace Origam.Gui.UI
 {
-    private readonly Type ValueType;
-    private readonly Func<string, object> textParseFunc;
-    private readonly IErrorReporter errorReporter;
-        
-    public NumberParser(Func<string,object> textParseFunc,
-        IErrorReporter errorReporter) 
+    public class NumberParser
     {
+        private readonly Type ValueType;
+        private readonly Func<string, object> textParseFunc;
+        private readonly IErrorReporter errorReporter;
+        
+        public NumberParser(Func<string,object> textParseFunc,
+            IErrorReporter errorReporter) 
+        {
             this.textParseFunc = textParseFunc;
             ValueType = GetValueType(textParseFunc); 
             this.errorReporter = errorReporter;
         }
 
-    public object Parse(string text)
-    {
+        public object Parse(string text)
+        {
             if (string.IsNullOrEmpty(text)) return 0;
             try
             {
                 return textParseFunc.Invoke(text);
             } catch (OverflowException) 
             {
-                // TODO: fix error message tooltip which does not show up above      // the textBox (commented lines below)
+                // TODO: fix error message tooltip which does not show up above 
+                // the textBox (commented lines below)
 //                errorReporter.NotifyInputError($"The value {text} " +
 //                                 $"is too big or too small for {ValueType.Name}");
                 throw;
@@ -57,7 +58,7 @@ public class NumberParser
             }
         }
 
-    private Type GetValueType(Func<string, object> textParseFunc){
+        private Type GetValueType(Func<string, object> textParseFunc){
             try
             {
                return  textParseFunc.Invoke("1").GetType();
@@ -68,4 +69,5 @@ public class NumberParser
                     "textParseFunc cannot parse numeric values");
             }
         }
+    }
 }

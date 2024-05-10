@@ -37,23 +37,23 @@ using Origam.Server;
 using Origam.Server.Model.Excel;
 using Origam.Server.Model.UIService;
 
-namespace Origam.Server.Controller;
-
-[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-[ApiController]
-[Route("internalApi/[controller]")]
-public class ExcelExportController: AbstractController
+namespace Origam.Server.Controller
 {
-        
-    public ExcelExportController(ILogger<AbstractController> log,
-        SessionObjects sessionObjects) : base(log, sessionObjects)
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+    [ApiController]
+    [Route("internalApi/[controller]")]
+    public class ExcelExportController: AbstractController
     {
+        
+        public ExcelExportController(ILogger<AbstractController> log,
+            SessionObjects sessionObjects) : base(log, sessionObjects)
+        {
         }
 
-    [HttpPost("[action]")]
-    public IActionResult GetFile(
-        [FromBody][Required]ExcelExportInput input)
-    {
+        [HttpPost("[action]")]
+        public IActionResult GetFile(
+            [FromBody][Required]ExcelExportInput input)
+        {
             return RunWithErrorHandler(() =>
             {
                 SessionStore sessionStore = sessionObjects.SessionManager
@@ -88,8 +88,8 @@ public class ExcelExportController: AbstractController
             });
         }
         
-    private IActionResult GetExcelFile(EntityExportInfo entityExportInfo)
-    {
+        private IActionResult GetExcelFile(EntityExportInfo entityExportInfo)
+        {
             return RunWithErrorHandler(() =>
             {
                 var excelEntityExporter = new ExcelEntityExporter();
@@ -121,12 +121,12 @@ public class ExcelExportController: AbstractController
             });
         }
 
-    class ReadeResult {
-        public DataStructureQuery DataStructureQuery { get; set; }
-        public IEnumerable<IEnumerable<object>> Rows { get; set; }
-    }
+        class ReadeResult {
+            public DataStructureQuery DataStructureQuery { get; set; }
+            public IEnumerable<IEnumerable<object>> Rows { get; set; }
+        }
 
-    private Result<ReadeResult, IActionResult> ReadRows(EntityExportInfo entityExportInfo, DataStructureQuery dataStructureQuery) {
+        private Result<ReadeResult, IActionResult> ReadRows(EntityExportInfo entityExportInfo, DataStructureQuery dataStructureQuery) {
             var result = ExecuteDataReader(
                                dataStructureQuery: dataStructureQuery,
                                methodId: entityExportInfo.LazyLoadedEntityInput.MenuId);
@@ -140,9 +140,9 @@ public class ExcelExportController: AbstractController
                 : Result.Failure<ReadeResult, IActionResult>(result.Error);
         }
 
-    private Result<IWorkbook, IActionResult> FillWorkbook(EntityExportInfo entityExportInfo,
-        ExcelEntityExporter excelEntityExporter)
-    {
+        private Result<IWorkbook, IActionResult> FillWorkbook(EntityExportInfo entityExportInfo,
+            ExcelEntityExporter excelEntityExporter)
+        {
             if (entityExportInfo.Store is WorkQueueSessionStore workQueueSessionStore)
             {
 
@@ -177,4 +177,5 @@ public class ExcelExportController: AbstractController
             IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
             return Result.Ok<IWorkbook, IActionResult>(workBook) ;
         }
+    }
 }

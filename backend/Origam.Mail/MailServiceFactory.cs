@@ -23,10 +23,10 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Mail;
-
-public class MailServiceFactory
+namespace Origam.Mail
 {
+    public class MailServiceFactory
+    {
 #if NETSTANDARD
         private static readonly IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -34,13 +34,13 @@ public class MailServiceFactory
             .AddEnvironmentVariables()
             .Build();
 #endif
-    private MailServiceFactory()
-    {
+        private MailServiceFactory()
+        {
 
         }
         
-    public static IMailService GetMailService()
-    {
+        public static IMailService GetMailService()
+        {
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
             string username = mailConfig["UserName"];
@@ -59,7 +59,8 @@ public class MailServiceFactory
                 useSsl: useSsl
             );            
 #else
-        return new NetFxMailService();            
+            return new NetFxMailService();            
 #endif
+        }
     }
 }

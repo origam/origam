@@ -21,17 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for TextBoxBuilder.
-/// </summary>
-public class ImageBoxBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement propertyElement, string sourceType)
+	/// <summary>
+	/// Summary description for TextBoxBuilder.
+	/// </summary>
+	public class ImageBoxBuilder
 	{
+		public static void Build(XmlElement propertyElement, string sourceType)
+		{
 			propertyElement.SetAttribute("Entity", "Image");
 			propertyElement.SetAttribute("Column", "Image");
 			propertyElement.SetAttribute("SourceType", sourceType);
 		}
+	}
 }

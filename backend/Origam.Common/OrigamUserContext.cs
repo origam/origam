@@ -24,27 +24,27 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Origam;
-
-/// <summary>
-/// Summary description for OrigamUserContext.
-/// </summary>
-public class OrigamUserContext
+namespace Origam
 {
-    private static IDictionary<string, Hashtable> _contexts
-        = new Dictionary<string, Hashtable>();
-    private static object _lock = new object();
+	/// <summary>
+	/// Summary description for OrigamUserContext.
+	/// </summary>
+	public class OrigamUserContext
+	{
+		private static IDictionary<string, Hashtable> _contexts
+            = new Dictionary<string, Hashtable>();
+        private static object _lock = new object();
 
-    public static Hashtable Context => GetContext(UserKey());
+		public static Hashtable Context => GetContext(UserKey());
 
-    public static void Reset()
-    { 
+        public static void Reset()
+        { 
             string currentUsername = UserKey();
             Reset(currentUsername);
         }
         
-    public static void Reset(string username)
-    {
+        public static void Reset(string username)
+        {
             lock (_lock)
             {
                 DisposeCachedObjects(username);
@@ -52,8 +52,8 @@ public class OrigamUserContext
             }
         }
 
-    public static void ResetAll()
-    {
+        public static void ResetAll()
+        {
             lock (_lock)
             {
                 foreach (var contextEntry in _contexts)
@@ -64,8 +64,8 @@ public class OrigamUserContext
             }
         }
 
-    private static Hashtable GetContext(string key)
-    {
+        private static Hashtable GetContext(string key)
+        {
             lock (_lock)
             {
                 if (!_contexts.ContainsKey(key))
@@ -76,8 +76,8 @@ public class OrigamUserContext
             }
         }
 
-    private static void DisposeCachedObjects(string username)
-    {
+        private static void DisposeCachedObjects(string username)
+        {
             Hashtable context = GetContext(username);
             foreach (DictionaryEntry entry in context)
             {
@@ -89,8 +89,8 @@ public class OrigamUserContext
             }
         }
 
-    private static string UserKey()
-    {            
+        private static string UserKey()
+        {            
             if (!SecurityManager.CurrentPrincipal.Identity.IsAuthenticated)
             {
                 return "guest";
@@ -98,8 +98,8 @@ public class OrigamUserContext
             return SecurityManager.CurrentPrincipal.Identity.Name;
         }
 
-    public static Hashtable GetContextItem(string cacheName)
-    {
+        public static Hashtable GetContextItem(string cacheName)
+        {
             lock (_lock)
             {
                 if (!Context.Contains(cacheName))
@@ -110,4 +110,5 @@ public class OrigamUserContext
                 return (Hashtable)Context[cacheName];
             }
         }
+    }
 }

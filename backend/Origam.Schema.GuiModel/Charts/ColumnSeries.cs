@@ -26,44 +26,45 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
-namespace Origam.Schema.GuiModel;
-
-[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
-[HelpTopic("Column+Series")]
-[ClassMetaVersion("6.0.0")]
-public class ColumnSeries : AbstractCartesianSeries
+namespace Origam.Schema.GuiModel
 {
-	public ColumnSeries() : base() {Init();}
-	public ColumnSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-	public ColumnSeries(Key primaryKey) : base(primaryKey) {Init();}
-
-	private void Init()
+	[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
+    [HelpTopic("Column+Series")]
+    [ClassMetaVersion("6.0.0")]
+	public class ColumnSeries : AbstractCartesianSeries
 	{
+		public ColumnSeries() : base() {Init();}
+		public ColumnSeries(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+		public ColumnSeries(Key primaryKey) : base(primaryKey) {Init();}
+
+		private void Init()
+		{
 			
 		}
 
-	#region Properties
-	private ColumnSeriesType _type = ColumnSeriesType.Clustered;
-	[Category("Series"), DefaultValue(ColumnSeriesType.Clustered)]
-	[XmlAttribute("type")]
-	public ColumnSeriesType Type
-	{
-		get
+		#region Properties
+		private ColumnSeriesType _type = ColumnSeriesType.Clustered;
+		[Category("Series"), DefaultValue(ColumnSeriesType.Clustered)]
+		[XmlAttribute("type")]
+		public ColumnSeriesType Type
 		{
+			get
+			{
 				return _type;
 			}
-		set
-		{
+			set
+			{
 				_type = value;
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion			
 	}
-	#endregion			
 }

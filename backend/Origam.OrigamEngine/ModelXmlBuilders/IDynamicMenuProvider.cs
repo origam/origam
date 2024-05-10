@@ -21,9 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine;
-
-public interface IDynamicMenuProvider
+namespace Origam.OrigamEngine
 {
-    void AddMenuItems(XmlNode parentNode);
+    public interface IDynamicMenuProvider
+    {
+        void AddMenuItems(XmlNode parentNode);
+    }
 }

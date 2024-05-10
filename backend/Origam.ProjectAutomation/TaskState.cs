@@ -19,15 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.ProjectAutomation;
-
-public enum TaskState
+namespace Origam.ProjectAutomation
 {
-    Prepared,
-    Running,
-    Finished,
-    RollingBack,
-    RolledBack,
-    RollbackFailed,
-    Failed
+    public enum TaskState
+    {
+        Prepared,
+        Running,
+        Finished,
+        RollingBack,
+        RolledBack,
+        RollbackFailed,
+        Failed
+    }
 }

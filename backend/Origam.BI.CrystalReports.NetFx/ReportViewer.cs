@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Collections;
 using System.Windows.Forms;
@@ -27,24 +26,24 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Schema.GuiModel;
 
-namespace Origam.BI.CrystalReports;
-
-/// <summary>
-/// Summary description for ReportViewer.
-/// </summary>
-public class ReportViewer : AbstractViewContent
+namespace Origam.BI.CrystalReports
 {
-	private CrystalDecisions.Windows.Forms.CrystalReportViewer crViewer;
-	private Origam.BI.CrystalReports.ReportToolbar pnlToolbar;
-	private CrystalReport _reportElement;
-
 	/// <summary>
-	/// Required designer variable.
+	/// Summary description for ReportViewer.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-	public ReportViewer()
+	public class ReportViewer : AbstractViewContent
 	{
+		private CrystalDecisions.Windows.Forms.CrystalReportViewer crViewer;
+		private Origam.BI.CrystalReports.ReportToolbar pnlToolbar;
+		private CrystalReport _reportElement;
+
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+		public ReportViewer()
+		{
 			//
 			// Required for Windows Form Designer support
 			//
@@ -57,36 +56,36 @@ public class ReportViewer : AbstractViewContent
 			
 		}
 
-	public ReportViewer(CrystalReport reportElement, string titleName) : this()
-	{
+		public ReportViewer(CrystalReport reportElement, string titleName) : this()
+		{
 			_reportElement = reportElement;
 			this.TitleName = titleName;
 			pnlToolbar.ShowRefreshButton = true;
 			pnlToolbar.ReportRefreshRequested += new EventHandler(pnlToolbar_ReportRefreshRequested);
 		}
 
-	public ReportViewer(CrystalReport reportElement, string titleName, Hashtable parameters) : this(reportElement, titleName)
-	{
+		public ReportViewer(CrystalReport reportElement, string titleName, Hashtable parameters) : this(reportElement, titleName)
+		{
 			foreach(DictionaryEntry entry in parameters)
 			{
 				_parameters.Add(entry.Key, entry.Value);
 			}
 		}
 
-	public override bool CanRefreshContent
-	{
-		get
+		public override bool CanRefreshContent
 		{
+			get
+			{
 				return (_reportElement != null);
 			}
-		set
-		{
+			set
+			{
 				base.CanRefreshContent = value;
 			}
-	}
+		}
 
-	public override void RefreshContent()
-	{
+		public override void RefreshContent()
+		{
 			try
 			{
 				Cursor.Current = Cursors.WaitCursor;
@@ -115,8 +114,8 @@ public class ReportViewer : AbstractViewContent
 			}
 		}
 
-	public void LoadReport()
-	{
+		public void LoadReport()
+		{
 			Cursor currentCursor = Cursor.Current;
 
 			try
@@ -135,11 +134,11 @@ public class ReportViewer : AbstractViewContent
 		}
 
 
-	/// <summary>
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				crViewer.Dispose();
@@ -152,19 +151,21 @@ public class ReportViewer : AbstractViewContent
 			base.Dispose( disposing );
 		}
 
-	#region Windows Form Designer generated code
-	/// <summary>
-	/// Required method for Designer support - do not modify
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ReportViewer));
 			this.crViewer = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
 			this.pnlToolbar = new Origam.BI.CrystalReports.ReportToolbar();
 			this.SuspendLayout();
-			// 		// crViewer
-			// 		this.crViewer.ActiveViewIndex = -1;
+			// 
+			// crViewer
+			// 
+			this.crViewer.ActiveViewIndex = -1;
 			this.crViewer.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None;
 			this.crViewer.DisplayToolbar = false;
 			this.crViewer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -174,8 +175,10 @@ public class ReportViewer : AbstractViewContent
 			this.crViewer.ShowRefreshButton = false;
 			this.crViewer.Size = new System.Drawing.Size(712, 445);
 			this.crViewer.TabIndex = 0;
-			// 		// pnlToolbar
-			// 		this.pnlToolbar.Caption = "";
+			// 
+			// pnlToolbar
+			// 
+			this.pnlToolbar.Caption = "";
 			this.pnlToolbar.Dock = System.Windows.Forms.DockStyle.Top;
 			this.pnlToolbar.EndColor = System.Drawing.Color.FromArgb(((System.Byte)(254)), ((System.Byte)(225)), ((System.Byte)(122)));
 			this.pnlToolbar.Location = new System.Drawing.Point(0, 0);
@@ -187,8 +190,10 @@ public class ReportViewer : AbstractViewContent
 			this.pnlToolbar.Size = new System.Drawing.Size(712, 24);
 			this.pnlToolbar.StartColor = System.Drawing.Color.FromArgb(((System.Byte)(255)), ((System.Byte)(217)), ((System.Byte)(170)));
 			this.pnlToolbar.TabIndex = 1;
-			// 		// ReportViewer
-			// 		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// ReportViewer
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(712, 469);
 			this.Controls.Add(this.crViewer);
 			this.Controls.Add(this.pnlToolbar);
@@ -198,36 +203,36 @@ public class ReportViewer : AbstractViewContent
 			this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public object ReportSource
-	{
-		get
+		#region Properties
+		public object ReportSource
 		{
+			get
+			{
 				return crViewer.ReportSource;
 			}
-		set
-		{
+			set
+			{
 				ClearReportSource();
 
 				crViewer.ReportSource = value;
 				this.crViewer.Zoom(1);
 			}
-	}
+		}
 
-	private Hashtable _parameters = new Hashtable();
-	public Hashtable Parameters
-	{
-		get
+		private Hashtable _parameters = new Hashtable();
+		public Hashtable Parameters
 		{
+			get
+			{
 				return _parameters;
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	private void ClearReportSource()
-	{
+		private void ClearReportSource()
+		{
 			IDisposable rs = this.crViewer.ReportSource as IDisposable;
 				
 			if(rs != null)
@@ -245,13 +250,13 @@ public class ReportViewer : AbstractViewContent
 			}
 		}
 
-	private void ReportViewer_TitleNameChanged(object sender, EventArgs e)
-	{
+		private void ReportViewer_TitleNameChanged(object sender, EventArgs e)
+		{
 			pnlToolbar.Caption = this.TitleName;
 		}
 
-	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-	{
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
 			if(pnlToolbar.ProcessCommand (ref msg, keyData))
 			{
 				return true;
@@ -260,8 +265,9 @@ public class ReportViewer : AbstractViewContent
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
 
-	private void pnlToolbar_ReportRefreshRequested(object sender, EventArgs e)
-	{
+		private void pnlToolbar_ReportRefreshRequested(object sender, EventArgs e)
+		{
 			RefreshContent();
 		}
+	}
 }

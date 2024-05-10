@@ -30,22 +30,22 @@ using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Pads;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for WorkbenchSchemaService.
-/// </summary>
-public class WorkbenchSchemaService : SchemaService
+namespace Origam.Workbench.Services
 {
-	SchemaBrowser _schemaBrowser;
-	public SchemaBrowser SchemaBrowser
+	/// <summary>
+	/// Summary description for WorkbenchSchemaService.
+	/// </summary>
+	public class WorkbenchSchemaService : SchemaService
 	{
-		get
+		SchemaBrowser _schemaBrowser;
+		public SchemaBrowser SchemaBrowser
 		{
+			get
+			{
 				return _schemaBrowser;
 			}
-		set
-		{
+			set
+			{
 				if(_schemaBrowser != null)
 				{
 					_schemaBrowser.EbrSchemaBrowser.NodeClick -= new EventHandler(ebrSchemaBrowser_NodeClick);
@@ -60,47 +60,47 @@ public class WorkbenchSchemaService : SchemaService
 					_schemaBrowser.EbrSchemaBrowser.NodeDoubleClick += new EventHandler(ebrSchemaBrowser_NodeDoubleClick);
 				}
 			}
-	}
+		}
 
-	ExtensionPad _schemaListBrowser;
-	public ExtensionPad SchemaListBrowser
-	{
-		get
+		ExtensionPad _schemaListBrowser;
+		public ExtensionPad SchemaListBrowser
 		{
+			get
+			{
 				return _schemaListBrowser;
 			}
-		set
-		{
+			set
+			{
 				_schemaListBrowser = value;
 			}
-	}
-	public ContextMenuStrip SchemaContextMenu
-	{
-		get
+		}
+		public ContextMenuStrip SchemaContextMenu
 		{
+			get
+			{
 				return _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip;
 			}
-		set
-		{
+			set
+			{
                 _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip = value;
 			}
-	}
+		}
 
-	public AbstractSchemaItem ActiveSchemaItem
-	{
-		get
+		public AbstractSchemaItem ActiveSchemaItem
 		{
+			get
+			{
 				if(_schemaBrowser?.EbrSchemaBrowser?.ActiveNode is AbstractSchemaItem)
 					return _schemaBrowser.EbrSchemaBrowser.ActiveNode as AbstractSchemaItem;
 				else
 					return null;
 			}
-	}
+		}
 
-	public IBrowserNode2 ActiveNode
-	{
-		get
+		public IBrowserNode2 ActiveNode
 		{
+			get
+			{
                 AbstractViewContent viewContent = WorkbenchSingleton.Workbench.ActiveDocument
                     as AbstractViewContent;
                 if (viewContent != null && viewContent.Focused
@@ -113,11 +113,11 @@ public class WorkbenchSchemaService : SchemaService
                     return _schemaBrowser?.EbrSchemaBrowser?.ActiveNode;
                 }
             }
-	}
+		}
 
 
-	public bool Disconnect()
-	{
+		public bool Disconnect()
+		{
 			if(UnloadSchema())
 			{
 				if(_schemaBrowser != null)
@@ -141,13 +141,13 @@ public class WorkbenchSchemaService : SchemaService
 			}
 		}
 
-	private void ebrSchemaBrowser_NodeClick(object sender, EventArgs e)
-	{
+		private void ebrSchemaBrowser_NodeClick(object sender, EventArgs e)
+		{
 			OnActiveNodeChanged(new EventArgs());
 		}
 
-	private void ebrSchemaBrowser_NodeDoubleClick(object sender, EventArgs e)
-	{
+		private void ebrSchemaBrowser_NodeDoubleClick(object sender, EventArgs e)
+		{
 			if(this.ActiveSchemaItem != null)
 			{
 				Commands.EditSchemaItem cmd = new Origam.Workbench.Commands.EditSchemaItem();
@@ -156,8 +156,8 @@ public class WorkbenchSchemaService : SchemaService
 			}
 		}
 
-	override protected void SchemaProvider_InstancePersisted(object sender, IPersistent persistedObject)
-	{
+		override protected void SchemaProvider_InstancePersisted(object sender, IPersistent persistedObject)
+		{
             if (this.SchemaBrowser != null && persistedObject is IBrowserNode browserNode)
             {
                 this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(browserNode);
@@ -165,8 +165,9 @@ public class WorkbenchSchemaService : SchemaService
 			base.SchemaProvider_InstancePersisted(sender, persistedObject);
 		}
 
-	public void SelectItem(AbstractSchemaItem schemaItem)
-	{
+		public void SelectItem(AbstractSchemaItem schemaItem)
+		{
 			SchemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 		}
+	}
 }

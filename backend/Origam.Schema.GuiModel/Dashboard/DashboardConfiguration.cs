@@ -23,23 +23,23 @@ using System;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for DashboardConfiguration.
-/// </summary>
-[Serializable()]
-[XmlRoot("configuration")]
-public class DashboardConfiguration
+namespace Origam.Schema.GuiModel
 {
-	private DashboardConfigurationItem[] _items;
-
-	public DashboardConfiguration()
+	/// <summary>
+	/// Summary description for DashboardConfiguration.
+	/// </summary>
+	[Serializable()]
+	[XmlRoot("configuration")]
+	public class DashboardConfiguration
 	{
+		private DashboardConfigurationItem[] _items;
+
+		public DashboardConfiguration()
+		{
 		}
 
-	public static DashboardConfiguration Deserialize(XmlDocument doc)
-	{
+		public static DashboardConfiguration Deserialize(XmlDocument doc)
+		{
 			if(doc == null) return new DashboardConfiguration();
 
 			XmlSerializer ser = new XmlSerializer(typeof(DashboardConfiguration));
@@ -49,16 +49,17 @@ public class DashboardConfiguration
 			return (DashboardConfiguration)ser.Deserialize(reader);
 		}
 
-	[XmlElement("item", typeof(DashboardConfigurationItem))]
-	public DashboardConfigurationItem[] Items
-	{
-		get
+		[XmlElement("item", typeof(DashboardConfigurationItem))]
+		public DashboardConfigurationItem[] Items
 		{
+			get
+			{
 				return _items;
 			}
-		set
-		{
+			set
+			{
 				_items = value;
 			}
+		}
 	}
 }

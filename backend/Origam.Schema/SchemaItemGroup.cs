@@ -33,46 +33,46 @@ using Origam.DA;
 using Origam.DA.Common.ObjectPersistence.Attributes;
 using InvalidCastException = System.InvalidCastException;
 
-namespace Origam.Schema;
-
-[XmlModelRoot("group")]
-[ClassMetaVersion("6.0.0")]
-[XmlNamespaceName("g")]
-public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, 
-	IFilePersistent
+namespace Origam.Schema
 {
-	public SchemaItemGroup()
+	[XmlModelRoot("group")]
+    [ClassMetaVersion("6.0.0")]
+	[XmlNamespaceName("g")]
+    public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, 
+	    IFilePersistent
 	{
+		public SchemaItemGroup()
+		{
 			PrimaryKey = new ModelElementKey();
 		}
 
-	public SchemaItemGroup(Guid extensionId) : this()
-	{
+		public SchemaItemGroup(Guid extensionId) : this()
+		{
 			SchemaExtensionId = extensionId;
 		}
 
-	public SchemaItemGroup(Key primaryKey) 
-		: base(primaryKey, primaryKey.KeyArray)
-	{
+		public SchemaItemGroup(Key primaryKey) 
+			: base(primaryKey, primaryKey.KeyArray)
+		{
 		}
 
-	public override string ToString() => Name;
+		public override string ToString() => Name;
 
-	#region Properties
-	[XmlAttribute(AttributeName = "rootItemType")] 
-	public string RootItemType { get; set; }
+		#region Properties
+		[XmlAttribute(AttributeName = "rootItemType")] 
+		public string RootItemType { get; set; }
 
-	[XmlAttribute(AttributeName = "name")]
-	public string Name { get; set; }
+        [XmlAttribute(AttributeName = "name")]
+        public string Name { get; set; }
 
-	[XmlParent(typeof(Package))]
-	public Guid SchemaExtensionId;
+        [XmlParent(typeof(Package))]
+        public Guid SchemaExtensionId;
 
-	[Browsable(false)]
-	public Package Package
-	{
-		get
+        [Browsable(false)]
+		public Package Package
 		{
+			get
+			{
 				var key = new ModelElementKey
 				{
 					Id = SchemaExtensionId
@@ -80,20 +80,20 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				return (Package)PersistenceProvider.RetrieveInstance(
 					typeof(Package), key);
 			}
-		set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
-	}
+			set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
+        }
 
-	[Browsable(false)]
-	public AbstractSchemaItem ParentItem { get; set; }
+		[Browsable(false)]
+		public AbstractSchemaItem ParentItem { get; set; }
 
-	[XmlParent(typeof(SchemaItemGroup))]
-	public Guid ParentGroupId;
+        [XmlParent(typeof(SchemaItemGroup))]
+        public Guid ParentGroupId;
 
-	[Browsable(false)]
-	public SchemaItemGroup ParentGroup
-	{
-		get
+		[Browsable(false)]
+		public SchemaItemGroup ParentGroup
 		{
+			get
+			{
 				var key = new ModelElementKey
 				{
 					Id = ParentGroupId
@@ -101,8 +101,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				return (SchemaItemGroup)PersistenceProvider.RetrieveInstance(
 					typeof(SchemaItemGroup), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					ParentGroupId = Guid.Empty;
@@ -112,16 +112,16 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 					ParentGroupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-	}
+		}
 		
-	[Browsable(false)]
-	public string Path => GetPath(this);
+		[Browsable(false)]
+		public string Path => GetPath(this);
 
-	public bool IsFileRootElement => FileParentId == Guid.Empty;
-	#endregion
+		public bool IsFileRootElement => FileParentId == Guid.Empty;
+		#endregion
 
-	private string GetPath(SchemaItemGroup item)
-	{
+		private string GetPath(SchemaItemGroup item)
+		{
 			if(ParentGroup == null)
 			{
 				return Name;
@@ -129,17 +129,17 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return ParentGroup.Path + "/" + Name;
 		}
 
-	[Browsable(false)]
-	public SchemaItemGroup RootGroup => GetRootGroup(this);
+		[Browsable(false)]
+		public SchemaItemGroup RootGroup => GetRootGroup(this);
 
-	private SchemaItemGroup GetRootGroup(SchemaItemGroup parentItem)
-	{
+		private SchemaItemGroup GetRootGroup(SchemaItemGroup parentItem)
+		{
 			return parentItem.ParentGroup == null 
 				? parentItem : GetRootGroup(parentItem.ParentGroup);
 		}
 		
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
-	{
+		private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+		{
 			var items = new ArrayList();
 			foreach(var childItem in parentItem.ChildItems)
 			{
@@ -149,8 +149,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return items;
 		}
 
-	public AbstractSchemaItem GetChildByName(string name, string itemType)
-	{
+		public AbstractSchemaItem GetChildByName(string name, string itemType)
+		{
 			foreach(var item in ChildItems)
 			{
 				if((item.Name == name) && (item.ItemType == itemType))
@@ -161,19 +161,19 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return null;
 		}
 		
-	#region IBrowserNode2 Members
-	[Browsable(false)] 
-	public bool Hide
-	{
-		get => !IsPersisted;
-		set => throw new InvalidOperationException(
-			ResourceUtils.GetString("ErrorSetHide"));
-	}
+		#region IBrowserNode2 Members
+		[Browsable(false)] 
+		public bool Hide
+		{
+			get => !IsPersisted;
+			set => throw new InvalidOperationException(
+				ResourceUtils.GetString("ErrorSetHide"));
+		}
 
-	public bool CanDelete => true;
+		public bool CanDelete => true;
 
-	public void Delete()
-	{
+		public void Delete()
+		{
 			if(ParentItem?.DerivedFrom != null)
 			{
 				throw new InvalidOperationException(
@@ -187,33 +187,33 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			Persist();
 		}
 
-	public bool CanMove(IBrowserNode2 newNode) => false;
+		public bool CanMove(IBrowserNode2 newNode) => false;
 
-	[Browsable(false)]
-	public IBrowserNode2 ParentNode
-	{
-		get => null;
-		set => throw new InvalidOperationException(
-			ResourceUtils.GetString("ErrorMoveGroup"));
-	}
+		[Browsable(false)]
+		public IBrowserNode2 ParentNode
+		{
+			get => null;
+			set => throw new InvalidOperationException(
+				ResourceUtils.GetString("ErrorMoveGroup"));
+		}
 
-	public byte[] NodeImage => null;
+		public byte[] NodeImage => null;
 
-	[Browsable(false)] 
-	public string NodeId => PrimaryKey["Id"].ToString();
+		[Browsable(false)] 
+		public string NodeId => PrimaryKey["Id"].ToString();
 
-	[Browsable(false)]
-	public virtual string FontStyle => "Regular";
-	#endregion
+		[Browsable(false)]
+        public virtual string FontStyle => "Regular";
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public bool HasChildNodes => this.ChildNodes().Count > 0;
+		public bool HasChildNodes => this.ChildNodes().Count > 0;
 
-	public bool CanRename => true;
+		public bool CanRename => true;
 
-	public BrowserNodeCollection ChildNodes()
-	{
+		public BrowserNodeCollection ChildNodes()
+		{
 			var browserNodeCollection = new BrowserNodeCollection();
 			// Child groups
 			foreach(IBrowserNode2 node in ChildGroups)
@@ -231,27 +231,27 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return browserNodeCollection;
 		}
 
-	public string NodeText
-	{
-		get => Name;
-		set
+		public string NodeText
 		{
+			get => Name;
+			set
+			{
 				Name = value;
 				Persist();
 			}
-	}
+		}
 
-	public string NodeToolTipText => null;
+		public string NodeToolTipText => null;
 
-	public string Icon => "37_folder-3.png";
-	#endregion
+		public string Icon => "37_folder-3.png";
+		#endregion
 
-	#region ISchemaItemProvider Members
+		#region ISchemaItemProvider Members
 
-	public SchemaItemCollection ChildItems
-	{
-		get
+		public SchemaItemCollection ChildItems
 		{
+			get
+			{
 				// We look for all child items of our parent schema item that have this group
 				// We browse the collection because it has all the items correctly set
 				var provider = ParentItem ?? RootProvider;
@@ -264,10 +264,10 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				}
 				return schemaItemCollection;
 			}
-	}
+		}
 
-	public ArrayList ChildItemsByType(string itemType)
-	{
+		public ArrayList ChildItemsByType(string itemType)
+		{
 			var list = new ArrayList();
 			// We look for all child items of our parent schema item that have this group
 			// We browse the collection because it has all the items correctly set
@@ -278,8 +278,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return list;
 		}
 
-	public ArrayList ChildItemsByGroup(SchemaItemGroup group)
-	{
+		public ArrayList ChildItemsByGroup(SchemaItemGroup group)
+		{
 			var list = new ArrayList();
 			foreach(var item in ChildItems)
 			{
@@ -292,23 +292,23 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return list;
 		}
 
-	public SchemaItemGroup GetGroup(string name)
-	{
+		public SchemaItemGroup GetGroup(string name)
+		{
 			return ChildGroups.FirstOrDefault(group => group.Name == name);
 		}
 
-	public bool HasChildItems => ChildItems.Count > 0;
+		public bool HasChildItems => ChildItems.Count > 0;
 
-	public bool HasChildItemsByType(string itemType) 
-		=> ChildItemsByType(itemType).Count > 0;
+		public bool HasChildItemsByType(string itemType) 
+			=> ChildItemsByType(itemType).Count > 0;
 
-	public bool HasChildItemsByGroup(SchemaItemGroup group) 
-		=> ChildItemsByGroup(group).Count > 0;
+		public bool HasChildItemsByGroup(SchemaItemGroup group) 
+			=> ChildItemsByGroup(group).Count > 0;
 
-	public List<SchemaItemGroup> ChildGroups
-	{
-		get
+		public List<SchemaItemGroup> ChildGroups
 		{
+			get
+			{
 				// We retrieve all child groups
 				var list = PersistenceProvider
 					.RetrieveListByGroup<SchemaItemGroup>(PrimaryKey);
@@ -321,12 +321,12 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				}
 				return list;
 			}
-	}
+		}
 
-	public IEnumerable<SchemaItemGroup> ChildGroupsRecursive
-	{
-		get
-		{
+        public IEnumerable<SchemaItemGroup> ChildGroupsRecursive
+        {
+            get
+            {
                 foreach (var childGroup in ChildGroups)
                 {
 					yield return childGroup;
@@ -336,15 +336,15 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
                     };
                 }
             }
-	}
+        }
 
 
-	public ISchemaItemProvider RootProvider { get; set; } = null;
+        public ISchemaItemProvider RootProvider { get; set; } = null;
 
-	public ArrayList ChildItemsRecursive
-	{
-		get
+		public ArrayList ChildItemsRecursive
 		{
+			get
+			{
 				var items = new ArrayList();
 				foreach(var item in ChildItems)
 				{
@@ -353,77 +353,77 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				}
 				return items;
 			}
-	}
+		}
 
-	public bool AutoCreateFolder => false;
+		public bool AutoCreateFolder => false;
 
-	public void ClearCache()
-	{
+		public void ClearCache()
+        {
         }
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public ArrayList ChildItemTypes => new(NewItemTypes);
+		public ArrayList ChildItemTypes => new(NewItemTypes);
 
-	[Browsable(false)]
-	public Type[] NewItemTypes
-	{
-		get
+		[Browsable(false)]
+		public Type[] NewItemTypes
 		{
+			get
+			{
 				if(ParentItem == null)
 				{
 					return RootProvider?.NewItemTypes ?? new Type[0];
 				}
 				return (ParentItem as ISchemaItemFactory).NewItemTypes;
 			}
-	}
+		}
 
-	[Browsable(false)]
-	public virtual IList<string> NewTypeNames =>
-		ParentItem == null 
-			? RootProvider.NewTypeNames 
-			: (ParentItem as ISchemaItemFactory).NewTypeNames;
+		[Browsable(false)]
+		public virtual IList<string> NewTypeNames =>
+			ParentItem == null 
+				? RootProvider.NewTypeNames 
+				: (ParentItem as ISchemaItemFactory).NewTypeNames;
 
-	/// <summary>
-	/// By default all NewItemTypes are nameable. Override if only a subset of types can
-	/// be populated with NewTypeNames.
-	/// </summary>
-	[Browsable(false)]
-	public virtual Type[] NameableTypes => NewItemTypes;
+		/// <summary>
+		/// By default all NewItemTypes are nameable. Override if only a subset of types can
+		/// be populated with NewTypeNames.
+		/// </summary>
+		[Browsable(false)]
+		public virtual Type[] NameableTypes => NewItemTypes;
 
-	public event Action<ISchemaItem> ItemCreated;
+		public event Action<ISchemaItem> ItemCreated;
 
-	public string RelativeFilePath 
-		=> Package.Name + "\\" + RootItemType + "\\" 
-		   + Path.Replace("/", "\\") + "\\" 
-		   + PersistenceFiles.GroupFileName;
+		public string RelativeFilePath 
+			=> Package.Name + "\\" + RootItemType + "\\" 
+			   + Path.Replace("/", "\\") + "\\" 
+			   + PersistenceFiles.GroupFileName;
 
-	public bool IsFolder => true;
+		public bool IsFolder => true;
 
-	public Guid FileParentId
-	{
-		get => Guid.Empty;
-		set { }
-	}
-
-	public IDictionary<string, Guid> ParentFolderIds =>
-		new Dictionary<string, Guid>
+		public Guid FileParentId
 		{
-			{
-				CategoryFactory.Create(typeof(Package)),
-				SchemaExtensionId
-			},
-			{
-				CategoryFactory.Create(typeof(SchemaItemGroup)),
-				ParentGroupId
-			}
-		};
+			get => Guid.Empty;
+			set { }
+		}
 
-	public virtual T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
-	{
+		public IDictionary<string, Guid> ParentFolderIds =>
+			new Dictionary<string, Guid>
+			{
+				{
+					CategoryFactory.Create(typeof(Package)),
+					SchemaExtensionId
+				},
+				{
+					CategoryFactory.Create(typeof(SchemaItemGroup)),
+					ParentGroupId
+				}
+			};
+
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
+		{
 			T newItem;
 			if(ParentItem == null)
 			{
@@ -438,8 +438,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return newItem;
 		}
 
-	public bool CanRenameTo(string nameCandidate)
-	{
+		public bool CanRenameTo(string nameCandidate)
+		{
 			if(string.IsNullOrEmpty(nameCandidate?.Trim()))
 			{
 				return false;
@@ -453,8 +453,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				          != nameCandidate.ToLower().Trim());
 		}
 
-	private IEnumerable<SchemaItemGroup> GetGroupsOnTheSameLevel()
-	{
+		private IEnumerable<SchemaItemGroup> GetGroupsOnTheSameLevel()
+		{
 			if(ParentGroup != null)
 			{
 				return ParentGroup.ChildGroups
@@ -467,9 +467,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				.Where(x => x != this);
 		}
 
-	public static string GetNextDefaultName(string defaultName,
-		List<SchemaItemGroup> childGroups)
-	{
+		public static string GetNextDefaultName(string defaultName,
+			List<SchemaItemGroup> childGroups)
+		{
 			var defaultNamedGroupsExists= childGroups
 				.Any(x => x.NodeText.Contains(defaultName));
 			if(!defaultNamedGroupsExists)
@@ -487,8 +487,8 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return $"{defaultName} {nextGroupNumber}";
 		}
 
-	public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
-	{	
+		public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
+		{	
 			var group = new SchemaItemGroup(schemaExtensionId);
 			group.Name = GetNextDefaultName(groupName, ChildGroups);
 			group.PersistenceProvider = PersistenceProvider;
@@ -501,11 +501,11 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return group;
 		}
 
-	#endregion
+		#endregion
 
-	#region IComparable Members
-	public int CompareTo(object obj)
-	{
+		#region IComparable Members
+		public int CompareTo(object obj)
+		{
 			return obj switch
 			{
 				ISchemaItem item => -1,
@@ -513,5 +513,6 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 				_ => throw new InvalidCastException()
 			};
 		}
-	#endregion
+		#endregion
+	}
 }

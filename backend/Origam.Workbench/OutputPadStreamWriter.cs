@@ -23,22 +23,22 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Origam.Workbench;
-
-public class LogPadStreamWriter : TextWriter
+namespace Origam.Workbench
 {
-	Pads.LogPad _output;
-	StringBuilder _buffer = new StringBuilder();
-	char[] _newLineTest = new char[2];
-	char[] _newLine = Environment.NewLine.ToCharArray();
-
-	public LogPadStreamWriter(Pads.LogPad output)
+	public class LogPadStreamWriter : TextWriter
 	{
+		Pads.LogPad _output;
+		StringBuilder _buffer = new StringBuilder();
+		char[] _newLineTest = new char[2];
+		char[] _newLine = Environment.NewLine.ToCharArray();
+
+		public LogPadStreamWriter(Pads.LogPad output)
+		{
 			_output = output;
 		}
 
-	public override void Write(char value)
-	{
+		public override void Write(char value)
+		{
 			_newLineTest[0] = _newLineTest[1];
 			_newLineTest[1] = value;
 			_buffer.Append(value);
@@ -50,8 +50,9 @@ public class LogPadStreamWriter : TextWriter
 			}
 		}
 
-	public override Encoding Encoding
-	{
-		get { return Encoding.UTF8; }
+		public override Encoding Encoding
+		{
+			get { return Encoding.UTF8; }
+		}
 	}
 }

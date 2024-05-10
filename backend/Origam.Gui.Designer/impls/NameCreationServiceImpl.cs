@@ -24,31 +24,31 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
 
-namespace Origam.Gui.Designer;
-
-/// <summary>
-/// Summary description for NameCreationServiceImpl.
-/// </summary>
-public class NameCreationServiceImpl:INameCreationService
+namespace Origam.Gui.Designer
 {
-	private IDesignerHost designerHost;
-	public NameCreationServiceImpl(IDesignerHost host)
+	/// <summary>
+	/// Summary description for NameCreationServiceImpl.
+	/// </summary>
+	public class NameCreationServiceImpl:INameCreationService
 	{
+		private IDesignerHost designerHost;
+		public NameCreationServiceImpl(IDesignerHost host)
+		{
 			if(host==null)
 			{
 				throw new ArgumentException("designerHost");
 			}
 			designerHost=host;
 		}
-	#region INameCreationService Members
-	/// <summary>
-	/// creates a unique name from the given container and dataType
-	/// </summary>
-	/// <param name="container"></param>
-	/// <param name="dataType"></param>
-	/// <returns></returns>
-	public string CreateName(IContainer container, Type dataType)
-	{
+		#region INameCreationService Members
+		/// <summary>
+		/// creates a unique name from the given container and dataType
+		/// </summary>
+		/// <param name="container"></param>
+		/// <param name="dataType"></param>
+		/// <returns></returns>
+		public string CreateName(IContainer container, Type dataType)
+		{
 			if(container==null)
 			{
 				throw new ArgumentException("container");
@@ -76,15 +76,16 @@ public class NameCreationServiceImpl:INameCreationService
 			return compName;
 		}
 
-	public bool IsValidName(string name)
-	{
+		public bool IsValidName(string name)
+		{
 			ValidateName(name);
 			return true;
 		}
 
-	public void ValidateName(string name)
-	{
-			// iterate the comps in the component container and 		// make sure that the name is not used already
+		public void ValidateName(string name)
+		{
+			// iterate the comps in the component container and 
+			// make sure that the name is not used already
 			if(designerHost.Container==null)
 			{
 				throw new Exception("Null container.");
@@ -103,5 +104,6 @@ public class NameCreationServiceImpl:INameCreationService
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

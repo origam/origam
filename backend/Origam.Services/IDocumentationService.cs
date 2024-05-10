@@ -26,17 +26,18 @@ using System.Collections.ObjectModel;
 using System.Data;
 using Origam.Schema;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for IDocumentationService.
-/// </summary>
-public interface IDocumentationService : IWorkbenchService
+namespace Origam.Workbench.Services
 {
-	string GetDocumentation(Guid schemaItemId, DocumentationType docType);
-	DocumentationComplete LoadDocumentation(Guid schemaItemId);
-	void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
-	void SaveDocumentation(DocumentationComplete documentationData);
-	void CloneDocumentation(List<ISchemaItem> clonedSchemaItems);
-	DocumentationComplete GetAllDocumentation();
+	/// <summary>
+	/// Summary description for IDocumentationService.
+	/// </summary>
+	public interface IDocumentationService : IWorkbenchService
+	{
+		string GetDocumentation(Guid schemaItemId, DocumentationType docType);
+		DocumentationComplete LoadDocumentation(Guid schemaItemId);
+		void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
+		void SaveDocumentation(DocumentationComplete documentationData);
+		void CloneDocumentation(List<ISchemaItem> clonedSchemaItems);
+		DocumentationComplete GetAllDocumentation();
+	}
 }

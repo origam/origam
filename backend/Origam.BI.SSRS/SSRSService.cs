@@ -35,19 +35,19 @@ using log4net;
 using Origam.BI.SSRS.SSRSWebReference;
 using Origam.Service.Core;
 
-namespace Origam.BI.SSRS;
-
-// ReSharper disable once InconsistentNaming
-public class SSRSService : IReportService
+namespace Origam.BI.SSRS
 {
-    private TraceTaskInfo traceTaskInfo;
     // ReSharper disable once InconsistentNaming
-    private static readonly ILog log = LogManager.GetLogger(
-        MethodBase.GetCurrentMethod().DeclaringType);
-
-    public object GetReport(Guid reportId, IXmlContainer data, string format, 
-        Hashtable parameters, string dbTransaction)
+    public class SSRSService : IReportService
     {
+        private TraceTaskInfo traceTaskInfo;
+        // ReSharper disable once InconsistentNaming
+        private static readonly ILog log = LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
+		public object GetReport(Guid reportId, IXmlContainer data, string format, 
+            Hashtable parameters, string dbTransaction)
+        {
             var persistenceService 
                 = ServiceManager.Services.GetService<IPersistenceService>();
             if(!(persistenceService.SchemaProvider
@@ -148,57 +148,57 @@ public class SSRSService : IReportService
                 .Result;
         }
 
-    public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
-        int copies, Hashtable parameters)
-    {
+		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
+            int copies, Hashtable parameters)
+		{
 			throw new NotSupportedException();
 		}
 
-    public void SetTraceTaskInfo(TraceTaskInfo value)
-    {
+        public void SetTraceTaskInfo(TraceTaskInfo value)
+        {
             this.traceTaskInfo = value;
         }
 
-    public string PrepareExternalReportViewer(Guid reportId,
-        IXmlContainer data, string format, Hashtable parameters,
-        string dbTransaction)
-    {
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
             throw new NotImplementedException();
         }
-}
+    }
 
-internal class ReportingServicesEndpointBehavior : IEndpointBehavior
-{
-    public void AddBindingParameters(
-        ServiceEndpoint endpoint,
-        BindingParameterCollection bindingParameters)
+    internal class ReportingServicesEndpointBehavior : IEndpointBehavior
     {
+        public void AddBindingParameters(
+            ServiceEndpoint endpoint,
+            BindingParameterCollection bindingParameters)
+        {
         }
 
-    public void ApplyClientBehavior(
-        ServiceEndpoint endpoint, ClientRuntime clientRuntime)
-    {
+        public void ApplyClientBehavior(
+            ServiceEndpoint endpoint, ClientRuntime clientRuntime)
+        {
             clientRuntime.ClientMessageInspectors.Add(
                 new ReportingServicesExecutionInspector());
         }
 
-    public void ApplyDispatchBehavior(
-        ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
-    {
+        public void ApplyDispatchBehavior(
+            ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
+        {
         }
 
-    public void Validate(ServiceEndpoint endpoint)
-    {
+        public void Validate(ServiceEndpoint endpoint)
+        {
         }
-}
+    }
 
-internal class ReportingServicesExecutionInspector : IClientMessageInspector
-{
-    private MessageHeaders headers;
-
-    public void AfterReceiveReply(
-        ref Message reply, object correlationState)
+    internal class ReportingServicesExecutionInspector : IClientMessageInspector
     {
+        private MessageHeaders headers;
+
+        public void AfterReceiveReply(
+            ref Message reply, object correlationState)
+        {
             var index = reply.Headers.FindHeader(
                 "ExecutionHeader", 
                 "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices");
@@ -213,9 +213,9 @@ internal class ReportingServicesExecutionInspector : IClientMessageInspector
             }
         }
 
-    public object BeforeSendRequest(
-        ref Message request, IClientChannel channel)
-    {
+        public object BeforeSendRequest(
+            ref Message request, IClientChannel channel)
+        {
             if (headers != null)
             {
                 request.Headers.CopyHeadersFrom(headers);
@@ -223,4 +223,5 @@ internal class ReportingServicesExecutionInspector : IClientMessageInspector
             //https://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.iclientmessageinspector.beforesendrequest(v=vs.110).aspx#Anchor_0
             return Guid.NewGuid(); 
         }
+    }
 }

@@ -27,22 +27,22 @@ using Microsoft.Msagl.Layout.Layered;
 using Origam.Workbench.Diagram.NodeDrawing;
 using Node = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Diagram.Graphs;
-
-public class BlockSubGraph : Subgraph, IWorkflowSubgraph
+namespace Origam.Workbench.Diagram.Graphs
 {
-    private readonly string contextStoreSubgraphId;
-    private readonly string mainSubgraphId;
-
-    public bool IsEmpty =>
-        (ContextStoreSubgraph == null ||
-         !ContextStoreSubgraph.Nodes.Any()) &&
-        !MainDrawingSubgraf.Nodes.Any() &&
-        !MainDrawingSubgraf.Subgraphs.Any();
-
-    public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
-    public BlockSubGraph(string id) : base(id)
+    public class BlockSubGraph : Subgraph, IWorkflowSubgraph
     {
+        private readonly string contextStoreSubgraphId;
+        private readonly string mainSubgraphId;
+
+        public bool IsEmpty =>
+            (ContextStoreSubgraph == null ||
+            !ContextStoreSubgraph.Nodes.Any()) &&
+            !MainDrawingSubgraf.Nodes.Any() &&
+            !MainDrawingSubgraf.Subgraphs.Any();
+
+        public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
+        public BlockSubGraph(string id) : base(id)
+        {
             contextStoreSubgraphId = "contextStores_"+id;
             mainSubgraphId = "mainSubGraph_"+id;
             LayoutSettings = new SugiyamaLayoutSettings
@@ -54,18 +54,18 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
             };
         }
 
-    public InfrastructureSubgraph ContextStoreSubgraph
-    {
-        get
+        public InfrastructureSubgraph ContextStoreSubgraph
         {
+            get
+            {
                 return Subgraphs
                     .OfType<InfrastructureSubgraph>()
                     .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
             }
-    }
+        }
 
-    private void InitContextStoreSubgraph()
-    {
+        private void InitContextStoreSubgraph()
+        {
             InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
             child.LayoutSettings = new SugiyamaLayoutSettings
             {
@@ -76,10 +76,10 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
             AddSubgraph(child);
         }
 
-    public InfrastructureSubgraph MainDrawingSubgraf
-    {
-        get
+        public InfrastructureSubgraph MainDrawingSubgraf
         {
+            get
+            {
                 InfrastructureSubgraph child = Subgraphs
                     .OfType<InfrastructureSubgraph>()
                     .SingleOrDefault(x => x.Id == mainSubgraphId);
@@ -95,14 +95,15 @@ public class BlockSubGraph : Subgraph, IWorkflowSubgraph
 
                 return child;
             }
-    }
+        }
 
-    public void AddContextStore(Node node)
-    {
+        public void AddContextStore(Node node)
+        {
             if (ContextStoreSubgraph == null)
             {
                 InitContextStoreSubgraph();
             }
             ContextStoreSubgraph.AddNode(node);
         }
+    }
 }

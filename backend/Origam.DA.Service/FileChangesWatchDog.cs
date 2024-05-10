@@ -24,50 +24,50 @@ using System.IO;
 using log4net;
 using System.Reflection;
 
-namespace Origam.DA.Service;
-
-public interface IFileChangesWatchDog
+namespace Origam.DA.Service
 {
-    event EventHandler<FileSystemChangeEventArgs> FileChanged;
-    void Start();
-    void Stop();
-}
-
-public class NullWatchDog : IFileChangesWatchDog
-{
-    public event EventHandler<FileSystemChangeEventArgs> FileChanged
+    public interface IFileChangesWatchDog
     {
-        add { }
-        remove { }
+        event EventHandler<FileSystemChangeEventArgs> FileChanged;
+        void Start();
+        void Stop();
     }
-    public void Start()
+
+    public class NullWatchDog : IFileChangesWatchDog
     {
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged
+        {
+            add { }
+            remove { }
+        }
+        public void Start()
+        {
         }
 
-    public void Stop()
-    { 
+        public void Stop()
+        { 
         }
-}
+    }
 
-public class FileChangesWatchDog : IFileChangesWatchDog
-{
-    private static readonly ILog log 
-        = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-    private readonly DirectoryInfo topDir;
-    private readonly FileFilter ignoreFileFilter;
-    private FileSystemWatcher watcher;
-
-    public FileChangesWatchDog(
-        DirectoryInfo topDir, FileFilter ignoreFileFilter)
+    public class FileChangesWatchDog : IFileChangesWatchDog
     {
+        private static readonly ILog log 
+            = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly DirectoryInfo topDir;
+        private readonly FileFilter ignoreFileFilter;
+        private FileSystemWatcher watcher;
+
+        public FileChangesWatchDog(
+            DirectoryInfo topDir, FileFilter ignoreFileFilter)
+        {
             this.topDir = topDir;
             this.ignoreFileFilter = ignoreFileFilter;
         }
 
-    public event EventHandler<FileSystemChangeEventArgs> FileChanged;
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged;
         
-    public void Start()
-    {
+        public void Start()
+        {
             watcher = new FileSystemWatcher
             {
                 Path = topDir.FullName,
@@ -81,19 +81,19 @@ public class FileChangesWatchDog : IFileChangesWatchDog
             watcher.EnableRaisingEvents = true;
         }
 
-    private void OnChanged(object source, FileSystemEventArgs e)
-    {
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
             if (ShouldBeIgnored(e.FullPath)) return;
             
             FileChanged?.Invoke(
                 null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
         }
 
-    private bool ShouldBeIgnored(string fullPath) =>
-        !ignoreFileFilter.ShouldPass(fullPath);
+        private bool ShouldBeIgnored(string fullPath) =>
+            !ignoreFileFilter.ShouldPass(fullPath);
 
-    private void OnRenamed(object source, RenamedEventArgs e)
-    {
+        private void OnRenamed(object source, RenamedEventArgs e)
+        {
             if (ShouldBeIgnored(e.FullPath)) return;
             
             FileChanged?.Invoke(
@@ -102,31 +102,31 @@ public class FileChangesWatchDog : IFileChangesWatchDog
                     e.OldFullPath, e.FullPath, e.ChangeType));
         }
 
-    public void Stop()
-    {
+        public void Stop()
+        {
             watcher.EnableRaisingEvents = false;
             watcher.Changed -= OnChanged;
             watcher.Created -= OnChanged;
             watcher.Deleted -= OnChanged;
             watcher.Renamed -= OnRenamed;
         }
-}
-public class FileSystemChangeEventArgs : EventArgs
-{
-    private readonly string path;
-
-    public bool IsDirectoryChange =>
-        ChangeType == WatcherChangeTypes.Changed &&
-        Directory.Exists(path);
-    public DirectoryInfo Folder { get;}
-    public FileInfo File { get; }
-    public string OldFilename { get; }
-    public WatcherChangeTypes ChangeType { get; }
-    public DateTime Timestamp { get; }
-    internal FileSystemChangeEventArgs(
-        string path, string oldFilename, 
-        WatcherChangeTypes changeType)
+    }
+    public class FileSystemChangeEventArgs : EventArgs
     {
+        private readonly string path;
+
+        public bool IsDirectoryChange =>
+            ChangeType == WatcherChangeTypes.Changed &&
+            Directory.Exists(path);
+        public DirectoryInfo Folder { get;}
+        public FileInfo File { get; }
+        public string OldFilename { get; }
+        public WatcherChangeTypes ChangeType { get; }
+        public DateTime Timestamp { get; }
+        internal FileSystemChangeEventArgs(
+            string path, string oldFilename, 
+            WatcherChangeTypes changeType)
+        {
             this.path = path;
             Folder = new DirectoryInfo(path);
             File = new FileInfo(path);
@@ -135,9 +135,10 @@ public class FileSystemChangeEventArgs : EventArgs
             Timestamp = DateTime.Now;
         }
 
-    public override string ToString()
-    {
+        public override string ToString()
+        {
             return "File: " + File + Environment.NewLine 
                 + "Change Type: " + ChangeType;
         }
+    }
 }

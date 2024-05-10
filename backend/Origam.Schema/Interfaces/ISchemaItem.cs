@@ -24,69 +24,70 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for SchemaItem.
-/// </summary>
-public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
+namespace Origam.Schema
 {
 	/// <summary>
-	/// Gets or sets the schema extensions, under which this item was defined.
+	/// Summary description for SchemaItem.
 	/// </summary>
-	Package Package{get; set;}
+	public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
+	{
+		/// <summary>
+		/// Gets or sets the schema extensions, under which this item was defined.
+		/// </summary>
+		Package Package{get; set;}
 
-	ModelElementKey OldPrimaryKey{get; set;}
+		ModelElementKey OldPrimaryKey{get; set;}
 
-	string Name{get; set;}
+		string Name{get; set;}
 
-	SchemaItemAncestorCollection AllAncestors{get;}
+		SchemaItemAncestorCollection AllAncestors{get;}
 
-	ArrayList Parameters{get;}
-	Hashtable ParameterReferences{get;}
-	bool HasParameterReferences{get;}
+		ArrayList Parameters{get;}
+		Hashtable ParameterReferences{get;}
+		bool HasParameterReferences{get;}
 
-	string ItemType{get;}
+		string ItemType{get;}
 
-	AbstractSchemaItem GetChildByName(string name);
-	AbstractSchemaItem GetChildById(Guid id);
+		AbstractSchemaItem GetChildByName(string name);
+		AbstractSchemaItem GetChildById(Guid id);
 
-	ArrayList ChildItemsByTypeRecursive(string itemType);
+		ArrayList ChildItemsByTypeRecursive(string itemType);
 
-	/// <summary>
-	/// Gets or sets the parent schema item.
-	/// </summary>
-	AbstractSchemaItem ParentItem{get; set;}
+		/// <summary>
+		/// Gets or sets the parent schema item.
+		/// </summary>
+		AbstractSchemaItem ParentItem{get; set;}
 
-	/// <summary>
-	/// Gets the root schema item.
-	/// </summary>
-	AbstractSchemaItem RootItem{get;}
+		/// <summary>
+		/// Gets the root schema item.
+		/// </summary>
+		AbstractSchemaItem RootItem{get;}
 
-	/// <summary>
-	/// Gets or sets the group where this item is located.
-	/// </summary>
-	SchemaItemGroup Group{get; set;}
+		/// <summary>
+		/// Gets or sets the group where this item is located.
+		/// </summary>
+		SchemaItemGroup Group{get; set;}
 
-	IEnumerable<AbstractSchemaItem> Parents{get;}
+		IEnumerable<AbstractSchemaItem> Parents{get;}
 
-	/// <summary>
-	/// Gets or sets the item from which this item has been derived
-	/// </summary>
-	AbstractSchemaItem DerivedFrom{get; set;}
+		/// <summary>
+		/// Gets or sets the item from which this item has been derived
+		/// </summary>
+		AbstractSchemaItem DerivedFrom{get; set;}
 
-	bool IsAbstract{get; set;}
+		bool IsAbstract{get; set;}
 
-	bool IsPersistable{get; set;}
+		bool IsPersistable{get; set;}
 
-	ArrayList GetDependencies(bool ignoreErrors);
+		ArrayList GetDependencies(bool ignoreErrors);
 
-	void UpdateReferences();
+		void UpdateReferences();
 
-	object Clone(bool keepKeys);
+		object Clone(bool keepKeys);
 
-	void SetExtensionRecursive(Package extension);
+		void SetExtensionRecursive(Package extension);
 
-	string ModelDescription();
+        string ModelDescription();
 
+    }
 }

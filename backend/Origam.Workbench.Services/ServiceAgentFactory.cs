@@ -28,28 +28,28 @@ using System.Linq;
 using Origam.Service.Core;
 using Origam.Workflow;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for ServiceAgentFactory.
-/// </summary>
-public class ServiceAgentFactory : IBusinessServicesService
+namespace Origam.Workbench.Services
 {
-    private readonly Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent;
-
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);   
-    private IPersistenceService _persistence;
-        
-    public ServiceAgentFactory(Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent)
+    /// <summary>
+    /// Summary description for ServiceAgentFactory.
+    /// </summary>
+    public class ServiceAgentFactory : IBusinessServicesService
     {
+        private readonly Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent;
+
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);   
+        private IPersistenceService _persistence;
+        
+        public ServiceAgentFactory(Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent)
+        {
             this.fromExternalAgent = fromExternalAgent;
             _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
         }
 
-    public IServiceAgent GetAgent(string serviceName, object ruleEngine, object workflowEngine)
-    {
+        public IServiceAgent GetAgent(string serviceName, object ruleEngine, object workflowEngine)
+        {
             IServiceAgent result;
 
             switch (serviceName)
@@ -135,9 +135,9 @@ public class ServiceAgentFactory : IBusinessServicesService
             return result;
         }
 
-    private static object InstantiateObject(string serviceName,
-        Origam.Schema.WorkflowModel.Service service)
-    {
+        private static object InstantiateObject(string serviceName,
+            Origam.Schema.WorkflowModel.Service service)
+        {
             if (service.ClassPath != null && service.ClassPath != string.Empty)
             {
                 string[] classPath = service.ClassPath.Split(",".ToCharArray());
@@ -155,27 +155,28 @@ public class ServiceAgentFactory : IBusinessServicesService
             }
         }
 
-    #region IBusinessServicesService Members
+        #region IBusinessServicesService Members
 
-    public IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine)
-    {
+        public IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine)
+        {
             // TODO:  Add ServiceAgentFactory.Origam.Workbench.Services.IBusinessServicesService.GetAgent implementation
             return null;
         }
 
-    #endregion
+        #endregion
 
-    #region IService Members
+        #region IService Members
         
-    public void UnloadService()
-    {
+        public void UnloadService()
+        {
             _persistence = null;
         }
 
-    public void InitializeService()
-    {            
+        public void InitializeService()
+        {            
             // TODO:  Add ServiceAgentFactory.InitializeService implementation
 		}
 
-    #endregion
+		#endregion
+	}
 }

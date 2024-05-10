@@ -6,22 +6,22 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ICSharpCode.AvalonEdit;
 
-namespace Origam.Windows.Editor.GIT;
-
-public partial class SingleColumnDiff : UserControl
+namespace Origam.Windows.Editor.GIT
 {
-    private readonly SingleColumnDiffWPF singleColumnDiffWpf;
-    public SingleColumnDiff()
+    public partial class SingleColumnDiff : UserControl
     {
+        private readonly SingleColumnDiffWPF singleColumnDiffWpf;
+        public SingleColumnDiff()
+        {
             InitializeComponent();
             singleColumnDiffWpf = new SingleColumnDiffWPF();
             elementHost1.Child = singleColumnDiffWpf;
         }
 
-    private TextEditor Editor => singleColumnDiffWpf.TextEditor;
+        private TextEditor Editor => singleColumnDiffWpf.TextEditor;
 
-    public void Show(DiffModelInfo diffInfo)
-    {
+        public void Show(DiffModelInfo diffInfo)
+        {
             var margin = new DiffInfoMargin {Lines = diffInfo.Lines};
             var backgroundRenderer =
                 new DiffLineBackgroundRenderer {Lines = diffInfo.Lines};
@@ -32,34 +32,34 @@ public partial class SingleColumnDiff : UserControl
             Editor.Text = String.Join("\r\n",
                 diffInfo.Lines.Select(x => x.Text));
         }
-}
+    }
 
-public class DiffModelInfo
-{
-    public List<DiffLineViewModel> Lines { get;  }
-    public int LinesReturned { get; }
-    public int LinesTotal { get; }
-
-    public DiffModelInfo(List<DiffLineViewModel> lines, int linesReturned, int linesTotal)
+    public class DiffModelInfo
     {
+        public List<DiffLineViewModel> Lines { get;  }
+        public int LinesReturned { get; }
+        public int LinesTotal { get; }
+
+        public DiffModelInfo(List<DiffLineViewModel> lines, int linesReturned, int linesTotal)
+        {
             Lines = lines;
             LinesReturned = linesReturned;
             LinesTotal = linesTotal;
         }
-}
+    }
 
-public class DiffParser
-{
-    private readonly List<string> allLines;
-
-    public DiffParser(string gitDiff)
+    public class DiffParser
     {
+        private readonly List<string> allLines;
+
+        public DiffParser(string gitDiff)
+        {
             allLines = gitDiff.Split('\n')
                 .Select(x => x.TrimEnd())
                 .ToList();
         }
 
-    public DiffModelInfo ParseToLines(int maxLinesToReturn){
+        public DiffModelInfo ParseToLines(int maxLinesToReturn){
             var lineNumbers = Enumerable.Range(0, allLines.Count);
 
             return allLines.Zip(lineNumbers,(x, index) => new {Line = x, Index = index})
@@ -68,8 +68,8 @@ public class DiffParser
                 .First(); 
         }
 
-    private DiffModelInfo ToLineViewList(int headerIndex, int maxLinesToReturn)
-    {
+        private DiffModelInfo ToLineViewList(int headerIndex, int maxLinesToReturn)
+        {
             List<string> hunkElements = GetLinesFromHeaderIndex(headerIndex);
             List<DiffSectionViewModel> sections =
                 ParseToSections(hunkElements);
@@ -83,16 +83,16 @@ public class DiffParser
                 linesTotal: CountMixedDiffLines(sections));
         }
 
-    private int CountMixedDiffLines(List<DiffSectionViewModel> sections)
-    {
+        private int CountMixedDiffLines(List<DiffSectionViewModel> sections)
+        {
             return sections
                 .Select(sec => sec.MixedDiff.Count)
                 .Sum();
         }
 
-    private List<DiffSectionViewModel> ReduceByLineCount(
-        List<DiffSectionViewModel> sections, int maxLineCount)
-    {
+        private List<DiffSectionViewModel> ReduceByLineCount(
+            List<DiffSectionViewModel> sections, int maxLineCount)
+        {
             List<DiffSectionViewModel> filtered = new List<DiffSectionViewModel>();
             int lineCount = 0;
             foreach (DiffSectionViewModel section in sections)
@@ -105,8 +105,8 @@ public class DiffParser
             return filtered;
         }
 
-    private static List<DiffLineViewModel> ToSingleLineModelList(List<DiffSectionViewModel> sections)
-    {
+        private static List<DiffLineViewModel> ToSingleLineModelList(List<DiffSectionViewModel> sections)
+        {
             return sections.Select(sec => sec.MixedDiff)
                 .Aggregate(new List<DiffLineViewModel>(),
                     (allDiffLines, sectionLines) =>
@@ -118,8 +118,8 @@ public class DiffParser
                     });
         }
 
-    private List<string> GetLinesFromHeaderIndex(int headerIndex)
-    {
+        private List<string> GetLinesFromHeaderIndex(int headerIndex)
+        {
             var hunkElements = allLines
                 .Skip(headerIndex + 1)
                 .TakeWhile(x => !x.StartsWith("diff --git a"))
@@ -127,8 +127,8 @@ public class DiffParser
             return hunkElements;
         }
 
-    private List<DiffSectionViewModel> ParseToSections(IEnumerable<string> hunkElements)
-    {
+        private List<DiffSectionViewModel> ParseToSections(IEnumerable<string> hunkElements)
+        {
             List<string> diffContents = hunkElements.Skip(3).ToList();
             List<string> sectionHeaders = diffContents
                 .Where(x => x.StartsWith("@@ "))
@@ -185,4 +185,5 @@ public class DiffParser
             }
             return sections;
         }
+    }
 }

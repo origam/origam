@@ -27,53 +27,53 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for PanelControlSet.
-/// </summary>
-[SchemaItemDescription("Screen Section", "icon_screen-section.png")]
-[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
-[HelpTopic("Screen+Sections")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class PanelControlSet : AbstractControlSet
+namespace Origam.Schema.GuiModel
 {
-	private static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-	private UserControlSchemaItemProvider _controls=_schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
-
-	public const string CategoryConst = "PanelControlSet";
-
-	public PanelControlSet() : base() {}
-		
-	public PanelControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public PanelControlSet(Key primaryKey) : base(primaryKey) {}
-
-	//refDataSource means for PanelCOntolSet reference on DataEntity object
-	// (for FormControlSet refDataSource means reference on DataStructure object
-	public Guid DataSourceId;
-
-	[XmlReference("entity", "DataSourceId")]
-	public IDataEntity DataEntity
+	/// <summary>
+	/// Summary description for PanelControlSet.
+	/// </summary>
+	[SchemaItemDescription("Screen Section", "icon_screen-section.png")]
+	[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
+    [HelpTopic("Screen+Sections")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class PanelControlSet : AbstractControlSet
 	{
-		get
+		private static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+		private UserControlSchemaItemProvider _controls=_schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
+
+		public const string CategoryConst = "PanelControlSet";
+
+		public PanelControlSet() : base() {}
+		
+		public PanelControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public PanelControlSet(Key primaryKey) : base(primaryKey) {}
+
+        //refDataSource means for PanelCOntolSet reference on DataEntity object
+        // (for FormControlSet refDataSource means reference on DataStructure object
+        public Guid DataSourceId;
+
+        [XmlReference("entity", "DataSourceId")]
+        public IDataEntity DataEntity
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.DataSourceId;
 
 				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				this.DataSourceId = (Guid)value.PrimaryKey["Id"];
 			}
-	}
+		}
 
-	public ControlItem PanelControl
-	{
-		get
+		public ControlItem PanelControl
 		{
+			get
+			{
 				foreach(ControlItem item in _controls.ChildItems)
 				{
 					if(	item.PanelControlSet !=null && 
@@ -86,18 +86,18 @@ public class PanelControlSet : AbstractControlSet
 
 				return null;
 			}
-	}
+		}
 		
-	#region Overriden AbstractSchemaItem Members
+		#region Overriden AbstractSchemaItem Members
 
-	public override bool IsDeleted
-	{
-		get
+		public override bool IsDeleted
 		{
+			get
+			{
 				return base.IsDeleted;
 			}
-		set
-		{
+			set
+			{
 				//1) find controlItem
 				ControlItem item = this.PanelControl;
 
@@ -114,18 +114,18 @@ public class PanelControlSet : AbstractControlSet
 				//if all done delete main control
 				base.IsDeleted = value;
 			}
-	}
+		}
 
-	public override string ItemType
-	{
-		get
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override Origam.UI.BrowserNodeCollection ChildNodes()
-	{
+		public override Origam.UI.BrowserNodeCollection ChildNodes()
+		{
             if (this.ChildItems.Count == 1)
             {
                 return new UI.BrowserNodeCollection();
@@ -136,12 +136,14 @@ public class PanelControlSet : AbstractControlSet
             }
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.DataEntity);
 			
 			base.GetExtraDependencies (dependencies);
 		}
-	#endregion			
+		#endregion			
 	
+	}
 }
+

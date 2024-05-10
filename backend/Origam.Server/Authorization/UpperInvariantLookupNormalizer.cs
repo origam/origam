@@ -1,14 +1,15 @@
-﻿namespace Origam.Server.Authorization;
-
-public class UpperInvariantLookupNormalizer : Microsoft.AspNetCore.Identity.ILookupNormalizer
+﻿namespace Origam.Server.Authorization
 {
-    public string NormalizeEmail(string email)
+    public class UpperInvariantLookupNormalizer : Microsoft.AspNetCore.Identity.ILookupNormalizer
     {
+        public string NormalizeEmail(string email)
+        {
             return email;
         }
 
-    public string NormalizeName(string name)
-    {
+        public string NormalizeName(string name)
+        {
             return name;
         }
+    }
 }

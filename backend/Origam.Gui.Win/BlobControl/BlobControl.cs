@@ -33,27 +33,27 @@ using Origam.UI;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for BlobControl.
-/// </summary>
-public class BlobControl : BaseCaptionControl
+namespace Origam.Gui.Win
 {
-	private System.Windows.Forms.ImageList imageList1;
-	private Origam.Gui.Win.AsDropDown.NoKeyUpTextBox txtEdit;
-	private System.Windows.Forms.Button btnDropDown;
-	private System.ComponentModel.IContainer components;
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	private ToolStripMenuItem mnuUpload;
-	private ToolStripMenuItem mnuDownload;
-	private ToolStripMenuItem mnuPreview;
-	private ToolStripMenuItem mnuDelete;
-
-	private Hashtable _openFiles = new Hashtable();
-
-	public BlobControl()
+	/// <summary>
+	/// Summary description for BlobControl.
+	/// </summary>
+	public class BlobControl : BaseCaptionControl
 	{
+		private System.Windows.Forms.ImageList imageList1;
+		private Origam.Gui.Win.AsDropDown.NoKeyUpTextBox txtEdit;
+		private System.Windows.Forms.Button btnDropDown;
+		private System.ComponentModel.IContainer components;
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		private ToolStripMenuItem mnuUpload;
+        private ToolStripMenuItem mnuDownload;
+        private ToolStripMenuItem mnuPreview;
+        private ToolStripMenuItem mnuDelete;
+
+		private Hashtable _openFiles = new Hashtable();
+
+		public BlobControl()
+		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -85,11 +85,11 @@ public class BlobControl : BaseCaptionControl
 
 		}
 
-	/// <summary> 
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 //				mnuUpload.Click -= new EventHandler(mnuUpload_Click);
@@ -119,8 +119,8 @@ public class BlobControl : BaseCaptionControl
 			base.Dispose( disposing );
 		}
 
-	protected override void OnMouseWheel(MouseEventArgs e)
-	{
+		protected override void OnMouseWheel(MouseEventArgs e)
+		{
 			AsDataGrid grid = this.Parent as AsDataGrid;
 			if(grid != null)
 			{
@@ -132,26 +132,30 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	#region Component Designer generated code
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Component Designer generated code
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BlobControl));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.txtEdit = new Origam.Gui.Win.BaseDropDownControl.NoKeyUpTextBox();
             this.btnDropDown = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 	 // imageList1
-            // 	 this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
             this.imageList1.Images.SetKeyName(0, "");
             this.imageList1.Images.SetKeyName(1, "");
-            // 	 // txtEdit
-            // 	 this.txtEdit.CustomFormat = null;
+            // 
+            // txtEdit
+            // 
+            this.txtEdit.CustomFormat = null;
             this.txtEdit.DataType = typeof(string);
             this.txtEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -166,8 +170,10 @@ public class BlobControl : BaseCaptionControl
             this.txtEdit.MouseEnter += new System.EventHandler(this.txtEdit_MouseEnter);
             this.txtEdit.MouseHover += new System.EventHandler(this.txtEdit_MouseHover);
             this.txtEdit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.txtEdit_MouseMove);
-            // 	 // btnDropDown
-            // 	 this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(203)))), ((int)(((byte)(111)))));
+            // 
+            // btnDropDown
+            // 
+            this.btnDropDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(214)))), ((int)(((byte)(203)))), ((int)(((byte)(111)))));
             this.btnDropDown.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnDropDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDropDown.ForeColor = System.Drawing.Color.White;
@@ -180,8 +186,10 @@ public class BlobControl : BaseCaptionControl
             this.btnDropDown.TabStop = false;
             this.btnDropDown.UseVisualStyleBackColor = false;
             this.btnDropDown.Click += new System.EventHandler(this.btnDropDown_Click);
-            // 	 // BlobControl
-            // 	 this.BackColor = System.Drawing.SystemColors.Window;
+            // 
+            // BlobControl
+            // 
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.txtEdit);
             this.Controls.Add(this.btnDropDown);
             this.Name = "BlobControl";
@@ -191,48 +199,48 @@ public class BlobControl : BaseCaptionControl
             this.PerformLayout();
 
 		}
-	#endregion
+		#endregion
 
-	#region Properties
-	public override string DefaultBindableProperty
-	{
-		get
+		#region Properties
+		public override string DefaultBindableProperty
 		{
+			get
+			{
 				return "FileName";
 			}
-	}
+		}
 
-	private bool _noKeyUp = false;
-	public bool NoKeyUp
-	{
-		get
+		private bool _noKeyUp = false;
+		public bool NoKeyUp
 		{
+			get
+			{
 				return _noKeyUp;
 			}
-		set
-		{
+			set
+			{
 				_noKeyUp = value;
 				this.txtEdit.NoKeyUp = value;
 			}
-	}
+		}
 
-	public Control EditControl
-	{
-		get
+		public Control EditControl
 		{
+			get
+			{
 				return txtEdit;
 			}
-	}
+		}
 
-	private bool _readOnly = false;
-	public bool ReadOnly
-	{
-		get
+		private bool _readOnly = false;
+		public bool ReadOnly
 		{
+			get
+			{
 				return _readOnly;
 			}
-		set
-		{
+			set
+			{
 				_readOnly = value;
 
 				if(_readOnly)
@@ -246,17 +254,17 @@ public class BlobControl : BaseCaptionControl
 					//this.btnDropDown.Visible = true;
 				}
 			}
-	}
+		}
 
-	string _fileName;
-	public string FileName
-	{
-		get
+		string _fileName;
+		public string FileName
 		{
+			get
+			{
 				return _fileName;
 			}
-		set
-		{
+			set
+			{
 				if(_fileName == value) return;
                 if (value == "") value = null;
 
@@ -266,329 +274,329 @@ public class BlobControl : BaseCaptionControl
 
 				OnFileNameChanged(EventArgs.Empty);
 			}
-	}
+		}
 
-	string _originalPathMember;
-	[Category("Data Members")]
-	public string OriginalPathMember
-	{
-		get
+		string _originalPathMember;
+		[Category("Data Members")]
+		public string OriginalPathMember
 		{
+			get
+			{
 				return _originalPathMember;
 			}
-		set
-		{
+			set
+			{
 				_originalPathMember = value;
 			}
-	}
+		}
 
-	string _fileSizeMember;
-	[Category("Data Members")]
-	public string FileSizeMember
-	{
-		get
+		string _fileSizeMember;
+		[Category("Data Members")]
+		public string FileSizeMember
 		{
+			get
+			{
 				return _fileSizeMember;
 			}
-		set
-		{
+			set
+			{
 				_fileSizeMember = value;
 			}
-	}
+		}
 
-	string _blobMember;
-	[Category("Data Members")]
-	public string BlobMember
-	{
-		get
+		string _blobMember;
+		[Category("Data Members")]
+		public string BlobMember
 		{
+			get
+			{
 				return _blobMember;
 			}
-		set
-		{
+			set
+			{
 				_blobMember = value;
 			}
-	}
+		}
 
-	string _thumbnailMember;
-	[Category("Data Members")]
-	public string ThumbnailMember
-	{
-		get
+		string _thumbnailMember;
+		[Category("Data Members")]
+		public string ThumbnailMember
 		{
+			get
+			{
 				return _thumbnailMember;
 			}
-		set
-		{
+			set
+			{
 				_thumbnailMember = value;
 			}
-	}
+		}
 
-	string _dateCreatedMember;
-	[Category("Data Members")]
-	public string DateCreatedMember
-	{
-		get
+		string _dateCreatedMember;
+		[Category("Data Members")]
+		public string DateCreatedMember
 		{
+			get
+			{
 				return _dateCreatedMember;
 			}
-		set
-		{
+			set
+			{
 				_dateCreatedMember = value;
 			}
-	}
+		}
 
-	string _dateLastModifiedMember;
-	[Category("Data Members")]
-	public string DateLastModifiedMember
-	{
-		get
+		string _dateLastModifiedMember;
+		[Category("Data Members")]
+		public string DateLastModifiedMember
 		{
+			get
+			{
 				return _dateLastModifiedMember;
 			}
-		set
-		{
+			set
+			{
 				_dateLastModifiedMember = value;
 			}
-	}
+		}
 
-	string _authorMember;
-	[Category("Data Members")]
-	public string AuthorMember
-	{
-		get
+		string _authorMember;
+		[Category("Data Members")]
+		public string AuthorMember
 		{
+			get
+			{
 				return _authorMember;
 			}
-		set
-		{
+			set
+			{
 				_authorMember = value;
 			}
-	}
+		}
 
-	string _remarkMember;
-	[Category("Data Members")]
-	public string RemarkMember
-	{
-		get
+		string _remarkMember;
+		[Category("Data Members")]
+		public string RemarkMember
 		{
+			get
+			{
 				return _remarkMember;
 			}
-		set
-		{
+			set
+			{
 				_remarkMember = value;
 			}
-	}
+		}
 
-	string _compressionStateMember;
-	[Category("Data Members")]
-	public string CompressionStateMember
-	{
-		get
+		string _compressionStateMember;
+		[Category("Data Members")]
+		public string CompressionStateMember
 		{
+			get
+			{
 				return _compressionStateMember;
 			}
-		set
-		{
+			set
+			{
 				_compressionStateMember = value;
 			}
-	}
+		}
 
-	BlobStorageType _storageType;
-	public BlobStorageType StorageType
-	{
-		get
+		BlobStorageType _storageType;
+		public BlobStorageType StorageType
 		{
+			get
+			{
 				return _storageType;
 			}
-		set
-		{
+			set
+			{
 				_storageType = value;
 			}
-	}
+		}
 
-	bool _displayStorageTypeSelection;
-	[Category("Blob Settings")]
-	public bool DisplayStorageTypeSelection
-	{
-		get
+		bool _displayStorageTypeSelection;
+		[Category("Blob Settings")]
+		public bool DisplayStorageTypeSelection
 		{
+			get
+			{
 				return _displayStorageTypeSelection;
 			}
-		set
-		{
+			set
+			{
 				_displayStorageTypeSelection = value;
 			}
-	}
+		}
 
-	private Guid _blobLookupId;
-	[Browsable(false)]
-	public Guid BlobLookupId
-	{
-		get
+		private Guid _blobLookupId;
+		[Browsable(false)]
+		public Guid BlobLookupId
 		{
+			get
+			{
 				return _blobLookupId;
 			}
-		set
-		{
+			set
+			{
 				_blobLookupId = value;
 			}
-	}
+		}
 		
-	[TypeConverter(typeof(DataLookupConverter))]
-	[Category("Blob Settings")]
-	public IDataLookup BlobLookup
-	{
-		get
+		[TypeConverter(typeof(DataLookupConverter))]
+		[Category("Blob Settings")]
+		public IDataLookup BlobLookup
 		{
+			get
+			{
 				return (IDataLookup)_persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.BlobLookupId));
 			}
-		set
-		{
+			set
+			{
 				this.BlobLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 		
-	private Guid _thumbnailWidthConstantId;
-	[Browsable(false)]
-	public Guid ThumbnailWidthConstantId
-	{
-		get
+		private Guid _thumbnailWidthConstantId;
+		[Browsable(false)]
+		public Guid ThumbnailWidthConstantId
 		{
+			get
+			{
 				return _thumbnailWidthConstantId;
 			}
-		set
-		{
+			set
+			{
 				_thumbnailWidthConstantId = value;
 			}
-	}
+		}
 		
-	[TypeConverter(typeof(DataConstantConverter))]
-	[Category("Blob Settings")]
-	public DataConstant ThumbnailWidthConstant
-	{
-		get
+		[TypeConverter(typeof(DataConstantConverter))]
+		[Category("Blob Settings")]
+		public DataConstant ThumbnailWidthConstant
 		{
+			get
+			{
 				return (DataConstant)_persistence.SchemaProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(this.ThumbnailWidthConstantId));
 			}
-		set
-		{
+			set
+			{
 				this.ThumbnailWidthConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 		
-	private Guid _thumbnailHeightConstantId;
-	[Browsable(false)]
-	public Guid ThumbnailHeightConstantId
-	{
-		get
+		private Guid _thumbnailHeightConstantId;
+		[Browsable(false)]
+		public Guid ThumbnailHeightConstantId
 		{
+			get
+			{
 				return _thumbnailHeightConstantId;
 			}
-		set
-		{
+			set
+			{
 				_thumbnailHeightConstantId = value;
 			}
-	}
+		}
 		
-	[TypeConverter(typeof(DataConstantConverter))]
-	[Category("Blob Settings")]
-	public DataConstant ThumbnailHeightConstant
-	{
-		get
+		[TypeConverter(typeof(DataConstantConverter))]
+		[Category("Blob Settings")]
+		public DataConstant ThumbnailHeightConstant
 		{
+			get
+			{
 				return (DataConstant)_persistence.SchemaProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(this.ThumbnailHeightConstantId));
 			}
-		set
-		{
+			set
+			{
 				this.ThumbnailHeightConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 
-	[Browsable(false)]
-	private Guid _storageTypeDefaultConstantId;
-	[Browsable(false)]
-	public Guid StorageTypeDefaultConstantId
-	{
-		get
+		[Browsable(false)]
+		private Guid _storageTypeDefaultConstantId;
+		[Browsable(false)]
+		public Guid StorageTypeDefaultConstantId
 		{
+			get
+			{
 				return _storageTypeDefaultConstantId;
 			}
-		set
-		{
+			set
+			{
 				_storageTypeDefaultConstantId = value;
 			}
-	}
+		}
 		
-	[TypeConverter(typeof(DataConstantConverter))]
-	[Category("Blob Settings")]
-	public DataConstant StorageTypeDefaultConstant
-	{
-		get
+		[TypeConverter(typeof(DataConstantConverter))]
+		[Category("Blob Settings")]
+		public DataConstant StorageTypeDefaultConstant
 		{
+			get
+			{
 				return (DataConstant)_persistence.SchemaProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(this.StorageTypeDefaultConstantId));
 			}
-		set
-		{
+			set
+			{
 				this.StorageTypeDefaultConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 		
-	[Browsable(false)]
-	private Guid _defaultCompressionConstantId;
-	[Browsable(false)]
-	public Guid DefaultCompressionConstantId
-	{
-		get
+		[Browsable(false)]
+		private Guid _defaultCompressionConstantId;
+		[Browsable(false)]
+		public Guid DefaultCompressionConstantId
 		{
+			get
+			{
 				return _defaultCompressionConstantId;
 			}
-		set
-		{
+			set
+			{
 				_defaultCompressionConstantId = value;
 			}
-	}
+		}
 		
-	[TypeConverter(typeof(DataConstantConverter))]
-	[Category("Blob Settings")]
-	public DataConstant DefaultCompressionConstant
-	{
-		get
+		[TypeConverter(typeof(DataConstantConverter))]
+		[Category("Blob Settings")]
+		public DataConstant DefaultCompressionConstant
 		{
+			get
+			{
 				return (DataConstant)_persistence.SchemaProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(this.DefaultCompressionConstantId));
 			}
-		set
-		{
+			set
+			{
 				this.DefaultCompressionConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
-	}
+		}
 		
-	#endregion
+		#endregion
 
-	#region Methods
-	#endregion
+		#region Methods
+		#endregion
 
-	#region Private Methods
-	private DataRow CurrentRow
-	{
-		get
+		#region Private Methods
+		private DataRow CurrentRow
 		{
+			get
+			{
 				return DataBindingTools.CurrentRow(this, DefaultBindableProperty);
 			}
-	}
+		}
 
-	private bool IsControlPressed
-	{
-		get
+		private bool IsControlPressed
 		{
+			get
+			{
 				return (Control.ModifierKeys & Keys.Control) == Keys.Control;
 			}
-	}
+		}
 
-	private bool IsCompressed
-	{
-		get
+		private bool IsCompressed
 		{
+			get
+			{
 				CheckCurrentRow();
 
 				bool compressed = false;
@@ -599,12 +607,12 @@ public class BlobControl : BaseCaptionControl
 
 				return compressed;
 			}
-	}
+		}
 
-	private bool ShouldCompress
-	{
-		get
+		private bool ShouldCompress
 		{
+			get
+			{
 				CheckCurrentRow();
 
 				if(CheckMember("CompressionStateMember", false))
@@ -624,15 +632,15 @@ public class BlobControl : BaseCaptionControl
 					return false;
 				}
 			}
-	}
+		}
 
-	private bool CanPreview()
-	{
+		private bool CanPreview()
+		{
 			return this.FileName != null & this.FileName != String.Empty;
 		}
 
-	private bool CheckMember(string member, bool throwExceptions)
-	{
+		private bool CheckMember(string member, bool throwExceptions)
+		{
 			object val = Reflector.GetValue(this.GetType(), this, member);
 
 			if(val == null || val.Equals(String.Empty))
@@ -650,13 +658,13 @@ public class BlobControl : BaseCaptionControl
 			return true;
 		}
 
-	private void CheckCurrentRow()
-	{
+		private void CheckCurrentRow()
+		{
 			if(CurrentRow == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorHandleBlob"));
 		}
 
-	private void Upload()
-	{
+		private void Upload()
+		{
 			try
 			{
 				IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -769,8 +777,8 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	private void Download()
-	{
+		private void Download()
+		{
 			try
 			{
 				CheckCurrentRow();
@@ -792,8 +800,8 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	private bool Download(string path)
-	{
+		private bool Download(string path)
+		{
 			try
 			{
 				CheckCurrentRow();
@@ -845,8 +853,8 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	private void ExecutePreview()
-	{
+		private void ExecutePreview()
+		{
 			string filePath = "";
 
 			try
@@ -876,54 +884,54 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	#endregion
+		#endregion
 
-	#region Events
-	public event System.EventHandler fileNameChanged;
-	protected virtual void OnFileNameChanged(EventArgs e)
-	{
+		#region Events
+		public event System.EventHandler fileNameChanged;
+		protected virtual void OnFileNameChanged(EventArgs e)
+		{
 			if (this.fileNameChanged != null)
 			{
 				this.fileNameChanged(this, e);
 			}
 		}
 
-	public event System.EventHandler ValueChangingByUser;
-	protected virtual void OnValueChangingByUser(EventArgs e)
-	{
+		public event System.EventHandler ValueChangingByUser;
+		protected virtual void OnValueChangingByUser(EventArgs e)
+		{
 			if (this.ValueChangingByUser != null)
 			{
 				this.ValueChangingByUser(this, e);
 			}
 		}
-	#endregion
+		#endregion
 
-	#region Event Handlers
-	private void btnDropDown_Click(object sender, System.EventArgs e)
-	{
+		#region Event Handlers
+		private void btnDropDown_Click(object sender, System.EventArgs e)
+		{
 			txtEdit.ContextMenuStrip.Show(txtEdit, new Point(txtEdit.Left, txtEdit.Bottom));
 		}
 
-	private void mnuUpload_Click(object sender, EventArgs e)
-	{
+		private void mnuUpload_Click(object sender, EventArgs e)
+		{
 			Upload();
 		}
 
-	private void mnuDownload_Click(object sender, EventArgs e)
-	{
+		private void mnuDownload_Click(object sender, EventArgs e)
+		{
 			Download();
 		}
 
-	private void mnuPreview_Click(object sender, EventArgs e)
-	{
+		private void mnuPreview_Click(object sender, EventArgs e)
+		{
 			if(CanPreview())
 			{
 				ExecutePreview();
 			}
 		}
 
-	private void mnuDelete_Click(object sender, EventArgs e)
-	{
+        private void mnuDelete_Click(object sender, EventArgs e)
+        {
             DataRow row = CurrentRow;
             row.EndEdit();
             if (CheckMember("OriginalPathMember", false))
@@ -953,29 +961,29 @@ public class BlobControl : BaseCaptionControl
             this.FileName = null;
         }
 
-	private static void SetNull(DataRow row, string member)
-	{
+        private static void SetNull(DataRow row, string member)
+        {
             if (CheckNullable(row, member))
             {
                 row[member] = DBNull.Value;
             }
         }
 
-	private static bool CheckNullable(DataRow row, string member)
-	{
+        private static bool CheckNullable(DataRow row, string member)
+        {
             return row.Table.Columns[member].AllowDBNull;
         }
         
-	private void txtEdit_MouseDown(object sender, MouseEventArgs e)
-	{
+        private void txtEdit_MouseDown(object sender, MouseEventArgs e)
+		{
 			if(CanPreview() & IsControlPressed)
 			{
 				ExecutePreview();
 			}
 		}
 
-	void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
-	{
+        void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
             bool canPreview = this.CanPreview();
 			mnuUpload.Visible = !this.ReadOnly;
             mnuPreview.Enabled = canPreview;
@@ -983,8 +991,8 @@ public class BlobControl : BaseCaptionControl
             mnuDelete.Enabled = canPreview;
 		}
 
-	private void process_Exited(object sender, EventArgs e)
-	{
+		private void process_Exited(object sender, EventArgs e)
+		{
 			System.Diagnostics.Process process = sender as System.Diagnostics.Process;
 			process.Exited -= new EventHandler(process_Exited);
 
@@ -1003,18 +1011,18 @@ public class BlobControl : BaseCaptionControl
 			}
 		}
 
-	private void txtEdit_MouseHover(object sender, EventArgs e)
-	{
+		private void txtEdit_MouseHover(object sender, EventArgs e)
+		{
 			this.OnMouseHover(e);
 		}
 
-	private void txtEdit_MouseEnter(object sender, EventArgs e)
-	{
+		private void txtEdit_MouseEnter(object sender, EventArgs e)
+		{
 			this.OnMouseEnter(e);
 		}
 
-	private void txtEdit_MouseMove(object sender, MouseEventArgs e)
-	{
+		private void txtEdit_MouseMove(object sender, MouseEventArgs e)
+		{
 			if(CanPreview() & IsControlPressed)
 			{
 				txtEdit.Cursor = Cursors.Hand;
@@ -1027,22 +1035,23 @@ public class BlobControl : BaseCaptionControl
 			this.OnMouseMove(e);
 		}
 
-	private void txtEdit_KeyDown(object sender, KeyEventArgs e)
-	{
+		private void txtEdit_KeyDown(object sender, KeyEventArgs e)
+		{
 			if(e.KeyCode != Keys.Left & e.KeyCode != Keys.Right & e.KeyCode != Keys.Up & e.KeyCode != Keys.Down & e.KeyCode != Keys.Tab & e.KeyCode != Keys.Escape & e.KeyCode != Keys.ControlKey & e.KeyCode != Keys.Alt & e.KeyCode != Keys.ShiftKey)
 			{
 				OnValueChangingByUser(EventArgs.Empty);
 			}
 		}
 
-	private void BlobControl_Resize(object sender, EventArgs e)
-	{
+		private void BlobControl_Resize(object sender, EventArgs e)
+		{
 			this.Height = txtEdit.Height;
 		}
 
-	private bool ThumbnailCallback()
-	{
+		private bool ThumbnailCallback()
+		{
 			return true;
 		}
-	#endregion
+		#endregion
+	}
 }

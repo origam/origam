@@ -28,30 +28,30 @@ using Origam.DA;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win;
-
-public delegate void DataViewQueryChanged (object sender, string query);
-
-
-/// <summary>
-/// This Factory Fill Controls into AsPanel
-/// </summary>
-public class DataGridFilterFactory : IDisposable
+namespace Origam.Gui.Win
 {
-	public event DataViewQueryChanged DataViewQueryChanged;
-		
-	private IServiceAgent _dataServiceAgent;
-	private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+	public delegate void DataViewQueryChanged (object sender, string query);
 
-	private FilterPanel			pnlFilter = null;
-	private FormGenerator	formGenerator = null;
-	private string			panelDataMember = "";
-	private Guid			_panelId;
 
-	private string query="";
-
-	public DataGridFilterFactory(FilterPanel panel, FormGenerator generator, string datamember, Guid panelId, IGridBuilder gridBuilder)
+	/// <summary>
+	/// This Factory Fill Controls into AsPanel
+	/// </summary>
+	public class DataGridFilterFactory : IDisposable
 	{
+		public event DataViewQueryChanged DataViewQueryChanged;
+		
+		private IServiceAgent _dataServiceAgent;
+		private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+
+		private FilterPanel			pnlFilter = null;
+		private FormGenerator	formGenerator = null;
+		private string			panelDataMember = "";
+		private Guid			_panelId;
+
+		private string query="";
+
+		public DataGridFilterFactory(FilterPanel panel, FormGenerator generator, string datamember, Guid panelId, IGridBuilder gridBuilder)
+		{
 			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			
 			this.pnlFilter=panel;
@@ -62,14 +62,14 @@ public class DataGridFilterFactory : IDisposable
 			this.GridBuilder = gridBuilder;
 		}
 
-	public string Query
-	{
-		get
+		public string Query
 		{
+			get
+			{
 				return this.query;
 			}
-		set
-		{
+			set
+			{
 				this.query = value;
 		
 				AsForm form = this.pnlFilter.FindForm() as AsForm;
@@ -88,55 +88,55 @@ public class DataGridFilterFactory : IDisposable
 					form.IsFiltering = false;
 				}
 			}
-	}
+		}
 
-	private OrigamPanelFilter.PanelFilterRow _currentStoredFilter;
-	public OrigamPanelFilter.PanelFilterRow CurrentStoredFilter
-	{
-		get
+		private OrigamPanelFilter.PanelFilterRow _currentStoredFilter;
+		public OrigamPanelFilter.PanelFilterRow CurrentStoredFilter
 		{
+			get
+			{
 				return _currentStoredFilter;
 			}
-		set
-		{
+			set
+			{
 				ApplyFilter(value);
 
 				_currentStoredFilter = value;
 			}
-	}
+		}
 
-	private IGridBuilder _gridBuilder;
-	public IGridBuilder GridBuilder
-	{
-		get
+		private IGridBuilder _gridBuilder;
+		public IGridBuilder GridBuilder
 		{
+			get
+			{
 				return _gridBuilder;
 			}
-		set
-		{
+			set
+			{
 				_gridBuilder = value;
 			}
-	}
+		}
 
-	private Hashtable _filterItems=new Hashtable();
-	public Hashtable FilterItems
-	{
-		get
+		private Hashtable _filterItems=new Hashtable();
+		public Hashtable FilterItems
 		{
+			get
+			{
 				return _filterItems;
 			}
-	}
+		}
 
-	public int ScrollOffset
-	{
-		get
+		public int ScrollOffset
 		{
+			get
+			{
 				return pnlFilter.ScrollOffset;
 			}
-	}
+		}
 
-	public void AddControlToPanel(Control control, DataColumn column, int controlWidth)
-	{
+		public void AddControlToPanel(Control control, DataColumn column, int controlWidth)
+		{
 			FilterPart part = null;
 			string caption = null;
 			
@@ -203,8 +203,8 @@ public class DataGridFilterFactory : IDisposable
 		}
 
 
-	public void PlotControls (DataGridTableStyle style, int offset)
-	{
+		public void PlotControls (DataGridTableStyle style, int offset)
+		{
 			this.pnlFilter.SizeControls(style, offset);
 		}
 
@@ -219,11 +219,11 @@ public class DataGridFilterFactory : IDisposable
 //		}
 
 
-	private OrigamPanelFilter _storedFilters = null;
-	public OrigamPanelFilter StoredFilters
-	{
-		get
+		private OrigamPanelFilter _storedFilters = null;
+		public OrigamPanelFilter StoredFilters
 		{
+			get
+			{
 				if(_storedFilters == null)
 				{
 					_storedFilters = OrigamPanelFilterDA.LoadFilters(_panelId);
@@ -231,32 +231,32 @@ public class DataGridFilterFactory : IDisposable
 
 				return _storedFilters;
 			}
-	}
+		}
 
-	public void PersistFilters()
-	{
+		public void PersistFilters()
+		{
 			PersistFilter(_storedFilters);
 		}
 
-	public void PersistFilter(OrigamPanelFilter filter)
-	{
+		public void PersistFilter(OrigamPanelFilter filter)
+		{
 			OrigamPanelFilterDA.PersistFilter(filter);
 		}
 
-	public OrigamPanelFilter LoadFilter(Guid id)
-	{
+		public OrigamPanelFilter LoadFilter(Guid id)
+		{
 			return OrigamPanelFilterDA.LoadFilter(id);
 		}
 
-	public void DeleteFilter(OrigamPanelFilter.PanelFilterRow filter)
-	{
+		public void DeleteFilter(OrigamPanelFilter.PanelFilterRow filter)
+		{
 			filter.Delete();
 			PersistFilters();
 			_currentStoredFilter = null;
 		}
 
-	public void StoreCurrentFilter(string name, bool global)
-	{
+		public void StoreCurrentFilter(string name, bool global)
+		{
 			// add new filter to stored filters
 			OrigamPanelFilter.PanelFilterRow filter = _storedFilters.PanelFilter.NewPanelFilterRow();
 			filter.Id = Guid.NewGuid();
@@ -268,8 +268,8 @@ public class DataGridFilterFactory : IDisposable
 			_currentStoredFilter = filter;
 		}
 
-	public void GetFilterFromCurrent(OrigamPanelFilter.PanelFilterRow filter, string name, bool global, bool isDefault, Guid panelId)
-	{
+		public void GetFilterFromCurrent(OrigamPanelFilter.PanelFilterRow filter, string name, bool global, bool isDefault, Guid panelId)
+		{
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
 			filter.Name = name;
@@ -298,24 +298,24 @@ public class DataGridFilterFactory : IDisposable
 			AddFilterDetails(filter.Table.DataSet as OrigamPanelFilter, filter, profile.Id);
 		}
 
-	public void AddFilterDetails(OrigamPanelFilter filterDS, OrigamPanelFilter.PanelFilterRow filter, Guid profileId)
-	{
+		public void AddFilterDetails(OrigamPanelFilter filterDS, OrigamPanelFilter.PanelFilterRow filter, Guid profileId)
+		{
 			pnlFilter.AddFilterDetails(filterDS, filter, profileId);
 		}
 
-	public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
-	{
+		public void ApplyFilter(OrigamPanelFilter.PanelFilterRow filter)
+		{
 			pnlFilter.ApplyFilter(filter);
 		}
 
-	public void FocusFilterPanel()
-	{
+		public void FocusFilterPanel()
+		{
 			this.pnlFilter.SelectNextControl(this.pnlFilter, true, true, true, true);
 		}
 
-	#region MakeQueryString
-	private string GetControlOperator(Control item, string columnName)
-	{
+		#region MakeQueryString
+		private string GetControlOperator(Control item, string columnName)
+		{
 			switch(item.GetType().Name)
 			{
 				case "AsDateBox":
@@ -335,23 +335,23 @@ public class DataGridFilterFactory : IDisposable
 					return "=";
 			}
 		}
-	#endregion
+		#endregion
         
-	#region Clear Filter
+		#region Clear Filter
 		
-	public void ClearQueryFields()
-	{
+		public void ClearQueryFields()
+		{
 			pnlFilter.ClearQuery();
 
 			_currentStoredFilter = null;
 		}
 
-	#endregion
+		#endregion
 
-	#region IDisposable Members
+		#region IDisposable Members
 
-	public void Dispose()
-	{
+		public void Dispose()
+		{
 			this.pnlFilter.QueryChanged -= new DataViewQueryChanged(pnlFilter_QueryChanged);
 
 			this.formGenerator = null;
@@ -365,16 +365,17 @@ public class DataGridFilterFactory : IDisposable
 			this._filterItems.Clear();
 		}
 
-	#endregion
+		#endregion
 
-	private void pnlFilter_QueryChanged(object sender, string query)
-	{
+		private void pnlFilter_QueryChanged(object sender, string query)
+		{
 			this.Query = query;
 			_currentStoredFilter = null;
 		}
 
-	public void RefreshFilter()
-	{
+		public void RefreshFilter()
+		{
 			this.Query = pnlFilter.GetQuery();
 		}
+	}
 }

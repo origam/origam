@@ -23,31 +23,31 @@ using System;
 using System.Collections.Generic;
 using Origam.Schema;
 
-namespace Origam.Workbench.Services;
-
-/// <summary>
-/// Summary description for AbstractDocumentationService.
-/// </summary>
-public abstract class AbstractDocumentationService : IDocumentationService
+namespace Origam.Workbench.Services
 {
-	public AbstractDocumentationService()
+	/// <summary>
+	/// Summary description for AbstractDocumentationService.
+	/// </summary>
+	public abstract class AbstractDocumentationService : IDocumentationService
 	{
+		public AbstractDocumentationService()
+		{
 			//
 			// TODO: Add constructor logic here
 			//
 		}
-	#region IDocumentationService Members
+		#region IDocumentationService Members
 
-	public abstract string GetDocumentation(Guid schemaItemId, DocumentationType docType);
+		public abstract string GetDocumentation(Guid schemaItemId, DocumentationType docType);
 
-	public abstract DocumentationComplete LoadDocumentation(Guid schemaItemId);
+		public abstract DocumentationComplete LoadDocumentation(Guid schemaItemId);
 
-	public abstract void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
+		public abstract void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
 
-	public abstract void SaveDocumentation(DocumentationComplete documentationData);
+		public abstract void SaveDocumentation(DocumentationComplete documentationData);
 
-	public void CloneDocumentation(List<ISchemaItem> clonedSchemaItems)
-	{
+		public void CloneDocumentation(List<ISchemaItem> clonedSchemaItems)
+		{
 			DocumentationComplete newDoc = new DocumentationComplete();
 
 			foreach(ISchemaItem item in clonedSchemaItems)
@@ -80,29 +80,30 @@ public abstract class AbstractDocumentationService : IDocumentationService
 			}
 		}
 
-	public abstract DocumentationComplete GetAllDocumentation();
-	#endregion
+		public abstract DocumentationComplete GetAllDocumentation();
+		#endregion
 
-	#region IWorkbenchService Members
+		#region IWorkbenchService Members
 
-	public abstract void InitializeService();
-	public abstract void UnloadService();
+		public abstract void InitializeService();
+		public abstract void UnloadService();
 
-	public abstract event System.EventHandler Initialize;
+		public abstract event System.EventHandler Initialize;
 
-	public abstract event System.EventHandler Unload;
+		public abstract event System.EventHandler Unload;
 
-	#endregion
-}
+		#endregion
+	}
 
-public enum DocumentationType
-{
-	USER_SHORT_HELP,
-	USER_LONG_HELP,
-	USER_WFSTEP_DESCRIPTION,
-	DEV_INTERNAL,
-	RULE_EXCEPTION_MESSAGE,
-	EXAMPLE,
-	EXAMPLE_JSON,
-	EXAMPLE_XML
+	public enum DocumentationType
+	{
+		USER_SHORT_HELP,
+		USER_LONG_HELP,
+		USER_WFSTEP_DESCRIPTION,
+		DEV_INTERNAL,
+		RULE_EXCEPTION_MESSAGE,
+		EXAMPLE,
+		EXAMPLE_JSON,
+		EXAMPLE_XML
+	}
 }

@@ -26,13 +26,13 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.MenuModel;
-
-public class MenuHelper
+namespace Origam.Schema.MenuModel
 {
-	public static FormReferenceMenuItem CreateMenuItem(
-		string caption, string role, FormControlSet form)
+	public class MenuHelper
 	{
+		public static FormReferenceMenuItem CreateMenuItem(
+			string caption, string role, FormControlSet form)
+		{
 			if(string.IsNullOrEmpty(caption))
 			{
 				throw new ArgumentOutOfRangeException
@@ -59,9 +59,9 @@ public class MenuHelper
 				"No menu defined. Create a root menu element.");
 		}
 
-	public static DataConstantReferenceMenuItem CreateMenuItem(
-		string caption, string role, DataConstant constant)
-	{
+		public static DataConstantReferenceMenuItem CreateMenuItem(
+			string caption, string role, DataConstant constant)
+		{
 			if(string.IsNullOrEmpty(caption))
 			{
 				throw new ArgumentOutOfRangeException(
@@ -88,9 +88,9 @@ public class MenuHelper
 				"No menu defined. Create a root menu element.");
 		}
 
-	public static WorkflowReferenceMenuItem CreateMenuItem(
-		string caption, string role, IWorkflow workflow)
-	{
+		public static WorkflowReferenceMenuItem CreateMenuItem(
+			string caption, string role, IWorkflow workflow)
+		{
 			if(string.IsNullOrEmpty(caption))
 			{
 				throw new ArgumentOutOfRangeException(
@@ -116,4 +116,5 @@ public class MenuHelper
 			throw new Exception(
 				"No menu defined. Create a root menu element.");
 		}
+	}
 }

@@ -21,14 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.UI;
-
-/// <summary>
-/// Interface for submenu builders.
-/// </summary>
-public interface ISubmenuBuilder
+namespace Origam.UI
 {
-	AsMenuCommand[] BuildSubmenu(object owner);
-	bool HasItems();
-	bool LateBound { get; }
+	/// <summary>
+	/// Interface for submenu builders.
+	/// </summary>
+	public interface ISubmenuBuilder
+	{
+		AsMenuCommand[] BuildSubmenu(object owner);
+		bool HasItems();
+        bool LateBound { get; }
+	}
 }

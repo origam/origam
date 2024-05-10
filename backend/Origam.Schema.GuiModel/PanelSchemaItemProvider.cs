@@ -21,53 +21,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.GuiModel;
-
-public class PanelSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.GuiModel
 {
-	public PanelSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => PanelControlSet.CategoryConst;
-
-	public override bool AutoCreateFolder => true;
-
-	public override string Group => "UI";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_21_screen-sections-2.png";
-
-	public override string NodeText
+	public class PanelSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Screen Sections";
-		set => base.NodeText = value;
-	}
+		public PanelSchemaItemProvider() {}
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		null;
+		#region ISchemaItemProvider Members
+		public override string RootItemType => PanelControlSet.CategoryConst;
 
-	#endregion
+		public override bool AutoCreateFolder => true;
 
-	#region ISchemaItemFactory Members
+		public override string Group => "UI";
 
-	public override Type[] NewItemTypes => new[]
+		#endregion
+
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_21_screen-sections-2.png";
+
+		public override string NodeText
+		{
+			get => "Screen Sections";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(PanelControlSet)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(PanelControlSet) ?
 					"NewPanel" : null);
 		}
 
-	#endregion
+		#endregion
+	}
 }

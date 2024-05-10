@@ -19,22 +19,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Rule;
-
-/// <summary>
-/// Summary description for ColumnSecurityState.
-/// </summary>
-public class FieldSecurityState
+namespace Origam.Rule
 {
-	string _name;
-	bool _allowUpdate;
-	bool _allowRead;
-	string _dynamicLabel;
-	int _backgroundColor;
-	int _foregroundColor;
-
-	public FieldSecurityState(string name, bool allowUpdate, bool allowRead, string dynamicLabel, int backgroundColor, int foregroundColor)
+	/// <summary>
+	/// Summary description for ColumnSecurityState.
+	/// </summary>
+	public class FieldSecurityState
 	{
+		string _name;
+		bool _allowUpdate;
+		bool _allowRead;
+		string _dynamicLabel;
+		int _backgroundColor;
+		int _foregroundColor;
+
+		public FieldSecurityState(string name, bool allowUpdate, bool allowRead, string dynamicLabel, int backgroundColor, int foregroundColor)
+		{
 			_name = name;
 			_allowUpdate = allowUpdate;
 			_allowRead = allowRead;
@@ -43,75 +43,76 @@ public class FieldSecurityState
 			_foregroundColor = foregroundColor;
 		}
 
-	public string Name 
-	{
-		get
+		public string Name 
 		{
+			get
+			{
 				return _name;
 			}
-		set
-		{
+			set
+			{
 				_name = value;
 			}
-	}
+		}
 
-	public string DynamicLabel
-	{
-		get
+		public string DynamicLabel
 		{
+			get
+			{
 				return _dynamicLabel;
 			}
-		set
-		{
+			set
+			{
 				_dynamicLabel = value;
 			}
-	}
+		}
 
-	public int BackgroundColor
-	{
-		get
+		public int BackgroundColor
 		{
+			get
+			{
 				return _backgroundColor;
 			}
-		set
-		{
+			set
+			{
 				_backgroundColor = value;
 			}
-	}
+		}
 
-	public int ForegroundColor
-	{
-		get
+		public int ForegroundColor
 		{
+			get
+			{
 				return _foregroundColor;
 			}
-		set
-		{
+			set
+			{
 				_foregroundColor = value;
 			}
-	}
+		}
 
-	public bool AllowUpdate
-	{
-		get
+		public bool AllowUpdate
 		{
+			get
+			{
 				return _allowUpdate;
 			}
-		set
-		{
+			set
+			{
 				_allowUpdate = value;
 			}
-	}
+		}
 
-	public bool AllowRead
-	{
-		get
+		public bool AllowRead
 		{
+			get
+			{
 				return _allowRead;
 			}
-		set
-		{
+			set
+			{
 				_allowRead = value;
 			}
+		}
 	}
 }

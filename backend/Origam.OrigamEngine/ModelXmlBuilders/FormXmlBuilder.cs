@@ -37,25 +37,25 @@ using Origam.Workbench.Services;
 using Origam.Workflow;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-public class XmlOutput
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public XmlDocument Document { get; set; }
-	public HashSet<Guid> ContainedLookups { get; set; } = new HashSet<Guid>();
-}
+    public class XmlOutput
+    {
+        public XmlDocument Document { get; set; }
+        public HashSet<Guid> ContainedLookups { get; set; } = new HashSet<Guid>();
+    }
 
-/// <summary>
-/// Summary description for FormXmlBuilder.
-/// </summary>
-public class FormXmlBuilder
-{
-	public const string WORKFLOW_FINISHED_FORMID = "C4E5DE43-69A4-40e6-9F7F-ED2AF8692429";
-	private const int GENERIC_FIELD_HEIGHT = 20;
-	private const int GENERIC_FIELD_VERTICAL_SPACE = 2;
-
-	public static XmlOutput GetXml(Guid menuId)
+    /// <summary>
+	/// Summary description for FormXmlBuilder.
+	/// </summary>
+	public class FormXmlBuilder
 	{
+		public const string WORKFLOW_FINISHED_FORMID = "C4E5DE43-69A4-40e6-9F7F-ED2AF8692429";
+        private const int GENERIC_FIELD_HEIGHT = 20;
+        private const int GENERIC_FIELD_VERTICAL_SPACE = 2;
+
+        public static XmlOutput GetXml(Guid menuId)
+		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
 
@@ -68,10 +68,10 @@ public class FormXmlBuilder
                 menuItem.Screen.DataStructure, readOnly, menuItem.SelectionChangeEntity);
 		}
 
-	public static XmlDocument GetXml(Guid formId, string name, bool isPreloaded, 
-		Guid menuId, string message, Guid structureId, bool forceReadOnly, 
-		string confirmSelectionChangeEntity)
-	{
+		public static XmlDocument GetXml(Guid formId, string name, bool isPreloaded, 
+            Guid menuId, string message, Guid structureId, bool forceReadOnly, 
+            string confirmSelectionChangeEntity)
+		{
 			if(formId == new Guid(WORKFLOW_FINISHED_FORMID))
 			{
 				return GetWorkflowFinishedXml(name, menuId, message);
@@ -90,14 +90,14 @@ public class FormXmlBuilder
 			}
 		}
 
-	public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId)
-	{
+		public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId)
+		{
 			return GetXmlFromPanel(panelId, name, menuId, panelId, true);
 		}
 		
-	public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId, 
-		Guid instanceId, bool forceHideNavigationPanel)
-	{
+		public static XmlDocument GetXmlFromPanel(Guid panelId, string name, Guid menuId, 
+            Guid instanceId, bool forceHideNavigationPanel)
+		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
 			PanelControlSet panel = persistence.SchemaProvider.RetrieveInstance(
@@ -138,11 +138,11 @@ public class FormXmlBuilder
 			return GetXml(form, gen.CreateDataSet(panel.DataEntity), name, true, menuId, false, "").Document;
 		}
 
-	internal static XmlDocument GetWindowBaseXml(
-		string name, Guid menuId, int autoRefreshInterval, 
-		bool refreshOnFocus, bool autoSaveOnListRecordChange,
-		bool requestSaveAfterUpdate)
-	{
+		internal static XmlDocument GetWindowBaseXml(
+			string name, Guid menuId, int autoRefreshInterval, 
+            bool refreshOnFocus, bool autoSaveOnListRecordChange,
+            bool requestSaveAfterUpdate)
+		{
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml("<Window xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"/>");
 			// <Window>
@@ -185,8 +185,8 @@ public class FormXmlBuilder
 			return doc;
 		}
 
-	private static XmlDocument GetWorkflowFinishedXml(string name, Guid menuId, string message)
-	{
+		private static XmlDocument GetWorkflowFinishedXml(string name, Guid menuId, string message)
+		{
 			XmlDocument doc = GetWindowBaseXml(name, menuId, 0, false, false, false);
 			XmlElement windowElement = WindowElement(doc);
 			XmlElement uiRootElement = UIRootElement(windowElement);
@@ -201,16 +201,16 @@ public class FormXmlBuilder
 			return doc;
 		}
 
-	public static XmlOutput GetXml(FormControlSet item, string name, bool isPreloaded, Guid menuId, DataStructure structure, bool forceReadOnly, string confirmSelectionChangeEntity)
-	{
+		public static XmlOutput GetXml(FormControlSet item, string name, bool isPreloaded, Guid menuId, DataStructure structure, bool forceReadOnly, string confirmSelectionChangeEntity)
+		{
 			DatasetGenerator gen = new DatasetGenerator(true);
 			return GetXml(item, gen.CreateDataSet(structure), 
 				name, isPreloaded, menuId, 
 				forceReadOnly, confirmSelectionChangeEntity, structure);
 		}
 
-	public static XmlElement CreateDataSourceField(XmlDocument doc, string name, int index)
-	{
+		public static XmlElement CreateDataSourceField(XmlDocument doc, string name, int index)
+		{
 			XmlElement dataSourceFieldElement = doc.CreateElement("Field");
 			dataSourceFieldElement.SetAttribute("Name", name);
 			dataSourceFieldElement.SetAttribute("Index", index.ToString());
@@ -218,8 +218,8 @@ public class FormXmlBuilder
 			return dataSourceFieldElement;
 		}
 
-	private static void RenderDataSources(XmlElement windowElement, Hashtable dataSources)
-	{
+		private static void RenderDataSources(XmlElement windowElement, Hashtable dataSources)
+		{
 			XmlElement dataSourcesElement = DataSourcesElement(windowElement);
 
 			foreach(DictionaryEntry entry in dataSources)
@@ -248,8 +248,8 @@ public class FormXmlBuilder
 			}
 		}
 
-	public static string DatabaseTableName(DataTable table)
-	{
+		public static string DatabaseTableName(DataTable table)
+		{
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			TableMappingItem tableMapping = ps.SchemaProvider.RetrieveInstance(typeof(TableMappingItem), new ModelElementKey((Guid)table.ExtendedProperties["EntityId"])) as TableMappingItem;
 			if(tableMapping != null)
@@ -262,9 +262,9 @@ public class FormXmlBuilder
 			}
 		}
 
-	public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, 
-		string identifier, string lookupCacheKey, string dataStructureEntityId)
-	{
+		public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, 
+		    string identifier, string lookupCacheKey, string dataStructureEntityId)
+		{
 			XmlElement dataSourceElement = dataSourcesElement.OwnerDocument.CreateElement("DataSource");
 			dataSourcesElement.AppendChild(dataSourceElement);
 
@@ -282,50 +282,63 @@ public class FormXmlBuilder
 			return dataSourceElement;
 		}
 
-	internal static XmlElement WindowElement(XmlDocument doc)
-	{
+		internal static XmlElement WindowElement(XmlDocument doc)
+		{
 			return doc.FirstChild as XmlElement;
 		}
 
-	internal static XmlElement UIRootElement(XmlElement windowElement)
-	{
+		internal static XmlElement UIRootElement(XmlElement windowElement)
+		{
 			return windowElement.SelectSingleNode("UIRoot") as XmlElement;
 		}
 
-	internal static XmlElement DataSourcesElement(XmlElement windowElement)
-	{
+		internal static XmlElement DataSourcesElement(XmlElement windowElement)
+		{
 			return windowElement.SelectSingleNode("DataSources") as XmlElement;
 		}
 
-	internal static XmlElement ComponentBindingsElement(XmlElement windowElement)
-	{
+		internal static XmlElement ComponentBindingsElement(XmlElement windowElement)
+		{
 			return windowElement.SelectSingleNode("ComponentBindings") as XmlElement;
 		}
 
-	public static XmlDocument GetXml(WorkQueueClass wqc, DataSet dataset, string name, Guid queueId)
-	{
+		public static XmlDocument GetXml(WorkQueueClass wqc, DataSet dataset, string name, Guid queueId)
+		{
 			Hashtable dataSources = new Hashtable();
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 			DataTable table = dataset.Tables["WorkQueueEntry"];
+            var parameterService = ServiceManager.Services.GetService<IParameterService>();
 
-			QueryParameterCollection pms = new QueryParameterCollection();
+            QueryParameterCollection pms = new QueryParameterCollection();
 			pms.Add(new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId));
 			DataSet commands = core.DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
 
-			ArrayList commandRows = new ArrayList();
+            var commandRows = new List<DataRow>();
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-			foreach (DataRow cmdRow in commands.Tables["WorkQueueCommand"].Rows)
-			{
-				if (cmdRow.IsNull("Roles") || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)cmdRow["Roles"]))
-				{
-					continue;
-				}
-				commandRows.Add(cmdRow);
-			}
-			bool showCheckboxes = commandRows.Count > 0;
+            foreach (DataRow cmdRow in commands.Tables["WorkQueueCommand"].Rows)
+            {
+                if (cmdRow.IsNull("Roles") || !auth.Authorize(SecurityManager.CurrentPrincipal, (string)cmdRow["Roles"]))
+                {
+                    continue;
+                }
+                commandRows.Add(cmdRow);
+            }
 
-			// Window
-			XmlDocument doc = GetWindowBaseXml(
+            bool showCheckboxes = commandRows.Any(cmdRow =>
+            {
+				if ((Guid)cmdRow["refWorkQueueCommandTypeId"] == (Guid)parameterService.GetParameterValue("WorkQueueCommandType_WorkQueueClassCommand"))
+				{
+					WorkQueueWorkflowCommand cmd = wqc.GetCommand((string)cmdRow["Command"]);
+					return cmd.Mode == PanelActionMode.MultipleCheckboxes;
+				}
+				else
+				{
+					return true;
+				}
+            });
+
+            // Window
+            XmlDocument doc = GetWindowBaseXml(
 				name, Guid.Empty, settings.WorkQueueListRefreshPeriod, false, false, false);
 			XmlElement windowElement = WindowElement(doc);
 			XmlElement uiRootElement = UIRootElement(windowElement);
@@ -460,8 +473,6 @@ public class FormXmlBuilder
 				CreateComponentBinding(doc, bindingsElement, queueId.ToString(), "Id", "WorkQueueEntry", "65DF44F9-C050-4554-AD9A-896445314279", "Id", "WorkQueueEntry", false);
 			}
 
-			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
 			foreach(DataRow cmdRow in commandRows)
 			{
 				Hashtable cmdParams = new Hashtable();
@@ -506,22 +517,22 @@ public class FormXmlBuilder
 			return doc;
 		}
 
-	internal static void AddColumn(DataStructureEntity entity, string columnName,
-		ref DataStructureColumn memoColumn, ref int lastPos,
-		XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
-		string formatPattern)
-	{
+		internal static void AddColumn(DataStructureEntity entity, string columnName,
+           ref DataStructureColumn memoColumn, ref int lastPos,
+            XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
+            string formatPattern)
+        {
             AddColumn(entity, columnName, ref memoColumn,
                 ref lastPos, propertiesElement, propertyNamesElement, table, formatPattern, 
                 "", true, null, null);
         }
 
-	private static void AddColumn(DataStructureEntity entity, string columnName,
-		ref DataStructureColumn memoColumn, ref int lastPos,
-		XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
-		string formatPattern, string label, bool readOnly, string lookupParameterName,
-		string lookupParameterValue)
-	{
+        private static void AddColumn(DataStructureEntity entity, string columnName,
+	        ref DataStructureColumn memoColumn, ref int lastPos,
+			XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
+			string formatPattern, string label, bool readOnly, string lookupParameterName,
+            string lookupParameterValue)
+		{
 			UIStyle style = null;
             SchemaService schema = ServiceManager.Services.GetService(
                 typeof(SchemaService)) as SchemaService;
@@ -618,8 +629,8 @@ public class FormXmlBuilder
 			lastPos += height + GENERIC_FIELD_VERTICAL_SPACE;
 		}
 
-	public static XmlDocument GetXml(SimpleModelData simpleModel, DataSet dataset, string name)
-	{
+        public static XmlDocument GetXml(SimpleModelData simpleModel, DataSet dataset, string name)
+        {
             Hashtable dataSources = new Hashtable();
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
             DataTable table = dataset.Tables["OrigamRecord"];
@@ -752,8 +763,8 @@ public class FormXmlBuilder
             return doc;
         }
 
-	private static string GetMember(SimpleModelData.OrigamEntityRow entityRow, Guid memberId)
-	{
+        private static string GetMember(SimpleModelData.OrigamEntityRow entityRow, Guid memberId)
+        {
             foreach (var item in entityRow.GetOrigamFieldRows())
             {
                 if (item.Id.Equals(memberId))
@@ -764,8 +775,8 @@ public class FormXmlBuilder
             throw new ArgumentOutOfRangeException("memberId", memberId, "Member not found");
         }
 
-	public static XmlDocument GetXml(string dashboardViewConfig, string name, Guid menuId, XmlDocument dashboardViews)
-	{
+        public static XmlDocument GetXml(string dashboardViewConfig, string name, Guid menuId, XmlDocument dashboardViews)
+		{
 			XmlDocument configXml = new XmlDocument();
 			configXml.LoadXml(dashboardViewConfig);
 
@@ -820,10 +831,10 @@ public class FormXmlBuilder
 			return doc;
 		}
 
-	public static XmlOutput GetXml(FormControlSet item, DataSet dataset, 
-		string name, bool isPreloaded, Guid menuId, bool forceReadOnly, 
-		string confirmSelectionChangeEntity, DataStructure structure=null)
-	{
+		public static XmlOutput GetXml(FormControlSet item, DataSet dataset, 
+			string name, bool isPreloaded, Guid menuId, bool forceReadOnly, 
+			string confirmSelectionChangeEntity, DataStructure structure=null)
+		{
 			int controlCounter = 0;
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			WorkflowReferenceMenuItem wfmi = ps.SchemaProvider.RetrieveInstance(typeof(WorkflowReferenceMenuItem), new ModelElementKey(menuId)) as WorkflowReferenceMenuItem;
@@ -1013,8 +1024,8 @@ public class FormXmlBuilder
 			return xmlOutput;
 		}
 
-	private static XmlElement FindComponentByInstanceId(XmlDocument doc, string instanceId)
-	{
+		private static XmlElement FindComponentByInstanceId(XmlDocument doc, string instanceId)
+		{
 			XmlElement result = (XmlElement)doc.SelectSingleNode("//*[@ModelInstanceId='" + instanceId + "']");
 
 			if (result == null)
@@ -1025,24 +1036,24 @@ public class FormXmlBuilder
 			return result;
 		}
 
-	private static string DataMemberByGridInstanceId(XmlDocument doc, string instanceId)
-	{
+		private static string DataMemberByGridInstanceId(XmlDocument doc, string instanceId)
+		{
 			XmlElement parentGrid = FindComponentByInstanceId(doc, instanceId);
 
 			return parentGrid.GetAttribute("DataMember");
 		}
 
-	private static string EntityByGridInstanceId(XmlDocument doc, string instanceId)
-	{
+		private static string EntityByGridInstanceId(XmlDocument doc, string instanceId)
+		{
 			XmlElement parentGrid = FindComponentByInstanceId(doc, instanceId);
 
 			return parentGrid.GetAttribute("Entity");
 		}
 
-	private static void CreateComponentBinding(XmlDocument doc, XmlElement bindingsElement, 
-		string parentId, string parentProperty, string parentEntity, 
-		string childId, string childProperty, string childEntity, bool isChildParameter)
-	{
+		private static void CreateComponentBinding(XmlDocument doc, XmlElement bindingsElement, 
+			string parentId, string parentProperty, string parentEntity, 
+			string childId, string childProperty, string childEntity, bool isChildParameter)
+		{
 			XmlElement binding = doc.CreateElement("Binding");
 			binding.SetAttribute("ParentId", parentId);
 			binding.SetAttribute("ParentProperty", parentProperty);
@@ -1072,8 +1083,8 @@ public class FormXmlBuilder
 			bindingsElement.AppendChild(binding);
 		}
 
-	private static XmlElement FindParentGridInParentEntity(DataSet dataset, string dataMember, XmlNodeList grids)
-	{
+		private static XmlElement FindParentGridInParentEntity(DataSet dataset, string dataMember, XmlNodeList grids)
+		{
 //			DataTable gridTable = dataset.Tables[entity];
 //			if(gridTable.ParentRelations.Count > 0)
 //			{
@@ -1106,10 +1117,10 @@ public class FormXmlBuilder
 			return null;
 		}
 
-	private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
-		DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
-		bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null, string parentTabIndex = null)
-	{
+		private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
+			DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
+			bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null, string parentTabIndex = null)
+		{
 			ControlSetItem control = item as ControlSetItem;
 			IParameterService parameterService = ServiceManager.Services.GetService (typeof(IParameterService)) as IParameterService;
 
@@ -1382,8 +1393,8 @@ public class FormXmlBuilder
 			return true;
 		}
 
-	private static AbstractSchemaItem GentControlItem(ControlSetItem control)
-	{
+		private static AbstractSchemaItem GentControlItem(ControlSetItem control)
+		{
 			if (control.ControlItem.Ancestors.Count > 1)
 			{
 				throw new Exception(
@@ -1395,17 +1406,17 @@ public class FormXmlBuilder
 				: control.ControlItem;
 		}
 
-	private static void AddDynamicProperties(XmlElement parentNode, UIElementRenderData renderData)
-	{
+		private static void AddDynamicProperties(XmlElement parentNode, UIElementRenderData renderData)
+		{
 			foreach (var pair in renderData.DynamicProperties)
 			{
 				parentNode.SetAttribute(pair.Key, pair.Value);
 			}
 		}
 
-	private static void RenderActions(IParameterService parameterService, 
-		ArrayList validActions, XmlElement actionsElement, Hashtable inputParameters)
-	{
+		private static void RenderActions(IParameterService parameterService, 
+            ArrayList validActions, XmlElement actionsElement, Hashtable inputParameters)
+        {
             // render action buttons
             foreach (EntityUIAction action in validActions)
             {
@@ -1456,8 +1467,8 @@ public class FormXmlBuilder
             }
         }
 
-	private static void SetUserConfig(XmlDocument doc, XmlNode parentNode, string defaultConfiguration, Guid objectId, Guid workflowId)
-	{
+		private static void SetUserConfig(XmlDocument doc, XmlNode parentNode, string defaultConfiguration, Guid objectId, Guid workflowId)
+		{
             UserProfile profile = SecurityManager.CurrentUserProfile();
 			DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(objectId, workflowId, profile.Id);
 			
@@ -1490,10 +1501,10 @@ public class FormXmlBuilder
 			}
 		}
 
-	private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
-		XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
-		bool processContainers, bool processEditControls, bool forceReadOnly, string parentTabIndex = null)
-	{
+		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
+			XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
+			bool processContainers, bool processEditControls, bool forceReadOnly, string parentTabIndex = null)
+		{
 
 			if (string.IsNullOrWhiteSpace(parentTabIndex))
 			{
@@ -1862,13 +1873,13 @@ public class FormXmlBuilder
 				parentElement.RemoveChild(formExclusiveControlsElement);
 			}
 		}
-	/// <summary>
-	/// https://docs.microsoft.com/cs-cz/dotnet/api/system.windows.forms.dockstyle?view=netframework-4.7.2
-	/// </summary>
-	/// <param name="intVal"></param>
-	/// <returns></returns>
-	private static string ToWinFormsDockStyle(int intVal)
-	{
+        /// <summary>
+        /// https://docs.microsoft.com/cs-cz/dotnet/api/system.windows.forms.dockstyle?view=netframework-4.7.2
+        /// </summary>
+        /// <param name="intVal"></param>
+        /// <returns></returns>
+	    private static string ToWinFormsDockStyle(int intVal)
+	    {
 	        switch (intVal)
 	        {
                 case 2: return "Bottom";
@@ -1881,8 +1892,8 @@ public class FormXmlBuilder
             }
 	    }
 
-	internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
-	{
+	    internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
+		{
 			string entityName = table.TableName;
 			if(isIndependent)
 			{
@@ -1893,4 +1904,5 @@ public class FormXmlBuilder
 
 			return entityName;
 		}
+	}
 }

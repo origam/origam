@@ -35,67 +35,67 @@ using System.IO;
 using System.Text;
 using System.Collections;
 
-namespace OpenPOP.MIMEParser;
-
-/// <summary>
-/// OpenPOP.MIMEParser.TNEFParser
-/// </summary>
-public class TNEFParser
+namespace OpenPOP.MIMEParser
 {
-	#region Member Variables
-	private const int TNEF_SIGNATURE  =0x223e9f78;
-	private const int LVL_MESSAGE     =0x01;
-	private const int LVL_ATTACHMENT  =0x02;
-	private const int _string			=0x00010000;
-	private const int _BYTE			=0x00060000;
-	private const int _WORD			=0x00070000;
-	private const int _DWORD			=0x00080000;
-
-	private const int AVERSION      =(_DWORD|0x9006);
-	private const int AMCLASS       =(_WORD|0x8008);
-	private const int ASUBJECT      =(_DWORD|0x8004);
-	private const int AFILENAME     =(_string|0x8010);
-	private const int ATTACHDATA    =(_BYTE|0x800f);
-
-	private Stream fsTNEF;
-	private Hashtable _attachments=new Hashtable();
-	private TNEFAttachment _attachment=null;
-
-	private bool _verbose = false;
-	//private string _logFile="OpenPOP.TNEF.log";
-	private string _basePath=null;
-	private int _skipSignature = 0;
-	private bool _searchSignature = false;
-	private long _offset = 0;
-	private long _fileLength=0;
-	private string _tnefFile="";
-	private string strSubject;
-	#endregion
-
-	#region Properties
-	//		public string LogFilePath
-	//		{
-	//			get{return _logFile;}
-	//			set{_logFile=value;}
-	//		}
-
-	public string TNEFFile
+	/// <summary>
+	/// OpenPOP.MIMEParser.TNEFParser
+	/// </summary>
+	public class TNEFParser
 	{
-		get{return _tnefFile;}
-		set{_tnefFile=value;}
-	}
+		#region Member Variables
+		private const int TNEF_SIGNATURE  =0x223e9f78;
+		private const int LVL_MESSAGE     =0x01;
+		private const int LVL_ATTACHMENT  =0x02;
+		private const int _string			=0x00010000;
+		private const int _BYTE			=0x00060000;
+		private const int _WORD			=0x00070000;
+		private const int _DWORD			=0x00080000;
 
-	public bool Verbose
-	{
-		get{return _verbose;}
-		set{_verbose=value;}
-	}
+		private const int AVERSION      =(_DWORD|0x9006);
+		private const int AMCLASS       =(_WORD|0x8008);
+		private const int ASUBJECT      =(_DWORD|0x8004);
+		private const int AFILENAME     =(_string|0x8010);
+		private const int ATTACHDATA    =(_BYTE|0x800f);
 
-	public string BasePath
-	{
-		get{return _basePath;}
-		set
+		private Stream fsTNEF;
+		private Hashtable _attachments=new Hashtable();
+		private TNEFAttachment _attachment=null;
+
+		private bool _verbose = false;
+		//private string _logFile="OpenPOP.TNEF.log";
+		private string _basePath=null;
+		private int _skipSignature = 0;
+		private bool _searchSignature = false;
+		private long _offset = 0;
+		private long _fileLength=0;
+		private string _tnefFile="";
+		private string strSubject;
+		#endregion
+
+		#region Properties
+		//		public string LogFilePath
+		//		{
+		//			get{return _logFile;}
+		//			set{_logFile=value;}
+		//		}
+
+		public string TNEFFile
 		{
+			get{return _tnefFile;}
+			set{_tnefFile=value;}
+		}
+
+		public bool Verbose
+		{
+			get{return _verbose;}
+			set{_verbose=value;}
+		}
+
+		public string BasePath
+		{
+			get{return _basePath;}
+			set
+			{
 				try
 				{
 					if(value.EndsWith("\\"))
@@ -107,40 +107,40 @@ public class TNEFParser
 				{
 				}
 			}
-	}
+		}
 
-	public int SkipSignature
-	{
-		get{return _skipSignature;}
-		set{_skipSignature=value;}
-	}
+		public int SkipSignature
+		{
+			get{return _skipSignature;}
+			set{_skipSignature=value;}
+		}
 
-	public bool SearchSignature
-	{
-		get{return _searchSignature;}
-		set{_searchSignature=value;}
-	}
+		public bool SearchSignature
+		{
+			get{return _searchSignature;}
+			set{_searchSignature=value;}
+		}
 
-	public long Offset
-	{
-		get{return _offset;}
-		set{_offset=value;}
-	}
-	#endregion
+		public long Offset
+		{
+			get{return _offset;}
+			set{_offset=value;}
+		}
+		#endregion
 
 
-	private int GETINT32(byte[] p)
-	{
+		private int GETINT32(byte[] p)
+		{
 			return (p[0]+(p[1]<<8)+(p[2]<<16)+(p[3]<<24));
 		}
 
-	private short GETINT16(byte[] p)
-	{
+		private short GETINT16(byte[] p)
+		{
 			return (short)(p[0]+(p[1]<<8));
 		}
 
-	private int geti32 () 
-	{
+		private int geti32 () 
+		{
 			byte[] buf=new byte[4];
 
 			if(StreamReadBytes(buf,4)!=1)
@@ -151,8 +151,8 @@ public class TNEFParser
 			return GETINT32(buf);
 		}
 
-	private int geti16 () 
-	{
+		private int geti16 () 
+		{
 			byte[] buf=new byte[2];
 
 			if(StreamReadBytes(buf,2)!=1)
@@ -163,8 +163,8 @@ public class TNEFParser
 			return GETINT16(buf);
 		}
 
-	private int geti8 () 
-	{
+		private int geti8 () 
+		{
 			byte[] buf=new byte[1];
 
 			if(StreamReadBytes(buf,1)!=1)
@@ -175,8 +175,8 @@ public class TNEFParser
 			return (int)buf[0];
 		}
 
-	private int StreamReadBytes(byte[] buffer, int size)
-	{
+		private int StreamReadBytes(byte[] buffer, int size)
+		{
 			try
 			{
 				if(fsTNEF.Position+size<=_fileLength)					
@@ -194,8 +194,8 @@ public class TNEFParser
 			}
 		}
 
-	private void CloseTNEFStream()
-	{
+		private void CloseTNEFStream()
+		{
 			try
 			{
 				fsTNEF.Close();
@@ -206,13 +206,13 @@ public class TNEFParser
 			}
 		}
 
-	/// <summary>
-	/// Open the MS-TNEF stream from file
-	/// </summary>
-	/// <param name="strFile">MS-TNEF file</param>
-	/// <returns></returns>
-	public bool OpenTNEFStream(string strFile)
-	{
+		/// <summary>
+		/// Open the MS-TNEF stream from file
+		/// </summary>
+		/// <param name="strFile">MS-TNEF file</param>
+		/// <returns></returns>
+		public bool OpenTNEFStream(string strFile)
+		{
 			//Utility.LogFilePath=LogFilePath;
 
 			TNEFFile=strFile;
@@ -231,13 +231,13 @@ public class TNEFParser
 			}
 		}
 
-	/// <summary>
-	/// Open the MS-TNEF stream from bytes
-	/// </summary>
-	/// <param name="bytContents">MS-TNEF bytes</param>
-	/// <returns></returns>
-	public bool OpenTNEFStream(byte[] bytContents)
-	{
+		/// <summary>
+		/// Open the MS-TNEF stream from bytes
+		/// </summary>
+		/// <param name="bytContents">MS-TNEF bytes</param>
+		/// <returns></returns>
+		public bool OpenTNEFStream(byte[] bytContents)
+		{
 			//Utility.LogFilePath=LogFilePath;
 
 			try
@@ -253,12 +253,12 @@ public class TNEFParser
 			}
 		}
 
-	/// <summary>
-	/// Find the MS-TNEF signature
-	/// </summary>
-	/// <returns>true if found, vice versa</returns>
-	public bool FindSignature()
-	{
+		/// <summary>
+		/// Find the MS-TNEF signature
+		/// </summary>
+		/// <returns>true if found, vice versa</returns>
+		public bool FindSignature()
+		{
 			bool ret=false;
 			long lpos=0;
 
@@ -295,8 +295,8 @@ public class TNEFParser
 			return ret;
 		}
 
-	private void decode_attribute (int d) 
-	{
+		private void decode_attribute (int d) 
+		{
 			byte[] buf=new byte[4000];
 			int len;
 			int v;
@@ -353,8 +353,8 @@ public class TNEFParser
 			geti16();     /* checksum */
 		}
 
-	private void decode_message() 
-	{  
+		private void decode_message() 
+		{  
 			int d;
 
 			d = geti32();
@@ -362,8 +362,8 @@ public class TNEFParser
 			decode_attribute(d);
 		}
 
-	private void decode_attachment() 
-	{  
+		private void decode_attachment() 
+		{  
 			byte[] buf=new byte[4096];
 			int d;
 			int len;
@@ -441,21 +441,21 @@ public class TNEFParser
 			}
 		}
 
-	/// <summary>
-	/// decoded attachments
-	/// </summary>
-	/// <returns>attachment array</returns>
-	public Hashtable Attachments()
-	{
+		/// <summary>
+		/// decoded attachments
+		/// </summary>
+		/// <returns>attachment array</returns>
+		public Hashtable Attachments()
+		{
 			return _attachments;
 		}
 
-	/// <summary>
-	/// save all decoded attachments to files
-	/// </summary>
-	/// <returns>true is succeded, vice versa</returns>
-	public bool SaveAttachments()
-	{
+		/// <summary>
+		/// save all decoded attachments to files
+		/// </summary>
+		/// <returns>true is succeded, vice versa</returns>
+		public bool SaveAttachments()
+		{
 			bool blnRet=false;
 			IDictionaryEnumerator ideAttachments=_attachments.GetEnumerator();
 
@@ -467,13 +467,13 @@ public class TNEFParser
 			return blnRet;
 		}
 
-	/// <summary>
-	/// save a decoded attachment to file
-	/// </summary>
-	/// <param name="attachment">decoded attachment</param>
-	/// <returns>true is succeded, vice versa</returns>
-	public bool SaveAttachment(TNEFAttachment attachment)
-	{
+		/// <summary>
+		/// save a decoded attachment to file
+		/// </summary>
+		/// <param name="attachment">decoded attachment</param>
+		/// <returns>true is succeded, vice versa</returns>
+		public bool SaveAttachment(TNEFAttachment attachment)
+		{
 			try
 			{
 				string strOutFile=BasePath+attachment.FileName;
@@ -495,12 +495,12 @@ public class TNEFParser
 			}
 		}
 
-	/// <summary>
-	/// parse MS-TNEF stream
-	/// </summary>
-	/// <returns>true is succeded, vice versa</returns>
-	public bool Parse()
-	{
+		/// <summary>
+		/// parse MS-TNEF stream
+		/// </summary>
+		/// <returns>true is succeded, vice versa</returns>
+		public bool Parse()
+		{
 			byte[] buf=new byte[4];
 			int d;
 
@@ -549,38 +549,40 @@ public class TNEFParser
 				return false;
 		}
 
-	private void PrintResult(string strResult, params object[] strContent)
-	{
+		private void PrintResult(string strResult, params object[] strContent)
+		{
 			string strRet=string.Format(strResult,strContent);
 			if (Verbose) 
 				Utility.LogError(strRet);
 		}
 
-	~TNEFParser()
-	{
+		~TNEFParser()
+		{
 			_attachments=null;
 			CloseTNEFStream();
 		}
 
-	public TNEFParser()
-	{
+		public TNEFParser()
+		{
 		}
 
-	/// <summary>
-	/// open MS-TNEF stream from a file
-	/// </summary>
-	/// <param name="strFile">MS-TNEF file</param>
-	public TNEFParser(string strFile)
-	{
+		/// <summary>
+		/// open MS-TNEF stream from a file
+		/// </summary>
+		/// <param name="strFile">MS-TNEF file</param>
+		public TNEFParser(string strFile)
+		{
 			OpenTNEFStream(strFile);
 		}	
 
-	/// <summary>
-	/// open MS-TNEF stream from bytes
-	/// </summary>
-	/// <param name="bytContents">MS-TNEF bytes</param>
-	public TNEFParser(byte[] bytContents)
-	{
+		/// <summary>
+		/// open MS-TNEF stream from bytes
+		/// </summary>
+		/// <param name="bytContents">MS-TNEF bytes</param>
+		public TNEFParser(byte[] bytContents)
+		{
 			OpenTNEFStream(bytContents);
 		}
+	}
 }
+

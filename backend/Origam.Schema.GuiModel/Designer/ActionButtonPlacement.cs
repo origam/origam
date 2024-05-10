@@ -19,14 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for ActionButtonPlacement.
-/// </summary>
-public enum ActionButtonPlacement
+namespace Origam.Schema.GuiModel
 {
-	Toolbar = 0,
-	PanelHeader = 1,
-	PanelMenu = 2
+	/// <summary>
+	/// Summary description for ActionButtonPlacement.
+	/// </summary>
+	public enum ActionButtonPlacement
+	{
+		Toolbar = 0,
+		PanelHeader = 1,
+		PanelMenu = 2
+	}
 }

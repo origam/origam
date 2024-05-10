@@ -24,24 +24,24 @@ using System.Collections;
 using Origam.Schema.GuiModel;
 using Origam.Service.Core;
 
-namespace Origam.BI.CrystalReports;
-
-/// <summary>
-/// Summary description for CrystalReportService.
-/// </summary>
-public class CrystalReportService : IReportService
+namespace Origam.BI.CrystalReports
 {
-	CrystalReportHelper _helper = new CrystalReportHelper();
-
-	public CrystalReportService()
+	/// <summary>
+	/// Summary description for CrystalReportService.
+	/// </summary>
+	public class CrystalReportService : IReportService
 	{
+		CrystalReportHelper _helper = new CrystalReportHelper();
+
+		public CrystalReportService()
+		{
 		}
 
-	#region IReportService Members
+		#region IReportService Members
 
-	public void PrintReport(Guid reportId, IXmlContainer data, 
-		string printerName, int copies, Hashtable parameters)
-	{
+		public void PrintReport(Guid reportId, IXmlContainer data, 
+			string printerName, int copies, Hashtable parameters)
+		{
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 			var xmlDataDoc = ReportHelper
 				.LoadOrUseReportData(report, data, parameters, null);
@@ -56,9 +56,9 @@ public class CrystalReportService : IReportService
 			}
 		}
 
-	public object GetReport(Guid reportId, IXmlContainer data, 
-		string format, Hashtable parameters, string dbTransaction)
-	{
+		public object GetReport(Guid reportId, IXmlContainer data, 
+			string format, Hashtable parameters, string dbTransaction)
+		{
 			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 			var xmlDataDoc = ReportHelper
 				.LoadOrUseReportData(report, data, parameters, dbTransaction);
@@ -72,15 +72,15 @@ public class CrystalReportService : IReportService
 					parameters, format);
 			}
 		}
-	public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-	{
+        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        {
             // do nothing unless we need to trace
         }
 
-	public string PrepareExternalReportViewer(Guid reportId,
-		IXmlContainer data, string format, Hashtable parameters,
-		string dbTransaction)
-	{
+        public string PrepareExternalReportViewer(Guid reportId,
+			IXmlContainer data, string format, Hashtable parameters,
+			string dbTransaction)
+        {
             var report = ReportHelper.GetReportElement<CrystalReport>(
 				reportId);
             var xmlDataDoc = ReportHelper
@@ -95,5 +95,6 @@ public class CrystalReportService : IReportService
                     parameters, DataReportExportFormatType.RPT.ToString());
             }
         }
-	#endregion
+        #endregion
+    }
 }

@@ -21,89 +21,90 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Configuration;
 
-namespace OrigamArchitect;
-
-public class NewProjectWizardSettings : ApplicationSettingsBase
+namespace OrigamArchitect
 {
-    [UserScopedSetting()]
-    [DefaultSettingValue(@".")]
-    public string DatabaseServerName
+    public class NewProjectWizardSettings : ApplicationSettingsBase
     {
-        get
+        [UserScopedSetting()]
+        [DefaultSettingValue(@".")]
+        public string DatabaseServerName
         {
+            get
+            {
                 return (string)this["DatabaseServerName"];
             }
-        set
-        {
+            set
+            {
                 this["DatabaseServerName"] = value;
             }
-    }
+        }
 
-    [UserScopedSetting()]
-    [DefaultSettingValue("c:\\OrigamProjects")]
-    public string SourcesFolder
-    {
-        get
+        [UserScopedSetting()]
+		[DefaultSettingValue("c:\\OrigamProjects")]
+        public string SourcesFolder
         {
+            get
+            {
                 return (string)this["SourcesFolder"];
             }
-        set
-        {
+            set
+            {
                 this["SourcesFolder"] = value;
             }
-    }
+        }
 
-    [UserScopedSetting()]
-    [DefaultSettingValue(@"C:\inetpub")]
-    public string BinFolder
-    {
-        get
+        [UserScopedSetting()]
+        [DefaultSettingValue(@"C:\inetpub")]
+        public string BinFolder
         {
+            get
+            {
                 return (string)this["BinFolder"];
             }
-        set
-        {
+            set
+            {
                 this["BinFolder"] = value;
             }
-    }
+        }
 
-    [UserScopedSetting()]
-    [DefaultSettingValue("Microsoft Sql Server")]
-    public string DatabaseTypeText
-    {
-        get
+        [UserScopedSetting()]
+        [DefaultSettingValue("Microsoft Sql Server")]
+        public string DatabaseTypeText
         {
+            get
+            {
                 return (string)this["DatabaseTypeText"];
             }
-        set
-        {
+            set
+            {
                 this["DatabaseTypeText"] = value;
             }
-    }
-    [UserScopedSetting()]
-    [DefaultSettingValue("http://localhost:2375")]
-    public string DockerApiAdress
-    {
-        get
+        }
+        [UserScopedSetting()]
+        [DefaultSettingValue("http://localhost:2375")]
+        public string DockerApiAdress
         {
+            get
+            {
                 return (string)this["DockerApiAdress"];
             }
-        set
-        {
+            set
+            {
                 this["DockerApiAdress"] = value;
             }
-    }
-    [UserScopedSetting()]
-    [DefaultSettingValue("")]
-    public string DockerSourceFolder
-    {
-        get
+        }
+        [UserScopedSetting()]
+        [DefaultSettingValue("")]
+        public string DockerSourceFolder
         {
+            get
+            {
                 return (string)this["DockerSourceFolder"];
             }
-        set
-        {
+            set
+            {
                 this["DockerSourceFolder"] = value;
             }
+        }
     }
 }

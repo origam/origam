@@ -22,29 +22,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Diagnostics;
 
-namespace Origam.Workflow;
-
-public class OperatingSystemServiceAgent : AbstractServiceAgent
+namespace Origam.Workflow
 {
-	private static readonly log4net.ILog log 
-		= log4net.LogManager.GetLogger(
-			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-	#region IServiceAgent Members
-
-	private object _result;
-	public override object Result
+	public class OperatingSystemServiceAgent : AbstractServiceAgent
 	{
-		get
+		private static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		#region IServiceAgent Members
+
+		private object _result;
+		public override object Result
 		{
+			get
+			{
 				object temp = _result;
 				_result = null;
 				return temp;
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
 			switch(this.MethodName)
 			{
 				case "StartProcess":
@@ -106,5 +106,6 @@ public class OperatingSystemServiceAgent : AbstractServiceAgent
                         ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

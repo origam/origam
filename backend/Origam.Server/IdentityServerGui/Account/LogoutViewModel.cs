@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-namespace Origam.Server.IdentityServerGui.Account;
-
-public class LogoutViewModel : LogoutInputModel
+namespace Origam.Server.IdentityServerGui.Account
 {
-    public bool ShowLogoutPrompt { get; set; } = true;
+    public class LogoutViewModel : LogoutInputModel
+    {
+        public bool ShowLogoutPrompt { get; set; } = true;
+    }
 }

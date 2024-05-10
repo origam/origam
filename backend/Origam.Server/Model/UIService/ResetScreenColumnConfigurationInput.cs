@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Origam.Server.Model.UIService;
-
-public class ResetScreenColumnConfigurationInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid ObjectInstanceId { get; set; }
+    public class ResetScreenColumnConfigurationInput
+    {
+        public Guid ObjectInstanceId { get; set; }
+    }
 }

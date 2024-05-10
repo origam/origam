@@ -26,15 +26,15 @@ using System.Linq;
 using System.Text;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation.Builders;
-
-public class DockerBuilder : AbstractBuilder
+namespace Origam.ProjectAutomation.Builders
 {
-    public static readonly string DockerFolderName = "Docker";
-    public override string Name => "Create Docker run script";
-    private string newProjectFolder;
-    public override void Execute(Project project)
+    public class DockerBuilder : AbstractBuilder
     {
+        public static readonly string DockerFolderName = "Docker";
+        public override string Name => "Create Docker run script";
+        private string newProjectFolder;
+        public override void Execute(Project project)
+        {
             newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
             if (Directory.Exists(newProjectFolder))
             {
@@ -48,8 +48,8 @@ public class DockerBuilder : AbstractBuilder
                 ProcessCmdFile(project);
             }
         }
-    private void ProcessCmdFile(Project project)
-    {
+        private void ProcessCmdFile(Project project)
+        {
             string cmdFile = Path.Combine(newProjectFolder, project.Name + ".cmd");
             if (File.Exists(cmdFile))
             {
@@ -85,8 +85,8 @@ public class DockerBuilder : AbstractBuilder
             }
         }
 
-    private string FillDockerParameter(Project project)
-    {
+        private string FillDockerParameter(Project project)
+        {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("docker run ");
             stringBuilder.AppendFormat("--env-file {0} ", project.DockerEnvPath);
@@ -98,8 +98,8 @@ public class DockerBuilder : AbstractBuilder
             return stringBuilder.ToString();
         }
 
-    private void ProcessEnvironmentFile(Project project)
-    {
+        private void ProcessEnvironmentFile(Project project)
+        {
             List<string> dockerParameters = FillDockerParameters();
             List<string> dockerCustomAssetsParameters = FillCustomAssetsParameters();
             string customAssetsDirectory = Path.Combine(project.SourcesFolder, "customAssets");
@@ -131,8 +131,8 @@ public class DockerBuilder : AbstractBuilder
             File.WriteAllLines(project.DockerEnvPath, lines);
             dictionary.Clear();
         }
-    private List<string> FillCustomAssetsParameters()
-    {
+        private List<string> FillCustomAssetsParameters()
+        {
             List<string> parameters = new List<string>
             {
                 "CustomAssetsConfig__PathToCustomAssetsFolder",
@@ -143,8 +143,8 @@ public class DockerBuilder : AbstractBuilder
             return parameters;
         }
 
-    private string CheckValue(string[] line, List<string> dockerParameters, Project project)
-    {
+        private string CheckValue(string[] line, List<string> dockerParameters, Project project)
+        {
             foreach(string dockerParameter in dockerParameters)
             {
                 if(line[0].Equals(dockerParameter) && line[1].Length==0)
@@ -192,8 +192,8 @@ public class DockerBuilder : AbstractBuilder
             return line[1];
         }
 
-    private string SetDbHost(Project project)
-    {
+        private string SetDbHost(Project project)
+        {
             if (project.Deployment == DeploymentType.DockerPostgres)
             {
                 return "localhost";
@@ -209,8 +209,8 @@ public class DockerBuilder : AbstractBuilder
             return project.DatabaseServerName;
         }
 
-    private List<string> FillDockerParameters()
-    {
+        private List<string> FillDockerParameters()
+        {
             List<string> parameters = new List<string>
             {
                 "gitPullOnStart",
@@ -227,11 +227,12 @@ public class DockerBuilder : AbstractBuilder
             };
             return parameters;
         }
-    public override void Rollback()
-    {
+        public override void Rollback()
+        {
         }
-    public string WebSiteUrl (Project project)
-    {
+        public string WebSiteUrl (Project project)
+        {
             return "http://localhost:" + project.DockerPort;
         }
+    }
 }

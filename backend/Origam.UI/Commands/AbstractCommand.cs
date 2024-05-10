@@ -22,23 +22,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema;
 using System.Collections.Generic;
 
-namespace Origam.UI;
-
-/// <summary>
-/// Abstract implementation of the <see cref="ICommand"/> interface.
-/// </summary>
-public abstract class AbstractCommand : ICommand
+namespace Origam.UI
 {
 	/// <summary>
-	/// Returns the owner of the command.
+	/// Abstract implementation of the <see cref="ICommand"/> interface.
 	/// </summary>
-	public virtual object Owner { get; set; } = null;
+	public abstract class AbstractCommand : ICommand
+	{
+		/// <summary>
+        /// Returns the owner of the command.
+        /// </summary>
+        public virtual object Owner { get; set; } = null;
 
-	/// <summary>
-	/// Invokes the command.
-	/// </summary>
-	public abstract void Run();
+		/// <summary>
+		/// Invokes the command.
+		/// </summary>
+		public abstract void Run();
 
-	public List<AbstractSchemaItem> GeneratedModelElements { get; } 
-		= new List<AbstractSchemaItem>();
+        public List<AbstractSchemaItem> GeneratedModelElements { get; } 
+	        = new List<AbstractSchemaItem>();
+	}
 }

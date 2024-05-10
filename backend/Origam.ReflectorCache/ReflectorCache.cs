@@ -21,19 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.ReflectorCache;
-
-/// <summary>
-/// Summary description for Class1.
-/// </summary>
-public class ReflectorCache : IReflectorCache
+namespace Origam.ReflectorCache
 {
-	public ReflectorCache()
+	/// <summary>
+	/// Summary description for Class1.
+	/// </summary>
+	public class ReflectorCache : IReflectorCache
 	{
+		public ReflectorCache()
+		{
 		}
 
-	public object InvokeObject(string classname, string assembly)
-	{
+		public object InvokeObject(string classname, string assembly)
+		{
 #if !ORIGAM_SERVER && !NETSTANDARD
 			switch(assembly)
 			{
@@ -71,12 +71,12 @@ public class ReflectorCache : IReflectorCache
 			}
 #endif
 
-		return null;
-	}
+            return null;
+		}
 
 
-	public object InvokeObject(string typeName, object[] args)
-	{
+		public object InvokeObject(string typeName, object[] args)
+		{
 			var key = args[0] as Key;
 			switch(typeName)
 			{
@@ -214,8 +214,8 @@ public class ReflectorCache : IReflectorCache
 			return null;
 		}
 
-	public bool SetValue(object instance, string property, object value)
-	{
+		public bool SetValue(object instance, string property, object value)
+		{
 			if(instance is Origam.Schema.AbstractSchemaItem)
 			{
 				switch(property)
@@ -316,4 +316,5 @@ public class ReflectorCache : IReflectorCache
             }
 			return false;
 		}
+	}
 }

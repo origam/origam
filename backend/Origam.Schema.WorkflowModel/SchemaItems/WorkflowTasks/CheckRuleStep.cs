@@ -23,19 +23,20 @@ using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for WorkflowCallTask.
-/// </summary>
-[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
-[HelpTopic("Check+Rule+Task")]
-[ClassMetaVersion("6.0.0")]
-public class CheckRuleStep : AbstractWorkflowStep
+namespace Origam.Schema.WorkflowModel
 {
-	public CheckRuleStep() : base() {}
+	/// <summary>
+	/// Summary description for WorkflowCallTask.
+	/// </summary>
+	[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
+    [HelpTopic("Check+Rule+Task")]
+    [ClassMetaVersion("6.0.0")]
+	public class CheckRuleStep : AbstractWorkflowStep
+	{
+		public CheckRuleStep() : base() {}
 
-	public CheckRuleStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public CheckRuleStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-	public CheckRuleStep(Key primaryKey) : base(primaryKey)	{}
+		public CheckRuleStep(Key primaryKey) : base(primaryKey)	{}
+	}
 }

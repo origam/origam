@@ -28,23 +28,23 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// Summary description for Checklist.
-/// </summary>
-public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
+namespace Origam.Gui.Win
 {
-	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-	private System.Windows.Forms.ColorDialog colorDialog1;
-	private System.Windows.Forms.TextBox textBox1;
-	/// <summary> 
-	/// Required designer variable.
+	/// <summary>
+	/// Summary description for Checklist.
 	/// </summary>
-	private System.ComponentModel.Container components = null;
-
-	public Checklist()
+	public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 	{
+		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		private System.Windows.Forms.ColorDialog colorDialog1;
+		private System.Windows.Forms.TextBox textBox1;
+		/// <summary> 
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.Container components = null;
+
+		public Checklist()
+		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -52,11 +52,11 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 
 		}
 
-	/// <summary> 
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				if(components != null)
@@ -67,116 +67,120 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 			base.Dispose( disposing );
 		}
 
-	#region Component Designer generated code
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Component Designer generated code
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 	 // textBox1
-            // 	 this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(328, 22);
             this.textBox1.TabIndex = 0;
-            // 	 // Checklist
-            // 	 this.Controls.Add(this.textBox1);
+            // 
+            // Checklist
+            // 
+            this.Controls.Add(this.textBox1);
             this.Name = "Checklist";
             this.Size = new System.Drawing.Size(328, 24);
             this.ResumeLayout(false);
             this.PerformLayout();
 
 		}
-	#endregion
+		#endregion
 
-	public override string DefaultBindableProperty
-	{
-		get
+		public override string DefaultBindableProperty
 		{
+			get
+			{
 				return "Value";
 			}
-	}
+		}
 
-	#region Properties
-	private Guid _lookupId;
-	[Browsable(false)]
-	public Guid LookupId
-	{
-		get
+		#region Properties
+		private Guid _lookupId;
+		[Browsable(false)]
+		public Guid LookupId
 		{
+			get
+			{
 				return _lookupId;
 			}
-		set
-		{
+			set
+			{
 				_lookupId = value;
 			}
-	}
+		}
 
-	public string Value
-	{
-		get
+		public string Value
 		{
+			get
+			{
 				return null;
 			}
-		set
-		{
+			set
+			{
 			}
-	}
+		}
 
-	private bool _readOnly = false;
-	public bool ReadOnly
-	{
-		get
+		private bool _readOnly = false;
+		public bool ReadOnly
 		{
+			get
+			{
 				return _readOnly;
 			}
-		set
-		{
+			set
+			{
 				_readOnly = value;
 			}
-	}
+		}
 
-	private int _columnWidth = 100;
-	public int ColumnWidth
-	{
-		get
+		private int _columnWidth = 100;
+		public int ColumnWidth
 		{
+			get
+			{
 				return _columnWidth;
 			}
-		set
-		{
+			set
+			{
 				_columnWidth = value;
 			}
-	}
+		}
 
-	ColumnParameterMappingCollection _parameterMappings = new ColumnParameterMappingCollection();
-	[TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
-	public ColumnParameterMappingCollection ParameterMappings
-	{
-		get
+		ColumnParameterMappingCollection _parameterMappings = new ColumnParameterMappingCollection();
+		[TypeConverter(typeof(ColumnParameterMappingCollectionConverter))]
+		public ColumnParameterMappingCollection ParameterMappings
 		{
+			get
+			{
 				return _parameterMappings;
 			}
-	}
+		}
 
 
-	[TypeConverter(typeof(DataLookupConverter))]
-	public AbstractDataLookup DataLookup
-	{
-		get
+		[TypeConverter(typeof(DataLookupConverter))]
+		public AbstractDataLookup DataLookup
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.LookupId;
 
 				return (AbstractDataLookup)_persistence.SchemaProvider.RetrieveInstance(typeof(AbstractDataLookup), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					this.LookupId = Guid.Empty;
@@ -197,13 +201,13 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 					CreateMappingItemsCollection();
 				}
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region methods
-	private bool _itemsLoaded = false;
-	private void ClearMappingItems()
-	{
+		#region methods
+		private bool _itemsLoaded = false;
+		private void ClearMappingItems()
+		{
 			try
 			{
 				if(!_itemsLoaded)
@@ -222,8 +226,8 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 			}
 		}
 
-	public void CreateMappingItemsCollection()
-	{
+		public void CreateMappingItemsCollection()
+		{
 			if(!_itemsLoaded)
 				return;
 
@@ -243,8 +247,8 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 			FillParameterCache(this._origamMetadata as ControlSetItem);
 		}
 
-	private void FillParameterCache(ControlSetItem controlItem)
-	{
+		private void FillParameterCache(ControlSetItem controlItem)
+		{
 			if( controlItem ==null)
 				return;
 			
@@ -258,25 +262,26 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 				}
 			}
 		}
-	#endregion
+		#endregion
 
-	#region IOrigamMetadataConsumer Members
+		#region IOrigamMetadataConsumer Members
 
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
-	{
-		get
+		private AbstractSchemaItem _origamMetadata;
+		public AbstractSchemaItem OrigamMetadata
 		{
+			get
+			{
 				return _origamMetadata;
 			}
-		set
-		{
+			set
+			{
 				_origamMetadata = value;
 				_itemsLoaded = true;
 
 				FillParameterCache(_origamMetadata as ControlSetItem);
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

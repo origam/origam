@@ -26,18 +26,19 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace Origam;
-
-public class MemberAttributeInfo
+namespace Origam
 {
-	public readonly MemberInfo MemberInfo;
-	public readonly Attribute Attribute;
-	public readonly IList MemberAttributes;
-	
-	public MemberAttributeInfo( MemberInfo memberInfo, Attribute attribute, IList memberAttributes )
+	public class MemberAttributeInfo
 	{
+		public readonly MemberInfo MemberInfo;
+		public readonly Attribute Attribute;
+		public readonly IList MemberAttributes;
+	
+		public MemberAttributeInfo( MemberInfo memberInfo, Attribute attribute, IList memberAttributes )
+		{
 			this.MemberInfo = memberInfo;
 			this.Attribute = attribute;
 			this.MemberAttributes = memberAttributes;
 		}
+	}
 }

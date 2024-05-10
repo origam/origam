@@ -29,39 +29,39 @@ using Origam.DA;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win;
-
-/// <summary>
-/// 
-/// </summary>
-public class DbNavigator : System.Windows.Forms.Panel
+namespace Origam.Gui.Win
 {
-	public event EventHandler NewRecordAdded;
-
-	private object _dataSource;
-	private string _dataMember;
-
-	private System.Windows.Forms.ToolBarButton _moveFirstButton;
-	private System.Windows.Forms.ToolBarButton _movePreviousButton;
-	private System.Windows.Forms.ToolBarButton _newButton;
-	private System.Windows.Forms.ToolBarButton _deleteButton;
-	private System.Windows.Forms.ToolBarButton _moveNextButton;
-	private System.Windows.Forms.ToolBarButton _moveLastButton;
-	private System.Windows.Forms.Label _recordLabel;
-	private System.Windows.Forms.ImageList _navigatorImageList;
-	private System.Windows.Forms.ToolBar _navigationToolbar;
-	private System.Windows.Forms.ToolBar _addDeleteToolbar;
-	private System.Windows.Forms.Timer timer1;
-	private System.Windows.Forms.ContextMenu templateMenu;
-	private System.ComponentModel.IContainer components;
-
-	private static ImageListStreamer ImgListStreamer = null;
-
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DbNavigator"/> class.
+	/// 
 	/// </summary>
-	public DbNavigator()
+	public class DbNavigator : System.Windows.Forms.Panel
 	{
+		public event EventHandler NewRecordAdded;
+
+		private object _dataSource;
+		private string _dataMember;
+
+		private System.Windows.Forms.ToolBarButton _moveFirstButton;
+		private System.Windows.Forms.ToolBarButton _movePreviousButton;
+		private System.Windows.Forms.ToolBarButton _newButton;
+		private System.Windows.Forms.ToolBarButton _deleteButton;
+		private System.Windows.Forms.ToolBarButton _moveNextButton;
+		private System.Windows.Forms.ToolBarButton _moveLastButton;
+		private System.Windows.Forms.Label _recordLabel;
+		private System.Windows.Forms.ImageList _navigatorImageList;
+		private System.Windows.Forms.ToolBar _navigationToolbar;
+		private System.Windows.Forms.ToolBar _addDeleteToolbar;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.ContextMenu templateMenu;
+		private System.ComponentModel.IContainer components;
+
+		private static ImageListStreamer ImgListStreamer = null;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbNavigator"/> class.
+		/// </summary>
+		public DbNavigator()
+		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 
@@ -73,19 +73,19 @@ public class DbNavigator : System.Windows.Forms.Panel
 			this._navigatorImageList.ImageStream = ImgListStreamer;
 		}
 
-	private void OnNewRecordAdded()
-	{
+		private void OnNewRecordAdded()
+		{
 			if(NewRecordAdded != null)
 			{
 				NewRecordAdded(this, EventArgs.Empty);
 			}
 		}
 
-	/// <summary> 
-	/// Clean up any resources being used.
-	/// </summary>
-	protected override void Dispose( bool disposing )
-	{
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		protected override void Dispose( bool disposing )
+		{
 			if( disposing )
 			{
 				BindingManagerBase bindMan = GetBindingManager();
@@ -104,13 +104,13 @@ public class DbNavigator : System.Windows.Forms.Panel
 			base.Dispose( disposing );
 		}
 
-	#region Component Designer generated code
-	/// <summary> 
-	/// Required method for Designer support - do not modify 
-	/// the contents of this method with the code editor.
-	/// </summary>
-	private void InitializeComponent()
-	{
+		#region Component Designer generated code
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbNavigator));
             this._navigationToolbar = new System.Windows.Forms.ToolBar();
@@ -126,8 +126,10 @@ public class DbNavigator : System.Windows.Forms.Panel
             this._recordLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
-            // 	 // _navigationToolbar
-            // 	 this._navigationToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            // 
+            // _navigationToolbar
+            // 
+            this._navigationToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
             this._navigationToolbar.AutoSize = false;
             this._navigationToolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
             this._moveFirstButton,
@@ -146,24 +148,34 @@ public class DbNavigator : System.Windows.Forms.Panel
             this._navigationToolbar.TabIndex = 0;
             this._navigationToolbar.Wrappable = false;
             this._navigationToolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
-            // 	 // _moveFirstButton
-            // 	 this._moveFirstButton.ImageIndex = 0;
+            // 
+            // _moveFirstButton
+            // 
+            this._moveFirstButton.ImageIndex = 0;
             this._moveFirstButton.Name = "_moveFirstButton";
             this._moveFirstButton.ToolTipText = "Přejít na první záznam";
-            // 	 // _movePreviousButton
-            // 	 this._movePreviousButton.ImageIndex = 1;
+            // 
+            // _movePreviousButton
+            // 
+            this._movePreviousButton.ImageIndex = 1;
             this._movePreviousButton.Name = "_movePreviousButton";
             this._movePreviousButton.ToolTipText = "Přejít na předchozí záznam";
-            // 	 // _moveNextButton
-            // 	 this._moveNextButton.ImageIndex = 4;
+            // 
+            // _moveNextButton
+            // 
+            this._moveNextButton.ImageIndex = 4;
             this._moveNextButton.Name = "_moveNextButton";
             this._moveNextButton.ToolTipText = "Přejít na další záznam";
-            // 	 // _moveLastButton
-            // 	 this._moveLastButton.ImageIndex = 5;
+            // 
+            // _moveLastButton
+            // 
+            this._moveLastButton.ImageIndex = 5;
             this._moveLastButton.Name = "_moveLastButton";
             this._moveLastButton.ToolTipText = "Přejít na poslední záznam";
-            // 	 // _navigatorImageList
-            // 	 this._navigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_navigatorImageList.ImageStream")));
+            // 
+            // _navigatorImageList
+            // 
+            this._navigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_navigatorImageList.ImageStream")));
             this._navigatorImageList.TransparentColor = System.Drawing.Color.Magenta;
             this._navigatorImageList.Images.SetKeyName(0, "first_white.png");
             this._navigatorImageList.Images.SetKeyName(1, "previous_white.png");
@@ -171,19 +183,27 @@ public class DbNavigator : System.Windows.Forms.Panel
             this._navigatorImageList.Images.SetKeyName(3, "delete_white.png");
             this._navigatorImageList.Images.SetKeyName(4, "next_white.png");
             this._navigatorImageList.Images.SetKeyName(5, "last_white.png");
-            // 	 // _newButton
-            // 	 this._newButton.DropDownMenu = this.templateMenu;
+            // 
+            // _newButton
+            // 
+            this._newButton.DropDownMenu = this.templateMenu;
             this._newButton.ImageIndex = 2;
             this._newButton.Name = "_newButton";
             this._newButton.ToolTipText = "Přidat záznam (Insert)";
-            // 	 // templateMenu
-            // 	 this.templateMenu.Popup += new System.EventHandler(this.templateMenu_Popup);
-            // 	 // _deleteButton
-            // 	 this._deleteButton.ImageIndex = 3;
+            // 
+            // templateMenu
+            // 
+            this.templateMenu.Popup += new System.EventHandler(this.templateMenu_Popup);
+            // 
+            // _deleteButton
+            // 
+            this._deleteButton.ImageIndex = 3;
             this._deleteButton.Name = "_deleteButton";
             this._deleteButton.ToolTipText = "Vymazat aktuální záznam (Ctrl+Delete)";
-            // 	 // _addDeleteToolbar
-            // 	 this._addDeleteToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            // 
+            // _addDeleteToolbar
+            // 
+            this._addDeleteToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
             this._addDeleteToolbar.AutoSize = false;
             this._addDeleteToolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
             this._newButton,
@@ -199,20 +219,26 @@ public class DbNavigator : System.Windows.Forms.Panel
             this._addDeleteToolbar.TabIndex = 1;
             this._addDeleteToolbar.Wrappable = false;
             this._addDeleteToolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
-            // 	 // _recordLabel
-            // 	 this._recordLabel.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // _recordLabel
+            // 
+            this._recordLabel.BackColor = System.Drawing.Color.Transparent;
             this._recordLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._recordLabel.Location = new System.Drawing.Point(96, 0);
             this._recordLabel.Name = "_recordLabel";
             this._recordLabel.Size = new System.Drawing.Size(216, 24);
             this._recordLabel.TabIndex = 2;
             this._recordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 	 // timer1
-            // 	 this.timer1.Enabled = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 	 // DbNavigator
-            // 	 this.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // DbNavigator
+            // 
+            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this._recordLabel);
             this.Controls.Add(this._addDeleteToolbar);
             this.Controls.Add(this._navigationToolbar);
@@ -220,21 +246,21 @@ public class DbNavigator : System.Windows.Forms.Panel
             this.ResumeLayout(false);
 
 		}
-	#endregion
+		#endregion
 
 
-	/// <summary>
-	/// Gets or sets a value indicating whether the New button 
-	/// will be shown.
-	/// </summary>
-	/// <value>true if the New button is visible. The default is true.</value>
-	/// 
-	[DefaultValue(true), Category("Behavior"), 
-	 Description("Indicates whether New Button will be shown.")]
-	public bool ShowNewButton
-	{
-		get 
+		/// <summary>
+		/// Gets or sets a value indicating whether the New button 
+		/// will be shown.
+		/// </summary>
+		/// <value>true if the New button is visible. The default is true.</value>
+		/// 
+		[DefaultValue(true), Category("Behavior"), 
+		Description("Indicates whether New Button will be shown.")]
+		public bool ShowNewButton
 		{
+			get 
+			{
 				if(_addDeleteToolbar.Buttons.Count > 0)
 				{
 					return _addDeleteToolbar.Buttons[0].Visible; 
@@ -244,28 +270,28 @@ public class DbNavigator : System.Windows.Forms.Panel
 					return false;
 				}
 			}
-		set 
-		{ 
+			set 
+			{ 
 				if(_addDeleteToolbar.Buttons.Count > 0)
 				{
 					_addDeleteToolbar.Buttons[0].Visible = value; 
 				}
 			}
-	}
+		}
 		
 		
-	/// <summary>
-	/// Gets or sets a value indicating whether the New button 
-	/// will be shown.
-	/// </summary>
-	/// <value>true if the New button is visible. The default is true.</value>
-	/// 
-	[DefaultValue(true), Category("Behavior"), 
-	 Description("Indicates whether New Button will be shown.")]
-	public bool ShowDeleteButton
-	{
-		get 
+		/// <summary>
+		/// Gets or sets a value indicating whether the New button 
+		/// will be shown.
+		/// </summary>
+		/// <value>true if the New button is visible. The default is true.</value>
+		/// 
+		[DefaultValue(true), Category("Behavior"), 
+		Description("Indicates whether New Button will be shown.")]
+		public bool ShowDeleteButton
 		{
+			get 
+			{
 				if(_addDeleteToolbar.Buttons.Count > 1)
 				{
 					return _addDeleteToolbar.Buttons[1].Visible; 
@@ -275,38 +301,38 @@ public class DbNavigator : System.Windows.Forms.Panel
 					return false;
 				}
 			}
-		set 
-		{ 
+			set 
+			{ 
 				if(_addDeleteToolbar.Buttons.Count > 1)
 				{
 					_addDeleteToolbar.Buttons[1].Visible = value; 
 				}
 			}
-	}
+		}
 			
 		
 		
 		
-	/// <summary>
-	/// Gets or sets a value indicating whether the navigator 
-	/// displays a ToolTip for each button.
-	/// </summary>
-	/// <value>true if the navigator displays a ToolTip for each button;
-	/// otherwise, false. The default is true.</value>
-	/// 
-	[DefaultValue(true), Category("Behavior"), 
-	 Description("Indicates whether tool tips will be shown.")]
-	public bool ShowToolTips
-	{
-		get { return _navigationToolbar.ShowToolTips; }
-		set { _navigationToolbar.ShowToolTips = _addDeleteToolbar.ShowToolTips = value; }
-	}
+		/// <summary>
+		/// Gets or sets a value indicating whether the navigator 
+		/// displays a ToolTip for each button.
+		/// </summary>
+		/// <value>true if the navigator displays a ToolTip for each button;
+		/// otherwise, false. The default is true.</value>
+		/// 
+		[DefaultValue(true), Category("Behavior"), 
+			Description("Indicates whether tool tips will be shown.")]
+		public bool ShowToolTips
+		{
+			get { return _navigationToolbar.ShowToolTips; }
+			set { _navigationToolbar.ShowToolTips = _addDeleteToolbar.ShowToolTips = value; }
+		}
 
-	/// <summary>
-	/// Indicates whether the New, Delete, OK, and Cancel butons are visible.
-	/// </summary>
-	/// <value>true if the New, Delete, OK, and Cancel butons are visible;
-	/// otherwise, false. The default is true.</value>
+		/// <summary>
+		/// Indicates whether the New, Delete, OK, and Cancel butons are visible.
+		/// </summary>
+		/// <value>true if the New, Delete, OK, and Cancel butons are visible;
+		/// otherwise, false. The default is true.</value>
 //////		[DefaultValue(true), Category("Behavior"), 
 //////			Description("Indicates whether the New, Delete, OK, and Cancel butons are visible.")]
 //////		public bool ShowEditButtons
@@ -324,14 +350,14 @@ public class DbNavigator : System.Windows.Forms.Panel
 //////			}
 //////		}
 
-	/// <summary>
-	/// Sets DataSource and DataMember.
-	/// </summary>
-	/// <param name="dataSource">The data source.</param>
-	/// <param name="dataMember">The DataMember string that specifies the
-	/// table to bind to within the DataSource object.</param>
-	public void SetDataBinding(object dataSource, string dataMember)
-	{
+		/// <summary>
+		/// Sets DataSource and DataMember.
+		/// </summary>
+		/// <param name="dataSource">The data source.</param>
+		/// <param name="dataMember">The DataMember string that specifies the
+		/// table to bind to within the DataSource object.</param>
+		public void SetDataBinding(object dataSource, string dataMember)
+		{
 			BindingManagerBase bindMan = GetBindingManager();
 			if(null != bindMan)
 			{
@@ -351,8 +377,8 @@ public class DbNavigator : System.Windows.Forms.Panel
 			UpdateControls();
 		}
 
-	private CurrencyManager ParentManager(CurrencyManager currentManager)
-	{
+		private CurrencyManager ParentManager(CurrencyManager currentManager)
+		{
 			if(currentManager != null && currentManager.GetType().Name == "RelatedCurrencyManager")
 			{
                 string propertyName = "parentManager";
@@ -364,8 +390,8 @@ public class DbNavigator : System.Windows.Forms.Panel
 			}
 		}
 
-	private bool AddNewRow(Schema.EntityModel.DataStructureTemplate template, DataRow parentRow)
-	{
+		private bool AddNewRow(Schema.EntityModel.DataStructureTemplate template, DataRow parentRow)
+		{
 			object[] templatePosition = null;
 			FormGenerator fg = (this.FindForm() as AsForm).FormGenerator;
 
@@ -395,8 +421,8 @@ public class DbNavigator : System.Windows.Forms.Panel
 			return true;
 		}
 
-	public void AddNewRow()
-	{
+		public void AddNewRow()
+		{
 			if(this.ShowNewButton)
 			{
 				UpdateControls();
@@ -435,10 +461,10 @@ public class DbNavigator : System.Windows.Forms.Panel
 			}
 		}
 
-	private DataRowView ParentRowView
-	{
-		get
+		private DataRowView ParentRowView
 		{
+			get
+			{
 				BindingManagerBase bindMan = GetBindingManager();
 
 				CurrencyManager parentManager = this.ParentManager(bindMan as CurrencyManager);
@@ -452,10 +478,10 @@ public class DbNavigator : System.Windows.Forms.Panel
 
 				return null;
 			}
-	}
+		}
 
-	public void DeleteRow()
-	{
+        public void DeleteRow()
+        {
             if (this.ShowDeleteButton)
             {
                 CurrencyManager bindMan = GetBindingManager();
@@ -515,24 +541,24 @@ public class DbNavigator : System.Windows.Forms.Panel
             }
         }
 
-	/// <summary>
-	/// Returns the current binding manager.
-	/// </summary>
-	/// <returns>A reference to the binding manager.</returns>
-	private CurrencyManager GetBindingManager()
-	{
+		/// <summary>
+		/// Returns the current binding manager.
+		/// </summary>
+		/// <returns>A reference to the binding manager.</returns>
+		private CurrencyManager GetBindingManager()
+		{
 			if(null != _dataSource && null != BindingContext)
 				return BindingContext[_dataSource, _dataMember] as CurrencyManager;
 			return null;
 		}
 
-	private void OnBindigContextPositionChanged(object sender, System.EventArgs e)
-	{
+		private void OnBindigContextPositionChanged(object sender, System.EventArgs e)
+		{
 			UpdateControls();
 		}
 
-	private void OnButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
-	{
+		private void OnButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
+		{
 			BindingManagerBase bindMan = GetBindingManager();
 			if(bindMan==null){return;}
 
@@ -612,15 +638,15 @@ public class DbNavigator : System.Windows.Forms.Panel
 			panel.FocusControls();
 		}
 
-	private bool IsManagerBinding(CurrencyManager cm)
-	{
+		private bool IsManagerBinding(CurrencyManager cm)
+		{
 			if(cm == null) return false;
 
 			return (bool)Reflector.GetValue(typeof(CurrencyManager), cm, "IsBinding");
 		}
 
-	public void UpdateControls()
-	{
+		public void UpdateControls()
+		{
 			CurrencyManager bindMan = GetBindingManager();
 
 			bool isBinding = IsManagerBinding(bindMan as CurrencyManager);
@@ -670,8 +696,8 @@ public class DbNavigator : System.Windows.Forms.Panel
 			}
 		}
 
-	public bool EndEdit()
-	{
+		public bool EndEdit()
+		{
 			BindingManagerBase bindMan = GetBindingManager();
 			if(bindMan==null){return true;}
 
@@ -709,13 +735,13 @@ public class DbNavigator : System.Windows.Forms.Panel
 			return true;
 		}
 
-	private void timer1_Tick(object sender, System.EventArgs e)
-	{
+		private void timer1_Tick(object sender, System.EventArgs e)
+		{
 			UpdateControls();
 		}
 
-	private void templateMenu_Popup(object sender, System.EventArgs e)
-	{
+		private void templateMenu_Popup(object sender, System.EventArgs e)
+		{
 			templateMenu.MenuItems.Clear();
 
 			FormGenerator fg = (this.FindForm() as AsForm).FormGenerator;
@@ -738,10 +764,11 @@ public class DbNavigator : System.Windows.Forms.Panel
 			}
 		}
 
-	private void templateMenuItem_Click(object sender, EventArgs e)
-	{
+		private void templateMenuItem_Click(object sender, EventArgs e)
+		{
 			DataRow parentRow = (this.ParentRowView == null ? null : this.ParentRowView.Row);
 
 			AddNewRow((sender as TemplateMenuItem).Template, parentRow);
 		}
+	}
 }

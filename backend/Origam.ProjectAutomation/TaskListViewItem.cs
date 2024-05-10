@@ -22,22 +22,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.ProjectAutomation;
-
-public class TaskListViewItem : ListViewItem
+namespace Origam.ProjectAutomation
 {
-    IProjectBuilder _builder;
-    string _name;
-        
-    public TaskListViewItem(string name, IProjectBuilder builder) : base (name)
+    public class TaskListViewItem : ListViewItem
     {
+        IProjectBuilder _builder;
+        string _name;
+        
+        public TaskListViewItem(string name, IProjectBuilder builder) : base (name)
+        {
             _name = name;
             _builder = builder;
             _builder.StateChanged += _builder_StateChanged;
         }
 
-    void _builder_StateChanged(object sender, EventArgs e)
-    {
+        void _builder_StateChanged(object sender, EventArgs e)
+        {
             if(this.SubItems.Count < 2)
             {
                 this.SubItems.Add("");
@@ -45,4 +45,5 @@ public class TaskListViewItem : ListViewItem
             this.SubItems[1].Text = _builder.State.ToString();
             Application.DoEvents();
         }
+    }
 }

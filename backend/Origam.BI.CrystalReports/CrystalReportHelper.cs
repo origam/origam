@@ -29,24 +29,24 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.Text;
 
-namespace Origam.BI.CrystalReports;
-
-/// <summary>
-/// Summary description for CrystalReportHelper.
-/// </summary>
-public class CrystalReportHelper
+namespace Origam.BI.CrystalReports
 {
-    private static readonly log4net.ILog log
-        = log4net.LogManager.GetLogger(
+	/// <summary>
+	/// Summary description for CrystalReportHelper.
+	/// </summary>
+	public class CrystalReportHelper
+	{
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    public CrystalReportHelper()
-    {
+		public CrystalReportHelper()
+		{
 		}
 		
-    #region Public Functions
-    private void TraceReportData(DataSet data, string reportName)
-    {
+		#region Public Functions
+		private void TraceReportData(DataSet data, string reportName)
+		{
 			try
 			{
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -65,9 +65,9 @@ public class CrystalReportHelper
 			}
 		}
 
-    public byte[] CreateReport(Guid reportId, DataSet data, 
-        Hashtable parameters, string format)
-    {
+		public byte[] CreateReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string format)
+        {
             // get report model element
             var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
             parameters = PrepareParameters(data, parameters, report);
@@ -82,10 +82,11 @@ public class CrystalReportHelper
             throw new Exception("Invalid data returned. Expected byte array.");
         }
 
-    public string PrepareReport(CrystalReport report, DataSet data,
-        Hashtable parameters, string format)
-    {
-            // get report model element                 parameters = PrepareParameters(data, parameters, report);
+        public string PrepareReport(CrystalReport report, DataSet data,
+            Hashtable parameters, string format)
+        {
+            // get report model element            
+            parameters = PrepareParameters(data, parameters, report);
             // get report
             object result = SendReportRequest("Report/PrepareViewer",
                 report.ReportFileName, data, parameters, report, "");
@@ -102,9 +103,9 @@ public class CrystalReportHelper
             throw new Exception("Invalid data returned. Expected byte array.");
         }
 
-    public void PrintReport(Guid reportId, DataSet data, 
-        Hashtable parameters, string printerName, int copies)
-    {
+        public void PrintReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string printerName, int copies)
+        {
             // get report model element
             var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
             parameters = PrepareParameters(data, parameters, report);
@@ -114,21 +115,21 @@ public class CrystalReportHelper
                 data, parameters, report, paramString);
         }
 
-    private Hashtable PrepareParameters(DataSet data, Hashtable parameters, 
-        CrystalReport report)
-    {
+        private Hashtable PrepareParameters(DataSet data, Hashtable parameters, 
+            CrystalReport report)
+        {
             if (parameters == null) parameters = new Hashtable();
             TraceReportData(data, report.Name);
             ReportHelper.PopulateDefaultValues(report, parameters);
             ReportHelper.ComputeXsltValueParameters(report, parameters);
             return parameters;
         }
-    #endregion
+        #endregion
 
-    public object SendReportRequest(string method, string fileName, 
-        DataSet data, Hashtable parameters, CrystalReport reportElement, 
-        string paramString)
-    {
+        public object SendReportRequest(string method, string fileName, 
+            DataSet data, Hashtable parameters, CrystalReport reportElement, 
+            string paramString)
+        {
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report started");
@@ -177,8 +178,8 @@ public class CrystalReportHelper
             return result;
         }
 
-    private void WriteInfoLog(CrystalReport reportElement, string message)
-    {
+        private void WriteInfoLog(CrystalReport reportElement, string message)
+        {
             LoggingEvent loggingEvent = new LoggingEvent(
               this.GetType(),
               log.Logger.Repository,
@@ -190,9 +191,9 @@ public class CrystalReportHelper
             log.Logger.Log(loggingEvent);
         }
 
-    private static string ParseConnectionString(string connectionString, 
-        out int? timeout)
-    {
+        private static string ParseConnectionString(string connectionString, 
+            out int? timeout)
+        {
             string url = null;
             timeout = null;
             string[] parts = connectionString.Split(";".ToCharArray(),
@@ -242,4 +243,5 @@ public class CrystalReportHelper
             }
             return url;
         }
+    }
 }

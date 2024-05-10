@@ -26,38 +26,38 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel;
-
-public enum ContextStoreLinkDirection
+namespace Origam.Schema.WorkflowModel
 {
-	Input,
-	Output,
-	Return
-}
-
-/// <summary>
-/// Summary description for ContextStoreLink.
-/// </summary>
-[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
-[HelpTopic("Workflow+Call+Context+Mapping")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class ContextStoreLink : AbstractSchemaItem
-{
-	public const string CategoryConst = "ContextStoreLink";
-
-	public ContextStoreLink() : base() {}
-
-	public ContextStoreLink(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-
-	public override string ItemType => CategoryConst;
-
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public enum ContextStoreLinkDirection
 	{
+		Input,
+		Output,
+		Return
+	}
+
+	/// <summary>
+	/// Summary description for ContextStoreLink.
+	/// </summary>
+	[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
+    [HelpTopic("Workflow+Call+Context+Mapping")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class ContextStoreLink : AbstractSchemaItem
+	{
+		public const string CategoryConst = "ContextStoreLink";
+
+		public ContextStoreLink() : base() {}
+
+		public ContextStoreLink(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+
+		public override string ItemType => CategoryConst;
+
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 
 			dependencies.Add(this.CallerContextStore);
@@ -66,8 +66,8 @@ public class ContextStoreLink : AbstractSchemaItem
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -83,28 +83,28 @@ public class ContextStoreLink : AbstractSchemaItem
 			base.UpdateReferences ();
 		}
 
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
-	#endregion
+		public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+		#endregion
 
-	#region Properties
-	[XmlAttribute ("direction")]
-	public ContextStoreLinkDirection Direction { get; set; } = ContextStoreLinkDirection.Input;
+		#region Properties
+		[XmlAttribute ("direction")]
+		public ContextStoreLinkDirection Direction { get; set; } = ContextStoreLinkDirection.Input;
 
-	public Guid CallerContextStoreId;
+		public Guid CallerContextStoreId;
 
-	[TypeConverter(typeof(ContextStoreConverter))]
-	[XmlReference("callerContextStore", "CallerContextStoreId")]
-	public IContextStore CallerContextStore
-	{
-		get
+		[TypeConverter(typeof(ContextStoreConverter))]
+		[XmlReference("callerContextStore", "CallerContextStoreId")]
+		public IContextStore CallerContextStore
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.CallerContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					this.CallerContextStoreId = Guid.Empty;
@@ -114,23 +114,23 @@ public class ContextStoreLink : AbstractSchemaItem
 					this.CallerContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-	}
+		}
 		
-	public Guid TargetContextStoreId;
+		public Guid TargetContextStoreId;
 
-	[TypeConverter(typeof(WorkflowCallTargetContextStoreConverter))]
-	[XmlReference("targetContextStore", "TargetContextStoreId")]
-	public IContextStore TargetContextStore
-	{
-		get
+		[TypeConverter(typeof(WorkflowCallTargetContextStoreConverter))]
+		[XmlReference("targetContextStore", "TargetContextStoreId")]
+		public IContextStore TargetContextStore
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.TargetContextStoreId;
 
 				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
-		set
-		{
+			set
+			{
 				if(value == null)
 				{
 					this.TargetContextStoreId = Guid.Empty;
@@ -140,10 +140,11 @@ public class ContextStoreLink : AbstractSchemaItem
 					this.TargetContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
-	}
+		}
 		
-	[DefaultValue("/")]
-	[XmlAttribute ("xPath")]
-	public string XPath { get; set; } = "/";
-	#endregion
+        [DefaultValue("/")]
+		[XmlAttribute ("xPath")]
+		public string XPath { get; set; } = "/";
+		#endregion
+	}
 }

@@ -21,46 +21,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 
-namespace Origam.DA.Service.FileSystemModeCheckers;
-
-public class ModelErrorSection
+namespace Origam.DA.Service.FileSystemModeCheckers
 {
-    public ModelErrorSection(string caption, List<ErrorMessage> errorMessages)
+    public class ModelErrorSection
     {
+        public ModelErrorSection(string caption, List<ErrorMessage> errorMessages)
+        {
             Caption = caption;
             ErrorMessages = errorMessages;
         }
 
-    public string Caption { get; }
-    public List<ErrorMessage> ErrorMessages { get; }
+        public string Caption { get; }
+        public List<ErrorMessage> ErrorMessages { get; }
 
-    public bool IsEmpty => ErrorMessages == null || ErrorMessages.Count == 0;
+        public bool IsEmpty => ErrorMessages == null || ErrorMessages.Count == 0;
 
-    public override string ToString()
-    {
+        public override string ToString()
+        {
             return Caption;
         }
-}
+    }
 
-public class ErrorMessage
-{
-    public string Text { get; }
-    public string Link { get; }
-    public static ErrorMessage Empty = new ErrorMessage(" ");
-
-    public ErrorMessage(string text)
+    public class ErrorMessage
     {
+        public string Text { get; }
+        public string Link { get; }
+        public static ErrorMessage Empty = new ErrorMessage(" ");
+
+        public ErrorMessage(string text)
+        {
             Text = text;
         }
 
-    public ErrorMessage(string text, string link)
-    {
+        public ErrorMessage(string text, string link)
+        {
             Text = text;
             Link = link;
         }
 
-    public override string ToString()
-    {
+        public override string ToString()
+        {
             return Text;
         }
+    }
 }

@@ -23,14 +23,15 @@ using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.RuleModel;
-
-[SchemaItemDescription("Validation Rule", "validation-rule.png")]
-[HelpTopic("Validation+Rule")]
-[ClassMetaVersion("6.0.0")]
-public class EndRule : XslRule, IEndRule
+namespace Origam.Schema.RuleModel
 {
-    public EndRule() : base() {}
-    public EndRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-    public EndRule(Key primaryKey) : base(primaryKey) { }
+    [SchemaItemDescription("Validation Rule", "validation-rule.png")]
+    [HelpTopic("Validation+Rule")]
+    [ClassMetaVersion("6.0.0")]
+    public class EndRule : XslRule, IEndRule
+    {
+		public EndRule() : base() {}
+		public EndRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+        public EndRule(Key primaryKey) : base(primaryKey) { }
+    }
 }

@@ -28,20 +28,21 @@ using Origam.Extensions;
 using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 
-namespace Origam.Gui.UI;
-
-public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
+namespace Origam.Gui.UI
 {
-    private readonly int imageArrowGap = 10;
-        
-    public List<ToolStripActionMenuItem> ToolStripMenuItems 
-        => DropDownItems.Cast<ToolStripActionMenuItem>().ToList();
-
-    /// <summary>
-    /// This constructor should be used for dubugging only
-    /// </summary>
-    public ToolStripActionDropDownButton()
+    
+    public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
     {
+        private readonly int imageArrowGap = 10;
+        
+        public List<ToolStripActionMenuItem> ToolStripMenuItems 
+            => DropDownItems.Cast<ToolStripActionMenuItem>().ToList();
+
+        /// <summary>
+        /// This constructor should be used for dubugging only
+        /// </summary>
+        public ToolStripActionDropDownButton()
+        {
             ToolStripButtonTools.InitBigButton(this);
             Padding = new Padding(
                 left: 0,
@@ -50,15 +51,15 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
                 bottom: 0);
         }
 
-    public ToolStripActionDropDownButton(EntityDropdownAction dropdownAction)
-    {
+        public ToolStripActionDropDownButton(EntityDropdownAction dropdownAction)
+        {
             AddActionItems(dropdownAction);
             ToolStripButtonTools.InitBigButton(this);
             ToolStripButtonTools.InitActionButton(this, dropdownAction);
         }
 
-    private void AddActionItems(EntityDropdownAction dropdownAction)
-    {
+        private void AddActionItems(EntityDropdownAction dropdownAction)
+        {
             foreach (var item in dropdownAction.ChildItems)
             {
                 if (item is EntityUIAction action)
@@ -68,11 +69,11 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
             }
         }
 
-    public override string Text
-    {
-        get => base.Text;
-        set
+        public override string Text
         {
+            get => base.Text;
+            set
+            {
                 base.Text = value.Wrap(Width, Font);
                 if (!base.Text.Contains(Environment.NewLine))
                 {
@@ -83,26 +84,26 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
                     base.Text += " ";
                 }
             }
-    }
+        }
         
-    protected override void OnPaint(PaintEventArgs e)
-    {
+        protected override void OnPaint(PaintEventArgs e)
+        {
             PaintButtonBackground(e);
             ToolStripButtonTools.PaintImage(this,e);
             this.PaintText(e);
             PaintDropDownArrow(e);
         }
 
-    private void PaintButtonBackground(PaintEventArgs e)
-    {
+        private void PaintButtonBackground(PaintEventArgs e)
+        {
             var teventArgs = new ToolStripItemRenderEventArgs(e.Graphics, this);
             Owner
                 .Renderer
                 .DrawDropDownButtonBackground(teventArgs);
         }
 
-    private void PaintDropDownArrow(PaintEventArgs e)
-    {
+        private void PaintDropDownArrow(PaintEventArgs e)
+        {
             var arrowRectangle = GetArrowRectangle();
             var renderer = this.Owner.Renderer;
             var graphics = e.Graphics;
@@ -121,8 +122,8 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
             renderer.DrawArrow(eventArgs);
         }
 
-    private Rectangle GetArrowRectangle()
-    {
+        private Rectangle GetArrowRectangle()
+        {
             var imageRectangle =
                 ToolStripButtonTools.GetImageRectangle(this);
             
@@ -133,21 +134,22 @@ public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
                 new Point(xCoord, yCoord),
                 new Size(5, 5)); // looks like the rectangle size has nothing to to do with the arrow size
         }
-}
+    }
     
-public class ToolStripActionMenuItem:ToolStripMenuItem, IActionContainer
-{
-
-    private readonly EntityUIAction action;
-
-    public ToolStripActionMenuItem(EntityUIAction action) 
-        : base(action.Caption)
+    public class ToolStripActionMenuItem:ToolStripMenuItem, IActionContainer
     {
+
+        private readonly EntityUIAction action;
+
+        public ToolStripActionMenuItem(EntityUIAction action) 
+            : base(action.Caption)
+        {
             this.action = action;
         }
 
-    public EntityUIAction GetAction()
-    {
+        public EntityUIAction GetAction()
+        {
             return action;
         }
+    }
 }

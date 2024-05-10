@@ -22,14 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.DA.ObjectPersistence;
-
-public interface IFilePersistent : IPersistent
+namespace Origam.DA.ObjectPersistence
 {
-    string RelativeFilePath { get; }
-    Guid FileParentId { get; set; }
-    bool IsFolder { get; }
-    IDictionary<string, Guid> ParentFolderIds { get; }
-    string Path { get; }
-    bool IsFileRootElement { get; }
+    public interface IFilePersistent : IPersistent
+    {
+        string RelativeFilePath { get; }
+        Guid FileParentId { get; set; }
+        bool IsFolder { get; }
+        IDictionary<string, Guid> ParentFolderIds { get; }
+        string Path { get; }
+        bool IsFileRootElement { get; }
+    }
 }

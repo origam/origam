@@ -23,20 +23,20 @@ using System.Collections;
 using System.Linq;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.Service;
-
-/// <summary>
-/// Summary description for CustomParameterService.
-/// </summary>
-public static class CustomParameterService
+namespace Origam.DA.Service
 {
-	private static ArrayList _customParameters = new ArrayList();
-	private static bool _isInitialized = false;
-
-	private static ArrayList CustomParameters
+	/// <summary>
+	/// Summary description for CustomParameterService.
+	/// </summary>
+	public static class CustomParameterService
 	{
-		get
+		private static ArrayList _customParameters = new ArrayList();
+		private static bool _isInitialized = false;
+
+		private static ArrayList CustomParameters
 		{
+			get
+			{
 				if(! _isInitialized)
 				{
 					Initialize();
@@ -44,10 +44,10 @@ public static class CustomParameterService
 
 				return _customParameters;
 			}
-	}
+		}
 
-	public static ICustomParameter MatchParameter(string parameterName)
-	{
+		public static ICustomParameter MatchParameter(string parameterName)
+		{
 			foreach(ICustomParameter customParameter in CustomParameterService.CustomParameters)
 			{
 				if(parameterName.EndsWith(customParameter.Name))
@@ -59,8 +59,8 @@ public static class CustomParameterService
 			return null;
 		}
 
-	public static string GetFirstNonCustomParameter(DataStructureMethod method)
-	{
+	    public static string GetFirstNonCustomParameter(DataStructureMethod method)
+	    {
             if (method == null)
             {
                 return null;
@@ -74,8 +74,8 @@ public static class CustomParameterService
 	    }
 
 
-	private static void Initialize()
-	{
+        private static void Initialize()
+		{
 			_customParameters.Add(new CustomParameters.CurrentDateCustomParameter());
 			_customParameters.Add(new CustomParameters.CurrentDateLastMinuteCustomParameter());
 			_customParameters.Add(new CustomParameters.CurrentDateTimeCustomParameter());
@@ -87,4 +87,5 @@ public static class CustomParameterService
 
 			_isInitialized = true;
 		}
+	}
 }

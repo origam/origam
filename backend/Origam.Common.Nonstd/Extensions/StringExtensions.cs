@@ -17,17 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System;
 using System.Drawing;
 
-namespace Origam.Extensions;
-
-public static class StringExtensions
+namespace Origam.Extensions
 {
-    public static FontStyle ToFont(this string str)
+    public static class StringExtensions
     {
+        public static FontStyle ToFont(this string str)
+        {
             return (FontStyle)Enum.Parse(typeof(FontStyle), str);
         }
+    }
 }

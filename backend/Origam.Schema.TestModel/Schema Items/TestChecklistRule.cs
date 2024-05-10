@@ -23,47 +23,48 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.TestModel;
-
-/// <summary>
-/// Summary description for TestChecklistRule.
-/// </summary>
-[SchemaItemDescription("Checklist Rule", "Checklist Rules", 16)]
-[ClassMetaVersion("6.0.0")]
-public class TestChecklistRule : AbstractSchemaItem
+namespace Origam.Schema.TestModel
 {
-	public const string CategoryConst = "TestChecklistRule";
-
-	public TestChecklistRule() : base() {}
-
-	public TestChecklistRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public TestChecklistRule(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractSchemaItem Members
-		
-	public override string ItemType
+	/// <summary>
+	/// Summary description for TestChecklistRule.
+	/// </summary>
+	[SchemaItemDescription("Checklist Rule", "Checklist Rules", 16)]
+    [ClassMetaVersion("6.0.0")]
+	public class TestChecklistRule : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "TestChecklistRule";
+
+		public TestChecklistRule() : base() {}
+
+		public TestChecklistRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TestChecklistRule(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				return "16";
 			}
-	}
+		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

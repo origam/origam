@@ -25,84 +25,85 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.DeploymentModel;
-
-public enum DeploymentFileLocation
+namespace Origam.Schema.DeploymentModel
 {
-	Manual = 0,
-	ReportsFolder = 3
-}
-
-/// <summary>
-/// Summary description for FileRestoreUpdateScriptActivity.
-/// </summary>
-[SchemaItemDescription("File Restore Update Activity", 
-	"icon_file-restore-update-activity.png")]
-[HelpTopic("File+Restore+Update+Activity")]
-public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
-{
-	public FileRestoreUpdateScriptActivity() : base()
+	public enum DeploymentFileLocation
 	{
+		Manual = 0,
+		ReportsFolder = 3
+	}
+
+	/// <summary>
+	/// Summary description for FileRestoreUpdateScriptActivity.
+	/// </summary>
+	[SchemaItemDescription("File Restore Update Activity", 
+        "icon_file-restore-update-activity.png")]
+    [HelpTopic("File+Restore+Update+Activity")]
+	public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
+	{
+		public FileRestoreUpdateScriptActivity() : base()
+        {
             InitializeProperyContainers();
         }
 
-	public FileRestoreUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId)
-	{
+		public FileRestoreUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId)
+        {
             InitializeProperyContainers();
         }
 
-	public FileRestoreUpdateScriptActivity(Key primaryKey) : base(primaryKey)
-	{
+        public FileRestoreUpdateScriptActivity(Key primaryKey) : base(primaryKey)
+        {
             InitializeProperyContainers();
         }
 
-	private void InitializeProperyContainers()
-	{
+        private void InitializeProperyContainers()
+        {
             content = new PropertyContainer<byte[]>(
                 containerName: nameof(content),
                 containingObject: this);
         }
 
-	#region Properties
-	private PropertyContainer<byte[]> content;
+		#region Properties
+		private PropertyContainer<byte[]> content;
 
-	[Category("File Information")]
-	[XmlExternalFileReference(containerName: nameof(content), 
-		extension: ExternalFileExtension.Bin)]
-	public Byte[] File 
-	{
-		get => content.Get();
-		set => content.Set(value);
-	}
-
-	private string _manualLocation;
-	[Category("File Information")]
-	[XmlAttribute("fileName")]
-	public string FileName 
-	{
-		get
+		[Category("File Information")]
+		[XmlExternalFileReference(containerName: nameof(content), 
+            extension: ExternalFileExtension.Bin)]
+        public Byte[] File 
 		{
+            get => content.Get();
+            set => content.Set(value);
+        }
+
+        private string _manualLocation;
+		[Category("File Information")]
+		[XmlAttribute("fileName")]
+		public string FileName 
+		{
+			get
+			{
 				return _manualLocation;
 			}
-		set
-		{
+			set
+			{
 				_manualLocation = value;
 			}
-	}
+		}
 
-	private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
-	[Category("File Information")]
-	[XmlAttribute("targetLocation")]
-	public DeploymentFileLocation TargetLocation 
-	{
-		get
+		private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
+		[Category("File Information")]
+		[XmlAttribute("targetLocation")]
+		public DeploymentFileLocation TargetLocation 
 		{
+			get
+			{
 				return _targetLocation;
 			}
-		set
-		{
+			set
+			{
 				_targetLocation = value;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

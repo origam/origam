@@ -19,16 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// interface for associations (relationships between entities)
-/// </summary>
-public interface IAssociation : ISchemaItem
+namespace Origam.Schema.EntityModel
 {
-	IDataEntity BaseEntity{get;}
-	IDataEntity AssociatedEntity{get;}
-	bool IsParentChild{get;}
-	bool IsSelfJoin{get;}
-	bool IsOR{get;}
+	/// <summary>
+	/// interface for associations (relationships between entities)
+	/// </summary>
+	public interface IAssociation : ISchemaItem
+	{
+		IDataEntity BaseEntity{get;}
+		IDataEntity AssociatedEntity{get;}
+		bool IsParentChild{get;}
+		bool IsSelfJoin{get;}
+		bool IsOR{get;}
+	}
 }

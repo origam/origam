@@ -19,19 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui.Win.Commands;
-
-public class SqlConsoleParameters
+namespace Origam.Gui.Win.Commands
 {
-    public SqlConsoleParameters()
+    public class SqlConsoleParameters
     {
+        public SqlConsoleParameters()
+        {
         }
 
-    public SqlConsoleParameters(string command)
-    {
+        public SqlConsoleParameters(string command)
+        {
             Command = command;
         }
 
-    public string Command { get; set; }
-    public Platform Platform { get; set; }
+        public string Command { get; set; }
+        public Platform Platform { get; set; }
+    }
 }

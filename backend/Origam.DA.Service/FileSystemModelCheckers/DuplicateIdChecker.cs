@@ -28,21 +28,21 @@ using MoreLinq;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.FileSystemModelCheckers;
-
-public class DuplicateIdChecker: IFileSystemModelChecker
+namespace Origam.DA.Service.FileSystemModelCheckers
 {
-    private readonly IEnumerable<FileInfo> modelDirectoryFiles;
-    private readonly DuplicateTracker duplicateTracker = new DuplicateTracker();
-
-    public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider,
-        IEnumerable<FileInfo> modelDirectoryFiles)
+    public class DuplicateIdChecker: IFileSystemModelChecker
     {
+        private readonly IEnumerable<FileInfo> modelDirectoryFiles;
+        private readonly DuplicateTracker duplicateTracker = new DuplicateTracker();
+
+        public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider,
+            IEnumerable<FileInfo> modelDirectoryFiles)
+        {
             this.modelDirectoryFiles = modelDirectoryFiles;
         }
 
-    public IEnumerable<ModelErrorSection> GetErrors()
-    {
+        public IEnumerable<ModelErrorSection> GetErrors()
+        {
             modelDirectoryFiles
                .Where(OrigamFile.IsPersistenceFile)
                .ForEach(PuIdsToDuplicateTracker);
@@ -55,8 +55,8 @@ public class DuplicateIdChecker: IFileSystemModelChecker
            yield return new ModelErrorSection("Duplicate Ids", errorMessages);
         }
 
-    private IEnumerable<ErrorMessage> ToErrorMessages(DuplicateInfo duplicate)
-    {
+        private IEnumerable<ErrorMessage> ToErrorMessages(DuplicateInfo duplicate)
+        {
             yield return new ErrorMessage($"Object with Id: {duplicate.ObjectId} is defined in more than one file:");
             foreach (var file in duplicate.Files)
             {
@@ -64,8 +64,8 @@ public class DuplicateIdChecker: IFileSystemModelChecker
             }
         }
 
-    private void PuIdsToDuplicateTracker(FileInfo file)
-    {
+        private void PuIdsToDuplicateTracker(FileInfo file)
+        {
             string text;
             try
             {
@@ -86,15 +86,15 @@ public class DuplicateIdChecker: IFileSystemModelChecker
                 duplicateTracker.Add(id, file);
             }
         }
-}
+    }
 
-class DuplicateTracker
-{
-    private readonly Dictionary<Guid, List<FileInfo>> idToFilesDictionary 
-        = new Dictionary<Guid, List<FileInfo>>();
-
-    public void Add(Guid id, FileInfo file)
+    class DuplicateTracker
     {
+        private readonly Dictionary<Guid, List<FileInfo>> idToFilesDictionary 
+            = new Dictionary<Guid, List<FileInfo>>();
+
+        public void Add(Guid id, FileInfo file)
+        {
             if (!idToFilesDictionary.ContainsKey(id))
             {
                 idToFilesDictionary.Add(id, new List<FileInfo>());
@@ -103,22 +103,23 @@ class DuplicateTracker
             idToFilesDictionary[id].Add(file);
         }
 
-    public IEnumerable<DuplicateInfo> GetDuplicates()
-    {
+        public IEnumerable<DuplicateInfo> GetDuplicates()
+        {
             return idToFilesDictionary
                 .Where(pair => pair.Value.Count > 1)
                 .Select(pair => new DuplicateInfo(pair.Key, pair.Value));
         }
-}
+    }
 
-class DuplicateInfo
-{
-    public DuplicateInfo(Guid objectId, List<FileInfo> files)
+    class DuplicateInfo
     {
+        public DuplicateInfo(Guid objectId, List<FileInfo> files)
+        {
             ObjectId = objectId;
             Files = files;
         }
 
-    public Guid ObjectId { get;  }
-    public List<FileInfo> Files { get;}
+        public Guid ObjectId { get;  }
+        public List<FileInfo> Files { get;}
+    }
 }

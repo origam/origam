@@ -34,29 +34,29 @@ using Origam.Schema;
 using Origam.Excel;
 using Origam.Rule.Xslt;
 
-namespace Origam.BI.Excel;
-
-public class ExcelService : IReportService
+namespace Origam.BI.Excel
 {
-    public enum CellType
+    public class ExcelService : IReportService
     {
-        Unknown = -1,
-        NUMERIC = 0,
-        STRING = 1,
-        FORMULA = 2,
-        BLANK = 3,
-        BOOLEAN = 4,
-        ERROR = 5,
-        DATE = 100
-    }
-
-    public ExcelService()
-    {
+        public enum CellType
+        {
+            Unknown = -1,
+            NUMERIC = 0,
+            STRING = 1,
+            FORMULA = 2,
+            BLANK = 3,
+            BOOLEAN = 4,
+            ERROR = 5,
+            DATE = 100
         }
 
-    public object GetReport(Guid reportId, IXmlContainer data, string format,
-        Hashtable parameters, string dbTransaction)
-    {
+        public ExcelService()
+        {
+        }
+
+        public object GetReport(Guid reportId, IXmlContainer data, string format,
+            Hashtable parameters, string dbTransaction)
+        {
             if (format != DataReportExportFormatType.MSExcel.ToString())
             {
                 throw new ArgumentOutOfRangeException("format", format,
@@ -101,16 +101,16 @@ public class ExcelService : IReportService
             }
         }
 
-    private static void SetWorkbookProperties(OrigamSpreadsheet.WorkbookRow sourceWorkbook, IWorkbook wb)
-    {
+        private static void SetWorkbookProperties(OrigamSpreadsheet.WorkbookRow sourceWorkbook, IWorkbook wb)
+        {
             if (!sourceWorkbook.IsActiveSheetIndexNull())
             {
                 wb.SetActiveSheet(sourceWorkbook.ActiveSheetIndex);
             }
         }
 
-    private static void ProcessSheet(IWorkbook wb, OrigamSpreadsheet.SheetRow sourceSheet)
-    {
+        private static void ProcessSheet(IWorkbook wb, OrigamSpreadsheet.SheetRow sourceSheet)
+        {
             ISheet sheet = wb.GetSheet(sourceSheet.SheetName);
             if (sheet == null)
             {
@@ -124,8 +124,8 @@ public class ExcelService : IReportService
             }
         }
 
-    private static void SetSheetProperties(OrigamSpreadsheet.SheetRow sourceSheet, ISheet sheet)
-    {
+        private static void SetSheetProperties(OrigamSpreadsheet.SheetRow sourceSheet, ISheet sheet)
+        {
             if (!sourceSheet.IsTabColorIndexNull())
             {
                 sheet.TabColorIndex = Convert.ToInt16(sourceSheet.TabColorIndex);
@@ -158,8 +158,8 @@ public class ExcelService : IReportService
             }
         }
 
-    private static void ProcessRow(ISheet sheet, OrigamSpreadsheet.RowRow sourceRow)
-    {
+        private static void ProcessRow(ISheet sheet, OrigamSpreadsheet.RowRow sourceRow)
+        {
             IRow row = sheet.GetRow(sourceRow.Index);
             if (row == null)
             {
@@ -172,12 +172,12 @@ public class ExcelService : IReportService
             }
         }
 
-    private static void SetRowProperties(OrigamSpreadsheet.RowRow sourceRow, IRow row)
-    {
+        private static void SetRowProperties(OrigamSpreadsheet.RowRow sourceRow, IRow row)
+        {
         }
 
-    private static void ProcessCell(IRow row, OrigamSpreadsheet.CellRow sourceCell)
-    {
+        private static void ProcessCell(IRow row, OrigamSpreadsheet.CellRow sourceCell)
+        {
             ICell cell = row.GetCell(sourceCell.Index);
             if (cell == null)
             {
@@ -186,8 +186,8 @@ public class ExcelService : IReportService
             SetCellProperties(sourceCell, cell);
         }
 
-    private static void SetCellProperties(OrigamSpreadsheet.CellRow sourceCell, ICell cell)
-    {
+        private static void SetCellProperties(OrigamSpreadsheet.CellRow sourceCell, ICell cell)
+        {
             string value = null;
             if (!sourceCell.IsValueNull())
             {
@@ -240,9 +240,9 @@ public class ExcelService : IReportService
         
  
 
-    private static OrigamSpreadsheet GetSpreadsheetData(AbstractDataReport report,
-        IXmlContainer data, Hashtable parameters, string dbTransaction)
-    {
+        private static OrigamSpreadsheet GetSpreadsheetData(AbstractDataReport report,
+            IXmlContainer data, Hashtable parameters, string dbTransaction)
+        {
             IDataDocument xmlDataDoc =
                 ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
             // optional xslt transformation
@@ -273,20 +273,21 @@ public class ExcelService : IReportService
             return spreadsheetData;
         }
 
-    public void PrintReport(Guid reportId, IXmlContainer data,
-        string printerName, int copies, Hashtable parameters)
-    {
+        public void PrintReport(Guid reportId, IXmlContainer data,
+            string printerName, int copies, Hashtable parameters)
+        {
             throw new NotSupportedException();
         }
-    public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
-    {
+        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        {
             // do nothing unless we want something to trace
         }
 
-    public string PrepareExternalReportViewer(Guid reportId,
-        IXmlContainer data, string format, Hashtable parameters,
-        string dbTransaction)
-    {
+        public string PrepareExternalReportViewer(Guid reportId,
+            IXmlContainer data, string format, Hashtable parameters,
+            string dbTransaction)
+        {
             throw new NotImplementedException();
         }
+    }
 }

@@ -21,14 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA;
-
-[AttributeUsage(AttributeTargets.Property)]
-public class RuntimeConfigurableAttribute: Attribute
+namespace Origam.DA
 {
-    public string Name { get; }
-    public RuntimeConfigurableAttribute(string name)
+    [AttributeUsage(AttributeTargets.Property)]
+    public class RuntimeConfigurableAttribute: Attribute
     {
+        public string Name { get; }
+        public RuntimeConfigurableAttribute(string name)
+        {
             Name = name;
         }
+    }
 }

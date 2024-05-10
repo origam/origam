@@ -28,16 +28,16 @@ using Origam.DA.Service;
 using NUnit.Framework;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests;
-
-[TestFixture]
-public class FlatFileSearcherTests: AbstractFileTestClass
-{    
-    protected override TestContext TestContext =>
-        TestContext.CurrentContext;
-    /// [Test]
-    public void ShouldThrowBecauseIdInFoundElementIsMissing()
-    {
+namespace Origam.DA.Service_net2Tests
+{
+    [TestFixture]
+    public class FlatFileSearcherTests: AbstractFileTestClass
+    {    
+        protected override TestContext TestContext =>
+            TestContext.CurrentContext;
+       /// [Test]
+        public void ShouldThrowBecauseIdInFoundElementIsMissing()
+        {
             var exception = Assert.Throws<ArgumentNullException>(() =>
             {
                 FindStrings(stringToFind:"this item has no id");
@@ -45,9 +45,9 @@ public class FlatFileSearcherTests: AbstractFileTestClass
             StringAssert.Contains("is malformed",exception.Message);
         }
 
-    [Test]
-    public void ShouldFindAllItemsContainingKeyword()
-    {
+        [Test]
+        public void ShouldFindAllItemsContainingKeyword()
+        {
             string stringToFind = "blable";
             
             var flatFileSearcher = new FlatFileSearcher(stringToFind);
@@ -57,12 +57,12 @@ public class FlatFileSearcherTests: AbstractFileTestClass
             Assert.That(foundElementIds.Count, Is.EqualTo(2));
         }
 
-    /// <summary>
-    /// Takes 300 ms on 1100 files.
-    /// </summary>
-    /// [Test]
-    public void SpeedTest()
-    {
+        /// <summary>
+        /// Takes 300 ms on 1100 files.
+        /// </summary>
+       /// [Test]
+        public void SpeedTest()
+        {
             string pathToLargeNumberOfTestFiles = @"C:\Bordel\Serialization";
             string stringToFind = "calendar";
 
@@ -83,31 +83,31 @@ public class FlatFileSearcherTests: AbstractFileTestClass
             Assert.That(foundElementIds.Count, Is.EqualTo(5));
         }
 
-    [TestCase("Test blable string", new []{
-        "221bf117-1afb-462e-8c38-5b66ad84c347"
-    })]
-    [TestCase("Test file blable", new []{
-        "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
-    })]
-    [TestCase("blable", new []{
-        "221bf117-1afb-462e-8c38-5b66ad84c347",
-        "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
-    })]
-    [TestCase("blabl*", new []{
-        "221bf117-1afb-462e-8c38-5b66ad84c347",
-        "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
-    })]
-    [TestCase("*lable", new []{
-        "221bf117-1afb-462e-8c38-5b66ad84c347",
-        "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
-    })]
-    [TestCase("*labl*", new []{
-        "221bf117-1afb-462e-8c38-5b66ad84c347",
-        "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
-    })]
-    public void ShouldFindStringInFiles(string stringToFind,
-        string[] expectedResultIdStr)
-    {
+        [TestCase("Test blable string", new []{
+            "221bf117-1afb-462e-8c38-5b66ad84c347"
+        })]
+        [TestCase("Test file blable", new []{
+           "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
+        })]
+        [TestCase("blable", new []{
+            "221bf117-1afb-462e-8c38-5b66ad84c347",
+            "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
+        })]
+        [TestCase("blabl*", new []{
+            "221bf117-1afb-462e-8c38-5b66ad84c347",
+            "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
+        })]
+        [TestCase("*lable", new []{
+            "221bf117-1afb-462e-8c38-5b66ad84c347",
+            "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
+        })]
+        [TestCase("*labl*", new []{
+            "221bf117-1afb-462e-8c38-5b66ad84c347",
+            "8afba476-ce1e-4c8c-b5e8-d3326b0e658d"
+        })]
+        public void ShouldFindStringInFiles(string stringToFind,
+            string[] expectedResultIdStr)
+        {
             List<Guid> foundElementIds = FindStrings(stringToFind);
             List<Guid> expectedGuids = 
                 expectedResultIdStr
@@ -120,17 +120,17 @@ public class FlatFileSearcherTests: AbstractFileTestClass
             }
         }
         
-    [TestCase("blabl")]
-    [TestCase("lable")]
-    [TestCase("labl")]
-    public void ShouldFailToFindFindStringInFiles(string stringToFind)
-    {
+        [TestCase("blabl")]
+        [TestCase("lable")]
+        [TestCase("labl")]
+        public void ShouldFailToFindFindStringInFiles(string stringToFind)
+        {
             List<Guid> foundElementIds = FindStrings(stringToFind);
             Assert.That(foundElementIds.Count, Is.EqualTo(0));
         }
 
-    private List<Guid> FindStrings(string stringToFind)
-    {
+        private List<Guid> FindStrings(string stringToFind)
+        {
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -143,5 +143,6 @@ public class FlatFileSearcherTests: AbstractFileTestClass
             return foundElementIds;
         }
 
-    protected override string DirName => "FlatFileSearchTests";
+        protected override string DirName => "FlatFileSearchTests";
+    }
 }

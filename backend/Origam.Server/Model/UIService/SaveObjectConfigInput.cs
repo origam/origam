@@ -22,11 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Server.Model.UIService;
-
-public class SaveObjectConfigInput
+namespace Origam.Server.Model.UIService
 {
-    public Guid ObjectInstanceId { get; set; }
-    public Guid SessionFormIdentifier { get; set; }
-    public Dictionary<string, string> SectionNameAndData { get; set; }
+    public class SaveObjectConfigInput
+    {
+        public Guid ObjectInstanceId { get; set; }
+        public Guid SessionFormIdentifier { get; set; }
+        public Dictionary<string, string> SectionNameAndData { get; set; }
+    }
 }

@@ -26,14 +26,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.Server.IdentityServerGui.Home;
 
-namespace Origam.Server.IdentityServerGui.Account;
-
-public class ErrorController: Microsoft.AspNetCore.Mvc.Controller
+namespace Origam.Server.IdentityServerGui.Account
 {
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Error()
+    public class ErrorController: Microsoft.AspNetCore.Mvc.Controller
     {
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Error()
+        {
             return View();
         }
+    }
 }

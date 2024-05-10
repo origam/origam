@@ -28,67 +28,67 @@ using Origam.UI;
 
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
 
-namespace OrigamArchitect;
-
-/// <summary>
-/// Summary description for MainClass.
-/// </summary>
-public class MainClass
+namespace OrigamArchitect
 {
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 	/// <summary>
-	/// The main entry point for the application.
+	/// Summary description for MainClass.
 	/// </summary>
-	[STAThread]
-	static void Main(string[] args) 
+	public class MainClass
 	{
-		log.Info("ORIGAM Desktop starting.");
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		Application.ThreadException += Application_ThreadException;
-		AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-		try
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main(string[] args) 
 		{
-			Application.EnableVisualStyles();
-			Application.DoEvents();
-		}
-		catch{}
+			log.Info("ORIGAM Desktop starting.");
 
-		try
-		{
+			Application.ThreadException += Application_ThreadException;
+			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+			try
+			{
+				Application.EnableVisualStyles();
+				Application.DoEvents();
+			}
+			catch{}
+
+			try
+			{
 #if !ORIGAM_CLIENT
 				Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 				Thread.CurrentThread.CurrentCulture =  new CultureInfo("en-US");
 #endif				
-			frmMain form = new frmMain();
+				frmMain form = new frmMain();
 
-			WorkbenchSingleton.Workbench = form;
+				WorkbenchSingleton.Workbench = form;
 
-			if(args.Length > 0 && args[0].ToUpper() == "/A")
-			{
-				form.AdministratorMode = true;
-			}
+				if(args.Length > 0 && args[0].ToUpper() == "/A")
+				{
+					form.AdministratorMode = true;
+				}
 				
-			Application.Run(WorkbenchSingleton.Workbench as Form);
+				Application.Run(WorkbenchSingleton.Workbench as Form);
+			}
+			catch(Exception ex)
+			{
+				HandleUnhandledException(ex);
+			}
 		}
-		catch(Exception ex)
-		{
-			HandleUnhandledException(ex);
-		}
-	}
 
-	private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
-	{
+		private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+		{
 			HandleUnhandledException(e.Exception);
 		}
 
-	private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-	{
+		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
 			HandleUnhandledException(e.ExceptionObject);
 		}
 
-	private static void HandleUnhandledException(object o)
-	{
+		private static void HandleUnhandledException(object o)
+		{
 			Exception ex = o as Exception;
             if (ex == null)
 			{
@@ -108,4 +108,5 @@ public class MainClass
 				}
 			}
 		}
+	}
 }

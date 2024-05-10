@@ -19,36 +19,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui.Designer;
-
-using System;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Collections;
-using System.Windows.Forms;
-using System.Diagnostics;
-
-/// This class keeps track of the selected component(s) and provides events
-/// to notify about selection changes.
-internal class SelectionServiceImpl : ISelectionService 
+namespace Origam.Gui.Designer
 {
+	using System;
+	using System.ComponentModel;
+	using System.ComponentModel.Design;
+	using System.Collections;
+	using System.Windows.Forms;
+	using System.Diagnostics;
 
-	// These constitute the current selection at any moment.
-	private SelectionItem           primarySelection;         // the primary selection
-	private Hashtable                     selectionsByComponent;    // hashtable of selections
-
-	// Hookups to other services
-	private IDesignerHost           host;                     // The host interface
-	private IContainer              container;                // The container we're showing selection for
-        
-	// These are used when the host is in batch mode: we want to queue up selection
-	// changes in this case.
-	private bool                 batchMode;                // Are we in batch mode?
-	private bool                 selectionChanged;         // true, if the selection changed in batch mode
-	private bool                 selectionContentsChanged; // true, if the selection contents changed in batch mode
-        
-	internal SelectionServiceImpl(IDesignerHost host) 
+	/// This class keeps track of the selected component(s) and provides events
+	/// to notify about selection changes.
+	internal class SelectionServiceImpl : ISelectionService 
 	{
+
+		// These constitute the current selection at any moment.
+		private SelectionItem           primarySelection;         // the primary selection
+		private Hashtable                     selectionsByComponent;    // hashtable of selections
+
+		// Hookups to other services
+		private IDesignerHost           host;                     // The host interface
+		private IContainer              container;                // The container we're showing selection for
+        
+		// These are used when the host is in batch mode: we want to queue up selection
+		// changes in this case.
+		private bool                 batchMode;                // Are we in batch mode?
+		private bool                 selectionChanged;         // true, if the selection changed in batch mode
+		private bool                 selectionContentsChanged; // true, if the selection contents changed in batch mode
+        
+		internal SelectionServiceImpl(IDesignerHost host) 
+		{
 			this.host = host;
 			this.container = host.Container;
 			this.selectionsByComponent = new Hashtable();
@@ -80,13 +80,13 @@ internal class SelectionServiceImpl : ISelectionService
 			host.LoadComplete += new EventHandler(this.DesignerHost_LoadComplete);
 		}
 
-	// Properties
+		// Properties
 
-	/// The primary selection is the last one to have been selected.
-	object ISelectionService.PrimarySelection 
-	{ 
-		get 
-		{
+		/// The primary selection is the last one to have been selected.
+		object ISelectionService.PrimarySelection 
+		{ 
+			get 
+			{
 				if (primarySelection == null) 
 				{
 					IDictionaryEnumerator selections = (IDictionaryEnumerator)selectionsByComponent.GetEnumerator();
@@ -106,32 +106,32 @@ internal class SelectionServiceImpl : ISelectionService
                 
 				return null;
 			}
-	}
+		}
         
-	/// Return the number of components we have selected.
-	int ISelectionService.SelectionCount 
-	{ 
-		get 
-		{
+		/// Return the number of components we have selected.
+		int ISelectionService.SelectionCount 
+		{ 
+			get 
+			{
 				return selectionsByComponent.Count;
 			}
-	}
+		}
 
-	// Events
-	public event EventHandler SelectionChanged;
-	public event EventHandler SelectionChanging;
+		// Events
+		public event EventHandler SelectionChanged;
+		public event EventHandler SelectionChanging;
 
-	// Methods
+		// Methods
 
-	/// Check to see if the given component is in our selection group.
-	bool ISelectionService.GetComponentSelected(object component) 
-	{
+		/// Check to see if the given component is in our selection group.
+		bool ISelectionService.GetComponentSelected(object component) 
+		{
 			return (component != null && null != selectionsByComponent[component]);
 		}
 
-	/// Return our list of selected components.
-	ICollection ISelectionService.GetSelectedComponents() 
-	{
+		/// Return our list of selected components.
+		ICollection ISelectionService.GetSelectedComponents() 
+		{
 			object[] sels = new object[selectionsByComponent.Values.Count];
 			selectionsByComponent.Values.CopyTo(sels, 0);
 			object[] objects = new object[sels.Length];
@@ -144,15 +144,15 @@ internal class SelectionServiceImpl : ISelectionService
 			return objects;
 		}
 
-	/// Select the given components.
-	void ISelectionService.SetSelectedComponents(ICollection components) 
-	{
+		/// Select the given components.
+		void ISelectionService.SetSelectedComponents(ICollection components) 
+		{
 			((ISelectionService)this).SetSelectedComponents(components, SelectionTypes.Normal);
 		}
 
-	/// Select the given components with the given SelectionType.
-	void ISelectionService.SetSelectedComponents(ICollection components, SelectionTypes selectionType) 
-	{
+		/// Select the given components with the given SelectionType.
+		void ISelectionService.SetSelectedComponents(ICollection components, SelectionTypes selectionType) 
+		{
 			bool fToggle = false;
 			bool fControl = false;
 			bool fClick  = false;
@@ -283,59 +283,59 @@ internal class SelectionServiceImpl : ISelectionService
 
 
 
-	///     Adds the given selection to our selection list.
-	private void AddSelection(SelectionItem sel) 
-	{
+		///     Adds the given selection to our selection list.
+		private void AddSelection(SelectionItem sel) 
+		{
 			selectionsByComponent[sel.Component] = sel;
 		}
 
 
-	private void DesignerHost_LoadComplete(object sender, EventArgs e) 
-	{
+		private void DesignerHost_LoadComplete(object sender, EventArgs e) 
+		{
 			// Flush any pending changes
 			batchMode = false;
 			FlushSelectionChanges();
 		}
 
 
-	///     Called by the designer host when it is entering or leaving a batch
-	///     operation.  Here we queue up selection notification and we turn off
-	///     our UI.
-	private void DesignerHost_TransactionClosed(object sender, DesignerTransactionCloseEventArgs e) 
-	{
+		///     Called by the designer host when it is entering or leaving a batch
+		///     operation.  Here we queue up selection notification and we turn off
+		///     our UI.
+		private void DesignerHost_TransactionClosed(object sender, DesignerTransactionCloseEventArgs e) 
+		{
 			batchMode = false;
 			FlushSelectionChanges();
 		}
 
-	///     Called by the designer host when it is entering or leaving a batch
-	///     operation.  Here we queue up selection notification and we turn off
-	///     our UI.
-	private void DesignerHost_TransactionOpened(object sender, EventArgs e) 
-	{
+		///     Called by the designer host when it is entering or leaving a batch
+		///     operation.  Here we queue up selection notification and we turn off
+		///     our UI.
+		private void DesignerHost_TransactionOpened(object sender, EventArgs e) 
+		{
 			batchMode = true;
 		}
 
-	///     Called by the formcore when someone has added a component.
-	private void DesignerHost_ComponentAdd(object sender, ComponentEventArgs ce) 
-	{
+		///     Called by the formcore when someone has added a component.
+		private void DesignerHost_ComponentAdd(object sender, ComponentEventArgs ce) 
+		{
 			OnSelectionContentsChanged();
 		}
 
-	///     Called when a component changes.  Here we look to see if the component is
-	///     selected.  If it is, we notify STrackSelection that the selection has changed.
-	private void DesignerHost_ComponentChanged(object sender, ComponentChangedEventArgs ce) 
-	{
+		///     Called when a component changes.  Here we look to see if the component is
+		///     selected.  If it is, we notify STrackSelection that the selection has changed.
+		private void DesignerHost_ComponentChanged(object sender, ComponentChangedEventArgs ce) 
+		{
 			if (selectionsByComponent[ce.Component] != null) 
 			{
 				OnSelectionContentsChanged();
 			}
 		}
 
-	///     Called by the formcore when someone has removed a component.  This will
-	///     remove any selection on the component without disturbing the rest of
-	///     the selection.
-	private void DesignerHost_ComponentRemove(object sender, ComponentEventArgs ce) 
-	{
+		///     Called by the formcore when someone has removed a component.  This will
+		///     remove any selection on the component without disturbing the rest of
+		///     the selection.
+		private void DesignerHost_ComponentRemove(object sender, ComponentEventArgs ce) 
+		{
 
 			SelectionItem sel = (SelectionItem)selectionsByComponent[ce.Component];
             
@@ -420,9 +420,9 @@ internal class SelectionServiceImpl : ISelectionService
 
 
 
-	///     Disposes the entire selection manager.
-	internal void Dispose() 
-	{
+		///     Disposes the entire selection manager.
+		internal void Dispose() 
+		{
 			// We've got to be careful here.  We're one of the last things to go away when
 			// a form is being torn down, and we've got to be wary if things have pulled out
 			// already.
@@ -456,10 +456,10 @@ internal class SelectionServiceImpl : ISelectionService
 		}
 
 
-	///     Called when our visiblity or batch mode changes.  Flushes
-	///     any pending notifications or updates if possible.
-	private void FlushSelectionChanges() 
-	{
+		///     Called when our visiblity or batch mode changes.  Flushes
+		///     any pending notifications or updates if possible.
+		private void FlushSelectionChanges() 
+		{
 			if (!batchMode) 
 			{
 				if (selectionChanged) OnSelectionChanged();
@@ -468,10 +468,10 @@ internal class SelectionServiceImpl : ISelectionService
 		}
         
         
-	///     Called anytime the selection has changed.  We update our UI for the selection, and
-	///     then we fire a change event.
-	private void OnSelectionChanged() 
-	{
+		///     Called anytime the selection has changed.  We update our UI for the selection, and
+		///     then we fire a change event.
+		private void OnSelectionChanged() 
+		{
 			if (batchMode) 
 			{
 				selectionChanged = true;
@@ -513,11 +513,11 @@ internal class SelectionServiceImpl : ISelectionService
 			}
 		}
 
-	///     This should be called when the selection has changed, or when just the contents of
-	///     the selection has changed.  It updates the document manager's notion of selection.
-	///     the selection have changed.
-	private void OnSelectionContentsChanged() 
-	{
+		///     This should be called when the selection has changed, or when just the contents of
+		///     the selection has changed.  It updates the document manager's notion of selection.
+		///     the selection have changed.
+		private void OnSelectionContentsChanged() 
+		{
 			if (batchMode) 
 			{
 				selectionContentsChanged = true;
@@ -537,17 +537,17 @@ internal class SelectionServiceImpl : ISelectionService
 			}
 		}
 
-	///     Removes the given selection from our selection list
-	private void RemoveSelection(SelectionItem s) 
-	{
+		///     Removes the given selection from our selection list
+		private void RemoveSelection(SelectionItem s) 
+		{
 			selectionsByComponent.Remove(s.Component);
 			s.Dispose();
 		}
 
 
-	///     Sets the given selection object to be the primary selection.
-	internal void SetPrimarySelection(SelectionItem sel) 
-	{
+		///     Sets the given selection object to be the primary selection.
+		internal void SetPrimarySelection(SelectionItem sel) 
+		{
 			if (sel != primarySelection) 
 			{
 				if (null != primarySelection) 
@@ -564,4 +564,6 @@ internal class SelectionServiceImpl : ISelectionService
 			}
 		}
 
+	}
 }
+

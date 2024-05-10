@@ -29,29 +29,29 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using Origam.DA;
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for Schema.
-/// </summary>
-[XmlPackageRoot("package")]
-[ClassMetaVersion("6.1.0")]
-public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
+namespace Origam.Schema
 {
-
-	SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "icon_01_common.png", 0);
-	SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "icon_05_data.png", 1);
-	SchemaItemProviderGroup _userInterfaceModelGroup = new SchemaItemProviderGroup("UI", "User Interface", "icon_13_user-interface.png", 2);
-	SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup("BL", "Business Logic", "icon_26_business-logic.png", 3);
-	SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup("API", "API", "icon_35_API.png", 4);
-		
-	public Package()
+	/// <summary>
+	/// Summary description for Schema.
+	/// </summary>
+	[XmlPackageRoot("package")]
+    [ClassMetaVersion("6.1.0")]
+	public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
+
+        SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "icon_01_common.png", 0);
+		SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "icon_05_data.png", 1);
+		SchemaItemProviderGroup _userInterfaceModelGroup = new SchemaItemProviderGroup("UI", "User Interface", "icon_13_user-interface.png", 2);
+		SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup("BL", "Business Logic", "icon_26_business-logic.png", 3);
+		SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup("API", "API", "icon_35_API.png", 4);
+		
+		public Package()
+		{
 			this.PrimaryKey = new ModelElementKey();
 		}
 
-	public Package(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
-	{
+		public Package(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
+		{
 			this._childNodes.Add(_dataModelGroup);
 			this._childNodes.Add(_businessLogicModelGroup);
 			this._childNodes.Add(_userInterfaceModelGroup);
@@ -59,8 +59,8 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 			this._childNodes.Add(_commonModelGroup);
 		}
 
-	public override void Persist()
-	{
+		public override void Persist()
+		{
 			Action persistsAction = () =>
 			{
 				if (!IsDeleted)
@@ -89,54 +89,54 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 			}
 		}
 
-	public override string ToString() => this.Name;
+		public override string ToString() => this.Name;
 
-	#region Properties
-	public bool IsFileRootElement => true;
+		#region Properties
+		public bool IsFileRootElement => true;
 
-	[XmlAttribute(AttributeName = "name")]
-	public string name  = "";
+		[XmlAttribute(AttributeName = "name")]
+		public string name  = "";
 
-	public string Name
-	{
-		get => name;
-		set
+		public string Name
 		{
+			get => name;
+			set
+			{
 				OldName = name;
 				name = value;
 			}
-	}
+		}
 
-	public string OldName { get; private set; } = "";
-	public bool WasRenamed =>
-		!string.IsNullOrEmpty(OldName) && OldName != Name;
+		public string OldName { get; private set; } = "";
+		public bool WasRenamed =>
+			!string.IsNullOrEmpty(OldName) && OldName != Name;
 
-	/// <summary>
-	/// Gets or sets the version of this schema extension.
-	/// </summary>
-	[XmlAttribute(AttributeName = "version")]
-	public string VersionString { get; set; } = "";
+		/// <summary>
+		/// Gets or sets the version of this schema extension.
+		/// </summary>
+		[XmlAttribute(AttributeName = "version")]
+        public string VersionString { get; set; } = "";
 
-	public PackageVersion Version => new PackageVersion(VersionString);
+		public PackageVersion Version => new PackageVersion(VersionString);
 
-	[XmlAttribute(AttributeName = "copyright")]
-	public string Copyright { get; set; } = "";
+        [XmlAttribute(AttributeName = "copyright")]
+        public string Copyright { get; set; } = "";
 
-	[XmlAttribute(AttributeName = "description")]
-	public string Description { get; set; } = "";
+        [XmlAttribute(AttributeName = "description")]
+        public string Description { get; set; } = "";
 
-	public IList<Package> IncludedPackages
-	{
-		get
-		{
+		public IList<Package> IncludedPackages
+        {
+            get
+            {
 	            List<Package> result = new List<Package>();
                 SortPackages(this, result);
                 return result;
             }
-	}
+        }
 
-	private static void SortPackages(Package package, IList<Package> packages)
-	{
+        private static void SortPackages(Package package, IList<Package> packages)
+        {
             foreach (PackageReference reference in package.References)
             {
                 if (!packages.Contains(reference.ReferencedPackage))
@@ -146,62 +146,62 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
                 }
             }
         }
-	#endregion
+        #endregion
 
-	#region IBrowserNode2 Members
-	[Browsable(false)] 
-	public bool Hide
-	{
-		get => !this.IsPersisted;
-		set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
-	}
+		#region IBrowserNode2 Members
+		[Browsable(false)] 
+		public bool Hide
+		{
+			get => !this.IsPersisted;
+			set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
+		}
 		
-	public bool CanDelete => false;
+		public bool CanDelete => false;
 
-	public void Delete()
-	{
+		public void Delete()
+		{
 			// TODO:  Add SchemaExtension.Delete implementation
 		}
 
-	public bool CanMove(IBrowserNode2 newNode) => false;
+		public bool CanMove(IBrowserNode2 newNode) => false;
 
-	[Browsable(false)]
-	public IBrowserNode2 ParentNode
-	{
-		get => null;
-		set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension"));
-	}
+		[Browsable(false)]
+		public IBrowserNode2 ParentNode
+		{
+			get => null;
+			set => throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveExtension"));
+		}
 
-	public byte[] NodeImage => null;
+		public byte[] NodeImage => null;
 
-	[Browsable(false)] 
-	public string NodeId => this.PrimaryKey["Id"].ToString();
+		[Browsable(false)] 
+		public string NodeId => this.PrimaryKey["Id"].ToString();
 
-	[Browsable(false)]
-	public virtual string FontStyle => "Regular";
-	#endregion
+		[Browsable(false)]
+        public virtual string FontStyle => "Regular";
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public bool HasChildNodes => this.ChildNodes().Count > 0;
+		public bool HasChildNodes => this.ChildNodes().Count > 0;
 
-	public bool CanRename => false;
+		public bool CanRename => false;
 
-	public List<PackageReference> References =>
-		PersistenceProvider
-			.RetrieveListByParent<PackageReference>(this.PrimaryKey,
-				"SchemaExtension", "PackageReference", this.UseObjectCache);
+		public List<PackageReference> References =>
+			PersistenceProvider
+				.RetrieveListByParent<PackageReference>(this.PrimaryKey,
+					"SchemaExtension", "PackageReference", this.UseObjectCache);
 
-	BrowserNodeCollection _childNodes = new BrowserNodeCollection();
+		BrowserNodeCollection _childNodes = new BrowserNodeCollection();
 
-	public BrowserNodeCollection ChildNodes()
-	{
+		public BrowserNodeCollection ChildNodes()
+		{
 			return _childNodes;
 			//return new BrowserNodeCollection(this.References.ToArray(typeof(IBrowserNode)) as IBrowserNode[]);
 		}
 
-	public void AddProvider(AbstractSchemaItemProvider provider)
-	{
+		public void AddProvider(AbstractSchemaItemProvider provider)
+		{
 			SchemaItemProviderGroup group = null;
 			foreach(SchemaItemProviderGroup childGroup in this.ChildNodes())
 			{
@@ -218,34 +218,34 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 			group.ChildNodes().Add(provider);
 		}
 
-	public string NodeText
-	{
-		get => this.Name;
-		set => this.Name = value;
-	}
+		public string NodeText
+		{
+			get => this.Name;
+			set => this.Name = value;
+		}
 
-	public string NodeToolTipText => null;
+		public string NodeToolTipText => null;
 
-	public string Icon => "09_packages-1.ico";
+		public string Icon => "09_packages-1.ico";
 
-	public string RelativeFilePath => this.Name + "\\"+ PersistenceFiles.PackageFileName;
+		public string RelativeFilePath => this.Name + "\\"+ PersistenceFiles.PackageFileName;
 
-	public Guid FileParentId
-	{
-		get => Guid.Empty;
-		set { }
-	}
+		public Guid FileParentId
+		{
+			get => Guid.Empty;
+			set { }
+		}
 
-	public bool IsFolder => true;
+		public bool IsFolder => true;
 
-	public IDictionary<string, Guid> ParentFolderIds => new Dictionary<string, Guid>();
+		public IDictionary<string, Guid> ParentFolderIds => new Dictionary<string, Guid>();
 
-	public string Path => null;
-	#endregion
+		public string Path => null;
+		#endregion
 
-	#region IComparable Members
-	public int CompareTo(object obj)
-	{
+        #region IComparable Members
+        public int CompareTo(object obj)
+		{
 			IBrowserNode bn = obj as IBrowserNode;
 
 			if(bn != null)
@@ -257,5 +257,6 @@ public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePers
 				throw new InvalidCastException();
 			}
 		}
-	#endregion
+        #endregion
+    }
 }

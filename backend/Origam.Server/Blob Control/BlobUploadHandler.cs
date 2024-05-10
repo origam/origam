@@ -22,12 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using ImageMagick;
 
-namespace Origam.Server;
-
-public class BlobUploadHandler
+namespace Origam.Server
 {
-    public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
+
+    public class BlobUploadHandler
     {
+        public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
+        {
             using MagickImage thumbnail = FixedSize(img, width, height);
             var memoryStream = new MemoryStream();
             try
@@ -41,9 +42,9 @@ public class BlobUploadHandler
             }
         }
 
-    public static MagickImage FixedSize(
-        MagickImage imgPhoto, int width, int height)
-    {
+        public static MagickImage FixedSize(
+            MagickImage imgPhoto, int width, int height)
+        {
             int sourceWidth = imgPhoto.Width;
             int sourceHeight = imgPhoto.Height;
             int destX = 0;
@@ -72,4 +73,5 @@ public class BlobUploadHandler
             blackMarginPhoto.Composite(imgPhoto, destX, destY);
             return blackMarginPhoto;
         }
+    }
 }

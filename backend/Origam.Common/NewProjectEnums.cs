@@ -19,20 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam;
-
-public class NewProjectEnums
+namespace Origam
 {
-    public enum TypeDoTemplate
+    public class NewProjectEnums
     {
-        Copy,
-        Clone,
-        None
-    }
-    public enum TypeTemplate
-    {
-        Default,
-        Open,
-        Template
+        public enum TypeDoTemplate
+        {
+            Copy,
+            Clone,
+            None
+        }
+        public enum TypeTemplate
+        {
+            Default,
+            Open,
+            Template
+        }
     }
 }

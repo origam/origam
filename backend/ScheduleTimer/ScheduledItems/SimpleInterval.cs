@@ -16,35 +16,35 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 
-namespace Schedule;
-
-/// <summary>
-/// The simple interval represents the simple scheduling that .net supports natively.  It consists of a start
-/// absolute time and an interval that is counted off from the start time.
-/// </summary>
-[Serializable]
-public class SimpleInterval : IScheduledItem
+namespace Schedule
 {
-	public SimpleInterval(DateTime StartTime, TimeSpan Interval)
+	/// <summary>
+	/// The simple interval represents the simple scheduling that .net supports natively.  It consists of a start
+	/// absolute time and an interval that is counted off from the start time.
+	/// </summary>
+	[Serializable]
+	public class SimpleInterval : IScheduledItem
 	{
+		public SimpleInterval(DateTime StartTime, TimeSpan Interval)
+		{
 			_Interval = Interval;
 			_StartTime = StartTime;
 			_EndTime = DateTime.MaxValue;
 		}
-	public SimpleInterval(DateTime StartTime, TimeSpan Interval, int count)
-	{
+		public SimpleInterval(DateTime StartTime, TimeSpan Interval, int count)
+		{
 			_Interval = Interval;
 			_StartTime = StartTime;
 			_EndTime = StartTime + TimeSpan.FromTicks(Interval.Ticks*count);
 		}
-	public SimpleInterval(DateTime StartTime, TimeSpan Interval, DateTime EndTime)
-	{
+		public SimpleInterval(DateTime StartTime, TimeSpan Interval, DateTime EndTime)
+		{
 			_Interval = Interval;
 			_StartTime = StartTime;
 			_EndTime = EndTime;
 		}
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
-	{
+		public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+		{
 			if (End <= _StartTime)
 				return;
 			DateTime Next = NextRunTime(Begin, true);
@@ -55,8 +55,8 @@ public class SimpleInterval : IScheduledItem
 			}
 		}
 
-	public DateTime NextRunTime(DateTime time, bool AllowExact)
-	{
+		public DateTime NextRunTime(DateTime time, bool AllowExact)
+		{
 			DateTime returnTime = NextRunTimeInt(time, AllowExact);
 			Debug.WriteLine(time);
 			Debug.WriteLine(returnTime);
@@ -64,8 +64,8 @@ public class SimpleInterval : IScheduledItem
 			return (returnTime >= _EndTime) ? DateTime.MaxValue : returnTime;
 		}
 
-	private DateTime NextRunTimeInt(DateTime time, bool AllowExact)
-	{
+		private DateTime NextRunTimeInt(DateTime time, bool AllowExact)
+		{
 			TimeSpan Span = time-_StartTime;
 			if (Span < TimeSpan.Zero)
 				return _StartTime;
@@ -75,15 +75,16 @@ public class SimpleInterval : IScheduledItem
 			return time.AddMilliseconds(msRemaining);
 		}
 
-	private bool ExactMatch(DateTime time)
-	{
+		private bool ExactMatch(DateTime time)
+		{
 			TimeSpan Span = time-_StartTime;
 			if (Span < TimeSpan.Zero)
 				return false;
 			return (Span.TotalMilliseconds % _Interval.TotalMilliseconds) == 0;
 		}
 
-	private TimeSpan _Interval;
-	private DateTime _StartTime;
-	private DateTime _EndTime;
+		private TimeSpan _Interval;
+		private DateTime _StartTime;
+		private DateTime _EndTime;
+	}
 }

@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 
-namespace Origam.Server;
-
-public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
+namespace Origam.Server
 {
-    private readonly IStringLocalizer<SharedResources> _localizer;
-
-    public MultiLanguageIdentityErrorDescriber(IStringLocalizer<SharedResources> localizer)
+    public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
     {
+        private readonly IStringLocalizer<SharedResources> _localizer;
+
+        public MultiLanguageIdentityErrorDescriber(IStringLocalizer<SharedResources> localizer)
+        {
             _localizer = localizer;
         }
 
-    public override IdentityError DuplicateEmail(string email)
-    {
+        public override IdentityError DuplicateEmail(string email)
+        {
             return new IdentityError()
             {
                 Code = nameof(DuplicateEmail),
@@ -21,14 +21,14 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError DefaultError()
-    {
+        public override IdentityError DefaultError()
+        {
             return new IdentityError
                 {Code = nameof(DefaultError), Description = _localizer["UnknownFailure"]};
         }
 
-    public override IdentityError ConcurrencyFailure()
-    {
+        public override IdentityError ConcurrencyFailure()
+        {
             return new IdentityError
             {
                 Code = nameof(ConcurrencyFailure),
@@ -36,18 +36,18 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError PasswordMismatch()
-    {
+        public override IdentityError PasswordMismatch()
+        {
             return new IdentityError {Code = nameof(PasswordMismatch), Description = _localizer["IncorrectPassword"]};
         }
 
-    public override IdentityError InvalidToken()
-    {
+        public override IdentityError InvalidToken()
+        {
             return new IdentityError {Code = nameof(InvalidToken), Description = _localizer["InvalidToken"]};
         }
 
-    public override IdentityError LoginAlreadyAssociated()
-    {
+        public override IdentityError LoginAlreadyAssociated()
+        {
             return new IdentityError
             {
                 Code = nameof(LoginAlreadyAssociated),
@@ -55,8 +55,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError InvalidUserName(string userName)
-    {
+        public override IdentityError InvalidUserName(string userName)
+        {
             return new IdentityError
             {
                 Code = nameof(InvalidUserName),
@@ -65,22 +65,22 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError InvalidEmail(string email)
-    {
+        public override IdentityError InvalidEmail(string email)
+        {
             return new IdentityError
                 {Code = nameof(InvalidEmail), Description = string.Format(_localizer["EmailIsInvalid"], email)};
         }
 
-    public override IdentityError DuplicateUserName(string userName)
-    {
+        public override IdentityError DuplicateUserName(string userName)
+        {
             return new IdentityError
             {
                 Code = nameof(DuplicateUserName),
                 Description = string.Format(_localizer["UserNameTaken"], userName)
             };
         }
-    public override IdentityError InvalidRoleName(string role)
-    {
+        public override IdentityError InvalidRoleName(string role)
+        {
             return new IdentityError
             {
                 Code = nameof(InvalidRoleName),
@@ -88,8 +88,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError DuplicateRoleName(string role)
-    {
+        public override IdentityError DuplicateRoleName(string role)
+        {
             return new IdentityError
             {
                 Code = nameof(DuplicateRoleName),
@@ -97,22 +97,22 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError UserAlreadyHasPassword()
-    {
+        public override IdentityError UserAlreadyHasPassword()
+        {
             return new IdentityError
                 {Code = nameof(UserAlreadyHasPassword), Description = _localizer["PasswordAlreadySet"]};
         }
 
-    public override IdentityError UserLockoutNotEnabled()
-    {
+        public override IdentityError UserLockoutNotEnabled()
+        {
             return new IdentityError
             {
                 Code = nameof(UserLockoutNotEnabled), Description = _localizer["LockOutNotEnabled"]
             };
         }
 
-    public override IdentityError UserAlreadyInRole(string role)
-    {
+        public override IdentityError UserAlreadyInRole(string role)
+        {
             return new IdentityError
             {
                 Code = nameof(UserAlreadyInRole),
@@ -120,16 +120,16 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError UserNotInRole(string role)
-    {
+        public override IdentityError UserNotInRole(string role)
+        {
             return new IdentityError
             {
                 Code = nameof(UserNotInRole), Description = string.Format(_localizer["UserNotInRole"], role)
             };
         }
 
-    public override IdentityError PasswordTooShort(int length)
-    {
+        public override IdentityError PasswordTooShort(int length)
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordTooShort),
@@ -137,8 +137,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError PasswordRequiresNonAlphanumeric()
-    {
+        public override IdentityError PasswordRequiresNonAlphanumeric()
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresNonAlphanumeric),
@@ -146,8 +146,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError PasswordRequiresDigit()
-    {
+        public override IdentityError PasswordRequiresDigit()
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresDigit),
@@ -155,8 +155,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError PasswordRequiresLower()
-    {
+        public override IdentityError PasswordRequiresLower()
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresLower),
@@ -164,8 +164,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError PasswordRequiresUpper()
-    {
+        public override IdentityError PasswordRequiresUpper()
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUpper),
@@ -173,8 +173,8 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };            
         }
 
-    public override IdentityError PasswordRequiresUniqueChars(int uniqueChars)
-    {
+        public override IdentityError PasswordRequiresUniqueChars(int uniqueChars)
+        {
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUniqueChars),
@@ -182,12 +182,13 @@ public class MultiLanguageIdentityErrorDescriber : IdentityErrorDescriber
             };
         }
 
-    public override IdentityError RecoveryCodeRedemptionFailed()
-    {
+        public override IdentityError RecoveryCodeRedemptionFailed()
+        {
             return new IdentityError
             {
                 Code = nameof(RecoveryCodeRedemptionFailed),
                 Description = _localizer["RecoveryCodeRedemptionFailed"]
             }; 
         }
+    }
 }

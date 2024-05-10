@@ -22,14 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService;
-
-public class DeleteRowInput
+namespace Origam.Server.Model.UIService
 {
-    [RequiredNonDefault]
-    public Guid DataStructureEntityId { get; set; }
-    [RequiredNonDefault]
-    public Guid RowIdToDelete { get; set; }
-    [RequiredNonDefault]
-    public Guid MenuId { get; set; }
+    public class DeleteRowInput
+    {
+        [RequiredNonDefault]
+        public Guid DataStructureEntityId { get; set; }
+        [RequiredNonDefault]
+        public Guid RowIdToDelete { get; set; }
+        [RequiredNonDefault]
+        public Guid MenuId { get; set; }
+    }
 }

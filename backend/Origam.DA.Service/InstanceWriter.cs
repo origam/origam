@@ -29,22 +29,22 @@ using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
-namespace Origam.DA.Service;
-
-public class InstanceWriter
+namespace Origam.DA.Service
 {
-    private readonly IExternalFileManager externalFileManger;
-    private readonly OrigamXmlDocument xmlDocument;
-
-
-    public InstanceWriter(IExternalFileManager externalFileManger, OrigamXmlDocument xmlDocument)
+    public class InstanceWriter
     {
+        private readonly IExternalFileManager externalFileManger;
+        private readonly OrigamXmlDocument xmlDocument;
+
+
+        public InstanceWriter(IExternalFileManager externalFileManger, OrigamXmlDocument xmlDocument)
+        {
             this.externalFileManger = externalFileManger;
             this.xmlDocument = xmlDocument;
         }
 
-    public void Write(IFilePersistent instance)
-    {
+        public void Write(IFilePersistent instance)
+        {
             var namespaceMapping = PropertyToNamespaceMapping
                 .Get(instance.GetType())
                 .DeepCopy();
@@ -56,9 +56,9 @@ public class InstanceWriter
             WriteToNode(elementToWriteTo, instance, namespaceMapping, isLocalChild);
         }
 
-    private XmlElement GetElementToWriteTo(IFilePersistent instance,
-        PropertyToNamespaceMapping namespaceMapping)
-    {
+        private XmlElement GetElementToWriteTo(IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping)
+        {
             XmlElement existingElement  = (XmlElement)xmlDocument    
                 .GetAllNodes()
                 .FirstOrDefault(x => XmlUtils.ReadId(x) == instance.Id);
@@ -78,9 +78,9 @@ public class InstanceWriter
             return existingElement;
         }
 
-    private void MoveElementToNewLocation(XmlElement element,
-        IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
-    {
+        private void MoveElementToNewLocation(XmlElement element,
+            IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
+        {
             element.ParentNode?.RemoveChild(element);
             XmlElement newElement = FindElementToWriteTo(xmlDocument, instance, 0, namespaceMapping);
             XmlNode parentNode = newElement.ParentNode;
@@ -88,9 +88,9 @@ public class InstanceWriter
             parentNode.AppendChild(element);
         }
 
-    private XmlElement FindElementToWriteTo(XmlNode node,
-        IFilePersistent instance, int depth, PropertyToNamespaceMapping namespaceMapping)
-    {
+        private XmlElement FindElementToWriteTo(XmlNode node,
+            IFilePersistent instance, int depth, PropertyToNamespaceMapping namespaceMapping)
+        {
             Guid? parentId = XmlUtils.ReadId(node);
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -123,9 +123,9 @@ public class InstanceWriter
             return null;
         }
             
-    private void WriteToNode(XmlElement node, IFilePersistent instance,
-        PropertyToNamespaceMapping namespaceMapping, bool localChild)
-    {
+        private void WriteToNode(XmlElement node, IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping, bool localChild)
+        {
             node.RemoveAllAttributes();
             // Set all the remaining properties
             WriteXmlAttributes(node, instance, namespaceMapping);
@@ -147,9 +147,9 @@ public class InstanceWriter
             }
         }
         
-    private static void WriteXmlReferenceAttributes(XmlElement node,
-        IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
-    {
+        private static void WriteXmlReferenceAttributes(XmlElement node,
+            IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
+        {
             IList references =
                 Reflector.FindMembers(instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
@@ -190,9 +190,9 @@ public class InstanceWriter
             }
         }
             
-    private void WriteXmlAttributes(XmlElement node,
-        IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
-    {
+        private void WriteXmlAttributes(XmlElement node,
+            IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
+        {
             IList members = Reflector.FindMembers(instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo memberInfo in members)
             {
@@ -208,8 +208,8 @@ public class InstanceWriter
             }
         }
             
-    private bool ShouldBeSkipped(object value)
-    {
+        private bool ShouldBeSkipped(object value)
+        {
             if (ReferenceEquals(value, null)) return true;
             if (value is Enum) return false;
             if (value is bool) return false;
@@ -217,10 +217,10 @@ public class InstanceWriter
             return value.IsDefault();
         }
 
-    private void WriteXmlExternalFiles(XmlElement node,
-        IFilePersistent instance,
-        PropertyToNamespaceMapping namespaceMapping)
-    {
+        private void WriteXmlExternalFiles(XmlElement node,
+            IFilePersistent instance,
+            PropertyToNamespaceMapping namespaceMapping)
+        {
             IList references =
                 Reflector.FindMembers(instance.GetType(),
                     typeof(XmlExternalFileReference));
@@ -264,9 +264,9 @@ public class InstanceWriter
                     value: externalFileLink);
             }
         }
-    private static object GetValueToWrite(IFilePersistent instance,
-        MemberAttributeInfo mi)
-    {
+        private static object GetValueToWrite(IFilePersistent instance,
+            MemberAttributeInfo mi)
+        {
             PropertyInfo propertyInfo = mi.MemberInfo as PropertyInfo;
             FieldInfo fieldInfo = mi.MemberInfo as FieldInfo;
             object value = null;
@@ -279,4 +279,5 @@ public class InstanceWriter
             }
             return value;
         }
+    }
 }

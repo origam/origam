@@ -29,19 +29,19 @@ using MoreLinq;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Designer;
-
-public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
+namespace Origam.Gui.Designer
 {
-	private IDesignerHost host;
-	public TypeDescriptorFilterServiceImpl(IDesignerHost host)
+	public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 	{
+		private IDesignerHost host;
+		public TypeDescriptorFilterServiceImpl(IDesignerHost host)
+		{
 			this.host=host;
 		}
 	#region ITypeDescriptorFilterService Members
 
-	public bool FilterAttributes(IComponent component, IDictionary attributes)
-	{
+		public bool FilterAttributes(IComponent component, IDictionary attributes)
+		{
 
 //			Hashtable finalprops = new Hashtable();
 //
@@ -64,8 +64,8 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 
 		}
 	
-	public bool FilterEvents(IComponent component, IDictionary events)
-	{
+		public bool FilterEvents(IComponent component, IDictionary events)
+		{
 //			IDesigner designer = host.GetDesigner(component);
 //			if (designer is IDesignerFilter)
 //			{
@@ -79,8 +79,8 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 
 		}
 	
-	public bool FilterProperties(IComponent component, IDictionary properties)
-	{
+		public bool FilterProperties(IComponent component, IDictionary properties)
+		{
 			if(!(component is Control)) return false;
 
 			Control control = component as Control;
@@ -171,9 +171,9 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 			return false;
 		}
 
-	private static void AddInheritedProperties(IComponent component,
-		Hashtable finalProps)
-	{
+		private static void AddInheritedProperties(IComponent component,
+			Hashtable finalProps)
+		{
 			ControlItem inheritorItem = DynamicTypeFactory
 				.GetAssociatedControlItem(component.GetType());
 
@@ -185,5 +185,6 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 			}
 		}
 
-	#endregion
+		#endregion
+	}
 }

@@ -23,16 +23,16 @@ using System.Xml;
 
 using Origam.Schema;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for TextBoxBuilder.
-/// </summary>
-public class TextBoxBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(
-		XmlElement propertyElement, TextBoxBuildDefinition buildDefinition)
+	/// <summary>
+	/// Summary description for TextBoxBuilder.
+	/// </summary>
+	public class TextBoxBuilder
 	{
+		public static void Build(
+			XmlElement propertyElement, TextBoxBuildDefinition buildDefinition)
+		{
 
 			if ((buildDefinition.Type == OrigamDataType.Integer)
 			    || (buildDefinition.Type == OrigamDataType.Long))
@@ -68,75 +68,76 @@ public class TextBoxBuilder
 					XmlConvert.ToString(buildDefinition.MaxLength));
 			}
 		}
-}
-
-public class TextBoxBuildDefinition
-{
-	private OrigamDataType _Type;
-
-	public OrigamDataType Type
-	{
-		get { return _Type; }
 	}
 
-	private string _Dock = "None";
-
-	public string Dock
+	public class TextBoxBuildDefinition
 	{
-		get { return _Dock; }
-		set { _Dock = value; }
-	}
+		private OrigamDataType _Type;
 
-	private bool _Multiline = false;
+		public OrigamDataType Type
+		{
+			get { return _Type; }
+		}
 
-	public bool Multiline
-	{
-		get { return _Multiline; }
-		set { _Multiline = value; }
-	}
+		private string _Dock = "None";
 
-	private bool _IsPassword = false;
+		public string Dock
+		{
+			get { return _Dock; }
+			set { _Dock = value; }
+		}
 
-	public bool IsPassword
-	{
-		get { return _IsPassword; }
-		set { _IsPassword = value; }
-	}
+		private bool _Multiline = false;
 
-	private bool _IsRichText = false;
+		public bool Multiline
+		{
+			get { return _Multiline; }
+			set { _Multiline = value; }
+		}
 
-	public bool IsRichText
-	{
-		get { return _IsRichText; }
-		set { _IsRichText = value; }
-	}
+		private bool _IsPassword = false;
 
-	private bool _AllowTab;
+		public bool IsPassword
+		{
+			get { return _IsPassword; }
+			set { _IsPassword = value; }
+		}
 
-	public bool AllowTab
-	{ 
-		get { return _AllowTab; }
-		set { _AllowTab = value; }
-	}
+		private bool _IsRichText = false;
 
-	private int _MaxLength = 0;
+		public bool IsRichText
+		{
+			get { return _IsRichText; }
+			set { _IsRichText = value; }
+		}
 
-	public int MaxLength
-	{
-		get { return _MaxLength; }
-		set { _MaxLength = value; }
-	}
+		private bool _AllowTab;
 
-	public TextBoxBuildDefinition(OrigamDataType type)
-	{
+		public bool AllowTab
+		{ 
+			get { return _AllowTab; }
+			set { _AllowTab = value; }
+		}
+
+		private int _MaxLength = 0;
+
+		public int MaxLength
+		{
+			get { return _MaxLength; }
+			set { _MaxLength = value; }
+		}
+
+		public TextBoxBuildDefinition(OrigamDataType type)
+		{
 			_Type = type;	
 		}
 
-	private string _CustomNumberFormat;
+        private string _CustomNumberFormat;
 
-	public string CustomNumberFormat 
-	{
-		get { return _CustomNumberFormat; }
-		set { _CustomNumberFormat = value; }
-	}
+        public string CustomNumberFormat 
+        {
+            get { return _CustomNumberFormat; }
+            set { _CustomNumberFormat = value; }
+        }
+    }
 }

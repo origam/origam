@@ -25,26 +25,26 @@ using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 
-namespace Origam.Server;
-
-class CorePasswordHasher: IPasswordHasher<IOrigamUser>
+namespace Origam.Server
 {
-    private readonly InternalPasswordHasherWithLegacySupport internalHasher 
-        = new InternalPasswordHasherWithLegacySupport();
-
-    public string HashPassword(IOrigamUser user, string password)
+    class CorePasswordHasher: IPasswordHasher<IOrigamUser>
     {
+        private readonly InternalPasswordHasherWithLegacySupport internalHasher 
+            = new InternalPasswordHasherWithLegacySupport();
+
+        public string HashPassword(IOrigamUser user, string password)
+        {
             return internalHasher.HashPassword(password);
         }
 
-    public PasswordVerificationResult VerifyHashedPassword(IOrigamUser user, string hashedPassword, string providedPassword)
-    {
+        public PasswordVerificationResult VerifyHashedPassword(IOrigamUser user, string hashedPassword, string providedPassword)
+        {
             VerificationResult verificationResult = internalHasher.VerifyHashedPassword(hashedPassword, providedPassword);
             return ToAspNetCoreResult(verificationResult);
         }
         
-    private static PasswordVerificationResult ToAspNetCoreResult(VerificationResult result)
-    {
+        private static PasswordVerificationResult ToAspNetCoreResult(VerificationResult result)
+        {
             switch (result)
             {
                 case VerificationResult.Failed:
@@ -57,4 +57,5 @@ class CorePasswordHasher: IPasswordHasher<IOrigamUser>
                     throw new NotImplementedException();
             }
         }
+    }
 }

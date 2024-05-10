@@ -22,55 +22,56 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 
-namespace Origam.Schema.GuiModel;
-
-public class UserControlSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.GuiModel 
 {
-	public UserControlSchemaItemProvider() {}
-
-	#region ISchemaItemProvider Members
-	public override string RootItemType => ControlItem.CategoryConst;
-
-	public override string Group => "UI";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_25_widgets.png";
-
-	public override string NodeText
+	public class UserControlSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Widgets";
-		set => base.NodeText = value;
-	}
+		public UserControlSchemaItemProvider() {}
 
-	public override string NodeToolTipText
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType => ControlItem.CategoryConst;
+
+		public override string Group => "UI";
+
+		#endregion
+
+		#region IBrowserNode Members
+
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_25_widgets.png";
+
+		public override string NodeText
 		{
+			get => "Widgets";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText
+		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	public override Type[] NewItemTypes => new[]
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(ControlItem)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(ControlItem) ?
 					"NewControl" : null);
 		}
-	#endregion
+		#endregion
+	}
 }

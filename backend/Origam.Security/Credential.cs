@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Security;
-
-record Credential(string RoleName, bool IsReadOnly, bool IsInitialScreen);
+namespace Origam.Security
+{
+    record Credential(string RoleName, bool IsReadOnly, bool IsInitialScreen);
+}

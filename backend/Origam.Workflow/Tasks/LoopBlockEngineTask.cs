@@ -23,22 +23,22 @@ using System;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Workflow.Tasks;
-
-/// <summary>
-/// Summary description for ForEachBlockEngineTask.
-/// </summary>
-public class LoopBlockEngineTask : BlockEngineTask
+namespace Origam.Workflow.Tasks
 {
-	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	WorkflowEngine _call;
-
-	public LoopBlockEngineTask() : base()
+	/// <summary>
+	/// Summary description for ForEachBlockEngineTask.
+	/// </summary>
+	public class LoopBlockEngineTask : BlockEngineTask
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		WorkflowEngine _call;
+
+		public LoopBlockEngineTask() : base()
+		{
 		}
 
-	public override void Execute()
-	{
+		public override void Execute()
+		{
 			Exception exception = null;
 
 			try
@@ -52,8 +52,8 @@ public class LoopBlockEngineTask : BlockEngineTask
 			}
 		}
 
-	protected override void OnExecute()
-	{
+		protected override void OnExecute()
+		{
 			if(log.IsInfoEnabled)
 			{
 				log.Info("Loop Block started.");
@@ -66,8 +66,8 @@ public class LoopBlockEngineTask : BlockEngineTask
 
 		}
 
-	private void ResumeLoop()
-	{
+		private void ResumeLoop()
+		{
 			int i = 0;
 			LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
 
@@ -103,8 +103,8 @@ public class LoopBlockEngineTask : BlockEngineTask
 			}
 		}
 
-	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
-	{
+		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+		{
 			if(this.Engine == null) return;	// finished already
 
 			LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
@@ -125,8 +125,8 @@ public class LoopBlockEngineTask : BlockEngineTask
 			}
 		}
 
-	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-	{
+		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+		{
 			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 			{
 				if(e.Exception != null)
@@ -137,12 +137,13 @@ public class LoopBlockEngineTask : BlockEngineTask
 			}
 		}
 
-	private void UnsubscribeEvents()
-	{
+		private void UnsubscribeEvents()
+		{
 			if(this.Engine != null)
 			{
 				this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
 				this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
 			}
 		}
+	}
 }

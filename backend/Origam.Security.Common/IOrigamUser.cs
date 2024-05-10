@@ -21,37 +21,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Security.Common;
-
-public interface IOrigamUser
+namespace Origam.Security.Common
 {
-    string BusinessPartnerId { get; set; }
-    string UserName { get; set; }
-    DateTime CreationDate { get; }
-    string Email { get; set; }
-    bool IsApproved { get; set; }
-    bool IsOnline { get; set; }
-    DateTime LastActivityDate { get;  }
-    // TODO: UserServerCore stores lockoutEndDate into LastLockoutEndDate.
-    // The LastLockoutDate should be renamed to LockoutEndDate when
-    // .net4 (netFx) specific classes are removed!
-    DateTime? LastLockoutDate { get; set; } 
-    DateTime LastLoginDate { get;  }
-    DateTime LastPasswordChangedDate { get;}
-    string PasswordQuestion { get; set; }
-    string PasswordAnswer { get; set; }
-    Guid ProviderUserKey { get; set; }
-    string TransactionId { get;  set; }
-    bool Is2FAEnforced { get;  }
-    string PasswordHash { get; set; }
-    bool TwoFactorEnabled { get; set; }
-    string NormalizedEmail { get; }
-    bool EmailConfirmed { get; set; }
-    string NormalizedUserName { get;}
-    string RoleId { get; }
-    string FirstName { get;  }
-    string Name { get;  }
-    int FailedPasswordAttemptCount { get; set; }
-    Guid LanguageId { get; set; }
-    string SecurityStamp { get; set; }
+    public interface IOrigamUser
+    {
+        string BusinessPartnerId { get; set; }
+        string UserName { get; set; }
+        DateTime CreationDate { get; }
+        string Email { get; set; }
+        bool IsApproved { get; set; }
+        bool IsOnline { get; set; }
+        DateTime LastActivityDate { get;  }
+        // TODO: UserServerCore stores lockoutEndDate into LastLockoutEndDate.
+        // The LastLockoutDate should be renamed to LockoutEndDate when
+        // .net4 (netFx) specific classes are removed!
+        DateTime? LastLockoutDate { get; set; } 
+        DateTime LastLoginDate { get;  }
+        DateTime LastPasswordChangedDate { get;}
+        string PasswordQuestion { get; set; }
+        string PasswordAnswer { get; set; }
+        Guid ProviderUserKey { get; set; }
+        string TransactionId { get;  set; }
+        bool Is2FAEnforced { get;  }
+        string PasswordHash { get; set; }
+        bool TwoFactorEnabled { get; set; }
+        string NormalizedEmail { get; }
+        bool EmailConfirmed { get; set; }
+        string NormalizedUserName { get;}
+        string RoleId { get; }
+        string FirstName { get;  }
+        string Name { get;  }
+        int FailedPasswordAttemptCount { get; set; }
+        Guid LanguageId { get; set; }
+        string SecurityStamp { get; set; }
+    }
 }

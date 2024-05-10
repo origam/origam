@@ -26,84 +26,84 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for DataStructureRuleDependency.
-/// </summary>
-[SchemaItemDescription("Dependency", "Dependencies", "icon_rule-dependency.png")]
-[HelpTopic("Rule+Set+Rule+Dependency")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Entity")]
-[ClassMetaVersion("6.0.0")]
-public class DataStructureRuleDependency : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "DataStructureRuleDependency";
-
-	public DataStructureRuleDependency() : base(){}
-		
-	public DataStructureRuleDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public DataStructureRuleDependency(Key primaryKey) : base(primaryKey)	{}
-
-	#region Properties
-	public Guid DataStructureEntityId;
-
-	[TypeConverter(typeof(DataQueryEntityConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("entity", "DataStructureEntityId")]
-	public DataStructureEntity Entity
+	/// <summary>
+	/// Summary description for DataStructureRuleDependency.
+	/// </summary>
+	[SchemaItemDescription("Dependency", "Dependencies", "icon_rule-dependency.png")]
+    [HelpTopic("Rule+Set+Rule+Dependency")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Entity")]
+    [ClassMetaVersion("6.0.0")]
+    public class DataStructureRuleDependency : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "DataStructureRuleDependency";
+
+		public DataStructureRuleDependency() : base(){}
+		
+		public DataStructureRuleDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataStructureRuleDependency(Key primaryKey) : base(primaryKey)	{}
+
+		#region Properties
+		public Guid DataStructureEntityId;
+
+		[TypeConverter(typeof(DataQueryEntityConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("entity", "DataStructureEntityId")]
+		public DataStructureEntity Entity
 		{
+			get
+			{
 				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.DataStructureEntityId));
 			}
-		set
-		{
+			set
+			{
 				this.DataStructureEntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 				this.Field = null;
 			}
-	}
+		}
 		
-	public Guid FieldId;
+		public Guid FieldId;
 
-	[TypeConverter(typeof(DataStructureEntityFieldConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("field", "FieldId")]
-	public IDataEntityColumn Field
-	{
-		get
+		[TypeConverter(typeof(DataStructureEntityFieldConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("field", "FieldId")]
+		public IDataEntityColumn Field
 		{
+			get
+			{
 				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
 			}
-		set
-		{
+			set
+			{
 				this.FieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 
 				UpdateName();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Overriden AbstractSchemaItem Members
-	public override string ItemType
-	{
-		get
+		#region Overriden AbstractSchemaItem Members
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Entity);
 			dependencies.Add(this.Field);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -119,22 +119,23 @@ public class DataStructureRuleDependency : AbstractSchemaItem
 			base.UpdateReferences ();
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Private Methods
-	private void UpdateName()
-	{
+		#region Private Methods
+		private void UpdateName()
+		{
 			if(this.Entity != null && this.Field != null)
 			{
 				this.Name = this.Entity.Name + "_" + this.Field.Name;
 			}
 		}
-	#endregion
+		#endregion
+	}
 }

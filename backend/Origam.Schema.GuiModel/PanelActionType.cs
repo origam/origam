@@ -19,18 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for PanelActionType.
-/// </summary>
-public enum PanelActionType
+namespace Origam.Schema.GuiModel
 {
-	Report,
-	ChangeUI,
-	OpenForm,
-	Workflow,
-	QueueAction,
-	SelectionDialogAction,
-	Dropdown
+	/// <summary>
+	/// Summary description for PanelActionType.
+	/// </summary>
+	public enum PanelActionType
+	{
+		Report,
+		ChangeUI,
+		OpenForm,
+		Workflow,
+		QueueAction,
+		SelectionDialogAction,
+		Dropdown
+	}
 }

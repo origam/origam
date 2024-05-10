@@ -23,30 +23,31 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for AbstractTransformation.
-/// </summary>
-[XmlModelRoot(CategoryConst)]
-public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "Transformation";
-
-	public AbstractTransformation() : base() {}
-
-	public AbstractTransformation(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public AbstractTransformation(Key primaryKey) : base(primaryKey)	{}
-
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType
+    /// <summary>
+    /// Summary description for AbstractTransformation.
+    /// </summary>
+    [XmlModelRoot(CategoryConst)]
+    public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
 	{
-		get
+		public const string CategoryConst = "Transformation";
+
+		public AbstractTransformation() : base() {}
+
+		public AbstractTransformation(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public AbstractTransformation(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

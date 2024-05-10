@@ -24,14 +24,14 @@ using System.IO;
 using NUnit.Framework;
 using Origam.TestCommon;
 
-namespace Origam.Common_net2Tests.Properties;
-
-[TestFixture]
-public class OrigamSettingsReaderTests: AbstractFileTestClass
+namespace Origam.Common_net2Tests.Properties
 {
-    [Test]
-    public void ShouldReadAllSettings()
+    [TestFixture]
+    public class OrigamSettingsReaderTests: AbstractFileTestClass
     {
+        [Test]
+        public void ShouldReadAllSettings()
+        {
             string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettings.config");
             OrigamSettingsCollection settings = 
                 new OrigamSettingsReader(pathToOrigamSettings).GetAll();
@@ -64,9 +64,9 @@ public class OrigamSettingsReaderTests: AbstractFileTestClass
             Assert.That(firstSettings.ProfileProvider, Is.EqualTo("Origam.Security.OrigamProfileProvider, Origam.Security"));
         }
 
-    [Test]
-    public void ShouldWriteSettings()
-    {
+        [Test]
+        public void ShouldWriteSettings()
+        {
             string pathToReadFrom = Path.Combine(TestFilesDir.FullName,"OrigamSettings.config");
             string pathToWriteTo = Path.Combine(TestFilesDir.FullName,"OrigamSettingsWriteTest.config");
 
@@ -88,8 +88,8 @@ public class OrigamSettingsReaderTests: AbstractFileTestClass
 
         }
         
-    [Test] public void ShouldFailWhenArrayOfOrigamSettingsIsMissing()
-    {
+        [Test] public void ShouldFailWhenArrayOfOrigamSettingsIsMissing()
+        {
             var exception = Assert.Throws<OrigamSettingsException>(() =>
             {
                 string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettingsWithArrayOfOrigamSettingsMissing.config");
@@ -99,6 +99,7 @@ public class OrigamSettingsReaderTests: AbstractFileTestClass
             Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\""));
         }
 
-    protected override TestContext TestContext =>
-        TestContext.CurrentContext;
+        protected override TestContext TestContext =>
+            TestContext.CurrentContext;
+    }
 }

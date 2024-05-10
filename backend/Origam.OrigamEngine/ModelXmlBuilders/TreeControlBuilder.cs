@@ -24,16 +24,16 @@ using System.Data;
 using System.Xml;
 using System.Collections;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for TreeControlBuilder.
-/// </summary>
-public class TreeControlBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement parentNode, UIElementRenderData  renderData, 
-		DataTable table, string controlId, Hashtable dataSources, bool isIndependent)
+	/// <summary>
+	/// Summary description for TreeControlBuilder.
+	/// </summary>
+	public class TreeControlBuilder
 	{
+		public static void Build(XmlElement parentNode, UIElementRenderData  renderData, 
+			DataTable table, string controlId, Hashtable dataSources, bool isIndependent)
+		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "TreePanel");
 			parentNode.SetAttribute("Entity", table.TableName);
@@ -47,12 +47,13 @@ public class TreeControlBuilder
 			FormXmlBuilder.AddDataSource(dataSources, table, controlId, isIndependent);
 		}
 
-	public static void Build2(XmlElement parentNode, string formParameterName, Guid treeId)
-	{
+		public static void Build2(XmlElement parentNode, string formParameterName, Guid treeId)
+		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "TreePanelEx");
 
 			parentNode.SetAttribute("TreeId", treeId.ToString());
 			parentNode.SetAttribute("FormParameterName", formParameterName);
 		}
+	}
 }

@@ -27,88 +27,88 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.EntityModel;
 
-namespace Origam.Schema.EntityModel;
-
-[SchemaItemDescription("Database Field", "Fields", 
-	"icon_database-field.png")]
-[HelpTopic("Database+Field")]
-[ClassMetaVersion("6.0.0")]
-public class FieldMappingItem : AbstractDataEntityColumn,
-	IDatabaseDataTypeMapping
+namespace Origam.Schema.EntityModel
 {
-	public FieldMappingItem() {}
+	[SchemaItemDescription("Database Field", "Fields", 
+        "icon_database-field.png")]
+    [HelpTopic("Database+Field")]
+    [ClassMetaVersion("6.0.0")]
+	public class FieldMappingItem : AbstractDataEntityColumn,
+        IDatabaseDataTypeMapping
+	{
+		public FieldMappingItem() {}
 
-	public FieldMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public FieldMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-	public FieldMappingItem(Key primaryKey) : base(primaryKey) {}
+		public FieldMappingItem(Key primaryKey) : base(primaryKey) {}
 
-	#region Properties
+		#region Properties
 		
-	[NoDuplicateNamesInParentRule]
-	[Category("(Schema Item)")]
-	[StringNotEmptyModelElementRule]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlAttribute("name")]
-	public override string Name
-	{
-		get => base.Name; 
-		set => base.Name = value;
-	}
+		[NoDuplicateNamesInParentRule]
+		[Category("(Schema Item)")]
+		[StringNotEmptyModelElementRule]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[XmlAttribute("name")]
+		public override string Name
+		{
+			get => base.Name; 
+			set => base.Name = value;
+		}
 		
-	private string _sourceFieldName;
-	[Category("Mapping")]
-	[StringNotEmptyModelElementRule()]
-	[XmlAttribute("mappedColumnName")]
-	[DisplayName("Mapped Column Name")]
-	public string MappedColumnName
-	{
-		get => _sourceFieldName?.Trim();
-		set => _sourceFieldName = value;
-	}
-
-	public Guid dataTypeMappingId;
-
-	[Category("Mapping")]
-	[TypeConverter(typeof(DataTypeMappingConverter))]
-	[Description("Optional specific data type. If not specified a default type will be assigned based on the main Data Type.")]
-	[DisplayName("Mapped Data Type")]
-	[XmlReference("mappedDataType", "dataTypeMappingId")]
-	public DatabaseDataType MappedDataType
-	{
-		get =>
-			(DatabaseDataType)PersistenceProvider.RetrieveInstance(
-				typeof(DatabaseDataType), 
-				new ModelElementKey(dataTypeMappingId));
-		set =>
-			dataTypeMappingId = (value == null) 
-				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-	}
-	#endregion
-
-	#region Overriden AbstractDataEntityColumn Members
-	protected bool _excludeFromAuditing = false;
-	[Browsable(true)]
-	[Category("Entity Column"), DefaultValue(false)]
-	[Description("When turned on this field's changes will not be recorded in the audit log (e.g. password fields).")]
-	[XmlAttribute("excludeFromAuditing")]
-	public override bool ExcludeFromAuditing
-	{
-		get => _excludeFromAuditing;
-		set => _excludeFromAuditing = value;
-	}
-
-	public override string FieldType { get; } = "FieldMappingItem";
-
-	[Browsable(false)]
-	public override bool ReadOnly => false;
-
-	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-	{
+		private string _sourceFieldName;
+		[Category("Mapping")]
+		[StringNotEmptyModelElementRule()]
+        [XmlAttribute("mappedColumnName")]
+        [DisplayName("Mapped Column Name")]
+		public string MappedColumnName
+		{
+			get => _sourceFieldName?.Trim();
+			set => _sourceFieldName = value;
 		}
 
-	public override void OnNameChanged(string originalName)
-	{
+        public Guid dataTypeMappingId;
+
+        [Category("Mapping")]
+        [TypeConverter(typeof(DataTypeMappingConverter))]
+        [Description("Optional specific data type. If not specified a default type will be assigned based on the main Data Type.")]
+        [DisplayName("Mapped Data Type")]
+        [XmlReference("mappedDataType", "dataTypeMappingId")]
+        public DatabaseDataType MappedDataType
+        {
+            get =>
+	            (DatabaseDataType)PersistenceProvider.RetrieveInstance(
+		            typeof(DatabaseDataType), 
+		            new ModelElementKey(dataTypeMappingId));
+            set =>
+	            dataTypeMappingId = (value == null) 
+		            ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+        }
+		#endregion
+
+		#region Overriden AbstractDataEntityColumn Members
+		protected bool _excludeFromAuditing = false;
+		[Browsable(true)]
+		[Category("Entity Column"), DefaultValue(false)]
+		[Description("When turned on this field's changes will not be recorded in the audit log (e.g. password fields).")]
+        [XmlAttribute("excludeFromAuditing")]
+        public override bool ExcludeFromAuditing
+		{
+			get => _excludeFromAuditing;
+			set => _excludeFromAuditing = value;
+		}
+
+        public override string FieldType { get; } = "FieldMappingItem";
+
+        [Browsable(false)]
+		public override bool ReadOnly => false;
+
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		{
+		}
+
+		public override void OnNameChanged(string originalName)
+		{
 			if(string.IsNullOrEmpty(MappedColumnName) 
 			|| MappedColumnName == originalName)
 			{
@@ -116,25 +116,25 @@ public class FieldMappingItem : AbstractDataEntityColumn,
 			}
 		}
 
-	public override void OnPropertyChanged(string propertyName)
-	{
+        public override void OnPropertyChanged(string propertyName)
+        {
             if(propertyName == "DataType")
             {
                 MappedDataType = null;
             }
             base.OnPropertyChanged(propertyName);
         }
-	#endregion
+		#endregion
 
-	#region Convert
-	public override bool CanConvertTo(Type type)
-	{
+		#region Convert
+		public override bool CanConvertTo(Type type)
+		{
 			return (type == typeof(DetachedField)) 
 			       && (ParentItem is IDataEntity);
 		}
 
-	protected override ISchemaItem ConvertTo<T>()
-	{
+		protected override ISchemaItem ConvertTo<T>()
+		{
 			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
 			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
@@ -151,18 +151,18 @@ public class FieldMappingItem : AbstractDataEntityColumn,
 			FinishConversion(this, converted);
 			return converted;
 		}
-	#endregion
+		#endregion
 
-	public static IDataEntity GetLocalizationTable(
-		TableMappingItem tableMappingItem)
-	{
+		public static IDataEntity GetLocalizationTable(
+			TableMappingItem tableMappingItem)
+		{
 			return tableMappingItem?.LocalizationRelation?.AssociatedEntity;
 		}
 
-	[Browsable(false)]
-	public FieldMappingItem GetLocalizationField(
-		TableMappingItem tableMappingItem)
-	{
+		[Browsable(false)]
+		public FieldMappingItem GetLocalizationField(
+			TableMappingItem tableMappingItem)
+		{
 			if((DataType != OrigamDataType.String) 
 			&& (DataType != OrigamDataType.Memo))
 			{
@@ -173,4 +173,5 @@ public class FieldMappingItem : AbstractDataEntityColumn,
 			// find column in localization table
 			return localizationTable?.GetChildByName(Name) as FieldMappingItem;
 		}
+	}
 }

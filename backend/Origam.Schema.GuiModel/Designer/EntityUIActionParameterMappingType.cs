@@ -19,10 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-public enum EntityUIActionParameterMappingType
+namespace Origam.Schema.GuiModel
 {
-	Current,
-	Original
+	public enum EntityUIActionParameterMappingType
+	{
+		Current,
+		Original
+	}
 }

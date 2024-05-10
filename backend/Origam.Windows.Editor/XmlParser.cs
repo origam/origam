@@ -24,29 +24,29 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace Origam.Windows.Editor;
-
-/// <summary>
-/// Utility class that contains xml parsing routines used to determine
-/// the currently selected element so we can provide intellisense.
-/// </summary>
-/// <remarks>
-/// All of the routines return <see cref="XmlElementPath"/> objects
-/// since we are interested in the complete path or tree to the
-/// currently active element.
-/// </remarks>
-public static class XmlParser
+namespace Origam.Windows.Editor
 {
-    static readonly char[] whitespaceCharacters = new char[] { ' ', '\n', '\t', '\r' };
-
     /// <summary>
-    /// Gets path of the xml element start tag that the specified
-    /// <paramref name="index"/> is currently inside.
+    /// Utility class that contains xml parsing routines used to determine
+    /// the currently selected element so we can provide intellisense.
     /// </summary>
-    /// <remarks>If the index outside the start tag then an empty path
-    /// is returned.</remarks>
-    public static XmlElementPath GetActiveElementStartPath(string xml, int index)
+    /// <remarks>
+    /// All of the routines return <see cref="XmlElementPath"/> objects
+    /// since we are interested in the complete path or tree to the
+    /// currently active element.
+    /// </remarks>
+    public static class XmlParser
     {
+        static readonly char[] whitespaceCharacters = new char[] { ' ', '\n', '\t', '\r' };
+
+        /// <summary>
+        /// Gets path of the xml element start tag that the specified
+        /// <paramref name="index"/> is currently inside.
+        /// </summary>
+        /// <remarks>If the index outside the start tag then an empty path
+        /// is returned.</remarks>
+        public static XmlElementPath GetActiveElementStartPath(string xml, int index)
+        {
             string elementText = GetActiveElementStartText(xml, index);
             if (elementText != null)
             {
@@ -55,16 +55,16 @@ public static class XmlParser
             return new XmlElementPath();
         }
 
-    /// <summary>
-    /// Gets path of the xml element start tag that the specified
-    /// <paramref name="index"/> is currently located. This is different to the
-    /// GetActiveElementStartPath method since the index can be inside the element
-    /// name.
-    /// </summary>
-    /// <remarks>If the index outside the start tag then an empty path
-    /// is returned.</remarks>
-    public static XmlElementPath GetActiveElementStartPathAtIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Gets path of the xml element start tag that the specified
+        /// <paramref name="index"/> is currently located. This is different to the
+        /// GetActiveElementStartPath method since the index can be inside the element
+        /// name.
+        /// </summary>
+        /// <remarks>If the index outside the start tag then an empty path
+        /// is returned.</remarks>
+        public static XmlElementPath GetActiveElementStartPathAtIndex(string xml, int index)
+        {
             // Find first non xml element name character to the right of the index.
             index = GetCorrectedIndex(xml.Length, index);
             if (index < 0)
@@ -90,20 +90,20 @@ public static class XmlParser
             return new XmlElementPath();
         }
 
-    /// <summary>
-    /// Gets the parent element path based on the index position.
-    /// </summary>
-    public static XmlElementPath GetParentElementPath(string xml)
-    {
+        /// <summary>
+        /// Gets the parent element path based on the index position.
+        /// </summary>
+        public static XmlElementPath GetParentElementPath(string xml)
+        {
             return GetFullParentElementPath(xml);
         }
 
-    /// <summary>
-    /// Checks whether the attribute at the end of the string is a
-    /// namespace declaration.
-    /// </summary>
-    public static bool IsNamespaceDeclaration(string xml, int index)
-    {
+        /// <summary>
+        /// Checks whether the attribute at the end of the string is a
+        /// namespace declaration.
+        /// </summary>
+        public static bool IsNamespaceDeclaration(string xml, int index)
+        {
             if (String.IsNullOrEmpty(xml))
             {
                 return false;
@@ -163,22 +163,22 @@ public static class XmlParser
             return isNamespace;
         }
 
-    /// <summary>
-    /// Gets the attribute name and any prefix. The namespace
-    /// is not determined.
-    /// </summary>
-    public static QualifiedName GetQualifiedAttributeName(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the attribute name and any prefix. The namespace
+        /// is not determined.
+        /// </summary>
+        public static QualifiedName GetQualifiedAttributeName(string xml, int index)
+        {
             string name = GetAttributeName(xml, index);
             return QualifiedName.FromString(name);
         }
 
-    /// <summary>
-    /// Gets the name of the attribute inside but before the specified
-    /// index.
-    /// </summary>
-    public static string GetAttributeName(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the name of the attribute inside but before the specified
+        /// index.
+        /// </summary>
+        public static string GetAttributeName(string xml, int index)
+        {
             if (String.IsNullOrEmpty(xml))
             {
                 return String.Empty;
@@ -188,14 +188,14 @@ public static class XmlParser
             return GetAttributeName(xml, index, true, true, true);
         }
 
-    /// <summary>
-    /// Gets the name of the attribute and its prefix at the specified index. The index
-    /// can be anywhere inside the attribute name or in the attribute value.
-    /// The namespace for the element containing the attribute will also be determined
-    /// if the includeNamespace flag is set to true.
-    /// </summary>
-    public static QualifiedName GetQualifiedAttributeNameAtIndex(string xml, int index, bool includeNamespace)
-    {
+        /// <summary>
+        /// Gets the name of the attribute and its prefix at the specified index. The index
+        /// can be anywhere inside the attribute name or in the attribute value.
+        /// The namespace for the element containing the attribute will also be determined
+        /// if the includeNamespace flag is set to true.
+        /// </summary>
+        public static QualifiedName GetQualifiedAttributeNameAtIndex(string xml, int index, bool includeNamespace)
+        {
             string name = GetAttributeNameAtIndex(xml, index);
             QualifiedName qualifiedName = QualifiedName.FromString(name);
             if (!qualifiedName.IsEmpty && !qualifiedName.HasNamespace && includeNamespace)
@@ -206,21 +206,21 @@ public static class XmlParser
             return qualifiedName;
         }
 
-    /// <summary>
-    /// Gets the name of the attribute and its prefix at the specified index. The index
-    /// can be anywhere inside the attribute name or in the attribute value.
-    /// </summary>
-    public static QualifiedName GetQualifiedAttributeNameAtIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the name of the attribute and its prefix at the specified index. The index
+        /// can be anywhere inside the attribute name or in the attribute value.
+        /// </summary>
+        public static QualifiedName GetQualifiedAttributeNameAtIndex(string xml, int index)
+        {
             return GetQualifiedAttributeNameAtIndex(xml, index, false);
         }
 
-    /// <summary>
-    /// Gets the name of the attribute at the specified index. The index
-    /// can be anywhere inside the attribute name or in the attribute value.
-    /// </summary>
-    public static string GetAttributeNameAtIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the name of the attribute at the specified index. The index
+        /// can be anywhere inside the attribute name or in the attribute value.
+        /// </summary>
+        public static string GetAttributeNameAtIndex(string xml, int index)
+        {
             if (String.IsNullOrEmpty(xml))
             {
                 return String.Empty;
@@ -299,11 +299,11 @@ public static class XmlParser
             return GetAttributeName(xml, index, ignoreWhitespace, ignoreQuote, ignoreEqualsSign);
         }
 
-    /// <summary>
-    /// Checks for valid xml attribute value character
-    /// </summary>
-    public static bool IsAttributeValueChar(char ch)
-    {
+        /// <summary>
+        /// Checks for valid xml attribute value character
+        /// </summary>
+        public static bool IsAttributeValueChar(char ch)
+        {
             if ((ch == '<') ||
                 (ch == '>'))
             {
@@ -313,11 +313,11 @@ public static class XmlParser
             return true;
         }
 
-    /// <summary>
-    /// Checks for valid xml element or attribute name character.
-    /// </summary>
-    public static bool IsXmlNameChar(char ch)
-    {
+        /// <summary>
+        /// Checks for valid xml element or attribute name character.
+        /// </summary>
+        public static bool IsXmlNameChar(char ch)
+        {
             if (Char.IsLetterOrDigit(ch) ||
                 (ch == ':') ||
                 (ch == '/') ||
@@ -331,11 +331,11 @@ public static class XmlParser
             return false;
         }
 
-    /// <summary>
-    /// Determines whether the specified index is inside an attribute value.
-    /// </summary>
-    public static bool IsInsideAttributeValue(string xml, int index)
-    {
+        /// <summary>
+        /// Determines whether the specified index is inside an attribute value.
+        /// </summary>
+        public static bool IsInsideAttributeValue(string xml, int index)
+        {
             if (String.IsNullOrEmpty(xml))
             {
                 return false;
@@ -385,12 +385,12 @@ public static class XmlParser
             return false;
         }
 
-    /// <summary>
-    /// Gets the attribute value at the specified index.
-    /// </summary>
-    /// <returns>An empty string if no attribute value can be found.</returns>
-    public static string GetAttributeValueAtIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the attribute value at the specified index.
+        /// </summary>
+        /// <returns>An empty string if no attribute value can be found.</returns>
+        public static string GetAttributeValueAtIndex(string xml, int index)
+        {
             if (!IsInsideAttributeValue(xml, index))
             {
                 return String.Empty;
@@ -463,15 +463,15 @@ public static class XmlParser
             return String.Empty;
         }
 
-    /// <summary>
-    /// Gets the text of the xml element start tag that the index is
-    /// currently inside.
-    /// </summary>
-    /// <returns>
-    /// Returns the text up to and including the start tag &lt; character.
-    /// </returns>
-    static string GetActiveElementStartText(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the text of the xml element start tag that the index is
+        /// currently inside.
+        /// </summary>
+        /// <returns>
+        /// Returns the text up to and including the start tag &lt; character.
+        /// </returns>
+        static string GetActiveElementStartText(string xml, int index)
+        {
             int elementStartIndex = GetActiveElementStartIndex(xml, index);
             if (elementStartIndex >= 0)
             {
@@ -487,16 +487,16 @@ public static class XmlParser
             return null;
         }
 
-    /// <summary>
-    /// Locates the index of the start tag &lt; character.
-    /// </summary>
-    /// <returns>
-    /// Returns the index of the start tag character; otherwise
-    /// -1 if no start tag character is found or a end tag
-    /// &gt; character is found first.
-    /// </returns>
-    public static int GetActiveElementStartIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Locates the index of the start tag &lt; character.
+        /// </summary>
+        /// <returns>
+        /// Returns the index of the start tag character; otherwise
+        /// -1 if no start tag character is found or a end tag
+        /// &gt; character is found first.
+        /// </returns>
+        public static int GetActiveElementStartIndex(string xml, int index)
+        {
             int elementStartIndex = -1;
             int currentIndex = index - 1;
 
@@ -519,16 +519,16 @@ public static class XmlParser
             return elementStartIndex;
         }
 
-    /// <summary>
-    /// Locates the index of the end tag character.
-    /// </summary>
-    /// <returns>
-    /// Returns the index of the end tag character; otherwise
-    /// -1 if no end tag character is found or a start tag
-    /// character is found first.
-    /// </returns>
-    static int GetActiveElementEndIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Locates the index of the end tag character.
+        /// </summary>
+        /// <returns>
+        /// Returns the index of the end tag character; otherwise
+        /// -1 if no end tag character is found or a start tag
+        /// character is found first.
+        /// </returns>
+        static int GetActiveElementEndIndex(string xml, int index)
+        {
             int elementEndIndex = index;
 
             for (int i = index; i < xml.Length; ++i)
@@ -550,13 +550,13 @@ public static class XmlParser
             return elementEndIndex;
         }
 
-    /// <summary>
-    /// Gets the element name from the element start tag string.
-    /// </summary>
-    /// <param name="xml">This string must start at the
-    /// element we are interested in.</param>
-    static QualifiedName GetElementName(string xml)
-    {
+        /// <summary>
+        /// Gets the element name from the element start tag string.
+        /// </summary>
+        /// <param name="xml">This string must start at the
+        /// element we are interested in.</param>
+        static QualifiedName GetElementName(string xml)
+        {
             string name = String.Empty;
 
             // Find the end of the element name.
@@ -574,14 +574,14 @@ public static class XmlParser
             return QualifiedName.FromString(name);
         }
 
-    /// <summary>
-    /// Gets the element namespace from the element start tag
-    /// string.
-    /// </summary>
-    /// <param name="xml">This string must start at the
-    /// element we are interested in.</param>
-    static XmlNamespace GetElementNamespace(string xml)
-    {
+        /// <summary>
+        /// Gets the element namespace from the element start tag
+        /// string.
+        /// </summary>
+        /// <param name="xml">This string must start at the
+        /// element we are interested in.</param>
+        static XmlNamespace GetElementNamespace(string xml)
+        {
             XmlNamespace namespaceUri = new XmlNamespace();
 
             Match match = Regex.Match(xml, ".*?(xmlns\\s*?|xmlns:.*?)=\\s*?['\\\"](.*?)['\\\"]");
@@ -600,8 +600,8 @@ public static class XmlParser
             return namespaceUri;
         }
 
-    static string ReverseString(string text)
-    {
+        static string ReverseString(string text)
+        {
             StringBuilder reversedString = new StringBuilder(text);
 
             int index = text.Length;
@@ -614,16 +614,16 @@ public static class XmlParser
             return reversedString.ToString();
         }
 
-    /// <summary>
-    /// Ensures that the index is on the last character if it is
-    /// too large.
-    /// </summary>
-    /// <param name="length">The length of the string.</param>
-    /// <param name="index">The current index.</param>
-    /// <returns>The index unchanged if the index is smaller than the
-    /// length of the string; otherwise it returns length - 1.</returns>
-    static int GetCorrectedIndex(int length, int index)
-    {
+        /// <summary>
+        /// Ensures that the index is on the last character if it is
+        /// too large.
+        /// </summary>
+        /// <param name="length">The length of the string.</param>
+        /// <param name="index">The current index.</param>
+        /// <returns>The index unchanged if the index is smaller than the
+        /// length of the string; otherwise it returns length - 1.</returns>
+        static int GetCorrectedIndex(int length, int index)
+        {
             if (index >= length)
             {
                 index = length - 1;
@@ -631,11 +631,11 @@ public static class XmlParser
             return index;
         }
 
-    /// <summary>
-    /// Gets the active element path given the element text.
-    /// </summary>
-    static XmlElementPath GetActiveElementStartPath(string xml, int index, string elementText)
-    {
+        /// <summary>
+        /// Gets the active element path given the element text.
+        /// </summary>
+        static XmlElementPath GetActiveElementStartPath(string xml, int index, string elementText)
+        {
             QualifiedName category = GetElementName(elementText);
             if (category.IsEmpty)
             {
@@ -674,8 +674,8 @@ public static class XmlParser
             return path;
         }
 
-    static string GetAttributeName(string xml, int index, bool ignoreWhitespace, bool ignoreQuote, bool ignoreEqualsSign)
-    {
+        static string GetAttributeName(string xml, int index, bool ignoreWhitespace, bool ignoreQuote, bool ignoreEqualsSign)
+        {
             string name = String.Empty;
 
             // From the end of the string work backwards until we have
@@ -752,11 +752,11 @@ public static class XmlParser
             return name;
         }
 
-    /// <summary>
-    /// Gets the element name at the specified index.
-    /// </summary>
-    static string GetElementNameAtIndex(string xml, int index)
-    {
+        /// <summary>
+        /// Gets the element name at the specified index.
+        /// </summary>
+        static string GetElementNameAtIndex(string xml, int index)
+        {
             int elementStartIndex = GetActiveElementStartIndex(xml, index);
             if (elementStartIndex >= 0 && elementStartIndex < index)
             {
@@ -773,13 +773,13 @@ public static class XmlParser
             return null;
         }
 
-    /// <summary>
-    /// Gets the parent element path based on the index position. This
-    /// method does not compact the path so it will include all elements
-    /// including those in another namespace in the path.
-    /// </summary>
-    static XmlElementPath GetFullParentElementPath(string xml)
-    {
+        /// <summary>
+        /// Gets the parent element path based on the index position. This
+        /// method does not compact the path so it will include all elements
+        /// including those in another namespace in the path.
+        /// </summary>
+        static XmlElementPath GetFullParentElementPath(string xml)
+        {
             XmlElementPath path = new XmlElementPath();
             IDictionary<string, string> namespacesInScope = null;
             using (StringReader reader = new StringReader(xml))
@@ -825,13 +825,13 @@ public static class XmlParser
             return path;
         }
 
-    public static bool IsQuoteChar(char ch)
-    {
+        public static bool IsQuoteChar(char ch)
+        {
             return (ch == '\"') || (ch == '\'');
         }
 
-    public static string GetXmlIdentifierBeforeIndex(ITextSource document, int index)
-    {
+        public static string GetXmlIdentifierBeforeIndex(ITextSource document, int index)
+        {
             if (document == null)
                 throw new ArgumentNullException("document");
             if (index < 0 || index > document.TextLength)
@@ -841,4 +841,5 @@ public static class XmlParser
                 i--;
             return document.GetText(i + 1, index - i - 1);
         }
+    }
 }

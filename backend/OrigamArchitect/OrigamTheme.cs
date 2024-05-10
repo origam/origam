@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using WeifenLuo.WinFormsUI.ThemeVS2015;
 
-namespace OrigamArchitect;
-
-public class OrigamTheme : VS2015ThemeBase
+namespace OrigamArchitect
 {
-    public OrigamTheme()
-        : base(Decompress(Resources.origam_vstheme))
+    public class OrigamTheme : VS2015ThemeBase
     {
+        public OrigamTheme()
+            : base(Decompress(Resources.origam_vstheme))
+        {
         }
+    }
 }

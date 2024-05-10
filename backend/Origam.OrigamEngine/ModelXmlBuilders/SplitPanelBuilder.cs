@@ -22,15 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Xml;
 using Origam.Gui;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for SplitPanelBuilder.
-/// </summary>
-public class SplitPanelBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement parentNode, SplitPanelOrientation orientation, bool fixedSize)
+	/// <summary>
+	/// Summary description for SplitPanelBuilder.
+	/// </summary>
+	public class SplitPanelBuilder
 	{
+		public static void Build(XmlElement parentNode, SplitPanelOrientation orientation, bool fixedSize)
+		{
 			string type;
 
 			if(orientation == SplitPanelOrientation.Horizontal)
@@ -45,4 +45,5 @@ public class SplitPanelBuilder
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", type);
 		}
+	}
 }

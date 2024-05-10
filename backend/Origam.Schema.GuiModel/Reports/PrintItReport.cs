@@ -23,18 +23,20 @@ using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for PrintItReport.
-/// </summary>
-[SchemaItemDescription("PrintIt Report", "icon_printit-report.png")]
-[ClassMetaVersion("6.0.0")]
-public class PrintItReport : AbstractDataReport, IDataStructureReference
+namespace Origam.Schema.GuiModel 
 {
-	public PrintItReport() : base() { }
+	/// <summary>
+	/// Summary description for PrintItReport.
+	/// </summary>
+	[SchemaItemDescription("PrintIt Report", "icon_printit-report.png")]
+    [ClassMetaVersion("6.0.0")]
+	public class PrintItReport : AbstractDataReport, IDataStructureReference
+	{
+		public PrintItReport() : base() { }
 
-	public PrintItReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+		public PrintItReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
 
-	public PrintItReport(Key primaryKey) : base(primaryKey) { }
+		public PrintItReport(Key primaryKey) : base(primaryKey) { }
+	}
 }
+

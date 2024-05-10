@@ -20,22 +20,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Origam.Windows.Editor;
-
-public class XmlNamespaceCollection : Collection<XmlNamespace>
+namespace Origam.Windows.Editor
 {
-    public XmlNamespaceCollection()
+    public class XmlNamespaceCollection : Collection<XmlNamespace>
     {
+        public XmlNamespaceCollection()
+        {
         }
 
-    public XmlNamespace[] ToArray()
-    {
+        public XmlNamespace[] ToArray()
+        {
             List<XmlNamespace> namespaces = new List<XmlNamespace>(this);
             return namespaces.ToArray();
         }
 
-    public string GetNamespaceForPrefix(string prefix)
-    {
+        public string GetNamespaceForPrefix(string prefix)
+        {
             foreach (XmlNamespace ns in this)
             {
                 if (ns.Prefix == prefix)
@@ -46,8 +46,8 @@ public class XmlNamespaceCollection : Collection<XmlNamespace>
             return String.Empty;
         }
 
-    public string GetPrefix(string namespaceToMatch)
-    {
+        public string GetPrefix(string namespaceToMatch)
+        {
             foreach (XmlNamespace ns in this)
             {
                 if (ns.Name == namespaceToMatch)
@@ -57,4 +57,5 @@ public class XmlNamespaceCollection : Collection<XmlNamespace>
             }
             return String.Empty;
         }
+    }
 }

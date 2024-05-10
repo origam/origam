@@ -26,7 +26,8 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 #endif
 
-namespace Origam.Schema.RuleModel;
+namespace Origam.Schema.RuleModel
+{
 #if !NETSTANDARD
     class MultiLineTextEditor : UITypeEditor
     {
@@ -55,3 +56,4 @@ namespace Origam.Schema.RuleModel;
         }
     }
 #endif
+}

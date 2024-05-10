@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema;
-
-/// <summary>
-/// Summary description for ICaptionSchemaItem.
-/// </summary>
-public interface ICaptionSchemaItem
+namespace Origam.Schema
 {
-	string Caption {get; set;}
+	/// <summary>
+	/// Summary description for ICaptionSchemaItem.
+	/// </summary>
+	public interface ICaptionSchemaItem
+	{
+		string Caption {get; set;}
+	}
 }

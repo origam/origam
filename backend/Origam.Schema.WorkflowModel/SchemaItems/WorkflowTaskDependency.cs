@@ -26,39 +26,39 @@ using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel;
-
-/// <summary>
-/// Summary description for WorkflowTaskDependency.
-/// </summary>
-[SchemaItemDescription("Dependency", "Dependencies", "dependency-blm.png")]
-[HelpTopic("Workflow+Task+Dependency")]
-[DefaultProperty("Task")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class WorkflowTaskDependency : AbstractSchemaItem
+namespace Origam.Schema.WorkflowModel
 {
-	public const string CategoryConst = "WorkflowTaskDependency";
-
-	public WorkflowTaskDependency() : base() {}
-
-	public WorkflowTaskDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public WorkflowTaskDependency(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType => CategoryConst;
-
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	/// <summary>
+	/// Summary description for WorkflowTaskDependency.
+	/// </summary>
+	[SchemaItemDescription("Dependency", "Dependencies", "dependency-blm.png")]
+    [HelpTopic("Workflow+Task+Dependency")]
+    [DefaultProperty("Task")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class WorkflowTaskDependency : AbstractSchemaItem
 	{
+		public const string CategoryConst = "WorkflowTaskDependency";
+
+		public WorkflowTaskDependency() : base() {}
+
+		public WorkflowTaskDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public WorkflowTaskDependency(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType => CategoryConst;
+
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Task);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -74,44 +74,44 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 			base.UpdateReferences ();
 		}
 
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
-	#endregion
+		public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+		#endregion
 
-	#region Properties
-	public Guid WorkflowTaskId;
-	[NotNullModelElementRule]
-	[NoParentDependenciesRule]
-	[TypeConverter(typeof(WorkflowStepFilteredConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[XmlReference("task", "WorkflowTaskId")]
-	public IWorkflowStep Task
-	{
-		get
+		#region Properties
+		public Guid WorkflowTaskId;
+        [NotNullModelElementRule]
+        [NoParentDependenciesRule]
+        [TypeConverter(typeof(WorkflowStepFilteredConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[XmlReference("task", "WorkflowTaskId")]
+		public IWorkflowStep Task
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.WorkflowTaskId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IWorkflowStep;
 			}
-		set
-		{
+			set
+			{
 				this.WorkflowTaskId = (Guid)value.PrimaryKey["Id"];
 
 				this.Name = "After_" + this.Task.Name;
 			}
-	}
+		}
 
-	[DefaultValue(WorkflowStepStartEvent.Success)]
-	[XmlAttribute ("startEvent")]
-	public WorkflowStepStartEvent StartEvent { get; set; } = WorkflowStepStartEvent.Success;
-	#endregion
-}
+        [DefaultValue(WorkflowStepStartEvent.Success)]
+		[XmlAttribute ("startEvent")]
+		public WorkflowStepStartEvent StartEvent { get; set; } = WorkflowStepStartEvent.Success;
+		#endregion
+	}
 	
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-public class NoParentDependenciesRule : AbstractModelElementRuleAttribute 
-{
-	public override Exception CheckRule(object instance)
+	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+	public class NoParentDependenciesRule : AbstractModelElementRuleAttribute 
 	{
+		public override Exception CheckRule(object instance)
+		{
 			if (!(instance is WorkflowTaskDependency taskDependency))
 			{
 				throw new Exception(
@@ -130,8 +130,9 @@ public class NoParentDependenciesRule : AbstractModelElementRuleAttribute
 				: null;
 		}
 		
-	public override Exception CheckRule(object instance, string memberName)
-	{
+		public override Exception CheckRule(object instance, string memberName)
+		{
 			return CheckRule(instance);
 		}
+	}
 }

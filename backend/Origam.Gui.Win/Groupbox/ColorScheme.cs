@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 // Copyright 2004 Shouvik - https://www.codeproject.com/Articles/8103/Creating-some-cool-buttons-and-groupboxes
 #endregion
@@ -28,36 +27,36 @@ using System.Drawing;
 
 using Origam.UI;
 
-namespace Origam.Gui.Win;
-
-public enum EnmColorScheme
+namespace Origam.Gui.Win
 {
-	Purple,
-	Green,
-	Yellow,
-	Origam
-}
-/// <summary>
-///  This class works as a common point for all the controls to 
-///  implement the color scheme
-/// </summary>
-internal class ColorScheme
-{
-	private EnmColorScheme oClrScheme;
-	public ColorScheme(EnmColorScheme aoColorScheme)
+	public enum EnmColorScheme
 	{
+		Purple,
+		Green,
+		Yellow,
+		Origam
+	}
+	/// <summary>
+	///  This class works as a common point for all the controls to 
+	///  implement the color scheme
+	/// </summary>
+	internal class ColorScheme
+	{
+		private EnmColorScheme oClrScheme;
+		public ColorScheme(EnmColorScheme aoColorScheme)
+		{
 			//
 			// TODO: Add constructor logic here
 			//
 			oClrScheme = aoColorScheme;
 			
 		}
-	///<summary>
-	/// This method sets the values of different color properties
-	/// for controls of IGradientButtonColor Type
-	/// </summary>
-	internal void SetColorScheme(IGradientButtonColor aCtrl)
-	{
+		///<summary>
+		/// This method sets the values of different color properties
+		/// for controls of IGradientButtonColor Type
+		/// </summary>
+		internal void SetColorScheme(IGradientButtonColor aCtrl)
+		{
 			switch(oClrScheme)
 			{
 				case EnmColorScheme.Green:
@@ -79,7 +78,8 @@ internal class ColorScheme
 					//---------------------------------------------------------
 				case EnmColorScheme.Purple:
 					//=========================================================
-					//Setting color properties of button control for 		//Purple color scheme
+					//Setting color properties of button control for 
+					//Purple color scheme
 					//---------------------------------------------------------
 					aCtrl.BackgroundBottomColor = Color.FromArgb(183, 157, 206);
 					aCtrl.BackgroundTopColor = Color.FromArgb(231, 222, 239);
@@ -95,7 +95,8 @@ internal class ColorScheme
 					//---------------------------------------------------------
 				case EnmColorScheme.Yellow:
 					//=========================================================
-					//Setting color properties of button control for 		//Yellow color scheme
+					//Setting color properties of button control for 
+					//Yellow color scheme
 					//---------------------------------------------------------
 					aCtrl.BackgroundBottomColor = Color.FromArgb(194, 168, 120);
 					aCtrl.BackgroundTopColor = Color.FromArgb(248, 245, 224);
@@ -112,17 +113,18 @@ internal class ColorScheme
 			}
 		}
 
-	///<summary>
-	/// This method sets the values of different color properties
-	/// for controls of IGradientContainer Type
-	///</summary>
-	internal void SetColorScheme(IGradientContainer aCtrl)
-	{
+		///<summary>
+		/// This method sets the values of different color properties
+		/// for controls of IGradientContainer Type
+		///</summary>
+		internal void SetColorScheme(IGradientContainer aCtrl)
+		{
 			switch(oClrScheme)
 			{
 				case EnmColorScheme.Origam:
 					//=========================================================
-					// Setting color properties of container control for 		// Green color scheme
+					// Setting color properties of container control for 
+					// Green color scheme
 					//---------------------------------------------------------
 					aCtrl.FontColor = OrigamColorScheme.GroupBoxFontColor;
 					aCtrl.ShadowColor = OrigamColorScheme.GroupBoxShadowColor;
@@ -134,7 +136,8 @@ internal class ColorScheme
 					//---------------------------------------------------------
 				case EnmColorScheme.Green:
 					//=========================================================
-					// Setting color properties of container control for 		// Green color scheme
+					// Setting color properties of container control for 
+					// Green color scheme
 					//---------------------------------------------------------
 					aCtrl.FontColor = Color.FromArgb(57, 66, 1);
 					aCtrl.ShadowColor = Color.FromArgb(142, 143, 116);
@@ -146,7 +149,8 @@ internal class ColorScheme
 					//---------------------------------------------------------
 				case EnmColorScheme.Purple:
 					//=========================================================
-					// Setting color properties of container control for 		// Purple color scheme
+					// Setting color properties of container control for 
+					// Purple color scheme
 					//---------------------------------------------------------
 					aCtrl.FontColor = Color.FromArgb(137, 101, 163);
 					aCtrl.ShadowColor = Color.FromArgb(110, 92, 121);
@@ -163,82 +167,84 @@ internal class ColorScheme
                     throw new InvalidColorSchemeException();
 			}
 		}
-}
-///<summary>
-/// This class define the exception which is thrown on invalid selection
-///</summary>
-public class InvalidColorSchemeException : Exception
-{
-	public  InvalidColorSchemeException():base(ResourceUtils.GetString("ErrorColorScheme"))
+	}
+	///<summary>
+	/// This class define the exception which is thrown on invalid selection
+	///</summary>
+	public class InvalidColorSchemeException : Exception
 	{
+		public  InvalidColorSchemeException():base(ResourceUtils.GetString("ErrorColorScheme"))
+		{
 		}
-}
+	}
 	
-///<summary>
-/// This interface defines properties 
-/// for control that have diffrent colors
-/// is disabled mode i.e. ElongatedButton
-///</summary>
-internal interface IGradientDisabledColor
-{
-	Color DisabledFontColor{get; set;}
-	Color DisbaledBottomColor{get;set;}
-	Color DisabledTopColor{get;set;}
-}
+	///<summary>
+	/// This interface defines properties 
+	/// for control that have diffrent colors
+	/// is disabled mode i.e. ElongatedButton
+	///</summary>
+	internal interface IGradientDisabledColor
+	{
+		Color DisabledFontColor{get; set;}
+		Color DisbaledBottomColor{get;set;}
+		Color DisabledTopColor{get;set;}
+	}
 
-///<summary>
-/// This interface defines property 
-/// for the color of the text on 
-/// the control
-///</summary>
-internal interface IFontColor
-{
-	Color FontColor{get;set;}
-}
+	///<summary>
+	/// This interface defines property 
+	/// for the color of the text on 
+	/// the control
+	///</summary>
+	internal interface IFontColor
+	{
+		Color FontColor{get;set;}
+	}
 	
-///<summary>
-/// This interface defines properties
-/// to set the control background
-/// Gradient's top color and bottom color
-///</summary>
-internal interface IGradientBackgroundColor
-{
-	Color BackgroundBottomColor{get;set;}
-	Color BackgroundTopColor{get;set;}
-}
+	///<summary>
+	/// This interface defines properties
+	/// to set the control background
+	/// Gradient's top color and bottom color
+	///</summary>
+	internal interface IGradientBackgroundColor
+	{
+		Color BackgroundBottomColor{get;set;}
+		Color BackgroundTopColor{get;set;}
+	}
 
-///<summary>
-/// This interface defines properties
-/// to set control's Gradient Border's
-/// Top color and Bottom Color
-///</summary>
-internal interface IGradientBorderColor
-{
-	Color BorderTopColor{get;set;}
-	Color BorderBottomColor {get;set;}
-}
+	///<summary>
+	/// This interface defines properties
+	/// to set control's Gradient Border's
+	/// Top color and Bottom Color
+	///</summary>
+	internal interface IGradientBorderColor
+	{
+		Color BorderTopColor{get;set;}
+		Color BorderBottomColor {get;set;}
+	}
 
-///<summary>
-/// This interface combines the interfaces
-/// needed for button controls and add button 
-/// specific properties
-///</summary>
-internal interface IGradientButtonColor:
-	IFontColor, IGradientDisabledColor,
-	IGradientBackgroundColor, IGradientBorderColor
-{
-	Color PressedFontColor{get;set;}
-	Color DefaultBorderColor{get;set;}
-}
+	///<summary>
+	/// This interface combines the interfaces
+	/// needed for button controls and add button 
+	/// specific properties
+	///</summary>
+	internal interface IGradientButtonColor:
+					IFontColor, IGradientDisabledColor,
+					IGradientBackgroundColor, IGradientBorderColor
+	{
+		Color PressedFontColor{get;set;}
+		Color DefaultBorderColor{get;set;}
+	}
 
-///<summary>
-/// This interface combines the interfaces 
-/// needed for container controls and add
-/// container specific property
-///</summary>
-internal interface IGradientContainer:
-	IFontColor, IGradientBackgroundColor,
-	IGradientBorderColor
-{
-	Color ShadowColor{get;set;}
+	///<summary>
+	/// This interface combines the interfaces 
+	/// needed for container controls and add
+	/// container specific property
+	///</summary>
+	internal interface IGradientContainer:
+						IFontColor, IGradientBackgroundColor,
+						IGradientBorderColor
+	{
+		Color ShadowColor{get;set;}
+	}
+
 }

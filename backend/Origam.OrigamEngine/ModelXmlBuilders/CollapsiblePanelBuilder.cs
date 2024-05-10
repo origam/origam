@@ -21,15 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders;
-
-/// <summary>
-/// Summary description for TabControlBuilder.
-/// </summary>
-public class CollapsiblePanelBuilder
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public static void Build(XmlElement parentNode, UIElementRenderData renderData)
+	/// <summary>
+	/// Summary description for TabControlBuilder.
+	/// </summary>
+	public class CollapsiblePanelBuilder
 	{
+		public static void Build(XmlElement parentNode, UIElementRenderData renderData)
+		{
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
 			parentNode.SetAttribute("Type", "CollapsiblePanel");
 			parentNode.SetAttribute("Label", renderData.Text);
@@ -40,4 +40,5 @@ public class CollapsiblePanelBuilder
 				parentNode.SetAttribute("Height", "0");
 			}
 		}
+	}
 }

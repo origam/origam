@@ -30,47 +30,47 @@ using Origam.Schema.GuiModel;
 
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.WorkflowModel;
-
-[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
-[HelpTopic("Service+Method+Call+Parameter")]
-[XmlModelRoot(CategoryConst)]
-[ClassMetaVersion("6.0.0")]
-public class ServiceMethodCallParameter : AbstractSchemaItem
+namespace Origam.Schema.WorkflowModel
 {
-	public const string CategoryConst = "ServiceMethodCallParameter";
-
-	public ServiceMethodCallParameter() {}
-
-	public ServiceMethodCallParameter(Guid schemaExtensionId) 
-		: base(schemaExtensionId) {}
-
-	public ServiceMethodCallParameter(Key primaryKey) : base(primaryKey) {}
-
-	#region Overriden AbstractDataEntityColumn Members
-		
-	public override string ItemType => CategoryConst;
-
-	[Browsable(false)]
-	public override bool UseFolders => false;
-
-	public override void GetExtraDependencies(ArrayList dependencies)
+	[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
+    [HelpTopic("Service+Method+Call+Parameter")]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public class ServiceMethodCallParameter : AbstractSchemaItem
 	{
+		public const string CategoryConst = "ServiceMethodCallParameter";
+
+		public ServiceMethodCallParameter() {}
+
+		public ServiceMethodCallParameter(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
+
+		public ServiceMethodCallParameter(Key primaryKey) : base(primaryKey) {}
+
+		#region Overriden AbstractDataEntityColumn Members
+		
+		public override string ItemType => CategoryConst;
+
+		[Browsable(false)]
+		public override bool UseFolders => false;
+
+		public override void GetExtraDependencies(ArrayList dependencies)
+		{
 			dependencies.Add(ServiceMethodParameter);
 			base.GetExtraDependencies(dependencies);
 		}
 
-	#endregion
+		#endregion
 
-	#region Properties
-	public Guid ServiceMethodParameterId;
+		#region Properties
+		public Guid ServiceMethodParameterId;
 
-	[XmlReference("serviceMethodParameter", "ServiceMethodParameterId")]
-	[ReadOnly(true)]
-	public ServiceMethodParameter ServiceMethodParameter
-	{
-		get
+		[XmlReference("serviceMethodParameter", "ServiceMethodParameterId")]
+        [ReadOnly(true)]
+		public ServiceMethodParameter ServiceMethodParameter
 		{
+			get
+			{
 				var key = new ModelElementKey
 				{
 					Id = ServiceMethodParameterId
@@ -78,17 +78,17 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 				return (ServiceMethodParameter)PersistenceProvider
 					.RetrieveInstance(typeof(ServiceMethodParameter), key);
 			}
-		set => ServiceMethodParameterId = (Guid)value.PrimaryKey["Id"];
-	}
-	#endregion
+			set => ServiceMethodParameterId = (Guid)value.PrimaryKey["Id"];
+		}
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region ISchemaItemFactory Members
 
-	[Browsable(false)]
-	public override Type[] NewItemTypes
-	{
-		get
+		[Browsable(false)]
+		public override Type[] NewItemTypes
 		{
+			get
+			{
 				var result = new ArrayList();
 				if(ServiceMethodParameter.AllowContextReference)
 				{
@@ -120,11 +120,11 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 				}
 				return (Type[])result.ToArray(typeof(Type));
 			}
-	}
+		}
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			string itemName = null;
 			if(typeof(T) == typeof(ContextReference))
 			{
@@ -157,10 +157,10 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
-	public override IList<string> NewTypeNames
-	{
-		get
+		public override IList<string> NewTypeNames
 		{
+			get
+			{
 				try
 				{
 					var serviceMethodCallTask = ParentItem as ServiceMethodCallTask;
@@ -178,6 +178,7 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 					return new string[] {};
 				}
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

@@ -25,40 +25,40 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel;
-
-/// <summary>
-/// Summary description for EntityColumnReference.
-/// </summary>
-[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
-[HelpTopic("Field+Reference")]
-[XmlModelRoot(CategoryConst)]
-[DefaultProperty("Field")]
-[ClassMetaVersion("6.0.0")]
-public class EntityColumnReference : AbstractSchemaItem
+namespace Origam.Schema.EntityModel
 {
-	public const string CategoryConst = "EntityColumnReference";
-
-	public EntityColumnReference() : base() {}
-
-	public EntityColumnReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-	public EntityColumnReference(Key primaryKey) : base(primaryKey)	{}
-	
-	#region Overriden AbstractDataEntityColumn Members
-
-	public override string ItemType
+	/// <summary>
+	/// Summary description for EntityColumnReference.
+	/// </summary>
+	[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
+    [HelpTopic("Field+Reference")]
+	[XmlModelRoot(CategoryConst)]
+	[DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.0")]
+    public class EntityColumnReference : AbstractSchemaItem
 	{
-		get
+		public const string CategoryConst = "EntityColumnReference";
+
+		public EntityColumnReference() : base() {}
+
+		public EntityColumnReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public EntityColumnReference(Key primaryKey) : base(primaryKey)	{}
+	
+		#region Overriden AbstractDataEntityColumn Members
+
+		public override string ItemType
 		{
+			get
+			{
 				return CategoryConst;
 			}
-	}
+		}
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				try
 				{
 					return this.Field.Icon;
@@ -68,23 +68,23 @@ public class EntityColumnReference : AbstractSchemaItem
 					return "icon_field-reference.png";
 				}
 			}
-	}
+		}
 
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
-	{
+		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		{
 			if(this.Field != null)
 				base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
 		}
 
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-	{
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
 			dependencies.Add(this.Field);
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-	public override void UpdateReferences()
-	{
+		public override void UpdateReferences()
+		{
 			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 			{
 				if(item.OldPrimaryKey != null)
@@ -100,34 +100,34 @@ public class EntityColumnReference : AbstractSchemaItem
 			base.UpdateReferences ();
 		}
 
-	public override SchemaItemCollection ChildItems
-	{
-		get
+		public override SchemaItemCollection ChildItems
 		{
+			get
+			{
 				return new SchemaItemCollection();
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region Properties
-	public Guid FieldId;
+		#region Properties
+		public Guid FieldId;
 
-	[Category("Reference")]
-	[TypeConverter(typeof(EntityColumnReferenceConverter))]
-	[RefreshProperties(RefreshProperties.Repaint)]
-	[NotNullModelElementRule()]
-	[XmlReference("field", "FieldId")]
-	public IDataEntityColumn Field
-	{
-		get
+		[Category("Reference")]
+		[TypeConverter(typeof(EntityColumnReferenceConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+		[NotNullModelElementRule()]
+        [XmlReference("field", "FieldId")]
+		public IDataEntityColumn Field
 		{
+			get
+			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.FieldId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
 			}
-		set
-		{
+			set
+			{
 				this.FieldId = (Guid)value.PrimaryKey["Id"];
 
 				if(this.Name == null)
@@ -135,6 +135,7 @@ public class EntityColumnReference : AbstractSchemaItem
 					this.Name = this.Field.Name;
 				}
 			}
+		}
+		#endregion
 	}
-	#endregion
 }

@@ -30,29 +30,29 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Gui.Win.Wizards;
-
-/// <summary>
-/// Summary description for CreatePanelFromEntityCommand.
-/// </summary>
-public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
+namespace Origam.Gui.Win.Wizards
 {
-	ScreenWizardForm wizardForm;
-	SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-	public override bool IsEnabled
+	/// <summary>
+	/// Summary description for CreatePanelFromEntityCommand.
+	/// </summary>
+	public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
 	{
-		get
+        ScreenWizardForm wizardForm;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
+			get
+			{
 				return Owner is IDataEntity;
 			}
-		set
-		{
+			set
+			{
 				throw new ArgumentException("Cannot set this property", "IsEnabled");
 			}
-	}
+		}
 
-	public override void Run()
-	{
+		public override void Run()
+		{
             ArrayList list = new ArrayList();
             WorkQueueClass workQueue = new WorkQueueClass();
             list.Add(new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon));
@@ -85,19 +85,19 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
             }
 		}
 
-	public override void Execute()
-	{
+        public override void Execute()
+        {
             WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
                     wizardForm.Entity, wizardForm.SelectedFields, GeneratedModelElements);
         }
 
-	public override int GetImageIndex(string icon)
-	{
+        public override int GetImageIndex(string icon)
+        {
             return _schemaBrowser.ImageIndex(icon);
         }
 
-	public override void SetSummaryText(object summary)
-	{
+        public override void SetSummaryText(object summary)
+        {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
             richTextBoxSummary.Text = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription") + " with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
@@ -107,4 +107,5 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
             richTextBoxSummary.AppendText(Environment.NewLine);
             ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
         }
+    }
 }

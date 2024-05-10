@@ -19,65 +19,66 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel;
-
-/// <summary>
-/// Summary description for Class1.
-/// </summary>
-public class KeyboardShortcutsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+namespace Origam.Schema.GuiModel
 {
-	public KeyboardShortcutsSchemaItemProvider() 
+	/// <summary>
+	/// Summary description for Class1.
+	/// </summary>
+	public class KeyboardShortcutsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
+		public KeyboardShortcutsSchemaItemProvider() 
+		{
 			this.ChildItemTypes.Add(typeof(KeyboardShortcut));
 		}
 		
-	#region ISchemaItemProvider Members
-	public override string RootItemType
-	{
-		get
+		#region ISchemaItemProvider Members
+		public override string RootItemType
 		{
+			get
+			{
 				return KeyboardShortcut.CategoryConst;
 			}
-	}
-	public override string Group
-	{
-		get
+		}
+		public override string Group
 		{
+			get
+			{
 				return "UI";
 			}
-	}
-	#endregion
+		}
+		#endregion
 
-	#region IBrowserNode Members
+		#region IBrowserNode Members
 
-	public override string Icon
-	{
-		get
+		public override string Icon
 		{
+			get
+			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
 				return "icon_17_keyboard-shortcuts.png";
 			}
-	}
+		}
 
-	public override string NodeText
-	{
-		get
+		public override string NodeText
 		{
+			get
+			{
 				return "Keyboard Shortcuts";
 			}
-		set
-		{
+			set
+			{
 				base.NodeText = value;
 			}
-	}
+		}
 
-	public override string NodeToolTipText
-	{
-		get
+		public override string NodeToolTipText
 		{
+			get
+			{
 				return "List of Keyboard Shortcuts";
 			}
-	}
+		}
 
-	#endregion
+		#endregion
+	}
 }

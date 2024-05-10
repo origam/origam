@@ -22,53 +22,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 
-namespace Origam.Schema.GuiModel;
-
-public class GraphicsSchemaItemProvider : AbstractSchemaItemProvider
+namespace Origam.Schema.GuiModel
 {
-	public GraphicsSchemaItemProvider() {}
-		
-	#region ISchemaItemProvider Members
-	public override string RootItemType => Graphics.CategoryConst;
-
-	public override string Group => "UI";
-
-	#endregion
-
-	#region IBrowserNode Members
-
-	public override string Icon =>
-		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-		"icon_16_images.png";
-
-	public override string NodeText
+	public class GraphicsSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		get => "Images";
-		set => base.NodeText = value;
-	}
+		public GraphicsSchemaItemProvider() {}
+		
+		#region ISchemaItemProvider Members
+		public override string RootItemType => Graphics.CategoryConst;
 
-	public override string NodeToolTipText =>
-		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-		"List of Graphics";
+		public override string Group => "UI";
 
-	#endregion
+		#endregion
 
-	#region ISchemaItemFactory Members
+		#region IBrowserNode Members
 
-	public override Type[] NewItemTypes => new[]
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_16_images.png";
+
+		public override string NodeText
+		{
+			get => "Images";
+			set => base.NodeText = value;
+		}
+
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Graphics";
+
+		#endregion
+
+		#region ISchemaItemFactory Members
+
+		public override Type[] NewItemTypes => new[]
 		{
 			typeof(Graphics)
 		};
 
-	public override T NewItem<T>(
-		Guid schemaExtensionId, SchemaItemGroup group)
-	{
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
 			return base.NewItem<T>(schemaExtensionId, group, 
 				typeof(T) == typeof(Graphics) ?
 					"NewGraphics" : null);
 		}
 
-	#endregion
+		#endregion
 
 
+	}
 }

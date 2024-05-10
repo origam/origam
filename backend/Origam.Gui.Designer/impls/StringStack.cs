@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 //------------------------------------------------------------------------------
 /// <copyright from='1997' to='2002' company='Microsoft Corporation'>
 ///    Copyright (c) Microsoft Corporation. All Rights Reserved.
@@ -29,21 +28,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 ///
 /// </copyright>
 //------------------------------------------------------------------------------
-namespace Origam.Gui.Designer;
-
-using System.Collections;
-
-/// This is just a special stack to handle the transaction descriptions.
-/// It functions like a normal stack, except it looks for the first
-/// non-null (and non "") string.
-internal class StringStack : Stack 
+namespace Origam.Gui.Designer
 {
-	internal StringStack() 
+	using System.Collections;
+
+	/// This is just a special stack to handle the transaction descriptions.
+	/// It functions like a normal stack, except it looks for the first
+	/// non-null (and non "") string.
+	internal class StringStack : Stack 
 	{
+		internal StringStack() 
+		{
 		}
 
-	internal string GetNonNull() 
-	{
+		internal string GetNonNull() 
+		{
 			int items = this.Count;
 			object item;
 			object[] itemArr = this.ToArray();
@@ -57,4 +56,5 @@ internal class StringStack : Stack
 			}
 			return "";
 		}
+	}
 }
