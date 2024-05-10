@@ -444,9 +444,10 @@ export class TablePanelView implements ITablePanelView {
     const _this = this;
     flow(function*() {
       if (_this.isEditing) {
-        if(!_this.isScrollByKeyboard) {
+        if (!_this.isScrollByKeyboard) {
           _this.setEditing(false);
         }
+        _this.isScrollByKeyboard = false;
         yield*flushCurrentRowData(_this)();
       }
     })();
@@ -458,9 +459,6 @@ export class TablePanelView implements ITablePanelView {
     if (event.key === "Tab" || event.key === "Enter") {
       clearTimeout(this.hScrollDead);
       this.isScrollByKeyboard = true;
-      this.hScrollDead = setTimeout(() => {
-        this.isScrollByKeyboard = false;
-      });
     }
   }
 
