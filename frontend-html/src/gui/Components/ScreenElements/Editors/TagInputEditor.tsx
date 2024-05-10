@@ -29,11 +29,14 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { requestFocus } from "utils/focus";
 import { CtxDropdownRefCtrl } from "gui/Components/Dropdown/DropdownCommon";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
   return {
     textualValues: value?.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
+    ctx: property
   };
 })(
   observer(
@@ -52,6 +55,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       customInputClass?: string;
       autoFocus?: boolean;
       id?: string;
+      ctx? : any
     }) => {
       const beh = useContext(CtxDropdownEditor).behavior;
       const ref = useContext(CtxDropdownRefCtrl);
@@ -132,8 +136,13 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
           removeItem(event, value[value.length - 1]);
         }
-        await beh.handleInputKeyDown(event);
-        props.onKeyDown?.(event);
+        runInFlowWithHandler({
+          ctx: props.ctx,
+          action: async () => {
+            await beh.handleInputKeyDown(event);
+            props.onKeyDown?.(event);
+          }
+        });
       }
 
       return (
