@@ -59,7 +59,6 @@ export class DateTimeEditor extends React.Component<{
   onKeyDown?: (event: any) => void;
   onMount?(onChange?: (value: any) => void): void;
   onEditorBlur?: (event: any) => Promise<void>;
-  refocuser?: (cb: () => void) => () => void;
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   className?: string;
 }> {
