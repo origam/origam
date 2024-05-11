@@ -3,9 +3,7 @@ import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialo
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import React from "react";
-import {observable} from "mobx";
-import {getApplication} from "../../selectors/getApplication";
-import {getMobileState} from "../../selectors/getMobileState";
+import { getMobileState } from "model/selectors/getMobileState";
 
 export interface IMobileLayoutState {
   actionDropUpHidden: boolean;

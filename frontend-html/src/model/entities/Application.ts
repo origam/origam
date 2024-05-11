@@ -18,14 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { handleError } from "model/actions/handleError";
-import { IApi } from "./types/IApi";
-import { IApplication, IApplicationData } from "./types/IApplication";
-import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
-import { IDialogStack } from "./types/IDialogStack";
-import { IErrorDialogController } from "./types/IErrorDialog";
-import { IWorkbench } from "./types/IWorkbench";
+import { IApi } from "model/entities/types/IApi";
+import { IApplication, IApplicationData } from "model/entities/types/IApplication";
+import { IApplicationLifecycle } from "model/entities/types/IApplicationLifecycle";
+import { IDialogStack } from "model/entities/types/IDialogStack";
+import { IErrorDialogController } from "model/entities/types/IErrorDialog";
+import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { LayoutManager } from "./LayoutManager";
+import { LayoutManager } from "model/entities/LayoutManager";
 
 export class Application implements IApplication {
 
@@ -67,7 +67,7 @@ export class Application implements IApplication {
     }
   }
 
-  get layout (){
+  get layout () {
     return this.layoutManager.layout;
   }
 

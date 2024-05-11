@@ -6,9 +6,9 @@ import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 import { IMobileLayoutState, MenuLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import React from "react";
-import { IEditingState } from "../types/IMainMenu";
-import {ISidebarState} from "../SidebarState";
-import {getWorkbench} from "../../selectors/getWorkbench";
+import { IEditingState } from "model/entities/types/IMainMenu";
+import { ISidebarState } from "model/entities/SidebarState";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
