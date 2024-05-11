@@ -52,6 +52,7 @@ import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import cx from 'classnames';
 import { getGridFocusManager } from "model/entities/GridFocusManager";
+import {getFormScreen} from "../../../../model/selectors/FormScreen/getFormScreen";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -435,7 +436,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   canFocus(){
-    return getGridFocusManager(this.context.tablePanelView).canFocusTable;
+    const formScreen = getFormScreen(this.tablePanelView);
+    const childBindings = formScreen.rootDataViews[0].childBindings;
+    const noEditorInChildViewsOpen = childBindings.every(x => x.childDataView.gridFocusManager.canFocusTable)
+    return getGridFocusManager(this.context.tablePanelView).canFocusTable && noEditorInChildViewsOpen;
   }
 
   render() {
