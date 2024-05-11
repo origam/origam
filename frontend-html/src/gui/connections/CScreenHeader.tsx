@@ -40,6 +40,8 @@ import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHead
 import { isAddRecordShortcut, isSaveShortcut } from "utils/keyShortcuts";
 import { ScreenToolbarAction } from "gui/Components/ScreenToolbar/ScreenToolbarAction";
 import { WorkflowAction } from "gui/connections/WorkflowAction";
+import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import { getTopmostOpenedNonDialogScreenItem } from "model/selectors/getTopmostNonDialogScreenItem";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -69,15 +71,18 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
     const {content} = activeScreen;
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
     if (!content) return null;
-    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
-    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
+    const isTopMostNonDialogScreen = getIsTopmostNonDialogScreen(activeScreen);
+    const formTitle = (activeScreen.formTitle || getTopmostOpenedNonDialogScreenItem(activeScreen)?.formTitle) ?? "";
+
+    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton && isTopMostNonDialogScreen;
+    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton && isTopMostNonDialogScreen;
     return (
       <>
-        <h1 className={"printOnly"}>{activeScreen.formTitle}</h1>
+        <h1 className={"printOnly"}>{formTitle}</h1>
         <ScreenHeader
           isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
         >
-          <h1>{activeScreen.formTitle}</h1>
+          <h1>{formTitle}</h1>
           {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
           {isCancelButton && (
             <WorkflowAction

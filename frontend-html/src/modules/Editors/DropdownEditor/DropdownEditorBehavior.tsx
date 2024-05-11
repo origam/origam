@@ -131,6 +131,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   willLoadNextPage = true;
 
   public handleDoubleClick(event: any){
+    if (this.isReadOnly) {
+      return;
+    }
     this.onDoubleClick?.(event);
     this.dropDown();
   }

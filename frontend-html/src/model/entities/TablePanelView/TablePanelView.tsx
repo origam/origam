@@ -264,7 +264,7 @@ export class TablePanelView implements ITablePanelView {
   lastSelectionRowIdUnderMouse: any = undefined;
   windowMouseMoveDeadPeriod = false;
   @observable shiftPressed = false;
-  @observable ctrlPressed = false;
+  @observable ctrlOrCmdPressed = false;
   @observable selectionCellHoveredId: any = undefined;
   @observable selectionTargetState: boolean = true;
   @observable lastSelectedRowId: any = undefined;
@@ -404,33 +404,19 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onWindowKeyDown(event: any) {
-    switch (event.key) {
-      case 'Shift':
-        this.shiftPressed = true;
-        break;
+    if (event.key == 'Shift')
+      this.shiftPressed = true;
 
-      case 'Control':
-        this.ctrlPressed = true;
-        break;
-
-      default:
-        break;
-    }
+    else if (event.ctrlKey || event.metaKey)
+      this.ctrlOrCmdPressed = true;
   }
 
   *onWindowKeyUp(event: any) {
-    switch (event.key) {
-      case 'Shift':
-        this.shiftPressed = false;
-        break;
+    if (event.key == 'Shift')
+      this.shiftPressed = false;
 
-      case 'Control':
-        this.ctrlPressed = false;
-        break;
-
-      default:
-        break;
-    }
+    else if (!event.ctrlKey && !event.metaKey)
+      this.ctrlOrCmdPressed = false;
   }
 
 
@@ -447,6 +433,7 @@ export class TablePanelView implements ITablePanelView {
         if(!_this.isScrollByKeyboard) {
           _this.setEditing(false);
         }
+        _this.isScrollByKeyboard = false;
         yield*flushCurrentRowData(_this)();
       }
     })();
@@ -458,9 +445,6 @@ export class TablePanelView implements ITablePanelView {
     if (event.key === "Tab" || event.key === "Enter") {
       clearTimeout(this.hScrollDead);
       this.isScrollByKeyboard = true;
-      this.hScrollDead = setTimeout(() => {
-        this.isScrollByKeyboard = false;
-      });
     }
   }
 

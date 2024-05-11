@@ -140,6 +140,7 @@ describe("Html client", () => {
     const rowCountDataBeforeDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataBeforeDelete.selectedRow).toBe("2");
     expect(rowCountDataBeforeDelete.rowCount).toBe("3");
+    await sleep(200);
     await deleteRowButton.click();
 
     const yesRowButton = await page.waitForXPath(
