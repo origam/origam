@@ -23,7 +23,6 @@ import React from "react";
 import { CWorkbenchPage } from "gui/connections/pages/CWorkbenchPage";
 import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
 import { IWorkbench } from "model/entities/types/IWorkbench";
-import { BreakpointProvider, setDefaultBreakpoints } from "react-socks";
 
 @observer
 export class CMain extends React.Component {
