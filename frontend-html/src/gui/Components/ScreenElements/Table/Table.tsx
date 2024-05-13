@@ -29,16 +29,16 @@ import { getTableViewProperties } from "model/selectors/TablePanelView/getTableV
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Measure, { BoundingRect } from "react-measure";
-import { Canvas } from "./Canvas";
-import { HeaderRow } from "./HeaderRow";
-import { PositionedField } from "./PositionedField";
-import Scrollee from "./Scrollee";
-import Scroller from "./Scroller";
-import S from "./Table.module.scss";
-import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
-import { renderTable } from "./TableRendering/renderTable";
-import { IClickSubsItem, IMouseOverSubsItem, ITableRow, ITooltipData } from "./TableRendering/types";
-import { IGridDimensions, ITableProps } from "./types";
+import { Canvas } from "gui/Components/ScreenElements/Table/Canvas";
+import { HeaderRow } from "gui/Components/ScreenElements/Table/HeaderRow";
+import { PositionedField } from "gui/Components/ScreenElements/Table/PositionedField";
+import Scrollee from "gui/Components/ScreenElements/Table/Scrollee";
+import Scroller from "gui/Components/ScreenElements/Table/Scroller";
+import S from "gui/Components/ScreenElements/Table/Table.module.scss";
+import { getTooltip, handleTableClick, handleTableMouseMove } from "gui/Components/ScreenElements/Table/TableRendering/onClick";
+import { renderTable } from "gui/Components/ScreenElements/Table/TableRendering/renderTable";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow, ITooltipData } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IGridDimensions, ITableProps } from "gui/Components/ScreenElements/Table/types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 import { getDataView } from "model/selectors/DataView/getDataView";
@@ -52,6 +52,7 @@ import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import cx from 'classnames';
 import { getGridFocusManager } from "model/entities/GridFocusManager";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -435,7 +436,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   canFocus(){
-    return getGridFocusManager(this.context.tablePanelView).canFocusTable;
+    const formScreen = getFormScreen(this.tablePanelView);
+    const childBindings = formScreen.rootDataViews[0].childBindings;
+    const noEditorInChildViewsOpen = childBindings.every(x => x.childDataView.gridFocusManager.canFocusTable)
+    return getGridFocusManager(this.context.tablePanelView).canFocusTable && noEditorInChildViewsOpen;
   }
 
   render() {
