@@ -157,7 +157,7 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 
   @action.bound
-  chooseNewValue(value: any) {
+  async chooseNewValue(value: any) {
     if (value !== null && !this.setting.val1?.includes(value)) {
       if (this.setting.val1 === undefined) {
         this.setting.val1 = [value];
