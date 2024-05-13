@@ -32,6 +32,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   justify-content: center;
   margin-right: 5px;
+  flex-grow: 1;
 }
 
 .middleContainer {
@@ -39,6 +40,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   align-items: center;
   flex: 1;
+
+  .heading{
+    flex-grow: 0;
+  }
 }
 .sideContainer {
   display: flex;

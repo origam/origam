@@ -23,7 +23,6 @@ import React from "react";
 import { CWorkbenchPage } from "gui/connections/pages/CWorkbenchPage";
 import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
 import { IWorkbench } from "model/entities/types/IWorkbench";
-import { BreakpointProvider, setDefaultBreakpoints } from "react-socks";
 
 @observer
 export class CMain extends React.Component {
@@ -38,19 +37,11 @@ export class CMain extends React.Component {
   }
 
   render() {
-    setDefaultBreakpoints([
-      { xsmall: 0 },
-      { small: 400 }, // smaller is phone, bigger is tablet
-      { medium: 576 } // smaller is phone or tablet, bigger is desktop
-    ]);
-
     return (
       <div className={"toplevelContainer"}>
         <Provider workbench={this.workbench}>
           <ApplicationDialogStack/>
-          <BreakpointProvider>
-            <CWorkbenchPage/>
-          </BreakpointProvider>
+          <CWorkbenchPage/>
         </Provider>
       </div>
     );

@@ -23,7 +23,7 @@ import { WorkbenchPage } from "gui/Components/WorkbenchPage/WorkbenchPage";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import React, { useContext } from "react";
+import React from "react";
 import { CScreenTabbedViewHandleRow } from "gui/connections/CScreenTabbedViewHandleRow";
 import { CScreenToolbar } from "gui/connections/CScreenToolbar";
 import { CSidebar } from "gui/connections/CSidebar";
@@ -34,10 +34,11 @@ import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentSc
 import { Fullscreen } from "gui/Components/Fullscreen/Fullscreen";
 import { onRootElementClick } from "model/actions/Global/onRootElementClick";
 import { action } from "mobx";
-import { Breakpoint, useCurrentBreakpointName } from "react-socks";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
 import { NotificationContainer } from "gui/connections/NotificationContainer";
+import { IApplication } from "model/entities/types/IApplication";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CWorkbenchPage extends React.Component {
@@ -45,6 +46,10 @@ export class CWorkbenchPage extends React.Component {
 
   get workbench(): IWorkbench {
     return getWorkbench(this.context.application);
+  }
+
+  get application() {
+    return this.context.application as IApplication;
   }
 
   @action.bound
@@ -64,43 +69,33 @@ export class CWorkbenchPage extends React.Component {
     const isFullscreen = getIsCurrentScreenFull(this.workbench);
     return (
         <>
-          <Breakpoint small down className={S.mobileContainer}>
-            <MobileMain/>
-          </Breakpoint>
-          <Breakpoint medium up className={S.root}>
-            <WorkbenchPage
-              sidebar={<CSidebar/>}
-              mainbar={
-                <MainBar>
-                  <CScreenToolbar/>
-                  <ScreenTabsArea>
-                    <CScreenTabbedViewHandleRow/>
-                    <Fullscreen isFullscreen={isFullscreen}>
-                      <CScreenHeader/>
-                      <NotificationContainer/>
-                      <CScreenContent/>
-                    </Fullscreen>
-                    <CDialogContent/>
-                  </ScreenTabsArea>
-                </MainBar>
-              }
-            />
-          </Breakpoint>
-          <OrigamBreakpointProvider/>
+        {isMobileLayoutActive(this.application)
+          ? <div className={S.mobileContainer}>
+              <MobileMain/>
+            </div>
+          : <div className={S.root}>
+              <WorkbenchPage
+                sidebar={<CSidebar/>}
+                mainbar={
+                  <MainBar>
+                    <CScreenToolbar/>
+                    <ScreenTabsArea>
+                      <CScreenTabbedViewHandleRow/>
+                      <Fullscreen isFullscreen={isFullscreen}>
+                        <CScreenHeader/>
+                        <NotificationContainer/>
+                        <CScreenContent/>
+                      </Fullscreen>
+                      <CDialogContent/>
+                    </ScreenTabsArea>
+                  </MainBar>
+                }
+              />
+            </div>
+        }
         </>
     );
   }
 }
 
-const OrigamBreakpointProvider: React.FC<{}> = (props) => {
-  const breakpoint = useCurrentBreakpointName();
-  const application = useContext(MobXProviderContext).application
-  setTimeout(() => {
-    application.breakpoint = breakpoint;
-  }, 0);
-  return (
-    <>
-    </>
-  );
-}
 

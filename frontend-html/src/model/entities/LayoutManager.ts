@@ -17,9 +17,30 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Layout } from "model/entities/types/IApplication";
-import { getApplication } from "model/selectors/getApplication";
+import { Layout } from "./types/IApplication";
+import { observable } from "mobx";
 
-export function isPhoneLayoutActive(ctx: any) {
-  return getApplication(ctx).layout == Layout.Phone;
+export class LayoutManager {
+
+  @observable
+  public layout = Layout.Desktop;
+
+  constructor() {
+    window.addEventListener("resize", this.handleResize.bind(this));
+    this.handleResize();
+  }
+
+  getCurrentLayout() {
+    if (window.innerHeight < 400) {
+      return Layout.Phone;
+    }
+    if (window.innerWidth < 576) {
+      return Layout.Tablet;
+    }
+    return Layout.Desktop;
+  }
+
+  handleResize() {
+    this.layout = this.getCurrentLayout();
+  }
 }

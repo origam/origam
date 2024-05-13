@@ -6,7 +6,9 @@ import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 import { IMobileLayoutState, MenuLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import React from "react";
-import { IEditingState } from "../types/IMainMenu";
+import { IEditingState } from "model/entities/types/IMainMenu";
+import { ISidebarState } from "model/entities/SidebarState";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -30,6 +32,7 @@ export class MobileState {
       () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
+    this.sidebarState.ctx = this._workbench;
     this.breadCrumbsState.workbench = workbench;
     this.breadCrumbsState.updateBreadCrumbs();
     this.start();
@@ -77,7 +80,26 @@ export class MobileState {
   }
 }
 
-export class MobileSidebarState implements IEditingState{
+export class MobileSidebarState implements IEditingState, ISidebarState {
+
+  public ctx: any;
+
+  private get desktopState(){
+    return getWorkbench(this.ctx).sidebarState;
+  }
+
+  get resultCount(){
+    return this.desktopState.resultCount;
+  };
+
+  get activeSection(){
+    return this.desktopState.activeSection;
+  };
+
+  set activeSection(value: string){
+    this.desktopState.activeSection = value;
+  }
+
   flipEditEnabled(): void {
     this.editingEnabled = !this.editingEnabled;
   }
