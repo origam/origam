@@ -54,21 +54,17 @@ export class DataViewData {
     } else return false;
   }
 
-  setNewValue(rowId: string, propertyId: string, value: any) {
+  async setNewValue(rowId: string, propertyId: string, value: any) {
     const dataTable = this.dataTable();
     const row = dataTable.getRowById(rowId);
     const property = this.propertyById(propertyId);
     if (property && row) {
-      runInFlowWithHandler({
-        ctx: this.dataTable(),
-        action: async () =>
-          await onFieldChange(property)({
-            event: undefined,
-            row: row,
-            property: property,
-            value: value,
-          })
-       });
+      await onFieldChange(property)({
+        event: undefined,
+        row: row,
+        property: property,
+        value: value,
+      });
     }
   }
 }

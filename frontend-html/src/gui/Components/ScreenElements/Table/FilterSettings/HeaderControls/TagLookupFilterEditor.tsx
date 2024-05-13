@@ -185,7 +185,7 @@ export class FilterEditorData implements IDropdownEditorData {
     return false;
   }
 
-  @action.bound chooseNewValue(value: any) {
+  @action.bound async chooseNewValue(value: any) {
     if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
       this.onChange(this._value);
