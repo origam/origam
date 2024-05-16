@@ -40,7 +40,7 @@ import {
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { CDialogContent } from "gui/connections/CDialogContent";
-import "gui/connections/MobileComponents/mobile.module.scss"
+import "gui/connections/MobileComponents/mobile.scss"
 import { observable } from "mobx";
 import { viewportHeight } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 import { MobileSideBar } from "./MobileSideBar";
