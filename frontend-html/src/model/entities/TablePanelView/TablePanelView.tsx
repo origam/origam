@@ -240,7 +240,7 @@ export class TablePanelView implements ITablePanelView {
         });
       }
     }
-    if (!getGroupingConfiguration(this).isGrouping && !this.ctrlOrCmdPressed) {
+    if (!getGroupingConfiguration(this).isGrouping && !(args.event.ctrlKey || args.event.metaKey)) {
       this.scrollToCurrentCell();
     }
   }
