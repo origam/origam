@@ -1027,7 +1027,7 @@ namespace Origam.DA.Service
 				  + query.SortSetId.ToString() 
 				  + columnsInfo;
 			Hashtable cache = GetScalarCommandCache();
-			if(cache.Contains(cacheId) && (filterset == null || !filterset.IsDynamic))
+			if(cache.Contains(cacheId) && filterset is not { IsDynamic: true })
 			{
 				command = (IDbCommand)cache[cacheId];
 				command = DbDataAdapterFactory.CloneCommand(command);
@@ -1041,7 +1041,7 @@ namespace Origam.DA.Service
 						columnsInfo,
 						query.Parameters.ToHashtable()
 						);
-				if (filterset == null || !filterset.IsDynamic)
+				if (filterset is not { IsDynamic: true })
 				{
 					lock (cache)
 					{
