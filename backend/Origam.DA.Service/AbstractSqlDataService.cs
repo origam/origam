@@ -1020,7 +1020,7 @@ namespace Origam.DA.Service
 					.GetProfile(principal.Identity) as UserProfile;
 			}
 			DataStructure dataStructure = GetDataStructure(query);
-            DataStructureFilterSet filterset = GetFilterSet(query.MethodId);
+			DataStructureFilterSet filterset = GetFilterSet(query.MethodId);
             var cacheId 
 				= query.DataSourceId.ToString() 
 				  + query.MethodId.ToString() 
@@ -1034,16 +1034,16 @@ namespace Origam.DA.Service
 			}
 			else
 			{
-                command = DbDataAdapterFactory.ScalarValueCommand(
-                        dataStructure,
-                        filterset,
-                        GetSortSet(query.SortSetId),
-                        columnsInfo,
-                        query.Parameters.ToHashtable()
-                        );
+				command = DbDataAdapterFactory.ScalarValueCommand(
+						dataStructure,
+						filterset,
+						GetSortSet(query.SortSetId),
+						columnsInfo,
+						query.Parameters.ToHashtable()
+						);
 				if (!filterset.IsDynamic)
 				{
-                    lock (cache)
+					lock (cache)
 					{
 						cache[cacheId] = command;
 					}
