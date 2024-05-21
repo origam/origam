@@ -1021,7 +1021,7 @@ namespace Origam.DA.Service
 			}
 			DataStructure dataStructure = GetDataStructure(query);
 			DataStructureFilterSet filterset = GetFilterSet(query.MethodId);
-            var cacheId 
+			var cacheId 
 				= query.DataSourceId.ToString() 
 				  + query.MethodId.ToString() 
 				  + query.SortSetId.ToString() 
