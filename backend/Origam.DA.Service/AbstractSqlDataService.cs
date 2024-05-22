@@ -1020,29 +1020,33 @@ namespace Origam.DA.Service
 					.GetProfile(principal.Identity) as UserProfile;
 			}
 			DataStructure dataStructure = GetDataStructure(query);
+			DataStructureFilterSet filterset = GetFilterSet(query.MethodId);
 			var cacheId 
 				= query.DataSourceId.ToString() 
 				  + query.MethodId.ToString() 
 				  + query.SortSetId.ToString() 
 				  + columnsInfo;
 			Hashtable cache = GetScalarCommandCache();
-			if(cache.Contains(cacheId))
+			if(cache.Contains(cacheId) && filterset is not { IsDynamic: true })
 			{
 				command = (IDbCommand)cache[cacheId];
 				command = DbDataAdapterFactory.CloneCommand(command);
 			}
 			else
 			{
-				lock(cache)
-				{
-					command = DbDataAdapterFactory.ScalarValueCommand(
+				command = DbDataAdapterFactory.ScalarValueCommand(
 						dataStructure,
-						GetFilterSet(query.MethodId),
+						filterset,
 						GetSortSet(query.SortSetId),
 						columnsInfo,
 						query.Parameters.ToHashtable()
 						);
-					cache[cacheId] = command;
+				if (filterset is not { IsDynamic: true })
+				{
+					lock (cache)
+					{
+						cache[cacheId] = command;
+					}
 				}
 			}
 			IDbTransaction transaction = null;
