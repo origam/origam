@@ -182,7 +182,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Escape") {
+    if (event.key === "Escape" || event.key === "Tab") {
       this.setShowFormatHint(false)
       if(this.elmDropdowner?.isDropped){
         event.closedADropdown = true;
