@@ -213,6 +213,7 @@ export class TablePanelView implements ITablePanelView {
     const property = this.propertyMap.get(args.columnId)!;
     if (property.column !== "CheckBox" || !args.isControlInteraction) {
       if (property.isLink && property.column !== "TagInput" && (args.event.ctrlKey || args.event.metaKey)) {
+        yield*this.selectCellAsync(this.dataTable.getRowId(args.row) as string, property.id);
         yield*getDataView(this).navigateLookupLink(property, args.row);
       } else {
         if (this.dataTable.getRowId(args.row) === this.selectedRowId) {
@@ -239,7 +240,7 @@ export class TablePanelView implements ITablePanelView {
         });
       }
     }
-    if (!getGroupingConfiguration(this).isGrouping) {
+    if (!getGroupingConfiguration(this).isGrouping && !(args.event.ctrlKey || args.event.metaKey)) {
       this.scrollToCurrentCell();
     }
   }
@@ -582,7 +583,7 @@ export class TablePanelView implements ITablePanelView {
     const rowIdx = getSelectedRowIndex(this);
     const columnIndex = getSelectedColumnIndex(this);
     if (rowIdx !== undefined) {
-      this.triggerOnScrollToCellShortest(rowIdx, columnIndex ?  columnIndex : 0);
+      this.triggerOnScrollToCellShortest(rowIdx, columnIndex ? columnIndex : 0);
     }
   }
 
