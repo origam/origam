@@ -75,7 +75,7 @@ export function DropdownEditorInput(props: {
   });
 
   const getTitle = () => {
-    if (!setup.isLink)
+    if (!setup.isLink || data.value == null)
       return "";
     
     else if (isMacOS())
@@ -84,11 +84,25 @@ export function DropdownEditorInput(props: {
     return T("Hold Ctrl and click to open link", "hold_ctrl_tool_tip");
   }
 
+  const getClassNames = () => {
+    let classNames = ["input", S.input];
+    
+    if (setup.isLink) {
+      classNames.push("isLink", S.isLink);
+    }
+  
+    if (setup.isLink && ctrlOrCmdKeyPressed && data.value != null) {
+      classNames.push("isCursorPointer", S.isCursorPointer);
+    }
+  
+    return classNames;
+  }
+
   return (
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input, (ctrlOrCmdKeyPressed && setup.isLink) ? ["isLink", S.isLink] : "")}
+          className={cx(getClassNames())}
           title={getTitle()}
           readOnly={beh.isReadOnly}
           ref={refInput}
