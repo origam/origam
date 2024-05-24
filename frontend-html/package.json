@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.5",
-    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-react": "^7.24.6",
     "@babel/preset-typescript": "^7.24.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
