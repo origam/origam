@@ -18,6 +18,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow Boolean Context Store Test"
+    x:id="bf870167-0792-4780-aed3-fa84c6e13916"
+    asi:name="BooleanContextStoreTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Workflow/Workflow/Workflow/BooleanContextStoreTest.origam#BooleanContextStoreTest/9234cf7f-9d25-453f-aab0-315eaf0463a5" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Test1"
     x:id="e231e8c7-6a5f-4032-a2ac-4e4862aeeb28"
     asi:name="Test1"
