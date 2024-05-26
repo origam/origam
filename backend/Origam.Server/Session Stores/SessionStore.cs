@@ -33,7 +33,6 @@ using Origam.DA.Service;
 using Origam.Schema.GuiModel;
 using Origam.Schema;
 using Origam.Schema.RuleModel;
-using Origam.Server;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
 using System.Linq;
@@ -41,7 +40,6 @@ using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
 using Origam.Service.Core;
-using System.Linq.Expressions;
 
 namespace Origam.Server
 {
@@ -1169,21 +1167,30 @@ namespace Origam.Server
             return value;
         }
 
-        public DataTable GetSessionEntity(string entity)
+        public DataTable GetDataTable(string entity)
         {
-            DataSet sourceData = (this.Data == null ? this.DataList : this.Data);
-
-            return GetTable(entity, sourceData);
+            return GetDataTable(entity, Data ?? DataList);
         }
 
-        public DataTable GetTable(string entity, DataSet data)
+        public DataTable GetDataTable(string entity, DataSet data)
         {
             if (!data.Tables.Contains(entity))
             {
                 throw new UIException("Entity not found: " + entity);
             }
-
             return data.Tables[entity];
+        }
+
+        public Guid GetEntityId(string entity)
+        {
+            var dataStructureEntityId 
+                = (Guid)GetDataTable(entity).ExtendedProperties["Id"]!;
+            var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                    .GetService<Workbench.Services.IPersistenceService>()
+                    .SchemaProvider
+                    .RetrieveInstance<DataStructureEntity>(
+                        dataStructureEntityId);
+            return dataStructureEntity.EntityId;
         }
 
         internal static object ShortGuid(Guid guid)
@@ -1215,7 +1222,7 @@ namespace Origam.Server
 
         public DataRow GetListRow(string entity, object id)
         {
-            DataTable table = GetTable(entity, this.DataList);
+            DataTable table = GetDataTable(entity, this.DataList);
             return table.Rows.Find(id);
         }
 
@@ -1431,13 +1438,13 @@ namespace Origam.Server
             return DataListEntity != null && entity == DataListEntity;
         }
 
-        #region CUD
+        #region CRUD
         public virtual List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values,
             IDictionary<string, object> parameters, string requestingGrid)
         {
             lock (_lock)
             {
-                DataTable table = GetTable(entity, this.Data);
+                DataTable table = GetDataTable(entity, this.Data);
                 UserProfile profile = SecurityTools.CurrentUserProfile();
                 DataRow newRow;
 
@@ -1814,7 +1821,7 @@ namespace Origam.Server
                         // delete the row from the list
                         if (this.DataList != null)
                         {
-                            DataTable table = GetTable(this.DataListEntity, this.DataList);
+                            DataTable table = GetDataTable(this.DataListEntity, this.DataList);
                             row = table.Rows.Find(id);
                             listRowBackup = row.ItemArray;
 
@@ -1868,7 +1875,7 @@ namespace Origam.Server
             lock (_lock)
             {
                 List<ArrayList> result = new List<ArrayList>();
-                DataTable table = GetTable(entity, DataList);
+                DataTable table = GetDataTable(entity, DataList);
                 if (table.PrimaryKey.Length != 1)
                 {
                     throw new Exception("There must be exactly 1 primary key column for GetDataForMatrix.");
@@ -1940,7 +1947,7 @@ namespace Origam.Server
                     throw new NullReferenceException("Original record not set. Cannot copy record.");
                 }
 
-                DataTable table = GetTable(entity, this.Data);
+                DataTable table = GetDataTable(entity, this.Data);
                 DataRow row = GetSessionRow(entity, originalId);
 
                 UserProfile profile = SecurityTools.CurrentUserProfile();

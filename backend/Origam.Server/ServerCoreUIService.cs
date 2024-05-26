@@ -566,7 +566,7 @@ namespace Origam.Server
                     return Result.Ok<Guid, IActionResult>(Guid.Empty);
                 default:
                 {
-                    var table = sessionStore.GetTable(entity, sessionStore.Data);
+                    var table = sessionStore.GetDataTable(entity, sessionStore.Data);
                     var entityId = Guid.Empty;
                     if(table.ExtendedProperties.Contains("EntityId"))
                     {

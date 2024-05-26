@@ -83,7 +83,7 @@ namespace Origam.Server
         {
             get 
             {
-                return Store.GetTable(Entity, DataSource);
+                return Store.GetDataTable(Entity, DataSource);
             }
         }
 

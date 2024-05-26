@@ -72,7 +72,7 @@ namespace Origam.Server
                 typeof(PanelActionType), actionType);
             SessionStore sessionStore 
                 = sessionManager.GetSession(new Guid(sessionFormIdentifier));
-            processData.DataTable = sessionStore.GetTable(
+            processData.DataTable = sessionStore.GetDataTable(
                 entity, sessionStore.Data);
             processData.SelectedRows = sessionStore.GetRows(entity, selectedIds);
             processData.ParameterService = ServiceManager.Services.GetService(

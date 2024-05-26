@@ -327,7 +327,7 @@ namespace Origam.Server
                     return result;
                 }
 
-                DataTable table = GetSessionEntity(entity);
+                DataTable table = GetDataTable(entity);
 
                 DataRow row = GetSessionRow(entity, id);
 
@@ -391,7 +391,7 @@ namespace Origam.Server
                 // we do not hold the data anymore, we throw-out the request
                 return new ArrayList();
             }
-            DataTable childTable = GetSessionEntity(childEntity);
+            DataTable childTable = GetDataTable(childEntity);
             ArrayList result = new ArrayList();
             if (childTable.ParentRelations.Count == 0)
             {
