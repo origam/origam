@@ -1927,7 +1927,7 @@ namespace Origam.Rule
 			return true;
 		}
 
-		public bool IsExportToExcelAllowed(Guid entityId)
+		public bool IsExportAllowed(Guid entityId)
 		{
 			var rules = new ArrayList();
 			var entity = _persistence.SchemaProvider

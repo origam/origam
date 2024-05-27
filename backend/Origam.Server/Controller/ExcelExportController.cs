@@ -54,8 +54,8 @@ public class ExcelExportController: AbstractController
         return RunWithErrorHandler(() =>
         {
             SessionStore sessionStore = sessionObjects.SessionManager
-                .GetSession(new Guid(input.SessionFormIdentifier.ToString()));
-            if (!sessionStore.RuleEngine.IsExportToExcelAllowed(
+                .GetSession(input.SessionFormIdentifier);
+            if (!sessionStore.RuleEngine.IsExportAllowed(
                     sessionStore.GetEntityId(input.Entity)))
             {
                 return StatusCode(403, "Export to Excel is forbidden.");
