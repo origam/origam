@@ -26,6 +26,7 @@ using CSharpFunctionalExtensions;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using NPOI.SS.UserModel;
@@ -40,10 +41,15 @@ namespace Origam.Server.Controller;
 [Route("internalApi/[controller]")]
 public class ExcelExportController: AbstractController
 {
+    private readonly IStringLocalizer<SharedResources> localizer;
         
-    public ExcelExportController(ILogger<ExcelExportController> log,
-        SessionObjects sessionObjects) : base(log, sessionObjects)
+    public ExcelExportController(
+        ILogger<ExcelExportController> log,
+        SessionObjects sessionObjects,
+        IStringLocalizer<SharedResources> localizer
+        ) : base(log, sessionObjects)
     {
+        this.localizer = localizer;
     }
 
     [HttpPost("[action]")]
@@ -57,7 +63,8 @@ public class ExcelExportController: AbstractController
             if (!sessionStore.RuleEngine.IsExportAllowed(
                     sessionStore.GetEntityId(input.Entity)))
             {
-                return StatusCode(403, "Export to Excel is forbidden.");
+                return StatusCode(403, 
+                    localizer["ExcelExportForbidden"].ToString());
             }
             bool isLazyLoaded 
                 = sessionStore.IsLazyLoadedEntity(input.Entity);

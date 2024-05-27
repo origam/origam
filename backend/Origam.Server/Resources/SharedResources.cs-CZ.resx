@@ -444,4 +444,7 @@
   <data name="BrowserNotCompatible" xml:space="preserve">
     <value>Váš prohlížeč není kompatibilní s naší aplikací. Nainstalujte si prosím nejnovější verzi jednoho s těchto prohlížečů: </value>
   </data>
+  <data name="ExcelExportForbidden" xml:space="preserve">
+    <value>Export do excelu je zakázán.</value>
+  </data>
 </root>

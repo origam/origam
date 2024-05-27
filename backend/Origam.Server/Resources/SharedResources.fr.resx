@@ -363,4 +363,7 @@
   <data name="ContinueAnyway" xml:space="preserve">
     <value>Continuer quoi qu'il en soit</value>
   </data>
+  <data name="ExcelExportForbidden" xml:space="preserve">
+    <value>L'exportation vers Excel est interdite.</value>
+  </data>
 </root>
