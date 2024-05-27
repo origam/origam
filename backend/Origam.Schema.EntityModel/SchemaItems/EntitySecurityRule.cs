@@ -45,6 +45,18 @@ public class EntitySecurityRule : AbstractEntitySecurityRule
 	public EntitySecurityRule(Key primaryKey) : base(primaryKey) {}
 	
 	#region Properties
+
+	[TypeConverter(typeof(EntityRuleConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NoRuleForExportRowLevelSecurityRule]
+	[Category("Security")]
+	[XmlReference("rule", "RuleId")]
+	public override IEntityRule Rule
+	{
+		get => base.Rule;
+		set => base.Rule = value;
+	}
+	
 	private bool create = true;
 	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
 	[Description("If set to true, the rule is applied to create operation.")]
