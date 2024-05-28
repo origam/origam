@@ -11,13 +11,13 @@ public class NoRuleForExportRowLevelSecurityRule
     {
         if (instance is not EntitySecurityRule entitySecurityRule)
         {
-            throw new Exception(
+            return new Exception(
                 $"{nameof(NoRuleForExportRowLevelSecurityRule)} can be only applied to type {nameof(EntitySecurityRule)}");  
         }
         if (entitySecurityRule.ExportCredential
             && entitySecurityRule.Rule is not null)
         {
-            throw new Exception(
+            return new Exception(
                 "Export row level security rule can't have a rule set.");
         }
         return null;
