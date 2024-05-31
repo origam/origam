@@ -88,6 +88,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   private expandAfterMounting?: boolean;
   private newRecordScreen?: NewRecordScreen;
   public onAddNewRecordClick?: (searchText?: string) => void;
+  private forceRequestFinish = false;
   private readonly handleInputChangeDeb: _.DebouncedFunc<() => void>;
 
   get hasNewScreenButton() {
@@ -161,15 +162,21 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   @action.bound
   dropUp() {
     if (this.isDropped) {
-      this.ensureRequestCancelled();
-      this.userEnteredValue = undefined;
-      this.dataTable.setFilterPhrase("");
-      this.dataTable.clearData();
       this.isDropped = false;
-      this.willLoadPage = 1;
-      this.willLoadNextPage = true;
-      this.scrollToRowIndex = 0;
+      if(!this.forceRequestFinish){
+        this.clear();
+      }
     }
+  }
+
+  private clear() {
+    this.ensureRequestCancelled();
+    this.userEnteredValue = undefined;
+    this.dataTable.setFilterPhrase("");
+    this.dataTable.clearData();
+    this.willLoadPage = 1;
+    this.willLoadNextPage = true;
+    this.scrollToRowIndex = 0;
   }
 
   @action.bound
@@ -295,7 +302,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
             await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           }
           else {
-            this.handleTabPressedBeforeDropdownReady();
+            this.handleTabPressedBeforeDropdownReady(event);
           }
         }
         else if (!this.isDropped && this.userEnteredValue === ""){
@@ -349,17 +356,18 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
     this.onKeyDown && this.onKeyDown(event);
   }
 
-  private handleTabPressedBeforeDropdownReady() {
-    if (this.dataTable.allRows.length !== 0) {
+  private handleTabPressedBeforeDropdownReady(event: any) {
+    if (this.dataTable.allRows.length !== 0 || !event.target.value) {
       return;
     }
+    this.forceRequestFinish = true;
     setTimeout(async () => {
       this.handleInputChangeDeb.cancel();
-      if (!this.runningPromise) {
-        this.ensureRequestRunning();
-      }
+      this.handleInputChangeImm();
       await this.runningPromise;
       await this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
+      this.forceRequestFinish = false;
+      this.clear();
     });
   }
 
@@ -482,7 +490,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   private ensureRequestCancelled() {
-    if (this.runningPromise) this.runningPromise.cancel();
+    if (this.runningPromise && !this.forceRequestFinish) {
+      this.runningPromise.cancel();
+    }
   }
 
   runningPromise: CancellablePromise<any> | undefined;
