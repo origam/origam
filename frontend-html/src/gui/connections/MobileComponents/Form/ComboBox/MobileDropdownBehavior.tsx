@@ -138,9 +138,9 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleTableCellClicked(event: any, visibleRowIndex: any) {
+  async handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    this.data.chooseNewValue(id);
+    await this.data.chooseNewValue(id);
 
     this.ensureRequestCancelled();
     this.userEnteredValue = "";
