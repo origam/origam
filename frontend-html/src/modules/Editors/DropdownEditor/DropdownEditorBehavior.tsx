@@ -243,11 +243,11 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   @action.bound
-  handleInputBlur(event: any) {
+  async handleInputBlur(event: any) {
     if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
-      this.data.chooseNewValue(this.cursorRowId);
+      await this.data.chooseNewValue(this.cursorRowId);
     } else if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
+      await this.data.chooseNewValue(null);
     }
     this.dropUp();
   }
@@ -292,18 +292,18 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
       case "Tab":
         if (this.isDropped) {
           if (this.cursorRowId) {
-            this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
+            await this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId);
           }
           else {
             this.handleTabPressedBeforeDropdownReady();
           }
         }
         else if (!this.isDropped && this.userEnteredValue === ""){
-          this.data.chooseNewValue(null);
+          await this.data.chooseNewValue(null);
         }
         break;
       case "Delete":
-        this.clearSelection();
+        await this.clearSelection();
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -342,7 +342,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         if (document.getSelection()?.toString() === event.target.value ||
           this.userEnteredValue?.length === 1)
         {
-          this.clearSelection();
+          await this.clearSelection();
         }
         break;
     }
@@ -359,14 +359,14 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         this.ensureRequestRunning();
       }
       await this.runningPromise;
-      this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
+      await this.data.chooseNewValue(!this.cursorRowId ? null : this.cursorRowId);
     });
   }
 
-  private clearSelection() {
+  private async clearSelection() {
     this.userEnteredValue = undefined;
     this.cursorRowId = "";
-    this.data.chooseNewValue(null);
+    await this.data.chooseNewValue(null);
     this.dataTable.setFilterPhrase("");
   }
 
@@ -405,9 +405,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   @action.bound
-  handleTableCellClicked(event: any, visibleRowIndex: any) {
+  async handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    this.data.chooseNewValue(id);
+    await this.data.chooseNewValue(id);
     this.userEnteredValue = "";
     this.dataTable.setFilterPhrase("");
     this.dropUp();
@@ -435,9 +435,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   @action.bound
-  handleWindowMouseDown(event: any) {
+  async handleWindowMouseDown(event: any) {
     if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
+      await this.data.chooseNewValue(null);
     }
     if (this.isDropped) {
       this.dropUp();
