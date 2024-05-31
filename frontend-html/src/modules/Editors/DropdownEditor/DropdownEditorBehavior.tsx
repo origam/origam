@@ -163,7 +163,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   dropUp() {
     if (this.isDropped) {
       this.isDropped = false;
-      if(!this.forceRequestFinish){
+      if (!this.forceRequestFinish) {
         this.clear();
       }
     }
