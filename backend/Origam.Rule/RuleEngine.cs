@@ -1828,7 +1828,7 @@ namespace Origam.Rule
 						|| (entityRule.DeleteCredential && type == CredentialType.Delete)
 						)
 					{
-						Boolean? result = ruleEvaluationCache?.Get(entityRule, entityId);
+						bool? result = ruleEvaluationCache?.Get(entityRule, entityId);
 						if (result == null)
 						{
 							result = IsRowLevelSecurityRuleMatching(entityRule,
@@ -1924,6 +1924,41 @@ namespace Origam.Rule
 				}
 			}
 
+			return true;
+		}
+
+		public bool IsExportAllowed(Guid entityId)
+		{
+			var rules = new ArrayList();
+			var entity = _persistence.SchemaProvider
+                .RetrieveInstance<IDataEntity>(entityId);
+			ArrayList entityRules = entity.RowLevelSecurityRules;
+			if (entityRules.Count > 0)
+			{
+				rules.AddRange(entityRules);
+			}
+			// no rules - permit
+			if (rules.Count == 0)
+			{
+				return true;
+			}
+			rules.Sort();
+			foreach (AbstractEntitySecurityRule rule in rules)
+			{
+				if (rule is not EntitySecurityRule entityRule)
+				{
+					continue;
+				}
+				if (!entityRule.ExportCredential)
+				{
+					continue;
+				}
+				if (IsRowLevelSecurityRuleMatching(
+					    rule: entityRule, data: null))
+				{
+					return entityRule.Type == PermissionType.Permit;                            
+				}
+			}
 			return true;
 		}
 #endregion

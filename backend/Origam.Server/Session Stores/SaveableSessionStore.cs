@@ -201,7 +201,7 @@ namespace Origam.Server
             }
             else
             {
-                DataTable table = GetTable(entity, this.Data);
+                DataTable table = GetDataTable(entity, this.Data);
                 object[] key;
                 if (parameters.Count == 0)
                 {
@@ -244,7 +244,7 @@ namespace Origam.Server
             bool isTopLevel)
         {
             InitializeFieldDependencies();
-            DataTable table = GetTable(entity, this.Data);
+            DataTable table = GetDataTable(entity, this.Data);
             Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
             Guid fieldId = (Guid)table.Columns[property].ExtendedProperties["Id"];
 

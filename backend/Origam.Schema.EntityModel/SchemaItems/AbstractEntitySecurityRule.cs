@@ -226,7 +226,7 @@ namespace Origam.Schema.EntityModel
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[Category("Security")]
         [XmlReference("rule", "RuleId")]
-		public IEntityRule Rule
+		public virtual IEntityRule Rule
 		{
 			get
 			{

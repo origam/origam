@@ -455,4 +455,7 @@
 
 </value>
   </data>
+  <data name="ExcelExportForbidden" xml:space="preserve">
+    <value>Der Export nach Excel ist verboten.</value>
+  </data>
 </root>
