@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:aesr="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractEntitySecurityRule/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
   xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
@@ -12,6 +13,7 @@
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:esr1="http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.1.0"
   xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
   xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
   xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
@@ -551,6 +553,30 @@
         asi:name="TagInputBindingKey1"
         ercpi:relatedEntityField="Widgets/DataEntity/Widgets/TagInputBinding.origam#TagInputBinding/refAllDataTypesId/cbe68de1-d044-439b-8c29-790bbca44937" />
     </eri:EntityRelation>
+    <esr1:EntitySecurityRule
+      asi:abstract="false"
+      esr1:createCredential="false"
+      esr1:deleteCredential="false"
+      esr1:exportCredential="true"
+      x:id="babf74ff-8245-4159-bbc8-1832aa2b0f13"
+      aesr:level="100"
+      asi:name="100_Deny_Export_*"
+      aesr:roles="*"
+      aesr:type="Deny"
+      esr1:updateCredential="false"
+      aesr:valueType="SavedValue" />
+    <esr1:EntitySecurityRule
+      asi:abstract="false"
+      esr1:createCredential="true"
+      esr1:deleteCredential="true"
+      esr1:exportCredential="false"
+      x:id="c4849e36-8545-414f-956b-f544d6a0c990"
+      aesr:level="999"
+      asi:name="999_Permit_CreateUpdateDelete_*"
+      aesr:roles="*"
+      aesr:type="Permit"
+      esr1:updateCredential="true"
+      aesr:valueType="SavedValue" />
     <ewa:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"

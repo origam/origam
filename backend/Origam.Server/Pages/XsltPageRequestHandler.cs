@@ -128,7 +128,13 @@ namespace Origam.Server.Pages
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
                     // pure dataset > json serialization
-                    response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, xsltPage.OmitJsonRootElement));
+                    response.WriteToOutput(textWriter 
+                        => JsonUtils.SerializeToJson(
+                            textWriter, 
+                            data, 
+                            xsltPage.OmitJsonRootElement,
+                            xsltPage.OmitJsonMainElement
+                            ));
                     xmlData = null;
                     isProcessed = true;
                 }
@@ -174,8 +180,12 @@ namespace Origam.Server.Pages
                     // pure dataset > json serialization
                     if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
                     {
-                        response.WriteToOutput(textWriter =>
-                            JsonUtils.SerializeToJson(textWriter, resultDataDocument.DataSet, false));
+                        response.WriteToOutput(textWriter 
+                            => JsonUtils.SerializeToJson(
+                                textWriter, 
+                                resultDataDocument.DataSet, 
+                                xsltPage.OmitJsonRootElement,
+                                xsltPage.OmitJsonMainElement));
                         isProcessed = true;
                     }
                 }
@@ -197,8 +207,12 @@ namespace Origam.Server.Pages
                     {
                         if (page.MimeType == MIME_JSON)
                         {
-                            response.WriteToOutput(textWriter =>
-                                JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
+                            response.WriteToOutput(textWriter 
+                                => JsonUtils.SerializeToJson(
+                                    textWriter, 
+                                    result.Xml, 
+                                    xsltPage.OmitJsonRootElement,
+                                    xsltPage.OmitJsonMainElement));
                         }
                         else
                         {
