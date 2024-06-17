@@ -31,7 +31,7 @@ public class XsltDataPageScriptContainer : UpgradeScriptContainer
 
         public override string[] OldPropertyXmlNames { get; } = {};
         public override List<string> OldFullTypeNames { get; } 
-            = new() {"Origam.Schema.SchemaExtension"};
+            = new() {"Origam.Schema.GuiModel.XsltDataPage"};
 
         public XsltDataPageScriptContainer() 
         {
