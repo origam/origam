@@ -8,13 +8,15 @@
     asi:abstract="false"
     ap:allowDelete="false"
     ap:allowPut="false"
+    xdp:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
     xdp:disableConstraintForInputValidation="false"
-    x:id="0092188b-d2be-4a03-bd12-550a6bfe4256"
-    ap:mimeType="text/html"
-    asi:name="PrivateLinkReportAPI"
-    xdp:omitJsonRootElement="false"
+    x:id="b6536a7d-e4aa-4ee4-a7c5-9c29187298ff"
+    xdp:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+    ap:mimeType="application/json"
+    asi:name="OmitJsonMainElement"
+    xdp:omitJsonMainElement="true"
+    xdp:omitJsonRootElement="true"
     xdp:processGetReadRowLevelRules="false"
     ap:roles="*"
-    xdp:transformation="Widgets/Transformation/Widgets/LinkReportHtml.origam#LinkReportHtml/c286449e-09ed-42d1-9a25-45937026bc05"
-    ap:url="api/private/link-report" />
+    ap:url="api/public/omit-json-main-element" />
 </x:file>

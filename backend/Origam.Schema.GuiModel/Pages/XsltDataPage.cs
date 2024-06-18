@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Data Page", "data-page.png")]
     [HelpTopic("Data+Page")]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.1.0")]
 	public class XsltDataPage : AbstractPage, IDataStructureReference
 	{
 		public XsltDataPage() : base() {Init();}
@@ -237,12 +237,16 @@ namespace Origam.Schema.GuiModel
 		public string ResultXPath { get; set; }
 
 		[Category("JSON")]
-		[Description("Tells whether to remove root 'ROOT' element. "
-		             + "It's applied only if a MimeType is application/json and "
-		             + " a non-typed XML->JSON conversion is used (Transformation is"
-		             + " filled while TransformationOutputDatastructure is not)")]
+		[Description("Applicable to media type application/json."
+			+ " If true 'ROOT' element is removed from the output.")]
 		[XmlAttribute ("omitJsonRootElement")]
-		public bool OmitJsonRootElement { get; set; } = false;
+		public bool OmitJsonRootElement { get; set; }
+		
+		[Category("JSON")]
+		[Description("Applicable to media type application/json."
+			+ " If true the main element is removed from the output.")]
+		[XmlAttribute ("omitJsonMainElement")]
+		public bool OmitJsonMainElement { get; set; }
 
 		[Category("InputValidation")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
