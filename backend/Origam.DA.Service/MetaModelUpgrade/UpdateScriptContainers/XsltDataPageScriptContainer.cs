@@ -26,15 +26,15 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
 
 public class XsltDataPageScriptContainer : UpgradeScriptContainer
 {
-        public override string FullTypeName { get; } 
-            = typeof(XsltDataPage).FullName;
+    public override string FullTypeName { get; } 
+        = typeof(XsltDataPage).FullName;
 
-        public override string[] OldPropertyXmlNames { get; } = {};
-        public override List<string> OldFullTypeNames { get; } 
-            = new() {"Origam.Schema.GuiModel.XsltDataPage"};
+    public override string[] OldPropertyXmlNames { get; } = {};
+    public override List<string> OldFullTypeNames { get; } 
+        = new() {"Origam.Schema.GuiModel.XsltDataPage"};
 
-        public XsltDataPageScriptContainer() 
-        {
-            AddEmptyUpgrade("6.0.0", "6.1.0");
-        }
+    public XsltDataPageScriptContainer() 
+    {
+        AddEmptyUpgrade("6.0.0", "6.1.0");
+    }
 }
