@@ -237,12 +237,14 @@ namespace Origam.Schema.GuiModel
 		public string ResultXPath { get; set; }
 
 		[Category("JSON")]
-		[Description("Applicable to MimeType application/json. If true 'ROOT' element is removed from the output.")]
+		[Description("Applicable to media type application/json."
+			+ " If true 'ROOT' element is removed from the output.")]
 		[XmlAttribute ("omitJsonRootElement")]
 		public bool OmitJsonRootElement { get; set; }
 		
 		[Category("JSON")]
-		[Description("Applicable to MimeType application/json. If true the main element is removed from the output.")]
+		[Description("Applicable to media type application/json."
+			+ " If true the main element is removed from the output.")]
 		[XmlAttribute ("omitJsonMainElement")]
 		public bool OmitJsonMainElement { get; set; }
 
