@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -29,233 +30,266 @@ using Origam.Workbench.Services;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+
+[SchemaItemDescription("Data Page", "data-page.png")]
+[HelpTopic("Data+Page")]
+[ClassMetaVersion("6.1.0")]
+public class XsltDataPage : AbstractPage, IDataStructureReference
 {
-	[SchemaItemDescription("Data Page", "data-page.png")]
-    [HelpTopic("Data+Page")]
-    [ClassMetaVersion("6.1.0")]
-	public class XsltDataPage : AbstractPage, IDataStructureReference
+	public XsltDataPage() : base()
 	{
-		public XsltDataPage() : base() {Init();}
-		public XsltDataPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public XsltDataPage(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
-		{
-			this.ChildItemTypes.Add(typeof(PageParameterMapping));
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			if(this.Transformation != null) dependencies.Add(this.Transformation);
-			if(this.DataStructure != null) dependencies.Add(this.DataStructure);
-			if(this.Method != null) dependencies.Add(this.Method);
-			if(this.SortSet != null) dependencies.Add(this.SortSet);
-			if(this.SaveValidationBeforeMerge != null) dependencies.Add(this.SaveValidationBeforeMerge);
-			if(this.SaveValidationAfterMerge != null) dependencies.Add(this.SaveValidationAfterMerge);
-			if(this.LogTransformation != null) dependencies.Add(this.LogTransformation);
-                        if (this.DefaultSet != null) dependencies.Add(this.DefaultSet);                        
-			XsltDependencyHelper.GetDependencies(this, dependencies, this.ResultXPath);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override IList<string> NewTypeNames
-		{
-			get
-			{
-				try
-				{
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent("DataService", null, null);
-					return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
-				}
-				catch
-				{
-					return new string[] {};
-				}
-			}
-		}
-
-		#region Properties
-		public Guid DataStructureId;
-
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("dataStructure", "DataStructureId")]
-		public DataStructure DataStructure
-		{
-			get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
-			set
-			{
-				this.Method = null;
-				this.SortSet = null;
-                                this.DefaultSet = null;
-				this.DataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		public Guid DataStructureMethodId;
-
-		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
-		[XmlReference("method", "DataStructureMethodId")]
-		public DataStructureMethod Method
-		{
-			get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
-			set
-			{
-				this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
- 
-		public Guid DataStructureSortSetId;
-
-		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
-		[XmlReference("sortSet", "DataStructureSortSetId")]
-		public DataStructureSortSet SortSet
-		{
-			get => (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
-			set
-			{
-				this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-
-		public Guid DefaultSetId;
-
-		[TypeConverter(typeof(DataStructureReferenceDefaultSetConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("defaultSet", "DefaultSetId")]
-		public DataStructureDefaultSet DefaultSet
-		{
-			get => (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultSetId));
-			set
-			{
-				this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		
-		public Guid TransformationId;
-
-		[Category("Xslt")]
-		[TypeConverter(typeof(TransformationConverter))]
-		[Description("A transformation to be applied on output data. "
-			+ " When a field MimeType is application/json, please consider"
-			+ " to define also TransformationOutputStructure.")]
-		[XmlReference("transformation", "TransformationId")]
-		public AbstractTransformation Transformation
-		{
-			get => (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TransformationId));
-			set
-			{
-				this.TransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-
-		public Guid TransformationOutputStructureId;
-
-		[Category("Xslt")]
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[Description("A data structure where an output of a Transformation"
-			+ " will be merged into. "
-			+ "It's applied only when a ResultXpath is not set and "
-			+ "a MimeType field is set to application/json."
-			+ "If not defined, the final XML->JSON conversion "
-			+ "after transformation works the following way: "
-			+ "DataTypes - float, int, boolen, etc. are converted "
-			+ "to string, attributes are prefixed with @. "
-			+ "But if defined, conversion is DataSet->JSON "
-			+ "conversion, which performs the standard way "
-			+ "(as without transformation).")]	
-		[XmlReference("transformationOutputStructure", "TransformationOutputStructureId")]
-		public DataStructure TransformationOutputStructure
-		{
-			get =>
-				(DataStructure)this.PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem),
-					new ModelElementKey(this.TransformationOutputStructureId));
-			set
-			{
-				this.TransformationOutputStructureId =
-					(value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
- 
-		public Guid SaveValidationBeforeMergeRuleId;
-
-		[Category("Updating")]
-		[TypeConverter(typeof(EndRuleConverter))]
-		[XmlReference("saveValidationBeforeMerge", "SaveValidationBeforeMergeRuleId")]
-		public IEndRule SaveValidationBeforeMerge
-		{
-			get => (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SaveValidationBeforeMergeRuleId));
-			set
-			{
-				this.SaveValidationBeforeMergeRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
- 
-		public Guid SaveValidationAfterMergeRuleId;
-
-		[Category("Updating")]
-		[TypeConverter(typeof(EndRuleConverter))]
-		[XmlReference("saveValidationAfterMerge", "SaveValidationAfterMergeRuleId")]
-		public IEndRule SaveValidationAfterMerge
-		{
-			get => (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SaveValidationAfterMergeRuleId));
-			set
-			{
-				this.SaveValidationAfterMergeRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-
-		public Guid LogTransformationId;
-
-		[Category("Logging")]
-		[TypeConverter(typeof(TransformationConverter))]
-		[XmlReference("logTransformation", "LogTransformationId")]
-		public AbstractTransformation LogTransformation
-		{
-			get => (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LogTransformationId));
-			set
-			{
-				this.LogTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-
-
-		[Category("Xslt")]
-		[Description("An xpath to be run on a result. A string "
-		             + "value of the resulting Xpath navigator is used. "
-		             + "It's mainly used for "
-		             + "extracting pure text out of the result xml. "
-		             + "If it's set and application/json mime-type is set too, "
-		             + "then resulting JSON conversion is always done as "
-		             + "a non-typed XML->JSON conversion")]
-		[XmlAttribute ("resultXPath")]
-		public string ResultXPath { get; set; }
-
-		[Category("JSON")]
-		[Description("Applicable to media type application/json."
-			+ " If true 'ROOT' element is removed from the output.")]
-		[XmlAttribute ("omitJsonRootElement")]
-		public bool OmitJsonRootElement { get; set; }
-		
-		[Category("JSON")]
-		[Description("Applicable to media type application/json."
-			+ " If true the main element is removed from the output.")]
-		[XmlAttribute ("omitJsonMainElement")]
-		public bool OmitJsonMainElement { get; set; }
-
-		[Category("InputValidation")]
-		[XmlAttribute ("disableConstraintForInputValidation")]
-		public bool DisableConstraintForInputValidation { get; set; }
-		[Category("Security")]
-		[XmlAttribute("processGetReadRowLevelRules")]
-		[Description("Enable checking of field-based row level security rules on the output data for GET requests." +
-			". Actually only DENY READ field based rules will be checked and applied if this is turned on.")]
-		public bool ProcessReadFieldRowLevelRulesForGETRequests { get; set; } = false;
-		#endregion
+		Init();
 	}
+
+	public XsltDataPage(Guid schemaExtensionId) : base(schemaExtensionId)
+	{
+		Init();
+	}
+
+	public XsltDataPage(Key primaryKey) : base(primaryKey)
+	{
+		Init();
+	}
+
+	private void Init()
+	{
+		ChildItemTypes.Add(typeof(PageParameterMapping));
+	}
+
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
+		if (Transformation != null)
+		{
+			dependencies.Add(Transformation);
+		}
+		if (DataStructure != null)
+		{
+			dependencies.Add(DataStructure);
+		}
+		if (Method != null)
+		{
+			dependencies.Add(Method);
+		}
+		if (SortSet != null)
+		{
+			dependencies.Add(SortSet);
+		}
+		if (SaveValidationBeforeMerge != null)
+		{
+			dependencies.Add(SaveValidationBeforeMerge);
+		}
+		if (SaveValidationAfterMerge != null)
+		{
+			dependencies.Add(SaveValidationAfterMerge);
+		}
+		if (LogTransformation != null)
+		{
+			dependencies.Add(LogTransformation);
+		}
+		if (DefaultSet != null)
+		{
+			dependencies.Add(DefaultSet);
+		}                        
+		XsltDependencyHelper.GetDependencies(this, dependencies, ResultXPath);
+		base.GetExtraDependencies (dependencies);
+	}
+
+	public override IList<string> NewTypeNames
+	{
+		get
+		{
+			try
+			{
+				var businessServicesService = ServiceManager.Services
+					.GetService<IBusinessServicesService>();
+				IServiceAgent dataServiceAgent = businessServicesService
+					.GetAgent(
+						serviceType:"DataService", 
+						ruleEngine:null, 
+						workflowEngine:null);
+				return dataServiceAgent.ExpectedParameterNames(
+					item:this, method:"LoadData", parameter:"Parameters");
+			}
+			catch
+			{
+				return new string[] {};
+			}
+		}
+	}
+
+	#region Properties
+	public Guid DataStructureId;
+
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("dataStructure", "DataStructureId")]
+	public DataStructure DataStructure
+	{
+		get => PersistenceProvider.RetrieveInstance<DataStructure>(
+			DataStructureId);
+		set
+		{
+			Method = null;
+			SortSet = null;
+			DefaultSet = null;
+			DataStructureId = value == null 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+
+	public Guid DataStructureMethodId;
+
+	[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
+	[XmlReference("method", "DataStructureMethodId")]
+	public DataStructureMethod Method
+	{
+		get => PersistenceProvider.RetrieveInstance<DataStructureMethod>(
+			DataStructureMethodId);
+		set => DataStructureMethodId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+ 
+	public Guid DataStructureSortSetId;
+
+	[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
+	[XmlReference("sortSet", "DataStructureSortSetId")]
+	public DataStructureSortSet SortSet
+	{
+		get => PersistenceProvider.RetrieveInstance<DataStructureSortSet>(
+			DataStructureSortSetId);
+		set => DataStructureSortSetId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+
+	public Guid DefaultSetId;
+
+	[TypeConverter(typeof(DataStructureReferenceDefaultSetConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("defaultSet", "DefaultSetId")]
+	public DataStructureDefaultSet DefaultSet
+	{
+		get => PersistenceProvider.RetrieveInstance<DataStructureDefaultSet>(
+			DefaultSetId);
+		set => DefaultSetId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+		
+	public Guid TransformationId;
+
+	[Category("Xslt")]
+	[TypeConverter(typeof(TransformationConverter))]
+	[Description("A transformation to be applied on output data." 
+	             + " When a field MimeType is application/json, please consider"
+	             + " to define also TransformationOutputStructure.")]
+	[XmlReference("transformation", "TransformationId")]
+	public AbstractTransformation Transformation
+	{
+		get => PersistenceProvider.RetrieveInstance<AbstractTransformation>(
+			TransformationId);
+		set => TransformationId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+
+	public Guid TransformationOutputStructureId;
+
+	[Category("Xslt")]
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[Description("A data structure where an output of a Transformation"
+	             + " will be merged into."
+	             + " It's applied only when a ResultXpath is not set and"
+	             + " a MimeType field is set to application/json."
+	             + " If not defined, the final XML->JSON conversion"
+	             + " after transformation works the following way:"
+	             + " DataTypes - float, int, boolen, etc. are converted"
+	             + " to string, attributes are prefixed with @."
+	             + " But if defined, conversion is DataSet->JSON"
+	             + " conversion, which performs the standard way"
+	             + " (as without transformation).")]	
+	[XmlReference("transformationOutputStructure", 
+		"TransformationOutputStructureId")]
+	public DataStructure TransformationOutputStructure
+	{
+		get => PersistenceProvider.RetrieveInstance<DataStructure>(
+			TransformationOutputStructureId);
+		set => TransformationOutputStructureId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+ 
+	public Guid SaveValidationBeforeMergeRuleId;
+
+	[Category("Updating")]
+	[TypeConverter(typeof(EndRuleConverter))]
+	[XmlReference("saveValidationBeforeMerge", 
+		"SaveValidationBeforeMergeRuleId")]
+	public IEndRule SaveValidationBeforeMerge
+	{
+		get => PersistenceProvider.RetrieveInstance<IEndRule>(
+			SaveValidationBeforeMergeRuleId);
+		set => SaveValidationBeforeMergeRuleId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+ 
+	public Guid SaveValidationAfterMergeRuleId;
+
+	[Category("Updating")]
+	[TypeConverter(typeof(EndRuleConverter))]
+	[XmlReference("saveValidationAfterMerge", 
+		"SaveValidationAfterMergeRuleId")]
+	public IEndRule SaveValidationAfterMerge
+	{
+		get => PersistenceProvider.RetrieveInstance<IEndRule>(
+			SaveValidationAfterMergeRuleId);
+		set => SaveValidationAfterMergeRuleId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+
+	public Guid LogTransformationId;
+
+	[Category("Logging")]
+	[TypeConverter(typeof(TransformationConverter))]
+	[XmlReference("logTransformation", "LogTransformationId")]
+	public AbstractTransformation LogTransformation
+	{
+		get => PersistenceProvider.RetrieveInstance<AbstractTransformation>(
+			LogTransformationId);
+		set => LogTransformationId = value == null 
+			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+	}
+
+	[Category("Xslt")]
+	[Description("An xpath to be run on a result. A string"
+	             + " value of the resulting Xpath navigator is used."
+	             + " It's mainly used for"
+	             + " extracting pure text out of the result xml."
+	             + " If it's set and application/json mime-type is set too,"
+	             + " then resulting JSON conversion is always done as"
+	             + " a non-typed XML->JSON conversion")]
+	[XmlAttribute ("resultXPath")]
+	public string ResultXPath { get; set; }
+
+	[Category("JSON")]
+	[Description("Applicable to media type application/json."
+	             + " If true 'ROOT' element is removed from the output.")]
+	[XmlAttribute ("omitJsonRootElement")]
+	public bool OmitJsonRootElement { get; set; }
+		
+	[Category("JSON")]
+	[Description("Applicable to media type application/json."
+	             + " If true the main element is removed from the output.")]
+	[XmlAttribute ("omitJsonMainElement")]
+	public bool OmitJsonMainElement { get; set; }
+
+	[Category("InputValidation")]
+	[XmlAttribute ("disableConstraintForInputValidation")]
+	public bool DisableConstraintForInputValidation { get; set; }
+	[Category("Security")]
+	[XmlAttribute("processGetReadRowLevelRules")]
+	[Description("Enable checking of field-based row level security rules" 
+	             + " on the output data for GET requests." 
+	             + " Actually only DENY READ field based rules will be" 
+	             + " checked and applied if this is turned on.")]
+	public bool ProcessReadFieldRowLevelRulesForGetRequests { get; set; }
+	#endregion
 }
