@@ -329,7 +329,7 @@ export class ColumnsDialog extends React.Component<{
       timeGroupingUnit,
     } = this.props.model.sortedColumnConfigs[rowIndex];
 
-    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
+    const { gridCaption, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
     const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
 
@@ -346,7 +346,7 @@ export class ColumnsDialog extends React.Component<{
           />
         );
       case 1:
-        return name;
+        return gridCaption;
       case 2:
         return (
           <label id={"group_index_" + modelInstanceId} className={S.checkBox}>
@@ -463,7 +463,7 @@ export class ColumnsDialog extends React.Component<{
                 key={args.key}
                 onClick={() => this.handleOrderRowClick(property.id)}
               >
-                {property.name}
+                {property.gridCaption}
               </div>
             );
           } else {

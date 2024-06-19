@@ -49,7 +49,7 @@ export interface IColumnOptions {
   canGroup: boolean;
   canAggregate: boolean;
   entity: string;
-  name: string;
+  gridCaption: string;
   modelInstanceId: string;
 }
 
@@ -76,7 +76,7 @@ export class ColumnConfigurationModel{
           canAggregate: groupingOnClient ||
             (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
           entity: property.entity,
-          name: property.name,
+          gridCaption: property.gridCaption,
           modelInstanceId: property.modelInstanceId
         })
     }
@@ -96,7 +96,7 @@ export class ColumnConfigurationModel{
       (a, b) => {
         const optionA = this.columnOptions.get(a.propertyId)!;
         const optionB = this.columnOptions.get(b.propertyId)!;
-        return compareStrings(optionA.name, optionB.name)
+        return compareStrings(optionA.gridCaption, optionB.gridCaption)
       }
     );
   }
