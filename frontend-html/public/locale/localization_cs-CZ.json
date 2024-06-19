@@ -94,7 +94,7 @@
   "column_config_name_empty": "Jméno nemůže být prázdné",
   "column_config_settings": "Nastavení",
   "column_config_order": "Pořadí",
-  "column_config_order_explanation": "Obsluha klávesnicí: ↑,↓ hýbe kurzorem. Ctrl + ↑,↓ přesouvá položku.",
+  "column_config_order_explanation": "Ovládání klávesnicí: ↑,↓ hýbe kurzorem. Ctrl + ↑,↓ přesouvá položku.",
   "info_button_tool_tip": "Zobrazit informace o záznamu",
   "move_first_tool_tip": "První",
   "move_prev_tool_tip": "Předchozí",
