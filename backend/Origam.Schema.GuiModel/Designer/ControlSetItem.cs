@@ -126,6 +126,7 @@ namespace Origam.Schema.GuiModel
 			var reportId = Guid.Empty;
 			var graphicsId = Guid.Empty;
 			var workflowId = Guid.Empty;
+			var constantId = Guid.Empty;
 			foreach(PropertyValueItem property 
 			        in ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
@@ -137,6 +138,11 @@ namespace Origam.Schema.GuiModel
 				&& (property.ControlPropertyItem.Name == "LookupId"))
 				{
 					lookupId = property.GuidValue;
+				}
+				if((ControlItem.Name == "RadioButton") 
+				&& (property.ControlPropertyItem.Name == "DataConstantId"))
+				{
+					constantId = property.GuidValue;
 				}
 				if((ControlItem.Name == "AsReportPanel")
 				&& (property.ControlPropertyItem.Name == "ReportId"))
@@ -174,6 +180,23 @@ namespace Origam.Schema.GuiModel
 					throw new ArgumentOutOfRangeException(
 						"lookupId", lookupId, ResourceUtils.GetString(
 							"ErrorLookupNotFound", Name, RootItem.ItemType, 
+							RootItem.Name));
+				}
+			}
+			if(constantId != Guid.Empty)
+			{
+				try
+				{
+					var item = PersistenceProvider.RetrieveInstance(
+						typeof(AbstractSchemaItem), 
+						new ModelElementKey(constantId)) as AbstractSchemaItem;
+					dependencies.Add(item);
+				}
+				catch
+				{
+					throw new ArgumentOutOfRangeException(
+						"constantId", lookupId, ResourceUtils.GetString(
+							"ErrorConstantNotFound", Name, RootItem.ItemType, 
 							RootItem.Name));
 				}
 			}

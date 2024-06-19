@@ -81,4 +81,7 @@
 	<data name="ErrorLookupNotSet">
 		<value>Lookup not set for {0}. Cannot generate user interface.</value>
 	</data>
+	<data name="ErrorConstantNotFound" xml:space="preserve">
+		<value>DataConstant referenced by '{0}' in {1} '{2}' was not found in the model.</value>
+	</data>
 </root>
