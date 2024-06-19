@@ -118,7 +118,7 @@ export const ColumnConfig: React.FC<{
   const selectedTimeUnitOption = timeunitOptions.find(option => option.value === props.config.timeGroupingUnit)!;
 
   const {
-    name,
+    gridCaption,
     entity,
     canGroup,
     canAggregate,
@@ -210,7 +210,7 @@ export const ColumnConfig: React.FC<{
 
   return (
     <NavigationButton
-      label={name}
+      label={gridCaption}
       onClick={() => setIsExpanded(!isExpanded)}
       isOpen={isExpanded}
     >
