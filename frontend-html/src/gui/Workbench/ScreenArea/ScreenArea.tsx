@@ -45,12 +45,12 @@ export const DialogScreen: React.FC<{
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
 
-  function renderActionButtons() {
+  function renderWorkflowButtons() {
     const content = props.openedScreen.content;
     const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
     const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
     return (
-      <div className={S.actionButtonHeader}>
+      <>
         {isCancelButton && (
           <button
             className={S.workflowActionBtn}
@@ -67,8 +67,30 @@ export const DialogScreen: React.FC<{
             {T("Next", "button_next")}
           </button>
         )}
-      </div>
+      </>
     );
+  }
+
+  function renderActionButtons() {
+    return props.openedScreen.content
+      .formScreen!.dialogActions.filter(
+      (action) =>
+        action.placement !== IActionPlacement.PanelHeader &&
+        action.placement !== IActionPlacement.PanelMenu &&
+        action.isEnabled
+    )
+      .map((action, idx) => (
+        <button
+          className={cx({isPrimary: action.isDefault})}
+          tabIndex={0}
+          key={action.id}
+          onClick={(event: any) => {
+            onSelectionDialogActionButtonClick(action)(event, action);
+          }}
+        >
+          {action.caption}
+        </button>
+      ));
   }
 
   useEffect(() => {
@@ -97,26 +119,9 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content
-                        .formScreen!.dialogActions.filter(
-                        (action) =>
-                          action.placement !== IActionPlacement.PanelHeader &&
-                          action.placement !== IActionPlacement.PanelMenu &&
-                          action.isEnabled
-                      )
-                        .map((action, idx) => (
-                          <button
-                            className={cx({isPrimary: action.isDefault})}
-                            tabIndex={0}
-                            key={action.id}
-                            onClick={(event: any) => {
-                              onSelectionDialogActionButtonClick(action)(event, action);
-                            }}
-                          >
-                            {action.caption}
-                          </button>
-                        ))}
-                        {props.bottomButtons}
+                      {renderActionButtons()}
+                      {props.bottomButtons}
+                      {renderWorkflowButtons()}
                     </>
                   ) : (
                     <></>
@@ -138,7 +143,6 @@ export const DialogScreen: React.FC<{
                   {
                     !props.openedScreen.content.isLoading ? (
                       <CtxPanelVisibility.Provider value={{isVisible: true}}>
-                        {renderActionButtons()}
                         <DialogScreenBuilder openedScreen={props.openedScreen}/>
                       </CtxPanelVisibility.Provider>
                     ) : null /*<DialogLoadingContent />*/
