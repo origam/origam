@@ -929,7 +929,7 @@ export class DataView implements IDataView {
       )
       .map((property) => {
         return {
-          Caption: property.name,
+          Caption: property.gridCaption,
           FieldName: property.id,
           LookupId: property.lookupId,
           Format: property.formatterPattern,
