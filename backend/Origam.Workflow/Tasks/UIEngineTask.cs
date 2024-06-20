@@ -130,7 +130,11 @@ namespace Origam.Workflow.Tasks
 
 		public void Abort()
 		{
-			OnFinished(new WorkflowEngineTaskEventArgs(new WorkflowCancelledByUserException(ResourceUtils.GetString("ErrorUserCanceled"))));
+			OnFinished(((UIFormTask)Step).IsFinalForm
+				? new WorkflowEngineTaskEventArgs()
+				: new WorkflowEngineTaskEventArgs(
+					new WorkflowCancelledByUserException(
+						ResourceUtils.GetString("ErrorUserCanceled"))));
 		}
 	}
 }
