@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="1781b2d5-ba46-4e6a-a450-c429742e4847"
+    asi:name="CheckTlsVersion"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="b0bef6ea-35d7-4db8-bebd-33af652588eb"
+      cs:isReturnValue="false"
+      asi:name="_any"
+      cs:structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="e6261f95-1a89-4aa1-a2c0-4755a987e679"
+      asi:name="Send"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/_any/b0bef6ea-35d7-4db8-bebd-33af652588eb"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/HttpService.origam#HttpService/3bcee140-d809-41ed-80c7-f2e8efde8ed9"
+      smct:serviceMethod="Root/Service/HttpService.origam#HttpService/SendRequest/a5ce96de-5114-4bb3-9525-5df9808037d2">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="15e36798-8712-46a5-8d57-11769541224b"
+        asi:name="Content"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Content/3a4571ec-4d1c-46ae-83cc-56ecc99d61c5" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8341e075-7e31-4fd3-abdc-3085e79cfb41"
+        asi:name="Timeout"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Timeout/ded687bd-6818-4c6a-9604-5d94f5e42c8e" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a55f72ce-651a-4384-ace3-b10127b84a55"
+        asi:name="Headers"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Headers/4811426c-e48d-4783-953b-993b88c2d842" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c39a2a27-f23f-4999-acfb-b5e93e302d45"
+        asi:name="Url"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Url/46c6a677-7b82-4426-8fa3-79d1eb500d82">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/_any/b0bef6ea-35d7-4db8-bebd-33af652588eb"
+          x:id="75fa84e9-c737-44da-bd45-dabe5e47f556"
+          asi:name="_any"
+          cr:xPath="'https://www.howsmyssl.com/a/check'" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="eaff3078-2379-48d5-a8b8-bbc2f03390b0"
+        asi:name="Method"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/Method/ba4bd51e-4bac-4812-ac3f-0ffd8f878f31">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/_any/b0bef6ea-35d7-4db8-bebd-33af652588eb"
+          x:id="c82a5b5b-a446-46ea-99e6-931f76a309cf"
+          asi:name="_any"
+          cr:xPath="'GET'" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="ecc58260-6547-4534-a315-76fb5aa5eb23"
+        asi:name="ContentType"
+        smcp:serviceMethodParameter="Root/Service/HttpService.origam#HttpService/SendRequest/ContentType/91c88cd2-6567-4be4-8396-36d2c80d3b97" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="f3f183aa-9874-4fcd-92c1-10ae8d860635"
+      asi:name="TransformResult"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/_any/b0bef6ea-35d7-4db8-bebd-33af652588eb"
+      wt:outputMethod="FullMerge"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="1e42a35f-818c-433c-9b6f-0b64ed32c1aa"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/_any/b0bef6ea-35d7-4db8-bebd-33af652588eb"
+          x:id="a7740173-6f99-4599-95d4-b861aa51da8d"
+          asi:name="_any"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="db35a569-3133-436b-af61-75ffc985b55e"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="eef90236-2430-4337-b4c5-806407711f35"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="49154f70-8378-4b7a-aac4-12bd82bb22ac"
+          asi:name="TransformTlsOutput"
+          tr:transformation="Widgets/Transformation/Widgets/TransformTlsOutput.origam#TransformTlsOutput/bd12c2f4-169c-4364-a885-31def6415af9" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="b80d685e-00d9-449e-aa6a-c5e4f81d2118"
+        asi:name="After_Send"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/Send/e6261f95-1a89-4aa1-a2c0-4755a987e679" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

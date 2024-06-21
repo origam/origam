@@ -606,6 +606,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Check Tls Version"
+    x:id="4f825c40-8349-4533-b25f-0a592484977d"
+    asi:name="NewWorkflow"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/CheckTlsVersion.origam#CheckTlsVersion/1781b2d5-ba46-4e6a-a450-c429742e4847" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="Test OAuth Request"
     x:id="6eacb389-2bf8-4948-828b-7972dfe8a1d1"
     asi:name="TestOAuthRequest"
