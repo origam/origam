@@ -95,7 +95,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   }
 
   get addNewDropDownVisible() {
-    return this.hasNewScreenButton && this.dataTable.rowCount === 0
+    return this.hasNewScreenButton && this.dataTable.rowCount === 0 && this.isBodyDisplayed;
   }
 
   constructor(args: IBehaviorData) {
