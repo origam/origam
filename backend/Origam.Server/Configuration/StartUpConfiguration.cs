@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
@@ -102,5 +103,35 @@ namespace Origam.Server.Configuration
         
         public bool ReloadModelWhenFilesChangesDetected =>
             configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
+        
+        public SecurityProtocolType SecurityProtocol
+        {
+            get
+            {
+                var protocols = configuration
+                    .GetSection("SupportedSecurityProtocols")
+                    .GetChildren()
+                    .ToArray();
+                if (protocols.Length == 0)
+                {
+                    return SecurityProtocolType.SystemDefault;
+                }
+                return protocols
+                    .Select(ParseSecurityProtocolType)
+                    .Aggregate((current, next) => current | next);
+            }
+        }
+
+        private SecurityProtocolType ParseSecurityProtocolType(IConfigurationSection section)
+        {
+            if (Enum.TryParse(section.Value, out SecurityProtocolType protocolType))
+            {
+                return protocolType;
+            }
+            else
+            {
+                throw new ArgumentException($"Cannot parse \"{section.Value}\" to a valid {nameof(SecurityProtocol)} when parsing values of SupportedSecurityProtocols");
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
     "PathToChatApp": "",
     "ChatRefreshInterval": 1000
   },
+  "SupportedSecurityProtocols": [ "Tls12", "Tls11", "Tls" ],
   "ExtensionDlls": ["C:\\someDirectory\\controller.dll"],
   "ReloadModelWhenFilesChangesDetected": "false",
   "UserConfig": {
