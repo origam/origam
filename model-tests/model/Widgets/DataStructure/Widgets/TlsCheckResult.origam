@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="7541504d-965f-4d84-ba7d-3ce8536fad59"
+    ds1:localized="false"
+    asi:name="TlsCheckResult">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/TlsCheckResult.origam#TlsCheckResult/bbff46fd-b3ad-4084-9da9-4b95a8776ba2"
+      x:id="9caff702-8fe6-4ce4-84a0-3dcbc4c58e16"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="TlsCheckResult"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+  </ds1:DataStructure>
+</x:file>

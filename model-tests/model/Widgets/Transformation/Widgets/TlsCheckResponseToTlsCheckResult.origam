@@ -8,6 +8,6 @@
     asi:abstract="false"
     xt:engineType="XslCompiledTransform"
     x:id="bd12c2f4-169c-4364-a885-31def6415af9"
-    asi:name="TransformTlsOutput"
-    xt:text="-***-ExternalFile:TransformTlsOutput.origam___text___bd12c2f4-169c-4364-a885-31def6415af9.xslt" />
+    asi:name="TlsCheckResponseToTlsCheckResult"
+    xt:text="-***-ExternalFile:TlsCheckResponseToTlsCheckResult.origam___text___bd12c2f4-169c-4364-a885-31def6415af9.xslt" />
 </x:file>
