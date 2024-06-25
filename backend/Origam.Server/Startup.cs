@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
@@ -78,6 +79,8 @@ namespace Origam.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ServicePointManager.SecurityProtocol 
+                = startUpConfiguration.SecurityProtocol;
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;

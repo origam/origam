@@ -320,9 +320,6 @@ public class HttpTools : IHttpTools
 		{
 			log.Warn("Request could not be authenticated because serviceProvider is null. This is expected if you send Http requests from the Architect.");
 		}
-		ServicePointManager.SecurityProtocol 
-			= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 
-			                             | SecurityProtocolType.Tls;
 		var webRequest = WebRequest.Create(request.Url);
 		var httpWebRequest = webRequest as HttpWebRequest;
 		if (request.Timeout != null)

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de1="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
+  <de1:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="bbff46fd-b3ad-4084-9da9-4b95a8776ba2"
+    asi:name="TlsCheckResult"
+    ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      x:id="2aceda53-3586-481f-9ff1-4b8601562433"
+      adec:isPrimaryKey="false"
+      asi:name="Message"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      x:id="74f0fe46-74db-4eb5-b81e-9ba8c6445e6d"
+      adec:isPrimaryKey="true"
+      asi:name="Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+  </de1:DataEntity>
+</x:file>
