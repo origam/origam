@@ -25,69 +25,61 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for FieldSecurityRule.
+/// </summary>
+[SchemaItemDescription("Row Level Security Rule", "Row Level Security",
+    "icon_row-level-security-rule.png")]
+[HelpTopic("Row+Level+Security+Rules")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class EntityFieldSecurityRule : AbstractEntitySecurityRule
 {
-	/// <summary>
-	/// Summary description for FieldSecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Row Level Security Rule", "Row Level Security",
-        "icon_row-level-security-rule.png")]
-    [HelpTopic("Row+Level+Security+Rules")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class EntityFieldSecurityRule : AbstractEntitySecurityRule
+	public EntityFieldSecurityRule() : base() {}
+	public EntityFieldSecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityFieldSecurityRule(Key primaryKey) : base(primaryKey)	{}
+
+	#region Properties
+	private bool _read = true;
+	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("readCredential")]
+    public bool ReadCredential
 	{
-		public EntityFieldSecurityRule() : base() {}
-
-		public EntityFieldSecurityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityFieldSecurityRule(Key primaryKey) : base(primaryKey)	{}
-	
-		#region Properties
-		private bool _read = true;
-		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("readCredential")]
-        public bool ReadCredential
+		get
 		{
-			get
-			{
-				return _read;
-			}
-			set
-			{
-				_read = value;
-				this.CredentialsChanged();
-			}
+			return _read;
 		}
-
-		private bool _update = true;
-		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[XmlAttribute("updateCredential")]
-        public bool UpdateCredential
+		set
 		{
-			get
-			{
-				return _update;
-			}
-			set
-			{
-				_update = value;
-				this.CredentialsChanged();
-			}
+			_read = value;
+			this.CredentialsChanged();
 		}
-
-		internal override string CredentialsShortcut
-		{
-			get
-			{
-				string result = "";
-				result += (this.ReadCredential ? "Read" : "");
-				result += (this.UpdateCredential ? "Update" : "");
-
-				return result;
-			}
-		}
-
-		#endregion
 	}
+	private bool _update = true;
+	[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
+	[XmlAttribute("updateCredential")]
+    public bool UpdateCredential
+	{
+		get
+		{
+			return _update;
+		}
+		set
+		{
+			_update = value;
+			this.CredentialsChanged();
+		}
+	}
+	internal override string CredentialsShortcut
+	{
+		get
+		{
+			string result = "";
+			result += (this.ReadCredential ? "Read" : "");
+			result += (this.UpdateCredential ? "Update" : "");
+			return result;
+		}
+	}
+	#endregion
 }

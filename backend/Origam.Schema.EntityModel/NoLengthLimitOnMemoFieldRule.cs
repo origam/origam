@@ -24,31 +24,27 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.DA.EntityModel
+namespace Origam.DA.EntityModel;
+[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+public class NoLengthLimitOnMemoFieldRule : AbstractModelElementRuleAttribute 
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
-    public class NoLengthLimitOnMemoFieldRule : AbstractModelElementRuleAttribute 
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
+        if (!(instance is AbstractDataEntityColumn dataEntityColumn))
         {
-            if (!(instance is AbstractDataEntityColumn dataEntityColumn))
-            {
-                throw new Exception(
-                    $"{nameof(NoLengthLimitOnMemoFieldRule)} can be only applied to type {nameof(AbstractDataEntityColumn)}");  
-            }
-
-            if (dataEntityColumn.DataType == OrigamDataType.Memo &&
-                dataEntityColumn.DataLength != 0)
-            {
-                return new Exception(
-                    $"{nameof(AbstractDataEntityColumn.DataLength)} cannot be se to anything other than 0 if the {nameof(AbstractDataEntityColumn.DataType)} is {nameof(OrigamDataType.Memo)}. The memo length is unlimited by definition.");
-            }
-            return null;
+            throw new Exception(
+                $"{nameof(NoLengthLimitOnMemoFieldRule)} can be only applied to type {nameof(AbstractDataEntityColumn)}");  
         }
-
-        public override Exception CheckRule(object instance, string memberName)
+        if (dataEntityColumn.DataType == OrigamDataType.Memo &&
+            dataEntityColumn.DataLength != 0)
         {
-            return CheckRule(instance);
+            return new Exception(
+                $"{nameof(AbstractDataEntityColumn.DataLength)} cannot be se to anything other than 0 if the {nameof(AbstractDataEntityColumn.DataType)} is {nameof(OrigamDataType.Memo)}. The memo length is unlimited by definition.");
         }
+        return null;
+    }
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        return CheckRule(instance);
     }
 }

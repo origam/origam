@@ -24,122 +24,114 @@ using System.Xml;
 using System.Xml.XPath;
 using System.IO;
 
-namespace Origam
+namespace Origam;
+/// <summary>
+/// Summary description for AsXmlTextWriter.
+/// </summary>
+public class AsXmlTextWriter : XmlTextWriter
 {
-	/// <summary>
-	/// Summary description for AsXmlTextWriter.
-	/// </summary>
-	public class AsXmlTextWriter : XmlTextWriter
+	public AsXmlTextWriter(TextWriter tw) : base (tw)
 	{
-		public AsXmlTextWriter(TextWriter tw) : base (tw)
+	}
+	public void WriteNode(XPathNavigator navigator)
+	{
+		bool flag;
+		if (navigator == null)
 		{
+			throw new ArgumentNullException("navigator");
 		}
-
-		public void WriteNode(XPathNavigator navigator)
+		int num = 0;
+		navigator = navigator.Clone();
+		Label_0018:
+			flag = false;
+		switch (navigator.NodeType)
 		{
-			bool flag;
-			if (navigator == null)
-			{
-				throw new ArgumentNullException("navigator");
-			}
-			int num = 0;
-			navigator = navigator.Clone();
-			Label_0018:
-				flag = false;
-			switch (navigator.NodeType)
-			{
-				case XPathNodeType.Root:
-					flag = true;
-					break;
-
-				case XPathNodeType.Element:
-					this.WriteStartElement(navigator.Prefix, navigator.LocalName, navigator.NamespaceURI);
-					if (navigator.MoveToFirstAttribute())
-					{
-						do
-						{
-							this.WriteStartAttribute(navigator.Prefix, navigator.LocalName, navigator.NamespaceURI);
-							this.WriteString(navigator.Value);
-							this.WriteEndAttribute();
-						}
-						while (navigator.MoveToNextAttribute());
-						navigator.MoveToParent();
-					}
-					if (navigator.MoveToFirstNamespace(XPathNamespaceScope.Local))
-					{
-						this.WriteLocalNamespaces(navigator);
-						navigator.MoveToParent();
-					}
-					flag = true;
-					break;
-
-				case XPathNodeType.Text:
-					this.WriteString(navigator.Value);
-					break;
-
-				case XPathNodeType.SignificantWhitespace:
-				case XPathNodeType.Whitespace:
-					this.WriteWhitespace(navigator.Value);
-					break;
-
-				case XPathNodeType.ProcessingInstruction:
-					this.WriteProcessingInstruction(navigator.LocalName, navigator.Value);
-					break;
-
-				case XPathNodeType.Comment:
-					this.WriteComment(navigator.Value);
-					break;
-			}
-			if (flag)
-			{
-				if (navigator.MoveToFirstChild())
+			case XPathNodeType.Root:
+				flag = true;
+				break;
+			case XPathNodeType.Element:
+				this.WriteStartElement(navigator.Prefix, navigator.LocalName, navigator.NamespaceURI);
+				if (navigator.MoveToFirstAttribute())
 				{
-					num++;
-					goto Label_0018;
+					do
+					{
+						this.WriteStartAttribute(navigator.Prefix, navigator.LocalName, navigator.NamespaceURI);
+						this.WriteString(navigator.Value);
+						this.WriteEndAttribute();
+					}
+					while (navigator.MoveToNextAttribute());
+					navigator.MoveToParent();
 				}
-				if (navigator.NodeType == XPathNodeType.Element)
+				if (navigator.MoveToFirstNamespace(XPathNamespaceScope.Local))
 				{
-					if (navigator.IsEmptyElement)
-					{
-						this.WriteEndElement();
-					}
-					else
-					{
-						this.WriteFullEndElement();
-					}
+					this.WriteLocalNamespaces(navigator);
+					navigator.MoveToParent();
 				}
-			}
-			while (num != 0)
+				flag = true;
+				break;
+			case XPathNodeType.Text:
+				this.WriteString(navigator.Value);
+				break;
+			case XPathNodeType.SignificantWhitespace:
+			case XPathNodeType.Whitespace:
+				this.WriteWhitespace(navigator.Value);
+				break;
+			case XPathNodeType.ProcessingInstruction:
+				this.WriteProcessingInstruction(navigator.LocalName, navigator.Value);
+				break;
+			case XPathNodeType.Comment:
+				this.WriteComment(navigator.Value);
+				break;
+		}
+		if (flag)
+		{
+			if (navigator.MoveToFirstChild())
 			{
-				if (navigator.MoveToNext())
+				num++;
+				goto Label_0018;
+			}
+			if (navigator.NodeType == XPathNodeType.Element)
+			{
+				if (navigator.IsEmptyElement)
 				{
-					goto Label_0018;
+					this.WriteEndElement();
 				}
-				num--;
-				navigator.MoveToParent();
-				if (navigator.NodeType == XPathNodeType.Element)
+				else
 				{
 					this.WriteFullEndElement();
 				}
 			}
 		}
-		
-		private void WriteLocalNamespaces(XPathNavigator nsNav)
+		while (num != 0)
 		{
-			string localName = nsNav.LocalName;
-			string str2 = nsNav.Value;
-			if (nsNav.MoveToNextNamespace(XPathNamespaceScope.Local))
+			if (navigator.MoveToNext())
 			{
-				this.WriteLocalNamespaces(nsNav);
+				goto Label_0018;
 			}
-			if (localName.Length == 0)
+			num--;
+			navigator.MoveToParent();
+			if (navigator.NodeType == XPathNodeType.Element)
 			{
-				this.WriteAttributeString(string.Empty, "xmlns", "http://www.w3.org/2000/xmlns/", str2);
+				this.WriteFullEndElement();
 			}
-			else
-			{
-				this.WriteAttributeString("xmlns", localName, "http://www.w3.org/2000/xmlns/", str2);
-			}
+		}
+	}
+	
+	private void WriteLocalNamespaces(XPathNavigator nsNav)
+	{
+		string localName = nsNav.LocalName;
+		string str2 = nsNav.Value;
+		if (nsNav.MoveToNextNamespace(XPathNamespaceScope.Local))
+		{
+			this.WriteLocalNamespaces(nsNav);
+		}
+		if (localName.Length == 0)
+		{
+			this.WriteAttributeString(string.Empty, "xmlns", "http://www.w3.org/2000/xmlns/", str2);
+		}
+		else
+		{
+			this.WriteAttributeString("xmlns", localName, "http://www.w3.org/2000/xmlns/", str2);
 		}
 	}
 }

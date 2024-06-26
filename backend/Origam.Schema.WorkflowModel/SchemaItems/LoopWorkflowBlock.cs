@@ -27,92 +27,79 @@ using Origam.DA.ObjectPersistence;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Summary description for ForeachWorkflowBlock.
+/// </summary>
+[SchemaItemDescription("(Block) Loop", "Tasks", "block-loop-1.png")]
+[HelpTopic("Loop+Block")]
+[ClassMetaVersion("6.0.0")]
+public class LoopWorkflowBlock : AbstractWorkflowBlock
 {
-	/// <summary>
-	/// Summary description for ForeachWorkflowBlock.
-	/// </summary>
-	[SchemaItemDescription("(Block) Loop", "Tasks", "block-loop-1.png")]
-    [HelpTopic("Loop+Block")]
-    [ClassMetaVersion("6.0.0")]
-	public class LoopWorkflowBlock : AbstractWorkflowBlock
+	public LoopWorkflowBlock() : base() {}
+	public LoopWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public LoopWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-		public LoopWorkflowBlock() : base() {}
-
-		public LoopWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public LoopWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
-
-			dependencies.Add(this.LoopConditionContextStore);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-			{
-				if(item.OldPrimaryKey != null)
-				{
-					if(item.OldPrimaryKey.Equals(this.LoopConditionContextStore.PrimaryKey))
-					{
-						this.LoopConditionContextStore = item as IContextStore;
-						break;
-					}
-				}
-			}
-
-			base.UpdateReferences ();
-		}
-		#endregion
-
-		#region Properties
-		public Guid ContextStoreId;
-
-		[TypeConverter(typeof(ContextStoreConverter))]
-		[NotNullModelElementRule()]
-        [XmlReference("loopConditionContextStore", "ContextStoreId")]
-		public IContextStore LoopConditionContextStore
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ContextStoreId;
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(value == null)
-				{
-					this.ContextStoreId = Guid.Empty;
-				}
-				else
-				{
-					this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
-				}
-			}
-		}
-
-		string _xpath;
-		[StringNotEmptyModelElementRule()]
-        [XmlAttribute("loopConditionXPath")]
-		public string LoopConditionXPath
-		{
-			get
-			{
-				return _xpath;
-			}
-			set
-			{
-				_xpath = value;
-			}
-		}
-		#endregion
+		XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
+		dependencies.Add(this.LoopConditionContextStore);
+		base.GetExtraDependencies (dependencies);
 	}
+	public override void UpdateReferences()
+	{
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+		{
+			if(item.OldPrimaryKey != null)
+			{
+				if(item.OldPrimaryKey.Equals(this.LoopConditionContextStore.PrimaryKey))
+				{
+					this.LoopConditionContextStore = item as IContextStore;
+					break;
+				}
+			}
+		}
+		base.UpdateReferences ();
+	}
+	#endregion
+	#region Properties
+	public Guid ContextStoreId;
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[NotNullModelElementRule()]
+    [XmlReference("loopConditionContextStore", "ContextStoreId")]
+	public IContextStore LoopConditionContextStore
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.ContextStoreId;
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				this.ContextStoreId = Guid.Empty;
+			}
+			else
+			{
+				this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+	}
+	string _xpath;
+	[StringNotEmptyModelElementRule()]
+    [XmlAttribute("loopConditionXPath")]
+	public string LoopConditionXPath
+	{
+		get
+		{
+			return _xpath;
+		}
+		set
+		{
+			_xpath = value;
+		}
+	}
+	#endregion
 }

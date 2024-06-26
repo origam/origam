@@ -25,64 +25,59 @@ using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+[Route("chatrooms/[controller]")]
+[Route("internalApi/[controller]")]
+[ApiController]
+public class AvatarController : ControllerBase
 {
-    [Route("chatrooms/[controller]")]
-    [Route("internalApi/[controller]")]
-    [ApiController]
-    public class AvatarController : ControllerBase
+    [HttpGet("{avatarId:guid}")]
+    public IActionResult GetAvatarRequest(Guid avatarId)
     {
-        [HttpGet("{avatarId:guid}")]
-        public IActionResult GetAvatarRequest(Guid avatarId)
+        QueryParameterCollection parameters = new QueryParameterCollection
         {
-
-            QueryParameterCollection parameters = new QueryParameterCollection
-            {
-                new QueryParameter("BusinessPartner_parId",avatarId)
-            };
-            DataSet datasetUsersForInvite = LoadData(new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"), 
-                                                     new Guid("d014e645-dda1-4999-b577-d82221715583"),
-               Guid.Empty, Guid.Empty, null, parameters);
-            if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
-            {
-                return NotFound();
-            }
-            DataRow userRow = datasetUsersForInvite.Tables[0].Rows[0];
-            byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
-            if (imageBytes == null)
-            {
-                return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
-            }
-            return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
-        }
-
-        private static string MakeInitialsSvg(DataRow userRow)
+            new QueryParameter("BusinessPartner_parId",avatarId)
+        };
+        DataSet datasetUsersForInvite = LoadData(new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"), 
+                                                 new Guid("d014e645-dda1-4999-b577-d82221715583"),
+           Guid.Empty, Guid.Empty, null, parameters);
+        if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
         {
-            string name = userRow.Field<string>("Name");
-            string firstName = userRow.Field<string>("FirstName");
-            string initials = "";
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                initials += firstName.First().ToString().ToUpper();
-            }
-            initials += name.First().ToString().ToUpper();
-            string userSvg =
-                "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">" +
-                    $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>" +
-                "</svg>";
-            return userSvg;
+            return NotFound();
         }
-
-        private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
-                                string transactionId, 
-                                QueryParameterCollection parameters)
+        DataRow userRow = datasetUsersForInvite.Tables[0].Rows[0];
+        byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
+        if (imageBytes == null)
         {
-            return DataService.Instance.LoadData(dataStructureId,
-                     methodId,
-                     defaultSetId,
-                     sortSetId,
-                     transactionId,
-                     parameters);
+            return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
         }
+        return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
+    }
+    private static string MakeInitialsSvg(DataRow userRow)
+    {
+        string name = userRow.Field<string>("Name");
+        string firstName = userRow.Field<string>("FirstName");
+        string initials = "";
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            initials += firstName.First().ToString().ToUpper();
+        }
+        initials += name.First().ToString().ToUpper();
+        string userSvg =
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">" +
+                $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>" +
+            "</svg>";
+        return userSvg;
+    }
+    private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
+                            string transactionId, 
+                            QueryParameterCollection parameters)
+    {
+        return DataService.Instance.LoadData(dataStructureId,
+                 methodId,
+                 defaultSetId,
+                 sortSetId,
+                 transactionId,
+                 parameters);
     }
 }

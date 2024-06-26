@@ -19,67 +19,60 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class StylesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class StylesSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public StylesSchemaItemProvider() 
 	{
-		public StylesSchemaItemProvider() 
-		{
-			this.ChildItemTypes.Add(typeof(UIStyle));
-		}
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return UIStyle.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_24_styles.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{
-				return "Styles";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return "List of Styles";
-			}
-		}
-
-		#endregion
+		this.ChildItemTypes.Add(typeof(UIStyle));
 	}
+	
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
+		{
+			return UIStyle.CategoryConst;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "UI";
+		}
+	}
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			return "icon_24_styles.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{
+			return "Styles";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			return "List of Styles";
+		}
+	}
+	#endregion
 }

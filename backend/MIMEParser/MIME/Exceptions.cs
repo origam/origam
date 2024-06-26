@@ -26,8 +26,4 @@
 *					1.added PopServerLockException
 */
 
-namespace OpenPOP.MIMEParser
-{
-
-}
-
+namespace OpenPOP.MIMEParser;

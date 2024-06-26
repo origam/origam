@@ -22,79 +22,71 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for DashboardConfigurationItemParameter.
+/// </summary>
+[Serializable()]
+public class DashboardConfigurationItemParameter
 {
-	/// <summary>
-	/// Summary description for DashboardConfigurationItemParameter.
-	/// </summary>
-	[Serializable()]
-	public class DashboardConfigurationItemParameter
+	private string _name;
+	private bool _isBound;
+	private string _value;
+	public DashboardConfigurationItemParameter()
 	{
-		private string _name;
-		private bool _isBound;
-		private string _value;
-
-		public DashboardConfigurationItemParameter()
+	}
+	[XmlAttribute("name")]
+	public string Name
+	{
+		get
 		{
+			return _name;
 		}
-
-		[XmlAttribute("name")]
-		public string Name
+		set
 		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
+			_name = value;
 		}
-
-		[XmlAttribute("isBound")]
-		public bool IsBound
+	}
+	[XmlAttribute("isBound")]
+	public bool IsBound
+	{
+		get
 		{
-			get
-			{
-				return _isBound;
-			}
-			set
-			{
-				_isBound = value;
-			}
+			return _isBound;
 		}
-
-		[XmlAttribute("value")]
-		public string Value
+		set
 		{
-			get
-			{
-				return _value;
-			}
-			set
-			{
-				_value = value;
-			}
+			_isBound = value;
 		}
-
-		public Guid BoundItemId
+	}
+	[XmlAttribute("value")]
+	public string Value
+	{
+		get
 		{
-			get
-			{
-				string[] paramArray = this.Value.Split(".".ToCharArray());
-				
-				return new Guid(paramArray[0]);
-			}
+			return _value;
 		}
-
-		public string BoundItemProperty
+		set
 		{
-			get
-			{
-				string[] paramArray = this.Value.Split(".".ToCharArray());
-				
-				return paramArray[1];
-			}
+			_value = value;
+		}
+	}
+	public Guid BoundItemId
+	{
+		get
+		{
+			string[] paramArray = this.Value.Split(".".ToCharArray());
+			
+			return new Guid(paramArray[0]);
+		}
+	}
+	public string BoundItemProperty
+	{
+		get
+		{
+			string[] paramArray = this.Value.Split(".".ToCharArray());
+			
+			return paramArray[1];
 		}
 	}
 }

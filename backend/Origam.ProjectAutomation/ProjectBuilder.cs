@@ -27,171 +27,158 @@ using System.Threading.Tasks;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class ProjectBuilder
 {
-    public class ProjectBuilder
+    private readonly List<IProjectBuilder> tasks = new List<IProjectBuilder>();
+    private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
+    private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
+    private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
+    private readonly DockerBuilder dockerBuilder = new DockerBuilder();
+    public ProjectBuilder()
+    {           
+        
+    }
+    public void Create(Project project)
     {
-        private readonly List<IProjectBuilder> tasks = new List<IProjectBuilder>();
-        private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
-        private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
-        private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
-        private readonly DockerBuilder dockerBuilder = new DockerBuilder();
-
-        public ProjectBuilder()
-        {           
-            
-        }
-
-        public void Create(Project project)
+        dataDatabaseBuilder.ResetDataservice();
+        //Wizard connection
+        project.DataConnectionString =
+        dataDatabaseBuilder.BuildConnectionString(project, true);
+        //OrigamSettings
+        project.BuilderDataConnectionString =
+        dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
+        switch (project.Deployment)
         {
-            dataDatabaseBuilder.ResetDataservice();
-            //Wizard connection
-            project.DataConnectionString =
-            dataDatabaseBuilder.BuildConnectionString(project, true);
-            //OrigamSettings
-            project.BuilderDataConnectionString =
-            dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
-
-            switch (project.Deployment)
+            case DeploymentType.Local:
+                project.BaseUrl =
+                    configureWebServerBuilder.WebSiteUrl(project.WebRootName);
+                break;
+            case DeploymentType.Docker:
+                project.BaseUrl =
+                    dockerBuilder.WebSiteUrl(project);
+                break;
+            case DeploymentType.DockerPostgres:
+                project.BaseUrl =
+                    dockerBuilder.WebSiteUrl(project);
+                break;
+        }
+        IProjectBuilder activeTask = null;
+        try
+        {
+            foreach (IProjectBuilder builder in tasks)
             {
-                case DeploymentType.Local:
-                    project.BaseUrl =
-                        configureWebServerBuilder.WebSiteUrl(project.WebRootName);
-                    break;
-                case DeploymentType.Docker:
-                    project.BaseUrl =
-                        dockerBuilder.WebSiteUrl(project);
-                    break;
-                case DeploymentType.DockerPostgres:
-                    project.BaseUrl =
-                        dockerBuilder.WebSiteUrl(project);
-                    break;
-            }
-
-            IProjectBuilder activeTask = null;
-            try
-            {
-                foreach (IProjectBuilder builder in tasks)
-                {
-                    activeTask = builder;
-                    builder.State = TaskState.Running;
-                    builder.Execute(project);
-                    builder.State = TaskState.Finished;
-                }
-            }
-            catch
-            {
-                activeTask.State = TaskState.Failed;
-                for (int i = tasks.Count - 1; i >= 0; i--)
-                {
-                    Rollback(tasks[i]);
-                }
-                throw;
+                activeTask = builder;
+                builder.State = TaskState.Running;
+                builder.Execute(project);
+                builder.State = TaskState.Finished;
             }
         }
-
-        public void CreateTasks(Project _project)
+        catch
         {
-            tasks.Clear();
-            if (_project.DatabaseType == DatabaseType.MsSql)
+            activeTask.State = TaskState.Failed;
+            for (int i = tasks.Count - 1; i >= 0; i--)
             {
-                tasks.Add(settingsBuilder);
-                tasks.Add(dataDatabaseBuilder);
-                tasks.Add(new FileModelImportBuilder());
-                tasks.Add(new FileModelInitBuilder());
-                tasks.Add(new DataDatabaseStructureBuilder());
-                if (_project.Deployment == DeploymentType.Local)
-                {
-                    tasks.Add(new ModifyConfigurationFilesBuilder());
-                    tasks.Add(configureWebServerBuilder);
-                }
-                tasks.Add(new ApplyDatabasePermissionsBuilder());
-                tasks.Add(new NewPackageBuilder());
+                Rollback(tasks[i]);
             }
-            if (_project.DatabaseType == DatabaseType.PgSql)
+            throw;
+        }
+    }
+    public void CreateTasks(Project _project)
+    {
+        tasks.Clear();
+        if (_project.DatabaseType == DatabaseType.MsSql)
+        {
+            tasks.Add(settingsBuilder);
+            tasks.Add(dataDatabaseBuilder);
+            tasks.Add(new FileModelImportBuilder());
+            tasks.Add(new FileModelInitBuilder());
+            tasks.Add(new DataDatabaseStructureBuilder());
+            if (_project.Deployment == DeploymentType.Local)
             {
-                tasks.Add(new FileModelImportBuilder());
-                if (_project.Deployment == DeploymentType.DockerPostgres)
-                {
-                    tasks.Add(new DockerBuilder());
-                    tasks.Add(new DockerCreator("master-latest".GetAssemblyVersion(),_project.DockerApiAddress));
-                }
-                tasks.Add(settingsBuilder);
-                tasks.Add(dataDatabaseBuilder);
-                tasks.Add(new ApplyDatabasePermissionsBuilder());
-                tasks.Add(new FileModelInitBuilder());
-                tasks.Add(new DataDatabaseStructureBuilder());
-
-                if (_project.Deployment == DeploymentType.Local)
-                {
-                    tasks.Add(new ModifyConfigurationFilesBuilder());
-                    tasks.Add(configureWebServerBuilder);
-                }
-                tasks.Add(new NewPackageBuilder());
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
             }
-            tasks.Add(new NewUserBuilder());
-            if (_project.Deployment == DeploymentType.Docker)
+            tasks.Add(new ApplyDatabasePermissionsBuilder());
+            tasks.Add(new NewPackageBuilder());
+        }
+        if (_project.DatabaseType == DatabaseType.PgSql)
+        {
+            tasks.Add(new FileModelImportBuilder());
+            if (_project.Deployment == DeploymentType.DockerPostgres)
             {
                 tasks.Add(new DockerBuilder());
+                tasks.Add(new DockerCreator("master-latest".GetAssemblyVersion(),_project.DockerApiAddress));
             }
-            AddGitTasks(_project);
-        }
-
-        private void AddGitTasks(Project _project)
-        {
-            switch (_project.TypeTemplate)
+            tasks.Add(settingsBuilder);
+            tasks.Add(dataDatabaseBuilder);
+            tasks.Add(new ApplyDatabasePermissionsBuilder());
+            tasks.Add(new FileModelInitBuilder());
+            tasks.Add(new DataDatabaseStructureBuilder());
+            if (_project.Deployment == DeploymentType.Local)
             {
-                case TypeTemplate.Default:
-                    CreateGit(_project);
-                    break;
-                case TypeTemplate.Template:
-                    tasks.Add(new DropGitRepository());
-                    CreateGit(_project);
-                    break;
-                case TypeTemplate.Open:
-                    if (_project.TypeDoTemplate == TypeDoTemplate.Clone &&
-                        _project.GitRepository)
-                    {
-                        break;
-                    }
-                    tasks.Add(new DropGitRepository());
-                    if (_project.TypeDoTemplate == TypeDoTemplate.Copy)
-                    {
-                        CreateGit(_project);
-                    }
-                    break;
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
             }
+            tasks.Add(new NewPackageBuilder());
         }
-
-        private void CreateGit(Project _project)
+        tasks.Add(new NewUserBuilder());
+        if (_project.Deployment == DeploymentType.Docker)
         {
-            if (_project.GitRepository)
-            {
-                tasks.Add(new CreateGitRepository());
-            }
+            tasks.Add(new DockerBuilder());
         }
-
-        #region Properties
-        public List<IProjectBuilder> Tasks => tasks;
-
-        public string[] WebSites() => configureWebServerBuilder.WebSites();
-        #endregion
-
-        private void Rollback(IProjectBuilder builder)
+        AddGitTasks(_project);
+    }
+    private void AddGitTasks(Project _project)
+    {
+        switch (_project.TypeTemplate)
         {
-            try
-            {
-                if(builder.State == TaskState.Finished)
+            case TypeTemplate.Default:
+                CreateGit(_project);
+                break;
+            case TypeTemplate.Template:
+                tasks.Add(new DropGitRepository());
+                CreateGit(_project);
+                break;
+            case TypeTemplate.Open:
+                if (_project.TypeDoTemplate == TypeDoTemplate.Clone &&
+                    _project.GitRepository)
                 {
-                    builder.State = TaskState.RollingBack;
-                    builder.Rollback();
-                    builder.State = TaskState.RolledBack;
+                    break;
                 }
-            }
-            catch
+                tasks.Add(new DropGitRepository());
+                if (_project.TypeDoTemplate == TypeDoTemplate.Copy)
+                {
+                    CreateGit(_project);
+                }
+                break;
+        }
+    }
+    private void CreateGit(Project _project)
+    {
+        if (_project.GitRepository)
+        {
+            tasks.Add(new CreateGitRepository());
+        }
+    }
+    #region Properties
+    public List<IProjectBuilder> Tasks => tasks;
+    public string[] WebSites() => configureWebServerBuilder.WebSites();
+    #endregion
+    private void Rollback(IProjectBuilder builder)
+    {
+        try
+        {
+            if(builder.State == TaskState.Finished)
             {
-                builder.State = TaskState.RollbackFailed;
+                builder.State = TaskState.RollingBack;
+                builder.Rollback();
+                builder.State = TaskState.RolledBack;
             }
+        }
+        catch
+        {
+            builder.State = TaskState.RollbackFailed;
         }
     }
 }

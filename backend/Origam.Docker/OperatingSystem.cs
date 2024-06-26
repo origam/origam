@@ -23,41 +23,35 @@ using Docker.DotNet.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace Origam.Docker
+namespace Origam.Docker;
+public class OperatingSystem
 {
-    public class OperatingSystem
+    public string TextOs { get; }
+    public string FileNameExtension => GetFileNameExtension();
+    public OperatingSystem(string textOs)
     {
-        public string TextOs { get; }
-        public string FileNameExtension => GetFileNameExtension();
-
-        public OperatingSystem(string textOs)
+        TextOs = textOs;
+    }
+    public OperatingSystem(Task<VersionResponse> task)
+    {
+        TextOs = task.ConfigureAwait(false).GetAwaiter().GetResult().Os;
+    }
+    private string GetFileNameExtension()
+    {
+        switch (TextOs)
         {
-            TextOs = textOs;
+            case "linux":
+                return ".sh";
+            case "Windows":
+                return ".cmd";
+            case "Apple":
+                return ".sh";
+            default:
+                throw new Exception("Docker Operation System was not recognize.");
         }
-
-        public OperatingSystem(Task<VersionResponse> task)
-        {
-            TextOs = task.ConfigureAwait(false).GetAwaiter().GetResult().Os;
-        }
-
-        private string GetFileNameExtension()
-        {
-            switch (TextOs)
-            {
-                case "linux":
-                    return ".sh";
-                case "Windows":
-                    return ".cmd";
-                case "Apple":
-                    return ".sh";
-                default:
-                    throw new Exception("Docker Operation System was not recognize.");
-            }
-        }
-
-        public bool IsOnline()
-        {
-            return string.IsNullOrEmpty(TextOs);
-        }
+    }
+    public bool IsOnline()
+    {
+        return string.IsNullOrEmpty(TextOs);
     }
 }

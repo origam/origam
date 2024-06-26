@@ -19,66 +19,59 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class KeyboardShortcutsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class KeyboardShortcutsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public KeyboardShortcutsSchemaItemProvider() 
 	{
-		public KeyboardShortcutsSchemaItemProvider() 
-		{
-			this.ChildItemTypes.Add(typeof(KeyboardShortcut));
-		}
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return KeyboardShortcut.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_17_keyboard-shortcuts.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{
-				return "Keyboard Shortcuts";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-
-		public override string NodeToolTipText
-		{
-			get
-			{
-				return "List of Keyboard Shortcuts";
-			}
-		}
-
-		#endregion
+		this.ChildItemTypes.Add(typeof(KeyboardShortcut));
 	}
+	
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
+		{
+			return KeyboardShortcut.CategoryConst;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "UI";
+		}
+	}
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			return "icon_17_keyboard-shortcuts.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{
+			return "Keyboard Shortcuts";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			return "List of Keyboard Shortcuts";
+		}
+	}
+	#endregion
 }

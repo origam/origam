@@ -25,55 +25,43 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
 
-namespace Origam.Schema.GuiModel
-{
-	[XmlModelRoot(CategoryConst)]
-    public abstract class AbstractReport : AbstractSchemaItem
+namespace Origam.Schema.GuiModel;
+[XmlModelRoot(CategoryConst)]
+public abstract class AbstractReport : AbstractSchemaItem
+	{
+		public const string CategoryConst = "Report";
+		public AbstractReport() {}
+	
+		public AbstractReport(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
+		public AbstractReport(Key primaryKey) : base(primaryKey) {}
+		#region Properties
+		private string _caption = "";
+		[Category("User Interface")]
+		[Localizable(true)]
+		public string Caption
 		{
-			public const string CategoryConst = "Report";
-
-			public AbstractReport() {}
-		
-			public AbstractReport(Guid schemaExtensionId) 
-				: base(schemaExtensionId) {}
-
-			public AbstractReport(Key primaryKey) : base(primaryKey) {}
-
-			#region Properties
-			private string _caption = "";
-			[Category("User Interface")]
-			[Localizable(true)]
-			public string Caption
-			{
-				get => _caption;
-				set => _caption = value;
-			}
-
-			#endregion
-           
-			#region Overriden AbstractSchemaItem Members
-			public override string ItemType => CategoryConst;
-
-			#endregion			
-
-
-			#region ISchemaItemFactory Members
-
-			public override Type[] NewItemTypes => new[]
-			{
-				typeof(DefaultValueParameter), 
-				typeof(SchemaItemParameter), 
-				typeof(XsltInitialValueParameter)
-			};
-
-			public override T NewItem<T>(
-				Guid schemaExtensionId, SchemaItemGroup group)
-			{
-				return base.NewItem<T>(schemaExtensionId, group, 
-					typeof(T) == typeof(FunctionCallParameter) ?
-						"NewParameter" : null);
-			}
-			#endregion
-
-	}
+			get => _caption;
+			set => _caption = value;
+		}
+		#endregion
+       
+		#region Overriden AbstractSchemaItem Members
+		public override string ItemType => CategoryConst;
+		#endregion			
+		#region ISchemaItemFactory Members
+		public override Type[] NewItemTypes => new[]
+		{
+			typeof(DefaultValueParameter), 
+			typeof(SchemaItemParameter), 
+			typeof(XsltInitialValueParameter)
+		};
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(FunctionCallParameter) ?
+					"NewParameter" : null);
+		}
+		#endregion
 }

@@ -25,95 +25,82 @@ using System;
 using System.Collections.Concurrent;
 using System.Xml.Serialization;
 
-namespace Origam.DA.Common
+namespace Origam.DA.Common;
+public class OrigamNameSpace
 {
-    public class OrigamNameSpace
+    private static readonly string firstPart = "http://schemas.origam.com";
+    public Version Version { get; }
+    public string StringValue { get; }
+    public string FullTypeName { get; }
+    
+    private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
+        =  new ConcurrentDictionary<string, OrigamNameSpace>();
+    public static implicit operator string(OrigamNameSpace nameSpace) => nameSpace.StringValue;
+    private static string MakeNamespaceString(string fullTypeName, Version version)
     {
-        private static readonly string firstPart = "http://schemas.origam.com";
-        public Version Version { get; }
-        public string StringValue { get; }
-        public string FullTypeName { get; }
-        
-        private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
-            =  new ConcurrentDictionary<string, OrigamNameSpace>();
-
-        public static implicit operator string(OrigamNameSpace nameSpace) => nameSpace.StringValue;
-
-        private static string MakeNamespaceString(string fullTypeName, Version version)
+        return $"{firstPart}/{fullTypeName}/{version}";
+    }
+    
+    public static bool IsOrigamNamespace(string candidate)
+    {
+        return candidate.StartsWith(firstPart);
+    }
+    public static OrigamNameSpace CreateOrGet(Type type, Version version)
+    {
+        string namespaceString = MakeNamespaceString(type.FullName, version);
+        return instances.GetOrAdd(
+            namespaceString,
+            new OrigamNameSpace(
+                version: version, 
+                stringValue: namespaceString, 
+                fullTypeName: type.FullName)
+            );
+    }
+    
+    public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
+    {
+        string namespaceString = MakeNamespaceString(fullTypeName, version);
+        return CreateOrGet(namespaceString);
+    }
+    public static OrigamNameSpace CreateOrGet(string xmlNamespace)
+    {
+        return instances.GetOrAdd(xmlNamespace, CreateNonCached);
+    }
+    private static OrigamNameSpace CreateNonCached(string xmlNamespace)
+    {
+        if (xmlNamespace == null)
+            throw new ArgumentNullException(nameof(xmlNamespace));
+        if (!IsOrigamNamespace(xmlNamespace))
         {
-            return $"{firstPart}/{fullTypeName}/{version}";
+            throw new ArgumentException(
+                $" {nameof(OrigamNameSpace)} must start with {firstPart}. The invalid namespace is: \"{xmlNamespace}\"");
         }
-        
-        public static bool IsOrigamNamespace(string candidate)
+        if (!Uri.IsWellFormedUriString(xmlNamespace, UriKind.Absolute))
         {
-            return candidate.StartsWith(firstPart);
+            throw new ArgumentException(
+                $"{xmlNamespace} is not a valid absolute Uri");
         }
-
-        public static OrigamNameSpace CreateOrGet(Type type, Version version)
+        string[] splitElName = xmlNamespace.Split('/');
+        if (splitElName.Length < 5)
         {
-            string namespaceString = MakeNamespaceString(type.FullName, version);
-            return instances.GetOrAdd(
-                namespaceString, 
-                new OrigamNameSpace(
-                    version: version, 
-                    stringValue: namespaceString, 
-                    fullTypeName: type.FullName)
-                );
+            throw new ArgumentException(
+                $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)}");
         }
-
-        
-        public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
+        if (!Version.TryParse(splitElName[4], out var version))
         {
-            string namespaceString = MakeNamespaceString(fullTypeName, version);
-            return CreateOrGet(namespaceString);
+            throw new ArgumentException(
+                $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)} because \"{splitElName[4]}\" cannot be parsed to version");
         }
-
-        public static OrigamNameSpace CreateOrGet(string xmlNamespace)
-        {
-            return instances.GetOrAdd(xmlNamespace, CreateNonCached);
-        }
-
-        private static OrigamNameSpace CreateNonCached(string xmlNamespace)
-        {
-            if (xmlNamespace == null)
-                throw new ArgumentNullException(nameof(xmlNamespace));
-
-            if (!IsOrigamNamespace(xmlNamespace))
-            {
-                throw new ArgumentException(
-                    $" {nameof(OrigamNameSpace)} must start with {firstPart}. The invalid namespace is: \"{xmlNamespace}\"");
-            }
-
-            if (!Uri.IsWellFormedUriString(xmlNamespace, UriKind.Absolute))
-            {
-                throw new ArgumentException(
-                    $"{xmlNamespace} is not a valid absolute Uri");
-            }
-
-            string[] splitElName = xmlNamespace.Split('/');
-            if (splitElName.Length < 5)
-            {
-                throw new ArgumentException(
-                    $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)}");
-            }
-
-            if (!Version.TryParse(splitElName[4], out var version))
-            {
-                throw new ArgumentException(
-                    $"{xmlNamespace} cannot be parsed to {nameof(OrigamNameSpace)} because \"{splitElName[4]}\" cannot be parsed to version");
-            }
-
-            return new OrigamNameSpace(
-                version: version,
-                stringValue: xmlNamespace,
-                fullTypeName: splitElName[3]);
-        }
-        
-        private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
-        {
-            Version = version;
-            StringValue = stringValue;
-            FullTypeName = fullTypeName;
-        }
+        return new OrigamNameSpace(
+            version: version,
+            stringValue: xmlNamespace,
+            fullTypeName: splitElName[3]);
+    }
+    
+    private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
+    {
+        Version = version;
+        StringValue = stringValue;
+        FullTypeName = fullTypeName;
     }
 }

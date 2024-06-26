@@ -25,60 +25,56 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class TypeExtensions
 {
-    public static class TypeExtensions
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+    public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
     {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
-
-        public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
+        return AppDomain.CurrentDomain.GetAssemblies()
+            .Where(assembly => !assembly.IsDynamic)
+            .SelectMany(GetExportedTypes)
+            .Where(baseType.IsAssignableFrom);
+    }
+    
+    public static object GetValue(this MemberInfo memberInfo, object forObject)
+    {
+        switch (memberInfo.MemberType)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.IsDynamic)
-                .SelectMany(GetExportedTypes)
-                .Where(baseType.IsAssignableFrom);
+            case MemberTypes.Field:
+                return ((FieldInfo)memberInfo).GetValue(forObject);
+            case MemberTypes.Property:
+                return ((PropertyInfo)memberInfo).GetValue(forObject);
+            default:
+                throw new NotImplementedException();
         }
-        
-        public static object GetValue(this MemberInfo memberInfo, object forObject)
+    } 
+    
+    public static IEnumerable<Type> GetAllBaseTypes(this Type type)
+    {
+        Type baseType = type.BaseType;
+        while (baseType != typeof(object))
         {
-            switch (memberInfo.MemberType)
-            {
-                case MemberTypes.Field:
-                    return ((FieldInfo)memberInfo).GetValue(forObject);
-                case MemberTypes.Property:
-                    return ((PropertyInfo)memberInfo).GetValue(forObject);
-                default:
-                    throw new NotImplementedException();
-            }
-        } 
-        
-        public static IEnumerable<Type> GetAllBaseTypes(this Type type)
-        {
-            Type baseType = type.BaseType;
-            while (baseType != typeof(object))
-            {
-                yield return baseType;
-                baseType = baseType.BaseType;
-            }
+            yield return baseType;
+            baseType = baseType.BaseType;
         }
-
-        private static IEnumerable<Type> GetExportedTypes(Assembly assembly)
+    }
+    private static IEnumerable<Type> GetExportedTypes(Assembly assembly)
+    {
+        try
         {
-            try
-            {
-                return assembly.GetExportedTypes();
-            }
-            catch (FileNotFoundException)
-            {
-                return new List<Type>();
-            }
-            catch (TypeLoadException ex)
-            {
-                log.Warn("Could not load assembly: "+assembly.Location+", reason: "+ex.Message);
-                return new List<Type>();
-            }
+            return assembly.GetExportedTypes();
+        }
+        catch (FileNotFoundException)
+        {
+            return new List<Type>();
+        }
+        catch (TypeLoadException ex)
+        {
+            log.Warn("Could not load assembly: "+assembly.Location+", reason: "+ex.Message);
+            return new List<Type>();
         }
     }
 }

@@ -24,84 +24,68 @@ using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
+	public DeploymentSchemaItemProvider() {}
+	public DeploymentVersion CurrentVersion()
 	{
-		public DeploymentSchemaItemProvider() {}
-
-		public DeploymentVersion CurrentVersion()
+		var schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
+		foreach(var abstractSchemaItem in ChildItems)
 		{
-			var schemaService 
-				= ServiceManager.Services.GetService<ISchemaService>();
-			foreach(var abstractSchemaItem in ChildItems)
+			var version = (DeploymentVersion)abstractSchemaItem;
+			// only version from the current extension
+			if(version.Package.PrimaryKey.Equals(
+				   schemaService.ActiveExtension.PrimaryKey))
 			{
-				var version = (DeploymentVersion)abstractSchemaItem;
-				// only version from the current extension
-				if(version.Package.PrimaryKey.Equals(
-					   schemaService.ActiveExtension.PrimaryKey))
+				if(version.IsCurrentVersion)
 				{
-					if(version.IsCurrentVersion)
-					{
-						return version;
-					}
+					return version;
 				}
 			}
-			return null;
 		}
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType => DeploymentVersion.CategoryConst;
-
-		public override bool AutoCreateFolder => true;
-
-		public override string Group => "COMMON";
-
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon => "icon_02_deployment.png";
-
-		public override string NodeText
-		{
-			get => "Deployment";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText => null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(DeploymentVersion)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(typeof(T) != typeof(DeploymentVersion))
-			{
-				return base.NewItem<T>(schemaExtensionId, group);
-			}
-			var schemaService 
-				= ServiceManager.Services.GetService<ISchemaService>();
-			var packages = schemaService.ActiveExtension.IncludedPackages;
-			var deploymentVersion = new DeploymentVersion(
-				schemaExtensionId, packages.ToList())
-			{
-				RootProvider = this,
-				PersistenceProvider = PersistenceProvider,
-				Name = "NewDeploymentVersion",
-				Group = group
-			};
-			ChildItems.Add(deploymentVersion);
-			return deploymentVersion as T;
-		}
-
-		#endregion
+		return null;
 	}
+	#region ISchemaItemProvider Members
+	public override string RootItemType => DeploymentVersion.CategoryConst;
+	public override bool AutoCreateFolder => true;
+	public override string Group => "COMMON";
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon => "icon_02_deployment.png";
+	public override string NodeText
+	{
+		get => "Deployment";
+		set => base.NodeText = value;
+	}
+	public override string NodeToolTipText => null;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(DeploymentVersion)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		if(typeof(T) != typeof(DeploymentVersion))
+		{
+			return base.NewItem<T>(schemaExtensionId, group);
+		}
+		var schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
+		var packages = schemaService.ActiveExtension.IncludedPackages;
+		var deploymentVersion = new DeploymentVersion(
+			schemaExtensionId, packages.ToList())
+		{
+			RootProvider = this,
+			PersistenceProvider = PersistenceProvider,
+			Name = "NewDeploymentVersion",
+			Group = group
+		};
+		ChildItems.Add(deploymentVersion);
+		return deploymentVersion as T;
+	}
+	#endregion
 }

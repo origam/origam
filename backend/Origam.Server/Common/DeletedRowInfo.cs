@@ -42,68 +42,57 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Data;
 
-namespace Origam.Server
+namespace Origam.Server;
+class DeletedRowInfo
 {
-    class DeletedRowInfo
+    public DeletedRowInfo(DataRow row)
     {
-        public DeletedRowInfo(DataRow row)
+        _rowData = GetRowData(row, DataRowVersion.Default);
+        if (row.RowState == DataRowState.Modified)
         {
-            _rowData = GetRowData(row, DataRowVersion.Default);
-
-            if (row.RowState == DataRowState.Modified)
-            {
-                _originalRowData = GetRowData(row, DataRowVersion.Original);
-            }
-            
-            _state = row.RowState;
+            _originalRowData = GetRowData(row, DataRowVersion.Original);
         }
-
-        public void ImportData(DataTable table)
-        {
-            if (_originalRowData != null)
-            {
-                // change
-                DataRow newRow = table.Rows.Add(_originalRowData);
-                newRow.AcceptChanges();
-
-                for (int i = 0; i < table.Columns.Count; i++)
-                {
-                    DataColumn col = table.Columns[i];
-
-                    if (!col.ReadOnly && (col.Expression == "" || col.Expression == null))
-                    {
-                        newRow[col] = _rowData[i]; 
-                    }
-                }
-            }
-            else
-            {
-                // new
-                DataRow newRow = table.Rows.Add(_rowData);
-
-                // or unchanged
-                if (_state == DataRowState.Unchanged)
-                {
-                    newRow.AcceptChanges();
-                }
-            }
-
-        }
-
-        private object[] GetRowData(DataRow row, DataRowVersion version)
-        {
-            int count = row.Table.Columns.Count;
-            object[] result = new object[count];
-            for (int i = 0; i < count; i++)
-            {
-                result[i] = row[i, version];
-            }
-
-            return result;
-        }
-
-        private object[] _originalRowData = null;
-        private object[] _rowData = null;
-        private DataRowState _state;
+        
+        _state = row.RowState;
     }
+    public void ImportData(DataTable table)
+    {
+        if (_originalRowData != null)
+        {
+            // change
+            DataRow newRow = table.Rows.Add(_originalRowData);
+            newRow.AcceptChanges();
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                DataColumn col = table.Columns[i];
+                if (!col.ReadOnly && (col.Expression == "" || col.Expression == null))
+                {
+                    newRow[col] = _rowData[i]; 
+                }
+            }
+        }
+        else
+        {
+            // new
+            DataRow newRow = table.Rows.Add(_rowData);
+            // or unchanged
+            if (_state == DataRowState.Unchanged)
+            {
+                newRow.AcceptChanges();
+            }
+        }
+    }
+    private object[] GetRowData(DataRow row, DataRowVersion version)
+    {
+        int count = row.Table.Columns.Count;
+        object[] result = new object[count];
+        for (int i = 0; i < count; i++)
+        {
+            result[i] = row[i, version];
+        }
+        return result;
+    }
+    private object[] _originalRowData = null;
+    private object[] _rowData = null;
+    private DataRowState _state;
 }

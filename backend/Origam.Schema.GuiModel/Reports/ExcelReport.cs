@@ -23,20 +23,15 @@ using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.GuiModel 
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for ExcelReport.
+/// </summary>
+[SchemaItemDescription("Excel Report", "icon_excel-report.png")]
+[ClassMetaVersion("6.0.0")]
+public class ExcelReport : AbstractDataReport, IDataStructureReference
 {
-	/// <summary>
-	/// Summary description for ExcelReport.
-	/// </summary>
-	[SchemaItemDescription("Excel Report", "icon_excel-report.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class ExcelReport : AbstractDataReport, IDataStructureReference
-	{
-		public ExcelReport() : base() { }
-
-		public ExcelReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
-
-        public ExcelReport(Key primaryKey) : base(primaryKey) { }
-	}
+	public ExcelReport() : base() { }
+	public ExcelReport(Guid schemaExtensionId) : base(schemaExtensionId) { }
+    public ExcelReport(Key primaryKey) : base(primaryKey) { }
 }
-

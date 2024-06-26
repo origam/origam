@@ -26,17 +26,14 @@ using System.Collections.Generic;
 using System.Text;
 using Origam.Schema.GuiModel;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+class WebReportScriptContainer : UpgradeScriptContainer
 {
-    class WebReportScriptContainer : UpgradeScriptContainer
+    public override string FullTypeName { get; } = typeof(WebReport).FullName;
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+    public WebReportScriptContainer()
     {
-        public override string FullTypeName { get; } = typeof(WebReport).FullName;
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
-
-        public WebReportScriptContainer()
-        {
-            AddEmptyUpgrade("6.0.0", "6.0.1");
-        }
+        AddEmptyUpgrade("6.0.0", "6.0.1");
     }
 }

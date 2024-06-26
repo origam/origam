@@ -22,19 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+/// <summary>
+/// Summary description for WorkQueueLoaderAdapter.
+/// </summary>
+public abstract class WorkQueueLoaderAdapter
 {
-	/// <summary>
-	/// Summary description for WorkQueueLoaderAdapter.
-	/// </summary>
-	public abstract class WorkQueueLoaderAdapter
+	public WorkQueueLoaderAdapter()
 	{
-		public WorkQueueLoaderAdapter()
-		{
-		}
-
-		public abstract void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId);
-		public abstract WorkQueueAdapterResult GetItem(string lastState);
-		public abstract void Disconnect();
 	}
+	public abstract void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId);
+	public abstract WorkQueueAdapterResult GetItem(string lastState);
+	public abstract void Disconnect();
 }

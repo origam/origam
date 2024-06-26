@@ -17,32 +17,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Resources;
 using System.Threading;
 
-namespace Origam.BI.CrystalReports
+namespace Origam.BI.CrystalReports;
+public class ResourceUtils
 {
-	public class ResourceUtils
+	private static readonly string BASENAME = "Origam.BI.CrystalReports.Strings";
+	private static ResourceManager _rm = null;
+	
+	public static string GetString(string key)
 	{
-		private static readonly string BASENAME = "Origam.BI.CrystalReports.Strings";
-
-		private static ResourceManager _rm = null;
-		
-		public static string GetString(string key)
+		if (_rm == null) 
 		{
-			if (_rm == null) 
-			{
-				_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
-			}
-
-			return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
+			_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
 		}
-
-		public static string GetString(string key, params object[] args)
-		{
-			string rawString = GetString(key);
-			return string.Format(rawString, args);
-		}
+		return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
+	}
+	public static string GetString(string key, params object[] args)
+	{
+		string rawString = GetString(key);
+		return string.Format(rawString, args);
 	}
 }

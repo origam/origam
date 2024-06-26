@@ -24,14 +24,12 @@ using Origam.Schema.EntityModel;
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+[SchemaItemDescription("Condition Rule", "condition-rule.png")]
+[HelpTopic("Condition+Rule")]
+public class StartRule : XPathRule, IStartRule
 {
-    [SchemaItemDescription("Condition Rule", "condition-rule.png")]
-    [HelpTopic("Condition+Rule")]
-    public class StartRule : XPathRule, IStartRule
-    {
-        public StartRule() : base() {}
-		public StartRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-        public StartRule(Key primaryKey) : base(primaryKey) { }
-    }
+    public StartRule() : base() {}
+	public StartRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+    public StartRule(Key primaryKey) : base(primaryKey) { }
 }

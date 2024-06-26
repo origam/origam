@@ -44,24 +44,19 @@ using System;
 using System.Runtime.Serialization;
 using Origam.Server;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class SessionExpiredException : Exception
 {
-    public class SessionExpiredException : Exception
+	public SessionExpiredException() : base(Resources.ErrorSessionExpired)
+	{ 
+	}
+	public SessionExpiredException(string message) : base(message)
 	{
-		public SessionExpiredException() : base(Resources.ErrorSessionExpired)
-		{ 
-		}
-
-		public SessionExpiredException(string message) : base(message)
-		{
-		}
-
-		public SessionExpiredException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
-
-		protected SessionExpiredException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-		}
+	}
+	public SessionExpiredException(string message, Exception innerException) : base(message, innerException)
+	{
+	}
+	protected SessionExpiredException(SerializationInfo info, StreamingContext context) : base(info, context)
+	{
 	}
 }

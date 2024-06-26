@@ -58,301 +58,274 @@ using Origam.Server.Session_Stores;
 using Origam.Schema.MenuModel;
 using Origam.Service.Core;
 
-namespace Origam.Server
+namespace Origam.Server;
+public abstract class SaveableSessionStore : SessionStore
 {
-    public abstract class SaveableSessionStore : SessionStore
+    private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
+           _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
+    private bool _dependenciesInitialized = false;
+    private DataSetBuilder datasetbuilder = new DataSetBuilder();
+    public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+        : base(service, request, name, analytics)
     {
-        private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
-               _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
-        private bool _dependenciesInitialized = false;
-        private DataSetBuilder datasetbuilder = new DataSetBuilder();
-
-        public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
-            : base(service, request, name, analytics)
+    }
+    private Guid _dataStructureId;
+    public Guid DataStructureId
+    {
+        get { return _dataStructureId; }
+        set
         {
-        }
-
-        private Guid _dataStructureId;
-        public Guid DataStructureId
-        {
-            get { return _dataStructureId; }
-            set
+            _dataStructureId = value;
+            this.DirtyEnabledEntities.Clear();
+            _entityFieldDependencies.Clear();
+            _dependenciesInitialized = false;
+            if (_dataStructureId != Guid.Empty)
             {
-                _dataStructureId = value;
-                this.DirtyEnabledEntities.Clear();
-                _entityFieldDependencies.Clear();
-                _dependenciesInitialized = false;
-
-                if (_dataStructureId != Guid.Empty)
+                IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+                DataStructure ds = ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(this.DataStructureId)) as DataStructure;
+                foreach (DataStructureEntity entity in ds.Entities)
                 {
-                    IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                    DataStructure ds = ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(this.DataStructureId)) as DataStructure;
-
-                    foreach (DataStructureEntity entity in ds.Entities)
+                    this.DirtyEnabledEntities.Add(entity.Name);
+                }
+            }
+        }
+    }
+    public DataStructure DataStructure()
+    {
+        return DataStructure(DataStructureId);
+    }
+    internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+    {
+        return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet);// new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
+    }
+    internal DataSetBuilder GetDataSetBuilder()
+    {
+        return datasetbuilder;
+    }
+    public DataStructure DataStructure(Guid id)
+    {
+        return datasetbuilder.DataStructure(id);
+    }
+    private DataStructureTemplate _template;
+    public DataStructureTemplate Template
+    {
+        get { return _template; }
+        set { _template = value; }
+    }
+    internal virtual object Save()
+    {
+        if (Data.HasErrors)
+        {
+            throw new UIException(Resources.ErrorInForm);
+        }
+        ArrayList listOfChanges = new ArrayList();
+        IList<DataRow> changedRows = new List<DataRow>();
+        Hashtable changedKeys = new Hashtable();
+        foreach (DataTable t in Data.Tables)
+        {
+            foreach (DataRow r in t.Rows)
+            {
+                if ((r.RowState == DataRowState.Modified) 
+                || (r.RowState == DataRowState.Added))
+                {
+                    changedRows.Add(r);
+                    if (!changedKeys.ContainsKey(
+                        DatasetTools.PrimaryKey(r)[0]))
                     {
-                        this.DirtyEnabledEntities.Add(entity.Name);
+                        changedKeys.Add(DatasetTools.PrimaryKey(r)[0], null);
                     }
                 }
             }
         }
-
-        public DataStructure DataStructure()
+        // store the data
+        try
         {
-            return DataStructure(DataStructureId);
+            core.DataService.Instance.StoreData(
+                DataStructureId, Data, 
+                RefreshAfterSaveType 
+                == SaveRefreshType.RefreshChangedRecords, 
+                TransationId);
         }
-        internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+        catch (DBConcurrencyException ex)
         {
-            return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet);// new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
+            throw new RuleException(ex.Message);
         }
-
-        internal DataSetBuilder GetDataSetBuilder()
+        if (RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords)
         {
-            return datasetbuilder;
-        }
-        public DataStructure DataStructure(Guid id)
-        {
-            return datasetbuilder.DataStructure(id);
-        }
-
-        private DataStructureTemplate _template;
-        public DataStructureTemplate Template
-        {
-            get { return _template; }
-            set { _template = value; }
-        }
-
-        internal virtual object Save()
-        {
-            if (Data.HasErrors)
+            foreach (DataRow r in changedRows)
             {
-                throw new UIException(Resources.ErrorInForm);
-            }
-            ArrayList listOfChanges = new ArrayList();
-            IList<DataRow> changedRows = new List<DataRow>();
-            Hashtable changedKeys = new Hashtable();
-            foreach (DataTable t in Data.Tables)
-            {
-                foreach (DataRow r in t.Rows)
+                listOfChanges.AddRange(GetChangesByRow(
+                    null, r, 0, changedKeys, true, false, false, false));
+                // if there is a list, we update the list, so it has the actual changed data
+                if ((DataList != null) 
+                && DataList.Tables.Contains(r.Table.TableName))
                 {
-                    if ((r.RowState == DataRowState.Modified) 
-                    || (r.RowState == DataRowState.Added))
-                    {
-                        changedRows.Add(r);
-                        if (!changedKeys.ContainsKey(
-                            DatasetTools.PrimaryKey(r)[0]))
-                        {
-                            changedKeys.Add(DatasetTools.PrimaryKey(r)[0], null);
-                        }
-                    }
+                    UpdateListRow(r);
                 }
             }
-            // store the data
-            try
-            {
-                core.DataService.Instance.StoreData(
-                    DataStructureId, Data, 
-                    RefreshAfterSaveType 
-                    == SaveRefreshType.RefreshChangedRecords, 
-                    TransationId);
-            }
-            catch (DBConcurrencyException ex)
-            {
-                throw new RuleException(ex.Message);
-            }
-            if (RefreshAfterSaveType == SaveRefreshType.RefreshChangedRecords)
-            {
-                foreach (DataRow r in changedRows)
-                {
-                    listOfChanges.AddRange(GetChangesByRow(
-                        null, r, 0, changedKeys, true, false, false, false));
-                    // if there is a list, we update the list, so it has the actual changed data
-                    if ((DataList != null) 
-                    && DataList.Tables.Contains(r.Table.TableName))
-                    {
-                        UpdateListRow(r);
-                    }
-                }
-            }
-            // add SAVED info, so the form looses its * sign
-            listOfChanges.Add(ChangeInfo.SavedChangeInfo());
-            switch (RefreshAfterSaveType)
-            {
-                case SaveRefreshType.RefreshCompleteForm:
-                    listOfChanges.Add(ChangeInfo.RefreshFormChangeInfo());
-                    break;
-
-                case SaveRefreshType.ReloadActualRecord:
-                    listOfChanges.Add(ChangeInfo.ReloadCurrentRecordChangeInfo());
-                    break;
-            }
-            if (RefreshPortalAfterSave)
-            {
-                listOfChanges.Add(ChangeInfo.RefreshPortalInfo());
-            }
-            return listOfChanges;
         }
-
-        public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
-            IDictionary<string, object> parameters, string requestingGrid)
+        // add SAVED info, so the form looses its * sign
+        listOfChanges.Add(ChangeInfo.SavedChangeInfo());
+        switch (RefreshAfterSaveType)
         {
-            if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
+            case SaveRefreshType.RefreshCompleteForm:
+                listOfChanges.Add(ChangeInfo.RefreshFormChangeInfo());
+                break;
+            case SaveRefreshType.ReloadActualRecord:
+                listOfChanges.Add(ChangeInfo.ReloadCurrentRecordChangeInfo());
+                break;
+        }
+        if (RefreshPortalAfterSave)
+        {
+            listOfChanges.Add(ChangeInfo.RefreshPortalInfo());
+        }
+        return listOfChanges;
+    }
+    public override List<ChangeInfo> CreateObject(string entity, IDictionary<string, object> values, 
+        IDictionary<string, object> parameters, string requestingGrid)
+    {
+        if (this.Template == null || !this.Template.Entity.Name.Equals(entity))
+        {
+            return base.CreateObject(entity, values, parameters, requestingGrid);
+        }
+        else
+        {
+            DataTable table = GetDataTable(entity, this.Data);
+            object[] key;
+            if (parameters.Count == 0)
             {
-                return base.CreateObject(entity, values, parameters, requestingGrid);
+                key = TemplateTools.AddTemplateRecord(null, this.Template, entity, this.DataStructureId, this.Data);
             }
             else
             {
-                DataTable table = GetDataTable(entity, this.Data);
-                object[] key;
-                if (parameters.Count == 0)
-                {
-                    key = TemplateTools.AddTemplateRecord(null, this.Template, entity, this.DataStructureId, this.Data);
-                }
-                else
-                {
-                    object[] keys = new object[parameters.Count];
-                    parameters.Values.CopyTo(keys, 0);
-
-                    DataRelation relation = table.ParentRelations[0];
-                    DataRow parentRow = relation.ParentTable.Rows.Find(keys);
-
-                    key = TemplateTools.AddTemplateRecord(parentRow, this.Template, entity, this.DataStructureId, this.Data);
-                }
-
-                DataRow newRow = table.Rows.Find(key);
-                NewRowToDataList(newRow);
-                List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
-                    newRow, Operation.Create, this.Data.HasErrors, 
-                    this.Data.HasChanges(), true);
-
-                return listOfChanges;
+                object[] keys = new object[parameters.Count];
+                parameters.Values.CopyTo(keys, 0);
+                DataRelation relation = table.ParentRelations[0];
+                DataRow parentRow = relation.ParentTable.Rows.Find(keys);
+                key = TemplateTools.AddTemplateRecord(parentRow, this.Template, entity, this.DataStructureId, this.Data);
             }
+            DataRow newRow = table.Rows.Find(key);
+            NewRowToDataList(newRow);
+            List<ChangeInfo> listOfChanges = GetChangesByRow(requestingGrid, 
+                newRow, Operation.Create, this.Data.HasErrors, 
+                this.Data.HasChanges(), true);
+            return listOfChanges;
         }
-
-        public override IEnumerable<ChangeInfo> UpdateObject(
-            string entity, object id, string property, object newValue)
+    }
+    public override IEnumerable<ChangeInfo> UpdateObject(
+        string entity, object id, string property, object newValue)
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                return UpdateObjectWithDependenies(entity, id,
-                    property, newValue, true);
-            }
+            return UpdateObjectWithDependenies(entity, id,
+                property, newValue, true);
         }
-
-        public IEnumerable<ChangeInfo>
-            UpdateObjectWithDependenies(
-            string entity, object id, string property, object newValue,
-            bool isTopLevel)
+    }
+    public IEnumerable<ChangeInfo>
+        UpdateObjectWithDependenies(
+        string entity, object id, string property, object newValue,
+        bool isTopLevel)
+    {
+        InitializeFieldDependencies();
+        DataTable table = GetDataTable(entity, this.Data);
+        Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
+        Guid fieldId = (Guid)table.Columns[property].ExtendedProperties["Id"];
+        if (_entityFieldDependencies.ContainsKey(dsEntityId))
         {
-            InitializeFieldDependencies();
-            DataTable table = GetDataTable(entity, this.Data);
-            Guid dsEntityId = (Guid)table.ExtendedProperties["Id"];
-            Guid fieldId = (Guid)table.Columns[property].ExtendedProperties["Id"];
-
-            if (_entityFieldDependencies.ContainsKey(dsEntityId))
+            if (_entityFieldDependencies[dsEntityId].ContainsKey(fieldId))
             {
-                if (_entityFieldDependencies[dsEntityId].ContainsKey(fieldId))
+                foreach(Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
                 {
-                    foreach(Guid dependentColumnId in _entityFieldDependencies[dsEntityId][fieldId])
+                    string dependentColumnName = ColumnNameById(table, dependentColumnId);
+                    try
                     {
-                        string dependentColumnName = ColumnNameById(table, dependentColumnId);
-                        try
-                        {
-                            this.UpdateObjectWithDependenies(
-                                entity, id,	dependentColumnName, null, false);
-                        }
-                        catch (NullReferenceException e) 
-                        {
-                            throw new NullReferenceException(
-                                String.Format(Resources.ErrorDependentColumnNotFound,
-                                dependentColumnName, property, entity, e.Message));
-                        }
+                        this.UpdateObjectWithDependenies(
+                            entity, id,	dependentColumnName, null, false);
+                    }
+                    catch (NullReferenceException e) 
+                    {
+                        throw new NullReferenceException(
+                            String.Format(Resources.ErrorDependentColumnNotFound,
+                            dependentColumnName, property, entity, e.Message));
                     }
                 }
             }
-
-            // call actual UpdateObject, do rowstates only for toplevel
-            // (last) update
-            if (isTopLevel)
+        }
+        // call actual UpdateObject, do rowstates only for toplevel
+        // (last) update
+        if (isTopLevel)
+        {
+            return base.UpdateObject(entity, id,
+                property, newValue);
+        }
+        else 
+        {
+            base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
+            return new List<ChangeInfo>();
+        }
+    }
+    private static string ColumnNameById(DataTable table, Guid columnId)
+    {
+        foreach (DataColumn col in table.Columns)
+        {
+            if ((Guid)col.ExtendedProperties["Id"] == columnId)
             {
-                return base.UpdateObject(entity, id,
-                    property, newValue);
-            }
-            else 
-            {
-                base.UpdateObjectsWithoutGetChanges(entity, id, property, newValue);
-                return new List<ChangeInfo>();
+                return col.ColumnName;
             }
         }
-
-        private static string ColumnNameById(DataTable table, Guid columnId)
+        throw new ArgumentOutOfRangeException("columnId", columnId, "Column not found in entity " + table.TableName);
+    }
+    public override string Title
+    {
+        get
         {
-            foreach (DataColumn col in table.Columns)
+            if (!this.IsModalDialog)
             {
-                if ((Guid)col.ExtendedProperties["Id"] == columnId)
-                {
-                    return col.ColumnName;
-                }
+                return base.Title;
             }
-            throw new ArgumentOutOfRangeException("columnId", columnId, "Column not found in entity " + table.TableName);
-        }
-
-        public override string Title
-        {
-            get
+            else
             {
-                if (!this.IsModalDialog)
-                {
-                    return base.Title;
-                }
-                else
-                {
-                    return "";
-                }
-            }
-            set
-            {
-                base.Title = value;
+                return "";
             }
         }
-
-        private void InitializeFieldDependencies()
+        set
         {
-            if (_dependenciesInitialized) return;
-            IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
-
-            foreach (DataTable table in this.Data.Tables)
+            base.Title = value;
+        }
+    }
+    private void InitializeFieldDependencies()
+    {
+        if (_dependenciesInitialized) return;
+        IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
+        foreach (DataTable table in this.Data.Tables)
+        {
+            // get entity definition
+            DataStructureEntity modelEntity = ps.SchemaProvider.RetrieveInstance(typeof(DataStructureEntity),
+                new ModelElementKey((Guid)table.ExtendedProperties["Id"])) as DataStructureEntity;
+            Dictionary<Guid, IList<Guid>> entityDependency = new Dictionary<Guid, IList<Guid>>();
+            _entityFieldDependencies.Add(modelEntity.Id, entityDependency);
+            // browse all the entity fields
+            foreach (DataStructureColumn column in modelEntity.Columns)
             {
-                // get entity definition
-                DataStructureEntity modelEntity = ps.SchemaProvider.RetrieveInstance(typeof(DataStructureEntity),
-                    new ModelElementKey((Guid)table.ExtendedProperties["Id"])) as DataStructureEntity;
-
-                Dictionary<Guid, IList<Guid>> entityDependency = new Dictionary<Guid, IList<Guid>>();
-                _entityFieldDependencies.Add(modelEntity.Id, entityDependency);
-
-                // browse all the entity fields
-                foreach (DataStructureColumn column in modelEntity.Columns)
+                // read the dependencies
+                foreach (EntityFieldDependency dep in column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst))
                 {
-                    // read the dependencies
-                    foreach (EntityFieldDependency dep in column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst))
+                    IList<Guid> fieldDependencies;
+                    Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];
+                    if (entityDependency.ContainsKey(fieldId))
                     {
-                        IList<Guid> fieldDependencies;
-                        Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];
-                        if (entityDependency.ContainsKey(fieldId))
-                        {
-                            fieldDependencies = entityDependency[fieldId];
-                        }
-                        else
-                        {
-                            fieldDependencies = new List<Guid>();
-                            entityDependency.Add(fieldId, fieldDependencies);
-                        }
-
-                        // add the dependency
-                        fieldDependencies.Add((Guid)column.Field.PrimaryKey["Id"]);
+                        fieldDependencies = entityDependency[fieldId];
                     }
+                    else
+                    {
+                        fieldDependencies = new List<Guid>();
+                        entityDependency.Add(fieldId, fieldDependencies);
+                    }
+                    // add the dependency
+                    fieldDependencies.Add((Guid)column.Field.PrimaryKey["Id"]);
                 }
             }
-            _dependenciesInitialized = true;
         }
+        _dependenciesInitialized = true;
     }
 }

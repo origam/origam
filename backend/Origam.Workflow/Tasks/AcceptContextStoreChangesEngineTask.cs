@@ -23,23 +23,21 @@ using System;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+public class AcceptContextStoreChangesEngineTask 
+    : AbstractWorkflowEngineTask
 {
-    public class AcceptContextStoreChangesEngineTask 
-        : AbstractWorkflowEngineTask
+    protected override void OnExecute()
     {
-        protected override void OnExecute()
+        var acceptContextStoreChangesTask = Step as AcceptContextStoreChangesTask;
+        if(!(Engine.RuleEngine.GetContext(
+               acceptContextStoreChangesTask.ContextStore) 
+               is IDataDocument dataDocument))
         {
-            var acceptContextStoreChangesTask = Step as AcceptContextStoreChangesTask;
-            if(!(Engine.RuleEngine.GetContext(
-                   acceptContextStoreChangesTask.ContextStore) 
-                   is IDataDocument dataDocument))
-            {
-                throw new ArgumentException(
-                    @"Context store doesn't implement IDataDocument interface.",
-                    $"ContextStore:{acceptContextStoreChangesTask.ContextStore.Name}");
-            }
-            dataDocument.DataSet.AcceptChanges();
+            throw new ArgumentException(
+                @"Context store doesn't implement IDataDocument interface.",
+                $"ContextStore:{acceptContextStoreChangesTask.ContextStore.Name}");
         }
+        dataDocument.DataSet.AcceptChanges();
     }
 }

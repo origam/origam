@@ -22,46 +22,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using System.IO;
 
-namespace Origam
+namespace Origam;
+/// <summary>
+/// Summary description for FileTransaction.
+/// </summary>
+public class FileDeleteTransaction : OrigamTransaction
 {
-	/// <summary>
-	/// Summary description for FileTransaction.
-	/// </summary>
-	public class FileDeleteTransaction : OrigamTransaction
+	Hashtable _files = new Hashtable();
+	public FileDeleteTransaction(Hashtable files)
 	{
-		Hashtable _files = new Hashtable();
-
-		public FileDeleteTransaction(Hashtable files)
+		_files = files;
+	}
+	public override void Commit()
+	{
+		foreach(DictionaryEntry entry in _files)
 		{
-			_files = files;
+			FileInfo fi = new FileInfo((string)entry.Key);
+			FileStream fs = (FileStream)entry.Value;
+			fs.Close();
+			fi.Delete();
 		}
-
-		public override void Commit()
+	}
+	public override void Rollback()
+	{
+		foreach(DictionaryEntry entry in _files)
 		{
-			foreach(DictionaryEntry entry in _files)
+			try
 			{
-				FileInfo fi = new FileInfo((string)entry.Key);
 				FileStream fs = (FileStream)entry.Value;
-
 				fs.Close();
-				fi.Delete();
 			}
+			catch{}
 		}
-
-		public override void Rollback()
-		{
-			foreach(DictionaryEntry entry in _files)
-			{
-				try
-				{
-					FileStream fs = (FileStream)entry.Value;
-
-					fs.Close();
-				}
-				catch{}
-			}
-
-			_files.Clear();
-		}
+		_files.Clear();
 	}
 }

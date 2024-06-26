@@ -20,74 +20,65 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace Origam.Windows.Editor
+namespace Origam.Windows.Editor;
+public class SchemaDocumentation
 {
-    public class SchemaDocumentation
+    XmlSchemaAnnotation annotation;
+    StringBuilder documentation = new StringBuilder();
+    StringBuilder documentationWithoutWhitespace = new StringBuilder();
+    public SchemaDocumentation(XmlSchemaAnnotation annotation)
     {
-        XmlSchemaAnnotation annotation;
-        StringBuilder documentation = new StringBuilder();
-        StringBuilder documentationWithoutWhitespace = new StringBuilder();
-
-        public SchemaDocumentation(XmlSchemaAnnotation annotation)
+        this.annotation = annotation;
+        if (annotation != null)
         {
-            this.annotation = annotation;
-            if (annotation != null)
+            ReadDocumentationFromAnnotation(annotation.Items);
+        }
+    }
+    void ReadDocumentationFromAnnotation(XmlSchemaObjectCollection annotationItems)
+    {
+        foreach (XmlSchemaObject schemaObject in annotationItems)
+        {
+            XmlSchemaDocumentation schemaDocumentation = schemaObject as XmlSchemaDocumentation;
+            if (schemaDocumentation != null)
             {
-                ReadDocumentationFromAnnotation(annotation.Items);
+                ReadSchemaDocumentationFromMarkup(schemaDocumentation.Markup);
             }
         }
-
-        void ReadDocumentationFromAnnotation(XmlSchemaObjectCollection annotationItems)
+        RemoveWhitespaceFromDocumentation();
+    }
+    void ReadSchemaDocumentationFromMarkup(XmlNode[] markup)
+    {
+        foreach (XmlNode node in markup)
         {
-            foreach (XmlSchemaObject schemaObject in annotationItems)
-            {
-                XmlSchemaDocumentation schemaDocumentation = schemaObject as XmlSchemaDocumentation;
-                if (schemaDocumentation != null)
-                {
-                    ReadSchemaDocumentationFromMarkup(schemaDocumentation.Markup);
-                }
-            }
-            RemoveWhitespaceFromDocumentation();
+            XmlText textNode = node as XmlText;
+            AppendTextToDocumentation(textNode);
         }
-
-        void ReadSchemaDocumentationFromMarkup(XmlNode[] markup)
+    }
+    void AppendTextToDocumentation(XmlText textNode)
+    {
+        if (textNode != null)
         {
-            foreach (XmlNode node in markup)
+            if (textNode.Data != null)
             {
-                XmlText textNode = node as XmlText;
-                AppendTextToDocumentation(textNode);
+                documentation.Append(textNode.Data);
             }
         }
-
-        void AppendTextToDocumentation(XmlText textNode)
+    }
+    void RemoveWhitespaceFromDocumentation()
+    {
+        string[] lines = documentation.ToString().Split('\n');
+        RemoveWhitespaceFromLines(lines);
+    }
+    void RemoveWhitespaceFromLines(string[] lines)
+    {
+        foreach (string line in lines)
         {
-            if (textNode != null)
-            {
-                if (textNode.Data != null)
-                {
-                    documentation.Append(textNode.Data);
-                }
-            }
+            string lineWithoutWhitespace = line.Trim();
+            documentationWithoutWhitespace.AppendLine(lineWithoutWhitespace);
         }
-
-        void RemoveWhitespaceFromDocumentation()
-        {
-            string[] lines = documentation.ToString().Split('\n');
-            RemoveWhitespaceFromLines(lines);
-        }
-
-        void RemoveWhitespaceFromLines(string[] lines)
-        {
-            foreach (string line in lines)
-            {
-                string lineWithoutWhitespace = line.Trim();
-                documentationWithoutWhitespace.AppendLine(lineWithoutWhitespace);
-            }
-        }
-
-        public override string ToString()
-        {
-            return documentationWithoutWhitespace.ToString().Trim();
-        }
+    }
+    public override string ToString()
+    {
+        return documentationWithoutWhitespace.ToString().Trim();
     }
 }

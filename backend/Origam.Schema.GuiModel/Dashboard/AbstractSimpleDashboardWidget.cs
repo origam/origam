@@ -23,31 +23,25 @@ using System;
 using System.Collections;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+public abstract class AbstractSimpleDashboardWidget : AbstractDashboardWidget
 {
-	public abstract class AbstractSimpleDashboardWidget : AbstractDashboardWidget
+	public AbstractSimpleDashboardWidget() : base() {Init();}
+	public AbstractSimpleDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public AbstractSimpleDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+	private void Init()
 	{
-		public AbstractSimpleDashboardWidget() : base() {Init();}
-		public AbstractSimpleDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public AbstractSimpleDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
+	}
+	public abstract OrigamDataType DataType {get; }
+	public override ArrayList Properties
+	{
+		get
 		{
-		}
-
-		public abstract OrigamDataType DataType {get; }
-
-		public override ArrayList Properties
-		{
-			get
-			{
-				ArrayList result = new ArrayList();
-				result.Add(new DashboardWidgetProperty("Value",
-					ResourceUtils.GetString("DashboardWidgetValueProperty"),
-					this.DataType));
-
-				return result;
-			}
+			ArrayList result = new ArrayList();
+			result.Add(new DashboardWidgetProperty("Value",
+				ResourceUtils.GetString("DashboardWidgetValueProperty"),
+				this.DataType));
+			return result;
 		}
 	}
 }

@@ -30,82 +30,74 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 
-namespace Origam.Gui.Win.Wizards
+namespace Origam.Gui.Win.Wizards;
+/// <summary>
+/// Summary description for CreatePanelFromEntityCommand.
+/// </summary>
+public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
 {
-	/// <summary>
-	/// Summary description for CreatePanelFromEntityCommand.
-	/// </summary>
-	public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
+    ScreenWizardForm wizardForm;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    public override bool IsEnabled
 	{
-        ScreenWizardForm wizardForm;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
-				return Owner is IDataEntity;
-			}
-			set
-			{
-				throw new ArgumentException("Cannot set this property", "IsEnabled");
-			}
+			return Owner is IDataEntity;
 		}
-
-		public override void Run()
+		set
 		{
-            ArrayList list = new ArrayList();
-            WorkQueueClass workQueue = new WorkQueueClass();
-            list.Add(new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon));
-
-            Stack stackPage = new Stack();
-            stackPage.Push(PagesList.Finish);
-            stackPage.Push(PagesList.SummaryPage);
-            stackPage.Push(PagesList.ScreenForm);
-            stackPage.Push(PagesList.StartPage);
-
-            wizardForm = new ScreenWizardForm
-            {
-                ItemTypeList = list,
-                Title = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardTitle"),
-                PageTitle = "",
-                Description = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription"),
-                Pages = stackPage,
-                Entity = Owner as IDataEntity,
-                NameOfEntity = (Owner as IDataEntity).Name,
-                IsRoleVisible = false,
-                textColumnsOnly = false,
-                CheckOnClick = true,
-                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-                Command = this
-            };
-            Wizard wiz = new Wizard(wizardForm);
-			if(wiz.ShowDialog() != DialogResult.OK)
-			{
-                GeneratedModelElements.Clear();
-            }
+			throw new ArgumentException("Cannot set this property", "IsEnabled");
 		}
-
-        public override void Execute()
+	}
+	public override void Run()
+	{
+        ArrayList list = new ArrayList();
+        WorkQueueClass workQueue = new WorkQueueClass();
+        list.Add(new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon));
+        Stack stackPage = new Stack();
+        stackPage.Push(PagesList.Finish);
+        stackPage.Push(PagesList.SummaryPage);
+        stackPage.Push(PagesList.ScreenForm);
+        stackPage.Push(PagesList.StartPage);
+        wizardForm = new ScreenWizardForm
         {
-            WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
-                    wizardForm.Entity, wizardForm.SelectedFields, GeneratedModelElements);
+            ItemTypeList = list,
+            Title = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardTitle"),
+            PageTitle = "",
+            Description = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription"),
+            Pages = stackPage,
+            Entity = Owner as IDataEntity,
+            NameOfEntity = (Owner as IDataEntity).Name,
+            IsRoleVisible = false,
+            textColumnsOnly = false,
+            CheckOnClick = true,
+            ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+            Command = this
+        };
+        Wizard wiz = new Wizard(wizardForm);
+		if(wiz.ShowDialog() != DialogResult.OK)
+		{
+            GeneratedModelElements.Clear();
         }
-
-        public override int GetImageIndex(string icon)
-        {
-            return _schemaBrowser.ImageIndex(icon);
-        }
-
-        public override void SetSummaryText(object summary)
-        {
-            RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription") + " with this parameters:";
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("Worqueue Entity : \t");
-            richTextBoxSummary.AppendText(wizardForm.Entity.Name);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
-        }
+	}
+    public override void Execute()
+    {
+        WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
+                wizardForm.Entity, wizardForm.SelectedFields, GeneratedModelElements);
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
+    }
+    public override void SetSummaryText(object summary)
+    {
+        RichTextBox richTextBoxSummary = (RichTextBox)summary;
+        richTextBoxSummary.Text = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription") + " with this parameters:";
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        richTextBoxSummary.AppendText("Worqueue Entity : \t");
+        richTextBoxSummary.AppendText(wizardForm.Entity.Name);
+        richTextBoxSummary.AppendText(Environment.NewLine);
+        ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
     }
 }

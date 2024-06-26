@@ -25,60 +25,53 @@ using System.Data;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+class DataRowConverter : JsonConverter
 {
-    class DataRowConverter : JsonConverter
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+        Newtonsoft.Json.JsonSerializer serializer)
     {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-            Newtonsoft.Json.JsonSerializer serializer)
+        DataRow row = (DataRow)value;
+        DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+        writer.WriteStartObject();
+        foreach (DataColumn column in row.Table.Columns)
         {
-            DataRow row = (DataRow)value;
-            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-
-            writer.WriteStartObject();
-            foreach (DataColumn column in row.Table.Columns)
+            if (column.ColumnMapping == MappingType.Hidden)
             {
-                if (column.ColumnMapping == MappingType.Hidden)
-                {
-                    continue;
-                }
-
-                if (serializer.NullValueHandling == NullValueHandling.Ignore 
-                    && (row[column] == null || row[column] == DBNull.Value))
-                    continue;
-
-                writer.WritePropertyName((resolver != null) 
-                    ? resolver.GetResolvedPropertyName(column.ColumnName) 
-                    : column.ColumnName);
-                serializer.Serialize(writer, row[column]);
+                continue;
             }
-            foreach (DataRelation relation in row.Table.ChildRelations)
+            if (serializer.NullValueHandling == NullValueHandling.Ignore 
+                && (row[column] == null || row[column] == DBNull.Value))
+                continue;
+            writer.WritePropertyName((resolver != null) 
+                ? resolver.GetResolvedPropertyName(column.ColumnName) 
+                : column.ColumnName);
+            serializer.Serialize(writer, row[column]);
+        }
+        foreach (DataRelation relation in row.Table.ChildRelations)
+        {
+            if (relation.Nested)
             {
-                if (relation.Nested)
+                string childTableName = relation.ChildTable.TableName;
+                writer.WritePropertyName((resolver != null) 
+                    ? resolver.GetResolvedPropertyName(childTableName) 
+                    : childTableName);
+                writer.WriteStartArray();
+                foreach (DataRow childRow in row.GetChildRows(relation))
                 {
-                    string childTableName = relation.ChildTable.TableName;
-                    writer.WritePropertyName((resolver != null) 
-                        ? resolver.GetResolvedPropertyName(childTableName) 
-                        : childTableName);
-                    writer.WriteStartArray();
-                    foreach (DataRow childRow in row.GetChildRows(relation))
-                    {
-                        this.WriteJson(writer, childRow, serializer);
-                    }
-                    writer.WriteEndArray();
+                    this.WriteJson(writer, childRow, serializer);
                 }
-            }            
-            writer.WriteEndObject();
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(DataRow).IsAssignableFrom(objectType);
-        }
+                writer.WriteEndArray();
+            }
+        }            
+        writer.WriteEndObject();
+    }
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        throw new NotImplementedException();
+    }
+    public override bool CanConvert(Type objectType)
+    {
+        return typeof(DataRow).IsAssignableFrom(objectType);
     }
 }

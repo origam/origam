@@ -24,39 +24,35 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+public class ShowSqlConsole : AbstractMenuCommand
 {
-    public class ShowSqlConsole : AbstractMenuCommand
+    public ShowSqlConsole(SqlConsoleParameters owner)
     {
-        public ShowSqlConsole(SqlConsoleParameters owner)
+        Owner = owner;
+    }
+    public override bool IsEnabled
+    {
+        get { return WorkbenchSingleton.Workbench.IsConnected; }
+        set
         {
-            Owner = owner;
+            throw new ArgumentException("Cannot set this property",
+                "IsEnabled");
         }
-
-        public override bool IsEnabled
+    }
+    public override void Run()
+    {
+        SqlConsoleParameters parameters = Owner as SqlConsoleParameters;
+        if(parameters == null)
         {
-            get { return WorkbenchSingleton.Workbench.IsConnected; }
-            set
-            {
-                throw new ArgumentException("Cannot set this property",
-                    "IsEnabled");
-            }
+            throw new ArgumentOutOfRangeException("SqlConsoleParameters input expected.");
         }
-
-        public override void Run()
+        SqlViewer viewer = new SqlViewer(parameters.Platform);
+        if (parameters.Platform != null)
         {
-            SqlConsoleParameters parameters = Owner as SqlConsoleParameters;
-            if(parameters == null)
-            {
-                throw new ArgumentOutOfRangeException("SqlConsoleParameters input expected.");
-            }
-            SqlViewer viewer = new SqlViewer(parameters.Platform);
-            if (parameters.Platform != null)
-            {
-                viewer.Text += " [" + parameters.Platform.Name + "]";
-            }
-            viewer.LoadObject(parameters.Command);
-            WorkbenchSingleton.Workbench.ShowView(viewer);
+            viewer.Text += " [" + parameters.Platform.Name + "]";
         }
+        viewer.LoadObject(parameters.Command);
+        WorkbenchSingleton.Workbench.ShowView(viewer);
     }
 }

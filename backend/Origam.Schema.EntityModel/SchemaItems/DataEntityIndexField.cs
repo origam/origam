@@ -26,155 +26,136 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for DataEntityIndexField.
+/// </summary>
+[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
+[HelpTopic("Index+Field")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Field")]
+[ClassMetaVersion("6.0.0")]
+public class DataEntityIndexField : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for DataEntityIndexField.
-	/// </summary>
-	[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
-    [HelpTopic("Index+Field")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Field")]
-    [ClassMetaVersion("6.0.0")]
-    public class DataEntityIndexField : AbstractSchemaItem
+	public DataEntityIndexField() : base(){}
+	
+	public DataEntityIndexField(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataEntityIndexField(Key primaryKey) : base(primaryKey)	{}
+	public const string CategoryConst = "DataEntityIndexField";
+	#region Properties
+	private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
+	
+	[NotNullModelElementRule()]
+    [XmlAttribute("sortOrder")]
+    public DataEntityIndexSortOrder SortOrder
 	{
-		public DataEntityIndexField() : base(){}
-		
-		public DataEntityIndexField(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataEntityIndexField(Key primaryKey) : base(primaryKey)	{}
-
-		public const string CategoryConst = "DataEntityIndexField";
-
-		#region Properties
-		private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
-		
-		[NotNullModelElementRule()]
-        [XmlAttribute("sortOrder")]
-        public DataEntityIndexSortOrder SortOrder
+		get
 		{
-			get
-			{
-				return _sortOrder;
-			}
-			set
-			{
-				_sortOrder = value;
-			}
+			return _sortOrder;
 		}
-
-		private int _ordinalPosition;
-		[NotNullModelElementRule()]
-        [XmlAttribute("ordinalPosition")]
-        public int OrdinalPosition
+		set
 		{
-			get
-			{
-				return _ordinalPosition;
-			}
-			set
-			{
-				_ordinalPosition = value;
-				UpdateName();
-			}
+			_sortOrder = value;
 		}
-        
-		public Guid ColumnId;
-
-		[TypeConverter(typeof(EntityColumnReferenceConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
-        [XmlReference("field", "ColumnId")]
-        public IDataEntityColumn Field
+	}
+	private int _ordinalPosition;
+	[NotNullModelElementRule()]
+    [XmlAttribute("ordinalPosition")]
+    public int OrdinalPosition
+	{
+		get
 		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ColumnId;
-
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				this.ColumnId = (Guid)value.PrimaryKey["Id"];
-
-				UpdateName();
-			}
+			return _ordinalPosition;
 		}
-		#endregion
-
-		#region Overriden AbstractSchemaItem Members
-		[Browsable(false)]
-		public override bool UseFolders
+		set
 		{
-			get
-			{
-				return false;
-			}
+			_ordinalPosition = value;
+			UpdateName();
 		}
-		
-		public override string ItemType
+	}
+    
+	public Guid ColumnId;
+	[TypeConverter(typeof(EntityColumnReferenceConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRule()]
+    [XmlReference("field", "ColumnId")]
+    public IDataEntityColumn Field
+	{
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.ColumnId;
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 		}
-
-		public override SchemaItemCollection ChildItems
+		set
 		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
+			this.ColumnId = (Guid)value.PrimaryKey["Id"];
+			UpdateName();
 		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	}
+	#endregion
+	#region Overriden AbstractSchemaItem Members
+	[Browsable(false)]
+	public override bool UseFolders
+	{
+		get
 		{
-			dependencies.Add(this.Field);
-
-			base.GetExtraDependencies (dependencies);
+			return false;
 		}
-
-		public override void UpdateReferences()
+	}
+	
+	public override string ItemType
+	{
+		get
 		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			return CategoryConst;
+		}
+	}
+	public override SchemaItemCollection ChildItems
+	{
+		get
+		{
+			return new SchemaItemCollection();
+		}
+	}
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
+		dependencies.Add(this.Field);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override void UpdateReferences()
+	{
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+		{
+			if(item.OldPrimaryKey != null)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
 				{
-					if(item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
-					{
-						this.Field = item as IDataEntityColumn;
-						break;
-					}
+					this.Field = item as IDataEntityColumn;
+					break;
 				}
 			}
-
-			base.UpdateReferences ();
 		}
-		#endregion
-
-		private void UpdateName()
-		{
-			this.Name = this.OrdinalPosition.ToString() + "_" + (this.ColumnId == Guid.Empty ? "?" : this.Field.Name);
-		}
-
-		#region IComparable Members
-
-		public override int CompareTo(object obj)
-		{
-			if(obj is DataEntityIndexField)
-			{
-				DataEntityIndexField f = obj as DataEntityIndexField;
-				
-				return this.OrdinalPosition.CompareTo(f.OrdinalPosition);
-			}
-			else
-			{
-				return base.CompareTo(obj);
-			}
-		}
-
-		#endregion
+		base.UpdateReferences ();
 	}
+	#endregion
+	private void UpdateName()
+	{
+		this.Name = this.OrdinalPosition.ToString() + "_" + (this.ColumnId == Guid.Empty ? "?" : this.Field.Name);
+	}
+	#region IComparable Members
+	public override int CompareTo(object obj)
+	{
+		if(obj is DataEntityIndexField)
+		{
+			DataEntityIndexField f = obj as DataEntityIndexField;
+			
+			return this.OrdinalPosition.CompareTo(f.OrdinalPosition);
+		}
+		else
+		{
+			return base.CompareTo(obj);
+		}
+	}
+	#endregion
 }

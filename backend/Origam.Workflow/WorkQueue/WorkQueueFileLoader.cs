@@ -27,525 +27,504 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+public class WorkQueueFileLoader : WorkQueueLoaderAdapter
 {
-	public class WorkQueueFileLoader : WorkQueueLoaderAdapter
+	private class SplitFileStreamReader : StreamReader
 	{
-		private class SplitFileStreamReader : StreamReader
+		private int segmentCounter;
+		public int SegmentNumber => ++segmentCounter;
+		public string ProcessedFilename { get; }
+		public string ProcessedFileTitle { get; }
+		public string Header { get; private set; }
+		public SplitFileStreamReader(
+			string processedFilename,
+			string processedFileTitle, 
+			Stream stream) 
+			: base(stream)
 		{
-			private int segmentCounter;
-			public int SegmentNumber => ++segmentCounter;
-			public string ProcessedFilename { get; }
-			public string ProcessedFileTitle { get; }
-			public string Header { get; private set; }
-			public SplitFileStreamReader(
-				string processedFilename,
-				string processedFileTitle, 
-				Stream stream) 
-				: base(stream)
+			ProcessedFilename = processedFilename;
+			ProcessedFileTitle = processedFileTitle;
+		}
+		public SplitFileStreamReader(
+			string processedFilename,
+			string processedFileTitle, 
+			Stream stream, 
+			Encoding encoding) 
+			: base(stream, encoding)
+		{
+			ProcessedFilename = processedFilename;
+			ProcessedFileTitle = processedFileTitle;
+		}
+		public void ProcessHeader()
+		{
+			if(!EndOfStream)
 			{
-				ProcessedFilename = processedFilename;
-				ProcessedFileTitle = processedFileTitle;
-			}
-			public SplitFileStreamReader(
-				string processedFilename,
-				string processedFileTitle, 
-				Stream stream, 
-				Encoding encoding) 
-				: base(stream, encoding)
-			{
-				ProcessedFilename = processedFilename;
-				ProcessedFileTitle = processedFileTitle;
-			}
-
-			public void ProcessHeader()
-			{
-				if(!EndOfStream)
-				{
-					Header = ReadLine();
-				}
+				Header = ReadLine();
 			}
 		}
-		private int _currentPosition;
-		private string[] _filenames;
-		private readonly Hashtable _files = new Hashtable();
-		private string _transactionId;
-		private bool _isLocalTransaction;
-		private FileType _mode = FileType.TEXT;
-        private ReadType _readType = ReadType.SingleFiles;
-        private string _encoding;
-        private CompressionType _compression = CompressionType.None;
-        private ZipInputStream _currentZipStream;
-        private int _splitFileByRows;
-        private bool _splitFileAndKeepHeader;
-        private SplitFileStreamReader _splitFileStreamReader;
-        
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		public enum FileType
-        {
-			TEXT = 0,
-			BINARY = 1
-        }
-
-		public enum ReadType
-        {
-			SingleFiles = 0,
-			AggregateCompressedFiles = 1,
-			AggregateAllFiles = 2,
-			SplitByRows = 3
-        }
-
-		public enum CompressionType
+	}
+	private int _currentPosition;
+	private string[] _filenames;
+	private readonly Hashtable _files = new Hashtable();
+	private string _transactionId;
+	private bool _isLocalTransaction;
+	private FileType _mode = FileType.TEXT;
+    private ReadType _readType = ReadType.SingleFiles;
+    private string _encoding;
+    private CompressionType _compression = CompressionType.None;
+    private ZipInputStream _currentZipStream;
+    private int _splitFileByRows;
+    private bool _splitFileAndKeepHeader;
+    private SplitFileStreamReader _splitFileStreamReader;
+    
+	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	public enum FileType
+    {
+		TEXT = 0,
+		BINARY = 1
+    }
+	public enum ReadType
+    {
+		SingleFiles = 0,
+		AggregateCompressedFiles = 1,
+		AggregateAllFiles = 2,
+		SplitByRows = 3
+    }
+	public enum CompressionType
+	{
+		None = 0,
+		ZIP = 1
+	}
+	public override void Connect(IWorkQueueService service, Guid queueId, 
+        string workQueueClass, string connection, string userName, 
+		string password, string transactionId)
+	{
+		if(log.IsInfoEnabled)
 		{
-			None = 0,
-			ZIP = 1
+			log.Info("Connecting " + connection);
 		}
-
-		public override void Connect(IWorkQueueService service, Guid queueId, 
-            string workQueueClass, string connection, string userName, 
-			string password, string transactionId)
+        _transactionId = transactionId;
+        if(_transactionId == null)
+        {
+            _transactionId = Guid.NewGuid().ToString();
+            _isLocalTransaction = true;
+        }
+        string path = null;
+		string searchPattern = null;
+		if (connection != null)
 		{
-			if(log.IsInfoEnabled)
+			var connectionParts = connection.Split(";".ToCharArray());
+			foreach (var part in connectionParts)
 			{
-				log.Info("Connecting " + connection);
-			}
-            _transactionId = transactionId;
-            if(_transactionId == null)
-            {
-                _transactionId = Guid.NewGuid().ToString();
-                _isLocalTransaction = true;
-            }
-            string path = null;
-			string searchPattern = null;
-			if (connection != null)
-			{
-				var connectionParts = connection.Split(";".ToCharArray());
-				foreach (var part in connectionParts)
+				var pair = part.Split("=".ToCharArray());
+				if (pair.Length == 2)
 				{
-					var pair = part.Split("=".ToCharArray());
-					if (pair.Length == 2)
+					try
 					{
-						try
+						switch (pair[0])
 						{
-							switch (pair[0])
-							{
-								case "path":
-									path = pair[1];
-									break;
-								case "searchPattern":
-									searchPattern = pair[1];
-									break;
-								case "mode":
-									_mode = (FileType)Enum.Parse(
-										typeof(FileType), pair[1]);
-									break;
-								case "encoding":
-									_encoding = pair[1];
-									break;
-								case "compression":
-									_compression = (CompressionType)Enum.Parse(
-										typeof(CompressionType), pair[1]);
-									break;
-								case "readType":
-									_readType = (ReadType)Enum.Parse(
-										typeof(ReadType), pair[1]);
-									break;
-								case "splitFileByRows":
-									_splitFileByRows = Convert.ToInt32(pair[1]);
-									break;
-								case "keepHeader":
-									_splitFileAndKeepHeader =
-										Convert.ToBoolean(pair[1]);
-									break;
-								default:
-									throw new ArgumentOutOfRangeException(
-										"connectionParameterName",
-										pair[0],
-										ResourceUtils.GetString(
-											"ErrorInvalidConnectionString"));
-							}
+							case "path":
+								path = pair[1];
+								break;
+							case "searchPattern":
+								searchPattern = pair[1];
+								break;
+							case "mode":
+								_mode = (FileType)Enum.Parse(
+									typeof(FileType), pair[1]);
+								break;
+							case "encoding":
+								_encoding = pair[1];
+								break;
+							case "compression":
+								_compression = (CompressionType)Enum.Parse(
+									typeof(CompressionType), pair[1]);
+								break;
+							case "readType":
+								_readType = (ReadType)Enum.Parse(
+									typeof(ReadType), pair[1]);
+								break;
+							case "splitFileByRows":
+								_splitFileByRows = Convert.ToInt32(pair[1]);
+								break;
+							case "keepHeader":
+								_splitFileAndKeepHeader =
+									Convert.ToBoolean(pair[1]);
+								break;
+							default:
+								throw new ArgumentOutOfRangeException(
+									"connectionParameterName",
+									pair[0],
+									ResourceUtils.GetString(
+										"ErrorInvalidConnectionString"));
 						}
-						catch (Exception ex)
-                        {
-							throw new Exception(
-								"An error has occurred while parsing the connection string: "
-								+ ex.Message);
-                        }
 					}
-				}
-			}
-			if(path == null)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorNoPath"));
-			}
-			if(searchPattern == null)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorNoSearchPattern"));
-			}
-            if (_readType == ReadType.SplitByRows)
-            {
-				if (_splitFileByRows <= 0)
-				{
-					throw new Exception(
-						ResourceUtils.GetString("ErrorSplitFileByRows"));
-				}
-				if (_mode == FileType.BINARY)
-				{
-					throw new Exception(
-						ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
-				}
-			}
-			if (_readType == ReadType.AggregateCompressedFiles
-				&& _compression == CompressionType.None)
-            {
-				throw new Exception(
-					ResourceUtils.GetString("AggregateCompressedFilesButNoCompression"));
-			}
-			// lock the files
-			_filenames = Directory.GetFiles(path, searchPattern);
-			foreach(var fileName in _filenames)
-			{
-				try
-				{
-					if(log.IsInfoEnabled)
-					{
-						log.Info("Locking file " + fileName);
-					}
-                    var fileStream = OpenFile(fileName);
-                    _files.Add(fileName, fileStream);
-                }
-				catch
-				{
-					// ignored
-				}
-			}
-			var fileDeleteTransaction = ResourceMonitor.GetTransaction(
-				_transactionId, connection) 
-				as FileDeleteTransaction;
-			if(fileDeleteTransaction == null)
-			{
-				ResourceMonitor.RegisterTransaction(
-					_transactionId, 
-					connection, 
-					new FileDeleteTransaction(_files));
-			}
-		}
-
-        private static FileStream OpenFile(string fileName)
-        {
-            return File.Open(
-	            fileName, FileMode.Open, FileAccess.Read, FileShare.None);
-        }
-
-		public override void Disconnect()
-		{
-			if(_isLocalTransaction)
-			{
-				ResourceMonitor.Commit(_transactionId);
-			}
-		}
-
-		public override WorkQueueAdapterResult GetItem(string lastState)
-		{
-			var dataTable = CreateFileDataset(_mode).Tables["File"];
-			bool result;
-			switch (_readType)
-            {
-                case ReadType.SingleFiles:
-					result = RetrieveNextFile(dataTable, false);
-					break;
-				case ReadType.AggregateCompressedFiles:
-					return RetrieveAggregate(dataTable, true);
-                case ReadType.AggregateAllFiles:
-					return RetrieveAggregate(dataTable, false);
-				case ReadType.SplitByRows:
-					result = RetrieveNextSegment(dataTable);
-					break;
-                default:
-					throw new ArgumentOutOfRangeException(
-						"readType", _readType, "Unknown ReadType value.");
-            }
-			return result
-				? new WorkQueueAdapterResult(
-					DataDocumentFactory.New(dataTable.DataSet))
-				: null;
-		}
-
-        private WorkQueueAdapterResult RetrieveAggregate(DataTable dataTable,
-			bool compressedOnly)
-        {
-			// retrieve files as multiple records
-			while(RetrieveNextFile(dataTable, compressedOnly))	{} 
-            if (dataTable.Rows.Count == 0)
-            {
-                return null;
-            }
-            // create an aggregated record with files as Data field
-            var aggregatedDataTable
-                = CreateFileDataset(_mode).Tables["File"];
-			DataRow dataRow;
-            if (compressedOnly)
-            {
-				string fileName = _filenames[_currentPosition - 1];
-				dataRow = CreateAndInitializeDataRow(
-					aggregatedDataTable, fileName, fileName);
-			}
-			else
-            {
-				dataRow = aggregatedDataTable.NewRow();
-				dataRow["Name"] = $"Multiple files {DateTime.Now}";
-			}
-			dataRow["Data"] = dataTable.DataSet.GetXml();
-            aggregatedDataTable.Rows.Add(dataRow);
-            return new WorkQueueAdapterResult(
-                DataDocumentFactory.New(aggregatedDataTable.DataSet));
-        }
-
-        private (Stream, string, string) GetNextFileStream(
-			bool aggregateCompressedFilesOnly)
-        {
-        start:
-			if(_currentPosition + 1 > _files.Count)
-			{
-				return (null, null, null);
-			}
-            var fileName = _filenames[_currentPosition];
-            var title = fileName;
-            var fileStream = (FileStream)_files[fileName];
-            Stream finalStream;
-            if(_compression == CompressionType.ZIP)
-            {
-                var zipStream = _currentZipStream;
-                if(zipStream == null)
-                {
-                    zipStream = new ZipInputStream(fileStream);
-                    _currentZipStream = zipStream;
-                }
-                var zipEntry = zipStream.GetNextEntry();
-                if(zipEntry == null)
-                {
-                    _currentZipStream = null;
-                    zipStream.Close();
-                    ((IDisposable)zipStream).Dispose();
-                    _currentPosition++;
-                    if (aggregateCompressedFilesOnly)
+					catch (Exception ex)
                     {
-						return (null, null, null);
-					}
-					else
-                    {
-						goto start;
-					}
+						throw new Exception(
+							"An error has occurred while parsing the connection string: "
+							+ ex.Message);
+                    }
 				}
-                finalStream = zipStream;
-                title += " " + zipEntry.Name;
+			}
+		}
+		if(path == null)
+		{
+			throw new Exception(
+				ResourceUtils.GetString("ErrorNoPath"));
+		}
+		if(searchPattern == null)
+		{
+			throw new Exception(
+				ResourceUtils.GetString("ErrorNoSearchPattern"));
+		}
+        if (_readType == ReadType.SplitByRows)
+        {
+			if (_splitFileByRows <= 0)
+			{
+				throw new Exception(
+					ResourceUtils.GetString("ErrorSplitFileByRows"));
+			}
+			if (_mode == FileType.BINARY)
+			{
+				throw new Exception(
+					ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
+			}
+		}
+		if (_readType == ReadType.AggregateCompressedFiles
+			&& _compression == CompressionType.None)
+        {
+			throw new Exception(
+				ResourceUtils.GetString("AggregateCompressedFilesButNoCompression"));
+		}
+		// lock the files
+		_filenames = Directory.GetFiles(path, searchPattern);
+		foreach(var fileName in _filenames)
+		{
+			try
+			{
+				if(log.IsInfoEnabled)
+				{
+					log.Info("Locking file " + fileName);
+				}
+                var fileStream = OpenFile(fileName);
+                _files.Add(fileName, fileStream);
             }
-            else
+			catch
+			{
+				// ignored
+			}
+		}
+		var fileDeleteTransaction = ResourceMonitor.GetTransaction(
+			_transactionId, connection) 
+			as FileDeleteTransaction;
+		if(fileDeleteTransaction == null)
+		{
+			ResourceMonitor.RegisterTransaction(
+				_transactionId, 
+				connection, 
+				new FileDeleteTransaction(_files));
+		}
+	}
+    private static FileStream OpenFile(string fileName)
+    {
+        return File.Open(
+            fileName, FileMode.Open, FileAccess.Read, FileShare.None);
+    }
+	public override void Disconnect()
+	{
+		if(_isLocalTransaction)
+		{
+			ResourceMonitor.Commit(_transactionId);
+		}
+	}
+	public override WorkQueueAdapterResult GetItem(string lastState)
+	{
+		var dataTable = CreateFileDataset(_mode).Tables["File"];
+		bool result;
+		switch (_readType)
+        {
+            case ReadType.SingleFiles:
+				result = RetrieveNextFile(dataTable, false);
+				break;
+			case ReadType.AggregateCompressedFiles:
+				return RetrieveAggregate(dataTable, true);
+            case ReadType.AggregateAllFiles:
+				return RetrieveAggregate(dataTable, false);
+			case ReadType.SplitByRows:
+				result = RetrieveNextSegment(dataTable);
+				break;
+            default:
+				throw new ArgumentOutOfRangeException(
+					"readType", _readType, "Unknown ReadType value.");
+        }
+		return result
+			? new WorkQueueAdapterResult(
+				DataDocumentFactory.New(dataTable.DataSet))
+			: null;
+	}
+    private WorkQueueAdapterResult RetrieveAggregate(DataTable dataTable,
+		bool compressedOnly)
+    {
+		// retrieve files as multiple records
+		while(RetrieveNextFile(dataTable, compressedOnly))	{} 
+        if (dataTable.Rows.Count == 0)
+        {
+            return null;
+        }
+        // create an aggregated record with files as Data field
+        var aggregatedDataTable
+            = CreateFileDataset(_mode).Tables["File"];
+		DataRow dataRow;
+        if (compressedOnly)
+        {
+			string fileName = _filenames[_currentPosition - 1];
+			dataRow = CreateAndInitializeDataRow(
+				aggregatedDataTable, fileName, fileName);
+		}
+		else
+        {
+			dataRow = aggregatedDataTable.NewRow();
+			dataRow["Name"] = $"Multiple files {DateTime.Now}";
+		}
+		dataRow["Data"] = dataTable.DataSet.GetXml();
+        aggregatedDataTable.Rows.Add(dataRow);
+        return new WorkQueueAdapterResult(
+            DataDocumentFactory.New(aggregatedDataTable.DataSet));
+    }
+    private (Stream, string, string) GetNextFileStream(
+		bool aggregateCompressedFilesOnly)
+    {
+    start:
+		if(_currentPosition + 1 > _files.Count)
+		{
+			return (null, null, null);
+		}
+        var fileName = _filenames[_currentPosition];
+        var title = fileName;
+        var fileStream = (FileStream)_files[fileName];
+        Stream finalStream;
+        if(_compression == CompressionType.ZIP)
+        {
+            var zipStream = _currentZipStream;
+            if(zipStream == null)
             {
-                finalStream = fileStream;
+                zipStream = new ZipInputStream(fileStream);
+                _currentZipStream = zipStream;
+            }
+            var zipEntry = zipStream.GetNextEntry();
+            if(zipEntry == null)
+            {
+                _currentZipStream = null;
+                zipStream.Close();
+                ((IDisposable)zipStream).Dispose();
                 _currentPosition++;
-            }
-            if(log.IsInfoEnabled)
-            {
-                log.Info("Reading file " + title);
-            }
-            return (finalStream, fileName, title);
-        }
-        
-        private bool RetrieveNextSegment(DataTable dataTable)
-        {
-            if((_splitFileStreamReader == null)
-			|| _splitFileStreamReader.EndOfStream)
-            {
-				var (stream, filename, title) = GetNextFileStream(false);
-				if(stream == null)
-				{
-					return false;
+                if (aggregateCompressedFilesOnly)
+                {
+					return (null, null, null);
 				}
-				_splitFileStreamReader = (_encoding == null)
-					? new SplitFileStreamReader(filename, title, stream)
-					: new SplitFileStreamReader(
-						filename,
-						title,
-						stream,
-						Encoding.GetEncoding(_encoding));
-				if(_splitFileAndKeepHeader)
-				{
-					_splitFileStreamReader.ProcessHeader();
+				else
+                {
+					goto start;
 				}
-            }
-			AddTextFileSegmentFromStream(dataTable);
-            return true;
+			}
+            finalStream = zipStream;
+            title += " " + zipEntry.Name;
         }
-
-        private bool RetrieveNextFile(
-			DataTable dataTable, bool aggregateCompressedFiles)
+        else
         {
-	        var (stream, filename, title) =
-				GetNextFileStream(aggregateCompressedFiles);
-	        if(stream == null)
-	        {
-		        return false;
-	        }
-            AddFileFromStream(
-	            stream, dataTable, _mode, filename, title, _encoding);
-            return true;
+            finalStream = fileStream;
+            _currentPosition++;
         }
-
-        private void AddTextFileSegmentFromStream(DataTable dataTable)
+        if(log.IsInfoEnabled)
         {
-			var rowCounter = 0;
-			using(var memoryStream = new MemoryStream())
+            log.Info("Reading file " + title);
+        }
+        return (finalStream, fileName, title);
+    }
+    
+    private bool RetrieveNextSegment(DataTable dataTable)
+    {
+        if((_splitFileStreamReader == null)
+		|| _splitFileStreamReader.EndOfStream)
+        {
+			var (stream, filename, title) = GetNextFileStream(false);
+			if(stream == null)
 			{
-				var streamWriter = (_encoding == null)
-					? new StreamWriter(memoryStream)
-					: new StreamWriter(memoryStream,
-						Encoding.GetEncoding(_encoding));
-				if(_splitFileAndKeepHeader)
-				{
-					streamWriter.WriteLine(_splitFileStreamReader.Header);
-				}
-				while(!_splitFileStreamReader.EndOfStream 
-			    && (rowCounter < _splitFileByRows))
-				{
-					streamWriter.WriteLine(_splitFileStreamReader.ReadLine());
-					rowCounter++;
-				}
-				// last parts tend to remain in buffer, we need to flush them
-				streamWriter.Flush();
-				var dataRow = CreateAndInitializeDataRow(
-					dataTable, _splitFileStreamReader.ProcessedFilename,
-					_splitFileStreamReader.ProcessedFileTitle);
-				dataRow["SequenceNumber"] 
-					= _splitFileStreamReader.SegmentNumber;
-				memoryStream.Position = 0;
-				var internalStreamReader = (_encoding == null)
-					? new StreamReader(memoryStream)
-					: new StreamReader(memoryStream,
-						Encoding.GetEncoding(_encoding));
-				dataRow["Data"] = internalStreamReader.ReadToEnd();
-				dataTable.Rows.Add(dataRow);
+				return false;
+			}
+			_splitFileStreamReader = (_encoding == null)
+				? new SplitFileStreamReader(filename, title, stream)
+				: new SplitFileStreamReader(
+					filename,
+					title,
+					stream,
+					Encoding.GetEncoding(_encoding));
+			if(_splitFileAndKeepHeader)
+			{
+				_splitFileStreamReader.ProcessHeader();
 			}
         }
-
-		public static DataSet GetFileFromStream(
-			Stream stream, FileType mode, string filename, 
-			string title, string encoding)
+		AddTextFileSegmentFromStream(dataTable);
+        return true;
+    }
+    private bool RetrieveNextFile(
+		DataTable dataTable, bool aggregateCompressedFiles)
+    {
+        var (stream, filename, title) =
+			GetNextFileStream(aggregateCompressedFiles);
+        if(stream == null)
+        {
+	        return false;
+        }
+        AddFileFromStream(
+            stream, dataTable, _mode, filename, title, _encoding);
+        return true;
+    }
+    private void AddTextFileSegmentFromStream(DataTable dataTable)
+    {
+		var rowCounter = 0;
+		using(var memoryStream = new MemoryStream())
 		{
-            var dataTable = CreateFileDataset(mode).Tables["File"];
-            AddFileFromStream(
-	            stream, dataTable, mode, filename, title, encoding);
-			return dataTable.DataSet;
+			var streamWriter = (_encoding == null)
+				? new StreamWriter(memoryStream)
+				: new StreamWriter(memoryStream,
+					Encoding.GetEncoding(_encoding));
+			if(_splitFileAndKeepHeader)
+			{
+				streamWriter.WriteLine(_splitFileStreamReader.Header);
+			}
+			while(!_splitFileStreamReader.EndOfStream 
+		    && (rowCounter < _splitFileByRows))
+			{
+				streamWriter.WriteLine(_splitFileStreamReader.ReadLine());
+				rowCounter++;
+			}
+			// last parts tend to remain in buffer, we need to flush them
+			streamWriter.Flush();
+			var dataRow = CreateAndInitializeDataRow(
+				dataTable, _splitFileStreamReader.ProcessedFilename,
+				_splitFileStreamReader.ProcessedFileTitle);
+			dataRow["SequenceNumber"] 
+				= _splitFileStreamReader.SegmentNumber;
+			memoryStream.Position = 0;
+			var internalStreamReader = (_encoding == null)
+				? new StreamReader(memoryStream)
+				: new StreamReader(memoryStream,
+					Encoding.GetEncoding(_encoding));
+			dataRow["Data"] = internalStreamReader.ReadToEnd();
+			dataTable.Rows.Add(dataRow);
 		}
-
-        private static void AddFileFromStream(
-	        Stream stream, DataTable dataTable, FileType mode, string filename, 
-	        string title, string encoding)
+    }
+	public static DataSet GetFileFromStream(
+		Stream stream, FileType mode, string filename, 
+		string title, string encoding)
+	{
+        var dataTable = CreateFileDataset(mode).Tables["File"];
+        AddFileFromStream(
+            stream, dataTable, mode, filename, title, encoding);
+		return dataTable.DataSet;
+	}
+    private static void AddFileFromStream(
+        Stream stream, DataTable dataTable, FileType mode, string filename, 
+        string title, string encoding)
+    {
+        AddFileToTable(stream, mode, filename, title, encoding, dataTable);
+    }
+    private static DataSet CreateFileDataset(FileType mode)
+    {
+        var dataSet = new DataSet("ROOT");
+        var dataTable = dataSet.Tables.Add("File");
+        dataTable.Columns.Add("Name", typeof(string));
+        switch(mode)
         {
-            AddFileToTable(stream, mode, filename, title, encoding, dataTable);
+            case FileType.TEXT:
+	            dataTable.Columns.Add("Data", typeof(string));
+	            break;
+            case FileType.BINARY:
+	            dataTable.Columns.Add("Data", typeof(byte[]));
+	            break;
         }
-
-        private static DataSet CreateFileDataset(FileType mode)
+        // Add file metadata (times)			
+        dataTable.Columns.Add("CreationTime", typeof(DateTime));
+        dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
+        dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
+        dataTable.Columns.Add("SequenceNumber", typeof(int));
+        return dataSet;
+    }
+    private static DataRow CreateAndInitializeDataRow(
+        DataTable dataTable, string filename, string title)
+    {
+		var dataRow = dataTable.NewRow();
+        if(File.Exists(filename))
         {
-            var dataSet = new DataSet("ROOT");
-            var dataTable = dataSet.Tables.Add("File");
-            dataTable.Columns.Add("Name", typeof(string));
-            switch(mode)
-            {
-	            case FileType.TEXT:
-		            dataTable.Columns.Add("Data", typeof(string));
-		            break;
-	            case FileType.BINARY:
-		            dataTable.Columns.Add("Data", typeof(byte[]));
-		            break;
-            }
             // Add file metadata (times)			
-            dataTable.Columns.Add("CreationTime", typeof(DateTime));
-            dataTable.Columns.Add("LastWriteTime", typeof(DateTime));
-            dataTable.Columns.Add("LastAccessTime", typeof(DateTime));
-            dataTable.Columns.Add("SequenceNumber", typeof(int));
-            return dataSet;
+            var fileInfo = new FileInfo(filename);
+            dataRow["CreationTime"] = fileInfo.CreationTime;
+            dataRow["LastWriteTime"] = fileInfo.LastWriteTime;
+            dataRow["LastAccessTime"] = fileInfo.LastAccessTime;
         }
-
-        private static DataRow CreateAndInitializeDataRow(
-	        DataTable dataTable, string filename, string title)
+        if(!(dataRow["CreationTime"] is DateTime))
         {
-			var dataRow = dataTable.NewRow();
-            if(File.Exists(filename))
-            {
-                // Add file metadata (times)			
-                var fileInfo = new FileInfo(filename);
-                dataRow["CreationTime"] = fileInfo.CreationTime;
-                dataRow["LastWriteTime"] = fileInfo.LastWriteTime;
-                dataRow["LastAccessTime"] = fileInfo.LastAccessTime;
-            }
-            if(!(dataRow["CreationTime"] is DateTime))
-            {
-                dataRow["CreationTime"] = DateTime.Now;
-            }
-            dataRow["Name"] = title;
-            return dataRow;
+            dataRow["CreationTime"] = DateTime.Now;
         }
-
-        private static void AddFileToTable(
-	        Stream stream, FileType mode, string filename, string title, 
-	        string encoding, DataTable dataTable)
+        dataRow["Name"] = title;
+        return dataRow;
+    }
+    private static void AddFileToTable(
+        Stream stream, FileType mode, string filename, string title, 
+        string encoding, DataTable dataTable)
+    {
+        var dataRow = CreateAndInitializeDataRow(
+            dataTable, filename, title);
+        switch(mode)
         {
-            var dataRow = CreateAndInitializeDataRow(
-	            dataTable, filename, title);
-            switch(mode)
-            {
-	            case FileType.TEXT:
-		            ReadTextStream(stream, encoding, dataRow);
-		            break;
-	            case FileType.BINARY:
-		            ReadBinaryStream(stream, dataRow);
-		            break;
-            }
-            dataTable.Rows.Add(dataRow);
+            case FileType.TEXT:
+	            ReadTextStream(stream, encoding, dataRow);
+	            break;
+            case FileType.BINARY:
+	            ReadBinaryStream(stream, dataRow);
+	            break;
         }
-
-        private static void ReadBinaryStream(Stream stream, DataRow dataRow)
+        dataTable.Rows.Add(dataRow);
+    }
+    private static void ReadBinaryStream(Stream stream, DataRow dataRow)
+    {
+        byte[] data;
+        if(stream.CanSeek)
         {
-            byte[] data;
-            if(stream.CanSeek)
+            data = new byte[stream.Length];
+            stream.Read(data, 0, Convert.ToInt32(stream.Length));
+        }
+        else
+        {
+            using(var memoryStream = new MemoryStream())
             {
-                data = new byte[stream.Length];
-                stream.Read(data, 0, Convert.ToInt32(stream.Length));
-            }
-            else
-            {
-                using(var memoryStream = new MemoryStream())
+                int count;
+                do
                 {
-                    int count;
-                    do
-                    {
-                        var buffer = new byte[1024];
-                        count = stream.Read(buffer, 0, 1024);
-                        memoryStream.Write(buffer, 0, count);
-                    } 
-                    while(stream.CanRead && count > 0);
-                    data = memoryStream.ToArray();
-                }
+                    var buffer = new byte[1024];
+                    count = stream.Read(buffer, 0, 1024);
+                    memoryStream.Write(buffer, 0, count);
+                } 
+                while(stream.CanRead && count > 0);
+                data = memoryStream.ToArray();
             }
-            dataRow["Data"] = data;
         }
-
-        private static void ReadTextStream(
-	        Stream stream, string encoding, DataRow dataRow)
+        dataRow["Data"] = data;
+    }
+    private static void ReadTextStream(
+        Stream stream, string encoding, DataRow dataRow)
+    {
+        var streamReader = (encoding == null) 
+	        ? new StreamReader(stream) 
+	        : new StreamReader(stream, Encoding.GetEncoding(encoding));
+        if(stream.CanSeek)
         {
-	        var streamReader = (encoding == null) 
-		        ? new StreamReader(stream) 
-		        : new StreamReader(stream, Encoding.GetEncoding(encoding));
-            if(stream.CanSeek)
-            {
-                stream.Position = 0;
-            }
-            dataRow["Data"] = streamReader.ReadToEnd();
+            stream.Position = 0;
         }
+        dataRow["Data"] = streamReader.ReadToEnd();
     }
 }

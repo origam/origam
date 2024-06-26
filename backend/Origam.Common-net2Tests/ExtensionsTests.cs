@@ -28,111 +28,95 @@ using Origam.Schema;
 using MoreLinq;
 using NUnit.Framework;
 
-namespace Origam.Common_net2Tests
+namespace Origam.Common_net2Tests;
+[TestFixture]
+public class DictiaoaryExtensionsTests
 {
-    [TestFixture]
-    public class DictiaoaryExtensionsTests
+    [Test]
+    public void ShouldRemoveValues()
     {
-        [Test]
-        public void ShouldRemoveValues()
-        {
-            int distSize = 1000000;
-            int itemsToKeep = 10000;
-
-            
-            var testDictionary = GenerateRandomDictionary(distSize);
-
-            HashSet<ReferenceTypeInt> valuesToKeep = new HashSet<ReferenceTypeInt>(testDictionary.Values
-                .Take(itemsToKeep));   
-
-            testDictionary
-                .RemoveByValueSelector(value => !valuesToKeep.Contains(value));
-            
-            Assert.That(testDictionary,Has.Count.EqualTo(itemsToKeep));
-
-        }
-
-        private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(
-            int numOfEntries)
-        {
-            return Enumerable
-                .Range(1, numOfEntries)
-                .ToDictionary(x => x, x => new ReferenceTypeInt(x));
-        }
-
-        class ReferenceTypeInt
-        {
-            private readonly int val;
-
-            public ReferenceTypeInt(int val)
-            {
-                this.val = val;
-            }
-
-            protected bool Equals(ReferenceTypeInt other) => val == other.val;
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((ReferenceTypeInt) obj);
-            }
-
-            public override int GetHashCode() => val;
-        }
-
+        int distSize = 1000000;
+        int itemsToKeep = 10000;
+        
+        var testDictionary = GenerateRandomDictionary(distSize);
+        HashSet<ReferenceTypeInt> valuesToKeep = new HashSet<ReferenceTypeInt>(testDictionary.Values
+            .Take(itemsToKeep));   
+        testDictionary
+            .RemoveByValueSelector(value => !valuesToKeep.Contains(value));
+        
+        Assert.That(testDictionary,Has.Count.EqualTo(itemsToKeep));
     }
-
-    [TestFixture]
-    public class TypeExtensionsTests
+    private Dictionary<int, ReferenceTypeInt> GenerateRandomDictionary(
+        int numOfEntries)
     {
-        [Test]
-        public void ShouldRemoveValues()
+        return Enumerable
+            .Range(1, numOfEntries)
+            .ToDictionary(x => x, x => new ReferenceTypeInt(x));
+    }
+    class ReferenceTypeInt
+    {
+        private readonly int val;
+        public ReferenceTypeInt(int val)
         {
-            IEnumerable<Type> allPublicSubTypes = typeof(AbstractSchemaItem).GetAllPublicSubTypes().ToList();
+            this.val = val;
         }
+        protected bool Equals(ReferenceTypeInt other) => val == other.val;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ReferenceTypeInt) obj);
+        }
+        public override int GetHashCode() => val;
+    }
+}
+[TestFixture]
+public class TypeExtensionsTests
+{
+    [Test]
+    public void ShouldRemoveValues()
+    {
+        IEnumerable<Type> allPublicSubTypes = typeof(AbstractSchemaItem).GetAllPublicSubTypes().ToList();
+    }
+}
+
+[TestFixture]
+public class DirectoryInfoExtensionTests
+{
+    [Test]
+    public void ShouldRecognizeDirectoryAsParent()
+    {
+        var parent = new DirectoryInfo(@"Serialization\Root Menu".
+            Replace('\\', Path.DirectorySeparatorChar));
+        var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+            Replace('\\', Path.DirectorySeparatorChar));
+        Assert.That(parent.IsOnPathOf(child));
     }
     
-    [TestFixture]
-    public class DirectoryInfoExtensionTests
+    [Test]
+    public void ShouldRecognizeDirectoryIsNotParent()
     {
-        [Test]
-        public void ShouldRecognizeDirectoryAsParent()
-        {
-            var parent = new DirectoryInfo(@"Serialization\Root Menu".
-                Replace('\\', Path.DirectorySeparatorChar));
-            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
-                Replace('\\', Path.DirectorySeparatorChar));
-
-            Assert.That(parent.IsOnPathOf(child));
-        }
-        
-        [Test]
-        public void ShouldRecognizeDirectoryIsNotParent()
-        {
-            var notApatent = new DirectoryInfo(@"Serialization\Root".
-                Replace('\\', Path.DirectorySeparatorChar));
-            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
-                Replace('\\', Path.DirectorySeparatorChar));
-
-            Assert.That(!notApatent.IsOnPathOf(child));
-        }
+        var notApatent = new DirectoryInfo(@"Serialization\Root".
+            Replace('\\', Path.DirectorySeparatorChar));
+        var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+            Replace('\\', Path.DirectorySeparatorChar));
+        Assert.That(!notApatent.IsOnPathOf(child));
     }
-    [TestFixture]
-    public class StringExtensionTests
+}
+[TestFixture]
+public class StringExtensionTests
+{
+    [Test]
+    public void ShouldTruncateString()
     {
-        [Test]
-        public void ShouldTruncateString()
-        {
-            string stringTestValue = "The quick brown fox jumps over the lazy dog.";
-            string nullString = null;
-            Assert.That(stringTestValue.Truncate(0).Equals(string.Empty));
-            Assert.That(stringTestValue.Truncate(9).Equals("The quick"));
-            Assert.That(stringTestValue.Truncate(100).Equals(stringTestValue));
-            Assert.That(stringTestValue.Truncate(-10).Equals(string.Empty));
-            Assert.That(nullString.Truncate(0) is null);
-            Assert.That(nullString.Truncate(10) is null);
-        }
+        string stringTestValue = "The quick brown fox jumps over the lazy dog.";
+        string nullString = null;
+        Assert.That(stringTestValue.Truncate(0).Equals(string.Empty));
+        Assert.That(stringTestValue.Truncate(9).Equals("The quick"));
+        Assert.That(stringTestValue.Truncate(100).Equals(stringTestValue));
+        Assert.That(stringTestValue.Truncate(-10).Equals(string.Empty));
+        Assert.That(nullString.Truncate(0) is null);
+        Assert.That(nullString.Truncate(10) is null);
     }
 }

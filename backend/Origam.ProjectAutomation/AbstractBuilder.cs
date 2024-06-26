@@ -21,30 +21,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public abstract class AbstractBuilder : IProjectBuilder
 {
-    public abstract class AbstractBuilder : IProjectBuilder
+    public event EventHandler StateChanged;
+    TaskState _state = TaskState.Prepared;
+    public TaskState State
     {
-        public event EventHandler StateChanged;
-        TaskState _state = TaskState.Prepared;
-        public TaskState State
+        get
         {
-            get
+            return _state;
+        }
+        set
+        {
+            _state = value;
+            if(StateChanged != null)
             {
-                return _state;
-            }
-            set
-            {
-                _state = value;
-                if(StateChanged != null)
-                {
-                    StateChanged(this, EventArgs.Empty);
-                }
+                StateChanged(this, EventArgs.Empty);
             }
         }
-
-        public abstract void Execute(Project project);
-        public abstract void Rollback();
-        public abstract string Name { get; }
     }
+    public abstract void Execute(Project project);
+    public abstract void Rollback();
+    public abstract string Name { get; }
 }

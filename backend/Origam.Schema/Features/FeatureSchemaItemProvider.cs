@@ -21,48 +21,35 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+public class FeatureSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class FeatureSchemaItemProvider : AbstractSchemaItemProvider
+	public FeatureSchemaItemProvider() {}
+	#region ISchemaItemProvider Members
+	public override string RootItemType => Feature.CategoryConst;
+	public override string Group => "COMMON";
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_03_features.png";
+	public override string NodeText
 	{
-		public FeatureSchemaItemProvider() {}
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType => Feature.CategoryConst;
-
-		public override string Group => "COMMON";
-
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_03_features.png";
-
-		public override string NodeText
-		{
-			get => "Features";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[] {typeof(Feature)};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group) 
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(Feature) ?
-					"NewFeature" : null);
-		}
-		#endregion
+		get => "Features";
+		set => base.NodeText = value;
 	}
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		null;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[] {typeof(Feature)};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group) 
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(Feature) ?
+				"NewFeature" : null);
+	}
+	#endregion
 }

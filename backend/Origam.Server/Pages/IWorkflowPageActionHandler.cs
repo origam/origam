@@ -43,10 +43,8 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Web;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+public interface IWorkflowPageActionHandler
 {
-    public interface IWorkflowPageActionHandler
-    {
-        void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response);
-    }
+    void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response);
 }

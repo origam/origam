@@ -25,23 +25,21 @@ using System.Data;
 using Origam;
 using Origam.Schema.MenuModel;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+public interface IEntityUIActionRunnerClient
 {
-    public interface IEntityUIActionRunnerClient
-    {
-        ExecuteActionProcessData CreateExecuteActionProcessData(
-            string sessionFormIdentifier, string requestingGrid,
-            string actionType, string entity, List<string> selectedIds,
-            string actionId, Hashtable parameterMappings,
-            Hashtable inputParameters);
-        void CheckActionConditions(ExecuteActionProcessData processData);
-        void SetModalDialogSize(ArrayList results,ExecuteActionProcessData processData);
-        void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
-            DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-            ArrayList changes);
-        void PostProcessWorkflowAction(DataSet data,
-            EntityWorkflowAction entityWorkflowAction, ArrayList changes);
-        void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
-            EntityWorkflowAction entityWorkflowAction);
-    }
+    ExecuteActionProcessData CreateExecuteActionProcessData(
+        string sessionFormIdentifier, string requestingGrid,
+        string actionType, string entity, List<string> selectedIds,
+        string actionId, Hashtable parameterMappings,
+        Hashtable inputParameters);
+    void CheckActionConditions(ExecuteActionProcessData processData);
+    void SetModalDialogSize(ArrayList results,ExecuteActionProcessData processData);
+    void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
+        DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
+        ArrayList changes);
+    void PostProcessWorkflowAction(DataSet data,
+        EntityWorkflowAction entityWorkflowAction, ArrayList changes);
+    void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
+        EntityWorkflowAction entityWorkflowAction);
 }

@@ -29,141 +29,120 @@ using Origam.Schema;
 using Origam.BI;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+/// <summary>
+/// Summary description for ReportServiceAgent.
+/// </summary>
+public class ReportServiceAgent : AbstractServiceAgent
 {
-	/// <summary>
-	/// Summary description for ReportServiceAgent.
-	/// </summary>
-	public class ReportServiceAgent : AbstractServiceAgent
+	public ReportServiceAgent()
 	{
-		public ReportServiceAgent()
-		{
-		}
-
-		private void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
-		{
-            AbstractReport report = GetReport(reportId);
-            IReportService service = GetService(report);
-            service.SetTraceTaskInfo(TraceTaskInfo);
-            service.PrintReport(reportId, data, printerName, copies, parameters);
-		}
-
-		private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
-		{
-            AbstractReport report = GetReport(reportId);
-            IReportService service = GetService(report);
-            service.SetTraceTaskInfo(TraceTaskInfo);
-            return service.GetReport(reportId, data, format, parameters, this.TransactionId);
-		}
-
-        private static AbstractReport GetReport(Guid reportId)
+	}
+	private void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+	{
+        AbstractReport report = GetReport(reportId);
+        IReportService service = GetService(report);
+        service.SetTraceTaskInfo(TraceTaskInfo);
+        service.PrintReport(reportId, data, printerName, copies, parameters);
+	}
+	private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
+	{
+        AbstractReport report = GetReport(reportId);
+        IReportService service = GetService(report);
+        service.SetTraceTaskInfo(TraceTaskInfo);
+        return service.GetReport(reportId, data, format, parameters, this.TransactionId);
+	}
+    private static AbstractReport GetReport(Guid reportId)
+    {
+        IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        AbstractReport report = persistence.SchemaProvider.RetrieveInstance(
+            typeof(AbstractReport), new ModelElementKey(reportId))
+            as AbstractReport;
+        return report;
+    }
+    public static IReportService GetService(AbstractReport report)
+    {
+        string serviceName;
+        if (report is CrystalReport)
         {
-            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            AbstractReport report = persistence.SchemaProvider.RetrieveInstance(
-                typeof(AbstractReport), new ModelElementKey(reportId))
-                as AbstractReport;
-            return report;
+            serviceName = "Origam.BI.CrystalReports.CrystalReportService,Origam.BI.CrystalReports";
         }
-
-        public static IReportService GetService(AbstractReport report)
+        else if (report is PrintItReport)
         {
-            string serviceName;
-            if (report is CrystalReport)
-            {
-                serviceName = "Origam.BI.CrystalReports.CrystalReportService,Origam.BI.CrystalReports";
-            }
-            else if (report is PrintItReport)
-            {
-                serviceName = "Origam.BI.PrintIt.PrintItService,Origam.BI.PrintIt";
-            }
-            else if (report is ExcelReport)
-            {
-                serviceName = "Origam.BI.Excel.ExcelService,Origam.BI.Excel";
-            }
-            else if (report is SSRSReport)
-            {
-                serviceName = "Origam.BI.SSRS.SSRSService,Origam.BI.SSRS";
-            }
-            else if (report is FastReport)
-            {
-                serviceName = "Origam.BI.FastReport.FastReportService,Origam.BI.FastReport";
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("report", report, "Unsupported report type.");
-            }
-            string[] split = serviceName.Split(",".ToCharArray());
-            return Reflector.InvokeObject(split[0], split[1]) as IReportService;
+            serviceName = "Origam.BI.PrintIt.PrintItService,Origam.BI.PrintIt";
         }
-		#region IServiceAgent Members
-		private object _result;
-		public override object Result
+        else if (report is ExcelReport)
+        {
+            serviceName = "Origam.BI.Excel.ExcelService,Origam.BI.Excel";
+        }
+        else if (report is SSRSReport)
+        {
+            serviceName = "Origam.BI.SSRS.SSRSService,Origam.BI.SSRS";
+        }
+        else if (report is FastReport)
+        {
+            serviceName = "Origam.BI.FastReport.FastReportService,Origam.BI.FastReport";
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException("report", report, "Unsupported report type.");
+        }
+        string[] split = serviceName.Split(",".ToCharArray());
+        return Reflector.InvokeObject(split[0], split[1]) as IReportService;
+    }
+	#region IServiceAgent Members
+	private object _result;
+	public override object Result
+	{
+		get
 		{
-			get
-			{
-				return _result;
-			}
+			return _result;
 		}
-
-		public override void Run()
+	}
+	public override void Run()
+	{
+		switch(this.MethodName)
 		{
-			switch(this.MethodName)
-			{
-				case "PrintReport":
-					// Check input parameters
-					if(! (this.Parameters["Report"] is Guid))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuild"));
-
+			case "PrintReport":
+				// Check input parameters
+				if(! (this.Parameters["Report"] is Guid))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuild"));
+				if(! (this.Parameters["Data"] is IXmlContainer | this.Parameters["Data"] == null))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
+				if(! (this.Parameters["PrinterName"] is string | this.Parameters["PrinterName"] == null))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorPrinterNameNotString"));
+				if(! (this.Parameters["Copies"] is int))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorCopiesNotInt"));
+				if(! (this.Parameters["Parameters"] == null || this.Parameters["Parameters"] is Hashtable))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+				PrintReport((Guid)this.Parameters["Report"],
+					this.Parameters["Data"] as IXmlContainer,
+					(string)this.Parameters["PrinterName"],
+					(int)this.Parameters["Copies"],
+					this.Parameters["Parameters"] as Hashtable);
+				break;
+			case "GetReport":
+				// Check input parameters
+				if(! (this.Parameters["Report"] is Guid))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuid"));
+			    IXmlContainer data = null;;
+				if (this.Parameters.Contains("Data")) {
 					if(! (this.Parameters["Data"] is IXmlContainer | this.Parameters["Data"] == null))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
-
-					if(! (this.Parameters["PrinterName"] is string | this.Parameters["PrinterName"] == null))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorPrinterNameNotString"));
-
-					if(! (this.Parameters["Copies"] is int))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorCopiesNotInt"));
-
-					if(! (this.Parameters["Parameters"] == null || this.Parameters["Parameters"] is Hashtable))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
-
-					PrintReport((Guid)this.Parameters["Report"],
-						this.Parameters["Data"] as IXmlContainer,
-						(string)this.Parameters["PrinterName"],
-						(int)this.Parameters["Copies"],
-						this.Parameters["Parameters"] as Hashtable);
-
-					break;
-
-				case "GetReport":
-					// Check input parameters
-					if(! (this.Parameters["Report"] is Guid))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuid"));
-
-				    IXmlContainer data = null;;
-					if (this.Parameters.Contains("Data")) {
-						if(! (this.Parameters["Data"] is IXmlContainer | this.Parameters["Data"] == null))
-							throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
-						data = this.Parameters["Data"] as IXmlContainer;
-					}					
-
-					if(! (this.Parameters["Format"] is string | this.Parameters["Format"] == null))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorFormatNotString"));
-
-					if(! (this.Parameters["Parameters"] == null || this.Parameters["Parameters"] is Hashtable))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
-
-					_result = GetReport((Guid)this.Parameters["Report"],
-						data,
-						(string)this.Parameters["Format"],
-						this.Parameters["Parameters"] as Hashtable);
-
-					break;
-
-				default:
-					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
-			}
+					data = this.Parameters["Data"] as IXmlContainer;
+				}					
+				if(! (this.Parameters["Format"] is string | this.Parameters["Format"] == null))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorFormatNotString"));
+				if(! (this.Parameters["Parameters"] == null || this.Parameters["Parameters"] is Hashtable))
+					throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
+				_result = GetReport((Guid)this.Parameters["Report"],
+					data,
+					(string)this.Parameters["Format"],
+					this.Parameters["Parameters"] as Hashtable);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
 		}
-
-		#endregion
 	}
+	#endregion
 }

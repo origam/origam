@@ -26,52 +26,47 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Origam.Server.Middleware
+namespace Origam.Server.Middleware;
+// Some classes were in different namespaces and/or assemblies in the old .NET 
+// this creates issues when these classes are received by an old .NET client.
+// This middleware fixes those issues by replacing the namespaces. 
+public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
 {
-    // Some classes were in different namespaces and/or assemblies in the old .NET 
-    // this creates issues when these classes are received by an old .NET client.
-    // This middleware fixes those issues by replacing the namespaces. 
-    public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
+    private readonly RequestDelegate next;
+    public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate next;
-
-        public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
+        this.next = next;
+    }
+    public async Task Invoke(HttpContext context)
+    {
+        var originalBodyStream = context.Response.Body;
+        using (var responseBody = new MemoryStream())
         {
-            this.next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            var originalBodyStream = context.Response.Body;
-
-            using (var responseBody = new MemoryStream())
+            context.Response.Body = responseBody;
+            await next(context);
+            using (var responseStream = await FixAssemblyReferencesInResponse(context.Response))
             {
-                context.Response.Body = responseBody;
-                await next(context);
-                using (var responseStream = await FixAssemblyReferencesInResponse(context.Response))
-                {
-                    context.Response.Headers.ContentLength = null;
-                    await responseStream.CopyToAsync(originalBodyStream);
-                }
+                context.Response.Headers.ContentLength = null;
+                await responseStream.CopyToAsync(originalBodyStream);
             }
         }
-        
-        private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
+    }
+    
+    private async Task<MemoryStream> FixAssemblyReferencesInResponse(HttpResponse response)
+    {
+        response.Body.Seek(0, SeekOrigin.Begin);
+        using (var streamReader = new StreamReader(response.Body))
         {
-            response.Body.Seek(0, SeekOrigin.Begin);
-            using (var streamReader = new StreamReader(response.Body))
-            {
-                var responseContent = await streamReader.ReadToEndAsync();
-                var regex = new Regex(@"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)");
-                Match match = regex.Match(responseContent);
-                var coreLibVersion = match.Groups[1].Value;
-                var coreLibKey = match.Groups[2].Value;
-                responseContent = responseContent.Replace(
-                    $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
-                    "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                var responseData = Encoding.UTF8.GetBytes(responseContent);
-                return new MemoryStream(responseData);
-            }
+            var responseContent = await streamReader.ReadToEndAsync();
+            var regex = new Regex(@"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)");
+            Match match = regex.Match(responseContent);
+            var coreLibVersion = match.Groups[1].Value;
+            var coreLibKey = match.Groups[2].Value;
+            responseContent = responseContent.Replace(
+                $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
+                "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+            var responseData = Encoding.UTF8.GetBytes(responseContent);
+            return new MemoryStream(responseData);
         }
     }
 }

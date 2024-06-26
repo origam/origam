@@ -23,15 +23,12 @@ using System;
 using System.Collections;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Server
+namespace Origam.Server;
+public interface IReportManager
 {
-    public interface IReportManager
-    {
-        string GetReport(string sessionFormIdentifier, string entity,
-            object id, string reportId, Hashtable parameterMappings);
-
-        string GetReportStandalone(string reportId, Hashtable parameters,
-            DataReportExportFormatType dataReportExportFormatType);
-        string GetReportFromMenu(Guid menuId);
-    }
+    string GetReport(string sessionFormIdentifier, string entity,
+        object id, string reportId, Hashtable parameterMappings);
+    string GetReportStandalone(string reportId, Hashtable parameters,
+        DataReportExportFormatType dataReportExportFormatType);
+    string GetReportFromMenu(Guid menuId);
 }

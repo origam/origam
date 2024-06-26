@@ -22,52 +22,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Data;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for DataBindingTools.
+/// </summary>
+public class DataBindingTools
 {
-	/// <summary>
-	/// Summary description for DataBindingTools.
-	/// </summary>
-	public class DataBindingTools
+	public static DataRow CurrentRow(Control control, string property)
 	{
-		public static DataRow CurrentRow(Control control, string property)
+		if(control.Parent is AsDataGrid)
 		{
-			if(control.Parent is AsDataGrid)
-			{
-				AsDataGrid grid = control.Parent as AsDataGrid;
-				if(grid.DataSource == null) return null;
-				if(grid.BindingContext[grid.DataSource, grid.DataMember] == null) return null;
-				if(grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0) return null;
-
-				return (grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView).Row;
-			}
-			else if(control.Parent is FilterPanel)
-			{
-				return null;
-
-				//AsPanel panel = this.Parent.Parent as AsPanel;
-				//return ((DataRowView)(panel.BindingContext[panel.DataSource, panel.DataMember] as CurrencyManager).Current).Row;
-			}
-			else
-			{
-				if(control.DataBindings[property] == null) return null;
-				if(control.DataBindings[property].BindingManagerBase == null) return null;
-				if(control.DataBindings[property].BindingManagerBase.Position < 0) return null;
-
-				return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
-			}
+			AsDataGrid grid = control.Parent as AsDataGrid;
+			if(grid.DataSource == null) return null;
+			if(grid.BindingContext[grid.DataSource, grid.DataMember] == null) return null;
+			if(grid.BindingContext[grid.DataSource, grid.DataMember].Position < 0) return null;
+			return (grid.BindingContext[grid.DataSource, grid.DataMember].Current as DataRowView).Row;
 		}
-
-        public static void UpdateBindedFormComponent(
-            BindingsCollection bindings, string mappingName)
+		else if(control.Parent is FilterPanel)
+		{
+			return null;
+			//AsPanel panel = this.Parent.Parent as AsPanel;
+			//return ((DataRowView)(panel.BindingContext[panel.DataSource, panel.DataMember] as CurrencyManager).Current).Row;
+		}
+		else
+		{
+			if(control.DataBindings[property] == null) return null;
+			if(control.DataBindings[property].BindingManagerBase == null) return null;
+			if(control.DataBindings[property].BindingManagerBase.Position < 0) return null;
+			return ((DataRowView)control.DataBindings[property].BindingManagerBase.Current).Row;
+		}
+	}
+    public static void UpdateBindedFormComponent(
+        BindingsCollection bindings, string mappingName)
+    {
+        foreach (Binding binding in bindings)
         {
-            foreach (Binding binding in bindings)
+            if (binding.BindingMemberInfo.BindingField == mappingName)
             {
-                if (binding.BindingMemberInfo.BindingField == mappingName)
-                {
-                    binding.ReadValue();
-                    break;
-                }
+                binding.ReadValue();
+                break;
             }
         }
-	}
+    }
 }

@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+public class ClientFilteringConfig: IFilteringConfig
 {
-    public class ClientFilteringConfig: IFilteringConfig
-    {
-        public bool CaseSensitive { get; set; } = false;
-        public bool AccentSensitive { get; set; } = true;
-    }
+    public bool CaseSensitive { get; set; } = false;
+    public bool AccentSensitive { get; set; } = true;
 }

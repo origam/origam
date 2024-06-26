@@ -32,89 +32,75 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.UI.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards;
+/// <summary>
+/// Summary description for CreateDataStructureFromEntityCommand.
+/// </summary>
+public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 {
-    /// <summary>
-    /// Summary description for CreateDataStructureFromEntityCommand.
-    /// </summary>
-    public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    StructureForm structureForm;
+   
+    public override bool IsEnabled
 	{
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        StructureForm structureForm;
-       
-
-        public override bool IsEnabled
+		get
 		{
-			get
-			{
-				return Owner is IDataEntity;
-			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
+			return Owner is IDataEntity;
 		}
-
-        public override void Run()
-        {
-            List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
-
-            IDataEntity entity = Owner as IDataEntity;
-
-            ArrayList list = new ArrayList();
-            DataStructure dd = new DataStructure();
-            list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
-
-            Stack stackPage = new Stack();
-
-            stackPage.Push(PagesList.Finish);
-            stackPage.Push(PagesList.SummaryPage);
-            if (listdsName.Any(name => name == entity.Name))
-            {
-                stackPage.Push(PagesList.StructureNamePage);
-            }
-
-            stackPage.Push(PagesList.StartPage);
-
-            structureForm = new StructureForm
-            {
-                Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
-                Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
-                ItemTypeList = list,
-                Pages = stackPage,
-                StructureList = listdsName,
-                NameOfEntity = entity.Name,
-                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-                Command = this
-            };
-
-            Wizard wizardscreen = new Wizard(structureForm);
-            if (wizardscreen.ShowDialog() != DialogResult.OK)
-            { 
-                GeneratedModelElements.Clear();
-            }
+		set
+		{
+			throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
-
-        public override void Execute()
+	}
+    public override void Run()
+    {
+        List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
+        IDataEntity entity = Owner as IDataEntity;
+        ArrayList list = new ArrayList();
+        DataStructure dd = new DataStructure();
+        list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
+        Stack stackPage = new Stack();
+        stackPage.Push(PagesList.Finish);
+        stackPage.Push(PagesList.SummaryPage);
+        if (listdsName.Any(name => name == entity.Name))
         {
-            DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
-            GeneratedModelElements.Add(ds);
+            stackPage.Push(PagesList.StructureNamePage);
         }
-
-        public override int GetImageIndex(string icon)
+        stackPage.Push(PagesList.StartPage);
+        structureForm = new StructureForm
         {
-            return _schemaBrowser.ImageIndex(icon);
+            Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
+            Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
+            ItemTypeList = list,
+            Pages = stackPage,
+            StructureList = listdsName,
+            NameOfEntity = entity.Name,
+            ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+            Command = this
+        };
+        Wizard wizardscreen = new Wizard(structureForm);
+        if (wizardscreen.ShowDialog() != DialogResult.OK)
+        { 
+            GeneratedModelElements.Clear();
         }
-
-        public override void SetSummaryText(object summary)
-        {
-            RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = "";
-            richTextBoxSummary.AppendText("");
-            richTextBoxSummary.AppendText("Create Data Structure: ");
-            richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-            richTextBoxSummary.AppendText(structureForm.NameOfEntity);
-            richTextBoxSummary.AppendText("");
-        }
+	}
+    public override void Execute()
+    {
+        DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
+        GeneratedModelElements.Add(ds);
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
+    }
+    public override void SetSummaryText(object summary)
+    {
+        RichTextBox richTextBoxSummary = (RichTextBox)summary;
+        richTextBoxSummary.Text = "";
+        richTextBoxSummary.AppendText("");
+        richTextBoxSummary.AppendText("Create Data Structure: ");
+        richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+        richTextBoxSummary.AppendText(structureForm.NameOfEntity);
+        richTextBoxSummary.AppendText("");
     }
 }

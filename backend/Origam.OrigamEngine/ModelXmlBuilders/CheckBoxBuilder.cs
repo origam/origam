@@ -21,22 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for CheckBoxBuilder.
+/// </summary>
+public class CheckBoxBuilder
 {
-	/// <summary>
-	/// Summary description for CheckBoxBuilder.
-	/// </summary>
-	public class CheckBoxBuilder
+	public static void Build(XmlElement propertyElement, string text)
 	{
-		public static void Build(XmlElement propertyElement, string text)
+		propertyElement.SetAttribute("Entity", "Boolean");
+		propertyElement.SetAttribute("Column", "CheckBox");
+		if(text != "" && text != null)
 		{
-			propertyElement.SetAttribute("Entity", "Boolean");
-			propertyElement.SetAttribute("Column", "CheckBox");
-			if(text != "" && text != null)
-			{
-				propertyElement.SetAttribute("Name", text);
-			}
-			propertyElement.SetAttribute("CaptionPosition", "Right");
+			propertyElement.SetAttribute("Name", text);
 		}
+		propertyElement.SetAttribute("CaptionPosition", "Right");
 	}
 }

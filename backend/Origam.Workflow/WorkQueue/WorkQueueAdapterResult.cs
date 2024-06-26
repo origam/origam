@@ -23,44 +23,39 @@ using System.Xml;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.WorkQueue
+namespace Origam.Workflow.WorkQueue;
+/// <summary>
+/// Summary description for WorkQueueAdapterResult.
+/// </summary>
+public class WorkQueueAdapterResult
 {
-	/// <summary>
-	/// Summary description for WorkQueueAdapterResult.
-	/// </summary>
-	public class WorkQueueAdapterResult
+    public WorkQueueAdapterResult(IXmlContainer document)
 	{
-	    public WorkQueueAdapterResult(IXmlContainer document)
+		this.Document = document;
+	}
+	public IXmlContainer Document { get; set; }
+    private WorkQueueAttachment[] _attachments;
+	public WorkQueueAttachment[] Attachments
+	{
+		get
 		{
-			this.Document = document;
+			return _attachments;
 		}
-
-		public IXmlContainer Document { get; set; }
-
-	    private WorkQueueAttachment[] _attachments;
-		public WorkQueueAttachment[] Attachments
+		set
 		{
-			get
-			{
-				return _attachments;
-			}
-			set
-			{
-				_attachments = value;
-			}
+			_attachments = value;
 		}
-
-		private string _state;
-		public string State
+	}
+	private string _state;
+	public string State
+	{
+		get
 		{
-			get
-			{
-				return _state;
-			}
-			set
-			{
-				_state = value;
-			}
+			return _state;
+		}
+		set
+		{
+			_state = value;
 		}
 	}
 }

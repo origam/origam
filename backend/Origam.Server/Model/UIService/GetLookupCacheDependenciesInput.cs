@@ -19,10 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+public class GetLookupCacheDependenciesInput
 {
-    public class GetLookupCacheDependenciesInput
-    {
-        public object[] LookupIds { get; set; }
-    }
+    public object[] LookupIds { get; set; }
 }

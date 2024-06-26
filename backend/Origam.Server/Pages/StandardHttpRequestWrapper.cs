@@ -31,105 +31,94 @@ using Microsoft.Net.Http.Headers;
 using Origam.Server.Extensions;
 using UAParser;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+internal class StandardHttpRequestWrapper : IRequestWrapper
 {
-    internal class StandardHttpRequestWrapper : IRequestWrapper
+    private readonly HttpContext httpContext;
+    private readonly HttpRequest request;
+    private readonly IHeaderDictionary headerDictionary;
+    private readonly ClientInfo clientInfo;
+    private readonly MediaTypeHeaderValue mediaTypeHeader;
+    public StandardHttpRequestWrapper(HttpContext httpContext)
     {
-        private readonly HttpContext httpContext;
-        private readonly HttpRequest request;
-        private readonly IHeaderDictionary headerDictionary;
-        private readonly ClientInfo clientInfo;
-        private readonly MediaTypeHeaderValue mediaTypeHeader;
-
-        public StandardHttpRequestWrapper(HttpContext httpContext)
+        this.httpContext = httpContext;
+        this.request = httpContext.Request;
+        headerDictionary = this.httpContext.Request.Headers;
+        clientInfo = GetClientInfo();
+        Params = GetParameters();
+        mediaTypeHeader = request.ContentType != null 
+            ? MediaTypeHeaderValue.Parse(request.ContentType) 
+            : null;
+    }
+    public string AppRelativeCurrentExecutionFilePath => request.Path.ToUriComponent();
+    public string ContentType => mediaTypeHeader?.MediaType.Value;
+    public string AbsoluteUri => Url;
+    public Stream InputStream => request.Body;
+    public string HttpMethod => request.Method;
+    public string RawUrl => request.GetDisplayUrl();
+    public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
+    public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
+    public string UserAgent =>  httpContext.Request.GetUserAgent();
+    public string Browser 
+        => clientInfo != null ? clientInfo.UserAgent.Family : "";
+    public string BrowserVersion 
+        => clientInfo != null 
+            ? clientInfo.UserAgent.Major + "." + clientInfo.UserAgent.Minor
+            : "";
+    public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
+    public string UserHostName => request.Host.Value;
+    public IEnumerable<string> UserLanguages
+    {
+        get
         {
-            this.httpContext = httpContext;
-            this.request = httpContext.Request;
-            headerDictionary = this.httpContext.Request.Headers;
-
-            clientInfo = GetClientInfo();
-            Params = GetParameters();
-            mediaTypeHeader = request.ContentType != null 
-                ? MediaTypeHeaderValue.Parse(request.ContentType) 
-                : null;
+            var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
+            return languages.Length == 0 
+                ? new string[0] 
+                : languages[0].Split(',');
         }
-
-        public string AppRelativeCurrentExecutionFilePath => request.Path.ToUriComponent();
-        public string ContentType => mediaTypeHeader?.MediaType.Value;
-        public string AbsoluteUri => Url;
-        public Stream InputStream => request.Body;
-        public string HttpMethod => request.Method;
-        public string RawUrl => request.GetDisplayUrl();
-        public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
-        public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
-        public string UserAgent => httpContext.Request.GetUserAgent();
-        public string Browser 
-            => clientInfo != null ? clientInfo.UserAgent.Family : "";
-        public string BrowserVersion 
-            => clientInfo != null 
-                ? clientInfo.UserAgent.Major + "." + clientInfo.UserAgent.Minor
-                : "";
-        public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
-        public string UserHostName => request.Host.Value;
-        public IEnumerable<string> UserLanguages
+    }
+    public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
+    public long ContentLength => request.ContentLength ?? 0;
+    public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
+    public string UrlReferrerAbsoluteUri => headerDictionary[HeaderNames.Referer];
+    public Parameters Params { get; }
+    public PostedFile FilesGet(string name)
+    {
+        var httpPostedFile = request.Form.Files[name];
+        return new PostedFile
         {
-            get
-            {
-                var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
-                return languages.Length == 0 
-                    ? new string[0] 
-                    : languages[0].Split(',');
-            }
+            ContentType = httpPostedFile.ContentType,
+            InputStream = httpPostedFile.OpenReadStream(),
+            ContentLength = httpPostedFile.Length,
+            FileName = httpPostedFile.FileName
+        };
+    }
+    private ClientInfo GetClientInfo()
+    {
+        if (string.IsNullOrEmpty(request.Headers[HeaderNames.UserAgent]))
+        {
+            return null;
         }
-
-        public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
-        public long ContentLength => request.ContentLength ?? 0;
-        public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
-
-        public string UrlReferrerAbsoluteUri => headerDictionary[HeaderNames.Referer];
-        public Parameters Params { get; }
-
-        public PostedFile FilesGet(string name)
+        var uaParser = Parser.GetDefault();
+        return uaParser.Parse(request.Headers[HeaderNames.UserAgent]);
+    }
+    private Parameters GetParameters()
+    {
+        var parameters = request.Query.Keys
+            .ToDictionary(
+                key => key,
+                key => request.Query[key].ToString());
+        foreach (var keyValuePair in request.Cookies)
         {
-            var httpPostedFile = request.Form.Files[name];
-            return new PostedFile
-            {
-                ContentType = httpPostedFile.ContentType,
-                InputStream = httpPostedFile.OpenReadStream(),
-                ContentLength = httpPostedFile.Length,
-                FileName = httpPostedFile.FileName
-            };
+            parameters.Add(keyValuePair.Key, keyValuePair.Value);
         }
-
-        private ClientInfo GetClientInfo()
+        if (request.HasFormContentType)
         {
-            if (string.IsNullOrEmpty(request.Headers[HeaderNames.UserAgent]))
-            {
-                return null;
-            }
-            var uaParser = Parser.GetDefault();
-            return uaParser.Parse(request.Headers[HeaderNames.UserAgent]);
-        }
-
-        private Parameters GetParameters()
-        {
-            var parameters = request.Query.Keys
-                .ToDictionary(
-                    key => key,
-                    key => request.Query[key].ToString());
-
-            foreach (var keyValuePair in request.Cookies)
+            foreach (var keyValuePair in request.Form)
             {
                 parameters.Add(keyValuePair.Key, keyValuePair.Value);
             }
-            if (request.HasFormContentType)
-            {
-                foreach (var keyValuePair in request.Form)
-                {
-                    parameters.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-            return new Parameters(parameters);
         }
+        return new Parameters(parameters);
     }
 }

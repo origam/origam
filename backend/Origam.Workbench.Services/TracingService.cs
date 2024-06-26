@@ -25,200 +25,172 @@ using System.Reflection;
 using Origam.DA;
 using Origam.Extensions;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// Summary description for TracingService.
+/// </summary>
+public class TracingService : ITracingService
 {
-	/// <summary>
-	/// Summary description for TracingService.
-	/// </summary>
-	public class TracingService : ITracingService
-	{
-		private static readonly log4net.ILog log =
-			log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-			
+	private static readonly log4net.ILog log =
+		log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		
-		private SchemaService _schema;
-		IServiceAgent _dataServiceAgent;
-		private bool? _enabled;
-
-		public TracingService()
+	
+	private SchemaService _schema;
+	IServiceAgent _dataServiceAgent;
+	private bool? _enabled;
+	public TracingService()
+	{
+	}
+	#region Public Methods
+	public void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName)
+	{
+		if (!Enabled)
 		{
-		}
-
-		#region Public Methods
-		public void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName)
-		{
-			if (!Enabled)
+			if (log.IsDebugEnabled)
 			{
-				if (log.IsDebugEnabled)
-				{
-					log.Info("Trace is disabled, workflow is not traced.");
-				}
-				return;
+				log.Info("Trace is disabled, workflow is not traced.");
 			}
-
+			return;
+		}
+        UserProfile profile = SecurityManager.CurrentUserProfile();
+		// create the record
+		OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
+		OrigamTraceWorkflowData.OrigamTraceWorkflowRow row = data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
+		row.Id = workflowInstanceId;
+		row.RecordCreated = DateTime.Now;
+		row.RecordCreatedBy = profile.Id;
+		row.WorkflowName = workflowName;
+		row.WorkflowId = workflowId;
+		data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
+		StoreTraceData(
+			dataSet: data, 
+			dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
+		);
+	}
+	public void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId,
+		string category, string subCategory, string remark, string data1,
+		string data2, string message)
+	{
+		if (!Enabled)
+		{
+			if (log.IsDebugEnabled)
+			{
+				log.Debug("Trace is disabled, step is not traced.");
+			}
+			return;
+		}
+		
+		try
+		{
             UserProfile profile = SecurityManager.CurrentUserProfile();
-
 			// create the record
-			OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
-
-			OrigamTraceWorkflowData.OrigamTraceWorkflowRow row = data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
-
-			row.Id = workflowInstanceId;
+			OrigamTraceWorkflowStepData data = new OrigamTraceWorkflowStepData();
+			OrigamTraceWorkflowStepData.OrigamTraceWorkflowStepRow row = data.OrigamTraceWorkflowStep.NewOrigamTraceWorkflowStepRow();
+			row.Id = Guid.NewGuid();
 			row.RecordCreated = DateTime.Now;
 			row.RecordCreatedBy = profile.Id;
-			row.WorkflowName = workflowName;
-			row.WorkflowId = workflowId;
-
-			data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
-
+		
+			row.Category = category;
+			if(data1 != null) row.Data1 = data1;
+			if(data2 != null) row.Data2 = data2;
+			if(message != null) row.Message = message;
+			row.refOrigamTraceWorkflowId = workflowInstanceId;
+			if(remark != null) row.Remark = remark;
+			row.Subcategory = subCategory;
+			row.WorkflowStepId = stepId;
+			row.WorkflowStepPath = stepPath;
+			data.OrigamTraceWorkflowStep.AddOrigamTraceWorkflowStepRow(row);
+		
 			StoreTraceData(
 				dataSet: data, 
-				dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
+				dataStructureQueryId: "4985a6b2-8bae-4c21-9a09-0c2480c4efe2"
 			);
 		}
-
-		public void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId,
-			string category, string subCategory, string remark, string data1,
-			string data2, string message)
+		catch (Exception ex)
 		{
-			if (!Enabled)
-			{
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("Trace is disabled, step is not traced.");
-				}
-				return;
-			}
-			
-			try
-			{
-                UserProfile profile = SecurityManager.CurrentUserProfile();
-
-				// create the record
-				OrigamTraceWorkflowStepData data = new OrigamTraceWorkflowStepData();
-
-				OrigamTraceWorkflowStepData.OrigamTraceWorkflowStepRow row = data.OrigamTraceWorkflowStep.NewOrigamTraceWorkflowStepRow();
-
-				row.Id = Guid.NewGuid();
-				row.RecordCreated = DateTime.Now;
-				row.RecordCreatedBy = profile.Id;
-			
-				row.Category = category;
-				if(data1 != null) row.Data1 = data1;
-				if(data2 != null) row.Data2 = data2;
-				if(message != null) row.Message = message;
-				row.refOrigamTraceWorkflowId = workflowInstanceId;
-				if(remark != null) row.Remark = remark;
-				row.Subcategory = subCategory;
-				row.WorkflowStepId = stepId;
-				row.WorkflowStepPath = stepPath;
-
-				data.OrigamTraceWorkflowStep.AddOrigamTraceWorkflowStepRow(row);
-			
-				StoreTraceData(
-					dataSet: data, 
-					dataStructureQueryId: "4985a6b2-8bae-4c21-9a09-0c2480c4efe2"
-				);
-			}
-			catch (Exception ex)
-			{
-				log.LogOrigamError(ex);
-			}
+			log.LogOrigamError(ex);
 		}
-
-		public void TraceRule(Guid ruleId, string ruleName, string ruleInput,
-			string ruleResult)
+	}
+	public void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+		string ruleResult)
+	{
+		TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
+	}
+	public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
+	{
+		if (!Enabled)
 		{
-			TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
-		}
-
-		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
-		{
-			if (!Enabled)
+			if (log.IsDebugEnabled)
 			{
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("Trace is disabled, step is not traced.");
-				}
-				return;
+				log.Debug("Trace is disabled, step is not traced.");
 			}
-			
-			try
-			{
-				UserProfile profile = SecurityManager.CurrentUserProfile();
-
-				OrigamTraceRuleData data = new OrigamTraceRuleData();
-				var row = data.OrigamTraceRule.NewOrigamTraceRuleRow();
-
-				row.Id = Guid.NewGuid();
-				row.RecordCreated = DateTime.Now;
-				row.RecordCreatedBy = profile.Id;
-				if (workflowInstanceId != Guid.Empty)
-				{
-					row.refOrigamTraceWorkflowId = workflowInstanceId;
-				}
-				if(ruleInput != null) row.Input = ruleInput;
-				if(ruleResult != null) row.Output = ruleResult;
-				row.RuleId = ruleId;
-				row.RuleName = ruleName;
-				
-				data.OrigamTraceRule.AddOrigamTraceRuleRow(row);
-				
-				StoreTraceData(
-					dataSet: data, 
-					dataStructureQueryId: "ca2f9609-e6b1-4425-a673-a46f69590eb3"
-				);
-			}
-			catch (Exception ex)
-			{
-				log.LogOrigamError(ex);
-			}
-		}
-
-		private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
-		{
-			DataStructureQuery query = new DataStructureQuery(
-				new Guid(dataStructureQueryId));
-
-			_dataServiceAgent.MethodName = "StoreDataByQuery";
-			_dataServiceAgent.Parameters.Clear();
-			_dataServiceAgent.Parameters.Add("Query", query);
-			_dataServiceAgent.Parameters.Add("Data", dataSet);
-
-			_dataServiceAgent.Run();
+			return;
 		}
 		
-		#endregion
-
-		#region IService Members
-
-		public void UnloadService()
+		try
 		{
-			_dataServiceAgent = null;
-			_schema = null;
-		}
-
-		public bool Enabled
-		{
-			get
+			UserProfile profile = SecurityManager.CurrentUserProfile();
+			OrigamTraceRuleData data = new OrigamTraceRuleData();
+			var row = data.OrigamTraceRule.NewOrigamTraceRuleRow();
+			row.Id = Guid.NewGuid();
+			row.RecordCreated = DateTime.Now;
+			row.RecordCreatedBy = profile.Id;
+			if (workflowInstanceId != Guid.Empty)
 			{
-				if (_enabled.HasValue)
-				{
-					return _enabled.Value;
-				}
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-				return settings.TraceEnabled;
+				row.refOrigamTraceWorkflowId = workflowInstanceId;
 			}
-			set => _enabled = value;
+			if(ruleInput != null) row.Input = ruleInput;
+			if(ruleResult != null) row.Output = ruleResult;
+			row.RuleId = ruleId;
+			row.RuleName = ruleName;
+			
+			data.OrigamTraceRule.AddOrigamTraceRuleRow(row);
+			
+			StoreTraceData(
+				dataSet: data, 
+				dataStructureQueryId: "ca2f9609-e6b1-4425-a673-a46f69590eb3"
+			);
 		}
-
-		public void InitializeService()
+		catch (Exception ex)
 		{
-			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-			_schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+			log.LogOrigamError(ex);
 		}
-
-		#endregion
 	}
+	private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
+	{
+		DataStructureQuery query = new DataStructureQuery(
+			new Guid(dataStructureQueryId));
+		_dataServiceAgent.MethodName = "StoreDataByQuery";
+		_dataServiceAgent.Parameters.Clear();
+		_dataServiceAgent.Parameters.Add("Query", query);
+		_dataServiceAgent.Parameters.Add("Data", dataSet);
+		_dataServiceAgent.Run();
+	}
+	
+	#endregion
+	#region IService Members
+	public void UnloadService()
+	{
+		_dataServiceAgent = null;
+		_schema = null;
+	}
+	public bool Enabled
+	{
+		get
+		{
+			if (_enabled.HasValue)
+			{
+				return _enabled.Value;
+			}
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+			return settings.TraceEnabled;
+		}
+		set => _enabled = value;
+	}
+	public void InitializeService()
+	{
+		_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
+		_schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+	}
+	#endregion
 }

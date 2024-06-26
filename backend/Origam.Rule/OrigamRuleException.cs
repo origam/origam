@@ -22,26 +22,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+/// <summary>
+/// Summary description for OrigamRuleException.
+/// </summary>
+public class OrigamRuleException : OrigamException
 {
-	/// <summary>
-	/// Summary description for OrigamRuleException.
-	/// </summary>
-	public class OrigamRuleException : OrigamException
+	DataRow _row;
+	public OrigamRuleException(string message, Exception innerException, DataRow row) : base(message, innerException)
 	{
-		DataRow _row;
-
-		public OrigamRuleException(string message, Exception innerException, DataRow row) : base(message, innerException)
+		_row = row;
+	}
+	public DataRow Row
+	{
+		get
 		{
-			_row = row;
-		}
-
-		public DataRow Row
-		{
-			get
-			{
-				return _row;
-			}
+			return _row;
 		}
 	}
 }

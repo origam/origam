@@ -17,20 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Collections.Generic;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class HashSetExtensions
 {
-    public static class HashSetExtensions
+    public static void AddOrReplace<T>(this HashSet<T> hashSet, T item)
     {
-        public static void AddOrReplace<T>(this HashSet<T> hashSet, T item)
+        if (hashSet.Contains(item))
         {
-            if (hashSet.Contains(item))
-            {
-                hashSet.Remove(item);
-            }
-            hashSet.Add(item);
+            hashSet.Remove(item);
         }
+        hashSet.Add(item);
     }
 }

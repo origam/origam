@@ -22,10 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 
-namespace Origam.Windows.Editor
+namespace Origam.Windows.Editor;
+public class OrigamTextEditor : TextEditor
 {
-    public class OrigamTextEditor : TextEditor
-    {
-        public CompletionWindow ActiveCompletionWindow { get; set; }
-    }
+    public CompletionWindow ActiveCompletionWindow { get; set; }
 }

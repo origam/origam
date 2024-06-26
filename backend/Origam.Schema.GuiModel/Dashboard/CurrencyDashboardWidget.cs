@@ -23,27 +23,22 @@ using Origam.DA.Common;
 using System;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+[SchemaItemDescription("Currency Widget", "icon_currency-widget.png")]
+[ClassMetaVersion("6.0.0")]
+public class CurrencyDashboardWidget : AbstractSimpleDashboardWidget
 {
-	[SchemaItemDescription("Currency Widget", "icon_currency-widget.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class CurrencyDashboardWidget : AbstractSimpleDashboardWidget
+	public CurrencyDashboardWidget() : base() {Init();}
+	public CurrencyDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public CurrencyDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+	private void Init()
 	{
-		public CurrencyDashboardWidget() : base() {Init();}
-		public CurrencyDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public CurrencyDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
+	}
+	public override OrigamDataType DataType
+	{
+		get
 		{
+			return OrigamDataType.Currency;
 		}
-
-		public override OrigamDataType DataType
-		{
-			get
-			{
-				return OrigamDataType.Currency;
-			}
-		}
-
 	}
 }

@@ -28,72 +28,60 @@ using Origam.DA;
 using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// Summary description for AttachmentService.
+/// </summary>
+public class AttachmentService : IWorkbenchService, IAttachmentService
 {
-	/// <summary>
-	/// Summary description for AttachmentService.
-	/// </summary>
-	public class AttachmentService : IWorkbenchService, IAttachmentService
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public AttachmentService()
 	{
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public AttachmentService()
-		{
-		}
-
-		#region IWorkbenchService Members
-
-		public void UnloadService()
-		{
-		}
-
-		public void InitializeService()
-		{
-		}
-
-		public void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId)
-		{
-			DatasetGenerator dsg = new DatasetGenerator(true);
-			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f")));
-
-			DataSet data = dsg.CreateDataSet(ds);
-			DataRow r = data.Tables["Attachment"].NewRow();
-
-			r["Id"] = Guid.NewGuid();
-			r["Data"] = attachment;
-			r["FileName"] = fileName;
-			r["RecordCreated"] = DateTime.Now;
-			r["RecordCreatedBy"] = profileId;
-			r["refParentRecordId"] = recordId;
-
-			data.Tables["Attachment"].Rows.Add(r);
-
-			core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), data, false, transactionId);
-		}
-
-        public void RemoveAttachment(Guid recordId, string transactionId)
-        {
-            DatasetGenerator dsg = new DatasetGenerator(true);
-            IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-            // fetch Attachment by refParentRecordId
-            DataSet attachmentDataSet = core.DataService.Instance.LoadData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
-                new Guid("b3624c91-526d-4b2b-a282-6d99e62a1eb5"), Guid.Empty, Guid.Empty, transactionId,
-                "Attachment_parRefParentRecordId", recordId);
-            if (attachmentDataSet.Tables[0].Rows.Count == 0)
-            {
-                // nothing to delete
-                return;
-            }
-            // delete the record           
-            attachmentDataSet.Tables[0].Rows[0].Delete();
-            core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), attachmentDataSet, false, transactionId);
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("Attachment with refParentRecordId `{0}' has been successfully removed.",
-                    recordId));
-            }
-        }
-		#endregion
 	}
+	#region IWorkbenchService Members
+	public void UnloadService()
+	{
+	}
+	public void InitializeService()
+	{
+	}
+	public void AddAttachment(string fileName, byte[] attachment, Guid recordId, Guid profileId, string transactionId)
+	{
+		DatasetGenerator dsg = new DatasetGenerator(true);
+		IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+		DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f")));
+		DataSet data = dsg.CreateDataSet(ds);
+		DataRow r = data.Tables["Attachment"].NewRow();
+		r["Id"] = Guid.NewGuid();
+		r["Data"] = attachment;
+		r["FileName"] = fileName;
+		r["RecordCreated"] = DateTime.Now;
+		r["RecordCreatedBy"] = profileId;
+		r["refParentRecordId"] = recordId;
+		data.Tables["Attachment"].Rows.Add(r);
+		core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), data, false, transactionId);
+	}
+    public void RemoveAttachment(Guid recordId, string transactionId)
+    {
+        DatasetGenerator dsg = new DatasetGenerator(true);
+        IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+        // fetch Attachment by refParentRecordId
+        DataSet attachmentDataSet = core.DataService.Instance.LoadData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
+            new Guid("b3624c91-526d-4b2b-a282-6d99e62a1eb5"), Guid.Empty, Guid.Empty, transactionId,
+            "Attachment_parRefParentRecordId", recordId);
+        if (attachmentDataSet.Tables[0].Rows.Count == 0)
+        {
+            // nothing to delete
+            return;
+        }
+        // delete the record           
+        attachmentDataSet.Tables[0].Rows[0].Delete();
+        core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), attachmentDataSet, false, transactionId);
+        if (log.IsDebugEnabled)
+        {
+            log.Debug(string.Format("Attachment with refParentRecordId `{0}' has been successfully removed.",
+                recordId));
+        }
+    }
+	#endregion
 }

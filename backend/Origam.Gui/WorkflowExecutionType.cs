@@ -19,11 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui
+namespace Origam.Gui;
+public enum WorkflowExecutionType
 {
-    public enum WorkflowExecutionType
-    {
-        ShowNewFormNoMerge = 0,
-        NoFormMerge = 1
-    }
+    ShowNewFormNoMerge = 0,
+    NoFormMerge = 1
 }

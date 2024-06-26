@@ -26,131 +26,122 @@ using System.Reflection;
 using System.Threading;
 using Origam.Extensions;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+public class OrigamFileManager: IDisposable
 {
-    public class OrigamFileManager: IDisposable
+    private static readonly log4net.ILog log
+        = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+    private readonly FilePersistenceIndex index;
+    private readonly OrigamPathFactory origamPathFactory;
+    private readonly FileEventQueue fileEventQueue;
+    public OrigamFileManager(FilePersistenceIndex index,
+        OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
     {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly FilePersistenceIndex index;
-        private readonly OrigamPathFactory origamPathFactory;
-        private readonly FileEventQueue fileEventQueue;
-
-        public OrigamFileManager(FilePersistenceIndex index,
-            OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
-        {
-            this.index = index;
-            this.origamPathFactory = origamPathFactory;
-            this.fileEventQueue = fileEventQueue;
-        }
-
-        public void WriteReferenceFileToDisc(string fullPath, string contents, ParentFolders parentFolderIds)
-        {
-            if (File.Exists(fullPath)) return;
-            OrigamPath path = origamPathFactory.Create(fullPath);
-            
-            fileEventQueue.Pause();
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-            using (StreamWriter sw = File.CreateText(fullPath))
-            {
-                sw.Write(contents);
-            }
-            OrigamReferenceFile referenceFile = new OrigamReferenceFile(path, parentFolderIds);
-            index.AddOrReplaceHash(referenceFile);
-            fileEventQueue.Continue();
-        }
+        this.index = index;
+        this.origamPathFactory = origamPathFactory;
+        this.fileEventQueue = fileEventQueue;
+    }
+    public void WriteReferenceFileToDisc(string fullPath, string contents, ParentFolders parentFolderIds)
+    {
+        if (File.Exists(fullPath)) return;
+        OrigamPath path = origamPathFactory.Create(fullPath);
         
-        public void RenameDirectory(DirectoryInfo dirToRename, string newName)
+        fileEventQueue.Pause();
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+        using (StreamWriter sw = File.CreateText(fullPath))
         {
-            string newDirPath =
-                Path.Combine(dirToRename.Parent.FullName, newName);
-            if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
-            fileEventQueue.Pause();
-            if (Directory.Exists(dirToRename.FullName))
-            {
-                Directory.Move(dirToRename.FullName, newDirPath);
-            }
-            index.RenameDirectory(dirToRename, newDirPath);
-            fileEventQueue.Continue();
+            sw.Write(contents);
         }
-        
-        public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
+        OrigamReferenceFile referenceFile = new OrigamReferenceFile(path, parentFolderIds);
+        index.AddOrReplaceHash(referenceFile);
+        fileEventQueue.Continue();
+    }
+    
+    public void RenameDirectory(DirectoryInfo dirToRename, string newName)
+    {
+        string newDirPath =
+            Path.Combine(dirToRename.Parent.FullName, newName);
+        if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
+        fileEventQueue.Pause();
+        if (Directory.Exists(dirToRename.FullName))
         {
-            string xmlToWrite = OrigamDocumentSorter
-                .CopyAndSort(xmlDocument)
-                .ToBeautifulString();
-            fileEventQueue.Pause();
-            Directory.CreateDirectory(origamFile.Path.Directory.FullName);
-            File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
-            origamFile.UpdateHash();
-            index.AddOrReplaceHash(origamFile);
-            fileEventQueue.Continue();
+            Directory.Move(dirToRename.FullName, newDirPath);
         }
-
-        public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
+        index.RenameDirectory(dirToRename, newDirPath);
+        fileEventQueue.Continue();
+    }
+    
+    public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
+    {
+        string xmlToWrite = OrigamDocumentSorter
+            .CopyAndSort(xmlDocument)
+            .ToBeautifulString();
+        fileEventQueue.Pause();
+        Directory.CreateDirectory(origamFile.Path.Directory.FullName);
+        File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
+        origamFile.UpdateHash();
+        index.AddOrReplaceHash(origamFile);
+        fileEventQueue.Continue();
+    }
+    public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
+    {
+        if (!Directory.Exists(oldFullDirectory.FullName))
         {
-            if (!Directory.Exists(oldFullDirectory.FullName))
-            {
-                return;
-            }
-
-            bool isEmpty = !oldFullDirectory
-                .GetAllFilesInSubDirectories()
-                .Any();
-            if (isEmpty)
-            {
-                Directory.Delete(oldFullDirectory.FullName, true);
-            }
-        } 
-
-        public void DeleteFile(OrigamFile origamFile)
-        {
-            fileEventQueue.Pause();
-            index.RemoveHash(origamFile);
-            index.Remove(origamFile);
-            DeleteFile(origamFile.Path.Absolute);
-            fileEventQueue.Continue();
+            return;
         }
-        
-        
-        public void RemoveDirectoryWithContents(DirectoryInfo packageDir)
+        bool isEmpty = !oldFullDirectory
+            .GetAllFilesInSubDirectories()
+            .Any();
+        if (isEmpty)
         {
-            fileEventQueue.Pause();
-            packageDir.Delete(true);
-            fileEventQueue.Continue();
+            Directory.Delete(oldFullDirectory.FullName, true);
         }
-
-        private void DeleteFile(String fileToDelete)
+    } 
+    public void DeleteFile(OrigamFile origamFile)
+    {
+        fileEventQueue.Pause();
+        index.RemoveHash(origamFile);
+        index.Remove(origamFile);
+        DeleteFile(origamFile.Path.Absolute);
+        fileEventQueue.Continue();
+    }
+    
+    
+    public void RemoveDirectoryWithContents(DirectoryInfo packageDir)
+    {
+        fileEventQueue.Pause();
+        packageDir.Delete(true);
+        fileEventQueue.Continue();
+    }
+    private void DeleteFile(String fileToDelete)
+    {
+        FileInfo fi = new FileInfo(fileToDelete);
+        if (!fi.Exists) return;
+        for (int i = 0; i < 10; i++)
         {
-            FileInfo fi = new FileInfo(fileToDelete);
-            if (!fi.Exists) return;
-            for (int i = 0; i < 10; i++)
+            try
             {
-                try
-                {
-                    fi.Delete();
-                    break;
-                } 
-                catch (IOException)
-                {
-                    Thread.Sleep(100);
-                }
-            }
-            fi.Refresh();
-            for (int i = 0; i < 10; i++)
+                fi.Delete();
+                break;
+            } 
+            catch (IOException)
             {
-                if (!fi.Exists) return;
                 Thread.Sleep(100);
-                fi.Refresh();
             }
-            throw new Exception($"Cannot remove file {fileToDelete}");
         }
-
-        public void Dispose()
+        fi.Refresh();
+        for (int i = 0; i < 10; i++)
         {
-            index?.Dispose();
-            fileEventQueue?.Dispose();
+            if (!fi.Exists) return;
+            Thread.Sleep(100);
+            fi.Refresh();
         }
+        throw new Exception($"Cannot remove file {fileToDelete}");
+    }
+    public void Dispose()
+    {
+        index?.Dispose();
+        fileEventQueue?.Dispose();
     }
 }

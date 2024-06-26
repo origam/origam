@@ -25,110 +25,93 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for EntityRelationFilter.
+/// </summary>
+[SchemaItemDescription("Filter Reference", 5)]
+[HelpTopic("Relationship+Filter")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("Filter")]
+[ClassMetaVersion("6.0.0")]
+public class EntityRelationFilter : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for EntityRelationFilter.
-	/// </summary>
-	[SchemaItemDescription("Filter Reference", 5)]
-    [HelpTopic("Relationship+Filter")]
-	[XmlModelRoot(CategoryConst)]
-	[DefaultProperty("Filter")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityRelationFilter : AbstractSchemaItem
+	public const string CategoryConst = "EntityRelationFilter";
+	public EntityRelationFilter() : base(){}
+	
+	public EntityRelationFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public EntityRelationFilter(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	public Guid FilterId;
+	[TypeConverter(typeof(RelationFilterConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[NotNullModelElementRuleAttribute()]
+    [XmlReference("filter", "FilterId")]
+    public EntityFilter Filter
 	{
-		public const string CategoryConst = "EntityRelationFilter";
-
-		public EntityRelationFilter() : base(){}
-		
-		public EntityRelationFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public EntityRelationFilter(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-
-		public Guid FilterId;
-
-		[TypeConverter(typeof(RelationFilterConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRuleAttribute()]
-        [XmlReference("filter", "FilterId")]
-        public EntityFilter Filter
+		get
 		{
-			get
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.FilterId;
+			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.FilterId;
-
-				return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				this.FilterId = Guid.Empty;
+				this.Name = "";
 			}
-			set
+			else
 			{
-				if(value == null)
-				{
-					this.FilterId = Guid.Empty;
-
-					this.Name = "";
-				}
-				else
-				{
-					this.FilterId = (Guid)value.PrimaryKey["Id"];
-
-					this.Name = this.Filter.Name;
-				}
+				this.FilterId = (Guid)value.PrimaryKey["Id"];
+				this.Name = this.Filter.Name;
 			}
 		}
-
-		#endregion
-
-		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "5";
-			}
-		}
-		
-		public override string ItemType
-		{
-			get
-			{
-				return EntityRelationFilter.CategoryConst;
-			}
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Filter);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
-			{
-				if(item.OldPrimaryKey != null)
-				{
-					if(item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
-					{
-						this.Filter = item as EntityFilter;
-						break;
-					}
-				}
-			}
-
-			base.UpdateReferences ();
-		}
-
-		public override SchemaItemCollection ChildItems
-		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
-		}
-		#endregion
 	}
+	#endregion
+	#region Overriden AbstractSchemaItem Members
+	public override string Icon
+	{
+		get
+		{
+			return "5";
+		}
+	}
+	
+	public override string ItemType
+	{
+		get
+		{
+			return EntityRelationFilter.CategoryConst;
+		}
+	}
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
+		dependencies.Add(this.Filter);
+		base.GetExtraDependencies (dependencies);
+	}
+	public override void UpdateReferences()
+	{
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+		{
+			if(item.OldPrimaryKey != null)
+			{
+				if(item.OldPrimaryKey.Equals(this.Filter.PrimaryKey))
+				{
+					this.Filter = item as EntityFilter;
+					break;
+				}
+			}
+		}
+		base.UpdateReferences ();
+	}
+	public override SchemaItemCollection ChildItems
+	{
+		get
+		{
+			return new SchemaItemCollection();
+		}
+	}
+	#endregion
 }

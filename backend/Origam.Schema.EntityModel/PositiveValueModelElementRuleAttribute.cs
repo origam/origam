@@ -24,39 +24,34 @@ using Origam.Schema.EntityModel;
 using System;
 using System.Data;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class PositiveValueModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	public PositiveValueModelElementRuleAttribute()
 	{
-		public PositiveValueModelElementRuleAttribute()
-		{
-		}
-
-		public override Exception CheckRule(object instance)
-		{
-			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
-		}
-
-		public override Exception CheckRule(object instance, string memberName)
-		{
-			if(memberName == String.Empty | memberName == null) CheckRule(instance);
-
-            var dataStructure = (IDataEntityColumn)instance;
-            OrigamDataType origamDataType = dataStructure.DataType;
-            
-            if(origamDataType is OrigamDataType.String)
+	}
+	public override Exception CheckRule(object instance)
+	{
+		return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+	}
+	public override Exception CheckRule(object instance, string memberName)
+	{
+		if(memberName == String.Empty | memberName == null) CheckRule(instance);
+        var dataStructure = (IDataEntityColumn)instance;
+        OrigamDataType origamDataType = dataStructure.DataType;
+        
+        if(origamDataType is OrigamDataType.String)
+        {
+            int value = (int)Reflector.GetValue(instance.GetType(), instance, memberName);
+            if (value == 0)
             {
-                int value = (int)Reflector.GetValue(instance.GetType(), instance, memberName);
-                if (value == 0)
-                {
-                    return new DataException("The Number cannot be zero!");
-                }
+                return new DataException("The Number cannot be zero!");
             }
-            return null;
-		}
+        }
+        return null;
 	}
 }

@@ -22,34 +22,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class ObjectExtensions
 {
-    public static class ObjectExtensions
+    private static readonly Dictionary<Type, object> caschedDefaultTypes =
+        new Dictionary<Type, object>();
+    
+    public static bool IsDefault(this object obj)
     {
-        private static readonly Dictionary<Type, object> caschedDefaultTypes =
-            new Dictionary<Type, object>();
+        if (ReferenceEquals(obj, null)) return true;
         
-        public static bool IsDefault(this object obj)
+        Type type = obj.GetType();
+        if (type.IsValueType)
         {
-            if (ReferenceEquals(obj, null)) return true;
-            
-            Type type = obj.GetType();
-            if (type.IsValueType)
-            {
-                return obj.Equals(GetValueTypeDefault(type));
-            }
-            return false;
+            return obj.Equals(GetValueTypeDefault(type));
         }
-
-        private static object GetValueTypeDefault(Type type)
+        return false;
+    }
+    private static object GetValueTypeDefault(Type type)
+    {
+        if (caschedDefaultTypes.ContainsKey(type))
         {
-            if (caschedDefaultTypes.ContainsKey(type))
-            {
-                return caschedDefaultTypes[type];
-            }
-            object defValue = Activator.CreateInstance(type);
-            caschedDefaultTypes.Add(type, defValue);
-            return defValue;
+            return caschedDefaultTypes[type];
         }
+        object defValue = Activator.CreateInstance(type);
+        caschedDefaultTypes.Add(type, defValue);
+        return defValue;
     }
 }

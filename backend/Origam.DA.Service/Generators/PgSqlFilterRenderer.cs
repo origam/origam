@@ -19,21 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Service.Generators
+namespace Origam.DA.Service.Generators;
+public class PgSqlFilterRenderer : AbstractFilterRenderer
 {
-    public class PgSqlFilterRenderer : AbstractFilterRenderer
+    public override string StringConcatenationChar => "||";
+    protected override string LikeOperator()
     {
-        public override string StringConcatenationChar => "||";
-
-        protected override string LikeOperator()
-        {
-            //for support case insensitive in PostgreSQL
-            return "ILIKE";
-        }
-
-        protected override string ColumnArray(string columnName, string operand, string[] rightValues)
-        {
-            return "\0" + columnName + " ::text " + operand + " (" + string.Join(", ", rightValues) + ")\0";
-        }
+        //for support case insensitive in PostgreSQL
+        return "ILIKE";
+    }
+    protected override string ColumnArray(string columnName, string operand, string[] rightValues)
+    {
+        return "\0" + columnName + " ::text " + operand + " (" + string.Join(", ", rightValues) + ")\0";
     }
 }
