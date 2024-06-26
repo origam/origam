@@ -70,7 +70,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 		if(this.Rule != null)
 			base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Rule);
 		base.GetExtraDependencies (dependencies);

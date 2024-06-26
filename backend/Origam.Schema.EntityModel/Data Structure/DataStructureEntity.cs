@@ -332,7 +332,7 @@ public class DataStructureEntity : AbstractSchemaItem
 	public override bool CanMove(UI.IBrowserNode2 newNode) =>
 		// can move to the root only
 		newNode.Equals(RootItem);
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Entity);
 		dependencies.Add(ConditionEntityConstant);

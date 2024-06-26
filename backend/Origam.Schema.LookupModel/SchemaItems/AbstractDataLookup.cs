@@ -48,7 +48,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	{
 		base.GetParameterReferences(ListMethod, list);
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ListDataStructure);
 		dependencies.Add(ValueDataStructure);

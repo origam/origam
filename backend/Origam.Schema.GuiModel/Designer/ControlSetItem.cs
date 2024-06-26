@@ -100,7 +100,7 @@ public class ControlSetItem  : AbstractSchemaItem
 		return ParentItem.ParentItem == null 
 			? new UI.BrowserNodeCollection() : base.ChildNodes();
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ControlItem);
 		if(ControlItem.PanelControlSet != null)

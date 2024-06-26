@@ -42,7 +42,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 		: base(schemaExtensionId) {}
 	public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey) {}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Report);
 		if(SelectionDialogEndRule != null)

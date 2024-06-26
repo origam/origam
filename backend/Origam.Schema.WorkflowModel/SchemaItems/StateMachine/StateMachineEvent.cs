@@ -61,7 +61,7 @@ public class StateMachineEvent : AbstractSchemaItem
 	#region Overriden AbstractSchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Action);
 		if(this.OldState != null)	dependencies.Add(this.OldState);

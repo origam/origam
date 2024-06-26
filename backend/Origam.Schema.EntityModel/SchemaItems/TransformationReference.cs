@@ -63,7 +63,7 @@ public class TransformationReference : AbstractSchemaItem
 		if(this.Transformation != null)
 			base.GetParameterReferences(this.Transformation as AbstractSchemaItem, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Transformation);
 		base.GetExtraDependencies (dependencies);

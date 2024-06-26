@@ -436,7 +436,7 @@ public class DataStructureColumn : AbstractSchemaItem
 //				}
 //			}
 //		}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Field);
 		if(this.DefaultLookup != null) dependencies.Add(this.DefaultLookup);

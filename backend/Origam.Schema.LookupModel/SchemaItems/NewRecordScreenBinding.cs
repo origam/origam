@@ -88,7 +88,7 @@ public class NewRecordScreenBinding
     #region Overriden AbstractSchemaItem Members
     public override string ItemType => CategoryConst;
 
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(MenuItem);
         AbstractSchemaItem menu = MenuItem;
@@ -208,7 +208,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 
     private IEnumerable<PanelControlSet> FindScreenSections(ControlSetItem controlSetItem)
     {
-        var dependencies = new ArrayList();
+        var dependencies = new List<ISchemaItem>();
         controlSetItem.GetExtraDependencies(dependencies);
         return dependencies.OfType<PanelControlSet>();
     }
@@ -226,7 +226,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 
     private IEnumerable<IDataLookup> GetLookups(ControlSetItem comboBox)
     {
-        var dependencies = new ArrayList();
+        var dependencies = new List<ISchemaItem>();
         comboBox.GetExtraDependencies(dependencies);
         return dependencies.OfType<IDataLookup>();
     }

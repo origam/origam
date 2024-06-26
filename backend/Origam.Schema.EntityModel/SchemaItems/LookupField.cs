@@ -227,7 +227,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	public override bool CanMove(UI.IBrowserNode2 newNode) 
 		=> newNode is IDataEntity;
 	public override string ItemType => AbstractDataEntityColumn.CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(DefaultLookup != null)
 		{

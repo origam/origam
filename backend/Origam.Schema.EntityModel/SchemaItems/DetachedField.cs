@@ -109,7 +109,7 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if(ArrayRelation != null)
         {

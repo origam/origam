@@ -50,7 +50,7 @@ public class WorkflowReference : AbstractSchemaItem
 		if(this.Workflow != null)
 			base.GetParameterReferences(Workflow, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Workflow);
 		base.GetExtraDependencies (dependencies);

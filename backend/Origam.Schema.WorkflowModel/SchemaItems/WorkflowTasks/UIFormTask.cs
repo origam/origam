@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -54,7 +55,7 @@ public class UIFormTask : WorkflowTask
 		OutputMethod = ServiceOutputMethod.FullMerge;
 	}
 	#region Override AbstractSchemaItem Members
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Screen);
 		if(RefreshDataStructure != null)

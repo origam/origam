@@ -70,7 +70,7 @@ public class StateMachineState : AbstractSchemaItem
 			}
 		}
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(DefaultSubstate != null)
 		{

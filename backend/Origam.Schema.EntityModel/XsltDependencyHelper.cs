@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel;
 /// </summary>
 public class XsltDependencyHelper
 {
-	public static void GetDependencies(AbstractSchemaItem item, ArrayList dependencies, string text)
+	public static void GetDependencies(AbstractSchemaItem item, List<ISchemaItem> dependencies, string text)
 	{
 		if(text == null) return;
         IPersistenceProvider persistenceprovider = item.PersistenceProvider;

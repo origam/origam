@@ -44,7 +44,7 @@ public class WorkflowPage : AbstractPage
 		this.ChildItemTypes.Add(typeof(PageParameterFileMapping));
 		this.ChildItemTypes.Add(typeof(RedirectWorkflowPageAction));
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Workflow);
 		base.GetExtraDependencies (dependencies);

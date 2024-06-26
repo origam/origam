@@ -61,7 +61,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 			}
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.LoadWorkflow);
 		base.GetExtraDependencies (dependencies);

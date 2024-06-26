@@ -41,7 +41,7 @@ public class EntityMenuAction : EntityUIAction
 	public EntityMenuAction(Key primaryKey) : base(primaryKey)	{}
 
 	#region Overriden AbstractDataEntityColumn Members
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Menu);
 		base.GetExtraDependencies (dependencies);

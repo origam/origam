@@ -113,7 +113,7 @@ public class DataStructureRule : AbstractSchemaItem
 	#region Overriden AbstractSchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Entity);
 		if(TargetField != null)

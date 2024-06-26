@@ -57,7 +57,7 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
 		if(this.Filter != null)
 			base.GetParameterReferences(Filter, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Filter);
 		base.GetExtraDependencies (dependencies);

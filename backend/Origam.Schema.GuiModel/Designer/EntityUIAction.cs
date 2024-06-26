@@ -72,7 +72,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
 			return new Hashtable(mappingDictionary);
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
         if (this.Rule != null)
         {

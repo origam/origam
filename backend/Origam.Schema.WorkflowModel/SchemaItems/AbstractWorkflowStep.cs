@@ -67,7 +67,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
         }
         return true;
     }
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.StartConditionRule != null) dependencies.Add(this.StartConditionRule);
 		if(this.StartConditionRuleContextStore != null) dependencies.Add(this.StartConditionRuleContextStore);

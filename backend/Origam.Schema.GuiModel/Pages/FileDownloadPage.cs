@@ -41,7 +41,7 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		this.ChildItemTypes.Add(typeof(PageParameterMapping));
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		if(this.Method != null) dependencies.Add(this.Method);

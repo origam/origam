@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -37,7 +38,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
 	public AbstractPage() : base() {Init();}
 	public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 	public AbstractPage(Key primaryKey) : base(primaryKey) {Init();}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{		
 		if (this.InputValidationRule != null) dependencies.Add(this.InputValidationRule);			
 		base.GetExtraDependencies(dependencies); 

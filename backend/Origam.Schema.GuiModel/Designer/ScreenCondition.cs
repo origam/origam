@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -64,7 +65,7 @@ public class ScreenCondition: AbstractSchemaItem
     {
     }
     
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(Screen);
     }

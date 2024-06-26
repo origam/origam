@@ -286,7 +286,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 	#endregion
 	#region Overriden AbstractSchemaItem Methods
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.DescribingField != null) dependencies.Add(this.DescribingField);
 		base.GetExtraDependencies (dependencies);

@@ -445,7 +445,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 			return AbstractDataEntityColumn.CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.ForeignKeyEntity != null) dependencies.Add(this.ForeignKeyEntity);
 		if(this.ForeignKeyField != null) dependencies.Add(this.ForeignKeyField);

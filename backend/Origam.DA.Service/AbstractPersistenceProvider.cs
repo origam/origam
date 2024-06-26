@@ -106,7 +106,7 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
         List<object> foundUsages = new List<object>();
         try
         {
-            ArrayList dep = item.GetDependencies(ignoreErrors);
+            List<ISchemaItem> dep = item.GetDependencies(ignoreErrors);
             foreach (AbstractSchemaItem depItem in dep)
             {
                 if (depItem != null)

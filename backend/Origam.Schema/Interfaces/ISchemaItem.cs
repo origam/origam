@@ -63,7 +63,7 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	AbstractSchemaItem DerivedFrom{get; set;}
 	bool IsAbstract{get; set;}
 	bool IsPersistable{get; set;}
-	ArrayList GetDependencies(bool ignoreErrors);
+	List<ISchemaItem> GetDependencies(bool ignoreErrors);
 	void UpdateReferences();
 	object Clone(bool keepKeys);
 	void SetExtensionRecursive(Package extension);

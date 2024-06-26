@@ -1066,9 +1066,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 	}
 	[Browsable(false)]
-	public ArrayList GetDependencies(bool ignoreErrors)
+	public List<ISchemaItem> GetDependencies(bool ignoreErrors)
 	{
-		ArrayList dependencies = new ArrayList();
+		var dependencies = new List<ISchemaItem>();
 		foreach(SchemaItemAncestor anc in this.Ancestors)
 		{
 			dependencies.Add(anc.Ancestor);
@@ -1083,7 +1083,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		return dependencies;
 	}
-	public virtual void GetExtraDependencies(ArrayList dependencies) {}
+	public virtual void GetExtraDependencies(List<ISchemaItem> dependencies) {}
 	
 	public virtual void UpdateReferences()
 	{

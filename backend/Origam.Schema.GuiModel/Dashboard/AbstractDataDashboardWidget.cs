@@ -23,7 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
@@ -38,7 +38,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	private void Init()
 	{
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		if(this.Method != null) dependencies.Add(this.Method);

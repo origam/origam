@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -38,7 +39,7 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
 	public DataConstantReferenceMenuItem() : base() {}
 	public DataConstantReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public DataConstantReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Constant);
         if(DataLookup != null) dependencies.Add(DataLookup);

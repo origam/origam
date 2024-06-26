@@ -58,7 +58,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
 		if(this.Rule != null) base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Rule);
 		if(this.ForegroundColorLookup != null) dependencies.Add(this.ForegroundColorLookup);

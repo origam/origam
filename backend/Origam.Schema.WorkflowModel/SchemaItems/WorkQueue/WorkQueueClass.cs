@@ -63,7 +63,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	#region Overriden AbstractSchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.EntityStructure != null) dependencies.Add(this.EntityStructure);
 		if(this.EntityStructurePrimaryKeyMethod != null) dependencies.Add(this.EntityStructurePrimaryKeyMethod);

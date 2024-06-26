@@ -112,7 +112,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		(this.BaseEntityField as AbstractSchemaItem).GetParameterReferences (this.BaseEntityField as AbstractSchemaItem, list);
 		(this.RelatedEntityField as AbstractSchemaItem).GetParameterReferences (this.RelatedEntityField as AbstractSchemaItem, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.BaseEntityField);
 		dependencies.Add(this.RelatedEntityField);

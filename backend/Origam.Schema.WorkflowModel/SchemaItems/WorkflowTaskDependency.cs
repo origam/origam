@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -45,7 +46,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 	#region Overriden AbstractDataEntityColumn Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Task);
 		base.GetExtraDependencies (dependencies);

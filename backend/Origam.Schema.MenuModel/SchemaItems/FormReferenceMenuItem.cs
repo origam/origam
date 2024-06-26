@@ -44,7 +44,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 		: base(schemaExtensionId) {}
 	public FormReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Screen);
 		if(DefaultSet != null)

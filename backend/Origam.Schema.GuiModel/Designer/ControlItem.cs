@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.GuiModel;
@@ -162,7 +163,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 			return ControlItem.CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		// we will not add panel control set, because panel handles deletion of this control,
 		// instead, ControlSetItem references directly the Panel definition

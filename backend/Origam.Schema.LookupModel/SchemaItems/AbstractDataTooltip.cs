@@ -53,7 +53,7 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         base.GetParameterReferences(this.TooltipLoadMethod, list);
     }
     
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.TooltipDataStructure);
         dependencies.Add(this.TooltipLoadMethod);

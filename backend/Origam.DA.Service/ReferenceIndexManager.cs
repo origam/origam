@@ -160,8 +160,8 @@ public static class ReferenceIndexManager
     }
     private static void GetReferencesFromDependencies(AbstractSchemaItem item)
     {
-        ArrayList dependencies = item.GetDependencies(false);
-        foreach (AbstractSchemaItem dependency in dependencies)
+        List<ISchemaItem> dependencies = item.GetDependencies(false);
+        foreach (ISchemaItem dependency in dependencies)
         {
             if (dependency != null)
             {

@@ -69,7 +69,7 @@ public class EntityFilterLookupReference : AbstractSchemaItem
 			base.GetParameterReferences(this.Lookup as AbstractSchemaItem, list);
 		base.GetParameterReferences(this, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Lookup);
 		base.GetExtraDependencies (dependencies);

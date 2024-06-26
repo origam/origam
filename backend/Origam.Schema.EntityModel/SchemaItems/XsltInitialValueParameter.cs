@@ -57,7 +57,7 @@ public class XsltInitialValueParameter : SchemaItemParameter
     }
     public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { InitArray(); }
     public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { InitArray(); }
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.Transformation);
     }
