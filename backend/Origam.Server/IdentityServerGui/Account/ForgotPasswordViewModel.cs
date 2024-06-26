@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.IdentityServerGui.Account
+namespace Origam.Server.IdentityServerGui.Account;
+public class ForgotPasswordViewModel
 {
-    public class ForgotPasswordViewModel
-    {
-        [Required(ErrorMessage = "EmailRequired")]
-        [EmailAddress(ErrorMessage = "EmailInvalid")]
-        public string Email { get; set; }
-    }
+    [Required(ErrorMessage = "EmailRequired")]
+    [EmailAddress(ErrorMessage = "EmailInvalid")]
+    public string Email { get; set; }
 }

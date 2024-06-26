@@ -24,91 +24,81 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Origam
+namespace Origam;
+/// <summary>
+/// Summary description for OrigamUserContext.
+/// </summary>
+public class OrigamUserContext
 {
-	/// <summary>
-	/// Summary description for OrigamUserContext.
-	/// </summary>
-	public class OrigamUserContext
-	{
-		private static IDictionary<string, Hashtable> _contexts
-            = new Dictionary<string, Hashtable>();
-        private static object _lock = new object();
-
-		public static Hashtable Context => GetContext(UserKey());
-
-        public static void Reset()
-        { 
-            string currentUsername = UserKey();
-            Reset(currentUsername);
-        }
-        
-        public static void Reset(string username)
+	private static IDictionary<string, Hashtable> _contexts
+        = new Dictionary<string, Hashtable>();
+    private static object _lock = new object();
+	public static Hashtable Context => GetContext(UserKey());
+    public static void Reset()
+    { 
+        string currentUsername = UserKey();
+        Reset(currentUsername);
+    }
+    
+    public static void Reset(string username)
+    {
+        lock (_lock)
         {
-            lock (_lock)
+            DisposeCachedObjects(username);
+            _contexts.Remove(username);
+        }
+    }
+    public static void ResetAll()
+    {
+        lock (_lock)
+        {
+            foreach (var contextEntry in _contexts)
             {
-                DisposeCachedObjects(username);
-                _contexts.Remove(username);
+                DisposeCachedObjects(contextEntry.Key);
+            }
+            _contexts.Clear();
+        }
+    }
+    private static Hashtable GetContext(string key)
+    {
+        lock (_lock)
+        {
+            if (!_contexts.ContainsKey(key))
+            {
+                _contexts.Add(key, new Hashtable());
+            }
+            return _contexts[key] as Hashtable;
+        }
+    }
+    private static void DisposeCachedObjects(string username)
+    {
+        Hashtable context = GetContext(username);
+        foreach (DictionaryEntry entry in context)
+        {
+            IDisposable disposableObject = entry.Value as IDisposable;
+            if (disposableObject != null)
+            {
+                disposableObject.Dispose();
             }
         }
-
-        public static void ResetAll()
+    }
+    private static string UserKey()
+    {            
+        if (!SecurityManager.CurrentPrincipal.Identity.IsAuthenticated)
         {
-            lock (_lock)
-            {
-                foreach (var contextEntry in _contexts)
-                {
-                    DisposeCachedObjects(contextEntry.Key);
-                }
-                _contexts.Clear();
-            }
-        }
-
-        private static Hashtable GetContext(string key)
+            return "guest";
+        }            
+        return SecurityManager.CurrentPrincipal.Identity.Name;
+    }
+    public static Hashtable GetContextItem(string cacheName)
+    {
+        lock (_lock)
         {
-            lock (_lock)
+            if (!Context.Contains(cacheName))
             {
-                if (!_contexts.ContainsKey(key))
-                {
-                    _contexts.Add(key, new Hashtable());
-                }
-                return _contexts[key] as Hashtable;
+                Context.Add(cacheName, new Hashtable());
             }
-        }
-
-        private static void DisposeCachedObjects(string username)
-        {
-            Hashtable context = GetContext(username);
-            foreach (DictionaryEntry entry in context)
-            {
-                IDisposable disposableObject = entry.Value as IDisposable;
-                if (disposableObject != null)
-                {
-                    disposableObject.Dispose();
-                }
-            }
-        }
-
-        private static string UserKey()
-        {            
-            if (!SecurityManager.CurrentPrincipal.Identity.IsAuthenticated)
-            {
-                return "guest";
-            }            
-            return SecurityManager.CurrentPrincipal.Identity.Name;
-        }
-
-        public static Hashtable GetContextItem(string cacheName)
-        {
-            lock (_lock)
-            {
-                if (!Context.Contains(cacheName))
-                {
-                    Context.Add(cacheName, new Hashtable());
-                }
-
-                return (Hashtable)Context[cacheName];
-            }
+            return (Hashtable)Context[cacheName];
         }
     }
 }

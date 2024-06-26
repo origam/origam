@@ -26,81 +26,76 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.FileSystemModeCheckers;
 
-namespace Origam.DA.Service.FileSystemModelCheckers
+namespace Origam.DA.Service.FileSystemModelCheckers;
+public class DeadModelFilesChecker: IFileSystemModelChecker
 {
-    public class DeadModelFilesChecker: IFileSystemModelChecker
+    private readonly FilePersistenceProvider filePersistenceProvider;
+    private readonly FileFilter ignoredFileFilter;
+    private readonly List<FileInfo> modelDirectoryFiles;
+    public DeadModelFilesChecker(
+        FilePersistenceProvider filePersistenceProvider,
+        FileFilter ignoredFileFilter,
+        List<FileInfo> modelDirectoryFiles)
     {
-        private readonly FilePersistenceProvider filePersistenceProvider;
-        private readonly FileFilter ignoredFileFilter;
-        private readonly List<FileInfo> modelDirectoryFiles;
-
-        public DeadModelFilesChecker(
-            FilePersistenceProvider filePersistenceProvider,
-            FileFilter ignoredFileFilter,
-            List<FileInfo> modelDirectoryFiles)
+        this.filePersistenceProvider = filePersistenceProvider;
+        this.ignoredFileFilter = ignoredFileFilter;
+        this.modelDirectoryFiles = modelDirectoryFiles;
+    }
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
+        var fileNamesToIgnore = new []
         {
-            this.filePersistenceProvider = filePersistenceProvider;
-            this.ignoredFileFilter = ignoredFileFilter;
-            this.modelDirectoryFiles = modelDirectoryFiles;
-        }
-
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
-            var fileNamesToIgnore = new []
-            {
-                ".origamGroupReference",
-                ".gitignore",
-                ".origamDoc",
-                "index.originalTracker",
-                "index.testTracker"
-            };
-            string topDirectoryPath = filePersistenceProvider.TopDirectory.FullName;
-            IFilePersistent[] allPersistedObjects = filePersistenceProvider
-                .RetrieveList<IFilePersistent>()
-                .ToArray();
-            var modelFilePaths = allPersistedObjects
-                .Select(persistent => Path.Combine(topDirectoryPath, persistent.RelativeFilePath));
-            var externalFilePaths = allPersistedObjects
-                .Select(persistent => filePersistenceProvider.FindPersistedObjectInfo(persistent.Id))
-                .Select(objectInfo => objectInfo.OrigamFile)
-                .SelectMany(origamFile => origamFile.ExternalFiles)
-                .Select(file => file.FullName);
-            
-            HashSet<string> knownFilePaths = new HashSet<string>(modelFilePaths
-                .Concat(externalFilePaths));
-          
-            var unexpectedFiles = modelDirectoryFiles
-                .Where(file => !knownFilePaths.Contains(file.FullName))
-                .Where(file => !fileNamesToIgnore.Contains(file.Name))
-                .Where(file => ignoredFileFilter.ShouldPass(file.FullName))
-                .ToList();
-
-            return  new []{ 
-                new ModelErrorSection
-                (
-                    caption : "These files are not referenced by any model element. Please remove them.",
-                    errorMessages : unexpectedFiles
-                        .Where(file => file.Extension != ".origam")
-                        .Select(file => 
-                            new ErrorMessage(
-                                text: file.FullName, 
-                                link:file.Directory?.FullName)
-                        )
-                        .ToList()
-                ),                
-                new ModelErrorSection
-                (
-                    caption : "These files are empty or contain incomplete data so they add nothing to the model. Please remove them.",
-                    errorMessages :  unexpectedFiles
-                        .Where(file => file.Extension == ".origam")
-                        .Select(file => 
-                            new ErrorMessage(
-                                text: file.FullName, 
-                                link:file.Directory?.FullName)
-                        )
-                        .ToList()
-                )
-            };
-        }
+            ".origamGroupReference",
+            ".gitignore",
+            ".origamDoc",
+            "index.originalTracker",
+            "index.testTracker"
+        };
+        string topDirectoryPath = filePersistenceProvider.TopDirectory.FullName;
+        IFilePersistent[] allPersistedObjects = filePersistenceProvider
+            .RetrieveList<IFilePersistent>()
+            .ToArray();
+        var modelFilePaths = allPersistedObjects
+            .Select(persistent => Path.Combine(topDirectoryPath, persistent.RelativeFilePath));
+        var externalFilePaths = allPersistedObjects
+            .Select(persistent => filePersistenceProvider.FindPersistedObjectInfo(persistent.Id))
+            .Select(objectInfo => objectInfo.OrigamFile)
+            .SelectMany(origamFile => origamFile.ExternalFiles)
+            .Select(file => file.FullName);
+        
+        HashSet<string> knownFilePaths = new HashSet<string>(modelFilePaths
+            .Concat(externalFilePaths));
+      
+        var unexpectedFiles = modelDirectoryFiles
+            .Where(file => !knownFilePaths.Contains(file.FullName))
+            .Where(file => !fileNamesToIgnore.Contains(file.Name))
+            .Where(file => ignoredFileFilter.ShouldPass(file.FullName))
+            .ToList();
+        return  new []{ 
+            new ModelErrorSection
+            (
+                caption : "These files are not referenced by any model element. Please remove them.",
+                errorMessages : unexpectedFiles
+                    .Where(file => file.Extension != ".origam")
+                    .Select(file => 
+                        new ErrorMessage(
+                            text: file.FullName, 
+                            link:file.Directory?.FullName)
+                    )
+                    .ToList()
+            ),                
+            new ModelErrorSection
+            (
+                caption : "These files are empty or contain incomplete data so they add nothing to the model. Please remove them.",
+                errorMessages :  unexpectedFiles
+                    .Where(file => file.Extension == ".origam")
+                    .Select(file => 
+                        new ErrorMessage(
+                            text: file.FullName, 
+                            link:file.Directory?.FullName)
+                    )
+                    .ToList()
+            )
+        };
     }
 }

@@ -23,34 +23,32 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Origam.Workbench.PropertyGrid
+namespace Origam.Workbench.PropertyGrid;
+public sealed class SimpleSiteImpl : ISite, IServiceProvider
 {
-    public sealed class SimpleSiteImpl : ISite, IServiceProvider
+    public IComponent Component { get; set; }
+    private readonly IContainer container = new Container();
+    IContainer ISite.Container { get { return container; } }
+    public bool DesignMode { get; set; }
+    public string Name { get; set; }
+    private Dictionary<Type, object> services;
+    public void AddService<T>(T service) where T : class
     {
-        public IComponent Component { get; set; }
-        private readonly IContainer container = new Container();
-        IContainer ISite.Container { get { return container; } }
-        public bool DesignMode { get; set; }
-        public string Name { get; set; }
-        private Dictionary<Type, object> services;
-        public void AddService<T>(T service) where T : class
+        if (services == null) services = new Dictionary<Type, object>();
+        services[typeof(T)] = service;
+    }
+    public void RemoveService<T>() where T : class
+    {
+        if (services != null) services.Remove(typeof(T));
+    }
+    object IServiceProvider.GetService(Type serviceType)
+    {
+        object service;
+        if (services != null && services.TryGetValue(serviceType, out
+        service))
         {
-            if (services == null) services = new Dictionary<Type, object>();
-            services[typeof(T)] = service;
+            return service;
         }
-        public void RemoveService<T>() where T : class
-        {
-            if (services != null) services.Remove(typeof(T));
-        }
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            object service;
-            if (services != null && services.TryGetValue(serviceType, out
-            service))
-            {
-                return service;
-            }
-            return null;
-        }
+        return null;
     }
 }

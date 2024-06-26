@@ -27,276 +27,254 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+public delegate void WorkflowHostFormEvent(object sender, WorkflowHostFormEventArgs e);
+/// <summary>
+/// Summary description for WorkflowHostFormEventArgs.
+/// </summary>
+public class WorkflowHostFormEventArgs : WorkflowHostEventArgs
 {
-	public delegate void WorkflowHostFormEvent(object sender, WorkflowHostFormEventArgs e);
-
-	/// <summary>
-	/// Summary description for WorkflowHostFormEventArgs.
-	/// </summary>
-	public class WorkflowHostFormEventArgs : WorkflowHostEventArgs
+	private IDataDocument _data;
+	private string _description;
+	private string _notification;
+	private FormControlSet _form;
+	private DataStructureRuleSet _ruleSet;
+	private IEndRule _endRule;
+	private Guid _taskId;
+	private AbstractDataStructure _structure;
+	private AbstractDataStructure _saveStructure;
+	private DataStructureMethod _refreshMethod;
+	private DataStructureSortSet _refreshSort;
+	private bool _isFinalForm;
+	private bool _allowSave;
+	private bool _isAutoNext;
+	private Hashtable _parameters;
+	private bool _isRefreshSuppressedBeforeFirstSave;
+	private IEndRule _saveConfirmationRule;
+    private bool _refreshPortalAfterSave;
+	public WorkflowHostFormEventArgs(Guid taskId, WorkflowEngine engine, IDataDocument data, 
+		string description, string notification, FormControlSet form, DataStructureRuleSet ruleSet, 
+		IEndRule endRule, AbstractDataStructure structure, DataStructureMethod refreshMethod,
+		DataStructureSortSet refreshSort, AbstractDataStructure saveStructure, bool isFinalForm, bool allowSave,
+		bool isAutoNext, Hashtable parameters, bool isRefreshSuppressedBeforeFirstSave,
+		IEndRule saveConfirmationRule, bool refreshPortalAfterSave
+		) : base(engine, null)
 	{
-		private IDataDocument _data;
-		private string _description;
-		private string _notification;
-		private FormControlSet _form;
-		private DataStructureRuleSet _ruleSet;
-		private IEndRule _endRule;
-		private Guid _taskId;
-		private AbstractDataStructure _structure;
-		private AbstractDataStructure _saveStructure;
-		private DataStructureMethod _refreshMethod;
-		private DataStructureSortSet _refreshSort;
-		private bool _isFinalForm;
-		private bool _allowSave;
-		private bool _isAutoNext;
-		private Hashtable _parameters;
-		private bool _isRefreshSuppressedBeforeFirstSave;
-		private IEndRule _saveConfirmationRule;
-        private bool _refreshPortalAfterSave;
-
-		public WorkflowHostFormEventArgs(Guid taskId, WorkflowEngine engine, IDataDocument data, 
-			string description, string notification, FormControlSet form, DataStructureRuleSet ruleSet, 
-			IEndRule endRule, AbstractDataStructure structure, DataStructureMethod refreshMethod,
-			DataStructureSortSet refreshSort, AbstractDataStructure saveStructure, bool isFinalForm, bool allowSave,
-			bool isAutoNext, Hashtable parameters, bool isRefreshSuppressedBeforeFirstSave,
-			IEndRule saveConfirmationRule, bool refreshPortalAfterSave
-			) : base(engine, null)
+		_taskId = taskId;
+		_data = data;
+		_description = description;
+		_notification = notification;
+		_form = form;
+		_ruleSet = ruleSet;
+		_endRule = endRule;
+		_structure = structure;
+		_refreshMethod = refreshMethod;
+		_refreshSort = refreshSort;
+		_saveStructure = saveStructure;
+		_isFinalForm = isFinalForm;
+		_allowSave = allowSave;
+		_isAutoNext = isAutoNext;
+		_parameters = parameters;
+		_isRefreshSuppressedBeforeFirstSave = isRefreshSuppressedBeforeFirstSave;
+		_saveConfirmationRule = saveConfirmationRule;
+        _refreshPortalAfterSave = refreshPortalAfterSave;
+	}
+	public IDataDocument Data
+	{
+		get
 		{
-			_taskId = taskId;
-			_data = data;
-			_description = description;
-			_notification = notification;
-			_form = form;
-			_ruleSet = ruleSet;
-			_endRule = endRule;
-			_structure = structure;
-			_refreshMethod = refreshMethod;
-			_refreshSort = refreshSort;
-			_saveStructure = saveStructure;
-			_isFinalForm = isFinalForm;
-			_allowSave = allowSave;
-			_isAutoNext = isAutoNext;
-			_parameters = parameters;
-			_isRefreshSuppressedBeforeFirstSave = isRefreshSuppressedBeforeFirstSave;
-			_saveConfirmationRule = saveConfirmationRule;
-            _refreshPortalAfterSave = refreshPortalAfterSave;
+			return _data;
 		}
-
-		public IDataDocument Data
+		set
 		{
-			get
-			{
-				return _data;
-			}
-			set
-			{
-				_data = value;
-			}
+			_data = value;
 		}
-
-		public string Description
+	}
+	public string Description
+	{
+		get
 		{
-			get
-			{
-				return _description;
-			}
-			set
-			{
-				_description = value;
-			}
+			return _description;
 		}
-
-		public string Notification
+		set
 		{
-			get
-			{
-				return _notification;
-			}
-			set
-			{
-				_notification = value;
-			}
+			_description = value;
 		}
-
-		public FormControlSet Form
+	}
+	public string Notification
+	{
+		get
 		{
-			get
-			{
-				return _form;
-			}
-			set
-			{
-				_form = value;
-			}
+			return _notification;
 		}
-
-		public AbstractDataStructure DataStructure
+		set
 		{
-			get
-			{
-				return _structure;
-			}
-			set
-			{
-				_structure = value;
-			}
+			_notification = value;
 		}
-
-		public DataStructureRuleSet RuleSet
+	}
+	public FormControlSet Form
+	{
+		get
 		{
-			get
-			{
-				return _ruleSet;
-			}
-			set
-			{
-				_ruleSet = value;
-			}
+			return _form;
 		}
-
-		public DataStructureMethod RefreshMethod
+		set
 		{
-			get
-			{
-				return _refreshMethod;
-			}
-			set
-			{
-				_refreshMethod = value;
-			}
+			_form = value;
 		}
-
-		public DataStructureSortSet RefreshSort
+	}
+	public AbstractDataStructure DataStructure
+	{
+		get
 		{
-			get
-			{
-				return _refreshSort;
-			}
-			set
-			{
-				_refreshSort = value;
-			}
+			return _structure;
 		}
-
-		public AbstractDataStructure SaveDataStructure
+		set
 		{
-			get
-			{
-				return _saveStructure;
-			}
-			set
-			{
-				_saveStructure = value;
-			}
+			_structure = value;
 		}
-
-		public IEndRule EndRule
+	}
+	public DataStructureRuleSet RuleSet
+	{
+		get
 		{
-			get
-			{
-				return _endRule;
-			}
-			set
-			{
-				_endRule = value;
-			}
+			return _ruleSet;
 		}
-
-		public Guid TaskId
+		set
 		{
-			get
-			{
-				return _taskId;
-			}
-			set
-			{
-				_taskId = value;
-			}
+			_ruleSet = value;
 		}
-
-		public bool IsFinalForm
+	}
+	public DataStructureMethod RefreshMethod
+	{
+		get
 		{
-			get
-			{
-				return _isFinalForm;
-			}
-			set
-			{
-				_isFinalForm = value;
-			}
+			return _refreshMethod;
 		}
-
-		public bool AllowSave
+		set
 		{
-			get
-			{
-				return _allowSave;
-			}
-			set
-			{
-				_allowSave = value;
-			}
+			_refreshMethod = value;
 		}
-
-		public bool IsAutoNext
+	}
+	public DataStructureSortSet RefreshSort
+	{
+		get
 		{
-			get
-			{
-				return _isAutoNext;
-			}
-			set
-			{
-				_isAutoNext = value;
-			}
+			return _refreshSort;
 		}
-
-		public bool IsRefreshSuppressedBeforeFirstSave
+		set
 		{
-			get
-			{
-				return _isRefreshSuppressedBeforeFirstSave;
-			}
-			set
-			{
-				_isRefreshSuppressedBeforeFirstSave = value;
-			}
+			_refreshSort = value;
 		}
-
-		public IEndRule SaveConfirmationRule
+	}
+	public AbstractDataStructure SaveDataStructure
+	{
+		get
 		{
-			get
-			{
-				return _saveConfirmationRule;
-			}
-			set
-			{
-				_saveConfirmationRule = value;
-			}
+			return _saveStructure;
 		}
-
-		public Hashtable Parameters
+		set
 		{
-			get
-			{
-				return _parameters;
-			}
-			set
-			{
-				_parameters = value;
-			}
+			_saveStructure = value;
 		}
-
-        public bool RefreshPortalAfterSave
+	}
+	public IEndRule EndRule
+	{
+		get
+		{
+			return _endRule;
+		}
+		set
+		{
+			_endRule = value;
+		}
+	}
+	public Guid TaskId
+	{
+		get
+		{
+			return _taskId;
+		}
+		set
+		{
+			_taskId = value;
+		}
+	}
+	public bool IsFinalForm
+	{
+		get
+		{
+			return _isFinalForm;
+		}
+		set
+		{
+			_isFinalForm = value;
+		}
+	}
+	public bool AllowSave
+	{
+		get
+		{
+			return _allowSave;
+		}
+		set
+		{
+			_allowSave = value;
+		}
+	}
+	public bool IsAutoNext
+	{
+		get
+		{
+			return _isAutoNext;
+		}
+		set
+		{
+			_isAutoNext = value;
+		}
+	}
+	public bool IsRefreshSuppressedBeforeFirstSave
+	{
+		get
+		{
+			return _isRefreshSuppressedBeforeFirstSave;
+		}
+		set
+		{
+			_isRefreshSuppressedBeforeFirstSave = value;
+		}
+	}
+	public IEndRule SaveConfirmationRule
+	{
+		get
+		{
+			return _saveConfirmationRule;
+		}
+		set
+		{
+			_saveConfirmationRule = value;
+		}
+	}
+	public Hashtable Parameters
+	{
+		get
+		{
+			return _parameters;
+		}
+		set
+		{
+			_parameters = value;
+		}
+	}
+    public bool RefreshPortalAfterSave
+    {
+        get
         {
-            get
-            {
-                return _refreshPortalAfterSave;
-            }
-            set
-            {
-                _refreshPortalAfterSave = value;
-            }
+            return _refreshPortalAfterSave;
+        }
+        set
+        {
+            _refreshPortalAfterSave = value;
         }
     }
 }

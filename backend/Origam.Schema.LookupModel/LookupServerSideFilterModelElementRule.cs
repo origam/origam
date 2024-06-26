@@ -22,46 +22,42 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-    /// <summary>
-    /// Summary description for NotNullModelElementRuleAttribute.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class LookupServerSideFilterModelElementRuleAttribute : AbstractModelElementRuleAttribute
+    public LookupServerSideFilterModelElementRuleAttribute()
     {
-        public LookupServerSideFilterModelElementRuleAttribute()
+    }
+    public override Exception CheckRule(object instance)
+    {
+        return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+    }
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        AbstractDataLookup lookup = instance as AbstractDataLookup;
+        if(lookup != null && lookup.IsFilteredServerside)
         {
-        }
-
-        public override Exception CheckRule(object instance)
-        {
-            return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
-        }
-
-        public override Exception CheckRule(object instance, string memberName)
-        {
-            AbstractDataLookup lookup = instance as AbstractDataLookup;
-            if(lookup != null && lookup.IsFilteredServerside)
+            switch (memberName)
             {
-                switch (memberName)
-                {
-                    case "ServersideFilterParameter":
-                        if (lookup.ServersideFilterParameter == null
-                            || lookup.ServersideFilterParameter == string.Empty)
-                        {
-                            return new ArgumentNullException("ServersideFilterParameter");
-                        }
-                        break;
-                    case "ListMethod":
-                        if (lookup.ListMethod == null)
-                        {
-                            return new ArgumentNullException("ListMethod");
-                        }
-                        break;
-                }
+                case "ServersideFilterParameter":
+                    if (lookup.ServersideFilterParameter == null
+                        || lookup.ServersideFilterParameter == string.Empty)
+                    {
+                        return new ArgumentNullException("ServersideFilterParameter");
+                    }
+                    break;
+                case "ListMethod":
+                    if (lookup.ListMethod == null)
+                    {
+                        return new ArgumentNullException("ListMethod");
+                    }
+                    break;
             }
-            return null;
         }
+        return null;
     }
 }

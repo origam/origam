@@ -24,171 +24,150 @@ using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Workflow.Tasks
+namespace Origam.Workflow.Tasks;
+/// <summary>
+/// Summary description for WorkflowCallEngineTask.
+/// </summary>
+public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
 {
-	/// <summary>
-	/// Summary description for WorkflowCallEngineTask.
-	/// </summary>
-	public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
+	WorkflowEngine _call;
+	public WorkflowCallEngineTask() : base()
 	{
-		WorkflowEngine _call;
-
-		public WorkflowCallEngineTask() : base()
+	}
+	public override void Execute()
+	{
+		Exception exception = null;
+		try
 		{
-		}
-
-		public override void Execute()
-		{
-			Exception exception = null;
-			try
-			{
-				MeasuredExecution();
-                SetWorkflowTrace();
-                OnExecute();
-            }
-			catch(Exception ex)
-			{
-				exception = ex;
-				OnFinished(new WorkflowEngineTaskEventArgs(exception));
-			}
-		}
-
-        private void SetWorkflowTrace()
-        {
-            WorkflowCallTask task = this.Step as WorkflowCallTask;
-            switch (task.Trace)
-            {
-                case Trace.Yes:
-                    _call.Trace = true;
-                    break;
-                case Trace.No :
-                    _call.Trace = false;
-                    break;
-                case Trace.InheritFromParent:
-                    break;
-            }
+			MeasuredExecution();
+            SetWorkflowTrace();
+            OnExecute();
         }
-
-        protected override void MeasuredExecution()
+		catch(Exception ex)
 		{
-            WorkflowCallTask task = this.Step as WorkflowCallTask;
-
-            _call = this.Engine.GetSubEngine(task.Workflow, task.Workflow.TransactionBehavior);
-            _call.Name = task.Workflow.Name;
-
-            if (ProfilingTools.IsDebugEnabled)
-			{
-				OperationTimer.Global.Start(
-					logEntryType: WorkflowItemType,
-					path: Step is AbstractSchemaItem schemItem ? schemItem.Path : "",
-					hash: _call.GetHashCode(),
-					id: Step.NodeId);
-			}
+			exception = ex;
+			OnFinished(new WorkflowEngineTaskEventArgs(exception));
 		}
-
-		protected override void OnExecute()
+	}
+    private void SetWorkflowTrace()
+    {
+        WorkflowCallTask task = this.Step as WorkflowCallTask;
+        switch (task.Trace)
+        {
+            case Trace.Yes:
+                _call.Trace = true;
+                break;
+            case Trace.No :
+                _call.Trace = false;
+                break;
+            case Trace.InheritFromParent:
+                break;
+        }
+    }
+    protected override void MeasuredExecution()
+	{
+        WorkflowCallTask task = this.Step as WorkflowCallTask;
+        _call = this.Engine.GetSubEngine(task.Workflow, task.Workflow.TransactionBehavior);
+        _call.Name = task.Workflow.Name;
+        if (ProfilingTools.IsDebugEnabled)
 		{
-			this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
-			this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
-
-			WorkflowCallTask task = this.Step as WorkflowCallTask;
-
-			// Fill input context stores
-			foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
+			OperationTimer.Global.Start(
+				logEntryType: WorkflowItemType,
+				path: Step is AbstractSchemaItem schemItem ? schemItem.Path : "",
+				hash: _call.GetHashCode(),
+				id: Step.NodeId);
+		}
+	}
+	protected override void OnExecute()
+	{
+		this.Engine.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
+		this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
+		WorkflowCallTask task = this.Step as WorkflowCallTask;
+		// Fill input context stores
+		foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
+		{
+			if(link.Direction == ContextStoreLinkDirection.Input)
 			{
-				if(link.Direction == ContextStoreLinkDirection.Input)
+				object val;
+				try
 				{
-					object val;
-
-					try
-					{
-						val = this.Engine.RuleEngine.EvaluateContext(
-							link.XPath, 
-							this.Engine.RuleEngine.GetContext(link.CallerContextStore), 
-							link.TargetContextStore.DataType,
-							link.TargetContextStore.Structure);
-					}
-					catch(Exception ex)
-					{
-						throw new OrigamException(ResourceUtils.GetString("ErrorContextEvalFailed", link.Path), ex);
-					}
-						
-					_call.InputContexts.Add(link.TargetContextStore.PrimaryKey, val);
+					val = this.Engine.RuleEngine.EvaluateContext(
+						link.XPath, 
+						this.Engine.RuleEngine.GetContext(link.CallerContextStore), 
+						link.TargetContextStore.DataType,
+						link.TargetContextStore.Structure);
 				}
+				catch(Exception ex)
+				{
+					throw new OrigamException(ResourceUtils.GetString("ErrorContextEvalFailed", link.Path), ex);
+				}
+					
+				_call.InputContexts.Add(link.TargetContextStore.PrimaryKey, val);
 			}
-
-			// Run
-			Engine.ExecuteSubEngineWorkflow(_call);
 		}
-
-		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+		// Run
+		Engine.ExecuteSubEngineWorkflow(_call);
+	}
+	private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+	{
+		if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
 		{
-			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+			UnsubscribeEvents();
+			if(e.Exception != null)
 			{
 				UnsubscribeEvents();
-
-				if(e.Exception != null)
+				OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+				return;
+			}
+			WorkflowCallTask task = this.Step as WorkflowCallTask;
+			// Fill output context stores
+			if(task.OutputMethod != ServiceOutputMethod.Ignore)
+			{
+				foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
 				{
-					UnsubscribeEvents();
-					OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
-					return;
-				}
-
-				WorkflowCallTask task = this.Step as WorkflowCallTask;
-
-				// Fill output context stores
-				if(task.OutputMethod != ServiceOutputMethod.Ignore)
-				{
-					foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
+					if(link.Direction == ContextStoreLinkDirection.Output)
 					{
-						if(link.Direction == ContextStoreLinkDirection.Output)
-						{
-							object val = _call.RuleEngine.EvaluateContext(
-								link.XPath, 
-								_call.RuleEngine.GetContext(link.TargetContextStore), 
-								link.CallerContextStore.DataType,
-								link.CallerContextStore.Structure);
-						
-							this.Engine.MergeContext(
-								link.CallerContextStore.PrimaryKey,
-								val, 
-								task, 
-								this.Engine.ContextStoreName(link.CallerContextStore.PrimaryKey), 
-								task.OutputMethod);
-						}
-
-						// handle return context store
-						if(link.Direction == ContextStoreLinkDirection.Return)
-						{
-							this.Result = _call.RuleEngine.EvaluateContext(
-								link.XPath, 
-								_call.RuleEngine.GetContext(link.TargetContextStore),
-								link.CallerContextStore.DataType,
-								link.CallerContextStore.Structure);
-						}
+						object val = _call.RuleEngine.EvaluateContext(
+							link.XPath, 
+							_call.RuleEngine.GetContext(link.TargetContextStore), 
+							link.CallerContextStore.DataType,
+							link.CallerContextStore.Structure);
+					
+						this.Engine.MergeContext(
+							link.CallerContextStore.PrimaryKey,
+							val, 
+							task, 
+							this.Engine.ContextStoreName(link.CallerContextStore.PrimaryKey), 
+							task.OutputMethod);
+					}
+					// handle return context store
+					if(link.Direction == ContextStoreLinkDirection.Return)
+					{
+						this.Result = _call.RuleEngine.EvaluateContext(
+							link.XPath, 
+							_call.RuleEngine.GetContext(link.TargetContextStore),
+							link.CallerContextStore.DataType,
+							link.CallerContextStore.Structure);
 					}
 				}
-
+			}
+			OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+		}
+	}
+	private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+	{
+		if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+		{
+			if(e.Exception != null)
+			{
+				UnsubscribeEvents();
 				OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
 			}
 		}
-
-		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
-		{
-			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
-			{
-				if(e.Exception != null)
-				{
-					UnsubscribeEvents();
-					OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
-				}
-			}
-		}
-
-		private void UnsubscribeEvents()
-		{
-			this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
-			this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
-		}
+	}
+	private void UnsubscribeEvents()
+	{
+		this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
+		this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
 	}
 }

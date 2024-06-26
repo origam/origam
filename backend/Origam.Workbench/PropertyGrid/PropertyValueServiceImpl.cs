@@ -24,49 +24,46 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing.Design;
 
-namespace Origam.Workbench.PropertyGrid
+namespace Origam.Workbench.PropertyGrid;
+public sealed class PropertyValueServiceImpl : IPropertyValueUIService
 {
-    public sealed class PropertyValueServiceImpl : IPropertyValueUIService
+    public event EventHandler PropertyUIValueItemsChanged;
+    public event PropertyValueUIHandler QueryPropertyUIValueItems;
+    public PropertyValueUIItem[]
+    GetPropertyUIValueItems(ITypeDescriptorContext context,
+    PropertyDescriptor propDesc)
     {
-        public event EventHandler PropertyUIValueItemsChanged;
-        public event PropertyValueUIHandler QueryPropertyUIValueItems;
-
-        public PropertyValueUIItem[]
-        GetPropertyUIValueItems(ITypeDescriptorContext context,
-        PropertyDescriptor propDesc)
+        ArrayList list = null;
+        if (QueryPropertyUIValueItems != null)
         {
-            ArrayList list = null;
-            if (QueryPropertyUIValueItems != null)
-            {
-                list = new ArrayList();
-                QueryPropertyUIValueItems(context, propDesc, list);
-            }
-            if (list == null || list.Count == 0)
-            {
-                return new PropertyValueUIItem[0];
-            }
-            PropertyValueUIItem[] result = new PropertyValueUIItem[list.Count];
-            list.CopyTo(result);
-            return result;
+            list = new ArrayList();
+            QueryPropertyUIValueItems(context, propDesc, list);
         }
-        public void NotifyPropertyValueUIItemsChanged()
+        if (list == null || list.Count == 0)
         {
-            if (PropertyUIValueItemsChanged != null)
-            {
-                PropertyUIValueItemsChanged(this, EventArgs.Empty);
-            }
+            return new PropertyValueUIItem[0];
         }
-        void
-        IPropertyValueUIService.RemovePropertyValueUIHandler(PropertyValueUIHandler
-        newHandler)
+        PropertyValueUIItem[] result = new PropertyValueUIItem[list.Count];
+        list.CopyTo(result);
+        return result;
+    }
+    public void NotifyPropertyValueUIItemsChanged()
+    {
+        if (PropertyUIValueItemsChanged != null)
         {
-            QueryPropertyUIValueItems -= newHandler;
+            PropertyUIValueItemsChanged(this, EventArgs.Empty);
         }
-        void
-        IPropertyValueUIService.AddPropertyValueUIHandler(PropertyValueUIHandler
-        newHandler)
-        {
-            QueryPropertyUIValueItems += newHandler;
-        }
+    }
+    void
+    IPropertyValueUIService.RemovePropertyValueUIHandler(PropertyValueUIHandler
+    newHandler)
+    {
+        QueryPropertyUIValueItems -= newHandler;
+    }
+    void
+    IPropertyValueUIService.AddPropertyValueUIHandler(PropertyValueUIHandler
+    newHandler)
+    {
+        QueryPropertyUIValueItems += newHandler;
     }
 }

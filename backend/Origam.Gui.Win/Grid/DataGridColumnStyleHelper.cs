@@ -25,40 +25,34 @@ using System.Data;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for DataGridColumnStyleHelper.
+/// </summary>
+public class DataGridColumnStyleHelper
 {
-	/// <summary>
-	/// Summary description for DataGridColumnStyleHelper.
-	/// </summary>
-	public class DataGridColumnStyleHelper
+	private DataGridColumnStyleHelper()
 	{
-		private DataGridColumnStyleHelper()
+	}
+	public static EntityFormatting Formatting(DataGridColumnStyle columnStyle, CurrencyManager source, int rowNum)
+	{
+		try
 		{
-		}
-
-		public static EntityFormatting Formatting(DataGridColumnStyle columnStyle, CurrencyManager source, int rowNum)
-		{
-			try
+			if(columnStyle.DataGridTableStyle == null) return null;
+			AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
+			if(panel != null)
 			{
-				if(columnStyle.DataGridTableStyle == null) return null;
-
-				AsPanel panel = columnStyle.DataGridTableStyle.DataGrid.Parent as AsPanel;
-				if(panel != null)
+				DataRow row = (source.List[rowNum] as DataRowView).Row;
+				if(row.Table.Columns.Contains("Id"))
 				{
-					DataRow row = (source.List[rowNum] as DataRowView).Row;
-
-					if(row.Table.Columns.Contains("Id"))
+					if(row["id"] is Guid)
 					{
-						if(row["id"] is Guid)
-						{
-							return panel.Formatting(row, (Guid)row["Id"]);
-						}
+						return panel.Formatting(row, (Guid)row["Id"]);
 					}
 				}
 			}
-			catch{}
-
-			return null;
 		}
+		catch{}
+		return null;
 	}
 }

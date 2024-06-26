@@ -26,85 +26,73 @@ using Origam.DA.ObjectPersistence;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for Graphics.
+/// </summary>
+[SchemaItemDescription("Style", "icon_style.png")]
+[HelpTopic("Styles")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class UIStyle : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for Graphics.
-	/// </summary>
-	[SchemaItemDescription("Style", "icon_style.png")]
-    [HelpTopic("Styles")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class UIStyle : AbstractSchemaItem
+	public const string CategoryConst = "Style";
+    public UIStyle() : base() { Init(); }
+    public UIStyle(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+    public UIStyle(Key primaryKey) : base(primaryKey) { Init(); }
+    private void Init()
+    {
+        this.ChildItemTypes.Add(typeof(UIStyleProperty));
+    }
+    public string StyleDefinition()
+    {
+        StringBuilder result = new StringBuilder();
+        foreach (UIStyleProperty property in 
+            this.ChildItemsByType(UIStyleProperty.CategoryConst))
+        {
+            result.AppendFormat("{0}:{1};", property.Property.Name, property.Value);
+        }
+        return result.ToString();
+    }
+    #region Properties
+    public Guid ControlId;
+    [TypeConverter(typeof(ControlConverter))]
+    [NotNullModelElementRule()]
+    [XmlReference("widget", "ControlId")]
+    public ControlItem Widget
+    {
+        get
+        {
+            return (ControlItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlItem), new ModelElementKey(this.ControlId));
+        }
+        set
+        {
+            this.ControlId = (Guid)value.PrimaryKey["Id"];
+        }
+    }
+    #endregion
+    #region Overriden AbstractSchemaItem Members
+    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    {
+        if (this.Widget != null)
+        {
+            dependencies.Add(this.Widget);
+        }
+        base.GetExtraDependencies(dependencies);
+    }
+    public override bool UseFolders
+    {
+        get
+        {
+            return false;
+        }
+    }
+	public override string ItemType
 	{
-		public const string CategoryConst = "Style";
-
-        public UIStyle() : base() { Init(); }
-
-        public UIStyle(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-        public UIStyle(Key primaryKey) : base(primaryKey) { Init(); }
-
-        private void Init()
-        {
-            this.ChildItemTypes.Add(typeof(UIStyleProperty));
-        }
-
-        public string StyleDefinition()
-        {
-            StringBuilder result = new StringBuilder();
-            foreach (UIStyleProperty property in 
-                this.ChildItemsByType(UIStyleProperty.CategoryConst))
-            {
-                result.AppendFormat("{0}:{1};", property.Property.Name, property.Value);
-            }
-            return result.ToString();
-        }
-
-        #region Properties
-        public Guid ControlId;
-
-        [TypeConverter(typeof(ControlConverter))]
-        [NotNullModelElementRule()]
-        [XmlReference("widget", "ControlId")]
-        public ControlItem Widget
-        {
-            get
-            {
-                return (ControlItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlItem), new ModelElementKey(this.ControlId));
-            }
-            set
-            {
-                this.ControlId = (Guid)value.PrimaryKey["Id"];
-            }
-        }
-        #endregion
-
-        #region Overriden AbstractSchemaItem Members
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-        {
-            if (this.Widget != null)
-            {
-                dependencies.Add(this.Widget);
-            }
-            base.GetExtraDependencies(dependencies);
-        }
-
-        public override bool UseFolders
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-		#endregion
 	}
+	#endregion
 }

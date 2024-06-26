@@ -24,26 +24,21 @@ using System.Drawing.Design;
 using Origam.Schema.GuiModel;
 
 
-namespace Origam.Gui.Designer
+namespace Origam.Gui.Designer;
+/// <summary>
+/// TreeNode is used for identifying Combra objects in ToolBox 
+/// </summary>
+public class ModelToolboxItem : ToolboxItem
 {
-	/// <summary>
-	/// TreeNode is used for identifying Combra objects in ToolBox 
-	/// </summary>
-	public class ModelToolboxItem : ToolboxItem
+	public ModelToolboxItem(Type type) : base(type)
 	{
-		public ModelToolboxItem(Type type) : base(type)
-		{
-		}
-		
-		public bool IsComplexType;
-
-		public bool IsExternal;
-
-		public bool IsFieldControl;
-
-		public string FieldName;
-        
-		public PanelControlSet  PanelControlSet;
-		public ControlItem ControlItem { get; set; }
 	}
+	
+	public bool IsComplexType;
+	public bool IsExternal;
+	public bool IsFieldControl;
+	public string FieldName;
+    
+	public PanelControlSet  PanelControlSet;
+	public ControlItem ControlItem { get; set; }
 }

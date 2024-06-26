@@ -21,16 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for TabControlBuilder.
+/// </summary>
+public class CollapsibleContainerBuilder
 {
-	/// <summary>
-	/// Summary description for TabControlBuilder.
-	/// </summary>
-	public class CollapsibleContainerBuilder
+	public static void Build(XmlElement parentNode)
 	{
-		public static void Build(XmlElement parentNode)
-		{
-			VBoxBuilder.Build(parentNode);
-		}
+		VBoxBuilder.Build(parentNode);
 	}
 }

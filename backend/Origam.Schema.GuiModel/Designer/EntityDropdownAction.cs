@@ -24,40 +24,34 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for EntityDropdownAction.
+/// </summary>
+[SchemaItemDescription("Dropdown Action", "UI Actions", 
+    "icon_dropdown-action.png")]
+[HelpTopic("DropDown+Action")]
+[ClassMetaVersion("6.0.0")]
+public class EntityDropdownAction : EntityUIAction
 {
-	/// <summary>
-	/// Summary description for EntityDropdownAction.
-	/// </summary>
-	[SchemaItemDescription("Dropdown Action", "UI Actions", 
-        "icon_dropdown-action.png")]
-    [HelpTopic("DropDown+Action")]
-    [ClassMetaVersion("6.0.0")]
-    public class EntityDropdownAction : EntityUIAction
+	public EntityDropdownAction() : base() {Init();}
+	public EntityDropdownAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public EntityDropdownAction(Key primaryKey) : base(primaryKey)	{Init();}
+
+	private void Init()
 	{
-		public EntityDropdownAction() : base() {Init();}
-
-		public EntityDropdownAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-
-		public EntityDropdownAction(Key primaryKey) : base(primaryKey)	{Init();}
-	
-		private void Init()
+		this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
+	}
+	[Browsable(false)]
+	public override PanelActionType ActionType
+	{
+		get
 		{
-			this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
+			return PanelActionType.Dropdown;
 		}
-
-		[Browsable(false)]
-		public override PanelActionType ActionType
+		set
 		{
-			get
-			{
-				return PanelActionType.Dropdown;
-			}
-			set
-			{
-				throw new InvalidOperationException();
-			}
+			throw new InvalidOperationException();
 		}
-
 	}
 }

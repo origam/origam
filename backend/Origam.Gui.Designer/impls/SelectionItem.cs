@@ -19,72 +19,60 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui.Designer
+namespace Origam.Gui.Designer;
+using System;
+using System.ComponentModel;
+// This class represents a single selected object.
+internal class SelectionItem 
 {
-
-	using System;
-	using System.ComponentModel;
-
-	// This class represents a single selected object.
-	internal class SelectionItem 
+	// Public objects this selection deals with
+	private IComponent                 component;      // the component that's selected
+	private SelectionServiceImpl    selectionMgr;   // host interface
+	private bool                      primary;        // is this the primary selection?
+	///  Constructor
+	internal SelectionItem(SelectionServiceImpl selectionMgr, IComponent component) 
 	{
-
-		// Public objects this selection deals with
-		private IComponent                 component;      // the component that's selected
-		private SelectionServiceImpl    selectionMgr;   // host interface
-		private bool                      primary;        // is this the primary selection?
-
-		///  Constructor
-		internal SelectionItem(SelectionServiceImpl selectionMgr, IComponent component) 
+		this.component = component;
+		this.selectionMgr = selectionMgr;
+	}
+	internal IComponent Component 
+	{
+		get 
 		{
-			this.component = component;
-			this.selectionMgr = selectionMgr;
-		}
-
-		internal IComponent Component 
-		{
-			get 
-			{
-				return component;
-			}
-		}
-
-		///     Determines if this is the primary selection.  The primary selection uses a
-		///     different set of grab handles and generally supports sizing. The caller must
-		///     verify that there is only one primary object; this merely updates the
-		///     UI.
-		internal virtual bool Primary 
-		{
-			get 
-			{
-				return primary;
-			}
-			set 
-			{
-				if (this.primary != value) 
-				{
-					this.primary = value;
-					if (SelectionItemInvalidate != null)
-						SelectionItemInvalidate(this, EventArgs.Empty);
-				}
-			}
-		}
-
-		internal event EventHandler SelectionItemDispose ;
-		internal event EventHandler SelectionItemInvalidate ;
-
-		///     Disposes of this selection.  We dispose of our region object if it still exists and we
-		///     invalidate our UI so that we don't leave any turds laying around.
-		internal virtual void Dispose() 
-		{
-			if (primary) 
-			{
-				selectionMgr.SetPrimarySelection((SelectionItem)null);
-			}
-
-			if (SelectionItemDispose != null)
-				SelectionItemDispose(this, EventArgs.Empty);
+			return component;
 		}
 	}
-
+	///     Determines if this is the primary selection.  The primary selection uses a
+	///     different set of grab handles and generally supports sizing. The caller must
+	///     verify that there is only one primary object; this merely updates the
+	///     UI.
+	internal virtual bool Primary 
+	{
+		get 
+		{
+			return primary;
+		}
+		set 
+		{
+			if (this.primary != value) 
+			{
+				this.primary = value;
+				if (SelectionItemInvalidate != null)
+					SelectionItemInvalidate(this, EventArgs.Empty);
+			}
+		}
+	}
+	internal event EventHandler SelectionItemDispose ;
+	internal event EventHandler SelectionItemInvalidate ;
+	///     Disposes of this selection.  We dispose of our region object if it still exists and we
+	///     invalidate our UI so that we don't leave any turds laying around.
+	internal virtual void Dispose() 
+	{
+		if (primary) 
+		{
+			selectionMgr.SetPrimarySelection((SelectionItem)null);
+		}
+		if (SelectionItemDispose != null)
+			SelectionItemDispose(this, EventArgs.Empty);
+	}
 }

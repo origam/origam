@@ -22,35 +22,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 
-namespace OrigamArchitect
+namespace OrigamArchitect;
+class SystemInformation : SplashScreenPopUp
 {
-	class SystemInformation : SplashScreenPopUp
+	protected override void SystemInformation_Load(object sender, EventArgs e)
 	{
-		protected override void SystemInformation_Load(object sender, EventArgs e)
-		{
-			Origam.Workflow.DebugInfo di = new Origam.Workflow.DebugInfo();
-			SetText(di.GetInfo());
-		}
-
-		protected override string GetTitle()
-		{
-			return "System Information";
-		}
-	}	
-	
-	class Attributions : SplashScreenPopUp
+		Origam.Workflow.DebugInfo di = new Origam.Workflow.DebugInfo();
+		SetText(di.GetInfo());
+	}
+	protected override string GetTitle()
 	{
-		protected override void SystemInformation_Load(object sender, EventArgs e)
-		{
-			if (File.Exists("Attributions.txt"))
-			{
-				SetText(File.ReadAllText("Attributions.txt"));
-			}
-		}
+		return "System Information";
+	}
+}	
 
-		protected override string GetTitle()
+class Attributions : SplashScreenPopUp
+{
+	protected override void SystemInformation_Load(object sender, EventArgs e)
+	{
+		if (File.Exists("Attributions.txt"))
 		{
-			return "Attributions";
+			SetText(File.ReadAllText("Attributions.txt"));
 		}
+	}
+	protected override string GetTitle()
+	{
+		return "Attributions";
 	}
 }

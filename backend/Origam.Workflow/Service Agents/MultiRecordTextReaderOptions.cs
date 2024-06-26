@@ -22,31 +22,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml.Serialization;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+/// <summary>
+/// Summary description for TextReaderAgentSettings.
+/// </summary>
+[Serializable()]
+public class MultiRecordTextReaderOptions
 {
-	/// <summary>
-	/// Summary description for TextReaderAgentSettings.
-	/// </summary>
-	[Serializable()]
-	public class MultiRecordTextReaderOptions
+	public MultiRecordTextReaderOptions()
 	{
-		public MultiRecordTextReaderOptions()
+	}
+	private MultiRecordTextReaderRecordType[] _recordTypes;
+	[XmlArrayItem("Type", typeof(MultiRecordTextReaderRecordType))]
+	public MultiRecordTextReaderRecordType[] RecordTypes
+	{
+		get
 		{
+			return _recordTypes;
 		}
-
-		private MultiRecordTextReaderRecordType[] _recordTypes;
-
-		[XmlArrayItem("Type", typeof(MultiRecordTextReaderRecordType))]
-		public MultiRecordTextReaderRecordType[] RecordTypes
+		set
 		{
-			get
-			{
-				return _recordTypes;
-			}
-			set
-			{
-                _recordTypes = value;
-			}
+            _recordTypes = value;
 		}
 	}
 }

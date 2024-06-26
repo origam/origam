@@ -26,30 +26,25 @@ using System.Windows.Forms;
 using Origam.Workbench;
 using Origam.Gui.Win;
 
-namespace Origam.Workflow.Gui.Win
+namespace Origam.Workflow.Gui.Win;
+/// <summary>
+/// Summary description for WorkflowHelper.
+/// </summary>
+public class WorkflowHelper
 {
-	/// <summary>
-	/// Summary description for WorkflowHelper.
-	/// </summary>
-	public class WorkflowHelper
+	public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
 	{
-		public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
+		// Initialize view for this workflow
+		WorkflowForm form = new WorkflowForm(host);
+		if(icon != null)
 		{
-			// Initialize view for this workflow
-			WorkflowForm form = new WorkflowForm(host);
-
-			if(icon != null)
-			{
-				(form as Form).Icon = icon;
-			}
-
-			form.FormGenerator = new FormGenerator();
-			form.TitleName = titleName;
-			form.WorkflowId = workflowId;
-			WorkbenchSingleton.Workbench.ShowView(form);
-			Application.DoEvents();
-
-			return form;
+			(form as Form).Icon = icon;
 		}
+		form.FormGenerator = new FormGenerator();
+		form.TitleName = titleName;
+		form.WorkflowId = workflowId;
+		WorkbenchSingleton.Workbench.ShowView(form);
+		Application.DoEvents();
+		return form;
 	}
 }

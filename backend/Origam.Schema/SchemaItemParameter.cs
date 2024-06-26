@@ -24,96 +24,86 @@ using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+/// <summary>
+/// Parameter that can be used to parametrize any kind of schema item.
+/// </summary>
+[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class SchemaItemParameter : AbstractSchemaItem
 {
-	/// <summary>
-	/// Parameter that can be used to parametrize any kind of schema item.
-	/// </summary>
-	[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
-    [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class SchemaItemParameter : AbstractSchemaItem
+	public const string CategoryConst = "Parameter";
+	public SchemaItemParameter() : base() {}
+	public SchemaItemParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public SchemaItemParameter(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	protected OrigamDataType _dataType;
+	[XmlAttribute("dataType")]
+	public virtual OrigamDataType DataType
 	{
-		public const string CategoryConst = "Parameter";
-
-		public SchemaItemParameter() : base() {}
-
-		public SchemaItemParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public SchemaItemParameter(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		protected OrigamDataType _dataType;
-		[XmlAttribute("dataType")]
-		public virtual OrigamDataType DataType
+		get
 		{
-			get
-			{
-				return _dataType;
-			}
-			set
-			{
-				_dataType = value;
-			}
+			return _dataType;
 		}
-		private int _dataLength = 0;
-		[XmlAttribute("dataLength")]
-        public int DataLength
+		set
 		{
-			get
-			{
-				if(this.DataType == OrigamDataType.Date)
-				{
-					return 8;
-				}
-				else
-				{
-					return _dataLength;
-				}
-			}
-			set
-			{
-				_dataLength = value;
-			}
+			_dataType = value;
 		}
-
-		private bool _allowNulls = true;
-		[XmlAttribute("allowNulls")]
-        public bool AllowNulls
+	}
+	private int _dataLength = 0;
+	[XmlAttribute("dataLength")]
+    public int DataLength
+	{
+		get
 		{
-			get
+			if(this.DataType == OrigamDataType.Date)
 			{
-				return _allowNulls;
-			}
-			set
-			{
-				_allowNulls = value;
-			}
-		}
-		#endregion
-
-		#region Overriden AbstractDataEntityColumn Members
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
-
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
-			AbstractSchemaItem newItem = newNode as AbstractSchemaItem;
-			if(newItem != null)
-			{
-				return newItem.ItemType.Equals(this.ParentItem.ItemType);
+				return 8;
 			}
 			else
 			{
-				return newNode.GetType().Equals(this.ParentItem.GetType());
+				return _dataLength;
 			}
 		}
-
-		#endregion
+		set
+		{
+			_dataLength = value;
+		}
 	}
+	private bool _allowNulls = true;
+	[XmlAttribute("allowNulls")]
+    public bool AllowNulls
+	{
+		get
+		{
+			return _allowNulls;
+		}
+		set
+		{
+			_allowNulls = value;
+		}
+	}
+	#endregion
+	#region Overriden AbstractDataEntityColumn Members
+	public override string ItemType
+	{
+		get
+		{
+			return CategoryConst;
+		}
+	}
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
+		AbstractSchemaItem newItem = newNode as AbstractSchemaItem;
+		if(newItem != null)
+		{
+			return newItem.ItemType.Equals(this.ParentItem.ItemType);
+		}
+		else
+		{
+			return newNode.GetType().Equals(this.ParentItem.GetType());
+		}
+	}
+	#endregion
 }

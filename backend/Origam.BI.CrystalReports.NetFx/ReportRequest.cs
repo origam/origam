@@ -4,23 +4,19 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace Origam.CrystalReportsService.Models
+namespace Origam.CrystalReportsService.Models;
+[DataContract(Namespace = "")]
+public class ReportRequest
 {
-    [DataContract(Namespace = "")]
-    public class ReportRequest
+    [DataMember()]
+    public string Data
     {
-        [DataMember()]
-        public string Data
+        get
         {
-            get
-            {
-                return Dataset.GetXml();
-            }
+            return Dataset.GetXml();
         }
-
-        public DataSet Dataset { get; set; }
-
-        [DataMember()]
-        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
     }
+    public DataSet Dataset { get; set; }
+    [DataMember()]
+    public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 }

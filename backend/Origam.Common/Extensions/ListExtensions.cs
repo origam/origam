@@ -23,16 +23,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class ListExtensions
 {
-    public static class ListExtensions
+    public static void Remove<T>(this IList<T> list, Type type)
     {
-        public static void Remove<T>(this IList<T> list, Type type)
-        {
-            list
-                .Where(x => x.GetType() == type)
-                .ToList()
-                .ForEach(obj => list.Remove(obj));
-        }
+        list
+            .Where(x => x.GetType() == type)
+            .ToList()
+            .ForEach(obj => list.Remove(obj));
     }
 }

@@ -21,9 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+public interface IEndRule : IRule
 {
-    public interface IEndRule : IRule
-    {
-    }
 }

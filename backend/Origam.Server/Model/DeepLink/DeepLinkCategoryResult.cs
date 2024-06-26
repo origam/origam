@@ -18,12 +18,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-namespace Origam.Server.Model.DeepLink
+namespace Origam.Server.Model.DeepLink;
+public class DeepLinkCategoryResult
 {
-    public class DeepLinkCategoryResult
-    {
-        public string DeepLinkName { get; set; }
-        public string DeepLinkLabel { get; set; }
-        public string ObjectComboboxMetadata { get; set; }
-    }
+    public string DeepLinkName { get; set; }
+    public string DeepLinkLabel { get; set; }
+    public string ObjectComboboxMetadata { get; set; }
 }

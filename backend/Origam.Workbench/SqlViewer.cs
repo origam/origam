@@ -25,83 +25,72 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using core = Origam.Workbench.Services.CoreServices;
-namespace Origam.Workbench
+namespace Origam.Workbench;
+public partial class SqlViewer : AbstractViewContent, IToolStripContainer
 {
-    public partial class SqlViewer : AbstractViewContent, IToolStripContainer
+    public SqlViewer(Platform platform)
     {
-        public SqlViewer(Platform platform)
+        InitializeComponent();
+        Platform = platform;
+    }
+    public override object Content
+    {
+        get
         {
-            InitializeComponent();
-            Platform = platform;
+            return editor.Text; ;
         }
-
-        public override object Content
+        set
         {
-            get
-            {
-                return editor.Text; ;
-            }
-
-            set
-            {
-                editor.Text = value as string;
-            }
+            editor.Text = value as string;
         }
-
-        public event EventHandler ToolStripsLoaded
+    }
+    public event EventHandler ToolStripsLoaded
+    {
+        add { }
+        remove { }
+    }
+    public event EventHandler AllToolStripsRemoved
+    {
+        add { }
+        remove { }
+    }
+    public event EventHandler ToolStripsNeedUpdate
+    {
+        add { }
+        remove { }
+    }
+    private void btnExecuteSql_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(editor.Text))
         {
-            add { }
-            remove { }
+            return;
         }
-        public event EventHandler AllToolStripsRemoved
+        var dataService = core.DataServiceFactory.GetDataService(Platform);
+        string result = dataService.ExecuteUpdate(editor.Text, null);
+        OutputPad outputPad = WorkbenchSingleton.Workbench.GetPad(
+            typeof(OutputPad)) as OutputPad;
+        outputPad.SetOutputText(result);
+        outputPad.Show();
+        editor.Focus();
+    }
+    protected override void ViewSpecificLoad(object objectToLoad)
+    {
+        this.Content = objectToLoad;
+    }
+    public override bool IsViewOnly
+    {
+        get
         {
-            add { }
-            remove { }
+            return true;
         }
-        public event EventHandler ToolStripsNeedUpdate
+        set
         {
-            add { }
-            remove { }
+            base.IsViewOnly = value;
         }
-
-        private void btnExecuteSql_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(editor.Text))
-            {
-                return;
-            }
-            var dataService = core.DataServiceFactory.GetDataService(Platform);
-            string result = dataService.ExecuteUpdate(editor.Text, null);
-            OutputPad outputPad = WorkbenchSingleton.Workbench.GetPad(
-                typeof(OutputPad)) as OutputPad;
-            outputPad.SetOutputText(result);
-            outputPad.Show();
-            editor.Focus();
-        }
-
-        protected override void ViewSpecificLoad(object objectToLoad)
-        {
-            this.Content = objectToLoad;
-        }
-
-        public override bool IsViewOnly
-        {
-            get
-            {
-                return true;
-            }
-
-            set
-            {
-                base.IsViewOnly = value;
-            }
-        }
-
-        public Platform Platform { get; }
-
-        public List<ToolStrip> GetToolStrips(int maxWidth = -1)
-        {
-            return new List<ToolStrip> { toolStrip1 };
-        }
+    }
+    public Platform Platform { get; }
+    public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+    {
+        return new List<ToolStrip> { toolStrip1 };
     }
 }

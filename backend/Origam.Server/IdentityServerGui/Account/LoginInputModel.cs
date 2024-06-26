@@ -4,15 +4,13 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.Server.IdentityServerGui.Account
+namespace Origam.Server.IdentityServerGui.Account;
+public class LoginInputModel
 {
-    public class LoginInputModel
-    {
-        [Required(ErrorMessage = "UserNameRequired")]
-        public string Username { get; set; }
-        [Required(ErrorMessage = "PasswordRequired")]
-        public string Password { get; set; }
-        public bool RememberLogin { get; set; }
-        public string ReturnUrl { get; set; }
-    }
+    [Required(ErrorMessage = "UserNameRequired")]
+    public string Username { get; set; }
+    [Required(ErrorMessage = "PasswordRequired")]
+    public string Password { get; set; }
+    public bool RememberLogin { get; set; }
+    public string ReturnUrl { get; set; }
 }

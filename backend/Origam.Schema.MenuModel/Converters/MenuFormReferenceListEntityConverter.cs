@@ -23,69 +23,56 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+public class MenuFormReferenceListEntityConverter : TypeConverter
 {
-    public class MenuFormReferenceListEntityConverter : TypeConverter
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		//true means show a combobox
+		return true;
+	}
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+		//true will limit to list. false will show the list, 
+		//but allow free-form entry
+		return true;
+	}
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
+		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
+		ArrayList entities = currentItem.ListDataStructure.Entities;
+		ArrayList entityArray = new ArrayList(entities.Count);
+		foreach(DataStructureEntity entity in entities)
 		{
-			//true means show a combobox
-			return true;
+			entityArray.Add(entity);
 		}
-
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+		entityArray.Sort();
+		return new StandardValuesCollection(entityArray);
+	}
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
+		if( sourceType == typeof(string) )
 			return true;
-		}
-
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
+		else 
+			return base.CanConvertFrom(context, sourceType);
+	}
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
+		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-
+			if(currentItem.ListDataStructure == null) return null;
 			ArrayList entities = currentItem.ListDataStructure.Entities;
-
-			ArrayList entityArray = new ArrayList(entities.Count);
-			foreach(DataStructureEntity entity in entities)
+			foreach(AbstractSchemaItem item in entities)
 			{
-				entityArray.Add(entity);
+				if(item.Name == value.ToString())
+					return item as DataStructureEntity;
 			}
-
-			entityArray.Sort();
-
-			return new StandardValuesCollection(entityArray);
+			return null;
 		}
-
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
-			if( sourceType == typeof(string) )
-				return true;
-			else 
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if( value.GetType() == typeof(string) )
-			{
-				FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-				if(currentItem.ListDataStructure == null) return null;
-
-				ArrayList entities = currentItem.ListDataStructure.Entities;
-
-				foreach(AbstractSchemaItem item in entities)
-				{
-					if(item.Name == value.ToString())
-						return item as DataStructureEntity;
-				}
-				return null;
-			}
-			else
-				return base.ConvertFrom(context, culture, value);
-		}
+		else
+			return base.ConvertFrom(context, culture, value);
 	}
-
 }

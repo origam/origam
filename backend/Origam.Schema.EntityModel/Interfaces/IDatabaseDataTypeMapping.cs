@@ -19,11 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+public interface IDatabaseDataTypeMapping
 {
-    public interface IDatabaseDataTypeMapping
-    {
-        OrigamDataType DataType { get; set; }
-        DatabaseDataType MappedDataType { get; set; }
-    }
+    OrigamDataType DataType { get; set; }
+    DatabaseDataType MappedDataType { get; set; }
 }

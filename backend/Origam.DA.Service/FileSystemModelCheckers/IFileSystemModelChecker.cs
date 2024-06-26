@@ -22,10 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using Origam.DA.Service.FileSystemModeCheckers;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+interface IFileSystemModelChecker
 {
-    interface IFileSystemModelChecker
-    {
-        IEnumerable<ModelErrorSection> GetErrors();
-    }
+    IEnumerable<ModelErrorSection> GetErrors();
 }

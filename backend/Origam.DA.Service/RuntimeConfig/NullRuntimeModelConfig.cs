@@ -23,22 +23,17 @@ using System;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+public class NullRuntimeModelConfig : IRuntimeModelConfig
 {
-    public class NullRuntimeModelConfig : IRuntimeModelConfig
+    public void SetConfigurationValues(IFilePersistent instance)
     {
-        public void SetConfigurationValues(IFilePersistent instance)
-        {
-        }
-
-        public void UpdateConfig(IPersistent persistent)
-        {
-        }
-
-        public event EventHandler<List<Guid>> ConfigurationReloaded;
-
-        public void Dispose()
-        {
-        }
+    }
+    public void UpdateConfig(IPersistent persistent)
+    {
+    }
+    public event EventHandler<List<Guid>> ConfigurationReloaded;
+    public void Dispose()
+    {
     }
 }

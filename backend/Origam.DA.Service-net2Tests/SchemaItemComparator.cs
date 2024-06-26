@@ -24,81 +24,72 @@ using System.Collections.Generic;
 using Origam.Schema;
 using NUnit.Framework;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+internal class SchemaItemComparator
 {
-    internal class SchemaItemComparator
+    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromDataBaseDict
     {
-        public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromDataBaseDict
+        private get;
+        set;
+    }
+    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromXmlDict
+    {
+        private get;
+        set;
+    }
+    private SchemaItemsToCompare nowComparing;
+    public void CompareSchemaItems()
+    {
+        foreach (var itemsToCompare in FindMatchingIdItems())
         {
-            private get;
-            set;
+            nowComparing = itemsToCompare;
+            bool areItemsIdentical = AreItemsIdentical(itemsToCompare);
         }
-
-        public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromXmlDict
+    }
+    private IEnumerable<SchemaItemsToCompare> FindMatchingIdItems()
+    {
+        foreach (var typeItemsPair in ItemsFromDataBaseDict)
         {
-            private get;
-            set;
-        }
-
-        private SchemaItemsToCompare nowComparing;
-
-        public void CompareSchemaItems()
-        {
-            foreach (var itemsToCompare in FindMatchingIdItems())
+            Type type = typeItemsPair.Key;
+            var itemList = typeItemsPair.Value;
+            foreach (AbstractSchemaItem itemFromDb in itemList)
             {
-                nowComparing = itemsToCompare;
-                bool areItemsIdentical = AreItemsIdentical(itemsToCompare);
+                var itemFromXml = ItemsFromXmlDict[type].Find(x =>
+                    x.Id == itemFromDb.Id);
+                yield return
+                    new SchemaItemsToCompare(fromDb: itemFromDb,
+                        fromXml: itemFromXml);
             }
         }
-
-        private IEnumerable<SchemaItemsToCompare> FindMatchingIdItems()
+    }
+    private bool AreItemsIdentical(SchemaItemsToCompare items)
+    {
+        Dictionary<string, object> dbItemProperties
+            = items.FromDb.GetAllProperies();
+        Dictionary<string, object> xmlItemProperties 
+            = items.FromXml.GetAllProperies();
+        
+        foreach (var dbItemPropery in dbItemProperties)
         {
-            foreach (var typeItemsPair in ItemsFromDataBaseDict)
-            {
-                Type type = typeItemsPair.Key;
-                var itemList = typeItemsPair.Value;
-                foreach (AbstractSchemaItem itemFromDb in itemList)
-                {
-                    var itemFromXml = ItemsFromXmlDict[type].Find(x =>
-                        x.Id == itemFromDb.Id);
-
-                    yield return
-                        new SchemaItemsToCompare(fromDb: itemFromDb,
-                            fromXml: itemFromXml);
-                }
-            }
-        }
-
-        private bool AreItemsIdentical(SchemaItemsToCompare items)
-        {
-            Dictionary<string, object> dbItemProperties
-                = items.FromDb.GetAllProperies();
-            Dictionary<string, object> xmlItemProperties 
-                = items.FromXml.GetAllProperies();
+            string propertyName = dbItemPropery.Key;
+            var dbValue = dbItemPropery.Value;
+            var xmlValue = xmlItemProperties[propertyName];
             
-            foreach (var dbItemPropery in dbItemProperties)
+            if (!dbValue.IsEqualTo(xmlValue))
             {
-                string propertyName = dbItemPropery.Key;
-                var dbValue = dbItemPropery.Value;
-                var xmlValue = xmlItemProperties[propertyName];
-                
-                if (!dbValue.IsEqualTo(xmlValue))
-                {
-                    FailTest(propertyName,dbValue.GetType());
-                    return false;
-                } 
-            }
-            return true;
+                FailTest(propertyName,dbValue.GetType());
+                return false;
+            } 
         }
-
-        private void FailTest(string propertyName, Type propertryType)
-        {
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine($"Comparing objects of type: \"{nowComparing.Type}\"");
-            Console.WriteLine($"propertyName \"{propertyName}\" of type {propertryType} is not equal in objects retrieved form db and xml.");
-            Console.WriteLine($"Before you draw any conclusions make sure that method IsEqualTo for {propertryType} is implemented in EqualityExtensions");
-            Console.WriteLine(nowComparing);
-            Assert.Fail();
-        }
+        return true;
+    }
+    private void FailTest(string propertyName, Type propertryType)
+    {
+        Console.WriteLine(Environment.NewLine);
+        Console.WriteLine($"Comparing objects of type: \"{nowComparing.Type}\"");
+        Console.WriteLine($"propertyName \"{propertyName}\" of type {propertryType} is not equal in objects retrieved form db and xml.");
+        Console.WriteLine($"Before you draw any conclusions make sure that method IsEqualTo for {propertryType} is implemented in EqualityExtensions");
+        Console.WriteLine(nowComparing);
+        Assert.Fail();
     }
 }

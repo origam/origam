@@ -19,23 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for IDropDownPart.
+/// </summary>
+public interface IDropDownPart
 {
-	/// <summary>
-	/// Summary description for IDropDownPart.
-	/// </summary>
-	public interface IDropDownPart
-	{
-		BaseDropDownControl DropDownControl{get; set;}
-		string SelectedText{get; set;}
-		object SelectedValue{get; set;}
-		bool Canceled{get; set;}
-
-		void MoveUp();
-		void MoveDown();
-		void SelectItem();
-		bool Focus();
-		int Height{get; set;}
-		int Width{get; set;}
-	}
+	BaseDropDownControl DropDownControl{get; set;}
+	string SelectedText{get; set;}
+	object SelectedValue{get; set;}
+	bool Canceled{get; set;}
+	void MoveUp();
+	void MoveDown();
+	void SelectItem();
+	bool Focus();
+	int Height{get; set;}
+	int Width{get; set;}
 }

@@ -22,21 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using CSharpFunctionalExtensions;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class CsFunctionalExtensions
 {
-    public static class CsFunctionalExtensions
+    public static Result<T, E> BindSuccessFailure<T, K, E>(
+        this Result<K, E> result, 
+        Func<K, Result<T, E>> onSuccess, 
+        Func<Result<T, E>> onFailure)
     {
-        public static Result<T, E> BindSuccessFailure<T, K, E>(
-            this Result<K, E> result, 
-            Func<K, Result<T, E>> onSuccess, 
-            Func<Result<T, E>> onFailure)
+        if (result.IsSuccess)
         {
-            if (result.IsSuccess)
-            {
-                return onSuccess(result.Value);
-            }
-
-            return onFailure();
+            return onSuccess(result.Value);
         }
+        return onFailure();
     }
 }

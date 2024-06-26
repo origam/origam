@@ -28,99 +28,94 @@ using Origam.Workbench.Services;
 using Origam.Workflow;
 using Origam.Workflow.WorkQueue;
 
-namespace Origam.OrigamEngine
+namespace Origam.OrigamEngine;
+public interface IRuntimeServiceFactory
 {
-    public interface IRuntimeServiceFactory
+    void InitializeServices();
+    IPersistenceService CreatePersistenceService();
+    IDocumentationService CreateDocumentationService();
+    void UnloadServices();
+}
+public class RuntimeServiceFactory : IRuntimeServiceFactory
+{
+    public void InitializeServices()
     {
-        void InitializeServices();
-        IPersistenceService CreatePersistenceService();
-        IDocumentationService CreateDocumentationService();
-        void UnloadServices();
+        ServiceManager.Services.AddService(new MetaModelUpgradeService());
+        ServiceManager.Services.AddService(CreatePersistenceService());
+        ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
+        // Architect initializes its own version of schema service
+        if (ServiceManager.Services.GetService(typeof(SchemaService)) == null)
+        {
+            ServiceManager.Services.AddService(new SchemaService());
+        }
+        ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
+        ServiceManager.Services.AddService(CreateDocumentationService());
+        ServiceManager.Services.AddService(new TracingService());
+        ServiceManager.Services.AddService(new DataLookupService());
+        ServiceManager.Services.AddService(CreateParameterService());
+        ServiceManager.Services.AddService(new DeploymentService());
+        ServiceManager.Services.AddService(CreateWorkQueueService());
+        ServiceManager.Services.AddService(new AttachmentService());
+        ServiceManager.Services.AddService(new RuleEngineService());
     }
-
-    public class RuntimeServiceFactory : IRuntimeServiceFactory
+    public void UnloadServices()
     {
-        public void InitializeServices()
-        {
-            ServiceManager.Services.AddService(new MetaModelUpgradeService());
-            ServiceManager.Services.AddService(CreatePersistenceService());
-            ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
-            // Architect initializes its own version of schema service
-            if (ServiceManager.Services.GetService(typeof(SchemaService)) == null)
+        List<IWorkbenchService> services = new []
             {
-                ServiceManager.Services.AddService(new SchemaService());
+                typeof(IPersistenceService),
+                typeof(IStateMachineService),
+                typeof(IBusinessServicesService),
+                typeof(IDocumentationService),
+                typeof(TracingService),
+                typeof(IDataLookupService),
+                typeof(IParameterService),
+                typeof(IDeploymentService),
+                typeof(IWorkQueueService),
+                typeof(IAttachmentService),
+                typeof(IRuleEngineService),
             }
-            ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
-            ServiceManager.Services.AddService(CreateDocumentationService());
-            ServiceManager.Services.AddService(new TracingService());
-            ServiceManager.Services.AddService(new DataLookupService());
-            ServiceManager.Services.AddService(CreateParameterService());
-            ServiceManager.Services.AddService(new DeploymentService());
-            ServiceManager.Services.AddService(CreateWorkQueueService());
-            ServiceManager.Services.AddService(new AttachmentService());
-            ServiceManager.Services.AddService(new RuleEngineService());
+            .Select(ServiceManager.Services.GetService)
+            .ToList();
+        foreach (var service in services.OfType<IBackgroundService>())
+        {
+            service.StopTasks();
         }
-        public void UnloadServices()
+        foreach (var service in services)
         {
-            List<IWorkbenchService> services = new []
-                {
-                    typeof(IPersistenceService),
-                    typeof(IStateMachineService),
-                    typeof(IBusinessServicesService),
-                    typeof(IDocumentationService),
-                    typeof(TracingService),
-                    typeof(IDataLookupService),
-                    typeof(IParameterService),
-                    typeof(IDeploymentService),
-                    typeof(IWorkQueueService),
-                    typeof(IAttachmentService),
-                    typeof(IRuleEngineService),
-                }
-                .Select(ServiceManager.Services.GetService)
-                .ToList();
-            foreach (var service in services.OfType<IBackgroundService>())
-            {
-                service.StopTasks();
-            }
-            foreach (var service in services)
-            {
-                ServiceManager.Services.UnloadService(service);
-            }
-            
-        }
-        protected virtual IParameterService CreateParameterService()
-        {
-            return new ParameterService();
-        }        
-        
-        protected virtual IWorkQueueService CreateWorkQueueService()
-        {
-            return new WorkQueueService();
-        }
-
-        public IPersistenceService CreatePersistenceService()
-        {
-            return GetPersistenceBuilder().GetPersistenceService();
+            ServiceManager.Services.UnloadService(service);
         }
         
-        public IDocumentationService CreateDocumentationService()
-        {
-            return GetPersistenceBuilder().GetDocumentationService();
-        }
-        
-        private static IPersistenceBuilder GetPersistenceBuilder()
-        {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-            string[] classpath = settings.ModelProvider.Split(',');
-            return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
-        }
     }
-
-    public class TestRuntimeServiceFactory : RuntimeServiceFactory
+    protected virtual IParameterService CreateParameterService()
     {
-        protected override IParameterService CreateParameterService()
-        {
-            return new  NullParameterService();
-        }
+        return new ParameterService();
+    }        
+    
+    protected virtual IWorkQueueService CreateWorkQueueService()
+    {
+        return new WorkQueueService();
+    }
+    public IPersistenceService CreatePersistenceService()
+    {
+        return GetPersistenceBuilder().GetPersistenceService();
+    }
+    
+    public IDocumentationService CreateDocumentationService()
+    {
+        return GetPersistenceBuilder().GetDocumentationService();
+    }
+    
+    private static IPersistenceBuilder GetPersistenceBuilder()
+    {
+        OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
+        string[] classpath = settings.ModelProvider.Split(',');
+        return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
+    }
+}
+public class TestRuntimeServiceFactory : RuntimeServiceFactory
+{
+    protected override IParameterService CreateParameterService()
+    {
+        return new  NullParameterService();
     }
 }

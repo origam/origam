@@ -21,45 +21,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for StringFilterPart.
+/// </summary>
+public class NumberFilterPart : TextBoxFilterPart
 {
-	/// <summary>
-	/// Summary description for StringFilterPart.
-	/// </summary>
-	public class NumberFilterPart : TextBoxFilterPart
+	#region Constructor
+	public NumberFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
 	{
-		#region Constructor
-		public NumberFilterPart(AsTextBox filteredControl, Type dataType, string dataMember, string gridColumnName, string label, FormGenerator formGenerator) : base(filteredControl, dataType, dataMember, gridColumnName, label, formGenerator)
-		{
-		}
-		#endregion
-
-		#region Overriden Members
-		public override FilterOperator[] AllowedOperators
-		{
-			get
-			{
-				return new FilterOperator[] {
-												FilterOperator.Equals,
-												FilterOperator.NotEquals,
-												FilterOperator.GreaterOrEqualThan, 
-												FilterOperator.LessOrEqualThan, 
-												FilterOperator.GreaterThan, 
-												FilterOperator.LessThan, 
-												FilterOperator.Between, 
-												FilterOperator.NotBetween, 
-												FilterOperator.IsNull, 
-												FilterOperator.NotIsNull};
-			}
-		}
-
-		public override FilterOperator DefaultOperator
-		{
-			get
-			{
-				return FilterOperator.Equals;
-			}
-		}
-		#endregion
 	}
+	#endregion
+	#region Overriden Members
+	public override FilterOperator[] AllowedOperators
+	{
+		get
+		{
+			return new FilterOperator[] {
+											FilterOperator.Equals,
+											FilterOperator.NotEquals,
+											FilterOperator.GreaterOrEqualThan, 
+											FilterOperator.LessOrEqualThan, 
+											FilterOperator.GreaterThan, 
+											FilterOperator.LessThan, 
+											FilterOperator.Between, 
+											FilterOperator.NotBetween, 
+											FilterOperator.IsNull, 
+											FilterOperator.NotIsNull};
+		}
+	}
+	public override FilterOperator DefaultOperator
+	{
+		get
+		{
+			return FilterOperator.Equals;
+		}
+	}
+	#endregion
 }

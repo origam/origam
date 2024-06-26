@@ -20,20 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using Origam.Git;
 
-namespace Origam.ProjectAutomation.Builders
+namespace Origam.ProjectAutomation.Builders;
+class DropGitRepository : AbstractBuilder
 {
-    class DropGitRepository : AbstractBuilder
+    public override string Name => "Remove Git From Project";
+    public override void Execute(Project project)
     {
-        public override string Name => "Remove Git From Project";
-
-        public override void Execute(Project project)
-        {
-            GitManager.RemoveRepository(project.SourcesFolder);
-        }
-
-        public override void Rollback()
-        {
-            
-        }
+        GitManager.RemoveRepository(project.SourcesFolder);
+    }
+    public override void Rollback()
+    {
+        
     }
 }

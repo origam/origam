@@ -22,20 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections;
 using System.Data;
 
-namespace Origam.DA
+namespace Origam.DA;
+/// <summary>
+/// Summary description for DataMergeChange.
+/// </summary>
+public class DataMergeChange
 {
-	/// <summary>
-	/// Summary description for DataMergeChange.
-	/// </summary>
-	public class DataMergeChange
+	public Hashtable Columns;
+	public DataRowState State;
+	public DataMergeChange(Hashtable columns, DataRowState state)
 	{
-		public Hashtable Columns;
-		public DataRowState State;
-
-		public DataMergeChange(Hashtable columns, DataRowState state)
-		{
-			this.Columns = columns;
-			this.State = state;
-		}
+		this.Columns = columns;
+		this.State = state;
 	}
 }

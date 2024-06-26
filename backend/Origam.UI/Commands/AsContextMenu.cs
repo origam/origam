@@ -26,47 +26,41 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Origam.UI
+namespace Origam.UI;
+/// <summary>
+/// Summary description for AsMenu.
+/// </summary>
+public class AsContextMenu : ContextMenuStrip, IStatusUpdate
 {
-	/// <summary>
-	/// Summary description for AsMenu.
-	/// </summary>
-	public class AsContextMenu : ContextMenuStrip, IStatusUpdate
+	private readonly object caller;
+	private readonly List<ToolStripItem> subItems = new List<ToolStripItem>();
+	public AsContextMenu(object caller)
 	{
-		private readonly object caller;
-		private readonly List<ToolStripItem> subItems = new List<ToolStripItem>();
-
-		public AsContextMenu(object caller)
-		{
-			this.caller = caller;
-		}
-		
-		public void AddSubItem(ToolStripItem subItem)
-		{
-			subItems.Add(subItem);
-			UpdateItemsToDisplay();
-		}
-		public void AddSubItems(IEnumerable<ToolStripItem> newItems)
-		{
-			subItems.AddRange(newItems);
-			UpdateItemsToDisplay();
-		}
-
-		protected override void OnOpening(CancelEventArgs e)
-        {
-            UpdateItemsToDisplay();
-            base.OnOpening(new CancelEventArgs(false));
-        }
-
-		#region IStatusUpdate Members
-
-		public void UpdateItemsToDisplay()
-		{
-			MenuItemTools.UpdateMenuItems(
-				itemsToUpdate: Items,
-				itemsToAdd: subItems,
-				caller: caller);
-		}
-		#endregion
+		this.caller = caller;
 	}
+	
+	public void AddSubItem(ToolStripItem subItem)
+	{
+		subItems.Add(subItem);
+		UpdateItemsToDisplay();
+	}
+	public void AddSubItems(IEnumerable<ToolStripItem> newItems)
+	{
+		subItems.AddRange(newItems);
+		UpdateItemsToDisplay();
+	}
+	protected override void OnOpening(CancelEventArgs e)
+    {
+        UpdateItemsToDisplay();
+        base.OnOpening(new CancelEventArgs(false));
+    }
+	#region IStatusUpdate Members
+	public void UpdateItemsToDisplay()
+	{
+		MenuItemTools.UpdateMenuItems(
+			itemsToUpdate: Items,
+			itemsToAdd: subItems,
+			caller: caller);
+	}
+	#endregion
 }

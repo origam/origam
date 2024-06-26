@@ -24,27 +24,25 @@ using Origam.Schema.GuiModel;
 using Origam.Server;
 using System;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class ServerCoreEntityUIActionRunner : ServerEntityUIActionRunner
 {
-    public class ServerCoreEntityUIActionRunner : ServerEntityUIActionRunner
+    public ServerCoreEntityUIActionRunner(
+        IEntityUIActionRunnerClient actionRunnerClient, 
+        UIManager uiManager, 
+        SessionManager sessionManager, 
+        IBasicUIService basicUIService, 
+        IReportManager reportManager) 
+        : base(
+              actionRunnerClient, 
+              uiManager, sessionManager, 
+              basicUIService, 
+              reportManager)
     {
-        public ServerCoreEntityUIActionRunner(
-            IEntityUIActionRunnerClient actionRunnerClient, 
-            UIManager uiManager, 
-            SessionManager sessionManager, 
-            IBasicUIService basicUIService, 
-            IReportManager reportManager) 
-            : base(
-                  actionRunnerClient, 
-                  uiManager, sessionManager, 
-                  basicUIService, 
-                  reportManager)
-        {
-        }
-        override protected void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
-        {
-            base.ExecuteSelectionDialogAction(processData);
-            resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
-        }
+    }
+    override protected void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
+    {
+        base.ExecuteSelectionDialogAction(processData);
+        resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
     }
 }

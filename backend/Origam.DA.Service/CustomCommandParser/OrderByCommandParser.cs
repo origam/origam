@@ -23,72 +23,63 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Origam.DA.Service.CustomCommandParser
+namespace Origam.DA.Service.CustomCommandParser;
+public class OrderByCommandParser : ICustomCommandParser
 {
-    public class OrderByCommandParser : ICustomCommandParser
+    private readonly ColumnOrderingRenderer columnOrderingRenderer;
+    private readonly List<Ordering> orderingsInput;
+    public OrderByCommandParser(List<Ordering> orderingsInput)
     {
-        private readonly ColumnOrderingRenderer columnOrderingRenderer;
-        private readonly List<Ordering> orderingsInput;
-
-        public OrderByCommandParser(List<Ordering> orderingsInput)
-        {
-            this.orderingsInput = orderingsInput ?? new List<Ordering>();
-            columnOrderingRenderer 
-                = new ColumnOrderingRenderer();
-        }
-
-        public string[] Columns => orderingsInput 
-            .Select(ordering => ordering.ColumnName)
-            .ToArray();
-        
-        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
-        {
-            columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expressions);
-        }
-
-        public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+        this.orderingsInput = orderingsInput ?? new List<Ordering>();
+        columnOrderingRenderer 
+            = new ColumnOrderingRenderer();
     }
+    public string[] Columns => orderingsInput 
+        .Select(ordering => ordering.ColumnName)
+        .ToArray();
     
-    class ColumnOrderingRenderer
+    public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
     {
-        private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
-        
-        public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
+        columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expressions);
+    }
+    public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+}
+
+class ColumnOrderingRenderer
+{
+    private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
+    
+    public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
+    {
+        if (!columnExpressions.ContainsKey(columnName))
         {
-            if (!columnExpressions.ContainsKey(columnName))
-            {
-                columnExpressions[columnName] = expressions;
-            }
+            columnExpressions[columnName] = expressions;
         }
-
-        internal string ToSqlOrderBy(List<Ordering> orderings)
+    }
+    internal string ToSqlOrderBy(List<Ordering> orderings)
+    {
+        if (orderings == null) return "";
+        return string.Join(", ", orderings.Select(ToSql)
+        );
+    }
+    private string ToSql(Ordering ordering)
+    {
+        string directionSql = DirectionToSQLName(ordering.Direction);
+        if (!columnExpressions.ContainsKey(ordering.ColumnName))
         {
-            if (orderings == null) return "";
-            return string.Join(", ", orderings.Select(ToSql)
-            );
+            throw new Exception($"No expression was set for {ordering.ColumnName}");
         }
-
-        private string ToSql(Ordering ordering)
+        var orderByExpressions = columnExpressions[ordering.ColumnName]
+            .Select(expression => $"{expression} {directionSql}");
+        return string.Join(", ", orderByExpressions);
+    }
+    private string DirectionToSQLName(string orderingName)
+    {
+        switch (orderingName.ToLower())
         {
-            string directionSql = DirectionToSQLName(ordering.Direction);
-            if (!columnExpressions.ContainsKey(ordering.ColumnName))
-            {
-                throw new Exception($"No expression was set for {ordering.ColumnName}");
-            }
-
-            var orderByExpressions = columnExpressions[ordering.ColumnName]
-                .Select(expression => $"{expression} {directionSql}");
-            return string.Join(", ", orderByExpressions);
-        }
-
-        private string DirectionToSQLName(string orderingName)
-        {
-            switch (orderingName.ToLower())
-            {
-                case "asc": return "ASC";
-                case "desc": return "DESC";
-                default: throw new NotImplementedException(orderingName);
-            }
+            case "asc": return "ASC";
+            case "desc": return "DESC";
+            default: throw new NotImplementedException(orderingName);
         }
     }
 }

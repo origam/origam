@@ -23,36 +23,33 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.Collections;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
 {
-    internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
+    public override Exception CheckRule(object instance)
     {
-        public override Exception CheckRule(object instance)
+        return new NotSupportedException(
+            ResourceUtils.GetString("MemberNameRequired"));
+    }
+    public override Exception CheckRule(object instance, string memberName)
+    {
+        if (string.IsNullOrEmpty(memberName))
         {
-            return new NotSupportedException(
-                ResourceUtils.GetString("MemberNameRequired"));
+            CheckRule(instance);
         }
-
-        public override Exception CheckRule(object instance, string memberName)
+        var filterSet = (DataStructureFilterSet)instance;
+        ArrayList filters = filterSet.ChildItemsRecursive;
+        foreach (DataStructureFilterSetFilter filter in filters)
         {
-            if (string.IsNullOrEmpty(memberName))
+            if (((filter.IgnoreFilterConstantId != Guid.Empty)
+                 || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName) 
+                 || filter.PassWhenParameterMatch) 
+                && !filterSet.IsDynamic)
             {
-                CheckRule(instance);
+                return new Exception( ResourceUtils.GetString(
+                    "ErrorDynamicParameter", memberName));
             }
-            var filterSet = (DataStructureFilterSet)instance;
-            ArrayList filters = filterSet.ChildItemsRecursive;
-            foreach (DataStructureFilterSetFilter filter in filters)
-            {
-                if (((filter.IgnoreFilterConstantId != Guid.Empty)
-                     || !string.IsNullOrEmpty(filter.IgnoreFilterParameterName) 
-                     || filter.PassWhenParameterMatch) 
-                    && !filterSet.IsDynamic)
-                {
-                    return new Exception( ResourceUtils.GetString(
-                        "ErrorDynamicParameter", memberName));
-                }
-            }
-            return null;
         }
+        return null;
     }
 }

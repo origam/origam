@@ -1,8 +1,6 @@
 ﻿using System;
 
-namespace Origam.Server
-{
-    class RowNotFoundException: Exception {
-        
-    }
+namespace Origam.Server;
+class RowNotFoundException: Exception {
+    
 }

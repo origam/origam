@@ -26,71 +26,60 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for Menu.
+/// </summary>
+[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
+[HelpTopic("Menu+Parameter+Mapping")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class SelectionDialogParameterMapping : AbstractSchemaItem
 {
-	/// <summary>
-	/// Summary description for Menu.
-	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
-    [HelpTopic("Menu+Parameter+Mapping")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class SelectionDialogParameterMapping : AbstractSchemaItem
+	public const string CategoryConst = "SelectionDialogParameterMapping";
+	public SelectionDialogParameterMapping() : base() {}
+	public SelectionDialogParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public SelectionDialogParameterMapping(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	
+	[XmlAttribute(AttributeName = "itemType")] 
+	public override string ItemType
 	{
-		public const string CategoryConst = "SelectionDialogParameterMapping";
-
-		public SelectionDialogParameterMapping() : base() {}
-
-		public SelectionDialogParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public SelectionDialogParameterMapping(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		[XmlAttribute(AttributeName = "itemType")] 
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return CategoryConst;
 		}
-
-		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "3";
-			}
-		}
-
-		#endregion
-
-		#region Properties
-		public Guid EntityFieldId;
-
-		[TypeConverter(typeof(MenuSelectionDialogFieldConverter))]
-		[XmlReference("selectionDialogField", "EntityFieldId")]
-		public IDataEntityColumn SelectionDialogField
-		{
-			get
-			{
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityFieldId));
-			}
-			set
-			{
-				this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion
 	}
+	[Browsable(false)]
+	public override bool UseFolders
+	{
+		get
+		{
+			return false;
+		}
+	}
+	public override string Icon
+	{
+		get
+		{
+			return "3";
+		}
+	}
+	#endregion
+	#region Properties
+	public Guid EntityFieldId;
+	[TypeConverter(typeof(MenuSelectionDialogFieldConverter))]
+	[XmlReference("selectionDialogField", "EntityFieldId")]
+	public IDataEntityColumn SelectionDialogField
+	{
+		get
+		{
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityFieldId));
+		}
+		set
+		{
+			this.EntityFieldId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion
 }

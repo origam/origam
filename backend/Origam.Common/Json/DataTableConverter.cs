@@ -23,24 +23,19 @@ using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+class DataTableConverter : newton.DataTableConverter
 {
-    class DataTableConverter : newton.DataTableConverter
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+        Newtonsoft.Json.JsonSerializer serializer)
     {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-            Newtonsoft.Json.JsonSerializer serializer)
+        DataTable table = (DataTable)value;
+        DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+        writer.WriteStartArray();
+        foreach (DataRow row in table.Rows)
         {
-            DataTable table = (DataTable)value;
-            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-
-            writer.WriteStartArray();
-
-            foreach (DataRow row in table.Rows)
-            {
-                serializer.Serialize(writer, row);
-            }
-
-            writer.WriteEndArray();
+            serializer.Serialize(writer, row);
         }
+        writer.WriteEndArray();
     }
 }

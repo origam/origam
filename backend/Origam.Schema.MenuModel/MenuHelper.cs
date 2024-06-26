@@ -26,95 +26,91 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+public class MenuHelper
 {
-	public class MenuHelper
+	public static FormReferenceMenuItem CreateMenuItem(
+		string caption, string role, FormControlSet form)
 	{
-		public static FormReferenceMenuItem CreateMenuItem(
-			string caption, string role, FormControlSet form)
+		if(string.IsNullOrEmpty(caption))
 		{
-			if(string.IsNullOrEmpty(caption))
-			{
-				throw new ArgumentOutOfRangeException
-					("Caption cannot be null for new menu item");
-			}
-			var schemaService 
-				= ServiceManager.Services.GetService<ISchemaService>();
-			var menuSchemaItemProvider 
-				= schemaService.GetProvider<MenuSchemaItemProvider>();
-			if((menuSchemaItemProvider.ChildItems.Count > 0) 
-			&& menuSchemaItemProvider.ChildItems[0].IsPersisted)
-			{
-                var menu = menuSchemaItemProvider.MainMenu;
-				var formReferenceMenuItem = menu.NewItem<FormReferenceMenuItem>(
+			throw new ArgumentOutOfRangeException
+				("Caption cannot be null for new menu item");
+		}
+		var schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
+		var menuSchemaItemProvider 
+			= schemaService.GetProvider<MenuSchemaItemProvider>();
+		if((menuSchemaItemProvider.ChildItems.Count > 0) 
+		&& menuSchemaItemProvider.ChildItems[0].IsPersisted)
+		{
+            var menu = menuSchemaItemProvider.MainMenu;
+			var formReferenceMenuItem = menu.NewItem<FormReferenceMenuItem>(
+				schemaService.ActiveSchemaExtensionId, null);
+			formReferenceMenuItem.Name = form.Name;
+			formReferenceMenuItem.DisplayName = caption;
+			formReferenceMenuItem.Screen = form;
+			formReferenceMenuItem.Roles = role;
+			formReferenceMenuItem.Persist();
+			return formReferenceMenuItem;
+		}
+		throw new Exception(
+			"No menu defined. Create a root menu element.");
+	}
+	public static DataConstantReferenceMenuItem CreateMenuItem(
+		string caption, string role, DataConstant constant)
+	{
+		if(string.IsNullOrEmpty(caption))
+		{
+			throw new ArgumentOutOfRangeException(
+				"Caption cannot be null for new menu item");
+		}
+		var schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
+		var menuSchemaItemProvider 
+			= schemaService.GetProvider<MenuSchemaItemProvider>();
+		if(menuSchemaItemProvider.ChildItems.Count > 0)
+		{
+			var menu = menuSchemaItemProvider.MainMenu;
+			var dataConstantReferenceMenuItem = menu
+				.NewItem<DataConstantReferenceMenuItem>(
 					schemaService.ActiveSchemaExtensionId, null);
-				formReferenceMenuItem.Name = form.Name;
-				formReferenceMenuItem.DisplayName = caption;
-				formReferenceMenuItem.Screen = form;
-				formReferenceMenuItem.Roles = role;
-				formReferenceMenuItem.Persist();
-				return formReferenceMenuItem;
-			}
-			throw new Exception(
-				"No menu defined. Create a root menu element.");
+			dataConstantReferenceMenuItem.Name = constant.Name;
+			dataConstantReferenceMenuItem.DisplayName = caption;
+			dataConstantReferenceMenuItem.Constant = constant;
+			dataConstantReferenceMenuItem.Roles = role;
+			dataConstantReferenceMenuItem.Persist();
+			return dataConstantReferenceMenuItem;
 		}
-
-		public static DataConstantReferenceMenuItem CreateMenuItem(
-			string caption, string role, DataConstant constant)
+		throw new Exception(
+			"No menu defined. Create a root menu element.");
+	}
+	public static WorkflowReferenceMenuItem CreateMenuItem(
+		string caption, string role, IWorkflow workflow)
+	{
+		if(string.IsNullOrEmpty(caption))
 		{
-			if(string.IsNullOrEmpty(caption))
-			{
-				throw new ArgumentOutOfRangeException(
-					"Caption cannot be null for new menu item");
-			}
-			var schemaService 
-				= ServiceManager.Services.GetService<ISchemaService>();
-			var menuSchemaItemProvider 
-				= schemaService.GetProvider<MenuSchemaItemProvider>();
-			if(menuSchemaItemProvider.ChildItems.Count > 0)
-			{
-				var menu = menuSchemaItemProvider.MainMenu;
-				var dataConstantReferenceMenuItem = menu
-					.NewItem<DataConstantReferenceMenuItem>(
-						schemaService.ActiveSchemaExtensionId, null);
-				dataConstantReferenceMenuItem.Name = constant.Name;
-				dataConstantReferenceMenuItem.DisplayName = caption;
-				dataConstantReferenceMenuItem.Constant = constant;
-				dataConstantReferenceMenuItem.Roles = role;
-				dataConstantReferenceMenuItem.Persist();
-				return dataConstantReferenceMenuItem;
-			}
-			throw new Exception(
-				"No menu defined. Create a root menu element.");
+			throw new ArgumentOutOfRangeException(
+				"Caption cannot be null for new menu item");
 		}
-
-		public static WorkflowReferenceMenuItem CreateMenuItem(
-			string caption, string role, IWorkflow workflow)
+		var schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
+		var menuSchemaItemProvider 
+			= schemaService.GetProvider<MenuSchemaItemProvider>();
+		if(menuSchemaItemProvider.ChildItems.Count > 0)
 		{
-			if(string.IsNullOrEmpty(caption))
-			{
-				throw new ArgumentOutOfRangeException(
-					"Caption cannot be null for new menu item");
-			}
-			var schemaService 
-				= ServiceManager.Services.GetService<ISchemaService>();
-			var menuSchemaItemProvider 
-				= schemaService.GetProvider<MenuSchemaItemProvider>();
-			if(menuSchemaItemProvider.ChildItems.Count > 0)
-			{
-				var menu = menuSchemaItemProvider.MainMenu;
-				var workflowReferenceMenuItem = menu
-					.NewItem<WorkflowReferenceMenuItem>(
-						schemaService.ActiveSchemaExtensionId, null);
-				workflowReferenceMenuItem.Name = workflow.Name;
-				workflowReferenceMenuItem.DisplayName = caption;
-				workflowReferenceMenuItem.Workflow = workflow;
-				workflowReferenceMenuItem.Roles = role;
-				workflowReferenceMenuItem.Persist();
-				return workflowReferenceMenuItem;
-			}
-			throw new Exception(
-				"No menu defined. Create a root menu element.");
+			var menu = menuSchemaItemProvider.MainMenu;
+			var workflowReferenceMenuItem = menu
+				.NewItem<WorkflowReferenceMenuItem>(
+					schemaService.ActiveSchemaExtensionId, null);
+			workflowReferenceMenuItem.Name = workflow.Name;
+			workflowReferenceMenuItem.DisplayName = caption;
+			workflowReferenceMenuItem.Workflow = workflow;
+			workflowReferenceMenuItem.Roles = role;
+			workflowReferenceMenuItem.Persist();
+			return workflowReferenceMenuItem;
 		}
+		throw new Exception(
+			"No menu defined. Create a root menu element.");
 	}
 }

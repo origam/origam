@@ -25,54 +25,45 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for Menu.
+/// </summary>
+[SchemaItemDescription("Context Menu", "home.png")]
+[HelpTopic("Context+Menu")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("1.0.0")]
+public class ContextMenu : AbstractSchemaItem, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Menu.
-	/// </summary>
-	[SchemaItemDescription("Context Menu", "home.png")]
-	[HelpTopic("Context+Menu")]
-	[XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("1.0.0")]
-	public class ContextMenu : AbstractSchemaItem, ISchemaItemFactory
-	{
-		public const string CategoryConst = "Menu";
-
-		public ContextMenu() : base() { Init(); }
-
-		public ContextMenu(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
-
-		public ContextMenu(Key primaryKey) : base(primaryKey) { Init(); }
-
-		private void Init()
-        {
-			ChildItemTypes.Add(typeof(Submenu));
-			ChildItemTypes.Add(typeof(FormReferenceMenuItem));
-			ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
-			ChildItemTypes.Add(typeof(WorkflowReferenceMenuItem));
-			ChildItemTypes.Add(typeof(ReportReferenceMenuItem));
-			ChildItemTypes.Add(typeof(DashboardMenuItem));
-			ChildItemTypes.Add(typeof(DynamicMenu));
-
-		}
-		#region Overriden AbstractSchemaItem Members
-
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
-
-		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
-		#endregion
+	public const string CategoryConst = "Menu";
+	public ContextMenu() : base() { Init(); }
+	public ContextMenu(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+	public ContextMenu(Key primaryKey) : base(primaryKey) { Init(); }
+	private void Init()
+    {
+		ChildItemTypes.Add(typeof(Submenu));
+		ChildItemTypes.Add(typeof(FormReferenceMenuItem));
+		ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
+		ChildItemTypes.Add(typeof(WorkflowReferenceMenuItem));
+		ChildItemTypes.Add(typeof(ReportReferenceMenuItem));
+		ChildItemTypes.Add(typeof(DashboardMenuItem));
+		ChildItemTypes.Add(typeof(DynamicMenu));
 	}
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
+	{
+		get
+		{
+			return CategoryConst;
+		}
+	}
+	[Browsable(false)]
+	public override bool UseFolders
+	{
+		get
+		{
+			return false;
+		}
+	}
+	#endregion
 }

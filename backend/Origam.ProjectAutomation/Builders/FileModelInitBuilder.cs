@@ -22,46 +22,43 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Workbench.Services;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class FileModelInitBuilder:AbstractBuilder
 {
-    public class FileModelInitBuilder:AbstractBuilder
+    public override string Name => "Initialize model";
+    private SchemaService schema = null;
+    public override void Execute(Project project)
     {
-        public override string Name => "Initialize model";
-        private SchemaService schema = null;
-        public override void Execute(Project project)
+        OrigamEngine.OrigamEngine.InitializeRuntimeServices();
+        LoadBaseSchema(project);
+    }
+    private void LoadBaseSchema(Project project)
+    {
+        schema =
+            ServiceManager.Services.GetService<SchemaService>();
+        try
         {
-            OrigamEngine.OrigamEngine.InitializeRuntimeServices();
-            LoadBaseSchema(project);
-        }
-        private void LoadBaseSchema(Project project)
+            schema.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
+        } catch
         {
-            schema =
-                ServiceManager.Services.GetService<SchemaService>();
+            
             try
             {
-                schema.LoadSchema(new Guid(project.BasePackageId), isInteractive: true);
+                // In case something went wrong AFTER the model was loaded
+                // (e.g. Architect failed handling some events) we unload the model.
+                // Since we do not know if it failed really AFTER, we just catch
+                // possible exceptions.
+                schema.UnloadSchema();
+                Rollback();
             } catch
             {
-                
-                try
-                {
-                    // In case something went wrong AFTER the model was loaded
-                    // (e.g. Architect failed handling some events) we unload the model.
-                    // Since we do not know if it failed really AFTER, we just catch
-                    // possible exceptions.
-                    schema.UnloadSchema();
-                    Rollback();
-                } catch
-                {
-                }
-                throw;
             }
+            throw;
         }
-
-        public override void Rollback()
-        {
-            schema.UnloadSchema();
-            OrigamEngine.OrigamEngine.UnloadConnectedServices();
-        }
+    }
+    public override void Rollback()
+    {
+        schema.UnloadSchema();
+        OrigamEngine.OrigamEngine.UnloadConnectedServices();
     }
 }

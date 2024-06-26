@@ -22,56 +22,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using ImageMagick;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class BlobUploadHandler
 {
-
-    public class BlobUploadHandler
+    public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
     {
-        public static byte[] FixedSizeBytes(MagickImage img, int width, int height)
+        using MagickImage thumbnail = FixedSize(img, width, height);
+        var memoryStream = new MemoryStream();
+        try
         {
-            using MagickImage thumbnail = FixedSize(img, width, height);
-            var memoryStream = new MemoryStream();
-            try
-            {
-                thumbnail.Write(memoryStream);
-                return memoryStream.GetBuffer();
-            }
-            finally
-            {
-                if (memoryStream != null) memoryStream.Close();
-            }
+            thumbnail.Write(memoryStream);
+            return memoryStream.GetBuffer();
         }
-
-        public static MagickImage FixedSize(
-            MagickImage imgPhoto, int width, int height)
+        finally
         {
-            int sourceWidth = imgPhoto.Width;
-            int sourceHeight = imgPhoto.Height;
-            int destX = 0;
-            int destY = 0;
-            float nPercent;
-            float nPercentW = (float)width / (float)sourceWidth;
-            float nPercentH = (float)height / (float)sourceHeight;
-            if (nPercentH < nPercentW)
-            {
-                nPercent = nPercentH;
-                destX = System.Convert.ToInt16((width -
-                    (sourceWidth * nPercent)) / 2);
-            }
-            else
-            {
-                nPercent = nPercentW;
-                destY = System.Convert.ToInt16((height -
-                    (sourceHeight * nPercent)) / 2);
-            }
-            int destWidth = (int)(sourceWidth * nPercent);
-            int destHeight = (int)(sourceHeight * nPercent);
-            var blackMarginPhoto = new MagickImage(
-                MagickColors.Black, width, height);
-            blackMarginPhoto.Format = MagickFormat.Png;
-            imgPhoto.Resize(destWidth, destHeight);
-            blackMarginPhoto.Composite(imgPhoto, destX, destY);
-            return blackMarginPhoto;
+            if (memoryStream != null) memoryStream.Close();
         }
+    }
+    public static MagickImage FixedSize(
+        MagickImage imgPhoto, int width, int height)
+    {
+        int sourceWidth = imgPhoto.Width;
+        int sourceHeight = imgPhoto.Height;
+        int destX = 0;
+        int destY = 0;
+        float nPercent;
+        float nPercentW = (float)width / (float)sourceWidth;
+        float nPercentH = (float)height / (float)sourceHeight;
+        if (nPercentH < nPercentW)
+        {
+            nPercent = nPercentH;
+            destX = System.Convert.ToInt16((width -
+                (sourceWidth * nPercent)) / 2);
+        }
+        else
+        {
+            nPercent = nPercentW;
+            destY = System.Convert.ToInt16((height -
+                (sourceHeight * nPercent)) / 2);
+        }
+        int destWidth = (int)(sourceWidth * nPercent);
+        int destHeight = (int)(sourceHeight * nPercent);
+        var blackMarginPhoto = new MagickImage(
+            MagickColors.Black, width, height);
+        blackMarginPhoto.Format = MagickFormat.Png;
+        imgPhoto.Resize(destWidth, destHeight);
+        blackMarginPhoto.Composite(imgPhoto, destX, destY);
+        return blackMarginPhoto;
     }
 }

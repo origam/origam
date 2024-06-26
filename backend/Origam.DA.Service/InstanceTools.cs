@@ -23,53 +23,50 @@ using System;
 using System.Reflection;
 using System.Xml;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+static class InstanceTools
 {
-    static class InstanceTools
+    public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
     {
-        public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
+        Type memberType;
+        if (memberInfo is PropertyInfo)
+            memberType = (memberInfo as PropertyInfo).PropertyType;
+        else
+            memberType = (memberInfo as FieldInfo).FieldType;
+        
+        object correctlyTypedValue;
+        // If member is enum, we have to convert
+        if (memberType.IsEnum )
         {
-            Type memberType;
-            if (memberInfo is PropertyInfo)
-                memberType = (memberInfo as PropertyInfo).PropertyType;
-            else
-                memberType = (memberInfo as FieldInfo).FieldType;
-            
-            object correctlyTypedValue;
-            // If member is enum, we have to convert
-            if (memberType.IsEnum )
+            correctlyTypedValue = value == null ? null :
+                Enum.Parse(memberType, (string)value);
+        }
+        else if (memberType == typeof(int))
+        {
+            correctlyTypedValue = value == null ? 0 :
+                XmlConvert.ToInt32((string)value);
+        }
+        else if (memberType == typeof(bool))
+        {
+            correctlyTypedValue = value != null &&
+                                  XmlConvert.ToBoolean((string)value);
+        }
+        else if (memberType == typeof(Guid))
+        {
+            if (value != null)
             {
-                correctlyTypedValue = value == null ? null :
-                    Enum.Parse(memberType, (string)value);
-            }
-            else if (memberType == typeof(int))
-            {
-                correctlyTypedValue = value == null ? 0 :
-                    XmlConvert.ToInt32((string)value);
-            }
-            else if (memberType == typeof(bool))
-            {
-                correctlyTypedValue = value != null &&
-                                      XmlConvert.ToBoolean((string)value);
-            }
-            else if (memberType == typeof(Guid))
-            {
-                if (value != null)
-                {
-                    correctlyTypedValue 
-                        = value is Guid ? value : new Guid((string)value);
-                }
-                else
-                {
-                    correctlyTypedValue = null;
-                }
+                correctlyTypedValue 
+                    = value is Guid ? value : new Guid((string)value);
             }
             else
             {
-                correctlyTypedValue = value;
+                correctlyTypedValue = null;
             }
-
-            return correctlyTypedValue;
-        }       
-    }
+        }
+        else
+        {
+            correctlyTypedValue = value;
+        }
+        return correctlyTypedValue;
+    }       
 }

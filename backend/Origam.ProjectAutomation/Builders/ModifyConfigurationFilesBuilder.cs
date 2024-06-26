@@ -22,36 +22,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Antlr4.StringTemplate;
 using System.IO;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class ModifyConfigurationFilesBuilder : AbstractBuilder
 {
-    public class ModifyConfigurationFilesBuilder : AbstractBuilder
+    public override string Name
     {
-        public override string Name
+        get
         {
-            get
+            return "Modify Configuration Files";
+        }
+    }
+    public override void Execute(Project project)
+    {
+        DirectoryInfo dir = new DirectoryInfo(project.BinFolder);
+        foreach (string filter in new string[] {"*.config", "Startup.cs"})
+        {
+            FileInfo[] files = dir.GetFiles(filter, SearchOption.AllDirectories);
+            foreach (FileInfo file in files)
             {
-                return "Modify Configuration Files";
+                Template template = new Template(System.IO.File.ReadAllText(file.FullName), '$', '$');
+                template.Add("project", project);
+                string result = template.Render();
+                File.WriteAllText(file.FullName, result);
             }
         }
-
-        public override void Execute(Project project)
-        {
-            DirectoryInfo dir = new DirectoryInfo(project.BinFolder);
-            foreach (string filter in new string[] {"*.config", "Startup.cs"})
-            {
-                FileInfo[] files = dir.GetFiles(filter, SearchOption.AllDirectories);
-                foreach (FileInfo file in files)
-                {
-                    Template template = new Template(System.IO.File.ReadAllText(file.FullName), '$', '$');
-                    template.Add("project", project);
-                    string result = template.Render();
-                    File.WriteAllText(file.FullName, result);
-                }
-            }
-        }
-
-        public override void Rollback()
-        {
-        }
+    }
+    public override void Rollback()
+    {
     }
 }

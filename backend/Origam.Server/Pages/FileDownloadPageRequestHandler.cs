@@ -49,79 +49,64 @@ using Origam.Rule;
 using Origam.Schema.GuiModel;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+class FileDownloadPageRequestHandler : AbstractPageRequestHandler
 {
-    class FileDownloadPageRequestHandler : AbstractPageRequestHandler
+    private readonly IHttpTools httpTools;
+    public FileDownloadPageRequestHandler(IHttpTools httpTools)
     {
-        private readonly IHttpTools httpTools;
-
-        public FileDownloadPageRequestHandler(IHttpTools httpTools)
+        this.httpTools = httpTools;
+    }
+    public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+    {
+        FileDownloadPage fdPage = page as FileDownloadPage;
+        QueryParameterCollection qparams = new QueryParameterCollection();
+		Hashtable transformParams = new Hashtable();
+		Hashtable preprocessorParams = GetPreprocessorParameters(request);
+		// convert parameters to QueryParameterCollection for data service and hashtable for transformation service
+		foreach (KeyValuePair<string, object> p in parameters)
+		{
+			qparams.Add(new QueryParameter(p.Key, p.Value));
+			transformParams.Add(p.Key, p.Value);
+		}
+		// copy also the preprocessor parameters to the transformation parameters
+		foreach (DictionaryEntry rp in preprocessorParams)
+		{
+			transformParams.Add(rp.Key, rp.Value);
+		}
+		RuleEngine ruleEngine = RuleEngine.Create(null, null);
+		Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
+        DataSet data = core.DataService.Instance.LoadData(fdPage.DataStructureId, fdPage.DataStructureMethodId, Guid.Empty, fdPage.DataStructureSortSetId, null, qparams);
+        DataTable table = data.Tables[0];
+        bool notFound = false;
+        byte[] bytes = null;
+        if (table.Rows.Count == 0) notFound = true;
+        if (!notFound)
         {
-            this.httpTools = httpTools;
+            bytes = table.Rows[0][fdPage.ContentField] as byte[];
+            if (bytes == null)
+            {
+                throw new Exception("Field is not a byte array.");
+            }
+            if (bytes.LongLength == 0)
+            {
+                notFound = true;
+            }
         }
-
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
+        if (! notFound)
         {
-            FileDownloadPage fdPage = page as FileDownloadPage;
-
-            QueryParameterCollection qparams = new QueryParameterCollection();
-			Hashtable transformParams = new Hashtable();
-			Hashtable preprocessorParams = GetPreprocessorParameters(request);
-
-			// convert parameters to QueryParameterCollection for data service and hashtable for transformation service
-			foreach (KeyValuePair<string, object> p in parameters)
-			{
-				qparams.Add(new QueryParameter(p.Key, p.Value));
-				transformParams.Add(p.Key, p.Value);
-			}
-
-			// copy also the preprocessor parameters to the transformation parameters
-			foreach (DictionaryEntry rp in preprocessorParams)
-			{
-				transformParams.Add(rp.Key, rp.Value);
-			}
-			RuleEngine ruleEngine = RuleEngine.Create(null, null);
-			Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
-
-            DataSet data = core.DataService.Instance.LoadData(fdPage.DataStructureId, fdPage.DataStructureMethodId, Guid.Empty, fdPage.DataStructureSortSetId, null, qparams);
-
-            DataTable table = data.Tables[0];
-
-            bool notFound = false;
-            byte[] bytes = null;
-
-            if (table.Rows.Count == 0) notFound = true;
-
-            if (!notFound)
+            string contentType = null;
+            if (fdPage.MimeType != "?")
             {
-                bytes = table.Rows[0][fdPage.ContentField] as byte[];
-
-                if (bytes == null)
-                {
-                    throw new Exception("Field is not a byte array.");
-                }
-
-                if (bytes.LongLength == 0)
-                {
-                    notFound = true;
-                }
+                contentType = fdPage.MimeType;
             }
-
-            if (! notFound)
-            {
-                string contentType = null;
-                if (fdPage.MimeType != "?")
-                {
-                    contentType = fdPage.MimeType;
-                }
-                httpTools.WriteFile(request, response, bytes, 
-                    (string)table.Rows[0][fdPage.FileNameField], 
-                    true, contentType);
-            }
-            else
-            {
-                response.StatusCode = 404;
-            }
+            httpTools.WriteFile(request, response, bytes, 
+                (string)table.Rows[0][fdPage.FileNameField], 
+                true, contentType);
+        }
+        else
+        {
+            response.StatusCode = 404;
         }
     }
 }
