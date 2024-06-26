@@ -23,82 +23,66 @@ using System;
 using System.Collections;
 using System.Linq;
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class ChartSchemaItemProvider : AbstractSchemaItemProvider
+	public ChartSchemaItemProvider() {}
+	
+	#region ISchemaItemProvider Members
+	public override string RootItemType => AbstractChart.CategoryConst;
+	public override string Group => "UI";
+	#endregion
+	public ArrayList Charts(Guid formId, string entity)
 	{
-		public ChartSchemaItemProvider() {}
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType => AbstractChart.CategoryConst;
-
-		public override string Group => "UI";
-
-		#endregion
-
-		public ArrayList Charts(Guid formId, string entity)
+		var result = new ArrayList();
+		foreach(var abstractSchemaItem in ChildItems)
 		{
-			var result = new ArrayList();
-			foreach(var abstractSchemaItem in ChildItems)
+			var chart = (AbstractChart)abstractSchemaItem;
+			if(chart.ChildItemsByType(ChartFormMapping.CategoryConst)
+			   .Cast<ChartFormMapping>().Any(chartFormMapping => 
+				   formId.Equals(chartFormMapping.Screen.Id) 
+				   && entity.Equals(chartFormMapping.Entity.Name)))
 			{
-				var chart = (AbstractChart)abstractSchemaItem;
-				if(chart.ChildItemsByType(ChartFormMapping.CategoryConst)
-				   .Cast<ChartFormMapping>().Any(chartFormMapping => 
-					   formId.Equals(chartFormMapping.Screen.Id) 
-					   && entity.Equals(chartFormMapping.Entity.Name)))
-				{
-					result.Add(chart);
-				}
+				result.Add(chart);
 			}
-			return result;
 		}
-
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_14_charts.png";
-
-		public override string NodeText
-		{
-			get => "Charts";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			"List of Charts";
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(CartesianChart), typeof(PieChart), typeof(SvgChart)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			string itemName = null;
-			if(typeof(T) == typeof(CartesianChart))
-			{
-				itemName = "NewCartesianChart";
-			}
-			else if(typeof(T) == typeof(PieChart))
-			{
-				itemName = "NewPieChart";
-			}
-			else if(typeof(T) == typeof(SvgChart))
-			{
-				itemName = "NewSvgChart";
-			}
-			return base.NewItem<T>(schemaExtensionId, group, itemName);
-		}
-
-		#endregion
-
-
+		return result;
 	}
+	#region IBrowserNode Members
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_14_charts.png";
+	public override string NodeText
+	{
+		get => "Charts";
+		set => base.NodeText = value;
+	}
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		"List of Charts";
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(CartesianChart), typeof(PieChart), typeof(SvgChart)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		string itemName = null;
+		if(typeof(T) == typeof(CartesianChart))
+		{
+			itemName = "NewCartesianChart";
+		}
+		else if(typeof(T) == typeof(PieChart))
+		{
+			itemName = "NewPieChart";
+		}
+		else if(typeof(T) == typeof(SvgChart))
+		{
+			itemName = "NewSvgChart";
+		}
+		return base.NewItem<T>(schemaExtensionId, group, itemName);
+	}
+	#endregion
 }

@@ -24,39 +24,32 @@ using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Summary description for EntitySecurityRule.
+/// </summary>
+[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class WorkQueueWorkflowCommandParameterMapping : AbstractSchemaItem, IComparable
 {
-	/// <summary>
-	/// Summary description for EntitySecurityRule.
-	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class WorkQueueWorkflowCommandParameterMapping : AbstractSchemaItem, IComparable
-	{
-		public const string CategoryConst = "WorkQueueWorkflowCommandParameterMapping";
+	public const string CategoryConst = "WorkQueueWorkflowCommandParameterMapping";
+	public WorkQueueWorkflowCommandParameterMapping() : base() {}
+	public WorkQueueWorkflowCommandParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public WorkQueueWorkflowCommandParameterMapping(Key primaryKey) : base(primaryKey)	{}
 
-		public WorkQueueWorkflowCommandParameterMapping() : base() {}
-
-		public WorkQueueWorkflowCommandParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WorkQueueWorkflowCommandParameterMapping(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractDataEntityColumn Members
 	
-		#region Overriden AbstractDataEntityColumn Members
-		
-		public override string ItemType => CategoryConst;
-		#endregion
-
-		#region Properties
-		[XmlAttribute ("value")]
-		public WorkQueueCommandParameterMappingType Value { get; set; } = WorkQueueCommandParameterMappingType.QueueEntries;
-		#endregion
-	}
-
-	public enum WorkQueueCommandParameterMappingType
-	{
-		QueueEntries = 0,
-		Parameter1 = 1,
-		Parameter2 = 2
-	}
+	public override string ItemType => CategoryConst;
+	#endregion
+	#region Properties
+	[XmlAttribute ("value")]
+	public WorkQueueCommandParameterMappingType Value { get; set; } = WorkQueueCommandParameterMappingType.QueueEntries;
+	#endregion
+}
+public enum WorkQueueCommandParameterMappingType
+{
+	QueueEntries = 0,
+	Parameter1 = 1,
+	Parameter2 = 2
 }

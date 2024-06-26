@@ -23,82 +23,69 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+/// <summary>
+/// Summary description for IPersistenceProvider.
+/// </summary>
+public interface IPersistenceProvider : ICloneable, IDisposable
 {
+	event EventHandler<IPersistent> InstancePersisted;
+	void OnTransactionEnded(object sender);
+	ICompiledModel CompiledModel {get; set;}
 	/// <summary>
-	/// Summary description for IPersistenceProvider.
+	/// Insert or update the current object instance.
 	/// </summary>
-	public interface IPersistenceProvider : ICloneable, IDisposable
-	{
-		event EventHandler<IPersistent> InstancePersisted;
-		void OnTransactionEnded(object sender);
-
-		ICompiledModel CompiledModel {get; set;}
-
-		/// <summary>
-		/// Insert or update the current object instance.
-		/// </summary>
-		object RetrieveInstance(Type type, Key primaryKey);
-
-		/// <summary>
-		/// Insert or update the current object instance.
-		/// </summary>
-		object RetrieveInstance(Type type, Key primaryKey, bool useCache);
-		object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
-
-        T RetrieveInstance<T>(Guid instanceId);
-        T RetrieveInstance<T>(Guid instanceId, bool useCache);
-        T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException);
-		
-		/// <summary>
-		/// Refreshes the current object with data from the dataset.
-		/// </summary>
-		/// <param name="persistentObject"></param>
-		void RefreshInstance(IPersistent persistentObject);
-
-		/// <summary>
-		/// Removes the item from the internal cache.
-		/// </summary>
-		/// <param name="instance"></param>
-		void RemoveFromCache(IPersistent instance);
-
-        /// <summary>
-        /// Retrieves a list of objects by specified filter. It does not load data from database,
-        /// just from the initialized data, loaded by Init() before.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
-		List<T> RetrieveListByCategory<T>(string category);
-		List<T> RetrieveListByPackage<T>(Guid packageId);
-		T[] FullTextSearch<T>(string text);
-		List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName, string childTableName, bool useCache);
-		List<T> RetrieveListByGroup<T>(Key primaryKey);
-
-		/// <summary>
-		/// Persist (inserts or updates) an object.
-		/// </summary>
-		/// <param name="obj">The object to persist</param>
-		void Persist(IPersistent obj);
-
-		void FlushCache();
-
-		void DeletePackage(Guid packageId);
-		bool IsInTransaction { get; }
-		void RunInTransaction(Action action);
-        void BeginTransaction();
-        void EndTransaction();
-	    void EndTransactionDontSave();
-
-        object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
-		void RestrictToLoadedPackage(bool b);
-		
-		ILocalizationCache LocalizationCache { get; }
-
-        List<string> Files(IPersistent item);
-        ArrayList GetReference(Key key);
-        
-        bool IsOfType<T>(Guid id);
-	}
+	object RetrieveInstance(Type type, Key primaryKey);
+	/// <summary>
+	/// Insert or update the current object instance.
+	/// </summary>
+	object RetrieveInstance(Type type, Key primaryKey, bool useCache);
+	object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
+    T RetrieveInstance<T>(Guid instanceId);
+    T RetrieveInstance<T>(Guid instanceId, bool useCache);
+    T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException);
+	
+	/// <summary>
+	/// Refreshes the current object with data from the dataset.
+	/// </summary>
+	/// <param name="persistentObject"></param>
+	void RefreshInstance(IPersistent persistentObject);
+	/// <summary>
+	/// Removes the item from the internal cache.
+	/// </summary>
+	/// <param name="instance"></param>
+	void RemoveFromCache(IPersistent instance);
+    /// <summary>
+    /// Retrieves a list of objects by specified filter. It does not load data from database,
+    /// just from the initialized data, loaded by Init() before.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
+	List<T> RetrieveListByCategory<T>(string category);
+	List<T> RetrieveListByPackage<T>(Guid packageId);
+	T[] FullTextSearch<T>(string text);
+	List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName, string childTableName, bool useCache);
+	List<T> RetrieveListByGroup<T>(Key primaryKey);
+	/// <summary>
+	/// Persist (inserts or updates) an object.
+	/// </summary>
+	/// <param name="obj">The object to persist</param>
+	void Persist(IPersistent obj);
+	void FlushCache();
+	void DeletePackage(Guid packageId);
+	bool IsInTransaction { get; }
+	void RunInTransaction(Action action);
+    void BeginTransaction();
+    void EndTransaction();
+    void EndTransactionDontSave();
+    object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
+	void RestrictToLoadedPackage(bool b);
+	
+	ILocalizationCache LocalizationCache { get; }
+    List<string> Files(IPersistent item);
+    ArrayList GetReference(Key key);
+    
+    bool IsOfType<T>(Guid id);
 }

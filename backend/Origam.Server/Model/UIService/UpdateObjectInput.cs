@@ -25,13 +25,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+public class UpdateObjectInput
 {
-    public class UpdateObjectInput
-    {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        [Required]
-        public UpdateData[] UpdateData { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; }
+    public string Entity { get; set; }
+    [Required]
+    public UpdateData[] UpdateData { get; set; }
 }

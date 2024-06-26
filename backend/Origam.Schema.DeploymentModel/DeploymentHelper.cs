@@ -25,57 +25,54 @@ using Origam.Workbench.Services;
 using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+public class DeploymentHelper
 {
-	public class DeploymentHelper
+	public static DeploymentVersion CreateVersion
+        (SchemaItemGroup group, string name, string version)
 	{
-		public static DeploymentVersion CreateVersion
-            (SchemaItemGroup group, string name, string version)
-		{
-			var activePackage = ServiceManager.Services
-				.GetService<ISchemaService>()
-				.ActiveExtension;
-			var deploymentVersion = group.NewItem<DeploymentVersion>( 
-				activePackage.Id, null);
-			deploymentVersion.Name = name;
-			deploymentVersion.VersionString = version;
-			deploymentVersion.Persist();
-			return deploymentVersion;
-		}
-		
-		public static ServiceCommandUpdateScriptActivity
-            CreateDatabaseScript(
-	            string name, string script, DatabaseType platformName)
-		{
-			var schemaService
-				= ServiceManager.Services.GetService<ISchemaService>();
-            var serviceSchemaItemProvider 
-	            = schemaService.GetProvider<ServiceSchemaItemProvider>();
-            var dataService = serviceSchemaItemProvider.GetChildByName(
-                "DataService", 
-                Origam.Schema.WorkflowModel.Service.CategoryConst) 
-	            as Origam.Schema.WorkflowModel.Service;
-            var deploymentSchemaItemProvider 
-	            = schemaService.GetProvider<DeploymentSchemaItemProvider>();
-            var currentVersion = deploymentSchemaItemProvider.CurrentVersion();
-            var newActivity = currentVersion
-	            .NewItem<ServiceCommandUpdateScriptActivity>(
-		            schemaService.ActiveSchemaExtensionId, null);
-            newActivity.Name += name;
-            newActivity.DatabaseType = platformName;
-            newActivity.CommandText = script;
-            newActivity.Service = dataService;
-            newActivity.Persist();
-            return newActivity;
-        }
-
-        public static ServiceCommandUpdateScriptActivity CreateSystemRole(
-	        string roleName, AbstractSqlDataService abstractSqlData)
-        {
-            var script = abstractSqlData.CreateSystemRole(roleName);
-            var activity = CreateDatabaseScript(
-	            $"AddRole_{roleName}", script,abstractSqlData.PlatformName);
-            return activity;
-        }
+		var activePackage = ServiceManager.Services
+			.GetService<ISchemaService>()
+			.ActiveExtension;
+		var deploymentVersion = group.NewItem<DeploymentVersion>( 
+			activePackage.Id, null);
+		deploymentVersion.Name = name;
+		deploymentVersion.VersionString = version;
+		deploymentVersion.Persist();
+		return deploymentVersion;
 	}
+	
+	public static ServiceCommandUpdateScriptActivity
+        CreateDatabaseScript(
+            string name, string script, DatabaseType platformName)
+	{
+		var schemaService
+			= ServiceManager.Services.GetService<ISchemaService>();
+        var serviceSchemaItemProvider 
+            = schemaService.GetProvider<ServiceSchemaItemProvider>();
+        var dataService = serviceSchemaItemProvider.GetChildByName(
+            "DataService", 
+            Origam.Schema.WorkflowModel.Service.CategoryConst) 
+            as Origam.Schema.WorkflowModel.Service;
+        var deploymentSchemaItemProvider 
+            = schemaService.GetProvider<DeploymentSchemaItemProvider>();
+        var currentVersion = deploymentSchemaItemProvider.CurrentVersion();
+        var newActivity = currentVersion
+            .NewItem<ServiceCommandUpdateScriptActivity>(
+	            schemaService.ActiveSchemaExtensionId, null);
+        newActivity.Name += name;
+        newActivity.DatabaseType = platformName;
+        newActivity.CommandText = script;
+        newActivity.Service = dataService;
+        newActivity.Persist();
+        return newActivity;
+    }
+    public static ServiceCommandUpdateScriptActivity CreateSystemRole(
+        string roleName, AbstractSqlDataService abstractSqlData)
+    {
+        var script = abstractSqlData.CreateSystemRole(roleName);
+        var activity = CreateDatabaseScript(
+            $"AddRole_{roleName}", script,abstractSqlData.PlatformName);
+        return activity;
+    }
 }

@@ -17,16 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 
-namespace Origam.Security
+namespace Origam.Security;
+/// <summary>
+/// Summary description for IAuthorizationContextContainer.
+/// </summary>
+public interface IAuthorizationContextContainer
 {
-	/// <summary>
-	/// Summary description for IAuthorizationContextContainer.
-	/// </summary>
-	public interface IAuthorizationContextContainer
-	{
-		string AuthorizationContext {get;}
-	}
+	string AuthorizationContext {get;}
 }

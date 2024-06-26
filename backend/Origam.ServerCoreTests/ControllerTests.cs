@@ -32,74 +32,64 @@ using Origam.ServerCore;
 using Origam.ServerCore.Controller;
 using Origam.ServerCore.Model.UIService;
 
-namespace Origam.ServerCoreTests
+namespace Origam.ServerCoreTests;
+abstract class ControllerTests
 {
-    abstract class ControllerTests
+    protected readonly SessionObjects sessionObjects;
+    protected readonly ControllerContext context;
+    private readonly UIServiceController uiServiceController;
+    protected ControllerTests()
     {
-        protected readonly SessionObjects sessionObjects;
-        protected readonly ControllerContext context;
-        private readonly UIServiceController uiServiceController;
-
-        protected ControllerTests()
+        var configuration = ConfigHelper
+            .GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
+        sessionObjects = new SessionObjects();
+        var claims = new List<Claim>
         {
-            var configuration = ConfigHelper
-                .GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
-            sessionObjects = new SessionObjects();
-
-            var claims = new List<Claim>
+            new Claim(ClaimTypes.Name, configuration.UserName),
+            new Claim(ClaimTypes.NameIdentifier, "1"),
+            new Claim("name", configuration.UserName),
+        };
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var principal = new ClaimsPrincipal(identity);
+        context = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext
             {
-                new Claim(ClaimTypes.Name, configuration.UserName),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", configuration.UserName),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            var principal = new ClaimsPrincipal(identity);
-            context = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext
-                {
-                    User = principal
-                }
-            };
-            Thread.CurrentPrincipal = principal;
-
-            uiServiceController = new UIServiceController(
-                sessionObjects,
-                null,
-                new NullLogger<AbstractController>());
-            uiServiceController.ControllerContext = context;
+                User = principal
+            }
+        };
+        Thread.CurrentPrincipal = principal;
+        uiServiceController = new UIServiceController(
+            sessionObjects,
+            null,
+            new NullLogger<AbstractController>());
+        uiServiceController.ControllerContext = context;
+    }
+    protected void AssertObjectIsPersisted(Guid menuId, Guid dataStructureId, Guid id,
+        string[] columnNames, object[] expectedColumnValues)
+    {
+        if (expectedColumnValues.Length != columnNames.Length)
+        {
+            throw new Exception("columnValues must have the same length as columnNames");
         }
-
-        protected void AssertObjectIsPersisted(Guid menuId, Guid dataStructureId, Guid id,
-            string[] columnNames, object[] expectedColumnValues)
+        IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
         {
-            if (expectedColumnValues.Length != columnNames.Length)
-            {
-                throw new Exception("columnValues must have the same length as columnNames");
-            }
-
-            IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
-            {
-                MenuId = menuId,
-                DataStructureEntityId = dataStructureId,
-                Filter = $"[\"Id\",\"eq\",\"{id}\"]",
-                Ordering = new List<List<string>>(),
-                RowLimit = 0,
-                ColumnNames = columnNames
-            });
-            Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
-
-            Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
-            var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
-
-            Assert.That(retrievedObjects, Has.Count.EqualTo(1));
-            object[] retrievedObject = (object[])retrievedObjects[0];
-
-            for (var i = 0; i < columnNames.Length; i++)
-            {
-                Assert.That(retrievedObject[i], Is.EqualTo(expectedColumnValues[i]));
-            }
+            MenuId = menuId,
+            DataStructureEntityId = dataStructureId,
+            Filter = $"[\"Id\",\"eq\",\"{id}\"]",
+            Ordering = new List<List<string>>(),
+            RowLimit = 0,
+            ColumnNames = columnNames
+        });
+        Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
+        OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
+        Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
+        var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
+        Assert.That(retrievedObjects, Has.Count.EqualTo(1));
+        object[] retrievedObject = (object[])retrievedObjects[0];
+        for (var i = 0; i < columnNames.Length; i++)
+        {
+            Assert.That(retrievedObject[i], Is.EqualTo(expectedColumnValues[i]));
         }
     }
 }

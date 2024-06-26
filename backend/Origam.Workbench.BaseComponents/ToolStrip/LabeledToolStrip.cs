@@ -23,81 +23,71 @@ using System.Drawing;
 using System.Windows.Forms;
 using Origam.Extensions;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+public class LabeledToolStrip : ToolStrip
 {
-    public class LabeledToolStrip : ToolStrip
+    private const int BottomTextMarin = 3;
+    private readonly SolidBrush foreColorBrush;
+    public IToolStripContainer Owner { get; }
+    public LabeledToolStrip(IToolStripContainer owner)
     {
-        private const int BottomTextMarin = 3;
-        private readonly SolidBrush foreColorBrush;
-        public IToolStripContainer Owner { get; }
-
-        public LabeledToolStrip(IToolStripContainer owner)
+        MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
+        foreColorBrush = new SolidBrush(ForeColor);
+        Renderer = new SideBorderOnlyStripRenderer();
+        Visible = false;
+        Owner = owner;
+    }
+    protected override void OnItemAdded(ToolStripItemEventArgs e)
+    {
+        base.OnItemAdded(e);
+        Visible = true;
+    }
+    protected override void OnItemRemoved(ToolStripItemEventArgs e)
+    {
+        base.OnItemRemoved(e);
+        if (Items.Count == 0)
         {
-            MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
-            foreColorBrush = new SolidBrush(ForeColor);
-            Renderer = new SideBorderOnlyStripRenderer();
             Visible = false;
-            Owner = owner;
-        }
-
-        protected override void OnItemAdded(ToolStripItemEventArgs e)
-        {
-            base.OnItemAdded(e);
-            Visible = true;
-        }
-
-        protected override void OnItemRemoved(ToolStripItemEventArgs e)
-        {
-            base.OnItemRemoved(e);
-            if (Items.Count == 0)
-            {
-                Visible = false;
-            }
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            int textX = (Size.Width - Text.Width(Font)) / 2;
-            int textY = Size.Height - Text.Height(Font) - BottomTextMarin;
-
-            var LabelFont = new Font(Font.Name, 8, FontStyle.Bold);
-            e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
         }
     }
-
-    internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer 
+    protected override void OnPaint(PaintEventArgs e)
     {
-        protected override void OnRenderToolStripBorder(
-            ToolStripRenderEventArgs e)
-        {
-            base.OnRenderToolStripBorder(e);
-            var rectangle = new Rectangle(
-                e.AffectedBounds.Location.X-5,
-                e.AffectedBounds.Location.Y - 5,
-                e.AffectedBounds.Width + 5,
-                e.AffectedBounds.Height + 10);
-            ControlPaint.DrawBorder(e.Graphics,
-                bounds: rectangle,
-                leftColor: SystemColors.ControlDarkDark,
-                leftWidth: 2,
-                leftStyle: ButtonBorderStyle.Solid,
-                topColor: SystemColors.ControlDarkDark,
-                topWidth: 2,
-                topStyle: ButtonBorderStyle.Solid,
-                rightColor: SystemColors.ControlDark,
-                rightWidth: 1,
-                rightStyle: ButtonBorderStyle.Solid,
-                bottomColor: SystemColors.ControlDarkDark,
-                bottomWidth: 2,
-                bottomStyle: ButtonBorderStyle.Solid);
-           
-        }
-
-        protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
-        {
-            // we want no grip
-        }
+        base.OnPaint(e);
+        int textX = (Size.Width - Text.Width(Font)) / 2;
+        int textY = Size.Height - Text.Height(Font) - BottomTextMarin;
+        var LabelFont = new Font(Font.Name, 8, FontStyle.Bold);
+        e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
+    }
+}
+internal class SideBorderOnlyStripRenderer : ToolStripProfessionalRenderer 
+{
+    protected override void OnRenderToolStripBorder(
+        ToolStripRenderEventArgs e)
+    {
+        base.OnRenderToolStripBorder(e);
+        var rectangle = new Rectangle(
+            e.AffectedBounds.Location.X-5,
+            e.AffectedBounds.Location.Y - 5,
+            e.AffectedBounds.Width + 5,
+            e.AffectedBounds.Height + 10);
+        ControlPaint.DrawBorder(e.Graphics,
+            bounds: rectangle,
+            leftColor: SystemColors.ControlDarkDark,
+            leftWidth: 2,
+            leftStyle: ButtonBorderStyle.Solid,
+            topColor: SystemColors.ControlDarkDark,
+            topWidth: 2,
+            topStyle: ButtonBorderStyle.Solid,
+            rightColor: SystemColors.ControlDark,
+            rightWidth: 1,
+            rightStyle: ButtonBorderStyle.Solid,
+            bottomColor: SystemColors.ControlDarkDark,
+            bottomWidth: 2,
+            bottomStyle: ButtonBorderStyle.Solid);
+       
+    }
+    protected override void OnRenderGrip(ToolStripGripRenderEventArgs e)
+    {
+        // we want no grip
     }
 }

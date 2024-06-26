@@ -17,14 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-namespace Origam.Security.Common
+#endregion
+
+namespace Origam.Security.Common;
+public class TokenResult
 {
-    public class TokenResult
-    {
-        public string ErrorMessage{ get; set; }
-        public string Token{ get; set; }
-        public int TokenValidityHours{ get; set; }
-        public string UserName { get; set; }
-    }
+    public string ErrorMessage{ get; set; }
+    public string Token{ get; set; }
+    public int TokenValidityHours{ get; set; }
+    public string UserName { get; set; }
 }

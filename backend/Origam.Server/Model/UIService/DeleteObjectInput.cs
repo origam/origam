@@ -21,12 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+public class DeleteObjectInput
 {
-    public class DeleteObjectInput
-    {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        public object Id { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; }
+    public string Entity { get; set; }
+    public object Id { get; set; }
 }

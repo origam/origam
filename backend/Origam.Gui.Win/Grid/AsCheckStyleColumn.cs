@@ -25,60 +25,52 @@ using System.Data;
 
 using Origam.Rule;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+public class AsCheckStyleColumn : DataGridBoolColumn
 {
-	public class AsCheckStyleColumn : DataGridBoolColumn
+	private bool _readOnly = false;
+	public override bool ReadOnly
 	{
-		private bool _readOnly = false;
-
-		public override bool ReadOnly
+		get
 		{
-			get
-			{
-				return _readOnly;
-			}
-			set
-			{
-				_readOnly = value;
-				base.ReadOnly = value;
-			}
+			return _readOnly;
 		}
-
-		private bool _alwaysReadOnly = false;
-		public bool AlwaysReadOnly
+		set
 		{
-			get
-			{
-				return _alwaysReadOnly;
-			}
-			set
-			{
-				_alwaysReadOnly = value;
-				this.ReadOnly = value;
-			}
+			_readOnly = value;
+			base.ReadOnly = value;
 		}
-
-		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+	}
+	private bool _alwaysReadOnly = false;
+	public bool AlwaysReadOnly
+	{
+		get
 		{
-			if(cellIsVisible)
+			return _alwaysReadOnly;
+		}
+		set
+		{
+			_alwaysReadOnly = value;
+			this.ReadOnly = value;
+		}
+	}
+	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+	{
+		if(cellIsVisible)
+		{
+			if(! AlwaysReadOnly)
 			{
-				if(! AlwaysReadOnly)
+				RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
+				if(ruleEngine != null)
 				{
-					RuleEngine ruleEngine = (this.DataGridTableStyle.DataGrid.FindForm() as AsForm).FormGenerator.FormRuleEngine;
-					if(ruleEngine != null)
-					{
-						this.ReadOnly = ! ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
-					}
-				}
-				else
-				{
-					this.ReadOnly = true;
+					this.ReadOnly = ! ruleEngine.EvaluateRowLevelSecurityState((source.Current as DataRowView).Row, this.MappingName, Schema.EntityModel.CredentialType.Update);
 				}
 			}
-
-			base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
+			else
+			{
+				this.ReadOnly = true;
+			}
 		}
-
-
+		base.Edit(source, rowNum, bounds, readOnly, instantText, cellIsVisible);
 	}
 }

@@ -30,45 +30,39 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 
-namespace OrigamArchitect.Commands
+namespace OrigamArchitect.Commands;
+public class GenerateXamlCommand : AbstractMenuCommand
 {
-	public class GenerateXamlCommand : AbstractMenuCommand
+	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+	public override bool IsEnabled
 	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
-		public override bool IsEnabled
+		get
 		{
-			get
-			{
-				return _schema.ActiveNode is Origam.Schema.MenuModel.Menu;
-			}
-			set
-			{
-				throw new ArgumentException("Cannot set this property", "IsEnabled");
-			}
+			return _schema.ActiveNode is Origam.Schema.MenuModel.Menu;
 		}
-
-		public override void Run()
+		set
 		{
-			SaveFileDialog dialog = new SaveFileDialog();
-			dialog.DefaultExt = "xml";
-			dialog.FileName = "menu.xml";
-			if(dialog.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window) == DialogResult.OK)
+			throw new ArgumentException("Cannot set this property", "IsEnabled");
+		}
+	}
+	public override void Run()
+	{
+		SaveFileDialog dialog = new SaveFileDialog();
+		dialog.DefaultExt = "xml";
+		dialog.FileName = "menu.xml";
+		if(dialog.ShowDialog(WorkbenchSingleton.Workbench as IWin32Window) == DialogResult.OK)
+		{
+			Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
+			Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
+			string path = Path.GetDirectoryName(dialog.FileName);
+			foreach(AbstractSchemaItem child in item.ChildItemsRecursive)
 			{
-				Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
-				Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
-
-				string path = Path.GetDirectoryName(dialog.FileName);
-
-				foreach(AbstractSchemaItem child in item.ChildItemsRecursive)
+				FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
+				if(formMenu != null)
 				{
-					FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
-					if(formMenu != null)
-					{
-						FormControlSet form = formMenu.Screen;
-						string formPath = Path.Combine(path, formMenu.Name + "_" + formMenu.Id.ToString() + ".xml");
-						Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(form, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, form.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document.Save(formPath);
-					}
+					FormControlSet form = formMenu.Screen;
+					string formPath = Path.Combine(path, formMenu.Name + "_" + formMenu.Id.ToString() + ".xml");
+					Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(form, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, form.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document.Save(formPath);
 				}
 			}
 		}

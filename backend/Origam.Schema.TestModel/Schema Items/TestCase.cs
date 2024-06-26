@@ -22,67 +22,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 
-namespace Origam.Schema.TestModel
+namespace Origam.Schema.TestModel;
+[SchemaItemDescription("Test Case", 26)]
+[ClassMetaVersion("6.0.0")]
+public class TestCase : AbstractSchemaItem
 {
-	[SchemaItemDescription("Test Case", 26)]
-    [ClassMetaVersion("6.0.0")]
-	public class TestCase : AbstractSchemaItem
+	public const string CategoryConst = "TestCase";
+	public TestCase() {}
+	public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TestCase(Key primaryKey) : base(primaryKey) {}
+	#region Overriden AbstractSchemaItem Members
+	
+	public override string ItemType => CategoryConst;
+	public override string Icon => "26";
+	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
-		public const string CategoryConst = "TestCase";
-
-		public TestCase() {}
-
-		public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public TestCase(Key primaryKey) : base(primaryKey) {}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType => CategoryConst;
-
-		public override string Icon => "26";
-
-		public override bool CanMove(UI.IBrowserNode2 newNode)
-		{
-			// can move test cases between scenarios
-			return newNode is TestScenario;
-		}
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(TestCaseAlternative), typeof(TestCaseStep)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			string itemName = null;
-			if(typeof(T) == typeof(TestCaseAlternative))
-			{
-				itemName = "NewTestCaseAlternative";
-			}
-			else if(typeof(T) == typeof(TestCaseStep))
-			{
-				itemName = "NewTestCaseCheck";
-			}
-			return base.NewItem<T>(schemaExtensionId, group, itemName);
-		}
-
-		#endregion
-
-		#region Properties
-		private string _role;
-		
-		public string Role
-		{
-			get => _role;
-			set => _role = value;
-		}
-		#endregion
-
+		// can move test cases between scenarios
+		return newNode is TestScenario;
 	}
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(TestCaseAlternative), typeof(TestCaseStep)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		string itemName = null;
+		if(typeof(T) == typeof(TestCaseAlternative))
+		{
+			itemName = "NewTestCaseAlternative";
+		}
+		else if(typeof(T) == typeof(TestCaseStep))
+		{
+			itemName = "NewTestCaseCheck";
+		}
+		return base.NewItem<T>(schemaExtensionId, group, itemName);
+	}
+	#endregion
+	#region Properties
+	private string _role;
+	
+	public string Role
+	{
+		get => _role;
+		set => _role = value;
+	}
+	#endregion
 }

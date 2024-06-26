@@ -19,9 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
- namespace Origam.Server
+namespace Origam.Server;
+public class SharedResources
 {
-    public class SharedResources
-    {
-    }
 }

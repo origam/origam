@@ -21,11 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.UIService
+namespace Origam.Server.Model.UIService;
+public class SetDefaultFilterInput : SaveFilterInput
 {
-    public class SetDefaultFilterInput : SaveFilterInput
-    {
-        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
-        public Guid PanelInstanceId { get; set; }
-    }
+    public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+    public Guid PanelInstanceId { get; set; }
 }

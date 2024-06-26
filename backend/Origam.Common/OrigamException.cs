@@ -23,64 +23,54 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace Origam
+namespace Origam;
+/// <summary>
+/// Summary description for OrigamException.
+/// </summary>
+public class OrigamException : Exception
 {
-	/// <summary>
-	/// Summary description for OrigamException.
-	/// </summary>
-	public class OrigamException : Exception
+	private StringBuilder _appendStackTrace;
+	public OrigamException() : base()
 	{
-		private StringBuilder _appendStackTrace;
-
-		public OrigamException() : base()
+	}
+	public OrigamException (string message) : base(message)
+	{
+	}
+	public OrigamException (string message, Exception innerException) : base(message, innerException)
+	{
+		foreach (DictionaryEntry entry in innerException.Data)
 		{
+			Data[entry.Key] = entry.Value;
 		}
-
-		public OrigamException (string message) : base(message)
+	}
+	public OrigamException (string message, string customStackTrace, Exception innerException) : this(message, innerException)
+	{
+		this.AppendStackTrace(customStackTrace);
+	}
+	public void AppendStackTrace(string stacktrace)
+	{
+		if(_appendStackTrace == null) _appendStackTrace = new StringBuilder();
+		_appendStackTrace.Append(Environment.NewLine);
+		_appendStackTrace.Append("--------------------------------------------");
+		_appendStackTrace.Append(Environment.NewLine);
+		_appendStackTrace.Append(stacktrace);
+		_appendStackTrace.Append(Environment.NewLine);
+		_appendStackTrace.Append("--------------------------------------------");
+		_appendStackTrace.Append(Environment.NewLine);
+	}
+	public override string StackTrace
+	{
+		get
 		{
-		}
-
-		public OrigamException (string message, Exception innerException) : base(message, innerException)
-		{
-			foreach (DictionaryEntry entry in innerException.Data)
+			if(_appendStackTrace != null)
 			{
-				Data[entry.Key] = entry.Value;
+				_appendStackTrace.Append(base.StackTrace);
+				return _appendStackTrace.ToString();
+			}
+			else
+			{
+				return base.StackTrace;
 			}
 		}
-
-		public OrigamException (string message, string customStackTrace, Exception innerException) : this(message, innerException)
-		{
-			this.AppendStackTrace(customStackTrace);
-		}
-
-		public void AppendStackTrace(string stacktrace)
-		{
-			if(_appendStackTrace == null) _appendStackTrace = new StringBuilder();
-
-			_appendStackTrace.Append(Environment.NewLine);
-			_appendStackTrace.Append("--------------------------------------------");
-			_appendStackTrace.Append(Environment.NewLine);
-			_appendStackTrace.Append(stacktrace);
-			_appendStackTrace.Append(Environment.NewLine);
-			_appendStackTrace.Append("--------------------------------------------");
-			_appendStackTrace.Append(Environment.NewLine);
-		}
-
-		public override string StackTrace
-		{
-			get
-			{
-				if(_appendStackTrace != null)
-				{
-					_appendStackTrace.Append(base.StackTrace);
-					return _appendStackTrace.ToString();
-				}
-				else
-				{
-					return base.StackTrace;
-				}
-			}
-		}
-
 	}
 }

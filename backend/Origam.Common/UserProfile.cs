@@ -21,93 +21,85 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam
+namespace Origam;
+/// <summary>
+/// Summary description for UserProfile.
+/// </summary>
+public class UserProfile
 {
-	/// <summary>
-	/// Summary description for UserProfile.
-	/// </summary>
-	public class UserProfile
+	public UserProfile()
 	{
-		public UserProfile()
+	}
+	private Guid _id;
+	public Guid Id
+	{
+		get
 		{
+			return _id;
 		}
-
-		private Guid _id;
-		public Guid Id
+		set
 		{
-			get
-			{
-				return _id;
-			}
-			set
-			{
-				_id = value;
-			}
+			_id = value;
 		}
-
-		private Guid _resourceId;
-		public Guid ResourceId
+	}
+	private Guid _resourceId;
+	public Guid ResourceId
+	{
+		get
 		{
-			get
-			{
-				return _resourceId;
-			}
-			set
-			{
-				_resourceId = value;
-			}
+			return _resourceId;
 		}
-
-		private Guid _businessUnitId;
-		public Guid BusinessUnitId
+		set
 		{
-			get
-			{
-				return _businessUnitId;
-			}
-			set
-			{
-				_businessUnitId = value;
-			}
+			_resourceId = value;
 		}
-
-		private Guid _organizationId;
-		public Guid OrganizationId
+	}
+	private Guid _businessUnitId;
+	public Guid BusinessUnitId
+	{
+		get
 		{
-			get
-			{
-				return _organizationId;
-			}
-			set
-			{
-				_organizationId = value;
-			}
+			return _businessUnitId;
 		}
-
-		private string _fullName;
-		public string FullName
+		set
 		{
-			get
-			{
-				return _fullName;
-			}
-			set
-			{
-				_fullName = value;
-			}
+			_businessUnitId = value;
 		}
-
-        private string _email;
-        public string Email
+	}
+	private Guid _organizationId;
+	public Guid OrganizationId
+	{
+		get
+		{
+			return _organizationId;
+		}
+		set
+		{
+			_organizationId = value;
+		}
+	}
+	private string _fullName;
+	public string FullName
+	{
+		get
+		{
+			return _fullName;
+		}
+		set
+		{
+			_fullName = value;
+		}
+	}
+    private string _email;
+    public string Email
+    {
+        get
         {
-            get
-            {
-                return _email;
-            }
-            set
-            {
-                _email = value;
-            }
+            return _email;
+        }
+        set
+        {
+            _email = value;
         }
     }
 }

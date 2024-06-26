@@ -24,28 +24,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+public class AbstractWorkflowStepScriptContainer : UpgradeScriptContainer
 {
-    public class AbstractWorkflowStepScriptContainer : UpgradeScriptContainer
+    public override string FullTypeName { get; } =
+        typeof(Schema.WorkflowModel.AbstractWorkflowStep).FullName;
+    public override List<string> OldFullTypeNames { get; }
+    public override string[] OldPropertyXmlNames { get; }
+    public AbstractWorkflowStepScriptContainer()
     {
-        public override string FullTypeName { get; } =
-            typeof(Schema.WorkflowModel.AbstractWorkflowStep).FullName;
-
-        public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; }
-
-        public AbstractWorkflowStepScriptContainer()
-        {
-            upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.0"),
-                new Version("6.0.1"),
-                (node, doc) =>
-                    RemoveAttribute(node, "traceLevel")));
-            upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.1"),
-                new Version("6.0.2"),
-                (node, doc) =>
-                    AddAttribute(node, "onFailure","WorkflowFails")));
-        }
+        upgradeScripts.Add(new UpgradeScript(
+            new Version("6.0.0"),
+            new Version("6.0.1"),
+            (node, doc) =>
+                RemoveAttribute(node, "traceLevel")));
+        upgradeScripts.Add(new UpgradeScript(
+            new Version("6.0.1"),
+            new Version("6.0.2"),
+            (node, doc) =>
+                AddAttribute(node, "onFailure","WorkflowFails")));
     }
 }

@@ -26,66 +26,62 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui
+namespace Origam.Gui;
+public class UIActionTools
 {
-    public class UIActionTools
+    public static bool GetValidActions(Guid formId, Guid panelId, 
+        bool disableActionButtons, Guid entityId, ArrayList validActions)
     {
-        public static bool GetValidActions(Guid formId, Guid panelId, 
-            bool disableActionButtons, Guid entityId, ArrayList validActions)
+        bool hasMultipleSelection = false;
+        if (entityId != Guid.Empty)
         {
-            bool hasMultipleSelection = false;
-            if (entityId != Guid.Empty)
+            IPersistenceService ps = ServiceManager.Services.GetService(
+                typeof(IPersistenceService)) as IPersistenceService;
+            AbstractDataEntity entity 
+                = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
+                typeof(AbstractDataEntity), new ModelElementKey(entityId));
+            ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
+                EntityUIAction.CategoryConst);
+            actionsSorted.Sort(new EntityUIActionOrderComparer());
+            foreach (EntityUIAction action in actionsSorted)
             {
-                IPersistenceService ps = ServiceManager.Services.GetService(
-                    typeof(IPersistenceService)) as IPersistenceService;
-                AbstractDataEntity entity 
-                    = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractDataEntity), new ModelElementKey(entityId));
-                ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
-                    EntityUIAction.CategoryConst);
-                actionsSorted.Sort(new EntityUIActionOrderComparer());
-                foreach (EntityUIAction action in actionsSorted)
+                if (RenderTools.ShouldRenderAction(
+                    action, formId, panelId))
                 {
-                    if (RenderTools.ShouldRenderAction(
-                        action, formId, panelId))
+                    if ((action.Mode != PanelActionMode.ActiveRecord)
+                    && (action.Mode != PanelActionMode.Always))
                     {
-                        if ((action.Mode != PanelActionMode.ActiveRecord)
-                        && (action.Mode != PanelActionMode.Always))
-                        {
-                            hasMultipleSelection = true;
-                        }
-                        if (disableActionButtons == false)
-                        {
-                            validActions.Add(action);
-                        }
+                        hasMultipleSelection = true;
+                    }
+                    if (disableActionButtons == false)
+                    {
+                        validActions.Add(action);
                     }
                 }
             }
-            return hasMultipleSelection;
         }
-
-        public static ArrayList GetOriginalParameters(EntityUIAction action)
+        return hasMultipleSelection;
+    }
+    public static ArrayList GetOriginalParameters(EntityUIAction action)
+    {
+        ArrayList originalDataParameters = new ArrayList();
+        foreach(EntityUIActionParameterMapping mapping 
+            in action.ChildItemsByType(
+            EntityUIActionParameterMapping.CategoryConst))
         {
-            ArrayList originalDataParameters = new ArrayList();
-            foreach(EntityUIActionParameterMapping mapping 
-                in action.ChildItemsByType(
-                EntityUIActionParameterMapping.CategoryConst))
+            if(mapping.Type == EntityUIActionParameterMappingType.Original)
             {
-                if(mapping.Type == EntityUIActionParameterMappingType.Original)
-                {
-                    originalDataParameters.Add(mapping.Name);
-                }
+                originalDataParameters.Add(mapping.Name);
             }
-            return originalDataParameters;
         }
-
-        public static EntityUIAction GetAction(string action)
-        {
-            return !Guid.TryParse(action, out Guid actionId)
-                ? null
-                : ServiceManager.Services
-                    .GetService<IPersistenceService>().SchemaProvider
-                    .RetrieveInstance<EntityUIAction>(actionId);
-        }
+        return originalDataParameters;
+    }
+    public static EntityUIAction GetAction(string action)
+    {
+        return !Guid.TryParse(action, out Guid actionId)
+            ? null
+            : ServiceManager.Services
+                .GetService<IPersistenceService>().SchemaProvider
+                .RetrieveInstance<EntityUIAction>(actionId);
     }
 }

@@ -22,31 +22,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+
+public sealed class ToolStripActionButton : BigToolStripButton,
+    IActionContainer
 {
-    
-    public sealed class ToolStripActionButton : BigToolStripButton,
-        IActionContainer
+    private readonly EntityUIAction action;
+    /// <summary>
+    /// This constructor should be used for dubugging only
+    /// </summary>
+    public ToolStripActionButton()
+    {         
+    }
+    public ToolStripActionButton(EntityUIAction action)
     {
-        private readonly EntityUIAction action;
-
-
-        /// <summary>
-        /// This constructor should be used for dubugging only
-        /// </summary>
-        public ToolStripActionButton()
-        {         
-        }
-
-        public ToolStripActionButton(EntityUIAction action)
-        {
-            this.action = action;
-            ToolStripButtonTools.InitActionButton(this, action);
-        }
-
-        public EntityUIAction GetAction()
-        {
-            return action;
-        }
+        this.action = action;
+        ToolStripButtonTools.InitActionButton(this, action);
+    }
+    public EntityUIAction GetAction()
+    {
+        return action;
     }
 }

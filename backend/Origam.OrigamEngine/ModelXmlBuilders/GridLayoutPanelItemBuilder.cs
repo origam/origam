@@ -21,22 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for GridLayoutPanelItemBuilder.
+/// </summary>
+public class GridLayoutPanelItemBuilder
 {
-	/// <summary>
-	/// Summary description for GridLayoutPanelItemBuilder.
-	/// </summary>
-	public class GridLayoutPanelItemBuilder
+	public static void Build(XmlElement parentNode, UIElementRenderData renderData)
 	{
-		public static void Build(XmlElement parentNode, UIElementRenderData renderData)
-		{
-			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-			parentNode.SetAttribute("Type", "GridLayoutPanelItem");
-			parentNode.SetAttribute("Label", renderData.Text);
-			parentNode.SetAttribute("TopCell", renderData.TopCell.ToString());
-			parentNode.SetAttribute("LeftCell", renderData.LeftCell.ToString());
-			parentNode.SetAttribute("HeightCells", renderData.HeightCells.ToString());
-			parentNode.SetAttribute("WidthCells", renderData.WidthCells.ToString());
-		}
+		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+		parentNode.SetAttribute("Type", "GridLayoutPanelItem");
+		parentNode.SetAttribute("Label", renderData.Text);
+		parentNode.SetAttribute("TopCell", renderData.TopCell.ToString());
+		parentNode.SetAttribute("LeftCell", renderData.LeftCell.ToString());
+		parentNode.SetAttribute("HeightCells", renderData.HeightCells.ToString());
+		parentNode.SetAttribute("WidthCells", renderData.WidthCells.ToString());
 	}
 }

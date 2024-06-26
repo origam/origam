@@ -28,117 +28,104 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+public class LanguageConfig
 {
-    public class LanguageConfig
+    public RequestCulture DefaultCulture { get; }
+    public CultureInfo[] AllowedCultures { get; }
+    public CultureItem[] CultureItems { get; }
+    public LanguageConfig(IConfiguration configuration)
     {
-        public RequestCulture DefaultCulture { get; }
-        public CultureInfo[] AllowedCultures { get; }
-        public CultureItem[] CultureItems { get; }
-
-        public LanguageConfig(IConfiguration configuration)
-        {
-            IConfigurationSection languageSection = configuration
-                .GetSectionOrThrow("LanguageConfig");
-            
-            string defaultCulture = languageSection
-                .GetStringOrThrow("Default");
-            if (string.IsNullOrWhiteSpace(defaultCulture))
-            {
-                throw new Exception("Default culture in \"LanguageConfig\" cannot be empty");
-            }
-
-            DefaultCulture = new RequestCulture(defaultCulture);
-            
-            CultureItems = languageSection
-                .GetSectionOrThrow("Allowed")
-                .GetChildren()
-                .Select(CultureItem.Create)
-                .ToArray();
-
-            var defaultCultureExists = CultureItems.Any(item => item.CultureName == defaultCulture);
-            if (!defaultCultureExists)
-            {
-                throw new Exception($"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section.");
-            }
-
-            AllowedCultures = CultureItems
-                .Select(item => new CultureInfo(item.CultureName))
-                .ToArray();
-        }
-    }
-
-    public class CultureItem
-    {
-        public static CultureItem Create(IConfigurationSection section)
-        {
-            return  new CultureItem
-            {
-                CultureName = section.GetStringOrThrow("Culture"),
-                Caption = section.GetStringOrThrow("Caption"),
-                ResetPasswordMailSubject = section["ResetPasswordMailSubject"],
-                ResetPasswordMailBodyFileName = section["ResetPasswordMailBodyFileName"],
-                DateCompleterConfig = DateCompleterConfig.Create(section),
-                DefaultDateFormats = DefaultDateFormats.Create(section)
-            };
-        }
-
-        public string CultureName { get; set; }
-        public string Caption { get; set; }
-        public string ResetPasswordMailSubject { get; set; }
-        public string ResetPasswordMailBodyFileName { get; set; }
-        public DateCompleterConfig DateCompleterConfig { get; set; }
-        public DefaultDateFormats DefaultDateFormats { get; set; }
-    }
-
-    public class DefaultDateFormats
-    {
-        public string Short { get; set; }
-        public string Long { get; set; }
-        public string Time { get; set; }
+        IConfigurationSection languageSection = configuration
+            .GetSectionOrThrow("LanguageConfig");
         
-        public static DefaultDateFormats Create(IConfigurationSection parentSection)
+        string defaultCulture = languageSection
+            .GetStringOrThrow("Default");
+        if (string.IsNullOrWhiteSpace(defaultCulture))
         {
-            var section = parentSection.GetSection("DefaultDateFormats");
-            return new DefaultDateFormats
-            {
-                Short = section?["Short"] ?? "dd.MM.yyyy",
-                Long = section?["Long"] ?? "dd.MM.yyyy HH:mm:ss",
-                Time = section?["Time"] ?? "HH:mm:ss"
-            };
+            throw new Exception("Default culture in \"LanguageConfig\" cannot be empty");
         }
-    }
-
-    public class DateCompleterConfig
-    {
-        public string DateSeparator { get; set; }
-        public string TimeSeparator { get; set; } = ":";
-        public string DateTimeSeparator { get; set; } = " ";
-        public DateSequence DateSequence { get; set; } =
-            DateSequence.DayMonthYear;
-
-        public static DateCompleterConfig Create(IConfigurationSection parentSection)
+        DefaultCulture = new RequestCulture(defaultCulture);
+        
+        CultureItems = languageSection
+            .GetSectionOrThrow("Allowed")
+            .GetChildren()
+            .Select(CultureItem.Create)
+            .ToArray();
+        var defaultCultureExists = CultureItems.Any(item => item.CultureName == defaultCulture);
+        if (!defaultCultureExists)
         {
-            var section = parentSection.GetSection("DateCompleterConfig");
-            bool parseSuccess = Enum.TryParse<DateSequence>(
-                section?["DateSequence"], out var sequence);
-            if (!parseSuccess)
-            {
-                sequence = Configuration.DateSequence.DayMonthYear;
-            }
-
-            return new DateCompleterConfig
-            {
-                DateSeparator = section?["DateSeparator"] ?? ".",
-                TimeSeparator = section?["TimeSeparator"] ?? ":",
-                DateTimeSeparator = section?["DateTimeSeparator"] ?? " ",
-                DateSequence = sequence
-            };
+            throw new Exception($"The default culture \"{defaultCulture}\" is not among the allowed cultures in the \"LanguageConfig\" section.");
         }
+        AllowedCultures = CultureItems
+            .Select(item => new CultureInfo(item.CultureName))
+            .ToArray();
     }
-
-    public enum DateSequence
+}
+public class CultureItem
+{
+    public static CultureItem Create(IConfigurationSection section)
     {
-        DayMonthYear, MonthDayYear
+        return  new CultureItem
+        {
+            CultureName = section.GetStringOrThrow("Culture"),
+            Caption = section.GetStringOrThrow("Caption"),
+            ResetPasswordMailSubject = section["ResetPasswordMailSubject"],
+            ResetPasswordMailBodyFileName = section["ResetPasswordMailBodyFileName"],
+            DateCompleterConfig = DateCompleterConfig.Create(section),
+            DefaultDateFormats = DefaultDateFormats.Create(section)
+        };
     }
+    public string CultureName { get; set; }
+    public string Caption { get; set; }
+    public string ResetPasswordMailSubject { get; set; }
+    public string ResetPasswordMailBodyFileName { get; set; }
+    public DateCompleterConfig DateCompleterConfig { get; set; }
+    public DefaultDateFormats DefaultDateFormats { get; set; }
+}
+public class DefaultDateFormats
+{
+    public string Short { get; set; }
+    public string Long { get; set; }
+    public string Time { get; set; }
+    
+    public static DefaultDateFormats Create(IConfigurationSection parentSection)
+    {
+        var section = parentSection.GetSection("DefaultDateFormats");
+        return new DefaultDateFormats
+        {
+            Short = section?["Short"] ?? "dd.MM.yyyy",
+            Long = section?["Long"] ?? "dd.MM.yyyy HH:mm:ss",
+            Time = section?["Time"] ?? "HH:mm:ss"
+        };
+    }
+}
+public class DateCompleterConfig
+{
+    public string DateSeparator { get; set; }
+    public string TimeSeparator { get; set; } = ":";
+    public string DateTimeSeparator { get; set; } = " ";
+    public DateSequence DateSequence { get; set; } =
+        DateSequence.DayMonthYear;
+    public static DateCompleterConfig Create(IConfigurationSection parentSection)
+    {
+        var section = parentSection.GetSection("DateCompleterConfig");
+        bool parseSuccess = Enum.TryParse<DateSequence>(
+            section?["DateSequence"], out var sequence);
+        if (!parseSuccess)
+        {
+            sequence = Configuration.DateSequence.DayMonthYear;
+        }
+        return new DateCompleterConfig
+        {
+            DateSeparator = section?["DateSeparator"] ?? ".",
+            TimeSeparator = section?["TimeSeparator"] ?? ":",
+            DateTimeSeparator = section?["DateTimeSeparator"] ?? " ",
+            DateSequence = sequence
+        };
+    }
+}
+public enum DateSequence
+{
+    DayMonthYear, MonthDayYear
 }

@@ -23,41 +23,36 @@ using Origam.DA.Service;
 using System;
 using static Origam.DA.Common.Enums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public abstract class AbstractDatabaseBuilder : AbstractBuilder
 {
-    public abstract class AbstractDatabaseBuilder : AbstractBuilder
+    AbstractSqlDataService _dataService = null;
+    internal AbstractSqlDataService DataService()
     {
-        AbstractSqlDataService _dataService = null;
-
-        internal AbstractSqlDataService DataService()
-        {
-            _dataService = null;
+        _dataService = null;
+        return _dataService;
+    }
+    internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
+    {
+       
+            if (_dataService == null)
+            {
+                _dataService = CreateService(DatabaseType);
+            }
             return _dataService;
-        }
-
-        internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
+        
+    }
+    internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
+    {
+        if (DatabaseType == DatabaseType.MsSql)
         {
-           
-                if (_dataService == null)
-                {
-                    _dataService = CreateService(DatabaseType);
-                }
-                return _dataService;
-            
+            return new MsSqlDataService();
         }
-
-        internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
+        if (DatabaseType == DatabaseType.PgSql)
         {
-            if (DatabaseType == DatabaseType.MsSql)
-            {
-                return new MsSqlDataService();
-            }
-            if (DatabaseType == DatabaseType.PgSql)
-            {
-                return new PgSqlDataService();
-            }
-            throw new ArgumentOutOfRangeException("DatabaseType is wrong ",
-                            DatabaseType.ToString());
+            return new PgSqlDataService();
         }
+        throw new ArgumentOutOfRangeException("DatabaseType is wrong ",
+                        DatabaseType.ToString());
     }
 }

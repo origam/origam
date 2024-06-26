@@ -23,70 +23,60 @@ using System;
 
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for DataGridSortItem.
+/// </summary>
+public class DataSortItem : IComparable
 {
-	/// <summary>
-	/// Summary description for DataGridSortItem.
-	/// </summary>
-	public class DataSortItem : IComparable
+	public DataSortItem(string columnName, DataStructureColumnSortDirection sortDirection, int sortOrder)
 	{
-		public DataSortItem(string columnName, DataStructureColumnSortDirection sortDirection, int sortOrder)
-		{
-			this.ColumnName = columnName;
-			this.SortDirection = sortDirection;
-			this.SortOrder = sortOrder;
-		}
-
-		private DataStructureColumnSortDirection _sortDirection;
-		public DataStructureColumnSortDirection SortDirection
-		{
-			get
-			{
-				return _sortDirection;
-			}
-			set
-			{
-				_sortDirection = value;
-			}
-		}
-
-		private string _columnName;
-		public string ColumnName
-		{
-			get
-			{
-				return _columnName;
-			}
-			set
-			{
-				_columnName = value;
-			}
-		}
-
-		private int _sortOrder;
-		public int SortOrder
-		{
-			get
-			{
-				return _sortOrder;
-			}
-			set
-			{
-				_sortOrder = value;
-			}
-		}
-
-		#region IComparable Members
-
-		public int CompareTo(object obj)
-		{
-			DataSortItem compareItem = obj as DataSortItem;
-
-			if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
-
-			return this.SortOrder.CompareTo(compareItem.SortOrder);
-		}
-
-		#endregion
+		this.ColumnName = columnName;
+		this.SortDirection = sortDirection;
+		this.SortOrder = sortOrder;
 	}
+	private DataStructureColumnSortDirection _sortDirection;
+	public DataStructureColumnSortDirection SortDirection
+	{
+		get
+		{
+			return _sortDirection;
+		}
+		set
+		{
+			_sortDirection = value;
+		}
+	}
+	private string _columnName;
+	public string ColumnName
+	{
+		get
+		{
+			return _columnName;
+		}
+		set
+		{
+			_columnName = value;
+		}
+	}
+	private int _sortOrder;
+	public int SortOrder
+	{
+		get
+		{
+			return _sortOrder;
+		}
+		set
+		{
+			_sortOrder = value;
+		}
+	}
+	#region IComparable Members
+	public int CompareTo(object obj)
+	{
+		DataSortItem compareItem = obj as DataSortItem;
+		if(compareItem == null) throw new InvalidCastException(ResourceUtils.GetString("ErrorCompareDataSortItem"));
+		return this.SortOrder.CompareTo(compareItem.SortOrder);
+	}
+	#endregion
 }

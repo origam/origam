@@ -24,46 +24,42 @@ using Origam.Server.Pages;
 using System.Net;
 using System.Text;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class CoreHttpTools : IHttpTools
 {
-    public class CoreHttpTools : IHttpTools
+    public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
+        string fileName, bool isPreview)
     {
-        public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
-            string fileName, bool isPreview)
+        throw new System.NotImplementedException();
+    }
+    public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
+        string fileName, bool isPreview, string overrideContentType)
+    {
+        response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
+        string disposition = GetFileDisposition(request, fileName);
+        if (!isPreview)
         {
-            throw new System.NotImplementedException();
+            disposition = "attachment; " + disposition;
         }
-
-        public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
-            string fileName, bool isPreview, string overrideContentType)
+        response.AppendHeader(
+            "content-length", 
+            file == null ? "0" : file.Length.ToString());
+        response.AppendHeader("content-disposition", disposition);
+        response.OutputStreamWrite(file, 0, file.Length);
+    }
+    public string GetFileDisposition(IRequestWrapper request, string fileName)
+    {
+        bool isFirefox 
+            = (request.UserAgent != null) 
+            && (request.UserAgent.IndexOf("Firefox") >= 0);
+        string dispositionLeft = "filename=";
+        if(isFirefox)
         {
-            response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
-            string disposition = GetFileDisposition(request, fileName);
-            if (!isPreview)
-            {
-                disposition = "attachment; " + disposition;
-            }
-            response.AppendHeader(
-                "content-length", 
-                file == null ? "0" : file.Length.ToString());
-            response.AppendHeader("content-disposition", disposition);
-            response.OutputStreamWrite(file, 0, file.Length);
+            dispositionLeft = "filename*=utf-8''";
         }
-
-        public string GetFileDisposition(IRequestWrapper request, string fileName)
-        {
-            bool isFirefox 
-                = (request.UserAgent != null) 
-                && (request.UserAgent.IndexOf("Firefox") >= 0);
-            string dispositionLeft = "filename=";
-            if(isFirefox)
-            {
-                dispositionLeft = "filename*=utf-8''";
-            }
-            // no commas allowed in the file name
-            fileName = fileName.Replace(",", "");
-            string disposition = dispositionLeft + WebUtility.UrlEncode(fileName);
-            return disposition;
-        }
+        // no commas allowed in the file name
+        fileName = fileName.Replace(",", "");
+        string disposition = dispositionLeft + WebUtility.UrlEncode(fileName);
+        return disposition;
     }
 }

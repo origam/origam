@@ -44,85 +44,77 @@ using System;
 using Origam.Schema;
 using System.Xml;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class DashboardToolboxItemParameter
 {
-    public class DashboardToolboxItemParameter
+    public DashboardToolboxItemParameter()
     {
-        public DashboardToolboxItemParameter()
+    }
+    public DashboardToolboxItemParameter(string name, string caption, OrigamDataType dataType, Guid lookupId)
+    {
+        _name = name;
+        _caption = caption;
+        _dataType = dataType;
+        _lookupId = lookupId;
+    }
+    private string _name;
+    public string Name
+    {
+        get
         {
+            return _name;
         }
-
-        public DashboardToolboxItemParameter(string name, string caption, OrigamDataType dataType, Guid lookupId)
+        set
         {
-            _name = name;
-            _caption = caption;
-            _dataType = dataType;
-            _lookupId = lookupId;
+            _name = value;
         }
-
-        private string _name;
-        public string Name
+    }
+    private string _caption;
+    public string Caption
+    {
+        get
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            return _caption;
         }
-
-        private string _caption;
-        public string Caption
+        set
         {
-            get
-            {
-                return _caption;
-            }
-            set
-            {
-                _caption = value;
-            }
+            _caption = value;
         }
-
-        private Guid _lookupId;
-        public Guid LookupId
+    }
+    private Guid _lookupId;
+    public Guid LookupId
+    {
+        get
         {
-            get
-            {
-                return _lookupId;
-            }
-            set
-            {
-                _lookupId = value;
-            }
+            return _lookupId;
         }
-
-        private OrigamDataType _dataType;
-        public OrigamDataType DataType
+        set
         {
-            get
-            {
-                return _dataType;
-            }
-            set
-            {
-                _dataType = value;
-            }
+            _lookupId = value;
         }
-
-        private XmlDocument _controlDefinition;
-        public XmlDocument ControlDefinition
+    }
+    private OrigamDataType _dataType;
+    public OrigamDataType DataType
+    {
+        get
         {
-            get
-            {
-                return _controlDefinition;
-            }
-            set
-            {
-                _controlDefinition = value;
-            }
+            return _dataType;
+        }
+        set
+        {
+            _dataType = value;
+        }
+    }
+    private XmlDocument _controlDefinition;
+    public XmlDocument ControlDefinition
+    {
+        get
+        {
+            return _controlDefinition;
+        }
+        set
+        {
+            _controlDefinition = value;
         }
     }
 }

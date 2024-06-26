@@ -22,50 +22,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Gui.Designer
+namespace Origam.Gui.Designer;
+public struct ToolBoxConverter
 {
-    public struct ToolBoxConverter
+    const string WIDGET_TEXTBOX = "Origam.Gui.Win.AsTextBox,Origam.Gui.Win";
+    const string WIDGET_DROPDOWN = "Origam.Gui.Win.AsDropDown,Origam.Gui.Win";
+    const string WIDGET_TAGINPUT = "Origam.Gui.Win.TagInput,Origam.Gui.Win";
+    const string WIDGET_IMAGEBOX = "Origam.Gui.Win.ImageBox,Origam.Gui.Win";
+    const string WIDGET_CHECKBOX = "Origam.Gui.Win.AsCheckBox,Origam.Gui.Win";
+    const string WIDGET_DATEBOX = "Origam.Gui.Win.AsDateBox,Origam.Gui.Win";
+    const string WIDGET_MULTICOLUMNWRAPPER = "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
+    public static string Convert(IDataEntityColumn field)
 	{
-        const string WIDGET_TEXTBOX = "Origam.Gui.Win.AsTextBox,Origam.Gui.Win";
-        const string WIDGET_DROPDOWN = "Origam.Gui.Win.AsDropDown,Origam.Gui.Win";
-        const string WIDGET_TAGINPUT = "Origam.Gui.Win.TagInput,Origam.Gui.Win";
-        const string WIDGET_IMAGEBOX = "Origam.Gui.Win.ImageBox,Origam.Gui.Win";
-        const string WIDGET_CHECKBOX = "Origam.Gui.Win.AsCheckBox,Origam.Gui.Win";
-        const string WIDGET_DATEBOX = "Origam.Gui.Win.AsDateBox,Origam.Gui.Win";
-        const string WIDGET_MULTICOLUMNWRAPPER = "Origam.Gui.Win.MultiColumnAdapterFieldWrapper,Origam.Gui.Win";
-
-        public static string Convert(IDataEntityColumn field)
-		{
-			string result;
-            if (field.DefaultLookup != null)
+		string result;
+        if (field.DefaultLookup != null)
+        {
+            result = WIDGET_DROPDOWN;
+        }
+        else
+        {
+            switch (field.DataType)
             {
-                result = WIDGET_DROPDOWN;
+                case OrigamDataType.Array:
+                    result = WIDGET_TAGINPUT;
+                    break;
+                case OrigamDataType.Blob:
+                    result = WIDGET_IMAGEBOX;
+                    break;
+                case OrigamDataType.Boolean:
+                    result = WIDGET_CHECKBOX;
+                    break;
+                case OrigamDataType.Date:
+                    result = WIDGET_DATEBOX;
+                    break;
+                case OrigamDataType.Object:
+                    result = WIDGET_MULTICOLUMNWRAPPER;
+                    break;
+                default:
+                    result = WIDGET_TEXTBOX;
+                    break;
             }
-            else
-            {
-                switch (field.DataType)
-                {
-                    case OrigamDataType.Array:
-                        result = WIDGET_TAGINPUT;
-                        break;
-                    case OrigamDataType.Blob:
-                        result = WIDGET_IMAGEBOX;
-                        break;
-                    case OrigamDataType.Boolean:
-                        result = WIDGET_CHECKBOX;
-                        break;
-                    case OrigamDataType.Date:
-                        result = WIDGET_DATEBOX;
-                        break;
-                    case OrigamDataType.Object:
-                        result = WIDGET_MULTICOLUMNWRAPPER;
-                        break;
-                    default:
-                        result = WIDGET_TEXTBOX;
-                        break;
-                }
-            }
-            return result;
-		}
+        }
+        return result;
 	}
 }

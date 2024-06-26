@@ -25,85 +25,75 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+public enum DeploymentFileLocation
 {
-	public enum DeploymentFileLocation
+	Manual = 0,
+	ReportsFolder = 3
+}
+/// <summary>
+/// Summary description for FileRestoreUpdateScriptActivity.
+/// </summary>
+[SchemaItemDescription("File Restore Update Activity", 
+    "icon_file-restore-update-activity.png")]
+[HelpTopic("File+Restore+Update+Activity")]
+public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
+{
+	public FileRestoreUpdateScriptActivity() : base()
+    {
+        InitializeProperyContainers();
+    }
+	public FileRestoreUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId)
+    {
+        InitializeProperyContainers();
+    }
+    public FileRestoreUpdateScriptActivity(Key primaryKey) : base(primaryKey)
+    {
+        InitializeProperyContainers();
+    }
+    private void InitializeProperyContainers()
+    {
+        content = new PropertyContainer<byte[]>(
+            containerName: nameof(content),
+            containingObject: this);
+    }
+	#region Properties
+	private PropertyContainer<byte[]> content;
+	[Category("File Information")]
+	[XmlExternalFileReference(containerName: nameof(content), 
+        extension: ExternalFileExtension.Bin)]
+    public Byte[] File 
 	{
-		Manual = 0,
-		ReportsFolder = 3
-	}
-
-	/// <summary>
-	/// Summary description for FileRestoreUpdateScriptActivity.
-	/// </summary>
-	[SchemaItemDescription("File Restore Update Activity", 
-        "icon_file-restore-update-activity.png")]
-    [HelpTopic("File+Restore+Update+Activity")]
-	public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
+        get => content.Get();
+        set => content.Set(value);
+    }
+    private string _manualLocation;
+	[Category("File Information")]
+	[XmlAttribute("fileName")]
+	public string FileName 
 	{
-		public FileRestoreUpdateScriptActivity() : base()
-        {
-            InitializeProperyContainers();
-        }
-
-		public FileRestoreUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId)
-        {
-            InitializeProperyContainers();
-        }
-
-        public FileRestoreUpdateScriptActivity(Key primaryKey) : base(primaryKey)
-        {
-            InitializeProperyContainers();
-        }
-
-        private void InitializeProperyContainers()
-        {
-            content = new PropertyContainer<byte[]>(
-                containerName: nameof(content),
-                containingObject: this);
-        }
-
-		#region Properties
-		private PropertyContainer<byte[]> content;
-
-		[Category("File Information")]
-		[XmlExternalFileReference(containerName: nameof(content), 
-            extension: ExternalFileExtension.Bin)]
-        public Byte[] File 
+		get
 		{
-            get => content.Get();
-            set => content.Set(value);
-        }
-
-        private string _manualLocation;
-		[Category("File Information")]
-		[XmlAttribute("fileName")]
-		public string FileName 
-		{
-			get
-			{
-				return _manualLocation;
-			}
-			set
-			{
-				_manualLocation = value;
-			}
+			return _manualLocation;
 		}
-
-		private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
-		[Category("File Information")]
-		[XmlAttribute("targetLocation")]
-		public DeploymentFileLocation TargetLocation 
+		set
 		{
-			get
-			{
-				return _targetLocation;
-			}
-			set
-			{
-				_targetLocation = value;
-			}
+			_manualLocation = value;
 		}
-		#endregion
 	}
+	private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
+	[Category("File Information")]
+	[XmlAttribute("targetLocation")]
+	public DeploymentFileLocation TargetLocation 
+	{
+		get
+		{
+			return _targetLocation;
+		}
+		set
+		{
+			_targetLocation = value;
+		}
+	}
+	#endregion
 }

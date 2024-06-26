@@ -44,13 +44,11 @@ using System;
 using System.Web;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Server.Pages
+namespace Origam.Server.Pages;
+public class AbstractWorkflowPageActionHandler : IWorkflowPageActionHandler
 {
-    public class AbstractWorkflowPageActionHandler : IWorkflowPageActionHandler
+    public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
     {
-        public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

@@ -23,17 +23,14 @@ using System;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
-namespace Origam.Services
+namespace Origam.Services;
+public interface ISchemaService : IWorkbenchService
 {
-	public interface ISchemaService : IWorkbenchService
-	{
-		ISchemaItemProvider GetProvider(Type type);
-		T GetProvider<T>() where T : ISchemaItemProvider;
-		Guid ActiveSchemaExtensionId { get; }
-        Guid StorageSchemaExtensionId { get; set; }
-        Package ActiveExtension { get; }
-
-        bool IsSchemaLoaded { get; }
-        bool UnloadSchema();
-	}
+	ISchemaItemProvider GetProvider(Type type);
+	T GetProvider<T>() where T : ISchemaItemProvider;
+	Guid ActiveSchemaExtensionId { get; }
+    Guid StorageSchemaExtensionId { get; set; }
+    Package ActiveExtension { get; }
+    bool IsSchemaLoaded { get; }
+    bool UnloadSchema();
 }

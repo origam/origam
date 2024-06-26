@@ -17,21 +17,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Drawing;
 using System.IO;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class ByteExtensions
 {
-    public static class ByteExtensions
+    public static Bitmap ToBitmap(this byte[] array)
     {
-        public static Bitmap ToBitmap(this byte[] array)
+        if (array == null) return null;
+        using (var ms = new MemoryStream(array))
         {
-            if (array == null) return null;
-            using (var ms = new MemoryStream(array))
-            {
-                return new Bitmap(ms);
-            }
-        } 
-    }
+            return new Bitmap(ms);
+        }
+    } 
 }

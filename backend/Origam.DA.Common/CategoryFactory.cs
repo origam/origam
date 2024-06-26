@@ -30,24 +30,21 @@ using Origam.Extensions;
 using Origam.OrigamEngine;
 using ProtoBuf;
 
-namespace Origam.DA
+namespace Origam.DA;
+public static class CategoryFactory
 {
-    public static class CategoryFactory
+    public static string Create(Type type)
     {
-        public static string Create(Type type)
-        {
-            XmlRootAttribute rootAttribute = FindRootAttribute(type);
-            return rootAttribute?.ElementName;
-        }
-
-        private static XmlRootAttribute FindRootAttribute(Type type)
-        {
-            object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
-        
-            if (attributes != null && attributes.Length > 0)
-                return (XmlRootAttribute) attributes[0];
-            else
-                return null;
-        }
+        XmlRootAttribute rootAttribute = FindRootAttribute(type);
+        return rootAttribute?.ElementName;
+    }
+    private static XmlRootAttribute FindRootAttribute(Type type)
+    {
+        object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
+    
+        if (attributes != null && attributes.Length > 0)
+            return (XmlRootAttribute) attributes[0];
+        else
+            return null;
     }
 }

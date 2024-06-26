@@ -21,33 +21,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.DA.ObjectPersistence
+namespace Origam.DA.ObjectPersistence;
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class StringNotEmptyModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class StringNotEmptyModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	public StringNotEmptyModelElementRuleAttribute()
 	{
-		public StringNotEmptyModelElementRuleAttribute()
+	}
+	public override Exception CheckRule(object instance)
+	{
+		return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+	}
+	public override Exception CheckRule(object instance, string memberName)
+	{
+		if(memberName == String.Empty | memberName == null) CheckRule(instance);
+		object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+		if(value == null | (value as string) == string.Empty)
 		{
+			return new NullReferenceException(ResourceUtils.GetString("CantBeEmpty", memberName));
 		}
-
-		public override Exception CheckRule(object instance)
-		{
-			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
-		}
-
-		public override Exception CheckRule(object instance, string memberName)
-		{
-			if(memberName == String.Empty | memberName == null) CheckRule(instance);
-
-			object value = Reflector.GetValue(instance.GetType(), instance, memberName);
-			if(value == null | (value as string) == string.Empty)
-			{
-				return new NullReferenceException(ResourceUtils.GetString("CantBeEmpty", memberName));
-			}
-            return null;
-		}
+        return null;
 	}
 }

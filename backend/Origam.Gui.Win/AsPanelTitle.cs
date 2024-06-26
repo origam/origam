@@ -25,198 +25,176 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for AsPanelTitle.
+/// </summary>
+public class AsPanelTitle : Panel
 {
-	/// <summary>
-	/// Summary description for AsPanelTitle.
-	/// </summary>
-	public class AsPanelTitle : Panel
+	public AsPanelTitle() : base()
 	{
-		public AsPanelTitle() : base()
+		this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | System.Windows.Forms.ControlStyles.DoubleBuffer,true);
+		this.ResizeRedraw = true;
+	}
+	private string _panelTitle = "";
+	public string PanelTitle
+	{
+		get
 		{
-			this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | System.Windows.Forms.ControlStyles.DoubleBuffer,true);
-			this.ResizeRedraw = true;
+			return _panelTitle;
 		}
-
-		private string _panelTitle = "";
-		public string PanelTitle
+		set
 		{
-			get
-			{
-				return _panelTitle;
-			}
-			set
-			{
-				_panelTitle = value;
-				this.Invalidate(true);
-			}
+			_panelTitle = value;
+			this.Invalidate(true);
 		}
-
-		private Bitmap _panelIcon;
-		public Bitmap PanelIcon
+	}
+	private Bitmap _panelIcon;
+	public Bitmap PanelIcon
+	{
+		get
 		{
-			get
-			{
-				return _panelIcon;
-			}
-			set
-			{
-				_panelIcon = value;
-				this.Invalidate(true);
-			}
+			return _panelIcon;
 		}
-
-		private Bitmap _statusIcon;
-		public Bitmap StatusIcon
+		set
 		{
-			get
-			{
-				return _statusIcon;
-			}
-			set
-			{
-				_statusIcon = value;
-				this.Invalidate(true);
-			}
+			_panelIcon = value;
+			this.Invalidate(true);
 		}
-
-		private Color _startColor;
-		public Color StartColor
+	}
+	private Bitmap _statusIcon;
+	public Bitmap StatusIcon
+	{
+		get
 		{
-			get
-			{
-				return _startColor;
-			}
-			set
-			{
-				_startColor = value;
-				this.Invalidate(true);
-			}
+			return _statusIcon;
 		}
-
-		private Color _endColor;
-		public Color EndColor
+		set
 		{
-			get
-			{
-				return _endColor;
-			}
-			set
-			{
-				_endColor = value;
-				this.Invalidate(true);
-			}
+			_statusIcon = value;
+			this.Invalidate(true);
 		}
-
-		private Color _middleStartColor;
-		public Color MiddleStartColor
+	}
+	private Color _startColor;
+	public Color StartColor
+	{
+		get
 		{
-			get
-			{
-				return _middleStartColor;
-			}
-			set
-			{
-				_middleStartColor = value;
-				this.Invalidate(true);
-			}
+			return _startColor;
 		}
-
-		private Color _middleEndColor;
-		public Color MiddleEndColor
+		set
 		{
-			get
-			{
-				return _middleEndColor;
-			}
-			set
-			{
-				_middleEndColor = value;
-				this.Invalidate(true);
-			}
+			_startColor = value;
+			this.Invalidate(true);
 		}
-
-		protected override void OnPaint(PaintEventArgs e)
+	}
+	private Color _endColor;
+	public Color EndColor
+	{
+		get
 		{
-			if(this.Width == 0) return;
-			//base.OnPaint (e);
-
-			// rounded rectangle
-			GraphicsPath path = null;
-			Graphics graphics = null;
-			SolidBrush brush = null;
-			LinearGradientBrush GBrush = null;
-			SolidBrush drawBrush = null;
-			Font font = null;
-			StringFormat sf = null;
-
-			try
-			{
-				graphics = e.Graphics;
-				int splitPosition = GetColorSplitPosition(this.Height);
-
+			return _endColor;
+		}
+		set
+		{
+			_endColor = value;
+			this.Invalidate(true);
+		}
+	}
+	private Color _middleStartColor;
+	public Color MiddleStartColor
+	{
+		get
+		{
+			return _middleStartColor;
+		}
+		set
+		{
+			_middleStartColor = value;
+			this.Invalidate(true);
+		}
+	}
+	private Color _middleEndColor;
+	public Color MiddleEndColor
+	{
+		get
+		{
+			return _middleEndColor;
+		}
+		set
+		{
+			_middleEndColor = value;
+			this.Invalidate(true);
+		}
+	}
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		if(this.Width == 0) return;
+		//base.OnPaint (e);
+		// rounded rectangle
+		GraphicsPath path = null;
+		Graphics graphics = null;
+		SolidBrush brush = null;
+		LinearGradientBrush GBrush = null;
+		SolidBrush drawBrush = null;
+		Font font = null;
+		StringFormat sf = null;
+		try
+		{
+			graphics = e.Graphics;
+			int splitPosition = GetColorSplitPosition(this.Height);
 //				// declare linear gradient brush for fill background of label
 //				GBrush = new LinearGradientBrush(
 //					new Point(0, 0),
 //					new Point(0, splitPosition), this.StartColor, this.MiddleEndColor);
 //					//new Point(this.Width, 0), this.StartColor, this.EndColor);
-
-				GBrush = new LinearGradientBrush(
-					new Point(0, 0),
-					new Point(0, splitPosition), this.StartColor, this.MiddleEndColor);
-
+			GBrush = new LinearGradientBrush(
+				new Point(0, 0),
+				new Point(0, splitPosition), this.StartColor, this.MiddleEndColor);
 //				Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
 //				path = RoundedRect.CreatePath(rect, 7, 0, CornerType.None);
 //				graphics.FillPath(GBrush, path);
+			graphics.FillRectangle(GBrush, 0, 0, this.Width, splitPosition);
+			Rectangle rect = new Rectangle(0, splitPosition, this.Width, this.Height-splitPosition+2);
+			
+			GBrush = new LinearGradientBrush(rect, this.MiddleStartColor, this.EndColor, LinearGradientMode.Vertical);
 
-				graphics.FillRectangle(GBrush, 0, 0, this.Width, splitPosition);
-
-				Rectangle rect = new Rectangle(0, splitPosition, this.Width, this.Height-splitPosition+2);
-				
-				GBrush = new LinearGradientBrush(rect, this.MiddleStartColor, this.EndColor, LinearGradientMode.Vertical);
-	
-				graphics.FillRectangle(GBrush, rect);
-
-				// draw text on label
-				drawBrush = new SolidBrush(this.ForeColor);
-				sf = new StringFormat();
-				// align with center
-				sf.Alignment = StringAlignment.Near;
-				sf.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show;
-
-				// set rectangle bound text
-				float x = 5;
-				if(PanelIcon != null) x = 20;
-
-				RectangleF rectF = new RectangleF(x, 12-Font.Height/2, this.Width, this.Height);
-				RectangleF rectIcon = new RectangleF(3, 4, 16, 16);
-				// output string
-				font = new Font(this.Font, FontStyle.Bold);
-				
-				if(PanelIcon != null) graphics.DrawImage(this.PanelIcon, rectIcon);
-				graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
-
-				if(StatusIcon != null) 
-				{
-					RectangleF rectStatusIcon = new RectangleF(graphics.MeasureString(this.PanelTitle, font, new PointF(x, 0), sf).Width + 14, 4, 16, 16);
-					graphics.DrawImage(this.StatusIcon, rectStatusIcon);
-				}
-			}
-			finally
+			graphics.FillRectangle(GBrush, rect);
+			// draw text on label
+			drawBrush = new SolidBrush(this.ForeColor);
+			sf = new StringFormat();
+			// align with center
+			sf.Alignment = StringAlignment.Near;
+			sf.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show;
+			// set rectangle bound text
+			float x = 5;
+			if(PanelIcon != null) x = 20;
+			RectangleF rectF = new RectangleF(x, 12-Font.Height/2, this.Width, this.Height);
+			RectangleF rectIcon = new RectangleF(3, 4, 16, 16);
+			// output string
+			font = new Font(this.Font, FontStyle.Bold);
+			
+			if(PanelIcon != null) graphics.DrawImage(this.PanelIcon, rectIcon);
+			graphics.DrawString(this.PanelTitle, font, drawBrush, rectF, sf);
+			if(StatusIcon != null) 
 			{
-				if(path != null) path.Dispose();
-				//			//graphics.Dispose();
-				if(brush != null) brush.Dispose();
-				if(GBrush != null) GBrush.Dispose();
-				if(drawBrush != null) drawBrush.Dispose();
-				if(sf != null) sf.Dispose();
-				if(font != null) font.Dispose();
+				RectangleF rectStatusIcon = new RectangleF(graphics.MeasureString(this.PanelTitle, font, new PointF(x, 0), sf).Width + 14, 4, 16, 16);
+				graphics.DrawImage(this.StatusIcon, rectStatusIcon);
 			}
 		}
-
-		private int GetColorSplitPosition(int height)
+		finally
 		{
-			return Convert.ToInt32((height / 2.5));
+			if(path != null) path.Dispose();
+			//			//graphics.Dispose();
+			if(brush != null) brush.Dispose();
+			if(GBrush != null) GBrush.Dispose();
+			if(drawBrush != null) drawBrush.Dispose();
+			if(sf != null) sf.Dispose();
+			if(font != null) font.Dispose();
 		}
+	}
+	private int GetColorSplitPosition(int height)
+	{
+		return Convert.ToInt32((height / 2.5));
 	}
 }

@@ -25,92 +25,83 @@ using System.Data;
 using Origam;
 using core = Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class PortalSessionStore
 {
-    public class PortalSessionStore
+    private DateTime? sessionStart;
+    private object _profileId;
+    private IList<SessionStore> _formSessions = new List<SessionStore>();
+    private bool _isExclusiveScreenOpen = false;
+    public PortalSessionStore(object profileId)
     {
-        private DateTime? sessionStart;
-        private object _profileId;
-        private IList<SessionStore> _formSessions = new List<SessionStore>();
-        private bool _isExclusiveScreenOpen = false;
-
-        public PortalSessionStore(object profileId)
+        _profileId = profileId;
+        sessionStart = DateTime.Now;
+    }
+    public object ProfileId
+    {
+        get { return _profileId; }
+        set { _profileId = value; }
+    }
+    public IList<SessionStore> FormSessions
+    {
+        get { return _formSessions; }
+    }
+    public bool IsExclusiveScreenOpen
+    {
+        get
         {
-            _profileId = profileId;
-            sessionStart = DateTime.Now;
+            return _isExclusiveScreenOpen;
         }
-
-        public object ProfileId
+        set
         {
-            get { return _profileId; }
-            set { _profileId = value; }
+            _isExclusiveScreenOpen = value;
         }
-
-        public IList<SessionStore> FormSessions
+    }
+    public SessionStore ExclusiveSession
+    {
+        get
         {
-            get { return _formSessions; }
-        }
-
-        public bool IsExclusiveScreenOpen
-        {
-            get
+            if (IsExclusiveScreenOpen)
             {
-                return _isExclusiveScreenOpen;
-            }
-            set
-            {
-                _isExclusiveScreenOpen = value;
-            }
-        }
-
-        public SessionStore ExclusiveSession
-        {
-            get
-            {
-                if (IsExclusiveScreenOpen)
+                foreach (var item in FormSessions)
                 {
-                    foreach (var item in FormSessions)
+                    if (item.IsExclusive)
                     {
-                        if (item.IsExclusive)
-                        {
-                            return item;
-                        }
+                        return item;
                     }
-                    throw new System.Exception("Exclusive screen not found.");
                 }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        public bool ShouldBeCleared()
-        {
-            DataSet data = core.DataService.Instance.LoadData(
-                new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-                new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
-                Guid.Empty, 
-                Guid.Empty, 
-                null,
-                "OrigamOnlineUser_par_UserName",
-                SecurityManager.CurrentPrincipal.Identity.Name);
-            if (data.Tables[0].Rows.Count == 0)
-            {
-                return false;
+                throw new System.Exception("Exclusive screen not found.");
             }
             else
             {
-                DataRow row = data.Tables[0].Rows[0];
-                return Nullable.Compare<DateTime>(
-                    row["ClearSessionRequestTimestamp"] as DateTime?, sessionStart) 
-                    > 0;
+                return null;
             }
         }
-
-        public void ResetSessionStart()
+    }
+    public bool ShouldBeCleared()
+    {
+        DataSet data = core.DataService.Instance.LoadData(
+            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
+            Guid.Empty, 
+            Guid.Empty, 
+            null,
+            "OrigamOnlineUser_par_UserName",
+            SecurityManager.CurrentPrincipal.Identity.Name);
+        if (data.Tables[0].Rows.Count == 0)
         {
-            sessionStart = DateTime.Now;
+            return false;
         }
+        else
+        {
+            DataRow row = data.Tables[0].Rows[0];
+            return Nullable.Compare<DateTime>(
+                row["ClearSessionRequestTimestamp"] as DateTime?, sessionStart) 
+                > 0;
+        }
+    }
+    public void ResetSessionStart()
+    {
+        sessionStart = DateTime.Now;
     }
 }

@@ -26,18 +26,15 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using Origam.Schema;
 
-namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers;
+class PackageScriptContainer : UpgradeScriptContainer
 {
-    class PackageScriptContainer : UpgradeScriptContainer
+    public override string FullTypeName { get; } = typeof(Package).FullName;
+    public override string[] OldPropertyXmlNames { get; }
+    public override List<string> OldFullTypeNames { get; } 
+        = new List<string>{"Origam.Schema.SchemaExtension"};
+    public PackageScriptContainer() 
     {
-        public override string FullTypeName { get; } = typeof(Package).FullName;
-        public override string[] OldPropertyXmlNames { get; }
-        public override List<string> OldFullTypeNames { get; } 
-            = new List<string>{"Origam.Schema.SchemaExtension"};
-
-        public PackageScriptContainer() 
-        {
-            AddEmptyUpgrade("6.0.0", "6.1.0");
-        }
-    }    
-}
+        AddEmptyUpgrade("6.0.0", "6.1.0");
+    }
+}    

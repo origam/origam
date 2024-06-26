@@ -19,16 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI
+namespace Origam.UI;
+/// <summary>
+/// Node used as a child node for nodes that were not expanded, yet. After expanding
+/// each node, the DummyNode is removed. It should never be visible to user.
+/// </summary>
+public class DummyNode : System.Windows.Forms.TreeNode
 {
-	/// <summary>
-	/// Node used as a child node for nodes that were not expanded, yet. After expanding
-	/// each node, the DummyNode is removed. It should never be visible to user.
-	/// </summary>
-	public class DummyNode : System.Windows.Forms.TreeNode
+	public DummyNode()
 	{
-		public DummyNode()
-		{
-		}
 	}
 }

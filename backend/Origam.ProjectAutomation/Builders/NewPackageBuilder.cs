@@ -23,41 +23,37 @@ using Origam.Workbench.Services;
 using System;
 using static Origam.NewProjectEnums;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class NewPackageBuilder : AbstractBuilder
 {
-    public class NewPackageBuilder : AbstractBuilder
+    public override string Name
     {
-        public override string Name
+        get
         {
-            get
-            {
-                return "Create New Package";
-            }
+            return "Create New Package";
         }
-
-        public override void Execute(Project project)
+    }
+    public override void Execute(Project project)
+    {
+        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
+            as SchemaService;
+        schema.UnloadSchema();
+        switch (project.TypeTemplate)
         {
-            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
-                as SchemaService;
-            schema.UnloadSchema();
-            switch (project.TypeTemplate)
-            {
-                case TypeTemplate.Default:
-                    PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
-                    new Guid(project.BasePackageId));
-                    break;
-                case TypeTemplate.Open:
-                case TypeTemplate.Template:
-                    schema.LoadSchema(new Guid(project.NewPackageId));
-                    break;
-                default:
-                    throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
-            }
-            schema.UnloadSchema();
+            case TypeTemplate.Default:
+                PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
+                new Guid(project.BasePackageId));
+                break;
+            case TypeTemplate.Open:
+            case TypeTemplate.Template:
+                schema.LoadSchema(new Guid(project.NewPackageId));
+                break;
+            default:
+                throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
         }
-
-        public override void Rollback()
-        {
-        }
+        schema.UnloadSchema();
+    }
+    public override void Rollback()
+    {
     }
 }

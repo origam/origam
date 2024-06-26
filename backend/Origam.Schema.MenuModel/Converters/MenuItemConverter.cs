@@ -24,70 +24,57 @@ using System.Collections;
 using Origam.Services;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+public class MenuItemConverter : TypeConverter
 {
-    public class MenuItemConverter : TypeConverter
+	ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+	public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
 	{
-		ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		//true means show a combobox
+		return true;
+	}
+	public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+	{
+		//true will limit to list. false will show the list, 
+		//but allow free-form entry
+		return true;
+	}
+	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+		GetStandardValues(ITypeDescriptorContext context)
+	{
+		MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
+		ArrayList menuArray = new ArrayList();
+		foreach(AbstractSchemaItem item in menu.ChildItemsRecursive)
 		{
-			//true means show a combobox
-			return true;
+			if(item is AbstractMenuItem && !(item is Menu || item is Submenu))
+			{
+				menuArray.Add(item.Path);
+			}
 		}
-
-		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
-		{
-			//true will limit to list. false will show the list, 
-			//but allow free-form entry
+		menuArray.Add(null);
+		menuArray.Sort();
+		return new StandardValuesCollection(menuArray);
+	}
+	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+	{
+		if( sourceType == typeof(string) )
 			return true;
-		}
-
-		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
-			GetStandardValues(ITypeDescriptorContext context)
+		else 
+			return base.CanConvertFrom(context, sourceType);
+	}
+	public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+	{
+		if( value.GetType() == typeof(string) )
 		{
 			MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-
-			ArrayList menuArray = new ArrayList();
 			foreach(AbstractSchemaItem item in menu.ChildItemsRecursive)
 			{
-				if(item is AbstractMenuItem && !(item is Menu || item is Submenu))
-				{
-					menuArray.Add(item.Path);
-				}
+				if(item.Path == value.ToString())
+					return item as AbstractSchemaItem;
 			}
-
-			menuArray.Add(null);
-
-			menuArray.Sort();
-
-			return new StandardValuesCollection(menuArray);
+			return null;
 		}
-
-		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
-		{
-			if( sourceType == typeof(string) )
-				return true;
-			else 
-				return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-		{
-			if( value.GetType() == typeof(string) )
-			{
-				MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-
-				foreach(AbstractSchemaItem item in menu.ChildItemsRecursive)
-				{
-					if(item.Path == value.ToString())
-						return item as AbstractSchemaItem;
-				}
-				return null;
-			}
-			else
-				return base.ConvertFrom(context, culture, value);
-		}
+		else
+			return base.ConvertFrom(context, culture, value);
 	}
-
 }

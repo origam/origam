@@ -22,32 +22,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Workbench.Services;
 using Origam;
 
-namespace Origam.ProjectAutomation
+namespace Origam.ProjectAutomation;
+public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
 {
-    public class DataDatabaseStructureBuilder : AbstractDatabaseBuilder
+    public override string Name
     {
-        public override string Name
+        get
         {
-            get
-            {
-                return "Create Data Database Structure";
-            }
+            return "Create Data Database Structure";
         }
-
-        public override void Execute(Project project)
-        {
-            IDeploymentService deployment =
-                ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
-            deployment.Deploy();
-            IParameterService parameterService =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-            parameterService.RefreshParameters();
-            IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
-            profileProvider.AddUser("Architect (" + project.ArchitectUserName + ")", project.ArchitectUserName);
-        }
-
-        public override void Rollback()
-        {
-        }
+    }
+    public override void Execute(Project project)
+    {
+        IDeploymentService deployment =
+            ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+        deployment.Deploy();
+        IParameterService parameterService =
+            ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        parameterService.RefreshParameters();
+        IOrigamProfileProvider profileProvider = SecurityManager.GetProfileProvider();
+        profileProvider.AddUser("Architect (" + project.ArchitectUserName + ")", project.ArchitectUserName);
+    }
+    public override void Rollback()
+    {
     }
 }

@@ -30,268 +30,238 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Origam.Schema.DeploymentModel
+namespace Origam.Schema.DeploymentModel;
+public interface IDeploymentVersion: IComparable
 {
-	public interface IDeploymentVersion: IComparable
+	PackageVersion Version { get; }
+	List<DeploymentDependency> DeploymentDependencies { get; set; }
+	bool HasDependencies { get; }
+	Guid SchemaExtensionId { get; }
+	string PackageName { get; }
+}
+[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
+[HelpTopic("Deployment+Version")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+[DebuggerDisplay("{PackageName} {ToString()}")]
+public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
+{
+	private IPersistenceService persistenceService 
+		= ServiceManager.Services.GetService<IPersistenceService>();
+	private ISchemaService schemaService 
+		= ServiceManager.Services.GetService<ISchemaService>();
+	public const string CategoryConst = "DeploymentVersion";
+	public DeploymentVersion() {}
+	public DeploymentVersion(Guid schemaExtensionId,
+		List<Package> packagesToDependOn) : base(schemaExtensionId)
 	{
-		PackageVersion Version { get; }
-		List<DeploymentDependency> DeploymentDependencies { get; set; }
-		bool HasDependencies { get; }
-		Guid SchemaExtensionId { get; }
-		string PackageName { get; }
+		deploymentDependencies = 
+			DeploymentDependency.FromPackages(packagesToDependOn);
+		DeploymentDependenciesCsv =
+			DeploymentDependency.ToCsv(deploymentDependencies);
 	}
-
-	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
-    [HelpTopic("Deployment+Version")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	[DebuggerDisplay("{PackageName} {ToString()}")]
-	public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
+	public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	public override bool IsDeleted
 	{
-		private IPersistenceService persistenceService 
-			= ServiceManager.Services.GetService<IPersistenceService>();
-
-		private ISchemaService schemaService 
-			= ServiceManager.Services.GetService<ISchemaService>();
-
-		public const string CategoryConst = "DeploymentVersion";
-
-		public DeploymentVersion() {}
-
-		public DeploymentVersion(Guid schemaExtensionId,
-			List<Package> packagesToDependOn) : base(schemaExtensionId)
+		get => base.IsDeleted;
+		set
 		{
-			deploymentDependencies = 
-				DeploymentDependency.FromPackages(packagesToDependOn);
-			DeploymentDependenciesCsv =
-				DeploymentDependency.ToCsv(deploymentDependencies);
-		}
-
-		public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override bool IsDeleted
-		{
-			get => base.IsDeleted;
-			set
+			if(value & IsCurrentVersion)
 			{
-				if(value & IsCurrentVersion)
+				throw new InvalidOperationException("Cannot delete current version.");
+			}
+			base.IsDeleted = value;
+		}
+	}
+	public override string ToString()
+	{
+		if(IsCurrentVersion)
+		{
+			return Name + ResourceUtils.GetString("Current");
+		}
+		return Name;
+	}
+	
+	public override string ItemType => CategoryConst;
+	public override string Icon => IsCurrentVersion 
+		? "icon_deployment-version-active.png" 
+		: "icon_deployment-version.png";
+	#endregion
+	#region Properties
+	[Browsable(false)]
+	public override bool UseFolders => false;
+	[Browsable(false)]
+	public bool IsCurrentVersion
+	{
+		get
+		{
+			var package = persistenceService.SchemaListProvider
+				.RetrieveInstance(typeof(Package), Package.PrimaryKey) 
+				as Package;
+			return package.VersionString == VersionString;
+		}
+	}
+	private string versionString;
+	[Category("Version Information")]
+	[XmlAttribute("version")]
+	public string VersionString
+	{
+		get => versionString;
+		set
+		{
+			if((versionString != null) && (versionString != value) 
+			&& IsCurrentVersion)
+			{
+				throw new InvalidOperationException(
+					ResourceUtils.GetString("ErrorChangePackageVersion"));
+			}
+			versionString = value;
+			Version = new PackageVersion(versionString);
+		}
+	}
+    [Browsable(false)]
+    public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
+		ChildItems
+			.ToGeneric()
+			.OrderBy(activity => 
+				((AbstractUpdateScriptActivity)activity).ActivityOrder)
+			.Cast<AbstractUpdateScriptActivity>();
+    [Browsable(false)]
+    public PackageVersion Version { get; private set; }
+    
+	[XmlAttribute("deploymentDependenciesCsv")]
+	public string DeploymentDependenciesCsv;
+	private List<DeploymentDependency> deploymentDependencies;
+    [Browsable(false)]
+    public List<DeploymentDependency> DeploymentDependencies
+	{
+		get =>
+			deploymentDependencies ?? (deploymentDependencies =
+				DeploymentDependency.FromCsv(DeploymentDependenciesCsv));
+		set
+		{
+			if(!string.IsNullOrEmpty(DeploymentDependenciesCsv))
+			{
+				throw new Exception(
+					$"Cannot set {nameof(DeploymentDependencies)} because its value was set in constructor.");
+			}
+			deploymentDependencies = value;
+		}
+	}
+    [Browsable(false)]
+    public bool HasDependencies => DeploymentDependencies.Count != 0;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes
+	{
+		get
+		{
+			if(schemaService.ActiveExtension.PrimaryKey.Equals(
+				   Package.PrimaryKey))
+			{
+				return new[] 
 				{
-					throw new InvalidOperationException("Cannot delete current version.");
-				}
-				base.IsDeleted = value;
+					typeof(FileRestoreUpdateScriptActivity),
+					typeof(ServiceCommandUpdateScriptActivity)
+				};
 			}
+			return new Type[] {};
 		}
-
-		public override string ToString()
+	}
+    public override T NewItem<T>(
+        Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		var order = MaxOrder() + 10;
+		var itemName = order.ToString("00000") + "_";;
+		var item = base.NewItem<T>(schemaExtensionId, group, itemName);
+		(item as AbstractUpdateScriptActivity).ActivityOrder = order;
+		return item;
+	}
+	#endregion
+	private int MaxOrder()
+	{
+		var max = 0;
+		foreach(AbstractUpdateScriptActivity activity 
+		        in ChildItemsByType(
+			        AbstractUpdateScriptActivity.CategoryConst))
 		{
-			if(IsCurrentVersion)
+			if(activity.ActivityOrder > max)
 			{
-				return Name + ResourceUtils.GetString("Current");
-			}
-			return Name;
-		}
-		
-		public override string ItemType => CategoryConst;
-
-		public override string Icon => IsCurrentVersion 
-			? "icon_deployment-version-active.png" 
-			: "icon_deployment-version.png";
-
-		#endregion
-
-		#region Properties
-		[Browsable(false)]
-		public override bool UseFolders => false;
-
-		[Browsable(false)]
-		public bool IsCurrentVersion
-		{
-			get
-			{
-				var package = persistenceService.SchemaListProvider
-					.RetrieveInstance(typeof(Package), Package.PrimaryKey) 
-					as Package;
-				return package.VersionString == VersionString;
+				max = activity.ActivityOrder;
 			}
 		}
-
-		private string versionString;
-		[Category("Version Information")]
-		[XmlAttribute("version")]
-		public string VersionString
-		{
-			get => versionString;
-			set
-			{
-				if((versionString != null) && (versionString != value) 
-				&& IsCurrentVersion)
-				{
-					throw new InvalidOperationException(
-						ResourceUtils.GetString("ErrorChangePackageVersion"));
-				}
-				versionString = value;
-				Version = new PackageVersion(versionString);
-			}
-		}
-
-        [Browsable(false)]
-        public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
-			ChildItems
-				.ToGeneric()
-				.OrderBy(activity => 
-					((AbstractUpdateScriptActivity)activity).ActivityOrder)
-				.Cast<AbstractUpdateScriptActivity>();
-
-        [Browsable(false)]
-        public PackageVersion Version { get; private set; }
-        
-		[XmlAttribute("deploymentDependenciesCsv")]
-		public string DeploymentDependenciesCsv;
-
-		private List<DeploymentDependency> deploymentDependencies;
-
-        [Browsable(false)]
-        public List<DeploymentDependency> DeploymentDependencies
-		{
-			get =>
-				deploymentDependencies ?? (deploymentDependencies =
-					DeploymentDependency.FromCsv(DeploymentDependenciesCsv));
-			set
-			{
-				if(!string.IsNullOrEmpty(DeploymentDependenciesCsv))
-				{
-					throw new Exception(
-						$"Cannot set {nameof(DeploymentDependencies)} because its value was set in constructor.");
-				}
-				deploymentDependencies = value;
-			}
-		}
-
-        [Browsable(false)]
-        public bool HasDependencies => DeploymentDependencies.Count != 0;
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				if(schemaService.ActiveExtension.PrimaryKey.Equals(
-					   Package.PrimaryKey))
-				{
-					return new[] 
-					{
-						typeof(FileRestoreUpdateScriptActivity),
-						typeof(ServiceCommandUpdateScriptActivity)
-					};
-				}
-				return new Type[] {};
-			}
-		}
-
-        public override T NewItem<T>(
-	        Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			var order = MaxOrder() + 10;
-			var itemName = order.ToString("00000") + "_";;
-			var item = base.NewItem<T>(schemaExtensionId, group, itemName);
-			(item as AbstractUpdateScriptActivity).ActivityOrder = order;
-			return item;
-		}
-
-		#endregion
-
-		private int MaxOrder()
-		{
-			var max = 0;
-			foreach(AbstractUpdateScriptActivity activity 
-			        in ChildItemsByType(
-				        AbstractUpdateScriptActivity.CategoryConst))
-			{
-				if(activity.ActivityOrder > max)
-				{
-					max = activity.ActivityOrder;
-				}
-			}
-			return max;
-		}
-
-        public override int CompareTo(object obj)
+		return max;
+	}
+    public override int CompareTo(object obj)
+    {
+        if(obj is DeploymentVersion otherDeploymentVersion)
         {
-	        if(obj is DeploymentVersion otherDeploymentVersion)
-            {
-                return Version.CompareTo(otherDeploymentVersion.Version);
-            }
-	        return base.CompareTo(obj);
+            return Version.CompareTo(otherDeploymentVersion.Version);
         }
-	}
-
-	public class DeploymentDependency
+        return base.CompareTo(obj);
+    }
+}
+public class DeploymentDependency
+{
+	public Guid PackageId { get; }
+	public PackageVersion PackageVersion { get; }
+	/// <summary></summary>
+	/// <param name="dependenciesInCsvFormat"> example:
+	/// 147FA70D-6519-4393-B5D0-87931F9FD609, 5.0
+	/// 6CB854A9-8A7F-4283-AF88-E4CA72919144, 5.0
+	/// </param>
+	/// <returns></returns>
+	public static List<DeploymentDependency> FromCsv(
+		string dependenciesInCsvFormat)
 	{
-		public Guid PackageId { get; }
-		public PackageVersion PackageVersion { get; }
-
-		/// <summary></summary>
-		/// <param name="dependenciesInCsvFormat"> example:
-		/// 147FA70D-6519-4393-B5D0-87931F9FD609, 5.0
-		/// 6CB854A9-8A7F-4283-AF88-E4CA72919144, 5.0
-		/// </param>
-		/// <returns></returns>
-		public static List<DeploymentDependency> FromCsv(
-			string dependenciesInCsvFormat)
+		if (string.IsNullOrEmpty(dependenciesInCsvFormat))
 		{
-			if (string.IsNullOrEmpty(dependenciesInCsvFormat))
-			{
-				return new List<DeploymentDependency>();
-			}
-			return dependenciesInCsvFormat
-				.Split('\n')
-				.Select(x => x.Trim())
-				.Where(x => !string.IsNullOrEmpty(x))
-				.Select(ParseFromCsvLine)
-				.ToList();
+			return new List<DeploymentDependency>();
 		}
-		
-		public static List<DeploymentDependency> FromPackages(
-			List<Package> packagesToDependOn)
+		return dependenciesInCsvFormat
+			.Split('\n')
+			.Select(x => x.Trim())
+			.Where(x => !string.IsNullOrEmpty(x))
+			.Select(ParseFromCsvLine)
+			.ToList();
+	}
+	
+	public static List<DeploymentDependency> FromPackages(
+		List<Package> packagesToDependOn)
+	{
+		return packagesToDependOn
+			.Select(package =>new DeploymentDependency(
+				package.Id, package.Version))
+			.ToList();
+	}
+	
+	public static string ToCsv(List<DeploymentDependency> dependencies)
+	{
+		return dependencies
+			.Select(dep => dep.PackageId + ", " + dep.PackageVersion)
+			.Aggregate("", (csv, line) => csv + Environment.NewLine + line);
+	}
+	private static DeploymentDependency ParseFromCsvLine(string csvLine)
+	{
+		var packageIdAndVersion = csvLine.Split(',');
+		if(!Guid.TryParse(packageIdAndVersion[0], out var packageId))
 		{
-			return packagesToDependOn
-				.Select(package =>new DeploymentDependency(
-					package.Id, package.Version))
-				.ToList();
+			throw new ArgumentException(
+				$"Could not parse csv line to DeploymentDependency: {csvLine}");
 		}
-		
-		public static string ToCsv(List<DeploymentDependency> dependencies)
+		if(!PackageVersion.TryParse(packageIdAndVersion[1], 
+			   out var version))
 		{
-			return dependencies
-				.Select(dep => dep.PackageId + ", " + dep.PackageVersion)
-				.Aggregate("", (csv, line) => csv + Environment.NewLine + line);
+			throw new ArgumentException(
+				$"Could not parse csv line to DeploymentDependency: {csvLine}");
 		}
-
-		private static DeploymentDependency ParseFromCsvLine(string csvLine)
-		{
-			var packageIdAndVersion = csvLine.Split(',');
-			if(!Guid.TryParse(packageIdAndVersion[0], out var packageId))
-			{
-				throw new ArgumentException(
-					$"Could not parse csv line to DeploymentDependency: {csvLine}");
-			}
-			if(!PackageVersion.TryParse(packageIdAndVersion[1], 
-				   out var version))
-			{
-				throw new ArgumentException(
-					$"Could not parse csv line to DeploymentDependency: {csvLine}");
-			}
-			return new DeploymentDependency(packageId, version);
-		}
-
-		public DeploymentDependency(
-			Guid packageId, PackageVersion packageVersion)
-		{
-			PackageId = packageId;
-			PackageVersion = packageVersion;
-		}
+		return new DeploymentDependency(packageId, version);
+	}
+	public DeploymentDependency(
+		Guid packageId, PackageVersion packageVersion)
+	{
+		PackageId = packageId;
+		PackageVersion = packageVersion;
 	}
 }

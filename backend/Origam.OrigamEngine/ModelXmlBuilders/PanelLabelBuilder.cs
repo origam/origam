@@ -21,25 +21,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for TextBoxBuilder.
+/// </summary>
+public class PanelLabelBuilder
 {
-	/// <summary>
-	/// Summary description for TextBoxBuilder.
-	/// </summary>
-	public class PanelLabelBuilder
+	public static void Build(XmlElement childrenElement, string text, int top, int left, int height, int width)
 	{
-		public static void Build(XmlElement childrenElement, string text, int top, int left, int height, int width)
-		{
-			XmlElement formElement = childrenElement.OwnerDocument.CreateElement("FormElement");
-			childrenElement.AppendChild(formElement);
-
-			formElement.SetAttribute("Type", "Label");
-			formElement.SetAttribute("Title", text);
-
-			formElement.SetAttribute("X", XmlConvert.ToString(left));
-			formElement.SetAttribute("Y", XmlConvert.ToString(top));
-			formElement.SetAttribute("Width", XmlConvert.ToString(width));
-			formElement.SetAttribute("Height", XmlConvert.ToString(height));
-		}
+		XmlElement formElement = childrenElement.OwnerDocument.CreateElement("FormElement");
+		childrenElement.AppendChild(formElement);
+		formElement.SetAttribute("Type", "Label");
+		formElement.SetAttribute("Title", text);
+		formElement.SetAttribute("X", XmlConvert.ToString(left));
+		formElement.SetAttribute("Y", XmlConvert.ToString(top));
+		formElement.SetAttribute("Width", XmlConvert.ToString(width));
+		formElement.SetAttribute("Height", XmlConvert.ToString(height));
 	}
 }

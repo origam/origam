@@ -30,37 +30,31 @@ using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+public class UIController: AbstractController
 {
-    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-    public class UIController: AbstractController
+    private readonly IPersistenceService persistenceService;
+    public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
+        : base(log, sessionObjects)
     {
-        private readonly IPersistenceService persistenceService;
-
-        public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
-            : base(log, sessionObjects)
-        {
-            persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
-        }
-
-        [HttpGet("[action]")]
-        public IActionResult GetMenu()
-        {
-            var claimsPrincipal = User;
-            return Ok(MenuXmlBuilder.GetMenu());
-        }
-
-        [HttpGet("[action]")]
-        public IActionResult GetUI([FromQuery] [Required] Guid id)
-        {
-            FormReferenceMenuItem menuItem = persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(FormReferenceMenuItem), new ModelElementKey(id)) as FormReferenceMenuItem;
-
-            if (menuItem == null) return BadRequest("Menu with that Id does not exist");
-            
-            XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
-            MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
-            return Ok(xmlOutput.Document.OuterXml);
-        }
+        persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+    }
+    [HttpGet("[action]")]
+    public IActionResult GetMenu()
+    {
+        var claimsPrincipal = User;
+        return Ok(MenuXmlBuilder.GetMenu());
+    }
+    [HttpGet("[action]")]
+    public IActionResult GetUI([FromQuery] [Required] Guid id)
+    {
+        FormReferenceMenuItem menuItem = persistenceService.SchemaProvider.RetrieveInstance(
+            typeof(FormReferenceMenuItem), new ModelElementKey(id)) as FormReferenceMenuItem;
+        if (menuItem == null) return BadRequest("Menu with that Id does not exist");
+        
+        XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
+        MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
+        return Ok(xmlOutput.Document.OuterXml);
     }
 }

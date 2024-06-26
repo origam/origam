@@ -27,161 +27,137 @@ using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Attributes;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Summary description for ContextStore.
+/// </summary>
+[SchemaItemDescription("Context Store", "Context Stores", "context-store.png")]
+[HelpTopic("Context+Store")]
+[DefaultProperty("Structure")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ContextStore : AbstractSchemaItem, IContextStore
 {
-	/// <summary>
-	/// Summary description for ContextStore.
-	/// </summary>
-	[SchemaItemDescription("Context Store", "Context Stores", "context-store.png")]
-    [HelpTopic("Context+Store")]
-    [DefaultProperty("Structure")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class ContextStore : AbstractSchemaItem, IContextStore
+	public const string CategoryConst = "ContextStore";
+	public ContextStore() : base() {}
+	public ContextStore(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public ContextStore(Key primaryKey) : base(primaryKey)	{}
+	public bool isScalar()
 	{
-		public const string CategoryConst = "ContextStore";
-
-		public ContextStore() : base() {}
-
-		public ContextStore(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ContextStore(Key primaryKey) : base(primaryKey)	{}
-
-		public bool isScalar()
-		{
-			return this.Structure == null;
-		}
-
-		#region Overriden AbstractSchemaItem Members
-
-		public override string ItemType => CategoryConst;
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			if(this.Structure != null)
-			{
-				dependencies.Add(this.Structure);
-			}
-			if(this.RuleSet != null)
-			{
-				dependencies.Add(this.RuleSet);
-			}
-			if(this.DefaultSet != null)
-			{
-				dependencies.Add(this.DefaultSet);
-			}
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override SchemaItemCollection ChildItems
-		{
-			get
-			{
-				return new SchemaItemCollection();
-			}
-		}
-
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
-			// can move inside the same workflow and we can move it under any block
-			if(this.RootItem == (newNode as ISchemaItem).RootItem && 
-				newNode is IWorkflowBlock)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		#endregion
-
-		#region IContextStore Members
-		[DefaultValue(OrigamDataType.Xml)]
-		[XmlAttribute ("dataType")]
-		public OrigamDataType DataType { get; set; } = OrigamDataType.Xml;
-
-		[DefaultValue(false)]
-		[XmlAttribute ("isReturnValue")]
-       // [ContexStoreOutputRuleAttribute()]
-		public bool IsReturnValue { get; set; } = false;
-
-		[DefaultValue(false)]
-		[Description("When set to True it will not check for mandatory fields, primary key duplicates or existence of parent records in the in-memory representation of data.")]
-		[XmlAttribute ("disableConstraints")]
-		public bool DisableConstraints { get; set; } = false;
- 
-		public Guid DataStructureId;
-
-		[TypeConverter(typeof(DataStructureConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule("DataType", null, OrigamDataType.Xml, null)]
-		[XmlReference("structure", "DataStructureId")]
-		public AbstractDataStructure Structure
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.DataStructureId;
-
-				return (AbstractDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(this.DataType == OrigamDataType.Xml)
-				{
-					if(value == null)
-					{
-						this.DataStructureId = Guid.Empty;
-						this.Name = "";
-					}
-					else
-					{
-						this.DataStructureId = (Guid)value.PrimaryKey["Id"];
-
-						this.Name = this.Structure.Name;
-					}
-				}
-
-				this.RuleSet = null;
-				this.DefaultSet = null;
-			}
-		}
- 
-		public Guid RuleSetId;
-
-		[TypeConverter(typeof(ContextStoreRuleSetConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("ruleSet", "RuleSetId")]
-		public DataStructureRuleSet RuleSet
-		{
-			get
-			{
-				return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleSetId));
-			}
-			set
-			{
-				this.RuleSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-
-		public Guid DefaultSetId;
-
-		[TypeConverter(typeof(ContextStoreDefaultSetConverter))]
-		[RefreshProperties(RefreshProperties.Repaint)]
-		[XmlReference("defaultSet", "DefaultSetId")]
-		public DataStructureDefaultSet DefaultSet
-		{
-			get
-			{
-				return (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultSetId));
-			}
-			set
-			{
-				this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-		#endregion
+		return this.Structure == null;
 	}
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType => CategoryConst;
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
+		if(this.Structure != null)
+		{
+			dependencies.Add(this.Structure);
+		}
+		if(this.RuleSet != null)
+		{
+			dependencies.Add(this.RuleSet);
+		}
+		if(this.DefaultSet != null)
+		{
+			dependencies.Add(this.DefaultSet);
+		}
+		base.GetExtraDependencies (dependencies);
+	}
+	public override SchemaItemCollection ChildItems
+	{
+		get
+		{
+			return new SchemaItemCollection();
+		}
+	}
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
+		// can move inside the same workflow and we can move it under any block
+		if(this.RootItem == (newNode as ISchemaItem).RootItem && 
+			newNode is IWorkflowBlock)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	#endregion
+	#region IContextStore Members
+	[DefaultValue(OrigamDataType.Xml)]
+	[XmlAttribute ("dataType")]
+	public OrigamDataType DataType { get; set; } = OrigamDataType.Xml;
+	[DefaultValue(false)]
+	[XmlAttribute ("isReturnValue")]
+   // [ContexStoreOutputRuleAttribute()]
+	public bool IsReturnValue { get; set; } = false;
+	[DefaultValue(false)]
+	[Description("When set to True it will not check for mandatory fields, primary key duplicates or existence of parent records in the in-memory representation of data.")]
+	[XmlAttribute ("disableConstraints")]
+	public bool DisableConstraints { get; set; } = false;
+	public Guid DataStructureId;
+	[TypeConverter(typeof(DataStructureConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule("DataType", null, OrigamDataType.Xml, null)]
+	[XmlReference("structure", "DataStructureId")]
+	public AbstractDataStructure Structure
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.DataStructureId;
+			return (AbstractDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			if(this.DataType == OrigamDataType.Xml)
+			{
+				if(value == null)
+				{
+					this.DataStructureId = Guid.Empty;
+					this.Name = "";
+				}
+				else
+				{
+					this.DataStructureId = (Guid)value.PrimaryKey["Id"];
+					this.Name = this.Structure.Name;
+				}
+			}
+			this.RuleSet = null;
+			this.DefaultSet = null;
+		}
+	}
+	public Guid RuleSetId;
+	[TypeConverter(typeof(ContextStoreRuleSetConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("ruleSet", "RuleSetId")]
+	public DataStructureRuleSet RuleSet
+	{
+		get
+		{
+			return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleSetId));
+		}
+		set
+		{
+			this.RuleSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	public Guid DefaultSetId;
+	[TypeConverter(typeof(ContextStoreDefaultSetConverter))]
+	[RefreshProperties(RefreshProperties.Repaint)]
+	[XmlReference("defaultSet", "DefaultSetId")]
+	public DataStructureDefaultSet DefaultSet
+	{
+		get
+		{
+			return (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultSetId));
+		}
+		set
+		{
+			this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+		}
+	}
+	#endregion
 }

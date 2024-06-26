@@ -19,44 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workbench
+namespace Origam.Workbench;
+public partial class XmlViewer : AbstractViewContent
 {
-    public partial class XmlViewer : AbstractViewContent
+    public XmlViewer()
     {
-        public XmlViewer()
+        InitializeComponent();
+    }
+    public override object Content
+    {
+        get
         {
-            InitializeComponent();
+            return editor.Text; ;
         }
-
-        public override object Content
+        set
         {
-            get
-            {
-                return editor.Text; ;
-            }
-
-            set
-            {
-                editor.Text = value as string;
-            }
+            editor.Text = value as string;
         }
-
-        protected override void ViewSpecificLoad(object objectToLoad)
+    }
+    protected override void ViewSpecificLoad(object objectToLoad)
+    {
+        this.Content = objectToLoad;
+    }
+    public override bool IsViewOnly
+    {
+        get
         {
-            this.Content = objectToLoad;
+            return true;
         }
-
-        public override bool IsViewOnly
+        set
         {
-            get
-            {
-                return true;
-            }
-
-            set
-            {
-                base.IsViewOnly = value;
-            }
+            base.IsViewOnly = value;
         }
     }
 }

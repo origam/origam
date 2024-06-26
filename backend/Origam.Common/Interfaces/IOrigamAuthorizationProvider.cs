@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Security.Principal;
 
-namespace Origam
+namespace Origam;
+public interface IOrigamAuthorizationProvider
 {
-	public interface IOrigamAuthorizationProvider
-	{
-	    bool Authorize(IPrincipal principal, string context);
-	}
+    bool Authorize(IPrincipal principal, string context);
 }

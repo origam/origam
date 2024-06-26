@@ -19,78 +19,69 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class DashboardWidgetsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public DashboardWidgetsSchemaItemProvider() 
 	{
-		public DashboardWidgetsSchemaItemProvider() 
-		{
-			this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
-			this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
-			this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
-
-			this.ChildItemTypes.Add(typeof(TextDashboardWidget));
-			this.ChildItemTypes.Add(typeof(DateDashboardWidget));
-			this.ChildItemTypes.Add(typeof(CurrencyDashboardWidget));
-			this.ChildItemTypes.Add(typeof(LookupDashboardWidget));
-			this.ChildItemTypes.Add(typeof(CheckBoxDashboardWidget));
-
-			this.ChildItemTypes.Add(typeof(HorizontalContainerDashboardWidget));
-			this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
-		}
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractDashboardWidget.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_15_dashboard-widgets.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{
-				return "Dashboard Widgets";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return "List of Dashboard Widgets";
-			}
-		}
-
-		#endregion
+		this.ChildItemTypes.Add(typeof(PanelDashboardWidget));
+		this.ChildItemTypes.Add(typeof(ChartDashboardWidget));
+		this.ChildItemTypes.Add(typeof(DashboardWidgetFolder));
+		this.ChildItemTypes.Add(typeof(TextDashboardWidget));
+		this.ChildItemTypes.Add(typeof(DateDashboardWidget));
+		this.ChildItemTypes.Add(typeof(CurrencyDashboardWidget));
+		this.ChildItemTypes.Add(typeof(LookupDashboardWidget));
+		this.ChildItemTypes.Add(typeof(CheckBoxDashboardWidget));
+		this.ChildItemTypes.Add(typeof(HorizontalContainerDashboardWidget));
+		this.ChildItemTypes.Add(typeof(VerticalContainerDashboardWidget));
 	}
+	
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
+		{
+			return AbstractDashboardWidget.CategoryConst;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "UI";
+		}
+	}
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			return "icon_15_dashboard-widgets.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{
+			return "Dashboard Widgets";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			return "List of Dashboard Widgets";
+		}
+	}
+	#endregion
 }

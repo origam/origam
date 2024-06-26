@@ -22,90 +22,85 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Diagnostics;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+public class OperatingSystemServiceAgent : AbstractServiceAgent
 {
-	public class OperatingSystemServiceAgent : AbstractServiceAgent
+	private static readonly log4net.ILog log 
+        = log4net.LogManager.GetLogger(
+        System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	#region IServiceAgent Members
+	private object _result;
+	public override object Result
 	{
-		private static readonly log4net.ILog log 
-            = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		#region IServiceAgent Members
-
-		private object _result;
-		public override object Result
+		get
 		{
-			get
-			{
-				object temp = _result;
-				_result = null;
-				return temp;
-			}
+			object temp = _result;
+			_result = null;
+			return temp;
 		}
-
-		public override void Run()
-		{
-			switch(this.MethodName)
-			{
-				case "StartProcess":
-					// Check input parameters
-					if(!(Parameters["FileName"] is string))
-                    {
-						throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorPathNotString"));
-                    }
-					if(!(Parameters["Arguments"] is string 
-                    || Parameters["Arguments"] == null))
-                    {
-						throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorArgumentsNotString"));
-                    }
-					if(!(Parameters["Timeout"] is int || 
-                    Parameters["Timeout"] == null))
-                    {
-						throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorTimeoutNotInt"));
-                    }
-					ProcessStartInfo processStartInfo = new ProcessStartInfo(
-                        (string)Parameters["FileName"], 
-                        (string)Parameters["Arguments"]);
-					processStartInfo.CreateNoWindow = false;
-					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-					processStartInfo.UseShellExecute = false;
-                    processStartInfo.RedirectStandardError = true;
-					Process process = new Process();
-					process.StartInfo = processStartInfo;
-                    if (log.IsDebugEnabled)
-                    {
-                        log.DebugFormat("Executing {0} {1}", 
-                            processStartInfo.FileName, 
-                            processStartInfo.Arguments);
-                    }
-					process.Start();
-                    string error = process.StandardError.ReadToEnd();
-					if(Parameters["Timeout"] is int)
-					{
-						process.WaitForExit((int)Parameters["Timeout"]);
-					}
-					else
-					{
-						process.WaitForExit();
-					}
-                    if (!String.IsNullOrEmpty(error))
-                    {
-                        throw new Exception(ResourceUtils.GetString(
-                            "ExternalProcessError",
-                            processStartInfo.FileName,
-                            error));
-                    }
-					_result = true;
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(
-                        "MethodName", MethodName, 
-                        ResourceUtils.GetString("InvalidMethodName"));
-			}
-		}
-		#endregion
 	}
+	public override void Run()
+	{
+		switch(this.MethodName)
+		{
+			case "StartProcess":
+				// Check input parameters
+				if(!(Parameters["FileName"] is string))
+                {
+					throw new InvalidCastException(
+                        ResourceUtils.GetString("ErrorPathNotString"));
+                }
+				if(!(Parameters["Arguments"] is string 
+                || Parameters["Arguments"] == null))
+                {
+					throw new InvalidCastException(
+                        ResourceUtils.GetString("ErrorArgumentsNotString"));
+                }
+				if(!(Parameters["Timeout"] is int || 
+                Parameters["Timeout"] == null))
+                {
+					throw new InvalidCastException(
+                        ResourceUtils.GetString("ErrorTimeoutNotInt"));
+                }
+				ProcessStartInfo processStartInfo = new ProcessStartInfo(
+                    (string)Parameters["FileName"], 
+                    (string)Parameters["Arguments"]);
+				processStartInfo.CreateNoWindow = false;
+				processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				processStartInfo.UseShellExecute = false;
+                processStartInfo.RedirectStandardError = true;
+				Process process = new Process();
+				process.StartInfo = processStartInfo;
+                if (log.IsDebugEnabled)
+                {
+                    log.DebugFormat("Executing {0} {1}", 
+                        processStartInfo.FileName, 
+                        processStartInfo.Arguments);
+                }
+				process.Start();
+                string error = process.StandardError.ReadToEnd();
+				if(Parameters["Timeout"] is int)
+				{
+					process.WaitForExit((int)Parameters["Timeout"]);
+				}
+				else
+				{
+					process.WaitForExit();
+				}
+                if (!String.IsNullOrEmpty(error))
+                {
+                    throw new Exception(ResourceUtils.GetString(
+                        "ExternalProcessError",
+                        processStartInfo.FileName,
+                        error));
+                }
+				_result = true;
+				break;
+			default:
+				throw new ArgumentOutOfRangeException(
+                    "MethodName", MethodName, 
+                    ResourceUtils.GetString("InvalidMethodName"));
+		}
+	}
+	#endregion
 }

@@ -25,83 +25,79 @@ using Origam;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Threading;
 
-namespace Origam.Server
+namespace Origam.Server;
+public static class SecurityTools
 {
-    public static class SecurityTools
+    internal static readonly log4net.ILog log =
+        log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public static UserProfile CurrentUserProfile()
     {
-        internal static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public static UserProfile CurrentUserProfile()
+        try
         {
-            try
-            {
-                return SecurityManager.CurrentUserProfile();
-            }
-            catch (Exception ex)
-            {
-                log.DebugFormat("Couldn't get user profile for current thread {0}",
-                    Thread.CurrentThread.ManagedThreadId);
-                throw new LoginFailedException(ex.Message, ex);
-            }
+            return SecurityManager.CurrentUserProfile();
         }
-
-        public static void CreateUpdateOrigamOnlineUser(
-            string username, SessionStats stats)
+        catch (Exception ex)
         {
-            DataSet data = core.DataService.Instance.LoadData(
-                new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-                new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
-                Guid.Empty, 
-                Guid.Empty, 
-                null,
-                "OrigamOnlineUser_par_UserName",
-                username);
-            DataRow row;
-            if (data.Tables[0].Rows.Count == 0)
-            {
-                row = data.Tables[0].NewRow();
-                row["Id"] = Guid.NewGuid();
-                row["UserName"] 
-                    = SecurityManager.CurrentPrincipal.Identity.Name;
-                row["LastOperationTimestamp"] = DateTime.Now;
-                row["DirtyScreens"] = stats.DirtyScreens;
-                row["RunningWorkflows"] = stats.RunningWorkflows;
-                data.Tables[0].Rows.Add(row);
-            }
-            else
-            {
-                row = data.Tables[0].Rows[0];
-                row["LastOperationTimestamp"] = DateTime.Now;
-                row["DirtyScreens"] = stats.DirtyScreens;
-                row["RunningWorkflows"] = stats.RunningWorkflows;
-            }
-            core.DataService.Instance.StoreData(
-                new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-                data,
-                false,
-                null);
+            log.DebugFormat("Couldn't get user profile for current thread {0}",
+                Thread.CurrentThread.ManagedThreadId);
+            throw new LoginFailedException(ex.Message, ex);
         }
-
-       
-        public static void RemoveOrigamOnlineUser(string username)
+    }
+    public static void CreateUpdateOrigamOnlineUser(
+        string username, SessionStats stats)
+    {
+        DataSet data = core.DataService.Instance.LoadData(
+            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
+            Guid.Empty, 
+            Guid.Empty, 
+            null,
+            "OrigamOnlineUser_par_UserName",
+            username);
+        DataRow row;
+        if (data.Tables[0].Rows.Count == 0)
         {
-            DataSet data = core.DataService.Instance.LoadData(
-                new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-                new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
-                Guid.Empty,
-                Guid.Empty,
-                null,
-                "OrigamOnlineUser_par_UserName",
-                username);
-            if (data.Tables[0].Rows.Count != 0)
-            {
-                data.Tables[0].Rows[0].Delete();
-            }
-            core.DataService.Instance.StoreData(
-                new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
-                data,
-                false,
-                null);
+            row = data.Tables[0].NewRow();
+            row["Id"] = Guid.NewGuid();
+            row["UserName"] 
+                = SecurityManager.CurrentPrincipal.Identity.Name;
+            row["LastOperationTimestamp"] = DateTime.Now;
+            row["DirtyScreens"] = stats.DirtyScreens;
+            row["RunningWorkflows"] = stats.RunningWorkflows;
+            data.Tables[0].Rows.Add(row);
         }
+        else
+        {
+            row = data.Tables[0].Rows[0];
+            row["LastOperationTimestamp"] = DateTime.Now;
+            row["DirtyScreens"] = stats.DirtyScreens;
+            row["RunningWorkflows"] = stats.RunningWorkflows;
+        }
+        core.DataService.Instance.StoreData(
+            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            data,
+            false,
+            null);
+    }
+   
+    public static void RemoveOrigamOnlineUser(string username)
+    {
+        DataSet data = core.DataService.Instance.LoadData(
+            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
+            Guid.Empty,
+            Guid.Empty,
+            null,
+            "OrigamOnlineUser_par_UserName",
+            username);
+        if (data.Tables[0].Rows.Count != 0)
+        {
+            data.Tables[0].Rows[0].Delete();
+        }
+        core.DataService.Instance.StoreData(
+            new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
+            data,
+            false,
+            null);
     }
 }

@@ -28,97 +28,85 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for AsTextBox.
+/// </summary>
+[ToolboxBitmap(typeof(AsTextBox))]
+public class AsTreeView2 : TextBox
 {
-	/// <summary>
-	/// Summary description for AsTextBox.
-	/// </summary>
-	[ToolboxBitmap(typeof(AsTextBox))]
-	public class AsTreeView2 : TextBox
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	#region Handling base events
+	protected override void InitLayout()
 	{
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-		#region Handling base events
-
-		protected override void InitLayout()
+		if(this.Disposing) return;
+		this.BorderStyle = BorderStyle.Fixed3D;
+		this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+		this.AcceptsTab = true;
+		this.Multiline = true;
+		base.InitLayout ();
+	}
+	#endregion
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
 		{
-			if(this.Disposing) return;
-
-			this.BorderStyle = BorderStyle.Fixed3D;
-			this.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.AcceptsTab = true;
-			this.Multiline = true;
-
-			base.InitLayout ();
-
+			return _styleId;
 		}
-		#endregion
-
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+		set
 		{
-			get
-			{
-				return _styleId;
-			}
-			set
-			{
-				_styleId = value;
-			}
+			_styleId = value;
 		}
-
-		private Guid _treeId;
-		[Browsable(false)]
-		public Guid TreeId
+	}
+	private Guid _treeId;
+	[Browsable(false)]
+	public Guid TreeId
+	{
+		get
 		{
-			get
-			{
-				return _treeId;
-			}
-			set
-			{
-				_treeId = value;
-			}
+			return _treeId;
 		}
-
-		[TypeConverter(typeof(TreeStructureConverter))]
-		public TreeStructure Tree
+		set
 		{
-			get
-			{
-				return (TreeStructure)_persistence.SchemaProvider.RetrieveInstance(typeof(TreeStructure), new ModelElementKey(this.TreeId));
-			}
-			set
-			{
-				this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			_treeId = value;
 		}
-
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+	}
+	[TypeConverter(typeof(TreeStructureConverter))]
+	public TreeStructure Tree
+	{
+		get
 		{
-			get
-			{
-				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-			}
-			set
-			{
-				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			return (TreeStructure)_persistence.SchemaProvider.RetrieveInstance(typeof(TreeStructure), new ModelElementKey(this.TreeId));
 		}
-
-		private string _formParameterName;
-		public string FormParameterName
+		set
 		{
-			get
-			{
-				return _formParameterName;
-			}
-			set
-			{
-				_formParameterName = value;
-			}
+			this.TreeId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
+		{
+			return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
+		}
+		set
+		{
+			this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	private string _formParameterName;
+	public string FormParameterName
+	{
+		get
+		{
+			return _formParameterName;
+		}
+		set
+		{
+			_formParameterName = value;
 		}
 	}
 }

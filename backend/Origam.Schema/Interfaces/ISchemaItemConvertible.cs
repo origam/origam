@@ -21,11 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+public interface ISchemaItemConvertible
 {
-	public interface ISchemaItemConvertible
-	{
-		ISchemaItem ConvertTo(Type type);
-		bool CanConvertTo(Type type);
-	}
+	ISchemaItem ConvertTo(Type type);
+	bool CanConvertTo(Type type);
 }

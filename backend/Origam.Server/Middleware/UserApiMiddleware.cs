@@ -28,47 +28,40 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Origam.Server.Pages;
 
-namespace Origam.Server.Middleware
+namespace Origam.Server.Middleware;
+public class UserApiMiddleware
 {
-    public class UserApiMiddleware
+    private readonly RequestLocalizationOptions requestLocalizationOptions;
+    public UserApiMiddleware(RequestDelegate next, 
+        IOptions<RequestLocalizationOptions> requestLocalizationOptions)
     {
-        private readonly RequestLocalizationOptions requestLocalizationOptions;
-
-        public UserApiMiddleware(RequestDelegate next, 
-            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
+        this.requestLocalizationOptions = requestLocalizationOptions.Value;
+    }
+    public async Task Invoke(HttpContext context)
+    {
+        await SetThreadCultureFromCookie(context);
+        var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
+        var contextWrapper = new StandardHttpContextWrapper(context);
+        userApiProcessor.Process(contextWrapper);
+        await Task.CompletedTask;
+    }
+    private async Task SetThreadCultureFromCookie(HttpContext context)
+    {
+        var cultureProvider = requestLocalizationOptions.RequestCultureProviders
+            .OfType<OrigamCookieRequestCultureProvider>().First();
+        var cultureResult =
+            await cultureProvider.DetermineProviderCultureResult(context);
+        var culture = cultureResult?.Cultures.FirstOrDefault();
+        if (culture != null)
         {
-            this.requestLocalizationOptions = requestLocalizationOptions.Value;
+            Thread.CurrentThread.CurrentUICulture =
+                new CultureInfo(culture.Value.ToString());
         }
-
-        public async Task Invoke(HttpContext context)
+        var uiCulture = cultureResult?.UICultures.FirstOrDefault();
+        if (uiCulture != null)
         {
-            await SetThreadCultureFromCookie(context);
-            var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
-            var contextWrapper = new StandardHttpContextWrapper(context);
-            userApiProcessor.Process(contextWrapper);
-            await Task.CompletedTask;
-        }
-
-        private async Task SetThreadCultureFromCookie(HttpContext context)
-        {
-            var cultureProvider = requestLocalizationOptions.RequestCultureProviders
-                .OfType<OrigamCookieRequestCultureProvider>().First();
-            var cultureResult =
-                await cultureProvider.DetermineProviderCultureResult(context);
-
-            var culture = cultureResult?.Cultures.FirstOrDefault();
-            if (culture != null)
-            {
-                Thread.CurrentThread.CurrentUICulture =
-                    new CultureInfo(culture.Value.ToString());
-            }
-
-            var uiCulture = cultureResult?.UICultures.FirstOrDefault();
-            if (uiCulture != null)
-            {
-                Thread.CurrentThread.CurrentCulture =
-                    new CultureInfo(uiCulture.Value.ToString());
-            }
+            Thread.CurrentThread.CurrentCulture =
+                new CultureInfo(uiCulture.Value.ToString());
         }
     }
 }

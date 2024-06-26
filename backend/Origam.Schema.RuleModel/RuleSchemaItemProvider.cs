@@ -22,142 +22,131 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System.Collections;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.Schema.RuleModel;
+/// <summary>
+/// Summary description for RuleSchemaItemProvider.
+/// </summary>
+public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
 {
-	/// <summary>
-	/// Summary description for RuleSchemaItemProvider.
-	/// </summary>
-	public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IRuleSchemaItemProvider
+	public RuleSchemaItemProvider()
 	{
-		public RuleSchemaItemProvider()
+        this.ChildItemTypes.Add(typeof(StartRule));
+        this.ChildItemTypes.Add(typeof(EndRule));
+        this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
+        this.ChildItemTypes.Add(typeof(EntityRule));
+        this.ChildItemTypes.Add(typeof(ComplexDataRule));
+        this.ChildItemTypes.Add(typeof(SimpleDataRule));
+    }
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
 		{
-            this.ChildItemTypes.Add(typeof(StartRule));
-            this.ChildItemTypes.Add(typeof(EndRule));
-            this.ChildItemTypes.Add(typeof(EndRuleLookupXPath));
-            this.ChildItemTypes.Add(typeof(EntityRule));
-            this.ChildItemTypes.Add(typeof(ComplexDataRule));
-            this.ChildItemTypes.Add(typeof(SimpleDataRule));
-        }
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractRule.CategoryConst;
-			}
+			return AbstractRule.CategoryConst;
 		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
-
-        public ArrayList StartRules
-        {
-            get
-            {
-                ArrayList result = new ArrayList();
-                foreach (AbstractRule rule in this.ChildItems)
-                {
-                    if(rule is StartRule)
-                    {
-                        result.Add(rule);
-                    }
-                }
-                return result;
-            }
-        }
-
-        public ArrayList EndRules
-        {
-            get
-            {
-                ArrayList result = new ArrayList();
-                foreach (AbstractRule rule in this.ChildItems)
-                {
-                    if (rule is IEndRule)
-                    {
-                        result.Add(rule);
-                    }
-                }
-                return result;
-            }
-        }
-
-        public ArrayList DataRules
-        {
-            get
-            {
-                ArrayList result = new ArrayList();
-                foreach (AbstractRule rule in this.ChildItems)
-                {
-                    if (rule is IDataRule)
-                    {
-                        result.Add(rule);
-                    }
-                }
-                return result;
-            }
-        }
-
-        public ArrayList EntityRules
-        {
-            get
-            {
-                ArrayList result = new ArrayList();
-                foreach (AbstractRule rule in this.ChildItems)
-                {
-                    if (rule is EntityRule)
-                    {
-                        result.Add(rule);
-                    }
-                }
-                return result;
-            }
-        }
-        #endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_27_rules.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{
-				return "Rules";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
-
-		#endregion
 	}
+	public override bool AutoCreateFolder
+	{
+		get
+		{
+			return true;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "BL";
+		}
+	}
+    public ArrayList StartRules
+    {
+        get
+        {
+            ArrayList result = new ArrayList();
+            foreach (AbstractRule rule in this.ChildItems)
+            {
+                if(rule is StartRule)
+                {
+                    result.Add(rule);
+                }
+            }
+            return result;
+        }
+    }
+    public ArrayList EndRules
+    {
+        get
+        {
+            ArrayList result = new ArrayList();
+            foreach (AbstractRule rule in this.ChildItems)
+            {
+                if (rule is IEndRule)
+                {
+                    result.Add(rule);
+                }
+            }
+            return result;
+        }
+    }
+    public ArrayList DataRules
+    {
+        get
+        {
+            ArrayList result = new ArrayList();
+            foreach (AbstractRule rule in this.ChildItems)
+            {
+                if (rule is IDataRule)
+                {
+                    result.Add(rule);
+                }
+            }
+            return result;
+        }
+    }
+    public ArrayList EntityRules
+    {
+        get
+        {
+            ArrayList result = new ArrayList();
+            foreach (AbstractRule rule in this.ChildItems)
+            {
+                if (rule is EntityRule)
+                {
+                    result.Add(rule);
+                }
+            }
+            return result;
+        }
+    }
+    #endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			return "icon_27_rules.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{
+			return "Rules";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			return null;
+		}
+	}
+	#endregion
 }

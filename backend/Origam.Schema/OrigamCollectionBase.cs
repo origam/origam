@@ -22,278 +22,246 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 
-namespace Origam.Schema
+namespace Origam.Schema;
+[Serializable]
+public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
 {
-
-	[Serializable]
-	public abstract class OrigamCollectionBase : IList, ICollection, IEnumerable
+	// Fields
+	private ArrayList list;
+	// Methods
+	protected OrigamCollectionBase()
 	{
-		// Fields
-		private ArrayList list;
-
-		// Methods
-		protected OrigamCollectionBase()
+		this.list = new ArrayList();
+	}
+	protected OrigamCollectionBase(int capacity)
+	{
+		this.list = new ArrayList(capacity);
+	}
+	public void Clear()
+	{
+		this.OnClear();
+		this.InnerList.Clear();
+		this.OnClearComplete();
+	}
+	public IEnumerator GetEnumerator()
+	{
+		return this.InnerList.GetEnumerator();
+	}
+	protected virtual void OnClear()
+	{
+	}
+	protected virtual void OnClearComplete()
+	{
+	}
+	protected virtual void OnInsert(int index, object value)
+	{
+	}
+	protected virtual void OnInsertComplete(int index, object value)
+	{
+	}
+	protected virtual void OnRemove(int index, object value)
+	{
+	}
+	protected virtual void OnRemoveComplete(int index, object value)
+	{
+	}
+	protected virtual void OnSet(int index, object oldValue, object newValue)
+	{
+	}
+	protected virtual void OnSetComplete(int index, object oldValue, object newValue)
+	{
+	}
+	protected virtual void OnValidate(object value)
+	{
+		if (value == null)
 		{
-			this.list = new ArrayList();
+			throw new ArgumentNullException("value");
 		}
-
-		protected OrigamCollectionBase(int capacity)
+	}
+	public void RemoveAt(int index)
+	{
+		if ((index < 0) || (index >= this.InnerList.Count))
 		{
-			this.list = new ArrayList(capacity);
+			throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
 		}
-
-		public void Clear()
+		object obj2 = this.InnerList[index];
+		this.OnValidate(obj2);
+		this.OnRemove(index, obj2);
+		this.InnerList.RemoveAt(index);
+		try
 		{
-			this.OnClear();
-			this.InnerList.Clear();
-			this.OnClearComplete();
+			this.OnRemoveComplete(index, obj2);
 		}
-
-		public IEnumerator GetEnumerator()
+		catch
 		{
-			return this.InnerList.GetEnumerator();
+			this.InnerList.Insert(index, obj2);
+			throw;
 		}
-
-		protected virtual void OnClear()
+	}
+	void ICollection.CopyTo(Array array, int index)
+	{
+		this.InnerList.CopyTo(array, index);
+	}
+	int IList.Add(object value)
+	{
+		this.OnValidate(value);
+		this.OnInsert(this.InnerList.Count, value);
+		int index = this.InnerList.Add(value);
+		try
 		{
+			this.OnInsertComplete(index, value);
 		}
-
-		protected virtual void OnClearComplete()
+		catch
 		{
+			this.InnerList.RemoveAt(index);
+			throw;
 		}
-
-		protected virtual void OnInsert(int index, object value)
+		return index;
+	}
+	bool IList.Contains(object value)
+	{
+		return this.InnerList.Contains(value);
+	}
+	int IList.IndexOf(object value)
+	{
+		return this.InnerList.IndexOf(value);
+	}
+	void IList.Insert(int index, object value)
+	{
+		if ((index < 0) || (index > this.InnerList.Count))
 		{
+			throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
 		}
-
-		protected virtual void OnInsertComplete(int index, object value)
+		this.OnValidate(value);
+		this.OnInsert(index, value);
+		this.InnerList.Insert(index, value);
+		try
 		{
+			this.OnInsertComplete(index, value);
 		}
-
-		protected virtual void OnRemove(int index, object value)
+		catch
 		{
+			this.InnerList.RemoveAt(index);
+			throw;
 		}
-
-		protected virtual void OnRemoveComplete(int index, object value)
+	}
+	void IList.Remove(object value)
+	{
+		this.OnValidate(value);
+		int index = this.InnerList.IndexOf(value);
+		if (index < 0)
 		{
+			throw new ArgumentException("Arg_RemoveArgNotFound");
 		}
-
-		protected virtual void OnSet(int index, object oldValue, object newValue)
+		this.OnRemove(index, value);
+		this.InnerList.RemoveAt(index);
+		try
 		{
+			this.OnRemoveComplete(index, value);
 		}
-
-		protected virtual void OnSetComplete(int index, object oldValue, object newValue)
+		catch
 		{
+			this.InnerList.Insert(index, value);
+			throw;
 		}
-
-		protected virtual void OnValidate(object value)
+	}
+	// Properties
+	public int Capacity
+	{
+		get
 		{
-			if (value == null)
+			return this.InnerList.Capacity;
+		}
+		set
+		{
+			this.InnerList.Capacity = value;
+		}
+	}
+	public int Count
+	{
+		get
+		{
+			if (this.list != null)
 			{
-				throw new ArgumentNullException("value");
+				return this.list.Count;
 			}
+			return 0;
 		}
-
-		public void RemoveAt(int index)
+	}
+	protected ArrayList InnerList
+	{
+		get
+		{
+			if (this.list == null)
+			{
+				this.list = new ArrayList();
+			}
+			return this.list;
+		}
+	}
+	protected IList List
+	{
+		get
+		{
+			return this;
+		}
+	}
+	bool ICollection.IsSynchronized
+	{
+		get
+		{
+			return this.InnerList.IsSynchronized;
+		}
+	}
+	object ICollection.SyncRoot
+	{
+		get
+		{
+			return this.InnerList.SyncRoot;
+		}
+	}
+	bool IList.IsFixedSize
+	{
+		get
+		{
+			return this.InnerList.IsFixedSize;
+		}
+	}
+	bool IList.IsReadOnly
+	{
+		get
+		{
+			return this.InnerList.IsReadOnly;
+		}
+	}
+	object IList.this[int index]
+	{
+		get
 		{
 			if ((index < 0) || (index >= this.InnerList.Count))
 			{
 				throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
 			}
-			object obj2 = this.InnerList[index];
-			this.OnValidate(obj2);
-			this.OnRemove(index, obj2);
-			this.InnerList.RemoveAt(index);
-			try
-			{
-				this.OnRemoveComplete(index, obj2);
-			}
-			catch
-			{
-				this.InnerList.Insert(index, obj2);
-				throw;
-			}
+			return this.InnerList[index];
 		}
-
-		void ICollection.CopyTo(Array array, int index)
+		set
 		{
-			this.InnerList.CopyTo(array, index);
-		}
-
-		int IList.Add(object value)
-		{
-			this.OnValidate(value);
-			this.OnInsert(this.InnerList.Count, value);
-			int index = this.InnerList.Add(value);
-			try
-			{
-				this.OnInsertComplete(index, value);
-			}
-			catch
-			{
-				this.InnerList.RemoveAt(index);
-				throw;
-			}
-			return index;
-		}
-
-		bool IList.Contains(object value)
-		{
-			return this.InnerList.Contains(value);
-		}
-
-		int IList.IndexOf(object value)
-		{
-			return this.InnerList.IndexOf(value);
-		}
-
-		void IList.Insert(int index, object value)
-		{
-			if ((index < 0) || (index > this.InnerList.Count))
+			if ((index < 0) || (index >= this.InnerList.Count))
 			{
 				throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
 			}
 			this.OnValidate(value);
-			this.OnInsert(index, value);
-			this.InnerList.Insert(index, value);
+			object oldValue = this.InnerList[index];
+			this.OnSet(index, oldValue, value);
+			this.InnerList[index] = value;
 			try
 			{
-				this.OnInsertComplete(index, value);
+				this.OnSetComplete(index, oldValue, value);
 			}
 			catch
 			{
-				this.InnerList.RemoveAt(index);
+				this.InnerList[index] = oldValue;
 				throw;
-			}
-		}
-
-		void IList.Remove(object value)
-		{
-			this.OnValidate(value);
-			int index = this.InnerList.IndexOf(value);
-			if (index < 0)
-			{
-				throw new ArgumentException("Arg_RemoveArgNotFound");
-			}
-			this.OnRemove(index, value);
-			this.InnerList.RemoveAt(index);
-			try
-			{
-				this.OnRemoveComplete(index, value);
-			}
-			catch
-			{
-				this.InnerList.Insert(index, value);
-				throw;
-			}
-		}
-
-		// Properties
-		public int Capacity
-		{
-			get
-			{
-				return this.InnerList.Capacity;
-			}
-			set
-			{
-				this.InnerList.Capacity = value;
-			}
-		}
-
-		public int Count
-		{
-			get
-			{
-				if (this.list != null)
-				{
-					return this.list.Count;
-				}
-				return 0;
-			}
-		}
-
-		protected ArrayList InnerList
-		{
-			get
-			{
-				if (this.list == null)
-				{
-					this.list = new ArrayList();
-				}
-				return this.list;
-			}
-		}
-
-		protected IList List
-		{
-			get
-			{
-				return this;
-			}
-		}
-
-		bool ICollection.IsSynchronized
-		{
-			get
-			{
-				return this.InnerList.IsSynchronized;
-			}
-		}
-
-		object ICollection.SyncRoot
-		{
-			get
-			{
-				return this.InnerList.SyncRoot;
-			}
-		}
-
-		bool IList.IsFixedSize
-		{
-			get
-			{
-				return this.InnerList.IsFixedSize;
-			}
-		}
-
-		bool IList.IsReadOnly
-		{
-			get
-			{
-				return this.InnerList.IsReadOnly;
-			}
-		}
-
-		object IList.this[int index]
-		{
-			get
-			{
-				if ((index < 0) || (index >= this.InnerList.Count))
-				{
-					throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
-				}
-				return this.InnerList[index];
-			}
-			set
-			{
-				if ((index < 0) || (index >= this.InnerList.Count))
-				{
-					throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
-				}
-				this.OnValidate(value);
-				object oldValue = this.InnerList[index];
-				this.OnSet(index, oldValue, value);
-				this.InnerList[index] = value;
-				try
-				{
-					this.OnSetComplete(index, oldValue, value);
-				}
-				catch
-				{
-					this.InnerList[index] = oldValue;
-					throw;
-				}
 			}
 		}
 	}

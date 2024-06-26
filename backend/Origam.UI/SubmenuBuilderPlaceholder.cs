@@ -21,28 +21,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.UI
+namespace Origam.UI;
+class SubmenuBuilderPlaceholder : ToolStripMenuItem
 {
-    class SubmenuBuilderPlaceholder : ToolStripMenuItem
+    public ISubmenuBuilder Builder { get; set; }
+    public SubmenuBuilderPlaceholder(ISubmenuBuilder builder)
     {
-        public ISubmenuBuilder Builder { get; set; }
-
-        public SubmenuBuilderPlaceholder(ISubmenuBuilder builder)
+        Builder = builder;
+    }
+    public override string Text
+    {
+        get
         {
-            Builder = builder;
+            return "-loading-";
         }
-
-        public override string Text
+        set
         {
-            get
-            {
-                return "-loading-";
-            }
-
-            set
-            {
-                base.Text = value;
-            }
+            base.Text = value;
         }
     }
 }

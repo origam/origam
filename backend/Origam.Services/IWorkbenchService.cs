@@ -19,21 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// This interface must be implemented by all services.
+/// </summary>
+public interface IWorkbenchService
 {
 	/// <summary>
-	/// This interface must be implemented by all services.
+	/// This method is called after the services are loaded.
 	/// </summary>
-	public interface IWorkbenchService
-	{
-		/// <summary>
-		/// This method is called after the services are loaded.
-		/// </summary>
-		void InitializeService();
-		
-		/// <summary>
-		/// This method is called before the service is unloaded.
-		/// </summary>
-		void UnloadService();
-	}
+	void InitializeService();
+	
+	/// <summary>
+	/// This method is called before the service is unloaded.
+	/// </summary>
+	void UnloadService();
 }

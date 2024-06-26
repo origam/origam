@@ -19,25 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.DA.Service.CustomParameters
+namespace Origam.DA.Service.CustomParameters;
+/// <summary>
+/// Returns current user's id
+/// </summary>
+public class CurrentUserBusinessUnitIdParameter : ICustomParameter
 {
-	/// <summary>
-	/// Returns current user's id
-	/// </summary>
-	public class CurrentUserBusinessUnitIdParameter : ICustomParameter
+	public string Name
 	{
-		public string Name
+		get
 		{
-			get
-			{
-				return "parCurrentUserBusinessUnitId";
-			}
+			return "parCurrentUserBusinessUnitId";
 		}
-
-		public object Evaluate(UserProfile profile)
-		{
-			return profile.BusinessUnitId;
-		}
-
+	}
+	public object Evaluate(UserProfile profile)
+	{
+		return profile.BusinessUnitId;
 	}
 }

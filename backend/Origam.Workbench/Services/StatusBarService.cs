@@ -22,85 +22,74 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// Summary description for StatusBarService.
+/// </summary>
+public class StatusBarService : IStatusBarService
 {
-	/// <summary>
-	/// Summary description for StatusBarService.
-	/// </summary>
-	public class StatusBarService : IStatusBarService
+	public StatusBarService(StatusBar statusBar)
 	{
-		public StatusBarService(StatusBar statusBar)
+	    this.statusBar = statusBar;
+	}
+	#region IService Members
+	public event System.EventHandler Unload;
+	public event System.EventHandler Initialize;
+	public void UnloadService()
+	{
+		OnUnload(EventArgs.Empty);
+	}
+	public void InitializeService()
+	{
+		OnInitialize(EventArgs.Empty);
+	}
+	protected void OnInitialize(EventArgs e)
+	{
+		if (Initialize != null) 
 		{
-		    this.statusBar = statusBar;
+			Initialize(this, e);
 		}
-
-		#region IService Members
-		public event System.EventHandler Unload;
-		public event System.EventHandler Initialize;
-
-		public void UnloadService()
+	}
+	
+	protected void OnUnload(EventArgs e)
+	{
+		if (Unload != null) 
 		{
-			OnUnload(EventArgs.Empty);
+			Unload(this, e);
 		}
-
-		public void InitializeService()
+	}
+	#endregion
+	#region Properties
+	private StatusBar statusBar;
+	#endregion
+	#region Public Functions
+    delegate void SetStatusTextDelegate(string text);
+    public void SetStatusText(string text)
+	{
+		if(CanSetStatus())
 		{
-			OnInitialize(EventArgs.Empty);
+            if (this.statusBar.InvokeRequired)
+            {
+                SetStatusTextDelegate setText = new SetStatusTextDelegate(SetStatusText);
+                this.statusBar.Invoke(setText, new object[] { text }); 
+            }
+            else
+            {
+                this.statusBar.Panels[0].Text = text;
+            }
 		}
-
-		protected void OnInitialize(EventArgs e)
+	}
+	public void SetStatusMemory(long bytes)
+	{
+		if(CanSetStatus())
 		{
-			if (Initialize != null) 
-			{
-				Initialize(this, e);
-			}
+			this.statusBar.Panels[1].Text = bytes.ToString("N");
+			// Application.DoEvents();
 		}
-		
-		protected void OnUnload(EventArgs e)
-		{
-			if (Unload != null) 
-			{
-				Unload(this, e);
-			}
-		}
-		#endregion
-
-		#region Properties
-		private StatusBar statusBar;
-
-		#endregion
-
-		#region Public Functions
-        delegate void SetStatusTextDelegate(string text);
-        public void SetStatusText(string text)
-		{
-			if(CanSetStatus())
-			{
-                if (this.statusBar.InvokeRequired)
-                {
-                    SetStatusTextDelegate setText = new SetStatusTextDelegate(SetStatusText);
-                    this.statusBar.Invoke(setText, new object[] { text }); 
-                }
-                else
-                {
-                    this.statusBar.Panels[0].Text = text;
-                }
-			}
-		}
-
-		public void SetStatusMemory(long bytes)
-		{
-			if(CanSetStatus())
-			{
-				this.statusBar.Panels[1].Text = bytes.ToString("N");
-				// Application.DoEvents();
-			}
-		}
-		#endregion
-
-		private bool CanSetStatus()
-		{
-			return ! (this.statusBar == null || this.statusBar.IsDisposed);
-		}
+	}
+	#endregion
+	private bool CanSetStatus()
+	{
+		return ! (this.statusBar == null || this.statusBar.IsDisposed);
 	}
 }

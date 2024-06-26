@@ -28,98 +28,83 @@ using MoreLinq;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.FileSystemModelCheckers
+namespace Origam.DA.Service.FileSystemModelCheckers;
+public class DuplicateIdChecker: IFileSystemModelChecker
 {
-    public class DuplicateIdChecker: IFileSystemModelChecker
+    private readonly IEnumerable<FileInfo> modelDirectoryFiles;
+    private readonly DuplicateTracker duplicateTracker = new DuplicateTracker();
+    public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider,
+        IEnumerable<FileInfo> modelDirectoryFiles)
     {
-        private readonly IEnumerable<FileInfo> modelDirectoryFiles;
-        private readonly DuplicateTracker duplicateTracker = new DuplicateTracker();
-
-        public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider,
-            IEnumerable<FileInfo> modelDirectoryFiles)
+        this.modelDirectoryFiles = modelDirectoryFiles;
+    }
+    public IEnumerable<ModelErrorSection> GetErrors()
+    {
+        modelDirectoryFiles
+           .Where(OrigamFile.IsPersistenceFile)
+           .ForEach(PuIdsToDuplicateTracker);
+       List<ErrorMessage> errorMessages = duplicateTracker    
+           .GetDuplicates()
+           .SelectMany(ToErrorMessages)
+           .ToList();
+       yield return new ModelErrorSection("Duplicate Ids", errorMessages);
+    }
+    private IEnumerable<ErrorMessage> ToErrorMessages(DuplicateInfo duplicate)
+    {
+        yield return new ErrorMessage($"Object with Id: {duplicate.ObjectId} is defined in more than one file:");
+        foreach (var file in duplicate.Files)
         {
-            this.modelDirectoryFiles = modelDirectoryFiles;
-        }
-
-        public IEnumerable<ModelErrorSection> GetErrors()
-        {
-            modelDirectoryFiles
-               .Where(OrigamFile.IsPersistenceFile)
-               .ForEach(PuIdsToDuplicateTracker);
-
-           List<ErrorMessage> errorMessages = duplicateTracker    
-               .GetDuplicates()
-               .SelectMany(ToErrorMessages)
-               .ToList();
-
-           yield return new ModelErrorSection("Duplicate Ids", errorMessages);
-        }
-
-        private IEnumerable<ErrorMessage> ToErrorMessages(DuplicateInfo duplicate)
-        {
-            yield return new ErrorMessage($"Object with Id: {duplicate.ObjectId} is defined in more than one file:");
-            foreach (var file in duplicate.Files)
-            {
-                yield return new ErrorMessage(text: file.FullName, link: file.FullName);
-            }
-        }
-
-        private void PuIdsToDuplicateTracker(FileInfo file)
-        {
-            string text;
-            try
-            {
-                text = File.ReadAllText(file.FullName);
-            }
-            catch (FileNotFoundException)
-            {
-                // The file was probably renamed/deleted during the model check
-                // analysis by a user interaction. That is ok.
-                // We will check the file next time the model is open.
-                return;
-            }
-
-            var idRegex = "x:id=\"([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})\"";
-            foreach (Match match in Regex.Matches(text, idRegex))
-            {
-                Guid id = Guid.Parse(match.Groups[1].Value);
-                duplicateTracker.Add(id, file);
-            }
+            yield return new ErrorMessage(text: file.FullName, link: file.FullName);
         }
     }
-
-    class DuplicateTracker
+    private void PuIdsToDuplicateTracker(FileInfo file)
     {
-        private readonly Dictionary<Guid, List<FileInfo>> idToFilesDictionary 
-            = new Dictionary<Guid, List<FileInfo>>();
-
-        public void Add(Guid id, FileInfo file)
+        string text;
+        try
         {
-            if (!idToFilesDictionary.ContainsKey(id))
-            {
-                idToFilesDictionary.Add(id, new List<FileInfo>());
-            }
-
-            idToFilesDictionary[id].Add(file);
+            text = File.ReadAllText(file.FullName);
         }
-
-        public IEnumerable<DuplicateInfo> GetDuplicates()
+        catch (FileNotFoundException)
         {
-            return idToFilesDictionary
-                .Where(pair => pair.Value.Count > 1)
-                .Select(pair => new DuplicateInfo(pair.Key, pair.Value));
+            // The file was probably renamed/deleted during the model check
+            // analysis by a user interaction. That is ok.
+            // We will check the file next time the model is open.
+            return;
+        }
+        var idRegex = "x:id=\"([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})\"";
+        foreach (Match match in Regex.Matches(text, idRegex))
+        {
+            Guid id = Guid.Parse(match.Groups[1].Value);
+            duplicateTracker.Add(id, file);
         }
     }
-
-    class DuplicateInfo
+}
+class DuplicateTracker
+{
+    private readonly Dictionary<Guid, List<FileInfo>> idToFilesDictionary 
+        = new Dictionary<Guid, List<FileInfo>>();
+    public void Add(Guid id, FileInfo file)
     {
-        public DuplicateInfo(Guid objectId, List<FileInfo> files)
+        if (!idToFilesDictionary.ContainsKey(id))
         {
-            ObjectId = objectId;
-            Files = files;
+            idToFilesDictionary.Add(id, new List<FileInfo>());
         }
-
-        public Guid ObjectId { get;  }
-        public List<FileInfo> Files { get;}
+        idToFilesDictionary[id].Add(file);
     }
+    public IEnumerable<DuplicateInfo> GetDuplicates()
+    {
+        return idToFilesDictionary
+            .Where(pair => pair.Value.Count > 1)
+            .Select(pair => new DuplicateInfo(pair.Key, pair.Value));
+    }
+}
+class DuplicateInfo
+{
+    public DuplicateInfo(Guid objectId, List<FileInfo> files)
+    {
+        ObjectId = objectId;
+        Files = files;
+    }
+    public Guid ObjectId { get;  }
+    public List<FileInfo> Files { get;}
 }

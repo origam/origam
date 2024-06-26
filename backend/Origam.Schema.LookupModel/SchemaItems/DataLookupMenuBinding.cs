@@ -28,221 +28,196 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 
-namespace Origam.Schema.LookupModel
+namespace Origam.Schema.LookupModel;
+/// <summary>
+/// Summary description for DataConstantReferenceMenuItem.
+/// </summary>
+[SchemaItemDescription("Menu Binding", "icon_menu-binding.png")]
+[HelpTopic("Menu+Bindings")]
+[XmlModelRoot(CategoryConst)]
+[DefaultProperty("MenuItem")]
+[ClassMetaVersion("6.0.0")]
+public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextContainer, IComparable
 {
-	/// <summary>
-	/// Summary description for DataConstantReferenceMenuItem.
-	/// </summary>
-	[SchemaItemDescription("Menu Binding", "icon_menu-binding.png")]
-    [HelpTopic("Menu+Bindings")]
-	[XmlModelRoot(CategoryConst)]
-    [DefaultProperty("MenuItem")]
-    [ClassMetaVersion("6.0.0")]
-    public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextContainer, IComparable
+	public const string CategoryConst = "DataLookupMenuBinding";
+	public DataLookupMenuBinding() : base() {}
+	public DataLookupMenuBinding(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataLookupMenuBinding(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType
 	{
-		public const string CategoryConst = "DataLookupMenuBinding";
-
-		public DataLookupMenuBinding() : base() {}
-
-		public DataLookupMenuBinding(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataLookupMenuBinding(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+		get
 		{
-			get
+			return CategoryConst;
+		}
+	}
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	{
+		dependencies.Add(this.MenuItem);
+		AbstractSchemaItem menu = this.MenuItem;
+		while(menu.ParentItem != null)
+		{
+			menu = menu.ParentItem;
+			dependencies.Add(menu);
+		}
+		if(this.SelectionConstant != null)
+		{
+			dependencies.Add(this.SelectionConstant);
+		}
+		if(this.SelectionLookup != null)
+		{
+			dependencies.Add(this.SelectionLookup);
+		}
+		base.GetExtraDependencies (dependencies);
+	}
+	public override SchemaItemCollection ChildItems
+	{
+		get
+		{
+			return new SchemaItemCollection();
+		}
+	}
+	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+	{
+		return newNode is AbstractDataLookup;
+	}
+	#endregion
+	#region Properties
+	public Guid MenuItemId;
+	[Category("Menu Reference")]
+	[TypeConverter(typeof(MenuItemConverter))]
+	[NotNullModelElementRule()]
+	[NotNullMenuRecordEditMethod()]
+    [XmlReference("menuItem", "MenuItemId")]
+    public AbstractMenuItem MenuItem
+	{
+		get
+		{
+			return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MenuItemId));
+		}
+		set
+		{
+			this.MenuItemId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
+		}
+	}
+	
+	private string _roles;
+	[Category("Security")]
+	[NotNullModelElementRule()]
+    [XmlAttribute("roles")]
+	public string Roles
+	{
+		get
+		{
+			return _roles;
+		}
+		set
+		{
+			_roles = value;
+		}
+	}
+	
+	public Guid SelectionLookupId;
+	[Category("Selection")]
+	[TypeConverter(typeof(DataLookupConverter))]
+	[Description("Choose lookup that returns a value you want to use for deciding whether the menu binding will be applied. Such a lookup should expect (as an input value) the same entity column (entity id in most cases) as original value lookup to which the current menu binding is bound. Example of use: We need for each type of actuarial document another form to edit. So we create parameter mappings for all types of documents with diferent selection constants and same selection lookup that returns a type of an actuarial document.")]
+    [XmlReference("selectionLookup", "SelectionLookupId")]
+    public AbstractDataLookup SelectionLookup
+	{
+		get
+		{
+			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
+		}
+		set
+		{
+			this.SelectionLookupId = (Guid)value.PrimaryKey["Id"];
+		}
+	}
+    
+	public Guid SelectionConstantId;
+	[Category("Selection")]
+	[TypeConverter(typeof(DataConstantConverter))]
+	[Description("If SelectionLookup return value will be equal to provided SelectionConstant, the current menu binding will be applied on the current record.")]
+    [XmlReference("selectionConstant", "SelectionConstantId")]
+    public DataConstant SelectionConstant
+	{
+		get
+		{
+			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
+		}
+		set
+		{
+			this.SelectionConstantId = (Guid)value.PrimaryKey["Id"];
+		}
+	}
+    
+	public Guid _selectionPanelId;
+	[Category("Menu Reference")]
+    [XmlReference("selectionSectionId", "_selectionPanelId")]
+    public string SelectionPanelId
+	{
+		get
+		{
+			if(_selectionPanelId.Equals(Guid.Empty))
 			{
-				return CategoryConst;
+				return null;
+			}
+			else
+			{
+				return _selectionPanelId.ToString();
 			}
 		}
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		set
 		{
-			dependencies.Add(this.MenuItem);
-
-			AbstractSchemaItem menu = this.MenuItem;
-			while(menu.ParentItem != null)
+			if(value == null)
 			{
-				menu = menu.ParentItem;
-				dependencies.Add(menu);
+				_selectionPanelId = Guid.Empty;
 			}
-
-			if(this.SelectionConstant != null)
+			else
 			{
-				dependencies.Add(this.SelectionConstant);
-			}
-
-			if(this.SelectionLookup != null)
-			{
-				dependencies.Add(this.SelectionLookup);
-			}
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override SchemaItemCollection ChildItems
-		{
-			get
-			{
-				return new SchemaItemCollection();
+				_selectionPanelId = new Guid(value);
 			}
 		}
-
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
-			return newNode is AbstractDataLookup;
-		}
-
-		#endregion
-
-		#region Properties
-		public Guid MenuItemId;
-
-		[Category("Menu Reference")]
-		[TypeConverter(typeof(MenuItemConverter))]
-		[NotNullModelElementRule()]
-		[NotNullMenuRecordEditMethod()]
-        [XmlReference("menuItem", "MenuItemId")]
-        public AbstractMenuItem MenuItem
-		{
-			get
-			{
-				return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MenuItemId));
-			}
-			set
-			{
-				this.MenuItemId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
-		}
-		
-		private string _roles;
-		[Category("Security")]
-		[NotNullModelElementRule()]
-        [XmlAttribute("roles")]
-		public string Roles
-		{
-			get
-			{
-				return _roles;
-			}
-			set
-			{
-				_roles = value;
-			}
-		}
-		
-		public Guid SelectionLookupId;
-
-		[Category("Selection")]
-		[TypeConverter(typeof(DataLookupConverter))]
-		[Description("Choose lookup that returns a value you want to use for deciding whether the menu binding will be applied. Such a lookup should expect (as an input value) the same entity column (entity id in most cases) as original value lookup to which the current menu binding is bound. Example of use: We need for each type of actuarial document another form to edit. So we create parameter mappings for all types of documents with diferent selection constants and same selection lookup that returns a type of an actuarial document.")]
-        [XmlReference("selectionLookup", "SelectionLookupId")]
-        public AbstractDataLookup SelectionLookup
-		{
-			get
-			{
-				return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
-			}
-			set
-			{
-				this.SelectionLookupId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-        
-		public Guid SelectionConstantId;
-
-		[Category("Selection")]
-		[TypeConverter(typeof(DataConstantConverter))]
-		[Description("If SelectionLookup return value will be equal to provided SelectionConstant, the current menu binding will be applied on the current record.")]
-        [XmlReference("selectionConstant", "SelectionConstantId")]
-        public DataConstant SelectionConstant
-		{
-			get
-			{
-				return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
-			}
-			set
-			{
-				this.SelectionConstantId = (Guid)value.PrimaryKey["Id"];
-			}
-		}
-        
-		public Guid _selectionPanelId;
-
-		[Category("Menu Reference")]
-        [XmlReference("selectionSectionId", "_selectionPanelId")]
-        public string SelectionPanelId
-		{
-			get
-			{
-				if(_selectionPanelId.Equals(Guid.Empty))
-				{
-					return null;
-				}
-				else
-				{
-					return _selectionPanelId.ToString();
-				}
-			}
-			set
-			{
-				if(value == null)
-				{
-					_selectionPanelId = Guid.Empty;
-				}
-				else
-				{
-					_selectionPanelId = new Guid(value);
-				}
-			}
-		}
-
-        private int _level = 100;
-        [Category("Selection")]
-        [NotNullModelElementRule()]
-        [XmlAttribute("level")]
-        public int Level
+	}
+    private int _level = 100;
+    [Category("Selection")]
+    [NotNullModelElementRule()]
+    [XmlAttribute("level")]
+    public int Level
+    {
+        get
         {
-            get
-            {
-                return _level;
-            }
-            set
-            {
-                _level = value;
-            }
+            return _level;
         }
-        #endregion
-
-		#region IAuthorizationContextContainer Members
-
-		[Browsable(false)]
-		public string AuthorizationContext
-		{
-			get
-			{
-				return this.Roles;
-			}
-		}
-
-		#endregion
-
-        #region IComparable Members
-        public override int CompareTo(object obj)
+        set
         {
-            DataLookupMenuBinding compared = obj as DataLookupMenuBinding;
-
-            if (compared != null)
-            {
-                // then by level
-                return this.Level.CompareTo(compared.Level);
-            }
-            else
-            {
-                return base.CompareTo(obj);
-            }
+            _level = value;
         }
-
-        #endregion
     }
+    #endregion
+	#region IAuthorizationContextContainer Members
+	[Browsable(false)]
+	public string AuthorizationContext
+	{
+		get
+		{
+			return this.Roles;
+		}
+	}
+	#endregion
+    #region IComparable Members
+    public override int CompareTo(object obj)
+    {
+        DataLookupMenuBinding compared = obj as DataLookupMenuBinding;
+        if (compared != null)
+        {
+            // then by level
+            return this.Level.CompareTo(compared.Level);
+        }
+        else
+        {
+            return base.CompareTo(obj);
+        }
+    }
+    #endregion
 }
