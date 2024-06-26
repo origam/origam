@@ -82,67 +82,6 @@ public class DataLookupService : IDataLookupService
 	{
 		return GetList(lookupId, new Hashtable(), transactionId);
 	}
-	public Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys)
-	{
-		Hashtable result = new Hashtable();
-		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-		IServiceAgent dataServiceAgent = GetAgent();
-		DataStructureQuery cacheQuery = GetQuery(lookup, QueryType.ValueCacheList);
-		dataServiceAgent.MethodName = "LoadDataByQuery";
-		dataServiceAgent.Parameters.Clear();
-		dataServiceAgent.Parameters.Add("Query", cacheQuery);
-		dataServiceAgent.Run();
-		DataSet data = dataServiceAgent.Result as DataSet;
-		string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-		foreach(DataRow row in data.Tables[0].Rows)
-		{
-			object id = row[lookup.ValueValueMember];
-			if(keys.ContainsKey(id))
-			{
-				object lookupText = ValueFromRow(row, columns);
-				ArrayList list;
-				if(result.Contains(lookupText))
-				{
-					list = result[lookupText] as ArrayList;
-				}
-				else
-				{
-					list = new ArrayList();
-					result.Add(lookupText, list);
-				}
-				list.Add(id);
-			}
-		}
-		return result;
-	}
-	public DataTable GetAllValues(Guid lookupId, Hashtable keys)
-	{
-		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-		DataTable result = new OrigamDataTable("LookupValues");
-		result.Columns.Add(lookup.ListValueMember, typeof(object));
-		result.Constraints.Add("PK", result.Columns[0], true);
-		result.Columns.Add(lookup.ListDisplayMember, typeof(object));
-		IServiceAgent dataServiceAgent = GetAgent();
-		DataStructureQuery cacheQuery = GetQuery(lookup, QueryType.ValueCacheList);
-		dataServiceAgent.MethodName = "LoadDataByQuery";
-		dataServiceAgent.Parameters.Clear();
-		dataServiceAgent.Parameters.Add("Query", cacheQuery);
-		dataServiceAgent.Run();
-		DataSet data = dataServiceAgent.Result as DataSet;
-		string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-		result.BeginLoadData();
-		foreach(DataRow row in data.Tables[0].Rows)
-		{
-			object id = row[lookup.ValueValueMember];
-			if(keys.ContainsKey(id))
-			{
-				object lookupText = ValueFromRow(row, columns);
-				result.LoadDataRow(new object[] { id, lookupText }, true);
-			}
-		}
-		result.EndLoadData();
-		return result;
-	}
 	public DataView GetList(Guid lookupId, Hashtable parameters, string transactionId)
 	{
 		IServiceAgent dataServiceAgent = GetAgent();
