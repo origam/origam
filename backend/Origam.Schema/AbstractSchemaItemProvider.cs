@@ -205,12 +205,12 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 			_rootProvider = value;
 		}
 	}
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			ArrayList items = new ArrayList();
-			foreach(AbstractSchemaItem item in this.ChildItems)
+			var items = new List<ISchemaItem>();
+			foreach(ISchemaItem item in this.ChildItems)
 			{
 				items.Add(item);
 				items.AddRange(GetChildItemsRecursive(item));
@@ -457,9 +457,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	}
 	public event Action<ISchemaItem> ItemCreated;
 	#endregion
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(ISchemaItem parentItem)
 	{
-		ArrayList items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);

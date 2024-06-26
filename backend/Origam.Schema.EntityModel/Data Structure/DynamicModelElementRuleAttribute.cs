@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
 internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttribute
@@ -38,7 +39,7 @@ internal class DynamicModelElementRuleAttribute : AbstractModelElementRuleAttrib
             CheckRule(instance);
         }
         var filterSet = (DataStructureFilterSet)instance;
-        ArrayList filters = filterSet.ChildItemsRecursive;
+        List<ISchemaItem> filters = filterSet.ChildItemsRecursive;
         foreach (DataStructureFilterSetFilter filter in filters)
         {
             if (((filter.IgnoreFilterConstantId != Guid.Empty)

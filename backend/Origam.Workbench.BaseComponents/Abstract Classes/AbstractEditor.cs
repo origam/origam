@@ -439,9 +439,9 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 // and persist again
                 ModelContent.ThrowEventOnPersist = true;
                 ModelContent.Persist();
-                ArrayList items = ModelContent.ChildItemsRecursive;
+                List<ISchemaItem> items = ModelContent.ChildItemsRecursive;
                 items.Add(ModelContent);
-                _documentation.CloneDocumentation(items.ToList<ISchemaItem>());
+                _documentation.CloneDocumentation(items);
                 ModelContent.OldPrimaryKey = null;
             }
         }

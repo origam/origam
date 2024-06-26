@@ -453,9 +453,9 @@ public class ControlSetEditor : AbstractEditor
             // If the controlset was cloned, we clone its documentation, too.
             if (ControlSet.OldPrimaryKey != null)
             {
-                ArrayList items = ControlSet.ChildItemsRecursive;
+	            List<ISchemaItem> items = ControlSet.ChildItemsRecursive;
                 items.Add(ControlSet);
-                _documentation.CloneDocumentation(items.ToList<ISchemaItem>());
+                _documentation.CloneDocumentation(items);
             }
             ControlSet.OldPrimaryKey = null;
             if (saveControl && IsPanel && _panelControlItemRef != null)

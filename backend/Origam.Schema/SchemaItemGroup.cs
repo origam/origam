@@ -123,9 +123,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			? parentItem : GetRootGroup(parentItem.ParentGroup);
 	}
 	
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(AbstractSchemaItem parentItem)
 	{
-		var items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(var childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
@@ -298,11 +298,11 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
         }
     }
     public ISchemaItemProvider RootProvider { get; set; } = null;
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			var items = new ArrayList();
+			var items = new List<ISchemaItem>();
 			foreach(var item in ChildItems)
 			{
 				items.Add(item);

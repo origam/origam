@@ -124,11 +124,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	}
 	
 	[Browsable(false)]
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			ArrayList items = new ArrayList();
+			var items = new List<ISchemaItem>();
 			foreach(AbstractSchemaItem item in this.ChildItems)
 			{
 				items.Add(item);
@@ -1157,9 +1157,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
         };
     #endregion
     #region Private Methods
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(AbstractSchemaItem parentItem)
 	{
-		ArrayList items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
