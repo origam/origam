@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -88,6 +89,13 @@ public class Startup
             options.AllowSynchronousIO = true;
             options.AuthenticationDisplayName = "Windows";
             options.AutomaticAuthentication = true;
+        });
+        // remove limit for multipart body length
+        services.Configure<FormOptions>(options =>
+        {
+            options.ValueLengthLimit = int.MaxValue;
+            options.MultipartBodyLengthLimit = int.MaxValue;
+            options.MultipartHeadersLengthLimit = int.MaxValue;
         });
         services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
         var builder = services.AddMvc().AddNewtonsoftJson();
