@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -64,7 +65,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Rule != null)
 			base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);

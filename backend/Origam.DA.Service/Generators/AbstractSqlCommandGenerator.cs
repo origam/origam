@@ -385,10 +385,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             foreach (EntityFilter filter in Filters(filterSet, entity, parameters, false))
             {
-                Hashtable paramReferences = filter.ParameterReferences;
-                foreach (DictionaryEntry entry in paramReferences)
+                Dictionary<string, ParameterReference> paramReferences = filter.ParameterReferences;
+                foreach (var entry in paramReferences)
                 {
-                    ParameterReference parameterRef = entry.Value as ParameterReference;
+                    ParameterReference parameterRef = entry.Value;
                     string paramName = RenderExpression(parameterRef, entity, replaceParameterTexts, null, null);
 
                     if (!command.Parameters.Contains(paramName))
@@ -2534,9 +2534,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
 
         // replace lookup parameters with keys from the entity
-        foreach (object key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
+        foreach (string key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
         {
-            string finalKey = key as string;
+            string finalKey = key;
             if (lookupRenamed)
             {
                 if (finalKey != null)

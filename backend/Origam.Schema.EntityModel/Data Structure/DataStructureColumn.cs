@@ -27,6 +27,7 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence.Attributes;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.Attributes;
 
 namespace Origam.Schema.EntityModel;
@@ -416,7 +417,7 @@ public class DataStructureColumn : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
 			base.GetParameterReferences(this.Field as AbstractSchemaItem, list);

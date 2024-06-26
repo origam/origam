@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -154,25 +155,25 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Filter != null)
 		{
-			Hashtable references = new Hashtable();
+			var references = new Dictionary<string, ParameterReference>();
 			base.GetParameterReferences(this.Filter, references);
-			foreach(DictionaryEntry entry in references)
+			foreach(var entry in references)
 			{
 				string key = this.Entity.Name + "_" + (string)entry.Key;
-				if(! list.Contains(key))
+				if(! list.ContainsKey(key))
 				{
 					list.Add(key, entry.Value);
 				}
 			}
 			if(this.IgnoreFilterParameterName != null)
 			{
-				if(! list.Contains(this.IgnoreFilterParameterName))
+				if(! list.ContainsKey(IgnoreFilterParameterName))
 				{
-					list.Add(this.IgnoreFilterParameterName, null);
+					list.Add(IgnoreFilterParameterName, null);
 				}
 			}
 		}

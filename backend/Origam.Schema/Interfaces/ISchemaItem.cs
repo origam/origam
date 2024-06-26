@@ -38,7 +38,7 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	string Name{get; set;}
 	SchemaItemAncestorCollection AllAncestors{get;}
 	ArrayList Parameters{get;}
-	Hashtable ParameterReferences{get;}
+	Dictionary<string, ParameterReference> ParameterReferences{get;}
 	bool HasParameterReferences{get;}
 	string ItemType{get;}
 	AbstractSchemaItem GetChildByName(string name);

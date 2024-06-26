@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -50,10 +51,10 @@ public class ReportReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Report != null)
-			base.GetParameterReferences(this.Report as AbstractSchemaItem, list);
+			base.GetParameterReferences(Report, list);
 	}
 	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{

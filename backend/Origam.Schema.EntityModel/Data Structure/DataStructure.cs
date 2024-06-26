@@ -164,13 +164,13 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 					   }
 			   );                        
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		foreach(DataStructureEntity item in this.Entities)
+		foreach(DataStructureEntity item in Entities)
 		{
 			item.GetParameterReferences(item, list);
 		}
-		foreach(DataStructureDefaultSet defset in this.DefaultSets)
+		foreach(DataStructureDefaultSet defset in DefaultSets)
 		{
 			defset.GetParameterReferences(defset, list);
 		}

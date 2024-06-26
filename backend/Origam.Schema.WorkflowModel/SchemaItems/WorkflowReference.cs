@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -44,10 +45,10 @@ public class WorkflowReference : AbstractSchemaItem
 	#region Overriden AbstractDataEntityColumn Members
 
 	public override string ItemType => CategoryConst;
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Workflow != null)
-			base.GetParameterReferences(this.Workflow as AbstractSchemaItem, list);
+			base.GetParameterReferences(Workflow, list);
 	}
 	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 
@@ -53,7 +54,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Rule != null) base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
 	}

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -138,7 +139,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Parameter != null)
 		{

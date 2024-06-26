@@ -246,11 +246,11 @@ public class FormSessionStore : SaveableSessionStore
         {
             object value = this.Request.Parameters["id"];
             this.Request.Parameters.Clear();
-            foreach (DictionaryEntry entry in method.ParameterReferences)
+            foreach (var entry in method.ParameterReferences)
             {
                 this.Request.Parameters[entry.Key] = value;
             }
-            foreach (DictionaryEntry entry in DataStructure().ParameterReferences)
+            foreach (var entry in DataStructure().ParameterReferences)
             {
                 this.Request.Parameters[entry.Key] = value;
             }

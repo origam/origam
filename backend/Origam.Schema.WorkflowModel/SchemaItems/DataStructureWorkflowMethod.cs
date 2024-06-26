@@ -25,6 +25,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -43,7 +44,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 
 	// with workflow method we consider all the workflows
 	// as input parameters except context stores marked with `IsReturnValue'
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
 		{

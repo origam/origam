@@ -195,14 +195,14 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
     {
         return this.GetType().SchemaItemDescription()?.Name;
     }
-    public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+    public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(parentItem == null) return;
 		foreach(AbstractSchemaItem item in parentItem.ChildItems)
 		{
-			if(item is ParameterReference & item.IsDeleted == false)
-				if(!list.ContainsKey((item as ParameterReference).Parameter.Name))
-					list.Add((item as ParameterReference).Parameter.Name, item);
+			if(item is ParameterReference parameterReference && item.IsDeleted == false)
+				if(!list.ContainsKey(parameterReference.Parameter.Name))
+					list.Add(parameterReference.Parameter.Name, parameterReference);
 			item.GetParameterReferences(item, list);
 		}
 	}
@@ -902,10 +902,10 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 		}
 	}
-	Hashtable _parameterReferences = new Hashtable();
+	Dictionary<string, ParameterReference> _parameterReferences = new();
 	[Category("(Schema Item)")]
 	[Browsable(false)]
-	public virtual Hashtable ParameterReferences
+	public virtual Dictionary<string, ParameterReference> ParameterReferences
 	{
 		get
 		{
@@ -953,7 +953,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 					lock(Lock)
 					{
 #endif
-						_hasParameterReferences = (this.ParameterReferences.Count > 0);
+						_hasParameterReferences = ParameterReferences.Count > 0;
 #if ORIGAM_CLIENT
 						_hasParameterReferencesCached = true;
 					}

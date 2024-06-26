@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -106,7 +107,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 			return EntityRelationColumnPairItem.CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		(this.BaseEntityField as AbstractSchemaItem).GetParameterReferences (this.BaseEntityField as AbstractSchemaItem, list);
 		(this.RelatedEntityField as AbstractSchemaItem).GetParameterReferences (this.RelatedEntityField as AbstractSchemaItem, list);

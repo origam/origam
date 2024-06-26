@@ -210,9 +210,9 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 			return;
 		if(this.DataLookup != null)
 		{
-			foreach(DictionaryEntry entry in this.DataLookup.ParameterReferences)
+			foreach(var entry in this.DataLookup.ParameterReferences)
 			{
-				string parameterName = entry.Key.ToString();
+				string parameterName = entry.Key;
 				ColumnParameterMapping mapping = _origamMetadata
 					.NewItem<ColumnParameterMapping>(
 						_origamMetadata.SchemaExtensionId, null);

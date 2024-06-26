@@ -118,7 +118,7 @@ public class DataLookupService : IDataLookupService
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 			if(lookup.ValueMethod != null)
 			{
-				ICollection keys = lookup.ValueMethod.ParameterReferences.Keys;
+				var keys = lookup.ValueMethod.ParameterReferences.Keys;
 				foreach(string parameterName in keys)
 				{
 					parameters.Add(parameterName, lookupValue);
@@ -332,9 +332,9 @@ public class DataLookupService : IDataLookupService
 				}
 				else
 				{
-					foreach(DictionaryEntry entry in (menu as FormReferenceMenuItem).RecordEditMethod.ParameterReferences)
+					foreach(var entry in (menu as FormReferenceMenuItem).RecordEditMethod.ParameterReferences)
 					{
-						result.Add((string)entry.Key, value);
+						result.Add(entry.Key, value);
 					}
 				}
 			}		

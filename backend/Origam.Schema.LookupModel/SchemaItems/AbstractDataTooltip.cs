@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -47,7 +48,7 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 			return CategoryConst;
 		}
 	}
-    public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+    public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
     {
         base.GetParameterReferences(this.TooltipLoadMethod, list);
     }
