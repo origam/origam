@@ -26,7 +26,7 @@ namespace Origam.Server.Extensions;
 
 public static class HttpRequestExtensions
 {
-    public static string GetUserAgent(this  HttpRequest request)
+    public static string GetUserAgent(this HttpRequest request)
     {
         return request.Headers.ContainsKey(HeaderNames.UserAgent)
             ? request.Headers[HeaderNames.UserAgent].ToString()
