@@ -380,7 +380,7 @@ public class XsltTests
         dataTable.AcceptChanges();
         var dataView = new DataView(dataTable);
 
-        var parameters = new Hashtable();
+        var parameters = new Dictionary<string, object>();
         if (args.Length >= 2)
         {
             parameters[args[0]] = args[1];

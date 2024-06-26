@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Xml.XPath;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
@@ -149,7 +150,7 @@ public class StateMachine : AbstractSchemaItem
 			}
 			else
 			{
-				var parameters = new Hashtable();
+				var parameters = new Dictionary<string, object>();
 				foreach(StateMachineDynamicLookupParameterMapping 
 					        parameterMapping in ParameterMappings)
 				{

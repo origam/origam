@@ -2050,7 +2050,7 @@ public void OpenForm(object owner,Hashtable parameters)
 		{
 		}
 	}
-	public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters)
+	public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Dictionary<string, object> parameters)
 	{
 		AbstractMenuItem targetMenuItem = linkTarget as AbstractMenuItem;
 		OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
@@ -2060,7 +2060,7 @@ public void OpenForm(object owner,Hashtable parameters)
 			{
 				object[] val = new object[parameters.Count];
 				int i = 0;
-				foreach(DictionaryEntry entry in parameters)
+				foreach(var entry in parameters)
 				{
 					val[i] = entry.Value;
 					
@@ -2070,7 +2070,7 @@ public void OpenForm(object owner,Hashtable parameters)
 				return;
 			}
 		}
-		foreach(DictionaryEntry entry in parameters)
+		foreach(var entry in parameters)
 		{
 			cmd.Parameters.Add(entry.Key, entry.Value);
 		}
