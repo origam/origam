@@ -1,6 +1,6 @@
-#region license
+﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,15 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
-using Origam.Server.Pages;
+namespace Origam.Server.Extensions;
 
-namespace Origam.Server
+public static class HttpRequestExtensions
 {
-    public interface IHttpTools
+    public static string GetUserAgent(this  HttpRequest request)
     {
-        void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview);
-        void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file, string fileName, bool isPreview, string overrideContentType);
-        string GetFileDisposition(string userAgent, string fileName);
+        return request.Headers.ContainsKey(HeaderNames.UserAgent)
+            ? request.Headers[HeaderNames.UserAgent].ToString()
+            : string.Empty;
     }
 }

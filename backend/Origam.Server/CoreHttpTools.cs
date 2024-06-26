@@ -38,7 +38,7 @@ namespace Origam.Server
             string fileName, bool isPreview, string overrideContentType)
         {
             response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
-            string disposition = GetFileDisposition(request, fileName);
+            string disposition = GetFileDisposition(request.UserAgent, fileName);
             if (!isPreview)
             {
                 disposition = "attachment; " + disposition;
@@ -50,11 +50,11 @@ namespace Origam.Server
             response.OutputStreamWrite(file, 0, file.Length);
         }
 
-        public string GetFileDisposition(IRequestWrapper request, string fileName)
+        public string GetFileDisposition(string userAgent, string fileName)
         {
             bool isFirefox 
-                = (request.UserAgent != null) 
-                && (request.UserAgent.IndexOf("Firefox") >= 0);
+                = (userAgent != null) 
+                && (userAgent.IndexOf("Firefox") >= 0);
             string dispositionLeft = "filename=";
             if(isFirefox)
             {

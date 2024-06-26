@@ -28,6 +28,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Net.Http.Headers;
+using Origam.Server.Extensions;
 using UAParser;
 
 namespace Origam.Server.Pages
@@ -61,7 +62,7 @@ namespace Origam.Server.Pages
         public string RawUrl => request.GetDisplayUrl();
         public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
         public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
-        public string UserAgent => headerDictionary[HeaderNames.UserAgent].ToString();
+        public string UserAgent => httpContext.Request.GetUserAgent();
         public string Browser 
             => clientInfo != null ? clientInfo.UserAgent.Family : "";
         public string BrowserVersion 

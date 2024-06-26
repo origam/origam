@@ -35,6 +35,7 @@ using Origam.DA;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using ImageMagick;
+using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
 
@@ -151,7 +152,7 @@ namespace Origam.Server.Controller
                 var filename = (string)blobDownloadRequest
                     .Row[blobDownloadRequest.Property];
                 var disposition = httpTools.GetFileDisposition(
-                    new CoreRequestWrapper(Request), filename);
+                    Request.GetUserAgent(), filename);
                 if(!blobDownloadRequest.IsPreview)
                 {
                     disposition = "attachment; " + disposition;
