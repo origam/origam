@@ -233,9 +233,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return schemaItemCollection;
 		}
 	}
-	public ArrayList ChildItemsByType(string itemType)
+	public List<ISchemaItem> ChildItemsByType(string itemType)
 	{
-		var list = new ArrayList();
+		var list = new List<ISchemaItem>();
 		// We look for all child items of our parent schema item that have this group
 		// We browse the collection because it has all the items correctly set
 		foreach(AbstractSchemaItem item in ParentItem.ChildItemsByGroup(this))

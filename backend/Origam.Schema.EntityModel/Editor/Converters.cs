@@ -200,12 +200,12 @@ public class DataStructureEntityConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList columnArray;
-		ArrayList entities;
+		List<ISchemaItem> entities;
 		DataStructureEntity parentEntity = (context.Instance as DataStructureEntity).ParentItem as DataStructureEntity;
 		if(parentEntity == null)
 		{
 			// Root entity, we display all available entities
-			entities = new ArrayList((_schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider).ChildItems);
+			entities = new List<ISchemaItem>();
 		}
 		else
 		{
@@ -239,12 +239,12 @@ public class DataStructureEntityConverter : TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			ArrayList entities;
+			List<ISchemaItem> entities;
 			DataStructureEntity parentEntity = (context.Instance as DataStructureEntity).ParentItem as DataStructureEntity;
 			if(parentEntity == null)
 			{
 				// Root entity, we display all available entities
-				entities = new ArrayList((_schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider).ChildItems);
+				entities = new List<ISchemaItem>();
 			}
 			else
 			{
@@ -286,7 +286,7 @@ public class RelationPrimaryKeyColumnConverter : System.ComponentModel.TypeConve
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		EntityRelationColumnPairItem columnPair = context.Instance as EntityRelationColumnPairItem;
-		ArrayList columns = ((EntityRelationItem)columnPair.ParentItem).BaseEntity.EntityColumns;
+		List<ISchemaItem> columns = ((EntityRelationItem)columnPair.ParentItem).BaseEntity.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -335,7 +335,7 @@ public class RelationForeignKeyColumnConverter : System.ComponentModel.TypeConve
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		EntityRelationColumnPairItem columnPair = context.Instance as EntityRelationColumnPairItem;
-		ArrayList columns = ((EntityRelationItem)columnPair.ParentItem).RelatedEntity.EntityColumns;
+		List<ISchemaItem> columns = ((EntityRelationItem)columnPair.ParentItem).RelatedEntity.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -384,7 +384,7 @@ public class RelationFilterConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		EntityRelationFilter filter = context.Instance as EntityRelationFilter;
-		ArrayList filters = ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.CategoryConst);
+		List<ISchemaItem> filters = ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.CategoryConst);
 		ArrayList filterArray = new ArrayList(filters.Count);
 		foreach(EntityFilter f in filters)
 		{
@@ -433,7 +433,7 @@ public class EntityFilterConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		AbstractSchemaItem item = context.Instance as AbstractSchemaItem;
-		ArrayList filters = ((IDataEntity)item.RootItem).ChildItemsByType(EntityFilter.CategoryConst);
+		List<ISchemaItem> filters = ((IDataEntity)item.RootItem).ChildItemsByType(EntityFilter.CategoryConst);
 		ArrayList filterArray = new ArrayList(filters.Count);
 		foreach(EntityFilter f in filters)
 		{
@@ -483,7 +483,7 @@ public class DataStructureColumnConverter : System.ComponentModel.TypeConverter
 	{
 		DataStructureColumn dsColumn = context.Instance as DataStructureColumn;
 		DataStructureEntity dsEntity = (dsColumn.Entity == null ? dsColumn.ParentItem as DataStructureEntity : dsColumn.Entity);
-		ArrayList columns = dsEntity.EntityDefinition.EntityColumns;
+		List<ISchemaItem> columns = dsEntity.EntityDefinition.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -505,7 +505,7 @@ public class DataStructureColumnConverter : System.ComponentModel.TypeConverter
 		{
 			DataStructureColumn dsColumn = context.Instance as DataStructureColumn;
 			DataStructureEntity dsEntity = (dsColumn.Entity == null ? dsColumn.ParentItem as DataStructureEntity : dsColumn.Entity);
-			ArrayList columns = dsEntity.EntityDefinition.EntityColumns;
+			List<ISchemaItem> columns = dsEntity.EntityDefinition.EntityColumns;
 		
 			foreach(IDataEntityColumn item in columns)
 			{
@@ -660,7 +660,7 @@ public class EntityColumnReferenceConverter : System.ComponentModel.TypeConverte
 	{
 		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 		IDataEntity entity = reference.RootItem as IDataEntity;
-		ArrayList columns = entity.EntityColumns;
+		List<ISchemaItem> columns = entity.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -684,7 +684,7 @@ public class EntityColumnReferenceConverter : System.ComponentModel.TypeConverte
 		{
 			AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 			IDataEntity entity = reference.RootItem as IDataEntity;
-			ArrayList columns = entity.EntityColumns;
+			List<ISchemaItem> columns = entity.EntityColumns;
 			foreach(IDataEntityColumn item in columns)
 			{
 				if(item.Name == value.ToString())
@@ -714,7 +714,7 @@ public class EntityForeignColumnConverter : System.ComponentModel.TypeConverter
 	{
 		IDataEntity entity = (context.Instance as IDataEntityColumn).ForeignKeyEntity as IDataEntity;
 		if(entity == null) return null;
-		ArrayList columns = entity.EntityColumns;
+		List<ISchemaItem> columns = entity.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -738,7 +738,7 @@ public class EntityForeignColumnConverter : System.ComponentModel.TypeConverter
 		{
 			IDataEntity entity = (context.Instance as IDataEntityColumn).ForeignKeyEntity as IDataEntity;
 			if(entity == null) return null;
-			ArrayList columns = entity.EntityColumns;
+			List<ISchemaItem> columns = entity.EntityColumns;
 			foreach(IDataEntityColumn item in columns)
 			{
 				if(item.Name == value.ToString())
@@ -768,7 +768,7 @@ public class EntityRelationConverter : System.ComponentModel.TypeConverter
 	{
 		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 		IDataEntity entity = reference.RootItem as IDataEntity;
-		ArrayList relations = entity.EntityRelations;
+		List<ISchemaItem> relations = entity.EntityRelations;
 		ArrayList relationArray = new ArrayList(relations.Count);
 		foreach(IAssociation relation in relations)
 		{
@@ -791,7 +791,7 @@ public class EntityRelationConverter : System.ComponentModel.TypeConverter
 		{
 			AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 			IDataEntity entity = reference.RootItem as IDataEntity;
-			ArrayList relations = entity.EntityRelations;
+			List<ISchemaItem> relations = entity.EntityRelations;
 			foreach(IAssociation item in relations)
 			{
 				if(item.Name == value.ToString())
@@ -822,7 +822,7 @@ public class EntityRelationColumnsConverter : System.ComponentModel.TypeConverte
 		IRelationReference reference = context.Instance as IRelationReference;
 		if(reference.Relation == null) return null;
 		IDataEntity entity = reference.Relation.AssociatedEntity as IDataEntity;
-		ArrayList columns = entity.EntityColumns;
+		List<ISchemaItem> columns = entity.EntityColumns;
 		ArrayList columnArray = new ArrayList(columns.Count);
 		foreach(IDataEntityColumn column in columns)
 		{
@@ -845,7 +845,7 @@ public class EntityRelationColumnsConverter : System.ComponentModel.TypeConverte
 		{
 			IRelationReference reference = context.Instance as IRelationReference;
 			IDataEntity entity = reference.Relation.AssociatedEntity as IDataEntity;
-			ArrayList columns = entity.EntityColumns;
+			List<ISchemaItem> columns = entity.EntityColumns;
 			foreach(IDataEntityColumn item in columns)
 			{
 				if(item.Name == value.ToString())
@@ -1183,7 +1183,7 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList fields;
+		List<ISchemaItem> fields;
 		
 		if(context.Instance is DataStructureDefaultSetDefault)
 		{
@@ -1224,7 +1224,7 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			ArrayList fields;
+			List<ISchemaItem> fields;
 		
 			if(context.Instance is DataStructureDefaultSetDefault)
 			{
@@ -1272,7 +1272,7 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
 		DataStructureFilterSetFilter queryFilter = context.Instance as DataStructureFilterSetFilter;
 		
 		if(queryFilter.Entity == null) return null;
-		ArrayList filters = queryFilter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
+		List<ISchemaItem> filters = queryFilter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 		ArrayList columnArray = new ArrayList(filters.Count);
 		foreach(EntityFilter filter in filters)
 		{
@@ -1295,7 +1295,7 @@ public class DataQueryEntityFilterConverter : System.ComponentModel.TypeConverte
 			DataStructureFilterSetFilter filter = context.Instance as DataStructureFilterSetFilter;
 		
 			if(filter.Entity == null) return null;
-			ArrayList filters = filter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
+			List<ISchemaItem> filters = filter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 			foreach(EntityFilter item in filters)
 			{
 				if(item.Name == value.ToString())
@@ -1326,7 +1326,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
 		IDataStructureReference reference = context.Instance as IDataStructureReference;
 		
 		if(reference.DataStructure == null) return null;
-		ArrayList methods = reference.DataStructure.Methods;
+		List<ISchemaItem> methods = reference.DataStructure.Methods;
 		ArrayList methodArray = new ArrayList(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
@@ -1350,7 +1350,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
 			IDataStructureReference reference = context.Instance as IDataStructureReference;
 		
 			if(reference.DataStructure == null) return null;
-			ArrayList methods = reference.DataStructure.Methods;
+			List<ISchemaItem> methods = reference.DataStructure.Methods;
 			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
@@ -1380,7 +1380,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
         {
             IDataStructureReference reference = context.Instance as IDataStructureReference;
             if (reference.DataStructure == null) return null;
-            ArrayList defaultSets = reference.DataStructure.DefaultSets;
+            List<ISchemaItem> defaultSets = reference.DataStructure.DefaultSets;
             ArrayList array = new ArrayList(defaultSets.Count);
             foreach (AbstractSchemaItem item in defaultSets)
             {
@@ -1403,7 +1403,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
             {
                 IDataStructureReference reference = context.Instance as IDataStructureReference;
                 if (reference.DataStructure == null) return null;
-                ArrayList defaultSets = reference.DataStructure.DefaultSets;                    
+                List<ISchemaItem> defaultSets = reference.DataStructure.DefaultSets;                    
                 foreach (AbstractSchemaItem item in defaultSets)
                 {
                     if (item.Name == value.ToString())
@@ -1434,7 +1434,7 @@ public class DataStructureReferenceSortSetConverter : System.ComponentModel.Type
 		IDataStructureReference reference = context.Instance as IDataStructureReference;
 		
 		if(reference.DataStructure == null) return null;
-		ArrayList sortSets = reference.DataStructure.SortSets;
+		List<ISchemaItem> sortSets = reference.DataStructure.SortSets;
 		ArrayList sortSetArray = new ArrayList(sortSets.Count);
 		foreach(DataStructureSortSet sortSet in sortSets)
 		{
@@ -1458,7 +1458,7 @@ public class DataStructureReferenceSortSetConverter : System.ComponentModel.Type
 			IDataStructureReference reference = context.Instance as IDataStructureReference;
 		
 			if(reference.DataStructure == null) return null;
-			ArrayList sortSets = reference.DataStructure.SortSets;
+			List<ISchemaItem> sortSets = reference.DataStructure.SortSets;
 			foreach(DataStructureSortSet item in sortSets)
 			{
 				if(item.Name == value.ToString())
@@ -1889,7 +1889,7 @@ public class DataStructureRuleSetConverter : TypeConverter
         DataStructureRuleSetReference ruleSetReference = context.Instance as DataStructureRuleSetReference;
         // list all rulesets of datastructure and it's 
         DataStructure ds = ruleSetReference.RootItem as DataStructure;
-        ArrayList ruleSets = ds.RuleSets;
+        List<ISchemaItem> ruleSets = ds.RuleSets;
         ArrayList array = new ArrayList(ruleSets.Count);
         foreach (AbstractSchemaItem item in ruleSets)
         {
@@ -1913,7 +1913,7 @@ public class DataStructureRuleSetConverter : TypeConverter
             DataStructureRuleSetReference ruleSetReference = context.Instance as DataStructureRuleSetReference;
             // list all rulesets of datastructure and it's 
             DataStructure ds = ruleSetReference.RootItem as DataStructure;
-            ArrayList ruleSets = ds.RuleSets;
+            List<ISchemaItem> ruleSets = ds.RuleSets;
             foreach (AbstractSchemaItem item in ruleSets)
             {
                 if (item.Name == value.ToString())

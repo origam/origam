@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -90,7 +91,7 @@ public class StateMachineState : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Operations => ChildItemsByType(
+	public List<ISchemaItem> Operations => ChildItemsByType(
 		StateMachineOperation.CategoryConst);
 	[Browsable(false)]
 	public ArrayList SubStates

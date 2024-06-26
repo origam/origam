@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using Origam.DA;
@@ -729,7 +730,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     /// For deletes this function will always return True because on delete operation basically 
     /// all fields were changed, no matter if there are any dependencies or not. Also if there are
     /// no dependencies True is always returned.</returns>
-    private bool FieldsChanged(ArrayList fields, DataRow row, StateMachineServiceStatelessEventType type)
+    private bool FieldsChanged(List<ISchemaItem> fields, DataRow row, StateMachineServiceStatelessEventType type)
     {
         // if there are no field dependencies all fields changed
         if (fields.Count == 0) return true;

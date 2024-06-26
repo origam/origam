@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -41,7 +42,7 @@ public class DataStructureRule : AbstractSchemaItem
 		: base(schemaExtensionId) {}
 	public DataStructureRule(Key primaryKey) : base(primaryKey)	{}
 	#region Properties
-	public ArrayList RuleDependencies => ChildItemsByType(
+	public List<ISchemaItem> RuleDependencies => ChildItemsByType(
 		DataStructureRuleDependency.CategoryConst);
 	private int _priority = 100;
 	

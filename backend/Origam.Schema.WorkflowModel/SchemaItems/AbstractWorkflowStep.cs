@@ -96,7 +96,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-	public ArrayList Dependencies
+	public List<ISchemaItem> Dependencies
 	{
 		get
 		{

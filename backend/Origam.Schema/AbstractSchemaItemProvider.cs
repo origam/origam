@@ -26,6 +26,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Origam.Schema;
 public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
@@ -69,14 +70,14 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	public SchemaItemCollection LoadChildItems()
 	{
 		SchemaItemCollection childItems = new SchemaItemCollection(this.PersistenceProvider, this, null);
-		childItems.AddRange((AbstractSchemaItem[])this.ChildItemsByType(RootItemType).ToArray(typeof(AbstractSchemaItem)));
+		childItems.AddRange(ChildItemsByType(RootItemType).Cast<AbstractSchemaItem>().ToArray());
 		return childItems;
 	}
-	public virtual ArrayList ChildItemsByType(string itemType)
+	public virtual List<ISchemaItem> ChildItemsByType(string itemType)
 	{
         List<AbstractSchemaItem> list = this.PersistenceProvider.
             RetrieveListByCategory<AbstractSchemaItem>(itemType);
-        ArrayList result = new ArrayList();
+        var result = new List<ISchemaItem>();
         foreach (AbstractSchemaItem item in list)
 		{
             if (item.ParentItemId == Guid.Empty)

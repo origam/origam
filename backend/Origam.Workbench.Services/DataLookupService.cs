@@ -457,7 +457,7 @@ public class DataLookupService : IDataLookupService
 		IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 		IPrincipal principal = SecurityManager.CurrentPrincipal;
 		Hashtable selectionCache = new Hashtable();
-        ArrayList menuBindings = lookup.MenuBindings;
+        List<ISchemaItem> menuBindings = lookup.MenuBindings;
         menuBindings.Sort();
 		
 		foreach(DataLookupMenuBinding binding in menuBindings)

@@ -139,7 +139,7 @@ public class DataStructureEntity : AbstractSchemaItem
 			}
 			if(value)
 			{
-				ArrayList list = ChildItemsByType(
+				List<ISchemaItem> list = ChildItemsByType(
 					DataStructureColumn.CategoryConst);
 				foreach(DataStructureColumn column in list)
 				{

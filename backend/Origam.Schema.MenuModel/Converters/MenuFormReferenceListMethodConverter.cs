@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -43,9 +44,9 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 		if(currentItem == null) return new StandardValuesCollection(new ArrayList());
 		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList methods = currentItem.ListDataStructure.Methods;
+		List<ISchemaItem> methods = currentItem.ListDataStructure.Methods;
 		ArrayList array = new ArrayList(methods.Count);
-		foreach(AbstractSchemaItem item in methods)
+		foreach(ISchemaItem item in methods)
 		{
 			array.Add(item);
 		}
@@ -66,8 +67,8 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			ArrayList methods = currentItem.ListDataStructure.Methods;
-			foreach(AbstractSchemaItem item in methods)
+			List<ISchemaItem> methods = currentItem.ListDataStructure.Methods;
+			foreach(ISchemaItem item in methods)
 			{
 				if(item.Name == value.ToString())
 					return item as DataStructureMethod;

@@ -1284,7 +1284,7 @@ public class ServerCoreUIService : IBasicUIService
         NotificationBox logoNotificationBox = LogoNotificationBox();
         if (logoNotificationBox != null)
         {
-            ArrayList tooltips = logoNotificationBox.ChildItemsByType(
+            List<ISchemaItem> tooltips = logoNotificationBox.ChildItemsByType(
                 DataServiceDataTooltip.CategoryConst);
             doc = GetTooltip(null, tooltips)?.Xml;
         }
@@ -1294,7 +1294,7 @@ public class ServerCoreUIService : IBasicUIService
         }
         return doc;
     }
-    private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
+    private static IXmlContainer GetTooltip(object id, List<ISchemaItem> tooltips)
     {
         tooltips.Sort();
         DataServiceDataTooltip tooltip = null;

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using Origam.Services;
@@ -697,7 +698,7 @@ public class DatasetGenerator
 		// if there is just 1 dynamic label and it is actually static (never changes)
 		// we take it as the default label so it can be used also in empty form or grid column
 		// label
-		ArrayList dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+		List<ISchemaItem> dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 		EntityFieldDynamicLabel dynamicLabel = null;
 		if(dynamicLabels.Count == 1)
 		{
@@ -800,7 +801,7 @@ public class DatasetGenerator
 	}
     private static string AddRelation(DataSet dataset, string debugPath, IAssociation assoc, string baseEntityName, string relatedEntityName, string relationName)
     {
-        ArrayList entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
+        List<ISchemaItem> entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
         DataColumn[] baseColumns = new DataColumn[entityItems.Count];
         DataColumn[] relatedColumns = new DataColumn[entityItems.Count];
         if (assoc.IsSelfJoin)

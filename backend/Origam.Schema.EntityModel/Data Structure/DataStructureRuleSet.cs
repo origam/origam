@@ -39,7 +39,7 @@ public class DataStructureRuleSet : AbstractSchemaItem
 	public DataStructureRuleSet(Key primaryKey) : base(primaryKey)	{}
 
 	#region Public Methods
-	public ArrayList Rules()
+	public List<ISchemaItem> Rules()
 	{
         var result = ChildItemsByType(DataStructureRule.CategoryConst);
         // add all child rule sets

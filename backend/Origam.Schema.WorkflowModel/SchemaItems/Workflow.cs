@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
@@ -91,11 +92,11 @@ public class Workflow : AbstractSchemaItem, IWorkflow
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-    public ArrayList Dependencies
+    public List<ISchemaItem> Dependencies
 	{
 		get
 		{
-			return new ArrayList();
+			return new List<ISchemaItem>();
 		}
 	}
     

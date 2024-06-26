@@ -730,7 +730,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             );
 
         int i = 0;
-        ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.CategoryConst);
+        List<ISchemaItem> sortedFields = index.ChildItemsByType(DataEntityIndexField.CategoryConst);
         sortedFields.Sort();
 
         foreach (DataEntityIndexField field in sortedFields)
@@ -1729,7 +1729,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     // When no file name, then the blob field will be emptied. Without dependency it would
                     // not touch the write only field.
                     const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
-                    ArrayList dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
+                    List<ISchemaItem> dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
                     ArrayList dependencies = new ArrayList();
                     // skip dependencies to virtual fields
                     foreach (EntityFieldDependency dep in dependenciesSource)

@@ -28,6 +28,7 @@ using Origam;
 
 using Origam.DA;
 using Origam.Rule;
+using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -196,7 +197,7 @@ public abstract class EntityUIActionRunner
         EntityWorkflowAction entityWorkflowAction,
         ExecuteActionProcessData processData)
     {
-        ArrayList scriptCalls = entityWorkflowAction.ChildItemsByType(
+        List<ISchemaItem> scriptCalls = entityWorkflowAction.ChildItemsByType(
             EntityWorkflowActionScriptCall.CategoryConst);
         if(scriptCalls.Count == 0)
         {

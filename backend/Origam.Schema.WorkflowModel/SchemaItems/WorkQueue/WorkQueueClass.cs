@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -86,7 +87,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList EntityMappings => 
+	public List<ISchemaItem> EntityMappings => 
 		this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 	public Guid EntityId;
 	[TypeConverter(typeof(EntityConverter))]

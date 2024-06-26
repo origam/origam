@@ -71,7 +71,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
         }
     }
 	[Browsable(false)]
-	public ArrayList DefaultSets
+	public List<ISchemaItem> DefaultSets
 	{
 		get
 		{
@@ -79,7 +79,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList TemplateSets
+	public List<ISchemaItem> TemplateSets
 	{
 		get
 		{
@@ -87,7 +87,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Methods
+	public List<ISchemaItem> Methods
 	{
 		get
 		{
@@ -95,7 +95,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList RuleSets
+	public List<ISchemaItem> RuleSets
 	{
 		get
 		{
@@ -103,7 +103,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList SortSets
+	public List<ISchemaItem> SortSets
 	{
 		get
 		{

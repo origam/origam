@@ -73,7 +73,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList MenuBindings => ChildItemsByType(
+	public List<ISchemaItem> MenuBindings => ChildItemsByType(
 		DataLookupMenuBinding.CategoryConst);
 	[Browsable(false)]
 	public bool HasTooltip
@@ -86,7 +86,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Tooltips => ChildItemsByType(
+	public List<ISchemaItem> Tooltips => ChildItemsByType(
 		AbstractDataTooltip.CategoryConst);
 	#region List
 	private string _listValueMember;

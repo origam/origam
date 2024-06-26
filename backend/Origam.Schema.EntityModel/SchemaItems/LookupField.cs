@@ -196,13 +196,13 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		set => throw new NotSupportedException();
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules 
+	public List<ISchemaItem> RowLevelSecurityRules 
 		=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules 
+	public List<ISchemaItem> ConditionalFormattingRules 
 		=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 	[Browsable(false)]
-	public ArrayList DynamicLabels 
+	public List<ISchemaItem> DynamicLabels 
 		=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 	#endregion
 	#region Properties

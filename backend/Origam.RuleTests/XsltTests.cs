@@ -118,7 +118,7 @@ public class XsltTests
         functionSchemaItemProvider
             .Setup(x =>
                 x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
-            .Returns(new ArrayList { functionCollection });
+            .Returns(new System.Collections.Generic.List<ISchemaItem> { functionCollection });
 
         xsltFunctionDefinitions = XsltFunctionContainerFactory.Create(
             businessServiceMock.Object,

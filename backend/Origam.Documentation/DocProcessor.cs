@@ -130,7 +130,7 @@ public class DocProcessor
             WriteElement("description",
                  documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP));
         }
-        ArrayList sortedControls;
+        List<ISchemaItem> sortedControls;
         if (control.ControlItem.IsComplexType)
         {
             if (panelTitle != "")

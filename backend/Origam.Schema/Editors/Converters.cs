@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema;
 public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
@@ -41,7 +42,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	{
 		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 		AbstractSchemaItem root = reference.RootItem;
-		ArrayList parameters = root.Parameters;
+		List<ISchemaItem> parameters = root.Parameters;
 		ArrayList paramArray = new ArrayList(parameters.Count);
         paramArray.Add(null);
 		foreach(SchemaItemParameter parameter in parameters)

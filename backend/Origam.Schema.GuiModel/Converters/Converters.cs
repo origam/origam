@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
@@ -565,7 +566,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     public override System.ComponentModel.TypeConverter.StandardValuesCollection
         GetStandardValues(ITypeDescriptorContext context)
     {
-        ArrayList styleProperties = 
+	    List<ISchemaItem> styleProperties = 
             ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
             .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
         ArrayList propertyArray = new ArrayList(styleProperties.Count);
@@ -587,7 +588,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     {
         if (value.GetType() == typeof(string))
         {
-            ArrayList styleProperties =
+	        List<ISchemaItem> styleProperties =
                 ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
                 .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
             foreach (AbstractSchemaItem item in styleProperties)

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
@@ -271,10 +272,10 @@ public class ControlSetItem  : AbstractSchemaItem
 	}
 	#endregion
 }
-public class ControlSetItemComparer : IComparer
+public class ControlSetItemComparer : IComparer<ISchemaItem>
 {
 	#region IComparer Members
-	public int Compare(object x, object y)
+	public int Compare(ISchemaItem x, ISchemaItem y)
 	{
 		if(!(x is ControlSetItem xItem))
 		{

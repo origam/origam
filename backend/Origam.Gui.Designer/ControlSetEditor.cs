@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
@@ -808,7 +809,7 @@ public class ControlSetEditor : AbstractEditor
 			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst).Count];
 			int i = 0;
 			FDToolboxItem fd_item;
-			ArrayList fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			List<ISchemaItem> fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 			fields.Sort();
 			foreach(IDataEntityColumn column in fields)
 			{

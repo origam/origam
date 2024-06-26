@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -41,9 +42,9 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		ArrayList ruleSets = currentItem.Screen.DataStructure.RuleSets;
+		List<ISchemaItem> ruleSets = currentItem.Screen.DataStructure.RuleSets;
 		ArrayList array = new ArrayList(ruleSets.Count);
-		foreach(AbstractSchemaItem item in ruleSets)
+		foreach(ISchemaItem item in ruleSets)
 		{
 			array.Add(item);
 		}
@@ -64,8 +65,8 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			ArrayList ruleSets = currentItem.Screen.DataStructure.RuleSets;
-			foreach(AbstractSchemaItem item in ruleSets)
+			List<ISchemaItem> ruleSets = currentItem.Screen.DataStructure.RuleSets;
+			foreach(ISchemaItem item in ruleSets)
 			{
 				if(item.Name == value.ToString())
 					return item as DataStructureRuleSet;

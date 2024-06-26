@@ -1235,7 +1235,7 @@ public class FormGenerator : IDisposable
 			supportInitialize.BeginInit();
 		}
 		//recursively add child controls
-		ArrayList sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.CategoryConst);
+		List<ISchemaItem> sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.CategoryConst);
 		sortedChildControls.Sort();
 		
 		foreach (ControlSetItem childItem in sortedChildControls)

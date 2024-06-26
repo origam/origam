@@ -43,7 +43,7 @@ public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
 	ArrayList ChildItemTypes{get;}
 	AbstractSchemaItem GetChildByName(string name, string itemType);
 	ArrayList ChildItemsRecursive{get;}
-	ArrayList ChildItemsByType(string itemType);
+	List<ISchemaItem> ChildItemsByType(string itemType);
 	ArrayList ChildItemsByGroup(SchemaItemGroup group);
 	bool HasChildItems{get;}
 	bool HasChildItemsByType(string itemType);

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -90,9 +91,9 @@ public class StateMachineEvent : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.CategoryConst);
+	public List<ISchemaItem> ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.CategoryConst);
 	[Browsable(false)]
-	public ArrayList FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
+	public List<ISchemaItem> FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
 	
 	[XmlAttribute ("type")]
 	public StateMachineEventType Type { get; set; }

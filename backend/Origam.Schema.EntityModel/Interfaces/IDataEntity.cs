@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
 public enum EntityAuditingType
@@ -36,7 +37,7 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Parameters of this data entity (in case the entity is query
 	/// </summary>
-	ArrayList EntityParameters {get;}
+	List<ISchemaItem> EntityParameters {get;}
 	/// <summary>
 	/// Collection of expressions which make up a primary key of this data entity
 	/// </summary>
@@ -49,24 +50,24 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Returns all columns of this data entity
 	/// </summary>
-	ArrayList EntityColumns {get;}
+	List<ISchemaItem> EntityColumns {get;}
 	/// <summary>
 	/// Returns all relations of this data entity
 	/// </summary>
-	ArrayList EntityRelations {get;}
+	List<ISchemaItem> EntityRelations {get;}
 	/// <summary>
 	/// Returns all filters of this data entity
 	/// </summary>
-	ArrayList EntityFilters {get;}
+	List<ISchemaItem> EntityFilters {get;}
 	/// <summary>
 	/// Returns all indexes of this data entity
 	/// </summary>
-	ArrayList EntityIndexes {get;}
+	List<ISchemaItem> EntityIndexes {get;}
 	/// <summary>
 	/// Returns all security rules of this data entity
 	/// </summary>
-	ArrayList RowLevelSecurityRules {get;}
-	ArrayList ConditionalFormattingRules {get;}
+	List<ISchemaItem> RowLevelSecurityRules {get;}
+	List<ISchemaItem> ConditionalFormattingRules {get;}
 	ArrayList Constraints {get;}
 	string Caption {get; set;}
 	EntityAuditingType AuditingType {get; set;}

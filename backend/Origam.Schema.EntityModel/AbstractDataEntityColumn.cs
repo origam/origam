@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA;
@@ -387,7 +388,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		}
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules
+	public List<ISchemaItem> RowLevelSecurityRules
 	{
 		get
 		{
@@ -396,7 +397,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 	}
 	
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules
+	public List<ISchemaItem> ConditionalFormattingRules
 	{
 		get
 		{
@@ -404,7 +405,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		}
 	}
 	[Browsable(false)]
-	public ArrayList DynamicLabels
+	public List<ISchemaItem> DynamicLabels
 	{
 		get
 		{

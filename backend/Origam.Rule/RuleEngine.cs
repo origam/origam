@@ -1593,7 +1593,7 @@ public class RuleEngine
 			}
 		}
 		// entity-level rules
-		ArrayList entityRules = entity.RowLevelSecurityRules;
+		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
 		if(entityRules.Count > 0)
 		{
 			rules.AddRange(entityRules);
@@ -1717,7 +1717,7 @@ public class RuleEngine
 		var rules = new ArrayList();
 		var entity = _persistence.SchemaProvider
             .RetrieveInstance<IDataEntity>(entityId);
-		ArrayList entityRules = entity.RowLevelSecurityRules;
+		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
 		if (entityRules.Count > 0)
 		{
 			rules.AddRange(entityRules);

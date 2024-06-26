@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -43,9 +44,9 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 		if(currentItem == null) return new StandardValuesCollection(new ArrayList());
 		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList sortSets = currentItem.ListDataStructure.SortSets;
+		List<ISchemaItem> sortSets = currentItem.ListDataStructure.SortSets;
 		ArrayList array = new ArrayList(sortSets.Count);
-		foreach(AbstractSchemaItem item in sortSets)
+		foreach(ISchemaItem item in sortSets)
 		{
 			array.Add(item);
 		}
@@ -66,8 +67,8 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			ArrayList sortSets = currentItem.ListDataStructure.SortSets;
-			foreach(AbstractSchemaItem item in sortSets)
+			List<ISchemaItem> sortSets = currentItem.ListDataStructure.SortSets;
+			foreach(ISchemaItem item in sortSets)
 			{
 				if(item.Name == value.ToString())
 					return item as DataStructureSortSet;

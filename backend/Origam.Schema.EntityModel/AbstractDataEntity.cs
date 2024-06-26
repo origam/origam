@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -60,7 +61,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 	#region IDataEntity Members
 	[Browsable(false)]
-	public ArrayList EntityParameters
+	public List<ISchemaItem> EntityParameters
 	{
 		get
 		{
@@ -155,10 +156,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 #if ORIGAM_CLIENT
 	private bool _columnsPopulated = false;
-	private ArrayList _columns;
+	private List<ISchemaItem> _columns;
 #endif
 	[Browsable(false)]
-	public ArrayList EntityColumns
+	public List<ISchemaItem> EntityColumns
 	{
 		get
 		{
@@ -181,7 +182,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList EntityRelations
+	public List<ISchemaItem> EntityRelations
 	{
 		get
 		{
@@ -216,7 +217,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList EntityFilters
+	public List<ISchemaItem> EntityFilters
 	{
 		get
 		{
@@ -224,7 +225,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList EntityIndexes
+	public List<ISchemaItem> EntityIndexes
 	{
 		get
 		{
@@ -232,7 +233,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules
+	public List<ISchemaItem> RowLevelSecurityRules
 	{
 		get
 		{
@@ -240,7 +241,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules
+	public List<ISchemaItem> ConditionalFormattingRules
 	{
 		get
 		{

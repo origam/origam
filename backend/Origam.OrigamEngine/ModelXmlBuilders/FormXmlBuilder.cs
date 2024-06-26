@@ -330,7 +330,7 @@ public class FormXmlBuilder
 		DataStructureColumn memoColumn = null;
 		// Panel controls
 		int lastPos = 5;
-		ArrayList mappedColumns = wqc.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
+		List<ISchemaItem> mappedColumns = wqc.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 		mappedColumns.Sort();
 		DataStructureEntity entity = wqc.WorkQueueStructure.Entities[0] as DataStructureEntity;
 		foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
@@ -1153,7 +1153,7 @@ public class FormXmlBuilder
         }
         // add config
         SetUserConfig (xmlOutput.Document, parentNode, renderData.DefaultConfiguration, control.Id, menuWorkflowId);
-		ArrayList sortedChildren = new ArrayList (item.ChildItemsByType (ControlSetItem.CategoryConst));
+        var sortedChildren = new List<ISchemaItem> (item.ChildItemsByType (ControlSetItem.CategoryConst));
 		if (sortedChildren.Count > 0) {
 			sortedChildren.Sort (new ControlSetItemComparer ());
 			XmlElement children = xmlOutput.Document.CreateElement ("UIChildren");
@@ -1352,7 +1352,7 @@ public class FormXmlBuilder
 		XmlElement formExclusiveControlsElement = xmlOutput.Document.CreateElement("FormExclusiveControls");
 		parentElement.AppendChild(formExclusiveControlsElement);
 		// other properties
-		ArrayList childItems = new ArrayList(item.ChildItemsByType(ControlSetItem.CategoryConst));
+		var childItems = new List<ISchemaItem>(item.ChildItemsByType(ControlSetItem.CategoryConst));
 		childItems.Sort(new ControlSetItemComparer());
 		foreach(ControlSetItem csi in childItems)
 		{

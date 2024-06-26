@@ -617,7 +617,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	private bool _ancestorsPopulated = false;
 	private SchemaItemAncestorCollection _ancestors = new SchemaItemAncestorCollection();
 	private Hashtable _childItemsById = new Hashtable();
-	private Hashtable _childItemsByType = new Hashtable();
+	private Dictionary<string, List<ISchemaItem>> _childItemsByType = new ();
 	private Hashtable _childItemsByName = new Hashtable();
 	[Browsable(false)] 
 	public SchemaItemAncestorCollection AllAncestors
@@ -845,11 +845,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	private int _childItemsTypeCacheCount = 0;
 	private void AddItemToTypeCache(ISchemaItem item)
 	{
-		if(! _childItemsByType.Contains(item.ItemType))
+		if(! _childItemsByType.ContainsKey(item.ItemType))
 		{
-			_childItemsByType.Add(item.ItemType, new ArrayList());
+			_childItemsByType.Add(item.ItemType, new List<ISchemaItem>());
 		}
-		(_childItemsByType[item.ItemType] as ArrayList).Add(item);
+		_childItemsByType[item.ItemType].Add(item);
 		
 		_childItemsTypeCacheCount++;
 	}
@@ -879,23 +879,23 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return null;
 		}
 	}
-	private ArrayList GetItemsFromCache(string itemType)
+	private List<ISchemaItem> GetItemsFromCache(string itemType)
 	{
 		// initialize the cache
 		InitializeItemCache();
-		if(_childItemsByType.Contains(itemType))
+		if(_childItemsByType.TryGetValue(itemType, out var value))
 		{
 			// we copy the array, because of multithreading (collection may change while
 			// another thread is running)
-			return new ArrayList(_childItemsByType[itemType] as ArrayList);
+			return new List<ISchemaItem>(value);
 		}
 		else
 		{
-			return new ArrayList();
+			return new List<ISchemaItem>();
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Parameters
+	public List<ISchemaItem> Parameters
 	{
 		get
 		{
@@ -964,7 +964,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 	}
 	
-	public ArrayList ChildItemsByType(string itemType)
+	public List<ISchemaItem> ChildItemsByType(string itemType)
 	{
 #if ORIGAM_CLIENT
 		// if the number of items is different than cached, we go through the whole collection
@@ -973,7 +973,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return GetItemsFromCache(itemType);
 		}
 #endif
-		ArrayList list = new ArrayList();
+		var list = new List<ISchemaItem>();
 		foreach(AbstractSchemaItem item in this.ChildItems)
 		{
 			if(item.ItemType == itemType)

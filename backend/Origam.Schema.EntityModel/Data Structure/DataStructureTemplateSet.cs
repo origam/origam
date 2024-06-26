@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel;
@@ -41,7 +42,7 @@ public class DataStructureTemplateSet : AbstractSchemaItem
 
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Templates => ChildItemsByType(
+	public List<ISchemaItem> Templates => ChildItemsByType(
 		DataStructureTemplate.CategoryConst);
 	#endregion
 	#region Public Methods
