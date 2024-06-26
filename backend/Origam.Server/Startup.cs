@@ -94,9 +94,12 @@ namespace Origam.Server
             // remove limit for multipart body length
             services.Configure<FormOptions>(options =>
             {
-                options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = int.MaxValue;
-                options.MultipartHeadersLengthLimit = int.MaxValue;
+                options.ValueLengthLimit = 
+                    startUpConfiguration.ValueLengthLimit;
+                options.MultipartBodyLengthLimit = 
+                    startUpConfiguration.MultipartBodyLengthLimit;
+                options.MultipartHeadersLengthLimit =
+                    startUpConfiguration.MultipartHeadersLengthLimit;
             });
 
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
