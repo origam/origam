@@ -895,12 +895,12 @@ public class ServerCoreUIService : IBasicUIService
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             favorites, false, null);
     }
-    public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+    public List<ChangeInfo> GetPendingChanges(Guid sessionFormIdentifier)
     {
         var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
         var changes = sessionStore.PendingChanges;
         sessionStore.PendingChanges = null;
-        return changes ?? new ArrayList();
+        return changes ?? new List<ChangeInfo>();
     }
     public List<ChangeInfo> GetChanges(ChangesInput input)
     {

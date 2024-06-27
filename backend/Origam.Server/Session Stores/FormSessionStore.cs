@@ -32,6 +32,7 @@ using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema;
 using System.Collections.Generic;
+using Origam.Gui;
 using Origam.Server;
 using Origam.Server.Session_Stores;
 
@@ -256,7 +257,7 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
     }
-    internal override object Save()
+    internal override List<ChangeInfo> Save()
     {
         if (MenuItem.ReadOnlyAccess)
         {

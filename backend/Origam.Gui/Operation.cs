@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server;
+namespace Origam.Gui;
 public enum Operation
 {
    DeleteAllData =-2, 

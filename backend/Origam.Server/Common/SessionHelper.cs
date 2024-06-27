@@ -66,7 +66,7 @@ public class SessionHelper
             if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
             {
                 SessionStore parentSession = sessionManager.GetSession(new Guid(ss.Request.ParentSessionId));
-                parentSession.PendingChanges = new ArrayList();
+                parentSession.PendingChanges = new List<ChangeInfo>();
                 EntityWorkflowAction ewa = UIActionTools.GetAction(
                     ss.Request.SourceActionId) as EntityWorkflowAction;
                 var actionRunnerClient = new ServerEntityUIActionRunnerClient(

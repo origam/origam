@@ -39,6 +39,7 @@ using System.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
+using Origam.Gui;
 using Origam.Service.Core;
 
 namespace Origam.Server;
@@ -79,7 +80,7 @@ public abstract class SessionStore : IDisposable
     private Dictionary<string, bool> _entityHasRuleDependencies = new Dictionary<string, bool>();
     private IList<string> _dirtyEnabledEntities = new List<string>();
     private bool _isModalDialog = false;
-    private ArrayList _pendingChanges = null;
+    private List<ChangeInfo> _pendingChanges = null;
     private bool _isModalDialogCommited = false;
     private IEndRule _confirmationRule = null;
     private IDictionary<string, IDictionary> _variables = new Dictionary<string, IDictionary>();
@@ -158,7 +159,7 @@ public abstract class SessionStore : IDisposable
         }
         set { _parentSession = value; }
     }
-    public ArrayList PendingChanges
+    public List<ChangeInfo> PendingChanges
     {
         get { return _pendingChanges; }
         set { _pendingChanges = value; }

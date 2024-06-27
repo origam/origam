@@ -107,7 +107,7 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     }
     public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
         DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes)
+        List<ChangeInfo> changes)
     {
         EntityWorkflowAction action 
             = processData.Action as EntityWorkflowAction;
@@ -232,7 +232,7 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             }
     }
     public void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        EntityWorkflowAction entityWorkflowAction, List<ChangeInfo> changes)
     {
     }       
    

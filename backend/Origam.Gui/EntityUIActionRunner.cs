@@ -123,7 +123,7 @@ public abstract class EntityUIActionRunner
                 }
             }
         }
-        ArrayList changes = new ArrayList();
+        var changes = new List<ChangeInfo>();
         var transactionId = Guid.NewGuid().ToString();
         SetTransactionId(processData,transactionId);
         try
