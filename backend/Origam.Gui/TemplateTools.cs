@@ -46,7 +46,7 @@ public static class TemplateTools
             DataSet slice = formData.Clone();
             DatasetTools.GetDataSlice(
                 slice, new List<DataRow> { parentRow },
-                null, false, new ArrayList());
+                null, false, new List<string>());
             try
             {
                 doc = DataDocumentFactory.New(slice);

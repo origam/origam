@@ -858,11 +858,11 @@ public class DatasetTools
 	}
 	
 	public static void GetDataSlice(DataSet target, IList<DataRow> rows, 
-        object profileId, bool copy, ArrayList tablesToSkip)
+        object profileId, bool copy, List<string> tablesToSkip)
 	{
         if (tablesToSkip == null)
         {
-            tablesToSkip = new ArrayList();
+            tablesToSkip = new List<string>();
         }
 		target.EnforceConstraints = false;
 		// parent
@@ -885,7 +885,7 @@ public class DatasetTools
             // last parent will get all the parent's children until the current row
             if (!copy && parentRow.Table.ParentRelations.Count == 0)
             {
-                ArrayList skipCurrent = new ArrayList(tablesToSkip);
+                var skipCurrent = new List<string>(tablesToSkip);
                 skipCurrent.Add(rows[0].Table.TableName);
                 ImportChildRows(parentRow, target, copy, skipCurrent);
             }
@@ -903,7 +903,7 @@ public class DatasetTools
             }
         }
 	}
-	private static void ImportChildRows(DataRow row, DataSet target, bool onlyParentChildRelations, ArrayList tablesToSkip)
+	private static void ImportChildRows(DataRow row, DataSet target, bool onlyParentChildRelations, List<string> tablesToSkip)
 	{
 		foreach(DataRelation relation in row.Table.ChildRelations)
 		{

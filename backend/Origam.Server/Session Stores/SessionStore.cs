@@ -1718,7 +1718,7 @@ public abstract class SessionStore : IDisposable
             DataTable table = GetDataTable(entity, this.Data);
             DataRow row = GetSessionRow(entity, originalId);
             UserProfile profile = SecurityTools.CurrentUserProfile();
-            ArrayList toSkip = new ArrayList();
+            var toSkip = new List<string>();
             foreach (DataTable t in this.Data.Tables)
             {
                 if (!entities.Contains(t.TableName) && !IsArrayChild(t))
