@@ -37,6 +37,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.Workbench.Services;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 
 namespace Origam.DA.Service;
 #region Data Loader
@@ -278,7 +279,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			throw new NullReferenceException(
 				ResourceUtils.GetString("NoProviderForMS"));
 		}
-		ArrayList entities;
+		List<DataStructureEntity> entities;
 		DataStructure dataStructure = null;
 		DataStructureFilterSet filterSet = null;
 		DataStructureSortSet sortSet = null;
@@ -295,7 +296,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
                 else
                 {
-                    entities = new ArrayList();
+                    entities = new List<DataStructureEntity>();
                     foreach(DataStructureEntity dataStructureEntity 
                             in dataStructure.Entities)
                     {
@@ -319,7 +320,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 			case QueryDataSourceType.DataStructureEntity:
 			{
-				entities = new ArrayList();
+				entities = new List<DataStructureEntity>();
                 filterSet = GetFilterSet(query.MethodId);
                 entities.Add(GetDataStructureEntity(query));
 				if(dataset == null)
@@ -498,7 +499,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		IDbConnection connection = transaction.Connection;
 		var currentEntityName = "";
 		var lastTableName = "";
-		ArrayList entities = dataStructure.Entities;
+		List<DataStructureEntity> entities = dataStructure.Entities;
 		var changedTables = new ArrayList();
         var deletedRowIds = new ArrayList();
 		var rowStates = new[]
@@ -514,7 +515,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				// for delete use reverse entity order
 				if(rowState == DataRowState.Deleted)
 				{
-					actualEntities = new ArrayList(entities.Count);
+					actualEntities = new List<DataStructureEntity>(entities.Count);
 					for(var i = entities.Count - 1; i >= 0; i--)
 					{
 						actualEntities.Add(entities[i]);
@@ -1190,14 +1191,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				{
 					// make a sorted list of entities that corresponds to
 					// an output from SP
-					ArrayList entitiesOrdered;
+					List<DataStructureEntity> entitiesOrdered;
 					if(entityOrder == null)
 					{
 						entitiesOrdered = dataStructure.Entities;
 					}
 					else
 					{
-						entitiesOrdered = new ArrayList();
+						entitiesOrdered = new List<DataStructureEntity>();
 						foreach(string entityName in entityOrder.Split(';'))
 						{
 							var found = false;
@@ -1846,14 +1847,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
 	        case QueryDataSourceType.DataStructure:
 	        {
-                ArrayList entities;
+		        List<DataStructureEntity> entities;
                 if(string.IsNullOrEmpty(query.Entity))
                 {
                     entities = dataStructure.Entities;
                 }
                 else
                 {
-                    entities = new ArrayList();
+                    entities = new List<DataStructureEntity>();
                     foreach(DataStructureEntity dataStructureEntity 
                             in dataStructure.Entities)
                     {

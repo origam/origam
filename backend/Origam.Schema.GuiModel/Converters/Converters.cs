@@ -352,7 +352,7 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 	{
 		ChartFormMapping currentItem = context.Instance as ChartFormMapping;
 		if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList entities = currentItem.Screen.DataStructure.Entities;
+		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
 		ArrayList entityArray = new ArrayList(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -374,11 +374,11 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 		{
 			ChartFormMapping currentItem = context.Instance as ChartFormMapping;
 			if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
-			ArrayList entities = currentItem.Screen.DataStructure.Entities;
-			foreach(AbstractSchemaItem item in entities)
+			List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
+			foreach(DataStructureEntity item in entities)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureEntity;
+					return item;
 			}
 			return null;
 		}

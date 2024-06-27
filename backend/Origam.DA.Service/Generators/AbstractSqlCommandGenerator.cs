@@ -168,7 +168,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return adapter;
     }
 
-    public DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered,
+    public DbDataAdapter CreateDataAdapter(string procedureName, List<DataStructureEntity> entitiesOrdered,
         IDbConnection connection, IDbTransaction transaction)
     {
         IDbCommand cmd = GetCommand(procedureName);
@@ -846,10 +846,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return result.ToString();
     }
 
-    internal ArrayList Parameters(IDbCommand cmd)
+    internal List<string> Parameters(IDbCommand cmd)
     {
         int declarationLength = sqlRenderer.ParameterDeclarationChar.Length;
-        ArrayList list = new ArrayList(cmd.Parameters.Count);
+        var list = new List<string>(cmd.Parameters.Count);
         foreach (IDataParameter param in cmd.Parameters)
         {
             list.Add(param.ParameterName.Substring(declarationLength));
@@ -877,7 +877,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return ((IDbDataAdapter)adapter).SelectCommand;
     }
 
-    public ArrayList Parameters(DataStructure ds, DataStructureEntity entity,
+    public List<string> Parameters(DataStructure ds, DataStructureEntity entity,
         DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
         string columnName)
     {
@@ -890,7 +890,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 	DataStructureSortSet sort, bool paging, string columnName)
     {
         IDbCommand cmd = SelectCommand(ds, entity, filter, sort, paging, columnName);
-        ArrayList list = Parameters(cmd);
+        List<string> list = Parameters(cmd);
         foreach (string paramName in list)
         {
             IDataParameter param = cmd.Parameters[sqlRenderer.ParameterDeclarationChar + paramName] as IDataParameter;
@@ -1512,7 +1512,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     internal void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
     {
-        ArrayList primaryKeys = new ArrayList();
+        var primaryKeys = new List<DataStructureColumn>();
         foreach (DataStructureColumn column in entity.Columns)
         {
             if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
@@ -1522,7 +1522,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
         }
         PrettyLine(sqlExpression);
-        sqlExpression.Append(sqlRenderer.Sequence(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
+        sqlExpression.Append(sqlRenderer.Sequence(entity.Name, (primaryKeys[0]).Name));
     }
 
     public string SelectRowSql(DataStructureEntity entity,
@@ -1531,7 +1531,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     {
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList primaryKeys = new ArrayList();
+        var primaryKeys = new List<DataStructureColumn>();
         StringBuilder primaryDetachKeys = new StringBuilder();
         sqlExpression.Append("SELECT ");
 
@@ -1603,7 +1603,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList selectKeys = new ArrayList();
+        var selectKeys = new List<DataStructureColumn>();
         sqlExpression.Append("SELECT ");
 
         int i = 0;
@@ -1656,7 +1656,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList selectKeys = new ArrayList();
+        var selectKeys = new List<DataStructureColumn>();
         sqlExpression.Append("SELECT " + sqlRenderer.CountAggregate() + "(*) ");
 
         foreach (DataStructureColumn column in entity.Columns)
@@ -1730,7 +1730,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     // not touch the write only field.
                     const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
                     List<ISchemaItem> dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
-                    ArrayList dependencies = new ArrayList();
+                    var dependencies = new List<EntityFieldDependency>();
                     // skip dependencies to virtual fields
                     foreach (EntityFieldDependency dep in dependenciesSource)
                     {
@@ -2920,9 +2920,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     }
 
 
-    internal ArrayList Filters(DataStructureFilterSet filterSet, DataStructureEntity entity, Hashtable parameters, bool ignoreImplicitFilters)
+    internal List<EntityFilter> Filters(DataStructureFilterSet filterSet, DataStructureEntity entity, Hashtable parameters, bool ignoreImplicitFilters)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<EntityFilter>();
 
         if (filterSet != null)
         {
@@ -3723,7 +3723,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             default:
                 result = sqlRenderer.FunctionPrefix() + item.Function.Name + "(";
 
-                ArrayList sortedParams = new ArrayList(item.ChildItems);
+                var sortedParams = item.ChildItems.ToList<FunctionCallParameter>();
                 sortedParams.Sort();
 
                 int i = 0;
@@ -3780,7 +3780,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
             case "Concat":
                 ISchemaItem concatArg = item.GetChildByName("Strings");
-                ArrayList concatStrings = new ArrayList(concatArg.ChildItems);
+                var concatStrings = concatArg.ChildItems.ToList<ISchemaItem>();
                 if (concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, "There have to be at least 2 strings to concatenate.");
                 concatStrings.Sort();
                 result = RenderConcat(concatStrings, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
@@ -3939,15 +3939,15 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
         return param;
     }
-    internal string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+    internal string RenderConcat(List<ISchemaItem> concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 	{
 		List<ColumnRenderItem> concatSchemaItemList = new List<ColumnRenderItem>();
 
-		foreach (object o in concatSchemaItems)
+		foreach (var o in concatSchemaItems)
         {
             concatSchemaItemList.Add(new ColumnRenderItem
             {
-                SchemaItem = o as ISchemaItem,
+                SchemaItem = o,
                 Entity = entity
             });
         }

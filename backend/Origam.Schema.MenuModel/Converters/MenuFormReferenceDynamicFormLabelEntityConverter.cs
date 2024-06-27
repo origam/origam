@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -48,7 +49,7 @@ public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
         {
             return new StandardValuesCollection(new ArrayList());
         }
-		ArrayList entities = currentItem.Screen.DataStructure.Entities;
+		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
 		ArrayList entityArray = new ArrayList(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -83,8 +84,8 @@ public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
             {
                 return null;
             }
-			ArrayList entities = currentItem.Screen.DataStructure.Entities;
-			foreach(AbstractSchemaItem item in entities)
+			List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
+			foreach(DataStructureEntity item in entities)
 			{
 				if(item.Name == value.ToString())
                 {

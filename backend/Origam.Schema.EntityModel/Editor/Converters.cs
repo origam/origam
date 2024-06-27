@@ -1028,7 +1028,7 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
 	{
 		AbstractSchemaItem currentItem = context.Instance as AbstractSchemaItem;
 		if(!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
-		ArrayList entities = ((DataStructure)currentItem.RootItem).Entities;
+		List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
 		ArrayList entityArray = new ArrayList(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -1050,7 +1050,7 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
 		{
 			AbstractSchemaItem currentItem = context.Instance as AbstractSchemaItem;
 			if(!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
-			ArrayList entities = ((DataStructure)currentItem.RootItem).Entities;
+			List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
 			foreach(AbstractSchemaItem item in entities)
 			{
 				if(item.Name == value.ToString())
@@ -1129,7 +1129,7 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
     {
         AbstractSchemaItem currentItem = context.Instance as AbstractSchemaItem;
         if (!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
-        ArrayList entities = ((DataStructure)currentItem.RootItem).Entities;
+        List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
         ArrayList entityArray = new ArrayList(entities.Count);
         foreach (DataStructureEntity entity in entities)
         {
@@ -1154,7 +1154,7 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
         {
             AbstractSchemaItem currentItem = context.Instance as AbstractSchemaItem;
             if (!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
-            ArrayList entities = ((DataStructure)currentItem.RootItem).Entities;
+            List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
             foreach (AbstractSchemaItem item in entities)
             {
                 if (item.Name == value.ToString())

@@ -710,7 +710,7 @@ public class UIServiceController : AbstractController
     
     private EntityData GetWorkQueueEntityData(WorkQueueSessionStore workQueueSessionStore)
     {
-        ArrayList entities = workQueueSessionStore.WQClass
+        List<DataStructureEntity> entities = workQueueSessionStore.WQClass
             .WorkQueueStructure
             .Entities;
         var structureEntity = entities

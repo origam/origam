@@ -301,7 +301,7 @@ public class DatasetGenerator
 		dataset.Locale = culture;
 		AddExtendedProperties(dataset.ExtendedProperties, ds.PrimaryKey);
 		//dataset.EndInit();
-		ArrayList entities = ds.Entities;
+		List<DataStructureEntity> entities = ds.Entities;
 		ArrayList aggregatedColumns = new ArrayList();
 		// Add tables
 		foreach(DataStructureEntity entity in entities)
@@ -784,7 +784,7 @@ public class DatasetGenerator
 	private void AddQueryRelations(DataSet dataset, DataStructure ds)
 	{
 		dataset.Relations.Clear();
-		ArrayList entities = ds.Entities;
+		List<DataStructureEntity> entities = ds.Entities;
         string debugPath = ds.Path;
 		foreach(DataStructureEntity entity in entities)
 		{

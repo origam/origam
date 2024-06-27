@@ -115,7 +115,7 @@ public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 			return new StandardValuesCollection(new ArrayList());
 		}
 		DataStructure ds  = (DataStructure) updateContextTask.OutputContextStore.Structure;
-		ArrayList entities = ds.Entities;
+		List<DataStructureEntity> entities = ds.Entities;
 		ArrayList entityArray = new ArrayList(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -141,7 +141,7 @@ public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 				return null;
 			}
 			DataStructure ds  = (DataStructure) updateContextTask.OutputContextStore.Structure;
-			ArrayList entities = ds.Entities;
+			List<DataStructureEntity> entities = ds.Entities;
 			foreach(AbstractSchemaItem item in entities)
 			{
 				if(item.Name == value.ToString())

@@ -599,7 +599,7 @@ public class DataServiceAgent : AbstractServiceAgent
 					sqlGenerator.ResolveAllFilters = true;
 					foreach(DataStructureEntity entity in ds.Entities)
 					{
-						ArrayList parameters = sqlGenerator.Parameters(ds, entity, fs, null, false, null);
+						List<string> parameters = sqlGenerator.Parameters(ds, entity, fs, null, false, null);
 						foreach(string newParameter in parameters)
 						{
 							if(!result.Contains(newParameter))

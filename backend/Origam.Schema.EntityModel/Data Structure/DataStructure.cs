@@ -40,11 +40,11 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 	public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Entities
+	public List<DataStructureEntity> Entities
 	{
 		get
 		{
-			ArrayList entities = new ArrayList();
+			var entities = new List<DataStructureEntity>();
 			foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
 			{
 				entities.Add(entity);
@@ -110,9 +110,9 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 			return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
 		}
 	}
-	private ArrayList GetChildEntities(DataStructureEntity entity)
+	private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
 	{
-		ArrayList entities = new ArrayList();
+		var entities = new List<DataStructureEntity>();
 		foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
 		{
 			entities.Add(childEntity);
