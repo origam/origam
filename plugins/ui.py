@@ -33,7 +33,7 @@ def run_and_wait_for_key(function_to_run):
         print()
     finally:
         print("Done!")
-        input("Press any key to exit...")
+        input("Press ENTER to exit...")
 
 
 if __name__ == "__main__":

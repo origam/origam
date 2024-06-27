@@ -77,7 +77,9 @@ def copy_from_plugin(plugin_config: PluginConfig):
     print("Copied PluginRegistration.ts")
     origam_plugin_src = get_origam_plugin_src(plugin_config)
     origam_plugin_root = get_origam_plugin_root(plugin_config)
-    shutil.rmtree(origam_repo_path / "frontend-html/src/plugins/implementations")
+    implementations_path = origam_repo_path / "frontend-html/src/plugins/implementations"
+    if os.path.exists(implementations_path):
+        shutil.rmtree(implementations_path)
     shutil.copytree(plugin_config.plugin_source_path,
                     origam_plugin_src)
     print(f"Copied plugin sources to: {origam_plugin_src}")
@@ -88,7 +90,7 @@ def copy_from_plugin(plugin_config: PluginConfig):
         shutil.copy(plugin_config.yarn_lock_path, frontend_path / "yarn.lock")
         print(f"Copied plugin's yarn.lock to: {frontend_path}")
     else:
-        print(f"{plugin_config.yarn_lock_path} was not copied because it does not exist")
+        print(f"yarn.lock from \"{plugin_config.yarn_lock_path}\" was not copied because it does not exist")
 
 
 def copy_to_plugin(plugin_config: PluginConfig):
@@ -98,6 +100,11 @@ def copy_to_plugin(plugin_config: PluginConfig):
     print(f"Copied plugin sources back to: {plugin_config.plugin_source_path}")
     shutil.copy(frontend_path / "yarn.lock", plugin_config.yarn_lock_path)
     print(f"Copied plugin's yarn.lock back to: {plugin_config.yarn_lock_path}")
+    shutil.copy(
+        origam_repo_path / "frontend-html/src/plugins/tools/PluginRegistration.ts",
+        plugin_config.registration_file_path,
+    )
+    print(f"Copied PluginRegistration.ts back to: {plugin_config.registration_file_path}")
 
 
 def init_new_plugin():
