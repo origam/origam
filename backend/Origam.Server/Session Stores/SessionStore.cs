@@ -1685,47 +1685,6 @@ public abstract class SessionStore : IDisposable
             }
         }
     }
-    public List<ArrayList> GetDataForMatrix(string entity, string[] rows, string[] columns)
-    {
-        lock (_lock)
-        {
-            List<ArrayList> result = new List<ArrayList>();
-            DataTable table = GetDataTable(entity, DataList);
-            if (table.PrimaryKey.Length != 1)
-            {
-                throw new Exception("There must be exactly 1 primary key column for GetDataForMatrix.");
-            }
-            foreach (string rowId in rows)
-            {
-                object pk = GetPrimaryKey(table, rowId);
-                DataRow row = table.Rows.Find(pk);
-                if (row == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        string.Format("Could not find row {0} in entity {1}.",
-                        rowId, entity));
-                }
-                LazyLoadListRowData(pk, row);
-                ArrayList resultRow = SessionStore.GetRowData(row, columns, false);
-                resultRow.Insert(0, rowId);
-                result.Add(resultRow);
-            }
-            return result;
-        }
-    }
-    public static object GetPrimaryKey(DataTable table, string rowId)
-    {
-        object pk;
-        if (table.PrimaryKey[0].DataType == typeof(Guid))
-        {
-            pk = new Guid(rowId);
-        }
-        else
-        {
-            pk = rowId;
-        }
-        return pk;
-    }
     private static Dictionary<string, List<DeletedRowInfo>> BackupDeletedRows(DataRow row)
     {
         Dictionary<string, List<DeletedRowInfo>> backup = new Dictionary<string, List<DeletedRowInfo>>();
