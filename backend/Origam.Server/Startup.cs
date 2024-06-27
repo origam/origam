@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -89,6 +90,16 @@ namespace Origam.Server
                 options.AllowSynchronousIO = true;
                 options.AuthenticationDisplayName = "Windows";
                 options.AutomaticAuthentication = true;
+            });
+            // remove limit for multipart body length
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = 
+                    startUpConfiguration.ValueLengthLimit;
+                options.MultipartBodyLengthLimit = 
+                    startUpConfiguration.MultipartBodyLengthLimit;
+                options.MultipartHeadersLengthLimit =
+                    startUpConfiguration.MultipartHeadersLengthLimit;
             });
 
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
