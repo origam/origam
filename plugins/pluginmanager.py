@@ -90,7 +90,7 @@ def copy_from_plugin(plugin_config: PluginConfig):
         shutil.copy(plugin_config.yarn_lock_path, frontend_path / "yarn.lock")
         print(f"Copied plugin's yarn.lock to: {frontend_path}")
     else:
-        print(f"{plugin_config.yarn_lock_path} was not copied because it does not exist")
+        print(f"yarn.lock from \"{plugin_config.yarn_lock_path}\" was not copied because it does not exist")
 
 
 def copy_to_plugin(plugin_config: PluginConfig):
