@@ -734,7 +734,7 @@ public abstract class SessionStore : IDisposable
                 requestingGrid: requestingGrid,
                 row: row,
                 operation: operation,
-                rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
             listOfChanges.Add(ci);
         }
         if (this.SuppressSave && hasChanges)
@@ -805,7 +805,7 @@ public abstract class SessionStore : IDisposable
                     requestingGrid: requestingGrid,
                     row: row,
                     operation: operation,
-                    rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                    rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
                 changes.Add(ci);
             }
             else if (ignoreKeys == null || !ignoreKeys.Contains(ignoreRowIndex))
@@ -831,7 +831,7 @@ public abstract class SessionStore : IDisposable
                         requestingGrid: null,
                         row: row,
                         operation: op,
-                        rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                        rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
                     changes.Add(ci);
                     // we processed it once so we do not want to get it again in a next iteration
                     if (ignoreKeys != null)
@@ -912,7 +912,7 @@ public abstract class SessionStore : IDisposable
     {
         return GetChangeInfo(requestingGrid, row, operation, RowStates);
     }
-    public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], ArrayList> rowStateProcessor)
+    public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], List<RowSecurityState>> rowStateProcessor)
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Entity = row.Table.TableName;
@@ -926,7 +926,7 @@ public abstract class SessionStore : IDisposable
             ci.WrappedObject = GetRowData(row, columns);
             if (rowStateProcessor != null)
             {
-                ci.State = rowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0] as RowSecurityState;
+                ci.State = rowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0];
             }
         }
         return ci;
@@ -1123,9 +1123,9 @@ public abstract class SessionStore : IDisposable
             }
         }
     }
-    public ArrayList RowStates(string entity, object[] ids)
+    public List<RowSecurityState> RowStates(string entity, object[] ids)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<RowSecurityState>();
         object profileId = SecurityTools.CurrentUserProfile().Id;
         if (dataRequested)
         {
@@ -1143,7 +1143,7 @@ public abstract class SessionStore : IDisposable
                         catch
                         {
                             // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
-                            return new ArrayList();
+                            return new List<RowSecurityState>();
                         }
                         var formIdBeforeLock = FormId;
                         lock (_lock)    // no update should be done in the meantime when rules are not handled
@@ -1152,7 +1152,7 @@ public abstract class SessionStore : IDisposable
                             // screen to load while this thread was waiting for the lock.
                             if (formIdBeforeLock != FormId)
                             {
-                                return new ArrayList();
+                                return new List<RowSecurityState>();
                             }
                             if (IsLazyLoadedRow(row))
                             {
@@ -1187,9 +1187,9 @@ public abstract class SessionStore : IDisposable
             return RowStatesForDataLessSessions(entity, ids, profileId);
         }
     }
-    private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
+    private List<RowSecurityState> RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<RowSecurityState>();
         RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
         foreach (var row in rowSearchResult.Rows)
         {
