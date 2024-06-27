@@ -98,6 +98,11 @@ def copy_to_plugin(plugin_config: PluginConfig):
     print(f"Copied plugin sources back to: {plugin_config.plugin_source_path}")
     shutil.copy(frontend_path / "yarn.lock", plugin_config.yarn_lock_path)
     print(f"Copied plugin's yarn.lock back to: {plugin_config.yarn_lock_path}")
+    shutil.copy(
+        origam_repo_path / "frontend-html/src/plugins/tools/PluginRegistration.ts",
+        plugin_config.registration_file_path,
+    )
+    print(f"Copied PluginRegistration.ts back to: {plugin_config.registration_file_path}")
 
 
 def init_new_plugin():
