@@ -77,7 +77,9 @@ def copy_from_plugin(plugin_config: PluginConfig):
     print("Copied PluginRegistration.ts")
     origam_plugin_src = get_origam_plugin_src(plugin_config)
     origam_plugin_root = get_origam_plugin_root(plugin_config)
-    shutil.rmtree(origam_repo_path / "frontend-html/src/plugins/implementations")
+    implementations_path = origam_repo_path / "frontend-html/src/plugins/implementations"
+    if os.path.exists(implementations_path):
+        shutil.rmtree(implementations_path)
     shutil.copytree(plugin_config.plugin_source_path,
                     origam_plugin_src)
     print(f"Copied plugin sources to: {origam_plugin_src}")
