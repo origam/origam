@@ -114,7 +114,7 @@ public class DataLookupService : IDataLookupService
 		}
 		else
 		{
-			Hashtable parameters = new Hashtable(1);
+			var parameters = new Dictionary<string, object>();
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 			if(lookup.ValueMethod != null)
 			{
