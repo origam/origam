@@ -1471,8 +1471,8 @@ public abstract class SessionStore : IDisposable
         {
             newArray = new object[] { };
         }
-        ArrayList rowsToDelete = new ArrayList();
-        ArrayList valuesToAdd = new ArrayList();
+        var rowsToDelete = new List<DataRow>();
+        var valuesToAdd = new List<object>();
         // values to add
         foreach (object arrayValue in newArray)
         {
@@ -1576,7 +1576,7 @@ public abstract class SessionStore : IDisposable
             deletedItems.Add(GetChangeInfo(null, row, Operation.Delete));
             AddChildDeletedItems(deletedItems, row);
             // get the parent rows for the rule handler in order to update them
-            ArrayList parentRows = new ArrayList();
+            var parentRows = new List<DataRow>();
             foreach(DataRelation relation in row.Table.ParentRelations)
             {
                 parentRows.AddRange(row.GetParentRows(relation, DataRowVersion.Default));
@@ -1618,7 +1618,7 @@ public abstract class SessionStore : IDisposable
                     RegisterEvents();
                     row.Delete();
                     // handle rules for the data changes after the row has been deleted
-                    this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
+                    this.RuleHandler.OnRowDeleted(parentRows.ToArray(), row, this.XmlData, this.RuleSet, this.RuleEngine);
                 }
                 finally
                 {
