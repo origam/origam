@@ -58,7 +58,7 @@ internal class StandardHttpRequestWrapper : IRequestWrapper
     public string RawUrl => request.GetDisplayUrl();
     public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
     public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
-    public string UserAgent =>  httpContext.Request.GetUserAgent();
+    public string UserAgent => httpContext.Request.GetUserAgent();
     public string Browser 
         => clientInfo != null ? clientInfo.UserAgent.Family : "";
     public string BrowserVersion 
