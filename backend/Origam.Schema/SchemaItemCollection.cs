@@ -38,10 +38,10 @@ namespace Origam.Schema;
 //
 [Serializable]
 #if ORIGAM_CLIENT
-    public class SchemaItemCollection : OrigamCollectionBase<AbstractSchemaItem>, IDisposable, ICollection<AbstractSchemaItem>
+public class SchemaItemCollection : OrigamCollectionBase<AbstractSchemaItem>,
+    IDisposable
 #else
-public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
-    ICollection<Key>
+public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable
 #endif
 {
     private bool _clearing = false;
@@ -49,9 +49,6 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     private IPersistenceProvider _persistence;
     private ISchemaItemProvider _rootProvider;
     private bool _disposing = false;
-    private bool _removeDeletedItems = true;
-    private bool _deleteItemsOnClear = true;
-    private bool _updateParentItem = true;
     private AbstractSchemaItem _parentSchemaItem = null;
 
     public SchemaItemCollection()
@@ -91,7 +88,7 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
 #if ORIGAM_CLIENT
             return base[index];
 #else
-            return GetItem((Key)base[index]);
+            return GetItem(base[index]);
 #endif
         }
         set
@@ -107,11 +104,11 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     public void Add(AbstractSchemaItem value)
     {
 #if ORIGAM_CLIENT
-            base.Add(value);
-            if (value.IsAbstract)
-            {
-                SetDerivedFrom(value);
-            }
+        base.Add(value);
+        if (value.IsAbstract)
+        {
+            SetDerivedFrom(value);
+        }
 #else
         if (!value.IsPersisted || value.IsAbstract || !value.UseObjectCache)
         {
@@ -147,23 +144,12 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     public bool Contains(AbstractSchemaItem value)
     {
 #if ORIGAM_CLIENT
-            return base.Contains(value);
+        return base.Contains(value);
 #else
         return base.Contains(value.PrimaryKey);
 #endif
     }
 
-#if !ORIGAM_CLIENT
-    // void ICollection.CopyTo(Array array, int index)
-    // {
-    //     var itemArray = new List<AbstractSchemaItem>();
-    //     foreach (Key key in List)
-    //     {
-    //         itemArray.Add(GetItem(key));
-    //     }
-    //     itemArray.CopyTo(array, index);
-    // }
-#endif
 
     public void CopyTo(AbstractSchemaItem[] array, int index)
     {
@@ -183,7 +169,7 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     public int IndexOf(AbstractSchemaItem value)
     {
 #if ORIGAM_CLIENT
-            return base.IndexOf(value);
+        return base.IndexOf(value);
 #else
         return base.IndexOf(value.PrimaryKey);
 #endif
@@ -198,43 +184,32 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
 #endif
     }
 
-    public new IDataEntityItemEnumerator GetEnumerator()
+    public new DataEntityItemEnumerator GetEnumerator()
     {
-        return new IDataEntityItemEnumerator(this);
+        return new DataEntityItemEnumerator(this);
     }
 
     public void Remove(AbstractSchemaItem value)
     {
 #if ORIGAM_CLIENT
-            base.Remove(value);
+        base.Remove(value);
 #else
         base.Remove(value.PrimaryKey);
 #endif
     }
 
-    public bool RemoveDeletedItems
-    {
-        get => _removeDeletedItems;
-        set => _removeDeletedItems = value;
-    }
+    public bool RemoveDeletedItems { get; set; } = true;
 
-    public bool DeleteItemsOnClear
-    {
-        get => _deleteItemsOnClear;
-        set => _deleteItemsOnClear = value;
-    }
+    public bool DeleteItemsOnClear { get; set; } = true;
 
-    public bool UpdateParentItem
-    {
-        get => _updateParentItem;
-        set => _updateParentItem = value;
-    }
+    public bool UpdateParentItem { get; set; } = true;
 
 #if ORIGAM_CLIENT
-        protected override void OnSet(int index, AbstractSchemaItem oldValue, AbstractSchemaItem newValue)
-        {
-            var oldItem = oldValue;
-            var newItem = newValue;
+    protected override void OnSet(int index, AbstractSchemaItem oldValue,
+        AbstractSchemaItem newValue)
+    {
+        var oldItem = oldValue;
+        var newItem = newValue;
 #else
     protected override void OnSet(int index, Key oldValue, Key newValue)
     {
@@ -253,13 +228,13 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     }
 
 #if ORIGAM_CLIENT
-        protected override void OnInsert(int index, AbstractSchemaItem value)
+    protected override void OnInsert(int index, AbstractSchemaItem value)
+    {
+        var item = value;
+        if (item.IsAbstract)
         {
-            var item = value;
-            if (item.IsAbstract)
-            {
-                SetDerivedFrom(item);
-            }
+            SetDerivedFrom(item);
+        }
 #else
     protected override void OnInsert(int index, Key value)
     {
@@ -280,10 +255,10 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
         {
             _clearing = true;
 #if ORIGAM_CLIENT
-                foreach (AbstractSchemaItem item in this)
-                {
+            foreach (AbstractSchemaItem item in this)
+            {
 #else
-            foreach (Key key in this)
+            foreach (Key key in InnerList)
             {
                 AbstractSchemaItem item;
                 try
@@ -322,9 +297,9 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
     }
 
 #if ORIGAM_CLIENT
-        protected override void OnRemove(int index, AbstractSchemaItem value)
-        {
-            var item = value;
+    protected override void OnRemove(int index, AbstractSchemaItem value)
+    {
+        var item = value;
 #else
     protected override void OnRemove(int index, Key value)
     {
@@ -353,16 +328,7 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
         }
     }
 
-#if ORIGAM_CLIENT
-        protected override void OnValidate(AbstractSchemaItem value)
-        {
-#else
-    protected override void OnValidate(Key value)
-    {
-#endif
-    }
-
-    public class IDataEntityItemEnumerator : object, IEnumerator
+    public class DataEntityItemEnumerator : object, IEnumerator
     {
         private IEnumerator baseEnumerator;
 #if ! ORIGAM_CLIENT
@@ -371,13 +337,13 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
 
         private IEnumerable temp;
 
-        public IDataEntityItemEnumerator(SchemaItemCollection mappings)
+        public DataEntityItemEnumerator(SchemaItemCollection mappings)
         {
 #if ! ORIGAM_CLIENT
             _collection = mappings;
 #endif
-            this.temp = mappings;
-            this.baseEnumerator = temp.GetEnumerator();
+            temp = mappings;
+            baseEnumerator = temp.GetEnumerator();
         }
 
         public AbstractSchemaItem Current
@@ -385,7 +351,7 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
             get
             {
 #if ORIGAM_CLIENT
-				return ((AbstractSchemaItem)(baseEnumerator.Current));
+                return ((AbstractSchemaItem)(baseEnumerator.Current));
 #else
                 Key key = ((Key)(baseEnumerator.Current));
                 return _collection.GetItem(key);
@@ -398,7 +364,7 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
             get
             {
 #if ORIGAM_CLIENT
-				return baseEnumerator.Current;
+                return baseEnumerator.Current;
 #else
                 Key key = ((Key)(baseEnumerator.Current));
                 return _collection.GetItem(key);
@@ -478,11 +444,11 @@ public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable,
         if (item.ParentItem != null)
         {
             // If we assign derived items, we mark them
-            if (!item.ParentItem.PrimaryKey.Equals(this.ParentSchemaItem
+            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem
                     .PrimaryKey))
             {
                 item.DerivedFrom = item.ParentItem;
-                item.ParentItem = this.ParentSchemaItem;
+                item.ParentItem = ParentSchemaItem;
             }
         }
     }
