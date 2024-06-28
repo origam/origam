@@ -842,7 +842,7 @@ public class ControlSetEditor : AbstractEditor
 		if(controls == null){ return null;}
 		FDToolboxItem[] tool = new FDToolboxItem[controls.ChildItems.Count];
 		int i=0;
-		ArrayList controlList = new ArrayList(controls.ChildItems);
+		List<AbstractSchemaItem> controlList = controls.ChildItems.ToList();
 		controlList.Sort();
 		foreach(ControlItem item in controlList)
 		{

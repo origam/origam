@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Schema;
@@ -1240,7 +1241,7 @@ public class DatasetGenerator
 				break;
 			case "Concat":
 				ISchemaItem concatArg = item.GetChildByName("Strings");
-				ArrayList concatStrings = new ArrayList(concatArg.ChildItems);
+				List<AbstractSchemaItem> concatStrings = concatArg.ChildItems.ToList();
 				if(concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, ResourceUtils.GetString("ErrorTwoCONCATArguments"));
 				concatStrings.Sort();
 				i = 0;

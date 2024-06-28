@@ -104,7 +104,7 @@ public class DebugInfo : IDebugInfoProvider
 			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			param.RefreshParameters();
 			FeatureSchemaItemProvider p = schema.GetProvider(typeof(FeatureSchemaItemProvider)) as FeatureSchemaItemProvider;
-			ArrayList features = new ArrayList(p.ChildItems);
+			var features = p.ChildItems.ToList();
 			features.Sort();
 			foreach(Feature f in features)
 			{

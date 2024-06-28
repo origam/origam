@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -220,7 +221,7 @@ public class MsSqlDataService : AbstractSqlDataService
         {
             if (index.IsUnique && sqle.Message.Contains(index.Name))
             {
-                ArrayList sortedFields = new ArrayList(index.ChildItems);
+                List<AbstractSchemaItem> sortedFields = index.ChildItems.ToList();
                 sortedFields.Sort();
                 foreach (DataEntityIndexField field in sortedFields)
                 {

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using Origam;
 using Origam.Extensions;
 using Origam.Services;
@@ -143,7 +144,7 @@ public class SchedulerService : System.ServiceProcess.ServiceBase
             log.InfoFormat("Scheduler filter: {0}", settings.SchedulerFilter);
         }
 		// Sort schedules alphabetically. If more schedules run at the same time, they will run in this order.
-		ArrayList sortedSchedules = new ArrayList(_schedules.ChildItems);
+		List<AbstractSchemaItem> sortedSchedules = _schedules.ChildItems.ToList();
 		sortedSchedules.Sort();
 		foreach(WorkflowSchedule schedule in sortedSchedules)
 		{

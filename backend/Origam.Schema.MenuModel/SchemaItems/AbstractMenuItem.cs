@@ -144,10 +144,10 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         }
         return base.CompareTo(obj);
 	}
-	public class MenuItemComparer : System.Collections.IComparer
+	public class MenuItemComparer : IComparer<AbstractSchemaItem>
 	{
 		#region IComparer Members
-		public int Compare(object x, object y)
+		public int Compare(AbstractSchemaItem x, AbstractSchemaItem y)
 		{
             var orderComparison = (x as AbstractMenuItem).Order
 	            .CompareTo((y as AbstractMenuItem).Order);
