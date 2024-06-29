@@ -36,11 +36,11 @@ public class XsdDataStructure : AbstractDataStructure
 	
 	public XsdDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public XsdDataStructure(Key primaryKey) : base(primaryKey)	{}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#region Properties

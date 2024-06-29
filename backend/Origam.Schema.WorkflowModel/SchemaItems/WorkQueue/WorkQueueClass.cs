@@ -342,7 +342,7 @@ public class StructureMustHaveGetByIdFilterRule : AbstractModelElementRuleAttrib
 			return null;
 		}
 		DataStructureFilterSet getByIdFilterSet = workQueueClass.WorkQueueStructure
-			.ChildItems.ToGeneric()
+			.ChildItems
 			.OfType<DataStructureFilterSet>()
 			.FirstOrDefault(filterSet => filterSet.Name == "GetById");
 		return getByIdFilterSet == null

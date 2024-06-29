@@ -107,12 +107,10 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	public string Roles { get; set; } = "";
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenIds => ChildItems
-		.ToGeneric()
 		.OfType<ScreenCondition>()
 		.Select(reference => reference.ScreenId);
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenSectionIds  => ChildItems
-		.ToGeneric()
 		.OfType<ScreenSectionCondition>()
 		.Select(reference => reference.ScreenSectionId);
 	[StringNotEmptyModelElementRule()]

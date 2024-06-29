@@ -75,11 +75,11 @@ public class TestCaseStep : AbstractSchemaItem
 		dependencies.Add(this.ChecklistRule);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

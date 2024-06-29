@@ -21,167 +21,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.ItemCollection;
 
-// Refactoring notes
-// removing ICollection along with the "void ICollection.CopyTo(Array array, int index)"
-// implementation seem to have ony caused the following not to work:
-// ArrayList childrenCopy =  new ArrayList(someSchemaItemCollection.ChildItems),
-// That is ok because we can replace it with:
-// List<AbstractSchemaItem> childrenCopy =  someSchemaItemCollection.ChildItems.ToList(),
-//
-[Serializable]
-public class SchemaItemCollection : ISchemaItemCollection
+public static class SchemaItemCollection
 {
-    private readonly ISchemaItemCollection itemList;
-
-    public SchemaItemCollection()
+    public static ISchemaItemCollection Create()
     {
 #if ORIGAM_CLIENT
-        itemList = new ServerSchemaItemCollection();
+        return new ServerISchemaItemCollection();
 #else
-        itemList = new ArchitectSchemaItemCollection();
-#endif
+        return new ArchitectISchemaItemCollection();
+#endif 
     }
-    public SchemaItemCollection(IPersistenceProvider persistence,
+    
+    public static ISchemaItemCollection Create(IPersistenceProvider persistence,
         ISchemaItemProvider provider, AbstractSchemaItem parentItem)
     {
 #if ORIGAM_CLIENT
-        itemList = new ServerSchemaItemCollection(parentItem);
+        return new ServerISchemaItemCollection(parentItem);
 #else
-        itemList =
-            new ArchitectSchemaItemCollection(persistence, provider,
+        return
+            new ArchitectISchemaItemCollection(persistence, provider,
                 parentItem);
 #endif
-    }
-
-    public SchemaItemCollection(SchemaItemCollection value)
-    {
-        AddRange(value);
-    }
-
-    public SchemaItemCollection(AbstractSchemaItem[] value)
-    {
-        AddRange(value);
-    }
-
-    public void RemoveAt(int index)
-    {
-       itemList.RemoveAt(index);
-    }
-
-    public AbstractSchemaItem this[int index]
-    {
-        get => itemList[index];
-        set => itemList[index] = value;
-    }
-
-    public void Add(AbstractSchemaItem value)
-    {
-        itemList.Add(value);
-    }
-
-    public void Clear()
-    {
-        itemList.Clear();
-    }
-
-    public void AddRange(AbstractSchemaItem[] value)
-    {
-        foreach (var item in value)
-        {
-            Add(item);
-        }
-    }
-
-    public void AddRange(SchemaItemCollection value)
-    {
-        foreach (AbstractSchemaItem item in value)
-        {
-            Add(item);
-        }
-    }
-
-    public bool Contains(AbstractSchemaItem value)
-    {
-        return itemList.Contains(value);
-    }
-
-    public void CopyTo(AbstractSchemaItem[] array, int index)
-    {
-        itemList.CopyTo(array, index);
-    }
-    
-    public int Count => itemList.Count;
-    public bool IsReadOnly { get; } = false;
-
-    public int IndexOf(AbstractSchemaItem value)
-    {
-        return itemList.IndexOf(value);
-    }
-
-    public void Insert(int index, AbstractSchemaItem value)
-    {
-        itemList.Insert(index, value);
-    }
-
-    public IEnumerator<AbstractSchemaItem> GetEnumerator()
-    {
-        return itemList.GetEnumerator();
-    }
-    
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return itemList.GetEnumerator();
-    }
-
-    public bool Remove(AbstractSchemaItem value)
-    {
-        return itemList.Remove(value);
-    }
-    
-    public bool RemoveDeletedItems
-    {
-        get => itemList.RemoveDeletedItems;
-        set => itemList.RemoveDeletedItems = value;
-    }
-    public bool DeleteItemsOnClear
-    {
-        get => itemList.DeleteItemsOnClear;
-        set => itemList.DeleteItemsOnClear = value;
-    }
-    public bool UpdateParentItem
-    {
-        get => itemList.UpdateParentItem;
-        set => itemList.UpdateParentItem = value;
-    }    
-    public AbstractSchemaItem ParentSchemaItem
-    {
-        get => itemList.ParentSchemaItem;
-        set => itemList.ParentSchemaItem = value;
-    }
-
-    public void Dispose()
-    {
-        itemList.Dispose();
-    }
-
-    public IEnumerable<AbstractSchemaItem> ToGeneric()
-    {
-        foreach (AbstractSchemaItem item in this)
-        {
-            yield return item;
-        }
-    }
-
-    public List<AbstractSchemaItem> ToList()
-    {
-        return ToGeneric().ToList();
     }
 }

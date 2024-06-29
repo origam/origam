@@ -242,7 +242,7 @@ public class ServerEntityUIActionRunner: EntityUIActionRunner
         // Stack can't handle resending DataDocumentFx, 
         // it needs to be converted to XmlDocument
         // and then converted back to DataDocumentFx
-        foreach(object key in uir.Parameters.Keys.ToList<object>())
+        foreach(object key in uir.Parameters.Keys.CastToList<object>())
         {
             if (uir.Parameters[key] is IXmlContainer)
             {

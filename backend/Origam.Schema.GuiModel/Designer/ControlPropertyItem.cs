@@ -93,11 +93,11 @@ public class ControlPropertyItem : AbstractSchemaItem
 			return ControlPropertyItem.CategoryConst;
 		}
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	[Browsable(false)]

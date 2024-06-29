@@ -238,7 +238,6 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		if (schemaItemUnderMouse is ServiceMethodCallTask)
 		{
 			schemaItemUnderMouse.ChildItems
-				.ToGeneric()
 				.Where(item => !(item is WorkflowTaskDependency))
 				.ForEach(schemaItem =>
 				{

@@ -51,7 +51,7 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     #region Overriden AbstractSchemaItem Members
     public override string ItemType => CategoryConst;
 
-    public override SchemaItemCollection ChildItems => new();
+    public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 
     #endregion
     

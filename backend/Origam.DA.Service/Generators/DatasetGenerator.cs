@@ -1258,7 +1258,7 @@ public class DatasetGenerator
 			case "LogicalOr":
 			case "LogicalAnd":
 				ISchemaItem logicalArg = item.GetChildByName("Arguments");
-				SchemaItemCollection logicalArguments = logicalArg.ChildItems;
+				ISchemaItemCollection logicalArguments = logicalArg.ChildItems;
 				if(logicalArguments.Count < 2) throw new ArgumentOutOfRangeException("Arguments", null, ResourceUtils.GetString("ErrorTwoArguments", item.Function.Name));
 				i = 0;
 				StringBuilder logicalBuilder = new StringBuilder();
@@ -1308,7 +1308,7 @@ public class DatasetGenerator
 			case "In":
 				ISchemaItem leftArg = item.GetChildByName("FilterExpression").ChildItems[0];
 				ISchemaItem listArg = item.GetChildByName("List");
-				SchemaItemCollection listExpressions = listArg.ChildItems;
+				ISchemaItemCollection listExpressions = listArg.ChildItems;
 				if(listExpressions.Count < 2) throw new ArgumentOutOfRangeException("List", null, "There have to be at least 2 items in the List argument for IN function specified as a column.");
 				i = 0;
 				StringBuilder listBuilder = new StringBuilder();

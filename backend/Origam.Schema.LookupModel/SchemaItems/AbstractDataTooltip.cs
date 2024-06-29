@@ -61,11 +61,11 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
         dependencies.Add(this.TooltipTransformation);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)

@@ -988,7 +988,7 @@ public abstract class StorageConvertor : AbstractMenuCommand
 			.GetService<SchemaService>()
 			.Providers
 			.Select(provider => provider.GetType());
-	private SchemaItemCollection GetAllItems(Type providerType) => 
+	private ISchemaItemCollection GetAllItems(Type providerType) => 
 		schemaService.GetProvider(providerType).ChildItems;
 	private void UpdateStatusBar(Type type, int typeNumber)
 	{
@@ -1027,7 +1027,7 @@ public abstract class StorageConvertor : AbstractMenuCommand
 	}
 	private void PersistAllProviderItems(Type providerType)
 	{
-		SchemaItemCollection allItems = GetAllItems(providerType); 
+		ISchemaItemCollection allItems = GetAllItems(providerType); 
 		if(log.IsDebugEnabled)
 		{
 			log.Debug($"ProviderType:{providerType}, items: {allItems.Count}");

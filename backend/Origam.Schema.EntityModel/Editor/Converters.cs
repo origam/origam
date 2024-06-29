@@ -600,7 +600,7 @@ public class DataStructureColumnStringConverter : System.ComponentModel.TypeConv
 //			DataStructureEntityFilter dsFilter = context.Instance as DataStructureEntityFilter;
 //			DataStructureEntity dsEntity = dsFilter.ParentItem as DataStructureEntity;
 //
-//			SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
+//			ISchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 //
 //			ArrayList columnArray = new ArrayList(filters.Count);
 //			foreach(EntityFilter filter in filters)
@@ -628,7 +628,7 @@ public class DataStructureColumnStringConverter : System.ComponentModel.TypeConv
 //				DataStructureEntityFilter dsFilter = context.Instance as DataStructureEntityFilter;
 //				DataStructureEntity dsEntity = dsFilter.ParentItem as DataStructureEntity;
 //
-//				SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
+//				ISchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 //
 //				foreach(EntityFilter item in filters)
 //				{

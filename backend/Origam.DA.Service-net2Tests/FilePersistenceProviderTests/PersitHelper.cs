@@ -76,7 +76,7 @@ internal class PersitHelper
     {
         List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
             .Select(TypeTools.GetAllItems)
-            .SelectMany(itemCollection => itemCollection.ToGeneric())
+            .SelectMany(itemCollection => itemCollection)
             .ToList();
         return abstractSchemaItems;
     }

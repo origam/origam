@@ -46,11 +46,11 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
         if(DataLookup != null) dependencies.Add(DataLookup);
         base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#region Properties

@@ -571,7 +571,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     #region Main SQL Command Rendering
 
-    public string TableListDefinitionDdl(SchemaItemCollection tables)
+    public string TableListDefinitionDdl(ISchemaItemCollection tables)
     {
         StringBuilder ddl = new StringBuilder();
 
@@ -1282,7 +1282,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             .Concat(new[] { entity })
             .SelectMany(entity =>
             {
-                var dataStructureColumnNames = entity.ChildItems.ToGeneric()
+                var dataStructureColumnNames = entity.ChildItems
                     .OfType<DataStructureColumn>()
                     .Where(x => x.UseLookupValue)
                     .Select(x => x.Name);
@@ -3156,7 +3156,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             return "";
         }
 
-        DataStructureEntity relation = entity.ChildItems.ToGeneric()
+        DataStructureEntity relation = entity.ChildItems
             .OfType<DataStructureEntity>()
             .FirstOrDefault(child =>
                 child.Entity.PrimaryKey.Equals(detachedField.ArrayRelation.PrimaryKey));
@@ -3724,7 +3724,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             default:
                 result = sqlRenderer.FunctionPrefix() + item.Function.Name + "(";
 
-                var sortedParams = item.ChildItems.ToList<FunctionCallParameter>();
+                var sortedParams = item.ChildItems.CastToList<FunctionCallParameter>();
                 sortedParams.Sort();
 
                 int i = 0;
@@ -3841,7 +3841,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             case "In":
                 ISchemaItem leftArg = item.GetChildByName("FilterExpression");
                 ISchemaItem listArg = item.GetChildByName("List");
-                SchemaItemCollection listExpressions = listArg.ChildItems;
+                ISchemaItemCollection listExpressions = listArg.ChildItems;
 
                 if (listExpressions.Count < 1) throw new ArgumentOutOfRangeException("List", null, ResourceUtils.GetString("ErrorNoParamIN"));
 
@@ -3856,7 +3856,6 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     string leftOperand = RenderExpression(leftArg.ChildItems[0], entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
                     IEnumerable<string> options = listExpressions
-                        .ToGeneric()
                         .Cast<ISchemaItem>()
                         .Select(listExpression =>
                             RenderExpression(listExpression, entity, replaceParameterTexts,

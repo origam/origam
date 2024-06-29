@@ -66,11 +66,11 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)

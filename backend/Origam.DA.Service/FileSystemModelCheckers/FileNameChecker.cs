@@ -72,7 +72,6 @@ public class FileNameChecker : IFileSystemModelChecker
     private IEnumerable<Guid> GetChildrenIds(AbstractSchemaItem item)
     {
         return item.ChildItems
-            .ToGeneric()
             .Select(x=>x.Id);
     }
     private bool IsPersistedInWrongFile(IFilePersistent instance)

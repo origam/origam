@@ -157,7 +157,6 @@ public class NewRecordScreenBinding
     public NewRecordScreenBindingParameterMapping[] GetParameterMappings()
     {
         return ChildItems
-            .ToGeneric()
             .OfType<NewRecordScreenBindingParameterMapping>()
             .ToArray();
     }
@@ -193,7 +192,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
             })
             .Distinct();
         var conflictingNewRecordBindingIds = allLookups
-            .Select(lookup => lookup.ChildItems.ToGeneric().OfType<NewRecordScreenBinding>().FirstOrDefault())
+            .Select(lookup => lookup.ChildItems.OfType<NewRecordScreenBinding>().FirstOrDefault())
             .Where(binding => binding != null)
             .Select(binding => binding.Id.ToString())
             .ToList();

@@ -203,7 +203,6 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
         AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 		Guid sourceId = IdTranslator.NodeToSchema(edge.Source);
         var workflowTaskDependency = dependentItem.ChildItems
-	        .ToGeneric()
 	        .OfType<WorkflowTaskDependency>()
 	        .First(x => x.WorkflowTaskId == sourceId);
         workflowTaskDependency.IsDeleted = true;

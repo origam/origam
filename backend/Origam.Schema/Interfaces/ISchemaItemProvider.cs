@@ -40,7 +40,7 @@ public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
 	/// <summary>
 	/// Gets all schema items.
 	/// </summary>
-	SchemaItemCollection ChildItems{get;}
+	ISchemaItemCollection ChildItems{get;}
 	ArrayList ChildItemTypes{get;}
 	AbstractSchemaItem GetChildByName(string name, string itemType);
 	List<ISchemaItem> ChildItemsRecursive{get;}

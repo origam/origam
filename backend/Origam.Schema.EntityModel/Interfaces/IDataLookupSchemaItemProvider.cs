@@ -27,5 +27,5 @@ namespace Origam.Schema.EntityModel;
 /// </summary>
 public interface IDataLookupSchemaItemProvider : ISchemaItemProvider
 {			
-	SchemaItemCollection LoadChildItems();
+	ISchemaItemCollection LoadChildItems();
 }

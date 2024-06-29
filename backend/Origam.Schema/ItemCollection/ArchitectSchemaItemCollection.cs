@@ -6,18 +6,18 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.ItemCollection;
 
-class ArchitectSchemaItemCollection: SchemaItemCollectionBase<Key>,
+class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     ISchemaItemCollection
 {
     private Dictionary<Key, AbstractSchemaItem> nonPersistedItems = new ();
     private readonly IPersistenceProvider persistence;
     private readonly ISchemaItemProvider rootProvider;
     
-    public ArchitectSchemaItemCollection()
+    public ArchitectISchemaItemCollection()
     {
     }
     
-    public ArchitectSchemaItemCollection(IPersistenceProvider persistence,
+    public ArchitectISchemaItemCollection(IPersistenceProvider persistence,
         ISchemaItemProvider rootProvider, AbstractSchemaItem parentItem)
     {
         this.persistence = persistence;
@@ -206,7 +206,14 @@ class ArchitectSchemaItemCollection: SchemaItemCollectionBase<Key>,
         oldItem.Deleted -= SchemaItem_Deleted;
         newItem.Deleted += SchemaItem_Deleted;
     }
-    
+
+    public override void AddRange(IEnumerable<AbstractSchemaItem> other)
+    {
+        foreach (var item in other)
+        {
+            Add(item);
+        }
+    }
     private void SchemaItem_Deleted(object sender, EventArgs e)
     {
         if (!clearing)

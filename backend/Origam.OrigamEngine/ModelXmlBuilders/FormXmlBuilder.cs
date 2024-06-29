@@ -1470,7 +1470,7 @@ public class FormXmlBuilder
 				}
 				var fieldType = csi.FirstParentOfType<PanelControlSet>()
 					?.DataEntity
-					?.ChildItems?.ToGeneric()
+					?.ChildItems
 					?.OfType<IDataEntityColumn>()
 					?.FirstOrDefault(child => child.Name == bindingMember)
 					?.FieldType ?? "";

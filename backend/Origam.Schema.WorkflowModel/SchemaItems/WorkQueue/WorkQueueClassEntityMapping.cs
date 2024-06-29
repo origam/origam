@@ -49,7 +49,7 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode.GetType().Equals(this.ParentItem.GetType());
 	#endregion
 	#region Properties

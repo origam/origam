@@ -93,7 +93,7 @@ public class SchemaItemAncestorConverter : System.ComponentModel.TypeConverter
 ////				AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 ////				AbstractSchemaItem root = reference.RootItem;
 ////
-////				SchemaItemCollection parameters = root.Parameters;
+////				ISchemaItemCollection parameters = root.Parameters;
 ////
 ////				foreach(SchemaItemParameter item in parameters)
 ////				{

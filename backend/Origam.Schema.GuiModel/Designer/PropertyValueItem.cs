@@ -258,11 +258,11 @@ public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLoc
 		base.GetExtraDependencies (dependencies);
 	}
 	
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

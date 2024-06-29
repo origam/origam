@@ -64,11 +64,11 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 		if(this.SortSet != null) dependencies.Add(this.SortSet);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

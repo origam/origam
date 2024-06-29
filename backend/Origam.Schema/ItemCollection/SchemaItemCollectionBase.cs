@@ -29,7 +29,7 @@ namespace Origam.Schema.ItemCollection;
 
 // T is supposed to be Key or AbstractSchemItem
 [Serializable]
-public class SchemaItemCollectionBase<T> : IList<T>, IDisposable
+public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 {
     private List<T> list;
     
@@ -51,7 +51,6 @@ public class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     {
         list = new List<T>(capacity);
     }
-    
         
     protected void SetDerivedFrom(AbstractSchemaItem item)
     {
@@ -143,7 +142,7 @@ public class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         }
     }
 
-    public void Add(T value)
+    public virtual void Add(T value)
     {
         OnValidate(value);
         OnInsert(InnerList.Count, value);
@@ -160,6 +159,8 @@ public class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         }
     }
 
+    public abstract void AddRange(IEnumerable<AbstractSchemaItem> value);
+    
     public bool Contains(T value)
     {
         return InnerList.Contains(value);

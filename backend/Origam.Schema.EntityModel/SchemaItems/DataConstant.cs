@@ -393,11 +393,11 @@ public class DataConstant : AbstractSchemaItem
 		if(this.DataLookup != null) dependencies.Add(this.DataLookup);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

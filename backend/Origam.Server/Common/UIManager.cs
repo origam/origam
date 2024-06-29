@@ -68,7 +68,7 @@ public class UIManager
         // Stack can't handle resending DataDocumentFx, 
         // it needs to be converted to XmlDocument 
         // and then converted back to DataDocumentFx
-        foreach (object key in request.Parameters.Keys.ToList<object>())
+        foreach (object key in request.Parameters.Keys.CastToList<object>())
         {
             object value = request.Parameters[key];
             if (value is XmlDocument xmlDoc)

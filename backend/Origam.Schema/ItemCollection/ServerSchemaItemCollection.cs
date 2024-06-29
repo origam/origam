@@ -1,14 +1,16 @@
-﻿namespace Origam.Schema.ItemCollection;
+﻿using System.Collections.Generic;
 
-class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
+namespace Origam.Schema.ItemCollection;
+
+class ServerISchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
     ISchemaItemCollection
 {
     
-    public ServerSchemaItemCollection()
+    public ServerISchemaItemCollection()
     {
     }
     
-    public ServerSchemaItemCollection(AbstractSchemaItem parentSchemaItem)
+    public ServerISchemaItemCollection(AbstractSchemaItem parentSchemaItem)
     {
         ParentSchemaItem = parentSchemaItem;
     }
@@ -21,6 +23,15 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
             SetDerivedFrom(value);
         }
     }
+
+    public override void AddRange(IEnumerable<AbstractSchemaItem> other)
+    {
+        foreach (var item in other)
+        {
+            Add(item);
+        }
+    }
+    
 
     protected override void OnSet(int index, AbstractSchemaItem oldItem,
         AbstractSchemaItem newItem)

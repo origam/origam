@@ -294,7 +294,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		if(IsPersistable == false) return;
         AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
-		var schemaItemCollection = ChildItems;
+		var ISchemaItemCollection = ChildItems;
         if(!IsDeleted)
         {
             // PERSIST THE ELEMENT
@@ -305,7 +305,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		if(PersistChildItems)
 		{
 			// We persist all child items
-			foreach(AbstractSchemaItem item in schemaItemCollection)
+			foreach(AbstractSchemaItem item in ISchemaItemCollection)
 			{
 				if(item.DerivedFrom == null && IsPersistable)
 				{
@@ -789,11 +789,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		return result;
 	}
-	SchemaItemCollection _childItems;
+	ISchemaItemCollection _childItems;
 	bool _childItemsPopulated = false;
 	
 	[Browsable(false)]
-	public virtual SchemaItemCollection ChildItems
+	public virtual ISchemaItemCollection ChildItems
 	{
 		get
 		{
@@ -813,7 +813,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 				{
 					if(_childItems == null)
 					{
-						_childItems = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, this);
+						_childItems = SchemaItemCollection.Create(this.PersistenceProvider, this.RootProvider, this);
 					}
 					_childItems.Clear();
 					_childItems.AddRange(this.GetChildItems(this));
@@ -1179,9 +1179,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return this.ParentItem.Path + "/" + this.Name;
 		}
 	}
-	private SchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
+	private ISchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
 	{
-		SchemaItemCollection col = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, parentItem);
+		ISchemaItemCollection col = SchemaItemCollection.Create(this.PersistenceProvider, this.RootProvider, parentItem);
         // Get children if we're allowed to do so
         if(!NeverRetrieveChildren)
         {

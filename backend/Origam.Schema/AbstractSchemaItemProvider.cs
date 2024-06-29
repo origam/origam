@@ -36,19 +36,19 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	// String for root item type
 	public abstract string RootItemType{get;}
 	#region ISchemaItemProvider Members
-	SchemaItemCollection _childItems;
+	ISchemaItemCollection _childItems;
 #if ! ORIGAM_CLIENT
 	bool _childItemsPopulated = false;
 #endif
-	public virtual SchemaItemCollection ChildItems
+	public virtual ISchemaItemCollection ChildItems
 	{
 		get
 		{
 			if(_childItems == null)
 			{
-				_childItems = new SchemaItemCollection(this.PersistenceProvider, this, null);
+				_childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
 			}
-			SchemaItemCollection childItems;
+			ISchemaItemCollection childItems;
 #if ! ORIGAM_CLIENT
 			// caching does not work properly with model localization
 			// so we do it only for architect
@@ -68,9 +68,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 			return childItems;
 		}
 	}
-	public SchemaItemCollection LoadChildItems()
+	public ISchemaItemCollection LoadChildItems()
 	{
-		SchemaItemCollection childItems = new SchemaItemCollection(this.PersistenceProvider, this, null);
+		ISchemaItemCollection childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
 		childItems.AddRange(ChildItemsByType(RootItemType).Cast<AbstractSchemaItem>().ToArray());
 		return childItems;
 	}

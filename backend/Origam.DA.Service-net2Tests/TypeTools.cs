@@ -40,7 +40,7 @@ internal static class TypeTools
             .GetService(typeof(SchemaService)))
         .Providers
         .Select(provider => provider.GetType());
-    public static SchemaItemCollection GetAllItems(Type providerType)
+    public static ISchemaItemCollection GetAllItems(Type providerType)
     {
         SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
             as SchemaService;

@@ -475,7 +475,6 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 		if (menuItem.ListEntity == null) return null;
 		string errorMessages = string.Join("\n", 
 			menuItem.ListEntity.Entity.ChildItems
-				.ToGeneric()
 				.OfType<EntityWorkflowAction>()
 				.Select(action => GetErrorOrNull(action, menuItem))
 				.Where(error => error != null));
@@ -496,7 +495,6 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 		}
 		
 		var screenConditions = action.ChildItems
-			.ToGeneric()
 			.OfType<ScreenCondition>()
 			.ToList();
 		bool shouldShowOnScreen = screenConditions.Any(
@@ -507,12 +505,10 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 			return null;
 		}
 		var screenSectionIds = menuItem.Screen.ChildItems
-			.ToGeneric()
 			.OfType<ControlSetItem>()
 			.Select(x => x.Id)
 			.ToList();
 		var screenSectionConditions = action.ChildItems
-			.ToGeneric()
 			.OfType<ScreenSectionCondition>()
 			.ToList();
 		bool shouldShowOnScreenSection = screenSectionConditions

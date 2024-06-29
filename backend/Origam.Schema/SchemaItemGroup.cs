@@ -217,21 +217,21 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 	public string Icon => "37_folder-3.png";
 	#endregion
 	#region ISchemaItemProvider Members
-	public SchemaItemCollection ChildItems
+	public ISchemaItemCollection ChildItems
 	{
 		get
 		{
 			// We look for all child items of our parent schema item that have this group
 			// We browse the collection because it has all the items correctly set
 			var provider = ParentItem ?? RootProvider;
-			var schemaItemCollection = new SchemaItemCollection(
+			var ISchemaItemCollection = SchemaItemCollection.Create(
 				PersistenceProvider, provider, ParentItem);
 			foreach(AbstractSchemaItem item 
 			        in provider.ChildItemsByGroup(this))
 			{
-				schemaItemCollection.Add(item);
+				ISchemaItemCollection.Add(item);
 			}
-			return schemaItemCollection;
+			return ISchemaItemCollection;
 		}
 	}
 	public List<ISchemaItem> ChildItemsByType(string itemType)

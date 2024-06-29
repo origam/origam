@@ -448,7 +448,6 @@ public class DataLookupService : IDataLookupService
 	public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
 	{
 		return lookup.ChildItems
-			.ToGeneric()
 			.OfType<NewRecordScreenBinding>()
 			.FirstOrDefault(x => x.IsAvailable);
 	}

@@ -85,7 +85,6 @@ public class SchemaCompareEditor : AbstractViewContent
 		// load versions combo box
 		var deploymentVersions = _schema.GetProvider<DeploymentSchemaItemProvider>()
 			.ChildItems
-			.ToGeneric()
 			.Cast<DeploymentVersion>()
 			.OrderBy(deploymentVersion => deploymentVersion.Version);
 		foreach(DeploymentVersion version in deploymentVersions)

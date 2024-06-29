@@ -36,7 +36,7 @@ public static class IEnumerableExtensions
         }
         return arrayList;
     }
-    public static List<T> ToList<T>(this IEnumerable iEnum) => 
+    public static List<T> CastToList<T>(this IEnumerable iEnum) => 
         iEnum.Cast<T>().ToList();
         
     public static T[] ToArray<T>(this IEnumerable iEnum) => 

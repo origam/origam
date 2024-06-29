@@ -1262,7 +1262,7 @@ public abstract class SessionStore : IDisposable
         if (rowSearchResult.IdsNotFoundInStore.Count > 0)
         {
             var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
-            rowSearchResult.Rows.AddRange(loadedRows.ToList<DataRow>());
+            rowSearchResult.Rows.AddRange(loadedRows.CastToList<DataRow>());
         }
         return rowSearchResult.Rows;
     }
@@ -1649,7 +1649,7 @@ public abstract class SessionStore : IDisposable
                         table.AcceptChanges();
                     }
                     // save the data
-                    var actionResult = ((IList)ExecuteAction(ACTION_SAVE)).ToList<ChangeInfo>();
+                    var actionResult = ((IList)ExecuteAction(ACTION_SAVE)).CastToList<ChangeInfo>();
                     listOfChanges.AddRange(actionResult);
                 }
                 return listOfChanges;

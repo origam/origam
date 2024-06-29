@@ -600,7 +600,7 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList methodArray;
-		SchemaItemCollection methods;
+		ISchemaItemCollection methods;
 		IService service = (context.Instance as ServiceMethodCallTask).Service as IService;
 		if(service == null)
 		{
@@ -630,7 +630,7 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			SchemaItemCollection methods;
+			ISchemaItemCollection methods;
 			IService service = (context.Instance as ServiceMethodCallTask).Service as IService;
 			if(service == null)
 			{

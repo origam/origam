@@ -40,11 +40,11 @@ public class XPathRule : AbstractRule
 	public XPathRule() : base() {}
 	public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public XPathRule(Key primaryKey) : base(primaryKey)	{}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)

@@ -60,11 +60,11 @@ public class XslRule : AbstractRule
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.Xsl);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

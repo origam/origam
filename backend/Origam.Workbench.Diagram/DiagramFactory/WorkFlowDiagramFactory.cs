@@ -126,7 +126,6 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 		Guid screenId)
 	{
 		var actions = entity.Entity.ChildItems
-			.ToGeneric()
 			.OfType<EntityUIAction>()
 			.Where(action => ShouldBeShownOnScreen(action, screenId))
 			.ToArray();
@@ -136,7 +135,7 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 		if (entityDropdownActions.Length > 0)
 		{
 			var actionsFromDropDowns = entityDropdownActions
-				.SelectMany(dropDown => dropDown.ChildItems.ToGeneric())
+				.SelectMany(dropDown => dropDown.ChildItems)
 				.Cast<EntityUIAction>();
 			actions = actions
 				.Except(entityDropdownActions)
@@ -152,12 +151,12 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 	}
 	private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
 	{
-		step.ChildItems.ToGeneric()
+		step.ChildItems
 			.Where(x => !(x is WorkflowTaskDependency))
 			.OrderByDescending(x => x.Name)
 			.ForEach(stepChild =>
 			{
-				stepChild.ChildItems.ToGeneric()
+				stepChild.ChildItems
 					.OrderByDescending(x => x.Name)
 					.ForEach(innerChild =>
 					{

@@ -67,7 +67,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	#endregion
 	#region Properties
 	public Guid WorkflowTaskId;

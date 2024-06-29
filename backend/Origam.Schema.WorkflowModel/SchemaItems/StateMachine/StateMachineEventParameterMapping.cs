@@ -57,7 +57,7 @@ public class StateMachineEventParameterMapping : AbstractSchemaItem
 		dependencies.Add(this.ContextStore);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	#endregion
 	#region Properties
 	[XmlAttribute ("wfParameterType")]
