@@ -2,14 +2,26 @@
 
 namespace Origam.Schema;
 
-class ServerSchemItemCollection : CheckedList<AbstractSchemaItem>, IDisposable
+class ServerSchemaItemCollection : CheckedList<AbstractSchemaItem>, IDisposable,
+    ISchemaItemCollection
 {
     private bool disposing;
     private bool clearing;
+    
     public bool DeleteItemsOnClear { get; set; } = true;
     public bool RemoveDeletedItems { get; set; } = true;
     public bool UpdateParentItem { get; set; } = true;
     public AbstractSchemaItem ParentSchemaItem { get; set;}
+    
+    public ServerSchemaItemCollection()
+    {
+    }
+    
+    public ServerSchemaItemCollection(AbstractSchemaItem parentSchemaItem)
+    {
+        ParentSchemaItem = parentSchemaItem;
+    }
+    
     public void Add(AbstractSchemaItem value)
     {
         base.Add(value);

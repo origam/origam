@@ -6,7 +6,8 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema;
 
-class ArchitectSchemaItemCollection: CheckedList<Key>, IEnumerable, IDisposable
+class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
+    ISchemaItemCollection
 {
     private Hashtable nonPersistedItems = new ();
     private readonly IPersistenceProvider persistence;
@@ -19,10 +20,15 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IEnumerable, IDisposable
     public bool UpdateParentItem { get; set; } = true;
     public AbstractSchemaItem ParentSchemaItem { get; set;}
     
-    public ArchitectSchemaItemCollection(IPersistenceProvider persistence, ISchemaItemProvider rootProvider)
+    public ArchitectSchemaItemCollection()
+    {
+    }
+    public ArchitectSchemaItemCollection(IPersistenceProvider persistence,
+        ISchemaItemProvider rootProvider, AbstractSchemaItem parentItem)
     {
         this.persistence = persistence;
         this.rootProvider = rootProvider;
+        ParentSchemaItem = parentItem;
     }
 
     public IEnumerator<AbstractSchemaItem> GetEnumerator()
