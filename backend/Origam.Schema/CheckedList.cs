@@ -28,16 +28,16 @@ using System.Collections.Generic;
 namespace Origam.Schema;
 
 [Serializable]
-public abstract class OrigamCollectionBase<T> : IList<T>
+public class CheckedList<T> : IList<T>
 {
     private List<T> list;
 
-    protected OrigamCollectionBase()
+    public CheckedList()
     {
         list = new List<T>();
     }
 
-    protected OrigamCollectionBase(int capacity)
+    public CheckedList(int capacity)
     {
         list = new List<T>(capacity);
     }
@@ -63,7 +63,7 @@ public abstract class OrigamCollectionBase<T> : IList<T>
     {
     }
 
-    protected virtual void OnClearComplete()
+    protected virtual void OnClearComplete() // Redundant
     {
     }
 
@@ -71,7 +71,7 @@ public abstract class OrigamCollectionBase<T> : IList<T>
     {
     }
 
-    protected virtual void OnInsertComplete(int index, T value)
+    protected virtual void OnInsertComplete(int index, T value) // Redundant
     {
     }
 
@@ -79,7 +79,7 @@ public abstract class OrigamCollectionBase<T> : IList<T>
     {
     }
 
-    protected virtual void OnRemoveComplete(int index, T value)
+    protected virtual void OnRemoveComplete(int index, T value) // Redundant
     {
     }
 
@@ -87,11 +87,11 @@ public abstract class OrigamCollectionBase<T> : IList<T>
     {
     }
 
-    protected virtual void OnSetComplete(int index, T oldValue, T newValue)
+    protected virtual void OnSetComplete(int index, T oldValue, T newValue) // Redundant
     {
     }
 
-    protected virtual void OnValidate(T value)
+    protected virtual void OnValidate(T value) // Redundant
     {
     }
 

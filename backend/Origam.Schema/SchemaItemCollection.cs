@@ -38,10 +38,10 @@ namespace Origam.Schema;
 //
 [Serializable]
 #if ORIGAM_CLIENT
-public class SchemaItemCollection : OrigamCollectionBase<AbstractSchemaItem>,
+public class SchemaItemCollection : CheckedList<AbstractSchemaItem>,
     IDisposable
 #else
-public class SchemaItemCollection : OrigamCollectionBase<Key>, IDisposable
+public class SchemaItemCollection : CheckedList<Key>, IDisposable
 #endif
 {
     private bool _clearing = false;
