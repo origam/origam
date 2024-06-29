@@ -25,21 +25,46 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Origam.Schema;
+namespace Origam.Schema.ItemCollection;
 
+// T is supposed to be Key or AbstractSchemItem
 [Serializable]
-public class CheckedList<T> : IList<T>
+public class SchemaItemCollectionBase<T> : IList<T>, IDisposable
 {
     private List<T> list;
+    
+    protected bool disposing;
+    protected bool clearing;
+    
+    public bool DeleteItemsOnClear { get; set; } = true;
+    public bool RemoveDeletedItems { get; set; } = true;
+    public bool UpdateParentItem { get; set; } = true;
+    
+    public AbstractSchemaItem ParentSchemaItem { get; set;}
 
-    public CheckedList()
+    public SchemaItemCollectionBase()
     {
         list = new List<T>();
     }
 
-    public CheckedList(int capacity)
+    public SchemaItemCollectionBase(int capacity)
     {
         list = new List<T>(capacity);
+    }
+    
+        
+    protected void SetDerivedFrom(AbstractSchemaItem item)
+    {
+        if (item.ParentItem != null)
+        {
+            // If we assign derived items, we mark them
+            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem
+                    .PrimaryKey))
+            {
+                item.DerivedFrom = item.ParentItem;
+                item.ParentItem = ParentSchemaItem;
+            }
+        }
     }
 
     public void Clear()
@@ -245,5 +270,11 @@ public class CheckedList<T> : IList<T>
     public void CopyTo(T[] array, int arrayIndex)
     {
         InnerList.CopyTo(array, arrayIndex);
+    }
+    
+    public void Dispose()
+    {
+        disposing = true;
+        Clear();
     }
 }

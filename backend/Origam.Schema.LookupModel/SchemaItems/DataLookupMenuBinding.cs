@@ -28,6 +28,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.MenuModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.LookupModel;
 /// <summary>

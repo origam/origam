@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Schema.ItemCollection;
+
 namespace Origam.Schema.EntityModel;
 /// <summary>
 /// Summary description for IDataLookupSchemaItemProvider.

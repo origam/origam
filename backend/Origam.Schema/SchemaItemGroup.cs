@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
 using Origam.DA.Common.ObjectPersistence.Attributes;
+using Origam.Schema.ItemCollection;
 using InvalidCastException = System.InvalidCastException;
 
 namespace Origam.Schema;

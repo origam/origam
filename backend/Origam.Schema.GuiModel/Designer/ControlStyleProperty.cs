@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]

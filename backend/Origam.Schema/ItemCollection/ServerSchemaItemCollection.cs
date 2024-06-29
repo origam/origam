@@ -1,17 +1,8 @@
-﻿using System;
+﻿namespace Origam.Schema.ItemCollection;
 
-namespace Origam.Schema;
-
-class ServerSchemaItemCollection : CheckedList<AbstractSchemaItem>, IDisposable,
+class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
     ISchemaItemCollection
 {
-    private bool disposing;
-    private bool clearing;
-    
-    public bool DeleteItemsOnClear { get; set; } = true;
-    public bool RemoveDeletedItems { get; set; } = true;
-    public bool UpdateParentItem { get; set; } = true;
-    public AbstractSchemaItem ParentSchemaItem { get; set;}
     
     public ServerSchemaItemCollection()
     {
@@ -22,26 +13,12 @@ class ServerSchemaItemCollection : CheckedList<AbstractSchemaItem>, IDisposable,
         ParentSchemaItem = parentSchemaItem;
     }
     
-    public void Add(AbstractSchemaItem value)
+    public new void Add(AbstractSchemaItem value)
     {
         base.Add(value);
         if (value.IsAbstract)
         {
             SetDerivedFrom(value);
-        }
-    }
-    
-    private void SetDerivedFrom(AbstractSchemaItem item)
-    {
-        if (item.ParentItem != null)
-        {
-            // If we assign derived items, we mark them
-            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem
-                    .PrimaryKey))
-            {
-                item.DerivedFrom = item.ParentItem;
-                item.ParentItem = ParentSchemaItem;
-            }
         }
     }
 
@@ -91,9 +68,4 @@ class ServerSchemaItemCollection : CheckedList<AbstractSchemaItem>, IDisposable,
         }
     }
     
-    public void Dispose()
-    {
-        disposing = true;
-        Clear();
-    }
 }

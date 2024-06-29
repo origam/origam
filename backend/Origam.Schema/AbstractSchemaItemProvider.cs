@@ -27,6 +27,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema;
 public abstract class AbstractSchemaItemProvider : ISchemaItemProvider

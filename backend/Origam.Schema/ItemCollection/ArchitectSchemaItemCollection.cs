@@ -4,25 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema;
+namespace Origam.Schema.ItemCollection;
 
-class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
+class ArchitectSchemaItemCollection: SchemaItemCollectionBase<Key>,
     ISchemaItemCollection
 {
-    private Hashtable nonPersistedItems = new ();
+    private Dictionary<Key, AbstractSchemaItem> nonPersistedItems = new ();
     private readonly IPersistenceProvider persistence;
     private readonly ISchemaItemProvider rootProvider;
-    
-    private bool disposing;
-    private bool clearing;
-    public bool DeleteItemsOnClear { get; set; } = true;
-    public bool RemoveDeletedItems { get; set; } = true;
-    public bool UpdateParentItem { get; set; } = true;
-    public AbstractSchemaItem ParentSchemaItem { get; set;}
     
     public ArchitectSchemaItemCollection()
     {
     }
+    
     public ArchitectSchemaItemCollection(IPersistenceProvider persistence,
         ISchemaItemProvider rootProvider, AbstractSchemaItem parentItem)
     {
@@ -31,9 +25,9 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
         ParentSchemaItem = parentItem;
     }
 
-    public IEnumerator<AbstractSchemaItem> GetEnumerator()
+    public new IEnumerator<AbstractSchemaItem> GetEnumerator()
     {
-        return new SchemaItemEnumerator(base.InnerList, GetItem);
+        return new SchemaItemEnumerator(InnerList, GetItem);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -50,16 +44,11 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
                 SetDerivedFrom(item);
             }
 
-            nonPersistedItems ??= new Hashtable();
+            nonPersistedItems ??= new Dictionary<Key, AbstractSchemaItem>();
             nonPersistedItems.Add(item.PrimaryKey, item);
         }
 
         base.Add(item.PrimaryKey);
-    }
-
-    public void Clear()
-    {
-        base.Clear();
     }
 
     public bool Contains(AbstractSchemaItem item)
@@ -75,27 +64,20 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
 
     public bool Remove(AbstractSchemaItem item)
     {
-        return base.Remove(item.PrimaryKey);
+        return base.Remove(item?.PrimaryKey);
     }
-
-    public int Count => base.Count;
-    public bool IsReadOnly { get; } = false;
+    
     public int IndexOf(AbstractSchemaItem item)
     {
-        return base.IndexOf(item.PrimaryKey);
+        return base.IndexOf(item?.PrimaryKey);
     }
 
     public void Insert(int index, AbstractSchemaItem item)
     {
-        base.Insert(index, item.PrimaryKey);
+        base.Insert(index, item?.PrimaryKey);
     }
-
-    public void RemoveAt(int index)
-    {
-        base.RemoveAt(index);
-    }
-
-    public AbstractSchemaItem this[int index]
+    
+    public new AbstractSchemaItem this[int index]
     {
         get => GetItem(base[index]);
         set => base[index] = value.PrimaryKey;
@@ -104,9 +86,9 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
     private AbstractSchemaItem GetItem(Key key)
     {
         if (nonPersistedItems != null &&
-            nonPersistedItems.ContainsKey(key))
+            nonPersistedItems.TryGetValue(key, out var persistedItem))
         {
-            return nonPersistedItems[key] as AbstractSchemaItem;
+            return persistedItem;
         }
 
         var item =
@@ -115,9 +97,9 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
         if (item == null)
         {
             if (nonPersistedItems != null &&
-                nonPersistedItems.ContainsKey(key))
+                nonPersistedItems.TryGetValue(key, out var nonPersistedItem))
             {
-                item = nonPersistedItems[key] as AbstractSchemaItem;
+                item = nonPersistedItem;
             }
             else
             {
@@ -201,7 +183,7 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
             // but that is ok
         }
 
-        if (nonPersistedItems != null && nonPersistedItems.Contains(value))
+        if (nonPersistedItems != null && nonPersistedItems.ContainsKey(value))
         {
             nonPersistedItems.Remove(value);
         }
@@ -225,20 +207,6 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
         newItem.Deleted += SchemaItem_Deleted;
     }
     
-    private void SetDerivedFrom(AbstractSchemaItem item)
-    {
-        if (item.ParentItem != null)
-        {
-            // If we assign derived items, we mark them
-            if (!item.ParentItem.PrimaryKey.Equals(ParentSchemaItem
-                    .PrimaryKey))
-            {
-                item.DerivedFrom = item.ParentItem;
-                item.ParentItem = ParentSchemaItem;
-            }
-        }
-    }
-    
     private void SchemaItem_Deleted(object sender, EventArgs e)
     {
         if (!clearing)
@@ -249,11 +217,6 @@ class ArchitectSchemaItemCollection: CheckedList<Key>, IDisposable,
                 Remove(si);
             }
         }
-    }
-    public void Dispose()
-    {
-        disposing = true;
-        Clear();
     }
 }
 

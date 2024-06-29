@@ -24,6 +24,7 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 /// <summary>

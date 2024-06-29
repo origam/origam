@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 using Origam.UI;
 
 namespace Origam.Schema;

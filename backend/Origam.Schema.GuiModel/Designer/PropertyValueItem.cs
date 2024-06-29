@@ -27,6 +27,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 [XmlModelRoot(CategoryConst)]

@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 [SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]

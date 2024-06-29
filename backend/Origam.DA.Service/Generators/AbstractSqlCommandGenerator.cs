@@ -33,6 +33,7 @@ using Origam.DA.Service.Generators;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
 

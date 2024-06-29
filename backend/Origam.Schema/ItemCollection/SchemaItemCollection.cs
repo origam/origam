@@ -21,13 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
-using System;
-using System.Collections;
 
-namespace Origam.Schema;
+namespace Origam.Schema.ItemCollection;
 
 // Refactoring notes
 // removing ICollection along with the "void ICollection.CopyTo(Array array, int index)"

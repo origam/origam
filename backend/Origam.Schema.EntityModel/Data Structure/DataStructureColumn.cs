@@ -29,6 +29,7 @@ using Origam.DA.ObjectPersistence.Attributes;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.Schema.Attributes;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 public enum DataStructureColumnSortDirection

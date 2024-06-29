@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Schema.ItemCollection;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.RuleModel;

@@ -52,6 +52,7 @@ using Origam.BI.CrystalReports;
 using MoreLinq;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.Schema.ItemCollection;
 using Origam.Service.Core;
 
 namespace OrigamArchitect.Commands;

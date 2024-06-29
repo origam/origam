@@ -26,6 +26,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>

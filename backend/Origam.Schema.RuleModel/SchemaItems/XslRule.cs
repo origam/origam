@@ -27,6 +27,7 @@ using System.ComponentModel;
 using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.RuleModel;
 /// <summary>

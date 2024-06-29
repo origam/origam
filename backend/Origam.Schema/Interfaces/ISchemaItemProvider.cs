@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.UI;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema;
 /// <summary>

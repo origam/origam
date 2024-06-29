@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.Services;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel;
