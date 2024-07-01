@@ -222,7 +222,7 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
     }
-    public void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId)
+    public void OnDataChanged(DataSet data, List<string> changedTables, string transactionId)
     {
         ArrayList rows = new ArrayList();
         foreach (string tableName in changedTables)

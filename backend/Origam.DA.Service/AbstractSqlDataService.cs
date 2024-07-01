@@ -500,8 +500,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		var currentEntityName = "";
 		var lastTableName = "";
 		List<DataStructureEntity> entities = dataStructure.Entities;
-		var changedTables = new ArrayList();
-        var deletedRowIds = new ArrayList();
+		var changedTables = new List<string>();
+        var deletedRowIds = new List<Guid>();
 		var rowStates = new[]
 		{
 			DataRowState.Deleted, DataRowState.Added, DataRowState.Modified
@@ -851,7 +851,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         DataStructure dataStructure, 
         IDbTransaction transaction, 
         IDbConnection connection, 
-		ArrayList deletedRowIds, 
+		List<Guid> deletedRowIds, 
         DataTable changedTable, 
         DataRowState rowState, 
         DataStructureEntity entity, 
@@ -926,9 +926,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		                // entity has a primary key Id taken from IOrigamEntity2
 		                foreach (DataRow row in changedTable.Rows)
 		                {
-			                deletedRowIds.Add(
-				                row[changedTable.PrimaryKey[0].ColumnName, 
-					                DataRowVersion.Original]);
+			                var id = (Guid)row[
+				                changedTable.PrimaryKey[0].ColumnName, 
+				                DataRowVersion.Original];
+			                deletedRowIds.Add(id);
 		                }
 	                }
 	                break;
@@ -2654,7 +2655,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	#endregion
     
 	#region Private Methods
-	private void AcceptChanges(DataSet dataset, ArrayList changedTables, 
+	private void AcceptChanges(DataSet dataset, List<string> changedTables, 
 		DataStructureQuery query, string transactionId, 
 		IPrincipal userProfile)
 	{
