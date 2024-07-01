@@ -299,7 +299,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
       case "Tab":
         if (this.isDropped) {
           if (this.cursorRowId) {
-            // chooseNewValue is not waited here because we need the dropdown to close immediately and not wait for it.
+            // chooseNewValue is not awaited here because we need the dropdown to close immediately and not wait for it.
             // Focus may end up in an unexpected place if Tab is pressed again while the dropdown is still open!
             this.data.chooseNewValue(this.cursorRowId === "" ? null : this.cursorRowId)
                 .catch(error => console.error('Error when setting a new value:', error));
