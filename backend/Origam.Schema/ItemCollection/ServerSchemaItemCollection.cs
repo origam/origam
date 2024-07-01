@@ -25,15 +25,15 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.ItemCollection;
 
-class ServerISchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
+class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
     ISchemaItemCollection
 {
     
-    public ServerISchemaItemCollection()
+    public ServerSchemaItemCollection()
     {
     }
     
-    public ServerISchemaItemCollection(AbstractSchemaItem parentSchemaItem)
+    public ServerSchemaItemCollection(AbstractSchemaItem parentSchemaItem)
     {
         ParentSchemaItem = parentSchemaItem;
     }

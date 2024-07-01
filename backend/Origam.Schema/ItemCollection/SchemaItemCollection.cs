@@ -30,7 +30,7 @@ public static class SchemaItemCollection
     public static ISchemaItemCollection Create()
     {
 #if ORIGAM_CLIENT
-        return new ServerISchemaItemCollection();
+        return new ServerSchemaItemCollection();
 #else
         return new ArchitectISchemaItemCollection();
 #endif 
@@ -40,7 +40,7 @@ public static class SchemaItemCollection
         ISchemaItemProvider provider, AbstractSchemaItem parentItem)
     {
 #if ORIGAM_CLIENT
-        return new ServerISchemaItemCollection(parentItem);
+        return new ServerSchemaItemCollection(parentItem);
 #else
         return
             new ArchitectISchemaItemCollection(persistence, provider,
