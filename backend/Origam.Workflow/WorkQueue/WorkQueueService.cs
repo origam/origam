@@ -941,7 +941,16 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                 row["ErrorText"] = errorMessage;
             }
         }
-        StoreQueueItems(wqc, selectedRows, transactionId);
+        try
+        {
+            StoreQueueItems(wqc, selectedRows, transactionId);
+        }
+        catch (DBConcurrencyException)
+        {
+            dataService.StoreData(
+                new Guid("7ca0c208-9ac8-4c55-bd0e-32575b613654"),
+                selectedRows.DataSet, false, transactionId);
+        }
         foreach (DataRow row in selectedRows.Rows)
         {
             DataSet slice = DatasetTools.CloneDataSet(selectedRows.DataSet);
