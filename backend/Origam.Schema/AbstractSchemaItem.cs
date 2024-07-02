@@ -207,9 +207,10 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			item.GetParameterReferences(item, list);
 		}
 	}
-	public ArrayList GetUsage()
+	public List<AbstractSchemaItem> GetUsage()
 	{
-        var referencelist = PersistenceProvider.GetReference(this.PrimaryKey);
+        List<AbstractSchemaItem> referencelist = 
+	        PersistenceProvider.GetReference<AbstractSchemaItem>(this.PrimaryKey);
         if (referencelist==null)
         {
             throw new Exception(ResourceUtils.GetString("ErrorBuildReferenceIndex"));
@@ -301,7 +302,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
             base.Persist();
         }
 		// TAKE CARE ABOUT CHILD ITEMS
-		ArrayList deletedItems = new ArrayList();
+		var deletedItems = new List<AbstractSchemaItem>();
 		if(PersistChildItems)
 		{
 			// We persist all child items

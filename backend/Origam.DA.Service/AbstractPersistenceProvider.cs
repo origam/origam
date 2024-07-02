@@ -74,7 +74,7 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
     public abstract List<T> RetrieveListByCategory<T>(string category);
     public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
     public abstract T[] FullTextSearch<T>(string text);
-    public ArrayList GetReference(Key key)
+    public List<T> GetReference<T>(Key key)
     {
         try
         {
@@ -86,8 +86,8 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             Guid id = Guid.Parse(key.ToString());
             return ReferenceIndexManager
                 .GetReferences(id)
-                .Select(refInfo => RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id)))
-                .ToArrayList();
+                .Select(refInfo => (T)RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id)))
+                .ToList();
         }
         finally
         {
