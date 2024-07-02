@@ -95,7 +95,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
                     names.Add(name);
                 }
             }
-            ArrayList nameableTypes = new ArrayList();
+            var nameableTypes = new List<Type>();
             foreach (Type type in factory.NewItemTypes)
             {
                 if (names.Count == 0 || !IsNameableType(factory, type))
@@ -272,10 +272,10 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
 }
 public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
 {
-    private ArrayList _types;
+    private List<Type> _types;
 	private string _name;
     private ISchemaItemFactory _parentElement;
-    public SchemaItemEditorNamesBuilder (ArrayList types, string name,
+    public SchemaItemEditorNamesBuilder (List<Type> types, string name,
         ISchemaItemFactory parentElement, bool showDialog)
 	{
 		_types = types;
