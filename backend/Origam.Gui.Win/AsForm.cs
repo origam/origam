@@ -737,11 +737,11 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 		}
 	}
 	public Hashtable ChildRecordReferences { get; } = new Hashtable();
-	private ArrayList _disabledControls = null;
+	private List<Control> _disabledControls = null;
 	private FlowLayoutPanel toolStripContainer;
 	public void BeginDisable()
 	{
-		_disabledControls = new ArrayList();
+		_disabledControls = new List<Control>();
 		foreach(Control child in this.Controls)
 		{
 			if(child.Enabled)
