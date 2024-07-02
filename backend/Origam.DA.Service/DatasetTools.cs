@@ -1579,7 +1579,7 @@ public class DatasetTools
         if (column.ExtendedProperties.Contains(Const.ArrayRelation))
         {
             string childColumnName = (string)column.ExtendedProperties[Const.ArrayRelationField];
-            var list = new List<object>();
+            ArrayList list = new ArrayList();
             foreach (DataRow childRow in
                 row.GetChildRows((string)column.ExtendedProperties[Const.ArrayRelation]))
             {
