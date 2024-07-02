@@ -45,7 +45,6 @@ public class FindRulesPad : AbstractResultPad
 	private SchemaBrowser _schemaBrowser;
     private ColumnHeader colPackage;
     private ColumnHeader colMessage;
-    ArrayList _results = new ArrayList();
 	public FindRulesPad()
 	{
 		// This call is required by the Windows Form Designer.
@@ -177,7 +176,6 @@ public class FindRulesPad : AbstractResultPad
 	public void ResetResults()
 	{
 		lvwResults.Items.Clear();
-		_results.Clear();
 		if(_schemaBrowser != null)
 		{
 			_schemaBrowser.RedrawContent();
@@ -215,13 +213,6 @@ public class FindRulesPad : AbstractResultPad
         lvwResults.EndUpdate();
         _schemaBrowser.RedrawContent();
     }
-    public ArrayList Results
-	{
-		get
-		{
-			return _results;
-		}
-	}
     private void AddResult(AbstractSchemaItem item)
     {
         AddResult(item, null);
