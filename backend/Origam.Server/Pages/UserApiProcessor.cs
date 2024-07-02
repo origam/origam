@@ -342,7 +342,7 @@ public class UserApiProcessor
         if (paramValue != null && ppm.IsList)
         {
             // we convert csv to proper arrays
-            ArrayList list = new ArrayList();
+            var list = new List<string>();
             string separator = ",";
             if (ppm.ListSeparator != null)
             {
