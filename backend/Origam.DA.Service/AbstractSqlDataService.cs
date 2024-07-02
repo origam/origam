@@ -1928,9 +1928,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	#region Compare Schema
 	
     internal abstract string GetAllTablesSql();
-	public override ArrayList CompareSchema(IPersistenceProvider provider)
+	public override List<SchemaDbCompareResult> CompareSchema(IPersistenceProvider provider)
 	{
-		var results = new ArrayList();
+		var results = new List<SchemaDbCompareResult>();
         ArrayList schemaTables = GetSchemaTables(provider);
         // tables
         Hashtable schemaTableList = GetSchemaTableList(schemaTables);
@@ -1980,7 +1980,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return results;
 	}
     private void DoCompareIndexExistingTables(
-        ArrayList results, ArrayList schemaTables, DataSet foreignKeys, 
+        List<SchemaDbCompareResult> results, ArrayList schemaTables, DataSet foreignKeys, 
         DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2039,7 +2039,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     private void CompareConstraintMissingInDatabase(
         DataEntityConstraint constraint, TableMappingItem table,
-        DataSet foreignKeys, DataSet columns, ArrayList results)
+        DataSet foreignKeys, DataSet columns, List<SchemaDbCompareResult> results)
     {
 		if((constraint.Type != ConstraintType.ForeignKey) 
 		   || !(constraint.ForeignEntity is TableMappingItem) 
@@ -2147,7 +2147,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     internal abstract string GetSqlFk();
     private void DoCompareIndex(
-        ArrayList results, ArrayList schemaTables, DataSet indexFields)
+        List<SchemaDbCompareResult> results, ArrayList schemaTables, DataSet indexFields)
     {
         foreach(TableMappingItem table in schemaTables)
         {
@@ -2241,7 +2241,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     internal abstract string GetSqlIndexFields();
     internal abstract string GetSqlIndexes();
     private void DoCompareDatabaseInModel(
-        ArrayList results, Hashtable schemaTableList, 
+        List<SchemaDbCompareResult> results, Hashtable schemaTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
         var abstractSqlCommandGenerator 
@@ -2360,7 +2360,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return stringBuilder.ToString().ToUpper();
 	}
     private void DoCompareModelInDatabase(
-        ArrayList results, ArrayList schemaTables, Hashtable dbTableList, 
+        List<SchemaDbCompareResult> results, ArrayList schemaTables, Hashtable dbTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2487,7 +2487,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             + "_" 
             + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
     }
-	private void DoCompare(ArrayList results, Hashtable dbList, 
+	private void DoCompare(List<SchemaDbCompareResult> results, Hashtable dbList, 
         Hashtable schemaList, DataSet columns, 
         DbCompareResultType direction, Type schemaItemType,
         IPersistenceProvider provider)
@@ -2508,7 +2508,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
         }
 	}
-    private void CompareMissingInModel(ArrayList results, Hashtable dbList, 
+    private void CompareMissingInModel(List<SchemaDbCompareResult> results, Hashtable dbList, 
         Hashtable schemaList, DataSet columns, Type schemaItemType, 
         IPersistenceProvider provider)
     {
@@ -2579,7 +2579,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             results.Add(result);
         }
     }
-    private void CompareMissingInDatabase(ArrayList results,
+    private void CompareMissingInDatabase(List<SchemaDbCompareResult> results,
         Hashtable dbList, Hashtable schemaList, Type schemaItemType)
     {
         var sqlGenerator 

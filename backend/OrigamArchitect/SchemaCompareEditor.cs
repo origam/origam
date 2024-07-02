@@ -23,6 +23,7 @@ using System;
 using System.Text;
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using Origam;
@@ -46,7 +47,7 @@ namespace OrigamArchitect;
 /// </summary>
 public class SchemaCompareEditor : AbstractViewContent
 {
-	ArrayList _results = new ArrayList();
+	private List<SchemaDbCompareResult> _results = new ();
 	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 	private System.Windows.Forms.ColumnHeader colType;
 	private System.Windows.Forms.ColumnHeader colName;
@@ -78,7 +79,7 @@ public class SchemaCompareEditor : AbstractViewContent
 		//
 		InitializeComponent();
 		this.Icon = Icon.FromHandle(new Bitmap(Images.DeploymentScriptGenerator).GetHicon());
-		cboFilter.Items.AddRange(new string[] {"Missing in Database", "Missing in Model", "Different"});
+		cboFilter.Items.AddRange(new object[] {"Missing in Database", "Missing in Model", "Different"});
 		cboFilter.SelectedIndex = 0;
 		lvwResults.SmallImageList = _schema.SchemaBrowser.ImageList;
 		DeploymentVersion currentVersion = null;
