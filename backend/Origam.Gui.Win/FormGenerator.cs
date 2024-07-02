@@ -1311,7 +1311,7 @@ public class FormGenerator : IDisposable
 	}
     private void ShowToolStrip(AsPanel panel, string table, ControlSetItem childItem)
     {
-        ArrayList validActions = new ArrayList();
+        var validActions = new List<EntityUIAction>();
         Guid entityId = new Guid(_mainFormData.Tables[table]
             .ExtendedProperties["EntityId"].ToString());
         UIActionTools.GetValidActions(
@@ -1354,7 +1354,7 @@ public class FormGenerator : IDisposable
 			}
 		}
 	}
-	private void CreatePanelToolStrip(AsPanel panel, ArrayList actions)
+	private void CreatePanelToolStrip(AsPanel panel, List<EntityUIAction> actions)
 	{
 		AsForm parentForm = AsyncForm ?? Form;
 		var toolStrip = new LabeledToolStrip(parentForm);
@@ -1362,7 +1362,6 @@ public class FormGenerator : IDisposable
 		_toolStripContainer.Controls.Add(toolStrip);
         panel.ToolStrip = toolStrip;
         var dropDownActions = actions
-	        .Cast<EntityUIAction>()
 	        .Where(action => action is EntityDropdownAction)
 	        .Cast<EntityDropdownAction>()
 	        .SelectMany(GetChildActions)

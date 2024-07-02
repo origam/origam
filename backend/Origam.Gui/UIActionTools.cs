@@ -31,7 +31,7 @@ namespace Origam.Gui;
 public class UIActionTools
 {
     public static bool GetValidActions(Guid formId, Guid panelId, 
-        bool disableActionButtons, Guid entityId, ArrayList validActions)
+        bool disableActionButtons, Guid entityId, List<EntityUIAction> validActions)
     {
         bool hasMultipleSelection = false;
         if (entityId != Guid.Empty)

@@ -441,7 +441,7 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 			}
 		}
 	}
-    public ArrayList Actions { get; set; }
+    public List<EntityUIAction> Actions { get; set; }
 	public ToolStrip ToolStrip { get; set; }
 	public IList<ToolStripItem> ActionButtons
 	{

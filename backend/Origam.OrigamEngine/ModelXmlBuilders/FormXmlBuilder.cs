@@ -641,7 +641,7 @@ public class FormXmlBuilder
                 false, "OrigamRecord_parOrigamEntityId", 
                 column.IsrefLookupOrigamEntityIdNull() ? null : "'" + column.refLookupOrigamEntityId.ToString() + "'");
         }
-        ArrayList validActions = new ArrayList();
+        var validActions = new List<EntityUIAction>();
         UIActionTools.GetValidActions(
             formId: entityRow.Id,
             panelId: entityRow.Id,
@@ -1121,7 +1121,7 @@ public class FormXmlBuilder
             if (table.PrimaryKey.Length == 0)
                 throw new Exception("Panel's data source has no primary key. Cannot render panel. " + control.Path);
             // get list of valid actions and set the panel multi-select-checkbox column visibility
-            ArrayList validActions = new ArrayList();
+            var validActions = new List<EntityUIAction>();
             bool hasMultipleSelection = UIActionTools.GetValidActions(
                 formId, control.ControlItem.PanelControlSet.Id, 
                 renderData.DisableActionButtons, 
@@ -1253,7 +1253,7 @@ public class FormXmlBuilder
 		}
 	}
 	private static void RenderActions(IParameterService parameterService, 
-        ArrayList validActions, XmlElement actionsElement, Hashtable inputParameters)
+		List<EntityUIAction> validActions, XmlElement actionsElement, Hashtable inputParameters)
     {
         // render action buttons
         foreach (EntityUIAction action in validActions)
