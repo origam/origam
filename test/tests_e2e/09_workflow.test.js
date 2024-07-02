@@ -37,7 +37,7 @@ async function clickElement(elementText, elementType){
 
 async function waitForWorkflowMessage(messageBegging) {
   const messageElement = await page.waitForXPath(
-    `//div[contains(@class, 'workflowMessage')]/font/p`,
+    `//div[contains(@class, 'workflowMessage')]/font/div`,
     {visible: true}
   );
   const errorMessage = await page.evaluate(name => name.innerText, messageElement);

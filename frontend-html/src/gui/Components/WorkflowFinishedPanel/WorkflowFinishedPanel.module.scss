@@ -23,7 +23,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background:var(--background1);
   padding: 20px;
   min-width: fit-content;
-  flex-direction: row;
   button {
     @include dialogButton();
   }
@@ -31,7 +30,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-left: 15px;
+    margin-left: 5px;
+    margin-top: 15px;
     > * {
       margin: 0;
       padding: 0;
