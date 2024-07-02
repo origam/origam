@@ -45,7 +45,6 @@ public class NoDuplicateNamesInParentRule : AbstractModelElementRuleAttribute
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
         AbstractSchemaItem itemWithDuplicateName = abstractSchemaItem
             .ParentItem.ChildItems
-            .ToGeneric()
             .Where(item => item is AbstractDataEntityColumn)
             .Where(item => item.Name == instanceName)
             .FirstOrDefault(item => item.Id != abstractSchemaItem.Id);

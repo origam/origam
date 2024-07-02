@@ -27,6 +27,7 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
@@ -451,7 +452,7 @@ class Program
             settings.DataBulkInsertThreshold,
             settings.DataUpdateBatchSize);
         dataService.PersistenceProvider = persistenceService.SchemaProvider;
-        var results = dataService.CompareSchema(
+        List<SchemaDbCompareResult> results = dataService.CompareSchema(
             persistenceService.SchemaProvider);
         if (results.Count == 0)
         {
@@ -464,7 +465,7 @@ class Program
         return DisplaySchemaComparisonResults(options, results);
     }
     private static int DisplaySchemaComparisonResults(
-        CompareSchemaOptions options, ArrayList results)
+        CompareSchemaOptions options, List<SchemaDbCompareResult> results)
     {
         var existingButDifferent = new ArrayList();
         var missingInDatabase = new ArrayList();

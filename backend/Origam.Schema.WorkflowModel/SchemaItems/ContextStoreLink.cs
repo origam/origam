@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 public enum ContextStoreLinkDirection
@@ -48,7 +50,7 @@ public class ContextStoreLink : AbstractSchemaItem
 	public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
 	#region Overriden AbstractSchemaItem Members
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 		dependencies.Add(this.CallerContextStore);
@@ -70,7 +72,7 @@ public class ContextStoreLink : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	#endregion
 	#region Properties
 	[XmlAttribute ("direction")]

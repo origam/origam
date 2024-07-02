@@ -52,7 +52,6 @@ public interface IDataService : IDisposable
 	string Xsd(Guid dataStructureId);
 	DataSet GetEmptyDataSet(Guid dataStructureId);
 	DataSet GetEmptyDataSet(Guid dataStructureId, CultureInfo culture);
-	ArrayList CompareSchema(IPersistenceProvider provider);
 	string DatabaseSchemaVersion();
 	void UpdateDatabaseSchemaVersion(string version, string transactionId);
 	string ExecuteUpdate(string command, string transactionId);

@@ -398,9 +398,9 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	{
 		if(this.CrystalReport == null) return;
 		// create any missing parameter mappings
-		foreach(DictionaryEntry entry in this.CrystalReport.ParameterReferences)
+		foreach(var entry in this.CrystalReport.ParameterReferences)
 		{
-			string parameterName = entry.Key.ToString();
+			string parameterName = entry.Key;
 			if(this._origamMetadata.GetChildByName(parameterName) == null)
 			{
 				ColumnParameterMapping mapping = _origamMetadata
@@ -424,7 +424,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
 		foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 		{
-			if(! this.CrystalReport.ParameterReferences.Contains(mapping.Name) & 
+			if(! this.CrystalReport.ParameterReferences.ContainsKey(mapping.Name) & 
 				this.CrystalReport.GetChildByName(mapping.Name) == null)
 			{
 				toDelete.Add(mapping);

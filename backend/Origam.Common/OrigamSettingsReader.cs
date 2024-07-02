@@ -111,7 +111,7 @@ public class OrigamSettingsReader
         using (var writer = nav.AppendChild())
         {
             var ser = new XmlSerializer(typeof(OrigamSettings[]));
-            ser.Serialize(writer, configuration.ToList<OrigamSettings>().ToArray());
+            ser.Serialize(writer, configuration.ToArray());
         }
         xmlSerializerNode.InnerXml = xmlDocument.InnerXml;
         document.Save(pathToOrigamSettings);

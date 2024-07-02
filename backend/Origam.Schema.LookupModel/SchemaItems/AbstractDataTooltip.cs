@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.LookupModel;
 /// <summary>
@@ -47,23 +49,23 @@ public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 			return CategoryConst;
 		}
 	}
-    public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+    public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
     {
         base.GetParameterReferences(this.TooltipLoadMethod, list);
     }
     
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.TooltipDataStructure);
         dependencies.Add(this.TooltipLoadMethod);
         dependencies.Add(this.TooltipTransformation);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)

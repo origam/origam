@@ -45,6 +45,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Origam.Extensions;
+using Origam.Gui;
 using Origam.Server.Configuration;
 using Origam.Server.Model.Search;
 using Origam.Server.Model.UIService;
@@ -710,7 +711,7 @@ public class UIServiceController : AbstractController
     
     private EntityData GetWorkQueueEntityData(WorkQueueSessionStore workQueueSessionStore)
     {
-        ArrayList entities = workQueueSessionStore.WQClass
+        List<DataStructureEntity> entities = workQueueSessionStore.WQClass
             .WorkQueueStructure
             .Entities;
         var structureEntity = entities
@@ -1228,7 +1229,7 @@ public class UIServiceController : AbstractController
             entityId, id);
         if(log != null)
         {
-            return Ok(DataTools.DatatableToHashtable(
+            return Ok(DataTools.DatatableToDictionary(
                 auditLog.Tables[0], false));
         }
         return Ok();

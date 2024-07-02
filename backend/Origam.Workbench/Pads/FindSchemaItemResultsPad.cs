@@ -41,7 +41,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 	private SchemaBrowser _schemaBrowser;
     private ColumnHeader colPackageName;
     private ColumnHeader colPackageReference;
-    ArrayList _results = new ArrayList();
+    private List<AbstractSchemaItem> _results = new ();
 	public FindSchemaItemResultsPad()
 	{
 		// This call is required by the Windows Form Designer.
@@ -207,7 +207,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 		}
 		_schemaBrowser.RedrawContent();
 	}
-	public ArrayList Results
+	public List<AbstractSchemaItem> Results
 	{
 		get
 		{

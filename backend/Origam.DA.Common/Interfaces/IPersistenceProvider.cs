@@ -85,7 +85,7 @@ public interface IPersistenceProvider : ICloneable, IDisposable
 	
 	ILocalizationCache LocalizationCache { get; }
     List<string> Files(IPersistent item);
-    ArrayList GetReference(Key key);
+    List<T> GetReference<T>(Key key);
     
     bool IsOfType<T>(Guid id);
 }

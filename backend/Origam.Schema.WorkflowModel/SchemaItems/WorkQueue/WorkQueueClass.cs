@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -62,7 +63,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	#region Overriden AbstractSchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.EntityStructure != null) dependencies.Add(this.EntityStructure);
 		if(this.EntityStructurePrimaryKeyMethod != null) dependencies.Add(this.EntityStructurePrimaryKeyMethod);
@@ -86,7 +87,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList EntityMappings => 
+	public List<ISchemaItem> EntityMappings => 
 		this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 	public Guid EntityId;
 	[TypeConverter(typeof(EntityConverter))]
@@ -341,7 +342,7 @@ public class StructureMustHaveGetByIdFilterRule : AbstractModelElementRuleAttrib
 			return null;
 		}
 		DataStructureFilterSet getByIdFilterSet = workQueueClass.WorkQueueStructure
-			.ChildItems.ToGeneric()
+			.ChildItems
 			.OfType<DataStructureFilterSet>()
 			.FirstOrDefault(filterSet => filterSet.Name == "GetById");
 		return getByIdFilterSet == null

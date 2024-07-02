@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Extensions;
+
 namespace Origam;
 using System;
 using System.Collections;
@@ -203,7 +205,12 @@ public class OrigamSettingsCollection : CollectionBase {
     public void Remove(OrigamSettings value) {
         List.Remove(value);
     }
-    
+
+    public OrigamSettings[] ToArray()
+    {
+        return List.ToArray<OrigamSettings>();
+    }
+
     public class OrigamSettingsEnumerator : object, IEnumerator {
         
         private IEnumerator baseEnumerator;

@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 using Origam.UI;
 
 namespace Origam.Schema;
@@ -124,11 +125,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	}
 	
 	[Browsable(false)]
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			ArrayList items = new ArrayList();
+			var items = new List<ISchemaItem>();
 			foreach(AbstractSchemaItem item in this.ChildItems)
 			{
 				items.Add(item);
@@ -195,20 +196,21 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
     {
         return this.GetType().SchemaItemDescription()?.Name;
     }
-    public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+    public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(parentItem == null) return;
 		foreach(AbstractSchemaItem item in parentItem.ChildItems)
 		{
-			if(item is ParameterReference & item.IsDeleted == false)
-				if(!list.ContainsKey((item as ParameterReference).Parameter.Name))
-					list.Add((item as ParameterReference).Parameter.Name, item);
+			if(item is ParameterReference parameterReference && item.IsDeleted == false)
+				if(!list.ContainsKey(parameterReference.Parameter.Name))
+					list.Add(parameterReference.Parameter.Name, parameterReference);
 			item.GetParameterReferences(item, list);
 		}
 	}
-	public ArrayList GetUsage()
+	public List<AbstractSchemaItem> GetUsage()
 	{
-        var referencelist = PersistenceProvider.GetReference(this.PrimaryKey);
+        List<AbstractSchemaItem> referencelist = 
+	        PersistenceProvider.GetReference<AbstractSchemaItem>(this.PrimaryKey);
         if (referencelist==null)
         {
             throw new Exception(ResourceUtils.GetString("ErrorBuildReferenceIndex"));
@@ -293,18 +295,18 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		if(IsPersistable == false) return;
         AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
-		var schemaItemCollection = ChildItems;
+		var ISchemaItemCollection = ChildItems;
         if(!IsDeleted)
         {
             // PERSIST THE ELEMENT
             base.Persist();
         }
 		// TAKE CARE ABOUT CHILD ITEMS
-		ArrayList deletedItems = new ArrayList();
+		var deletedItems = new List<AbstractSchemaItem>();
 		if(PersistChildItems)
 		{
 			// We persist all child items
-			foreach(AbstractSchemaItem item in schemaItemCollection)
+			foreach(AbstractSchemaItem item in ISchemaItemCollection)
 			{
 				if(item.DerivedFrom == null && IsPersistable)
 				{
@@ -617,7 +619,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	private bool _ancestorsPopulated = false;
 	private SchemaItemAncestorCollection _ancestors = new SchemaItemAncestorCollection();
 	private Hashtable _childItemsById = new Hashtable();
-	private Hashtable _childItemsByType = new Hashtable();
+	private Dictionary<string, List<ISchemaItem>> _childItemsByType = new ();
 	private Hashtable _childItemsByName = new Hashtable();
 	[Browsable(false)] 
 	public SchemaItemAncestorCollection AllAncestors
@@ -788,11 +790,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		return result;
 	}
-	SchemaItemCollection _childItems;
+	ISchemaItemCollection _childItems;
 	bool _childItemsPopulated = false;
 	
 	[Browsable(false)]
-	public virtual SchemaItemCollection ChildItems
+	public virtual ISchemaItemCollection ChildItems
 	{
 		get
 		{
@@ -812,7 +814,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 				{
 					if(_childItems == null)
 					{
-						_childItems = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, this);
+						_childItems = SchemaItemCollection.Create(this.PersistenceProvider, this.RootProvider, this);
 					}
 					_childItems.Clear();
 					_childItems.AddRange(this.GetChildItems(this));
@@ -845,11 +847,11 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	private int _childItemsTypeCacheCount = 0;
 	private void AddItemToTypeCache(ISchemaItem item)
 	{
-		if(! _childItemsByType.Contains(item.ItemType))
+		if(! _childItemsByType.ContainsKey(item.ItemType))
 		{
-			_childItemsByType.Add(item.ItemType, new ArrayList());
+			_childItemsByType.Add(item.ItemType, new List<ISchemaItem>());
 		}
-		(_childItemsByType[item.ItemType] as ArrayList).Add(item);
+		_childItemsByType[item.ItemType].Add(item);
 		
 		_childItemsTypeCacheCount++;
 	}
@@ -879,33 +881,33 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return null;
 		}
 	}
-	private ArrayList GetItemsFromCache(string itemType)
+	private List<ISchemaItem> GetItemsFromCache(string itemType)
 	{
 		// initialize the cache
 		InitializeItemCache();
-		if(_childItemsByType.Contains(itemType))
+		if(_childItemsByType.TryGetValue(itemType, out var value))
 		{
 			// we copy the array, because of multithreading (collection may change while
 			// another thread is running)
-			return new ArrayList(_childItemsByType[itemType] as ArrayList);
+			return new List<ISchemaItem>(value);
 		}
 		else
 		{
-			return new ArrayList();
+			return new List<ISchemaItem>();
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Parameters
+	public List<ISchemaItem> Parameters
 	{
 		get
 		{
 			return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 		}
 	}
-	Hashtable _parameterReferences = new Hashtable();
+	Dictionary<string, ParameterReference> _parameterReferences = new();
 	[Category("(Schema Item)")]
 	[Browsable(false)]
-	public virtual Hashtable ParameterReferences
+	public virtual Dictionary<string, ParameterReference> ParameterReferences
 	{
 		get
 		{
@@ -953,7 +955,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 					lock(Lock)
 					{
 #endif
-						_hasParameterReferences = (this.ParameterReferences.Count > 0);
+						_hasParameterReferences = ParameterReferences.Count > 0;
 #if ORIGAM_CLIENT
 						_hasParameterReferencesCached = true;
 					}
@@ -964,7 +966,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 	}
 	
-	public ArrayList ChildItemsByType(string itemType)
+	public List<ISchemaItem> ChildItemsByType(string itemType)
 	{
 #if ORIGAM_CLIENT
 		// if the number of items is different than cached, we go through the whole collection
@@ -973,7 +975,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return GetItemsFromCache(itemType);
 		}
 #endif
-		ArrayList list = new ArrayList();
+		var list = new List<ISchemaItem>();
 		foreach(AbstractSchemaItem item in this.ChildItems)
 		{
 			if(item.ItemType == itemType)
@@ -1066,9 +1068,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 	}
 	[Browsable(false)]
-	public ArrayList GetDependencies(bool ignoreErrors)
+	public List<ISchemaItem> GetDependencies(bool ignoreErrors)
 	{
-		ArrayList dependencies = new ArrayList();
+		var dependencies = new List<ISchemaItem>();
 		foreach(SchemaItemAncestor anc in this.Ancestors)
 		{
 			dependencies.Add(anc.Ancestor);
@@ -1083,7 +1085,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 		return dependencies;
 	}
-	public virtual void GetExtraDependencies(ArrayList dependencies) {}
+	public virtual void GetExtraDependencies(List<ISchemaItem> dependencies) {}
 	
 	public virtual void UpdateReferences()
 	{
@@ -1157,9 +1159,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
         };
     #endregion
     #region Private Methods
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(AbstractSchemaItem parentItem)
 	{
-		ArrayList items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
@@ -1178,9 +1180,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return this.ParentItem.Path + "/" + this.Name;
 		}
 	}
-	private SchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
+	private ISchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
 	{
-		SchemaItemCollection col = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, parentItem);
+		ISchemaItemCollection col = SchemaItemCollection.Create(this.PersistenceProvider, this.RootProvider, parentItem);
         // Get children if we're allowed to do so
         if(!NeverRetrieveChildren)
         {

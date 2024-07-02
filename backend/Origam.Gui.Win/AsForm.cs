@@ -562,18 +562,18 @@ public class AsForm : DockContent, IViewContent, IRecordReferenceProvider,
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<AsPanel>();
 			AddPanels(this, list);
-			return (AsPanel[])list.ToArray(typeof(AsPanel));
+			return list.ToArray();
 		}
 	}
-	private void AddPanels(Control parentControl, ArrayList list)
+	private void AddPanels(Control parentControl, List<AsPanel> list)
 	{
 		foreach(Control control in parentControl.Controls)
 		{
-			if(control is AsPanel)
+			if(control is AsPanel panel)
 			{
-				list.Add(control);
+				list.Add(panel);
 			}
 			
 			AddPanels(control, list);

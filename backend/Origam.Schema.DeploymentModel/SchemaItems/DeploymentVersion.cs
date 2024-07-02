@@ -123,7 +123,6 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [Browsable(false)]
     public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
 		ChildItems
-			.ToGeneric()
 			.OrderBy(activity => 
 				((AbstractUpdateScriptActivity)activity).ActivityOrder)
 			.Cast<AbstractUpdateScriptActivity>();

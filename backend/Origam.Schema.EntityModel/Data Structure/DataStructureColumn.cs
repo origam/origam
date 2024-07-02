@@ -27,7 +27,9 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence.Attributes;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.Attributes;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 public enum DataStructureColumnSortDirection
@@ -416,7 +418,7 @@ public class DataStructureColumn : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
 			base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
@@ -435,7 +437,7 @@ public class DataStructureColumn : AbstractSchemaItem
 //				}
 //			}
 //		}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Field);
 		if(this.DefaultLookup != null) dependencies.Add(this.DefaultLookup);
@@ -457,11 +459,11 @@ public class DataStructureColumn : AbstractSchemaItem
         }
         base.UpdateReferences();
     }
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override string NodeText

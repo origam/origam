@@ -55,7 +55,7 @@ public class GenerateXamlCommand : AbstractMenuCommand
 			Origam.Schema.MenuModel.Menu item = _schema.ActiveNode as Origam.Schema.MenuModel.Menu;
 			Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item).Save(dialog.FileName);
 			string path = Path.GetDirectoryName(dialog.FileName);
-			foreach(AbstractSchemaItem child in item.ChildItemsRecursive)
+			foreach(ISchemaItem child in item.ChildItemsRecursive)
 			{
 				FormReferenceMenuItem formMenu = child as FormReferenceMenuItem;
 				if(formMenu != null)

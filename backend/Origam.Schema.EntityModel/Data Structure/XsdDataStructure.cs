@@ -21,7 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml.Serialization;
-using Origam.DA.ObjectPersistence; 
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -35,11 +36,11 @@ public class XsdDataStructure : AbstractDataStructure
 	
 	public XsdDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public XsdDataStructure(Key primaryKey) : base(primaryKey)	{}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#region Properties

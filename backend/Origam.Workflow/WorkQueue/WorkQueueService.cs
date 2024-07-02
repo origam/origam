@@ -147,7 +147,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         // Load all active work queues
         DataSet result = dataService.LoadData(new Guid("3a23f4e1-368c-4163-a790-4eed173af83d"), new Guid("ed3d93ca-bd4e-4830-8d26-f7120c8fc7ff"), Guid.Empty, Guid.Empty, null);
         // filter out those current user has no access to
-        ArrayList rowsToDelete = new ArrayList();
+        var rowsToDelete = new List<DataRow>();
         foreach (DataRow row in result.Tables["WorkQueue"].Rows)
         {
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();

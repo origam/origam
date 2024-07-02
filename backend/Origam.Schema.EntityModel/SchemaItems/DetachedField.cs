@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.EntityModel;
@@ -105,10 +106,10 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	public override string FieldType => "DetachedField";
 	public override bool ReadOnly => false;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if(ArrayRelation != null)
         {

@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -203,9 +205,8 @@ public class MenuXmlBuilder
         }
         if (newNode != null)
         {
-            ArrayList sortedList = new ArrayList(item.ChildItems);
-            sortedList.Sort(new Origam.Schema.MenuModel
-                .AbstractMenuItem.MenuItemComparer());
+            List<AbstractSchemaItem> sortedList = item.ChildItems.ToList();
+            sortedList.Sort(new AbstractMenuItem.MenuItemComparer());
             foreach (AbstractSchemaItem child in sortedList)
             {
                 RenderNode(doc, newNode, child);

@@ -71,6 +71,10 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
       <Name>Origam.DA.Common</Name>
       <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>

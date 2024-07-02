@@ -675,7 +675,7 @@ public class ShowUsage : AbstractMenuCommand
         var referenceList = _schema.ActiveSchemaItem.GetUsage();
         if (referenceList != null)
         {
-            pad.DisplayResults((AbstractSchemaItem[])referenceList.ToArray(typeof(AbstractSchemaItem)));
+            pad.DisplayResults(referenceList.ToArray());
         }
 		ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 		cmd.Run();

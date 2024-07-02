@@ -72,7 +72,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
 			return new Hashtable(mappingDictionary);
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
         if (this.Rule != null)
         {
@@ -107,12 +107,10 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	public string Roles { get; set; } = "";
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenIds => ChildItems
-		.ToGeneric()
 		.OfType<ScreenCondition>()
 		.Select(reference => reference.ScreenId);
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenSectionIds  => ChildItems
-		.ToGeneric()
 		.OfType<ScreenSectionCondition>()
 		.Select(reference => reference.ScreenSectionId);
 	[StringNotEmptyModelElementRule()]

@@ -267,7 +267,7 @@ public class ServerCoreUIService : IBasicUIService
             // (primary keys + all the initial sort columns)
             columns = sessionStore.DataListLoadedColumns;
         }
-        return DataTools.DatasetToHashtable(result as DataSet, columns, 
+        return DataTools.DatasetToDictionary(result as DataSet, columns, 
             INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
             sessionStore.DataListEntity, sessionStore);
     }
@@ -895,12 +895,12 @@ public class ServerCoreUIService : IBasicUIService
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             favorites, false, null);
     }
-    public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+    public List<ChangeInfo> GetPendingChanges(Guid sessionFormIdentifier)
     {
         var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
         var changes = sessionStore.PendingChanges;
         sessionStore.PendingChanges = null;
-        return changes ?? new ArrayList();
+        return changes ?? new List<ChangeInfo>();
     }
     public List<ChangeInfo> GetChanges(ChangesInput input)
     {
@@ -1284,7 +1284,7 @@ public class ServerCoreUIService : IBasicUIService
         NotificationBox logoNotificationBox = LogoNotificationBox();
         if (logoNotificationBox != null)
         {
-            ArrayList tooltips = logoNotificationBox.ChildItemsByType(
+            List<ISchemaItem> tooltips = logoNotificationBox.ChildItemsByType(
                 DataServiceDataTooltip.CategoryConst);
             doc = GetTooltip(null, tooltips)?.Xml;
         }
@@ -1294,7 +1294,7 @@ public class ServerCoreUIService : IBasicUIService
         }
         return doc;
     }
-    private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
+    private static IXmlContainer GetTooltip(object id, List<ISchemaItem> tooltips)
     {
         tooltips.Sort();
         DataServiceDataTooltip tooltip = null;

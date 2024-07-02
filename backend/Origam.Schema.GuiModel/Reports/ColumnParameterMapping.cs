@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 [XmlModelRoot(CategoryConst)]
@@ -69,11 +70,11 @@ public class ColumnParameterMapping : AbstractSchemaItem
 			return ColumnParameterMapping.CategoryConst;
 		}
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion			

@@ -50,6 +50,8 @@ using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.DA.Service;
 using System.Collections;
+using System.Collections.Generic;
+using Origam.Gui;
 using Origam.Server;
 
 namespace Origam.Server;
@@ -229,7 +231,7 @@ class ParameterSessionStore : SessionStore
     }
     private object SaveParameterData()
     {
-        ArrayList listOfChanges = new ArrayList();
+        var listOfChanges = new List<ChangeInfo>();
         DataRow r = this.Data.Tables["SD"].Rows[0];
         IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
         int intValue = 0;

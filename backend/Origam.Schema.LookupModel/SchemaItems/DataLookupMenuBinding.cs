@@ -21,12 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.MenuModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.LookupModel;
 /// <summary>
@@ -51,7 +53,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.MenuItem);
 		AbstractSchemaItem menu = this.MenuItem;
@@ -70,11 +72,11 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)

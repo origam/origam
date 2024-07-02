@@ -28,6 +28,7 @@ using Origam;
 
 using Origam.DA;
 using Origam.Rule;
+using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -40,7 +41,7 @@ namespace Origam.Gui;
 public abstract class EntityUIActionRunner
 {
     protected readonly IEntityUIActionRunnerClient actionRunnerClient;
-    protected readonly ArrayList resultList = new ArrayList();
+    protected readonly List<object> resultList = new ();
     public EntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
     {
         this.actionRunnerClient = actionRunnerClient;
@@ -122,7 +123,7 @@ public abstract class EntityUIActionRunner
                 }
             }
         }
-        ArrayList changes = new ArrayList();
+        var changes = new List<ChangeInfo>();
         var transactionId = Guid.NewGuid().ToString();
         SetTransactionId(processData,transactionId);
         try
@@ -196,7 +197,7 @@ public abstract class EntityUIActionRunner
         EntityWorkflowAction entityWorkflowAction,
         ExecuteActionProcessData processData)
     {
-        ArrayList scriptCalls = entityWorkflowAction.ChildItemsByType(
+        List<ISchemaItem> scriptCalls = entityWorkflowAction.ChildItemsByType(
             EntityWorkflowActionScriptCall.CategoryConst);
         if(scriptCalls.Count == 0)
         {

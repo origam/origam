@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -125,18 +126,18 @@ public abstract class AbstractDataReport : AbstractReport
         }
     }
     #endregion
-    public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+    public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
     {
         if (this.Method != null)
         {
-            base.GetParameterReferences(this.Method as AbstractSchemaItem, list);
+            base.GetParameterReferences(Method, list);
         }
         else
         {
-            base.GetParameterReferences(this.DataStructure as AbstractSchemaItem, list);
+            base.GetParameterReferences(DataStructure, list);
         }
     }
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.DataStructure);
         if (this.Method != null) dependencies.Add(this.Method);

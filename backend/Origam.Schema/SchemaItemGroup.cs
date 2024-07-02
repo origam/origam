@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
 using Origam.DA.Common.ObjectPersistence.Attributes;
+using Origam.Schema.ItemCollection;
 using InvalidCastException = System.InvalidCastException;
 
 namespace Origam.Schema;
@@ -123,9 +124,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			? parentItem : GetRootGroup(parentItem.ParentGroup);
 	}
 	
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(AbstractSchemaItem parentItem)
 	{
-		var items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(var childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
@@ -216,26 +217,26 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 	public string Icon => "37_folder-3.png";
 	#endregion
 	#region ISchemaItemProvider Members
-	public SchemaItemCollection ChildItems
+	public ISchemaItemCollection ChildItems
 	{
 		get
 		{
 			// We look for all child items of our parent schema item that have this group
 			// We browse the collection because it has all the items correctly set
 			var provider = ParentItem ?? RootProvider;
-			var schemaItemCollection = new SchemaItemCollection(
+			var ISchemaItemCollection = SchemaItemCollection.Create(
 				PersistenceProvider, provider, ParentItem);
 			foreach(AbstractSchemaItem item 
 			        in provider.ChildItemsByGroup(this))
 			{
-				schemaItemCollection.Add(item);
+				ISchemaItemCollection.Add(item);
 			}
-			return schemaItemCollection;
+			return ISchemaItemCollection;
 		}
 	}
-	public ArrayList ChildItemsByType(string itemType)
+	public List<ISchemaItem> ChildItemsByType(string itemType)
 	{
-		var list = new ArrayList();
+		var list = new List<ISchemaItem>();
 		// We look for all child items of our parent schema item that have this group
 		// We browse the collection because it has all the items correctly set
 		foreach(AbstractSchemaItem item in ParentItem.ChildItemsByGroup(this))
@@ -298,11 +299,11 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
         }
     }
     public ISchemaItemProvider RootProvider { get; set; } = null;
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			var items = new ArrayList();
+			var items = new List<ISchemaItem>();
 			foreach(var item in ChildItems)
 			{
 				items.Add(item);

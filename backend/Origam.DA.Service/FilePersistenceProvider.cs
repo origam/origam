@@ -283,7 +283,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 CategoryFactory.Create(typeof(T)),
                 typeof(T),
                 useCache)
-            .ToList<T>();
+            .CastToList<T>();
     }
     private ArrayList RetrieveListByParent(Guid id, string category,
         Type type, bool useCache)

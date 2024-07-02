@@ -395,9 +395,9 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         tableRelation.Items.Clear();
         if (this.Entity == null) return;
         txtName.Text = "Transaction " + this.Entity.Name;
-        foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
+        foreach (AbstractSchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
         {
-            tableRelation.Items.Add(abstractSchemaIttem);
+            tableRelation.Items.Add(abstractSchemaItem);
         }
     }
     private void SetUpFormKey()

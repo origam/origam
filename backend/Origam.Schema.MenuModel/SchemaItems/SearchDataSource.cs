@@ -26,6 +26,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel;
@@ -156,7 +157,7 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     }
     #endregion
     #region Overriden AbstractSchemaItem Members
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.DataStructure);
         base.GetExtraDependencies(dependencies);

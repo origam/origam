@@ -754,7 +754,7 @@ public abstract class AbstractDataService : IDataService
         DataSet ds, string transactionid, bool forceBulkInsert);
 	public abstract object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId);
 	public abstract DataSet ExecuteProcedure(string name, string EntityOrder, DataStructureQuery query, string transactionid);
-	public abstract ArrayList CompareSchema(IPersistenceProvider provider);
+	public abstract List<SchemaDbCompareResult> CompareSchema(IPersistenceProvider provider);
     public abstract bool IsSchemaItemInDatabase(ISchemaItem schemaItem);
 	public virtual string ExecuteUpdate(string command, string transactionId)
 	{

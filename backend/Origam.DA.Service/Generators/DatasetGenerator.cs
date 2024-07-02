@@ -22,12 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 using Origam.Schema.WorkflowModel;
 
 namespace Origam.DA.Service;
@@ -300,7 +303,7 @@ public class DatasetGenerator
 		dataset.Locale = culture;
 		AddExtendedProperties(dataset.ExtendedProperties, ds.PrimaryKey);
 		//dataset.EndInit();
-		ArrayList entities = ds.Entities;
+		List<DataStructureEntity> entities = ds.Entities;
 		ArrayList aggregatedColumns = new ArrayList();
 		// Add tables
 		foreach(DataStructureEntity entity in entities)
@@ -697,7 +700,7 @@ public class DatasetGenerator
 		// if there is just 1 dynamic label and it is actually static (never changes)
 		// we take it as the default label so it can be used also in empty form or grid column
 		// label
-		ArrayList dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+		List<ISchemaItem> dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 		EntityFieldDynamicLabel dynamicLabel = null;
 		if(dynamicLabels.Count == 1)
 		{
@@ -783,7 +786,7 @@ public class DatasetGenerator
 	private void AddQueryRelations(DataSet dataset, DataStructure ds)
 	{
 		dataset.Relations.Clear();
-		ArrayList entities = ds.Entities;
+		List<DataStructureEntity> entities = ds.Entities;
         string debugPath = ds.Path;
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -800,7 +803,7 @@ public class DatasetGenerator
 	}
     private static string AddRelation(DataSet dataset, string debugPath, IAssociation assoc, string baseEntityName, string relatedEntityName, string relationName)
     {
-        ArrayList entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
+        List<ISchemaItem> entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
         DataColumn[] baseColumns = new DataColumn[entityItems.Count];
         DataColumn[] relatedColumns = new DataColumn[entityItems.Count];
         if (assoc.IsSelfJoin)
@@ -1239,7 +1242,7 @@ public class DatasetGenerator
 				break;
 			case "Concat":
 				ISchemaItem concatArg = item.GetChildByName("Strings");
-				ArrayList concatStrings = new ArrayList(concatArg.ChildItems);
+				List<AbstractSchemaItem> concatStrings = concatArg.ChildItems.ToList();
 				if(concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, ResourceUtils.GetString("ErrorTwoCONCATArguments"));
 				concatStrings.Sort();
 				i = 0;
@@ -1255,7 +1258,7 @@ public class DatasetGenerator
 			case "LogicalOr":
 			case "LogicalAnd":
 				ISchemaItem logicalArg = item.GetChildByName("Arguments");
-				SchemaItemCollection logicalArguments = logicalArg.ChildItems;
+				ISchemaItemCollection logicalArguments = logicalArg.ChildItems;
 				if(logicalArguments.Count < 2) throw new ArgumentOutOfRangeException("Arguments", null, ResourceUtils.GetString("ErrorTwoArguments", item.Function.Name));
 				i = 0;
 				StringBuilder logicalBuilder = new StringBuilder();
@@ -1305,7 +1308,7 @@ public class DatasetGenerator
 			case "In":
 				ISchemaItem leftArg = item.GetChildByName("FilterExpression").ChildItems[0];
 				ISchemaItem listArg = item.GetChildByName("List");
-				SchemaItemCollection listExpressions = listArg.ChildItems;
+				ISchemaItemCollection listExpressions = listArg.ChildItems;
 				if(listExpressions.Count < 2) throw new ArgumentOutOfRangeException("List", null, "There have to be at least 2 items in the List argument for IN function specified as a column.");
 				i = 0;
 				StringBuilder listBuilder = new StringBuilder();

@@ -62,7 +62,6 @@ public static class CustomParameterService
         else
         {
             return method.ParameterReferences.Keys
-                .Cast<string>()
                 .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
         }
     }

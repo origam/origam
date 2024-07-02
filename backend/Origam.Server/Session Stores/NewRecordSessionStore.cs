@@ -77,7 +77,7 @@ public class NewRecordSessionStore : FormSessionStore
             RegisterEvents();
             // we're sorting column names in order to introduce
             // a level of predictability in the order of rule processing
-            var sortedColumnNames = Request.NewRecordInitialValues.Keys.ToList<string>();
+            var sortedColumnNames = Request.NewRecordInitialValues.Keys.CastToList<string>();
             sortedColumnNames.Sort();
             foreach (var columnName in sortedColumnNames
                          .Where(columnName 

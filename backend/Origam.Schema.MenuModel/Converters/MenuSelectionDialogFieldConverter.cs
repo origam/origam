@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -51,9 +52,9 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 			selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 		}
 		if(selectionDialogPanel == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList fields = selectionDialogPanel.DataEntity.EntityColumns;
+		List<ISchemaItem> fields = selectionDialogPanel.DataEntity.EntityColumns;
 		ArrayList array = new ArrayList(fields.Count);
-		foreach(AbstractSchemaItem item in fields)
+		foreach(ISchemaItem item in fields)
 		{
 			array.Add(item);
 		}
@@ -82,8 +83,8 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 				selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 			}
 			if(selectionDialogPanel == null) return null;
-			ArrayList fields = selectionDialogPanel.DataEntity.EntityColumns;
-			foreach(AbstractSchemaItem item in fields)
+			List<ISchemaItem> fields = selectionDialogPanel.DataEntity.EntityColumns;
+			foreach(ISchemaItem item in fields)
 			{
 				if(item.Name == value.ToString())
 					return item as IDataEntityColumn;

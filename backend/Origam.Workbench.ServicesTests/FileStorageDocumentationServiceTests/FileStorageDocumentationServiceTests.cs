@@ -305,7 +305,7 @@ internal class MockFileProvider: IFilePersistenceProvider
     {
         throw new NotImplementedException();
     }
-    public ArrayList GetReference( Key key)
+    public List<T> GetReference<T>( Key key)
     {
         throw new NotImplementedException();
     }

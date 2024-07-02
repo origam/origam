@@ -205,7 +205,7 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 		var baseControl = ServiceManager.Services
 			.GetService<ISchemaService>()
 			.GetProvider<UserControlSchemaItemProvider>()
-			.ChildItems.ToGeneric()
+			.ChildItems
 			.Cast<ControlItem>()
 			.FirstOrDefault(item =>
 				item.ControlType == type.FullName);

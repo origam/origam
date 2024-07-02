@@ -100,7 +100,7 @@ public class ControlsLookUpService: IControlsLookUpService
         if (binding != null)
         {
             ParameterizedEventArgs args = new ParameterizedEventArgs();
-            foreach (DictionaryEntry entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue))
+            foreach (var entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue))
             {
                 args.Parameters.Add(entry.Key, entry.Value);
             }

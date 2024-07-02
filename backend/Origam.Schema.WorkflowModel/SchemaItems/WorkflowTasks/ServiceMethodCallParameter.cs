@@ -47,7 +47,7 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 	public override string ItemType => CategoryConst;
 	[Browsable(false)]
 	public override bool UseFolders => false;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ServiceMethodParameter);
 		base.GetExtraDependencies(dependencies);

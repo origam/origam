@@ -40,11 +40,11 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 	public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Entities
+	public List<DataStructureEntity> Entities
 	{
 		get
 		{
-			ArrayList entities = new ArrayList();
+			var entities = new List<DataStructureEntity>();
 			foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
 			{
 				entities.Add(entity);
@@ -71,7 +71,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
         }
     }
 	[Browsable(false)]
-	public ArrayList DefaultSets
+	public List<ISchemaItem> DefaultSets
 	{
 		get
 		{
@@ -79,7 +79,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList TemplateSets
+	public List<ISchemaItem> TemplateSets
 	{
 		get
 		{
@@ -87,7 +87,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Methods
+	public List<ISchemaItem> Methods
 	{
 		get
 		{
@@ -95,7 +95,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList RuleSets
+	public List<ISchemaItem> RuleSets
 	{
 		get
 		{
@@ -103,16 +103,16 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	[Browsable(false)]
-	public ArrayList SortSets
+	public List<ISchemaItem> SortSets
 	{
 		get
 		{
 			return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
 		}
 	}
-	private ArrayList GetChildEntities(DataStructureEntity entity)
+	private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
 	{
-		ArrayList entities = new ArrayList();
+		var entities = new List<DataStructureEntity>();
 		foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
 		{
 			entities.Add(childEntity);
@@ -164,13 +164,13 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 					   }
 			   );                        
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		foreach(DataStructureEntity item in this.Entities)
+		foreach(DataStructureEntity item in Entities)
 		{
 			item.GetParameterReferences(item, list);
 		}
-		foreach(DataStructureDefaultSet defset in this.DefaultSets)
+		foreach(DataStructureDefaultSet defset in DefaultSets)
 		{
 			defset.GetParameterReferences(defset, list);
 		}

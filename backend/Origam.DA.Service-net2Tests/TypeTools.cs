@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Schema.ItemCollection;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.RuleModel;
@@ -39,7 +40,7 @@ internal static class TypeTools
             .GetService(typeof(SchemaService)))
         .Providers
         .Select(provider => provider.GetType());
-    public static SchemaItemCollection GetAllItems(Type providerType)
+    public static ISchemaItemCollection GetAllItems(Type providerType)
     {
         SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
             as SchemaService;

@@ -681,7 +681,7 @@ public class PackageEditor : AbstractViewContent
 				.RetrieveListByPackage<AbstractSchemaItem>(package.Id);
 		foreach(AbstractSchemaItem item in allCurrent)
 		{
-			ArrayList dep = item.GetDependencies(false);
+			List<ISchemaItem> dep = item.GetDependencies(false);
 			
 			foreach(AbstractSchemaItem refItem in allReferenced)
 			{

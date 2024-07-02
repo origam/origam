@@ -28,11 +28,11 @@ using Origam.DA;
 namespace Origam.Server;
 public static class DataTools
 {
-    public static IDictionary<string, object> DatasetToHashtable(DataSet data)
+    public static IDictionary<string, object> DatasetToDictionary(DataSet data)
     {
-        return DatasetToHashtable(data, null, 0, null, null, null);
+        return DatasetToDictionary(data, null, 0, null, null, null);
     }
-    public static IDictionary<string, object> DatasetToHashtable(
+    public static IDictionary<string, object> DatasetToDictionary(
         DataSet data, IList<string> columns, int firstPageRecords, object firstRecordId, 
         string dataListEntity, SessionStore ss)
     {
@@ -45,7 +45,7 @@ public static class DataTools
             {
                 if (t.TableName == dataListEntity)
                 {
-                    resultDataset.Add(t.TableName, DatatableToHashtable(
+                    resultDataset.Add(t.TableName, DatatableToDictionary(
                         t, columns, firstPageRecords, firstRecordId, false, 
                         ss));
                 }
@@ -58,23 +58,23 @@ public static class DataTools
             }
             else
             {
-                resultDataset.Add(t.TableName, DatatableToHashtable(t, columns,
+                resultDataset.Add(t.TableName, DatatableToDictionary(t, columns,
                     firstPageRecords, recordId, false, ss));
             }
         }
         return resultDataset;
     }
-    public static IDictionary<string, ArrayList> DatatableToHashtable(
+    public static IDictionary<string, List<object>> DatatableToDictionary(
         DataTable t, bool includeColumnNames)
     {
-        return DatatableToHashtable(t, null, 0, null, includeColumnNames, null);
+        return DatatableToDictionary(t, null, 0, null, includeColumnNames, null);
     }
-    public static IDictionary<string, ArrayList> DatatableToHashtable(
+    public static IDictionary<string, List<object>> DatatableToDictionary(
         DataTable t, IList<string> columns, int initialPageRecords, 
         object initialRecordId, bool includeColumnNames, SessionStore ss)
     {
         bool primaryKeysOnly = (columns != null);
-        IDictionary<string, ArrayList> resultTable = new Dictionary<string, ArrayList>(2);
+        var resultTable = new Dictionary<string, List<object>>(2);
         string[] allColumnNames = SessionStore.GetColumnNames(t);
         bool primaryKeysOnlyFinal = primaryKeysOnly;
         if (primaryKeysOnly && t.Rows.Count <= initialPageRecords)
@@ -83,7 +83,7 @@ public static class DataTools
         }
         if (includeColumnNames)
         {
-            resultTable.Add("columnNames", new ArrayList(allColumnNames));
+            resultTable.Add("columnNames", new List<object>(allColumnNames));
         }
         if (primaryKeysOnly && ! primaryKeysOnlyFinal && ss != null)
         {
@@ -108,25 +108,25 @@ public static class DataTools
                 columnNamesFinal[i] = t.PrimaryKey[i].ColumnName;
             }
             columns.CopyTo(columnNamesFinal, t.PrimaryKey.Length);
-            resultTable.Add("columnNames", new ArrayList(columnNamesFinal));
+            resultTable.Add("columnNames", new List<object>(columnNamesFinal));
         }
         else
         {
             columnNamesFinal = allColumnNames;
         }
-        ArrayList data = DataTableToArrayList(t, columnNamesFinal);
+        List<object> data = DataTableToList(t, columnNamesFinal);
         resultTable.Add("data", data);
         if (primaryKeysOnlyFinal)
         {
             resultTable.Add("initialPage", 
-                DataTableToArrayList(t, initialPageRecords, initialRecordId,
+                DataTableToList(t, initialPageRecords, initialRecordId,
                 ss));
         }
         return resultTable;
     }
-    public static ArrayList DataTableToArrayList(DataTable t, string[] columnNames)
+    public static List<object> DataTableToList(DataTable t, string[] columnNames)
     {
-        ArrayList data = new ArrayList(t.Rows.Count);
+        var data = new List<object>(t.Rows.Count);
         foreach (DataRow r in t.Rows)
         {
             if (r.RowState != DataRowState.Deleted && r.RowState != DataRowState.Detached)
@@ -136,10 +136,10 @@ public static class DataTools
         }
         return data;
     }
-    public static ArrayList DataTableToArrayList(DataTable t, int pageSize, 
+    public static List<object> DataTableToList(DataTable t, int pageSize, 
         object startRecordId, SessionStore ss)
     {
-        ArrayList data = new ArrayList(pageSize);
+        var data = new List<object>(pageSize);
         string[] columnNames = SessionStore.GetColumnNames(t);
         DataRow startRow = null;
         int startRowIndex = 0;

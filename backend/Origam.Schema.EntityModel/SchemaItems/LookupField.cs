@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA;
@@ -195,13 +196,13 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		set => throw new NotSupportedException();
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules 
+	public List<ISchemaItem> RowLevelSecurityRules 
 		=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules 
+	public List<ISchemaItem> ConditionalFormattingRules 
 		=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 	[Browsable(false)]
-	public ArrayList DynamicLabels 
+	public List<ISchemaItem> DynamicLabels 
 		=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 	#endregion
 	#region Properties
@@ -226,7 +227,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	public override bool CanMove(UI.IBrowserNode2 newNode) 
 		=> newNode is IDataEntity;
 	public override string ItemType => AbstractDataEntityColumn.CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(DefaultLookup != null)
 		{
@@ -247,7 +248,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		base.GetExtraDependencies (dependencies);
 	}
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
 	public override void UpdateReferences()

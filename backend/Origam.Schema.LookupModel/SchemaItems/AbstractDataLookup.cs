@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -43,11 +44,11 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	public override bool UseFolders => false;
 	public override string ItemType => CategoryConst;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		base.GetParameterReferences(ListMethod, list);
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ListDataStructure);
 		dependencies.Add(ValueDataStructure);
@@ -72,7 +73,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList MenuBindings => ChildItemsByType(
+	public List<ISchemaItem> MenuBindings => ChildItemsByType(
 		DataLookupMenuBinding.CategoryConst);
 	[Browsable(false)]
 	public bool HasTooltip
@@ -85,7 +86,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Tooltips => ChildItemsByType(
+	public List<ISchemaItem> Tooltips => ChildItemsByType(
 		AbstractDataTooltip.CategoryConst);
 	#region List
 	private string _listValueMember;

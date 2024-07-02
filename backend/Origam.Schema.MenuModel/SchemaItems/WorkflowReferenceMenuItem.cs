@@ -45,7 +45,7 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
 		: base(schemaExtensionId) {}
 	public WorkflowReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Workflow);
 		base.GetExtraDependencies(dependencies);

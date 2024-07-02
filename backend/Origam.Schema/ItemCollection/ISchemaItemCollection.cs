@@ -1,6 +1,7 @@
-#region license
+﻿#region license
+
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,17 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-namespace Origam.Server;
-public enum Operation
+using System;
+using System.Collections.Generic;
+
+namespace Origam.Schema.ItemCollection;
+
+public interface ISchemaItemCollection : IList<AbstractSchemaItem>, IDisposable
 {
-   DeleteAllData =-2, 
-   Delete = -1, 
-   Update = 0, 
-   Create =1,
-   FormSaved = 2,
-   FormNeedsRefresh = 3,
-   CurrentRecordNeedsUpdate = 4,
-   RefreshPortal = 5
+    public bool DeleteItemsOnClear { get; set; }
+    public bool RemoveDeletedItems { get; set; }
+    public bool UpdateParentItem { get; set; }
+    public AbstractSchemaItem ParentSchemaItem { get; set;}
+
+    public void AddRange(IEnumerable<AbstractSchemaItem> value);
 }

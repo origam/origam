@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using Origam.UI;
@@ -645,7 +646,7 @@ public class DataGridBuilder : IGridBuilder
 			CurrencyManager cm = grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
 			object value = (cm.List[hti.Row] as DataRowView).Row[col.MappingName];
 			object linkTarget = lookupService.LinkTarget(col.DropDown, value);
-			Hashtable parameters = lookupService.LinkParameters(linkTarget, value);
+			Dictionary<string, object> parameters = lookupService.LinkParameters(linkTarget, value);
 			Workbench.WorkbenchSingleton.Workbench.ProcessGuiLink(_form, linkTarget, parameters);
 		}
 	}

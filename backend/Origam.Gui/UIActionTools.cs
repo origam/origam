@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -62,9 +63,9 @@ public class UIActionTools
         }
         return hasMultipleSelection;
     }
-    public static ArrayList GetOriginalParameters(EntityUIAction action)
+    public static List<string> GetOriginalParameters(EntityUIAction action)
     {
-        ArrayList originalDataParameters = new ArrayList();
+        var originalDataParameters = new List<string>();
         foreach(EntityUIActionParameterMapping mapping 
             in action.ChildItemsByType(
             EntityUIActionParameterMapping.CategoryConst))

@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Xml.XPath;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
@@ -68,7 +69,7 @@ public class StateMachine : AbstractSchemaItem
 	#region Overriden AbstractSchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Entity);
 		if(Field != null)
@@ -88,10 +89,10 @@ public class StateMachine : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Events => ChildItemsByType(
+	public List<ISchemaItem> Events => ChildItemsByType(
 		StateMachineEvent.CategoryConst);
 	[Browsable(false)]
-	public ArrayList ParameterMappings => ChildItemsByType(
+	public List<ISchemaItem> ParameterMappings => ChildItemsByType(
 		StateMachineDynamicLookupParameterMapping.CategoryConst);
 	public object[] DynamicOperations(IXmlContainer data)
 	{
@@ -149,7 +150,7 @@ public class StateMachine : AbstractSchemaItem
 			}
 			else
 			{
-				var parameters = new Hashtable();
+				var parameters = new Dictionary<string, object>();
 				foreach(StateMachineDynamicLookupParameterMapping 
 					        parameterMapping in ParameterMappings)
 				{

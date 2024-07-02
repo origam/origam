@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
@@ -60,7 +61,7 @@ public class FunctionCall : AbstractDataEntityColumn
 		return RootItem == ((ISchemaItem)newNode).RootItem;
 	}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Function);
 		base.GetExtraDependencies (dependencies);

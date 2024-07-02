@@ -57,7 +57,7 @@ public class XsltDataPage : AbstractPage, IDataStructureReference
 		ChildItemTypes.Add(typeof(PageParameterMapping));
 	}
 
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if (Transformation != null)
 		{

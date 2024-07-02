@@ -1742,8 +1742,8 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		
                 DataSet tmpDS = DatasetTools.CloneDataSet(row.Table.DataSet, false);
                 object profileId = SecurityManager.CurrentUserProfile().Id;
-				ArrayList toSkip = new ArrayList();
-				ArrayList toAdd = new ArrayList();
+				var toSkip = new List<string>();
+				var toAdd = new List<string>();
 				foreach(AsPanel panel in (this.FindForm() as AsForm).Panels)
 				{
 					if(panel.OriginalShowNewButton)

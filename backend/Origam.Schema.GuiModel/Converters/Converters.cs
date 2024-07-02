@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
@@ -351,7 +352,7 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 	{
 		ChartFormMapping currentItem = context.Instance as ChartFormMapping;
 		if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList entities = currentItem.Screen.DataStructure.Entities;
+		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
 		ArrayList entityArray = new ArrayList(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
@@ -373,11 +374,11 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 		{
 			ChartFormMapping currentItem = context.Instance as ChartFormMapping;
 			if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
-			ArrayList entities = currentItem.Screen.DataStructure.Entities;
-			foreach(AbstractSchemaItem item in entities)
+			List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
+			foreach(DataStructureEntity item in entities)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureEntity;
+					return item;
 			}
 			return null;
 		}
@@ -565,7 +566,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     public override System.ComponentModel.TypeConverter.StandardValuesCollection
         GetStandardValues(ITypeDescriptorContext context)
     {
-        ArrayList styleProperties = 
+	    List<ISchemaItem> styleProperties = 
             ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
             .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
         ArrayList propertyArray = new ArrayList(styleProperties.Count);
@@ -587,7 +588,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     {
         if (value.GetType() == typeof(string))
         {
-            ArrayList styleProperties =
+	        List<ISchemaItem> styleProperties =
                 ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
                 .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
             foreach (AbstractSchemaItem item in styleProperties)

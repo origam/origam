@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -45,7 +46,7 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 		this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
 		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
 	}
-	public new ArrayList ParameterMappings
+	public new List<ISchemaItem> ParameterMappings
 	{
 		get
 		{
@@ -61,7 +62,7 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Workflow);
 		base.GetExtraDependencies (dependencies);

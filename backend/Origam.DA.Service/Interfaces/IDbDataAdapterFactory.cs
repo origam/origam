@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Origam.Schema.EntityModel;
@@ -36,7 +37,7 @@ public interface IDbDataAdapterFactory : ICloneable, IDisposable
     bool PrettyFormat { get; set; }
 	DbDataAdapter CreateDataAdapter(SelectParameters adParameters,
         bool forceDatabaseCalculation);
-	DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
+	DbDataAdapter CreateDataAdapter(string procedureName, List<DataStructureEntity> entitiesOrdered, 
         IDbConnection connection, IDbTransaction transaction);
 	DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
 		DataStructureFilterSet filterSet, ColumnsInfo columnsInfo,
@@ -55,7 +56,7 @@ public interface IDbDataAdapterFactory : ICloneable, IDisposable
 	DbDataAdapter GetAdapter(IDbCommand command);
 	DbDataAdapter CloneAdapter(DbDataAdapter adapter);
 	IDbCommand CloneCommand(IDbCommand command);
-	ArrayList Parameters(DataStructure ds, DataStructureEntity entity, 
+	List<string> Parameters(DataStructure ds, DataStructureEntity entity, 
         DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
         string columnName);
     string TableDefinitionDdl(TableMappingItem table);

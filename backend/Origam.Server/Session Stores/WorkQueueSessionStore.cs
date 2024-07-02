@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Data;
 using System.Linq;
+using Origam.Gui;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Session_Stores;

@@ -37,8 +37,8 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	ModelElementKey OldPrimaryKey{get; set;}
 	string Name{get; set;}
 	SchemaItemAncestorCollection AllAncestors{get;}
-	ArrayList Parameters{get;}
-	Hashtable ParameterReferences{get;}
+	List<ISchemaItem> Parameters{get;}
+	Dictionary<string, ParameterReference> ParameterReferences{get;}
 	bool HasParameterReferences{get;}
 	string ItemType{get;}
 	AbstractSchemaItem GetChildByName(string name);
@@ -63,7 +63,7 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	AbstractSchemaItem DerivedFrom{get; set;}
 	bool IsAbstract{get; set;}
 	bool IsPersistable{get; set;}
-	ArrayList GetDependencies(bool ignoreErrors);
+	List<ISchemaItem> GetDependencies(bool ignoreErrors);
 	void UpdateReferences();
 	object Clone(bool keepKeys);
 	void SetExtensionRecursive(Package extension);

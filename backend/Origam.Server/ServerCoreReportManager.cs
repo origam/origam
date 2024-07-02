@@ -46,7 +46,7 @@ public class ServerCoreReportManager : IReportManager
         SessionStore sessionStore = sessionManager.GetSession(
             new Guid(sessionFormIdentifier));
         DataRow row = sessionStore.GetSessionRow(entity, id);
-        Hashtable resultParams = DatasetTools.RetrieveParemeters(
+        Hashtable resultParams = DatasetTools.RetrieveParameters(
             parameterMappings, new List<DataRow>{row});
         sessionManager.AddReportRequest(
             key, new ReportRequest(reportId, resultParams));

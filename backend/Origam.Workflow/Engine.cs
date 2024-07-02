@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using Origam.DA;
@@ -442,7 +443,7 @@ public class WorkflowEngine : IDisposable
 			{
 				contextStores.Add(entry.Key, entry.Value);
 			}
-			ArrayList tasks = WorkflowBlock.ChildItemsByType(
+			List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
 				AbstractWorkflowStep.CategoryConst);
 			// Set states of each task to "not run"
 			foreach (IWorkflowStep task in tasks)
@@ -484,7 +485,7 @@ public class WorkflowEngine : IDisposable
 
 	private void ResumeWorkflow()
 	{
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
 			AbstractWorkflowStep.CategoryConst);
 		if (tasks.Count == 0)
 		{
@@ -558,7 +559,7 @@ public class WorkflowEngine : IDisposable
 				exception.Message);
 		}
 		// suppress all tasks that had not run yet and have no dependencies
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
 			AbstractWorkflowStep.CategoryConst);
 		for (int i = 0; i < tasks.Count; i++)
 		{
@@ -585,7 +586,7 @@ public class WorkflowEngine : IDisposable
 	/// <returns></returns>
 	private bool IsFailureHandled(IWorkflowStep failedStep)
 	{
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
 			AbstractWorkflowStep.CategoryConst);
 		foreach (IWorkflowStep step in tasks)
 		{

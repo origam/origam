@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
@@ -452,9 +453,9 @@ public class ControlSetEditor : AbstractEditor
             // If the controlset was cloned, we clone its documentation, too.
             if (ControlSet.OldPrimaryKey != null)
             {
-                ArrayList items = ControlSet.ChildItemsRecursive;
+	            List<ISchemaItem> items = ControlSet.ChildItemsRecursive;
                 items.Add(ControlSet);
-                _documentation.CloneDocumentation(items.ToList<ISchemaItem>());
+                _documentation.CloneDocumentation(items);
             }
             ControlSet.OldPrimaryKey = null;
             if (saveControl && IsPanel && _panelControlItemRef != null)
@@ -808,7 +809,7 @@ public class ControlSetEditor : AbstractEditor
 			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst).Count];
 			int i = 0;
 			FDToolboxItem fd_item;
-			ArrayList fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			List<ISchemaItem> fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 			fields.Sort();
 			foreach(IDataEntityColumn column in fields)
 			{
@@ -841,7 +842,7 @@ public class ControlSetEditor : AbstractEditor
 		if(controls == null){ return null;}
 		FDToolboxItem[] tool = new FDToolboxItem[controls.ChildItems.Count];
 		int i=0;
-		ArrayList controlList = new ArrayList(controls.ChildItems);
+		List<AbstractSchemaItem> controlList = controls.ChildItems.ToList();
 		controlList.Sort();
 		foreach(ControlItem item in controlList)
 		{
