@@ -1252,8 +1252,8 @@ public class RuleEngine
 				}
 				else
 				{
-					ArrayList changedColumns = new ArrayList();
-					ArrayList changedTargetColumns = new ArrayList(changedColumns.Count);
+					var changedColumns = new List<DataColumn>();
+					var changedTargetColumns = new List<DataColumn>(changedColumns.Count);
 					foreach(DataColumn col in resultRow.Table.Columns)
 					{
 						if(rowChanged.Table.Columns.Contains(col.ColumnName) && ! (resultRow[col].Equals(rowChanged[col.ColumnName])))
