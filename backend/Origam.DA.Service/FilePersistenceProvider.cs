@@ -285,10 +285,10 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 useCache)
             .CastToList<T>();
     }
-    private ArrayList RetrieveListByParent(Guid id, string category,
+    private List<IFilePersistent> RetrieveListByParent(Guid id, string category,
         Type type, bool useCache)
     {         
-        var result = new ArrayList();
+        var result = new List<IFilePersistent>();
         foreach (var objInfo in index.GetByParentId(id))
         {
             if(!string.IsNullOrWhiteSpace(category)
@@ -296,7 +296,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             {
                 continue;
             }
-            object instance = RetrieveInstance(objInfo, useCache);
+            IFilePersistent instance = RetrieveInstance(objInfo, useCache);
             if(type == null || type.IsInstanceOfType(instance))
             {
                 result.Add(instance);
