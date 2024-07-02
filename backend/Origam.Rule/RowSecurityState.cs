@@ -34,7 +34,7 @@ public class RowSecurityState
     public bool AllowDelete { get; set; }
     public bool AllowCreate { get; set; }
     public List<FieldSecurityState> Columns { get; } = new ();
-    public ArrayList Relations { get; } = new ArrayList();
+    public List<RelationSecurityState> Relations { get; } = new ();
     public ArrayList DisabledActions { get; set; } = new ArrayList();
     public bool NotFound { get; set; }
 }
