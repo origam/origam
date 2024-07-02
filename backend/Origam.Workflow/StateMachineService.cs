@@ -95,12 +95,12 @@ public class StateMachineService : AbstractService, IStateMachineService
             {
                 // original value is null, meaning that this is a new row
                 // we only allow the initial state to be selected, no other
-                ArrayList resultList = new ArrayList();
+                var resultList = new List<object>();
                 foreach (object val in sm.InitialStateValues(data))
                 {
                     resultList.Add(val);
                 }
-                return (object[])resultList.ToArray(typeof(object));
+                return resultList.ToArray();
             }
             else if (sm.DynamicOperationsLookup != null)
             {
