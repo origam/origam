@@ -134,7 +134,6 @@ public class ActionButtonManager : IDisposable
         {
             return ruleEngine
                 .GetDisabledActions(null, null, entityId, formIdGetter())
-                .Cast<string>()
                 .ToList();
         }
         DataRow row = (currencyManager.Current as DataRowView).Row;
@@ -147,7 +146,6 @@ public class ActionButtonManager : IDisposable
                 : DataRowVersion.Default);
         return ruleEngine
             .GetDisabledActions(originalData, actualData, entityId, formIdGetter())
-            .Cast<string>()
             .ToList();
     }
     private void UpdateToolStripItemVisibility(

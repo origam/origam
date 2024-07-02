@@ -1475,10 +1475,10 @@ public class RuleEngine
 			return true;
 		}
 	}
-    public ArrayList GetDisabledActions(
+    public List<string> GetDisabledActions(
         XmlContainer originalData, XmlContainer actualData, Guid entityId, Guid formId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<string>();
         IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
             typeof(AbstractSchemaItem), new ModelElementKey(entityId))
             as IDataEntity;
