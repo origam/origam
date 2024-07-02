@@ -135,11 +135,11 @@ public class TableMappingItem : AbstractDataEntity
 		}
 	}
 	[Browsable(false)]
-	public override ArrayList EntityPrimaryKey
+	public override List<IDataEntityColumn> EntityPrimaryKey
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<IDataEntityColumn>();
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
 				if(column.IsPrimaryKey && column is FieldMappingItem)

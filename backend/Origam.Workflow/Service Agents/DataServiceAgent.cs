@@ -261,7 +261,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
 		}
-		ArrayList pkList = originalEntity.EntityPrimaryKey;
+		List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
 		if(pkList.Count == 0) throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path));
 		if(pkList.Count > 1) throw new InvalidOperationException(ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path));
 		FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
@@ -338,7 +338,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
 		}
-		ArrayList pkList = originalEntity.EntityPrimaryKey;
+		List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
 		if(pkList.Count == 0) throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path));
 		if(pkList.Count > 1) throw new InvalidOperationException(ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path));
 		FieldMappingItem originalKey = pkList[0] as FieldMappingItem;

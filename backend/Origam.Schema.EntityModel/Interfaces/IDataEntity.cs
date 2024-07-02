@@ -41,7 +41,7 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Collection of expressions which make up a primary key of this data entity
 	/// </summary>
-	ArrayList EntityPrimaryKey {get;}
+	List<IDataEntityColumn> EntityPrimaryKey {get;}
 	
 	/// <summary>
 	/// Returns true if complete data entity is read only

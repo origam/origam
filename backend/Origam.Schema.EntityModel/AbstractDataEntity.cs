@@ -69,11 +69,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public virtual ArrayList EntityPrimaryKey
+	public virtual List<IDataEntityColumn> EntityPrimaryKey
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<IDataEntityColumn>();
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
 				if(column.IsPrimaryKey)
