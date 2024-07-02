@@ -77,7 +77,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         var items = new List<AsMenuCommand>();
         if (factory.NewItemTypes != null)
         {
-            ArrayList names = new ArrayList();
+            var names = new List<string>();
             // filter out only the names that do not exist already in the children collection
             foreach (string name in factory.NewTypeNames)
             {
