@@ -1010,12 +1010,12 @@ public abstract class SessionStore : IDisposable
         }
         return value;
     }
-    public static ArrayList GetRowColumnArrayValue(DataRow row, DataColumn dataColumn)
+    public static List<object> GetRowColumnArrayValue(DataRow row, DataColumn dataColumn)
     {
         string relatedTableName = (string)dataColumn.ExtendedProperties[Const.ArrayRelation];
         string relatedColumnName = (string)dataColumn.ExtendedProperties[Const.ArrayRelationField];
         DataRow[] childRows = row.GetChildRows(relatedTableName);
-        ArrayList list = new ArrayList(childRows.Length);
+        var list = new List<object>(childRows.Length);
         foreach (DataRow childRow in childRows)
         {
             list.Add(childRow[relatedColumnName]);
