@@ -375,12 +375,12 @@ public class ServerCoreUIService : IBasicUIService
             sessionManager.GetSessionStats()));
         return changes;
     }
-    public ArrayList GetRowData(MasterRecordInput input)
+    public List<ChangeInfo> GetRowData(MasterRecordInput input)
     {
         SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
         if(sessionStore == null)
         {
-            return new ArrayList();
+            return new List<ChangeInfo>();
         }
         return sessionStore.GetRowData(
             input.Entity, input.RowId, false);

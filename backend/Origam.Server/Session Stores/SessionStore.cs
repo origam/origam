@@ -1876,7 +1876,7 @@ public abstract class SessionStore : IDisposable
     {
         throw new Exception("GetData not available for " + this.GetType().Name);
     }
-    public virtual ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+    public virtual List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
         throw new Exception("GetRowData not available for " + this.GetType().Name);
     }        

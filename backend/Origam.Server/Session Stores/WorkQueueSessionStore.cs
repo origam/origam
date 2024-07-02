@@ -81,9 +81,9 @@ public class WorkQueueSessionStore : SessionStore
     {
         return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
     }
-    public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+    public override List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<ChangeInfo>();
         lock (_getRowDataLock)
         {
             if (id == null)

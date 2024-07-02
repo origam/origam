@@ -110,7 +110,7 @@ public class SessionController : ControllerBase
         return RunWithErrorHandler(() =>
         {
             SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
-            IList output = ss.GetRowData(
+            List<ChangeInfo> output = ss.GetRowData(
                 sessionData.Entity,
                 sessionData.RowId,
                 false);
