@@ -129,7 +129,7 @@ public class ServerCoreUIService : IBasicUIService
             {
                 var clearAll = portalSessionStore.ShouldBeCleared();
             // running session, we get all the form sessions
-            var sessionsToDestroy = new ArrayList();
+            var sessionsToDestroy = new List<Guid>();
             foreach(var mainSessionStore in portalSessionStore.FormSessions)
             {
                 if(clearAll)
