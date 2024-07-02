@@ -571,7 +571,7 @@ public class DatasetTools
 			{
 				adcPK = in_dtSource.PrimaryKey;
 				aRowKey = new object[adcPK.Length];
-				ArrayList rowsToDelete = new ArrayList();					
+				var rowsToDelete = new List<DataRow>();					
 				int nbRowTarget = inout_dtTarget.Rows.Count;
 				for (int iRowTarget = 0 ; nbRowTarget > iRowTarget ; ++iRowTarget) 
 				{
