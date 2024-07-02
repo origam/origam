@@ -150,8 +150,8 @@ public class FormSessionStore : SaveableSessionStore
     public override void LoadColumns(IList<string> columns)
     {
         QueryParameterCollection qparams = Request.QueryParameters;
-        ArrayList finalColumns = new ArrayList();
-        ArrayList arrayColumns = new ArrayList();
+        var finalColumns = new List<string>();
+        var arrayColumns = new List<string>();
         foreach (var column in columns)
         {
             if (!DataListLoadedColumns.Contains(column))
@@ -170,7 +170,7 @@ public class FormSessionStore : SaveableSessionStore
         LoadArrayColumns(this.DataList, this.DataListEntity, qparams, arrayColumns);
     }
     private void LoadArrayColumns(DataSet dataset, string entity,
-        QueryParameterCollection qparams, ArrayList arrayColumns)
+        QueryParameterCollection qparams, List<string> arrayColumns)
     {
         lock (_lock)
         {
@@ -188,7 +188,7 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
     }
-    private void LoadStandardColumns(QueryParameterCollection qparams, ArrayList finalColumns)
+    private void LoadStandardColumns(QueryParameterCollection qparams, List<string> finalColumns)
     {
         lock (_lock)
         {
@@ -202,7 +202,7 @@ public class FormSessionStore : SaveableSessionStore
             core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                 Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
                 this.DataListEntity,
-                string.Join(";", (string[])finalColumns.ToArray(typeof(string))));
+                string.Join(";", finalColumns));
             listTable.BeginLoadData();
             try
             {
