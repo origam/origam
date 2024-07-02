@@ -1705,7 +1705,7 @@ public abstract class SessionStore : IDisposable
         }
     }
     public List<ChangeInfo> CopyObject(string entity, object originalId,
-        string requestingGrid, ArrayList entities,
+        string requestingGrid, List<string> entities,
         IDictionary<string, object> forcedValues)
     {
         lock (_lock)

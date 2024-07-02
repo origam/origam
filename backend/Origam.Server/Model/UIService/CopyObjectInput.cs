@@ -30,6 +30,6 @@ public class CopyObjectInput
     public string Entity { get; set; }
     public Guid OriginalId { get; set; }
     public Guid RequestingGridId { get; set; }
-    public ArrayList Entities  { get; set; }
+    public List<string> Entities  { get; set; }
     public IDictionary<string, object> ForcedValues { get; set; }
 }
