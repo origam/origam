@@ -1368,23 +1368,23 @@ public class DatasetTools
 		}
 		return version;
 	}
-	public static Hashtable RetrieveParemeters(Hashtable parameterMappings, IList<DataRow> rows)
+	public static Hashtable RetrieveParameters(Hashtable parameterMappings, IList<DataRow> rows)
 	{
-		return RetrieveParemeters(parameterMappings, rows, new ArrayList());
+		return RetrieveParameters(parameterMappings, rows, new List<string>());
 	}
-    public static Hashtable RetrieveParemeters(Hashtable parameterMappings,
-        IList<DataRow> rows, ArrayList originalDataParameters)
+    public static Hashtable RetrieveParameters(Hashtable parameterMappings,
+        IList<DataRow> rows, List<string> originalDataParameters)
     {
         DataSet fullData = null;
         if (rows != null && rows.Count > 0)
         {
             fullData = rows[0].Table.DataSet;
         }
-        return RetrieveParemeters(parameterMappings, rows, originalDataParameters,
+        return RetrieveParameters(parameterMappings, rows, originalDataParameters,
             fullData);
     }
-    public static Hashtable RetrieveParemeters(Hashtable parameterMappings, 
-        IList<DataRow> rows, ArrayList originalDataParameters, DataSet fullData)
+    public static Hashtable RetrieveParameters(Hashtable parameterMappings, 
+        IList<DataRow> rows, List<string> originalDataParameters, DataSet fullData)
 	{
 		Hashtable result = new Hashtable();
 		foreach(DictionaryEntry entry in parameterMappings)

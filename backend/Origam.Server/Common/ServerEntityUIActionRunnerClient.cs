@@ -79,9 +79,9 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             // get action
             processData.Action = UIActionTools.GetAction(actionId);
             // retrieve parameter mappings
-            ArrayList originalDataParameters 
+            List<string> originalDataParameters 
                 = UIActionTools.GetOriginalParameters(processData.Action);
-            processData.Parameters = DatasetTools.RetrieveParemeters(
+            processData.Parameters = DatasetTools.RetrieveParameters(
                 parameterMappings, processData.SelectedRows, originalDataParameters,
                 processData.DataTable.DataSet);
             // add input parameters

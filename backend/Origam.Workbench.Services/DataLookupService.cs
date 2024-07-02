@@ -531,7 +531,7 @@ public class DataLookupService : IDataLookupService
 		if(request.CurrentRow != null)
 		{
 			// set parameters
-            foreach (DictionaryEntry entry in DatasetTools.RetrieveParemeters(
+            foreach (DictionaryEntry entry in DatasetTools.RetrieveParameters(
                 request.ParameterMappings,
                 new List<DataRow>{ request.CurrentRow })) 
 			{
