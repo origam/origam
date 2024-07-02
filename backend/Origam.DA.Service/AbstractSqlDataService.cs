@@ -1931,7 +1931,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	public override List<SchemaDbCompareResult> CompareSchema(IPersistenceProvider provider)
 	{
 		var results = new List<SchemaDbCompareResult>();
-        ArrayList schemaTables = GetSchemaTables(provider);
+		List<TableMappingItem> schemaTables = GetSchemaTables(provider);
         // tables
         Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 		var schemaColumnList = new Hashtable();
@@ -1980,7 +1980,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return results;
 	}
     private void DoCompareIndexExistingTables(
-        List<SchemaDbCompareResult> results, ArrayList schemaTables, DataSet foreignKeys, 
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet foreignKeys, 
         DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2147,7 +2147,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     internal abstract string GetSqlFk();
     private void DoCompareIndex(
-        List<SchemaDbCompareResult> results, ArrayList schemaTables, DataSet indexFields)
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet indexFields)
     {
         foreach(TableMappingItem table in schemaTables)
         {
@@ -2235,7 +2235,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     internal abstract Hashtable GetDbIndexList(
         DataSet indexes, Hashtable schemaTableList);
     internal abstract Hashtable GetSchemaIndexListGenerate(
-        ArrayList schemaTables, Hashtable dbTableList, 
+	    List<TableMappingItem> schemaTables, Hashtable dbTableList, 
         Hashtable schemaIndexListAll);
     
     internal abstract string GetSqlIndexFields();
@@ -2360,7 +2360,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return stringBuilder.ToString().ToUpper();
 	}
     private void DoCompareModelInDatabase(
-        List<SchemaDbCompareResult> results, ArrayList schemaTables, Hashtable dbTableList, 
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, Hashtable dbTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2451,7 +2451,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         return dbTableList;
     }
     
-    private Hashtable GetSchemaTableList(ArrayList schemaTables)
+    private Hashtable GetSchemaTableList(List<TableMappingItem> schemaTables)
     {
         var schemaTableList = new Hashtable();
         foreach(TableMappingItem table in schemaTables)
@@ -2463,12 +2463,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return schemaTableList;
     }
-    private ArrayList GetSchemaTables(IPersistenceProvider provider)
+    private List<TableMappingItem> GetSchemaTables(IPersistenceProvider provider)
     {
         List<AbstractSchemaItem> entityList = provider
             .RetrieveListByCategory<AbstractSchemaItem>(
 	            AbstractDataEntity.CategoryConst);
-        var schemaTables = new ArrayList();
+        var schemaTables = new List<TableMappingItem>();
         foreach(var tableMappingItem 
                 in entityList.OfType<TableMappingItem>())
         {
