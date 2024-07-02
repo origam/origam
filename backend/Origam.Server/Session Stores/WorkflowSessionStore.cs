@@ -328,7 +328,6 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.Notifications.Clear();
             this.RefreshPortalAfterSave = false;
             // get the messages in reverse order
-            ArrayList messages = new ArrayList();
             Exception ex = handler.Result.Exception;
             if (ex != null)
             {
@@ -337,20 +336,6 @@ public class WorkflowSessionStore : SaveableSessionStore
                 message.Append("<FONT COLOR=\"#FF0000\" SIZE=\"16\"><P>");
                 message.Append(ex.Message);
                 message.Append("</P></FONT>");
-                /*
-                if (ex.StackTrace != null)
-                {
-                    message.Append("<FONT COLOR=\"#808080\" SIZE=\"10\"><P>");
-                    Exception innerException = ex;
-                    while (innerException != null)
-                    {
-                        message.Append("<BR/>");
-                        message.Append(innerException.StackTrace.Replace("\n", "<BR/>").Replace("\r", ""));
-                        innerException = innerException.InnerException;
-                    }
-                    message.Append("</P></FONT>");
-                }
-                */
                 message.Append("</HTML></BODY>");
                 this.FinishMessage = message.ToString() ;
             }
