@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -423,7 +424,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 				mapping.Name = param.Name;
 			}
 		}
-		ArrayList toDelete = new ArrayList();
+		var toDelete = new List<AbstractSchemaItem>();
 		// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
 		foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 		{
