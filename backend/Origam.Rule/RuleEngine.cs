@@ -612,7 +612,7 @@ public class RuleEngine
 		/********************************************************************
 		 * Row bound rules
 		 ********************************************************************/
-		ArrayList sortedTables = GetSortedTables(data.DataSet);
+		List<DataTable> sortedTables = GetSortedTables(data.DataSet);
 		try
 		{
 			foreach(DataTable table in sortedTables)
@@ -668,9 +668,9 @@ public class RuleEngine
 			}
 		}
 	}
-	private ArrayList GetSortedTables(DataSet dataset)
+	private List<DataTable> GetSortedTables(DataSet dataset)
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<DataTable>();
 		foreach(DataTable table in dataset.Tables)
 		{
 			if(table.ParentRelations.Count == 0)
@@ -680,7 +680,7 @@ public class RuleEngine
 		}
 		return result;
 	}
-	private void GetChildTables(DataTable table, ArrayList list)
+	private void GetChildTables(DataTable table, List<DataTable> list)
 	{
 		foreach(DataRelation childRelation in table.ChildRelations)
 		{
@@ -761,10 +761,10 @@ public class RuleEngine
 	}
 	private void EnqueueAllRows(IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 	{
-		ArrayList tables = GetSortedTables(data.DataSet);
+		List<DataTable> tables = GetSortedTables(data.DataSet);
 		for(int i=tables.Count-1; i >= 0; i--)
 		{
-			foreach(DataRow row in ((DataTable)tables[i]).Rows)
+			foreach(DataRow row in tables[i].Rows)
 			{
 				EnqueueEntry(row, data, ruleSet, columns);
 			}
