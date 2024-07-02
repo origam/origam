@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Design;
 //using System.Reflection;
 using System.Data;
+using System.Linq;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
@@ -383,7 +384,9 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			if(!_itemsLoaded)
 				return;
-			ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+			var col = _origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst)
+				.Cast<ColumnParameterMapping>()
+				.ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
 				mapping.IsDeleted = true;
