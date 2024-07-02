@@ -68,7 +68,7 @@ public interface IDataEntity : ISchemaItem
 	/// </summary>
 	List<ISchemaItem> RowLevelSecurityRules {get;}
 	List<ISchemaItem> ConditionalFormattingRules {get;}
-	ArrayList Constraints {get;}
+	List<DataEntityConstraint> Constraints {get;}
 	string Caption {get; set;}
 	EntityAuditingType AuditingType {get; set;}
 	IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }

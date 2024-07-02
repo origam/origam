@@ -249,11 +249,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Constraints
+	public List<DataEntityConstraint> Constraints
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<DataEntityConstraint>();
 			DataEntityConstraint pk = new DataEntityConstraint(ConstraintType.PrimaryKey);
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{

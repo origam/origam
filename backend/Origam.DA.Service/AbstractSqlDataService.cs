@@ -2002,7 +2002,6 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 foreach(DataRow row in dbRows)
                 {
 	                bool found = table.Constraints
-		                .Cast<DataEntityConstraint>()
 		                .Where(constraint => 
 			                (constraint.Type == ConstraintType.ForeignKey) 
 			                && (constraint.ForeignEntity is TableMappingItem))
@@ -2029,8 +2028,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
             }
             // we compare what is missing in the database
-            foreach (DataEntityConstraint constraint 
-                     in table.Constraints)
+            foreach (DataEntityConstraint constraint in table.Constraints)
             {
                 CompareConstraintMissingInDatabase(constraint, table,
 	                foreignKeys, columns, results);
