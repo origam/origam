@@ -343,7 +343,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		if(pkList.Count > 1) throw new InvalidOperationException(ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path));
 		FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
 		if(originalKey == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorPrimaryKeyNotMapped", originalEntity.Path));
-		ArrayList skipRelationships = originalEntity.ChildEntitiesRecursive;
+		List<IDataEntity> skipRelationships = originalEntity.ChildEntitiesRecursive;
 		SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		EntityModelSchemaItemProvider entities = schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
 		int result = 0;

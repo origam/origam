@@ -72,8 +72,8 @@ public interface IDataEntity : ISchemaItem
 	string Caption {get; set;}
 	EntityAuditingType AuditingType {get; set;}
 	IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }
-	ArrayList ChildEntitiesRecursive {get;}
-	ArrayList ChildEntities {get;}
+	List<IDataEntity> ChildEntitiesRecursive {get;}
+	List<IDataEntity> ChildEntities {get;}
 	IDataEntityColumn DescribingField {get; set;}
 	bool HasEntityAFieldDenyReadRule();
 }

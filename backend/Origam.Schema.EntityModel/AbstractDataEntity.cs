@@ -190,11 +190,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList ChildEntities
+	public List<IDataEntity> ChildEntities
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<IDataEntity>();
 			foreach(EntityRelationItem relation in this.EntityRelations)
 			{
 				if(relation.IsParentChild) result.Add(relation.RelatedEntity);
@@ -203,11 +203,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList ChildEntitiesRecursive
+	public List<IDataEntity> ChildEntitiesRecursive
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<IDataEntity>();
 			foreach(IDataEntity entity in this.ChildEntities)
 			{
 				result.Add(entity);
