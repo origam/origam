@@ -38,7 +38,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
         ParentSchemaItem = parentSchemaItem;
     }
     
-    public new void Add(AbstractSchemaItem value)
+    public override void Add(AbstractSchemaItem value)
     {
         base.Add(value);
         if (value.IsAbstract)
