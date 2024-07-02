@@ -401,12 +401,12 @@ public class ServerCoreUIService : IBasicUIService
         return sessionStore == null 
             ? new Hashtable() : sessionStore.Request.Parameters;
     }
-    public ArrayList GetData(GetDataInput input)
+    public List<List<object>> GetData(GetDataInput input)
     {
         SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
         if(sessionStore == null)
         {
-            return new ArrayList();
+            return new List<List<object>>();
         }
         return sessionStore.GetData(
             input.ChildEntity, 

@@ -1872,7 +1872,7 @@ public abstract class SessionStore : IDisposable
     /// <param name="entity"></param>
     /// <param name="parentId"></param>
     /// <returns></returns>
-    public virtual ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
+    public virtual List<List<object>> GetData(string childEntity, object parentRecordId, object rootRecordId)
     {
         throw new Exception("GetData not available for " + this.GetType().Name);
     }

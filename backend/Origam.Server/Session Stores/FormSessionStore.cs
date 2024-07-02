@@ -345,16 +345,16 @@ public class FormSessionStore : SaveableSessionStore
             Data.RejectChanges();
         }
     }
-    public override ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
+    public override List<List<object>> GetData(string childEntity, object parentRecordId, object rootRecordId)
     {
         // check validity of the request
         if (!rootRecordId.Equals(this.CurrentRecordId))
         {
             // we do not hold the data anymore, we throw-out the request
-            return new ArrayList();
+            return new List<List<object>>();
         }
         DataTable childTable = GetDataTable(childEntity);
-        ArrayList result = new ArrayList();
+        var result = new List<List<object>>();
         if (childTable.ParentRelations.Count == 0)
         {
             throw new Exception("Requested entity " + childEntity + " has no parent relations. Cannot load child records.");
