@@ -470,7 +470,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
         }
         return dbIndexList;
     }
-    internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+    internal override Hashtable GetSchemaIndexListGenerate(List<TableMappingItem> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
     {
         Hashtable schemaIndexListGenerate = new Hashtable();
         foreach (TableMappingItem t in schemaTables)
