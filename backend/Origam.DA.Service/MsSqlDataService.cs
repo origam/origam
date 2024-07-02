@@ -209,13 +209,6 @@ public class MsSqlDataService : AbstractSqlDataService
         TableMappingItem entity =
             (TableMappingItem)persistence.SchemaProvider.RetrieveInstance(
             typeof(TableMappingItem), new ModelElementKey(entityId));
-        ArrayList sortedIndexes = new ArrayList(entity.EntityIndexes);
-        sortedIndexes.Sort();
-        // sort descending for cases where one index name would be
-        // a subset of another, so they will come e.g.
-        // ix_NameAndFirstName
-        // ix_Name
-        sortedIndexes.Reverse();
         StringBuilder fieldNames = new StringBuilder();
         foreach (DataEntityIndex index in entity.EntityIndexes)
         {

@@ -1014,7 +1014,6 @@ public abstract class SessionStore : IDisposable
     {
         string relatedTableName = (string)dataColumn.ExtendedProperties[Const.ArrayRelation];
         string relatedColumnName = (string)dataColumn.ExtendedProperties[Const.ArrayRelationField];
-        DataTable relatedTable = row.Table.DataSet.Tables[relatedTableName];
         DataRow[] childRows = row.GetChildRows(relatedTableName);
         ArrayList list = new ArrayList(childRows.Length);
         foreach (DataRow childRow in childRows)

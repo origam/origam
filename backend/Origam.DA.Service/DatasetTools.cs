@@ -1059,7 +1059,6 @@ public class DatasetTools
 			result.Tables.Add(CloneTable(table, false));
 		}
 		DataRelation[] relations = new DataRelation[dataset.Relations.Count];
-		ArrayList constraints = new ArrayList();
 		for(int i=0; i < relations.Length; i++)
 		{
 			DataRelation relation = dataset.Relations[i];
