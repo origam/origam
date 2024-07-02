@@ -2695,7 +2695,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 								throw new Exception(ResourceUtils
 									.GetString("NoDataRowAfterUpdate"));
 							}
-							var detachedColumns = new ArrayList();
+							var detachedColumns = new List<string>();
 							foreach(var column in entity.Columns.Where(
 								        column => !(column.Field 
 									        is FieldMappingItem)))
