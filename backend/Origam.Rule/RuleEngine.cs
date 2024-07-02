@@ -789,7 +789,7 @@ public class RuleEngine
 	}
 	private void EnqueueParentRows(DataRow childRow, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns, DataRow[] parentRows)
 	{
-		ArrayList rows = new ArrayList();
+		var rows = new List<DataRow>();
 		if(parentRows == null)
 		{
 			foreach(DataRelation parentRelation in childRow.Table.ParentRelations)
