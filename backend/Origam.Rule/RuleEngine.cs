@@ -1364,7 +1364,7 @@ public class RuleEngine
 	public EntityFormatting Formatting(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
 		EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
-		ArrayList entityRules = new ArrayList(); 
+		var entityRules = new List<ISchemaItem>(); 
 		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		
 		if(fieldId == Guid.Empty)
@@ -1435,7 +1435,7 @@ public class RuleEngine
 	}
 	public string DynamicLabel(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
-		ArrayList rules = new ArrayList(); 
+		var rules = new List<ISchemaItem>(); 
 		
 		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
