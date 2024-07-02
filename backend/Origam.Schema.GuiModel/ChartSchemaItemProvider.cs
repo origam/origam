@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Origam.Schema.GuiModel;
@@ -32,9 +33,9 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 	public override string RootItemType => AbstractChart.CategoryConst;
 	public override string Group => "UI";
 	#endregion
-	public ArrayList Charts(Guid formId, string entity)
+	public List<AbstractChart> Charts(Guid formId, string entity)
 	{
-		var result = new ArrayList();
+		var result = new List<AbstractChart>();
 		foreach(var abstractSchemaItem in ChildItems)
 		{
 			var chart = (AbstractChart)abstractSchemaItem;
