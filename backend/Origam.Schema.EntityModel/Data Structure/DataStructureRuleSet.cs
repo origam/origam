@@ -84,9 +84,9 @@ public class DataStructureRuleSet : AbstractSchemaItem
                 ruleSetUniqIds, curRuleSetReference);
         }
     }
-	public ArrayList Rules(string entityName)
+	public List<DataStructureRule> Rules(string entityName)
 	{
-		var result = new ArrayList();
+		var result = new List<DataStructureRule>();
 		foreach(DataStructureRule rule in Rules())
 		{
 			if(rule.EntityName == entityName 
@@ -111,21 +111,21 @@ public class DataStructureRuleSet : AbstractSchemaItem
 		return result;
 	}
 #if ORIGAM_CLIENT
-	private static Hashtable _ruleCache = new Hashtable();
+	private static Dictionary<string, List<DataStructureRule>> _ruleCache = new ();
 #endif
-	public ArrayList Rules(string entityName, Guid fieldId, bool includeOtherEntities)
+	public List<DataStructureRule> Rules(string entityName, Guid fieldId, bool includeOtherEntities)
 	{
-        ArrayList result;
+		List<DataStructureRule> result;
 #if ORIGAM_CLIENT
-		string cacheId = this.Id.ToString() + entityName + fieldId.ToString() + includeOtherEntities.ToString();
+		string cacheId = Id + entityName + fieldId + includeOtherEntities;
         lock (_lock)
         {
-            if (_ruleCache.Contains(cacheId))
+            if (_ruleCache.TryGetValue(cacheId, out var rules))
             {
-                return _ruleCache[cacheId] as ArrayList;
+                return rules;
             }
 #endif
-            result = new ArrayList();
+            result = new List<DataStructureRule>();
             foreach(DataStructureRule rule in Rules())
             {
                 foreach(DataStructureRuleDependency dep 

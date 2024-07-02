@@ -911,7 +911,7 @@ public class RuleEngine
 		var outputPad = GetOutputPad();
 	    if(ruleSet != null)
 		{
-			ArrayList rules;
+			List<DataStructureRule> rules;
 			if(columnChanged == null)
 			{
 				rules = ruleSet.Rules(rowChanged.Table.TableName);
@@ -921,7 +921,7 @@ public class RuleEngine
 					if(col.ExtendedProperties.Contains("Id"))
 					{
 						Guid fieldId = (Guid)col.ExtendedProperties["Id"];
-						ArrayList r = ruleSet.Rules(col.Table.TableName, fieldId, isFromRuleQueue);
+						List<DataStructureRule> r = ruleSet.Rules(col.Table.TableName, fieldId, isFromRuleQueue);
 						foreach(DataStructureRule rule in r)
 						{
 							if(rule.Entity.Name.Equals(rowChanged.Table.TableName))
@@ -1047,10 +1047,10 @@ public class RuleEngine
         
 		return changed;
 	}
-	private bool ProcessRulesInternalFinish(ArrayList rules, IDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
+	private bool ProcessRulesInternalFinish(List<DataStructureRule> rules, IDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
 	{
 		bool changed = false;
-		ArrayList myRules = new ArrayList(rules);
+		var myRules = new List<DataStructureRule>(rules);
 		foreach(DataStructureRule rule in myRules)
 		{
 			if(log.IsDebugEnabled)
@@ -2043,13 +2043,13 @@ internal class XmlNodeListEnumerator : IEnumerator
 }
 #endregion
 #region IComparer Members
-public class ProcessRuleComparer : IComparer
+public class ProcessRuleComparer : IComparer<DataStructureRule>
 {
-	int IComparer.Compare(Object x, Object y)
+	public int Compare(DataStructureRule x, DataStructureRule y)
 	{
-		if ((x as DataStructureRule) != null && (y as DataStructureRule) != null)
+		if (x  != null && y  != null)
 		{
-			return (x as DataStructureRule).Priority.CompareTo((y as DataStructureRule).Priority);
+			return x.Priority.CompareTo(y.Priority);
 		}
 		else
 		{
