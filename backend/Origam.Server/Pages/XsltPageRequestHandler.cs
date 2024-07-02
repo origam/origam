@@ -278,8 +278,7 @@ internal class XsltPageRequestHandler : AbstractPageRequestHandler
                 {
                     continue;
                 }
-                List<FieldSecurityState> listState = rowSecurity.Columns
-                    .Cast<FieldSecurityState>().Where(
+                List<FieldSecurityState> listState = rowSecurity.Columns.Where(
                         columnState => !columnState.AllowRead).ToList();
                 foreach (FieldSecurityState securityState in listState)
                 {
