@@ -132,7 +132,7 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
     }
-    public void SetModalDialogSize(ArrayList resultList,ExecuteActionProcessData processData)
+    public void SetModalDialogSize(List<object> resultList,ExecuteActionProcessData processData)
     {
         PanelActionResult result = (PanelActionResult)resultList[0];
         if ((processData.Action != null) 

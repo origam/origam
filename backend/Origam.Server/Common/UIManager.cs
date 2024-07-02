@@ -171,7 +171,7 @@ public class UIManager
         DatasetTools.CheckRowErrorOfChangedRows(ss.InitialData);
         UIResult result = new UIResult(
             sessionId: ss.Id, 
-            data: DataTools.DatasetToHashtable(
+            data: DataTools.DatasetToDictionary(
                 ss.InitialData, columns, initialPageNumberOfRecords,
                 ss.CurrentRecordId, ss.DataListEntity, ss), 
             variables: ss.Variables, 

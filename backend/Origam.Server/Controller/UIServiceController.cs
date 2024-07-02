@@ -1229,7 +1229,7 @@ public class UIServiceController : AbstractController
             entityId, id);
         if(log != null)
         {
-            return Ok(DataTools.DatatableToHashtable(
+            return Ok(DataTools.DatatableToDictionary(
                 auditLog.Tables[0], false));
         }
         return Ok();

@@ -936,13 +936,13 @@ public abstract class SessionStore : IDisposable
     {
         return text.Replace("\r\n", "\n");
     }
-    public static ArrayList GetRowData(DataRow row, string[] columns)
+    public static List<object> GetRowData(DataRow row, string[] columns)
     {
         return GetRowData(row, columns, true);
     }
-    public static ArrayList GetRowData(DataRow row, string[] columns, bool withErrors)
+    private static List<object> GetRowData(DataRow row, string[] columns, bool withErrors)
     {
-        ArrayList result = new ArrayList(columns.Length);
+        var result = new List<object>(columns.Length);
         foreach (string col in columns)
         {
             if (col != LIST_LOADED_COLUMN_NAME)

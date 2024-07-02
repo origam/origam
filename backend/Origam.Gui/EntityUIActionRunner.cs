@@ -41,7 +41,7 @@ namespace Origam.Gui;
 public abstract class EntityUIActionRunner
 {
     protected readonly IEntityUIActionRunnerClient actionRunnerClient;
-    protected readonly ArrayList resultList = new ArrayList();
+    protected readonly List<object> resultList = new ();
     public EntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient)
     {
         this.actionRunnerClient = actionRunnerClient;

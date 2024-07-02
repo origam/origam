@@ -101,7 +101,7 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     public void CheckActionConditions(ExecuteActionProcessData processData)
     {
     }
-    public void SetModalDialogSize(ArrayList resultList,
+    public void SetModalDialogSize(List<object> resultList,
         ExecuteActionProcessData processData)
     {
     }

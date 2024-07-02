@@ -267,7 +267,7 @@ public class ServerCoreUIService : IBasicUIService
             // (primary keys + all the initial sort columns)
             columns = sessionStore.DataListLoadedColumns;
         }
-        return DataTools.DatasetToHashtable(result as DataSet, columns, 
+        return DataTools.DatasetToDictionary(result as DataSet, columns, 
             INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
             sessionStore.DataListEntity, sessionStore);
     }
