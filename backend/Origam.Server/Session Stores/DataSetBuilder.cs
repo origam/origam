@@ -80,7 +80,7 @@ public class DataSetBuilder
         // load all array field child entities - there is no way how to read
         // only children of a specific record (inside LazyLoadListRowData) so
         // we preload all array fields here
-        ArrayList arrayColumns = new ArrayList();
+        var arrayColumns = new List<string>();
         foreach (DataColumn col in result.Tables[listEntity].Columns)
         {
             if (IsColumnArray(col))
@@ -92,7 +92,7 @@ public class DataSetBuilder
         return result;
     }
     private void LoadArrayColumns(DataSet dataset, string entity,
-        QueryParameterCollection qparams, ArrayList arrayColumns, IList<string> DataListLoadedColumns, FormReferenceMenuItem _menuItem)
+        QueryParameterCollection qparams, List<string> arrayColumns, IList<string> DataListLoadedColumns, FormReferenceMenuItem _menuItem)
     {
         lock (_lock)
         {
