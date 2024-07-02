@@ -1770,7 +1770,7 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		XmlContainer actualData = DatasetTools.GetRowXml(row, row.HasVersion(DataRowVersion.Proposed) ? DataRowVersion.Proposed : DataRowVersion.Default);
 		if(! this.GridVisible) 
 		{
-			foreach(Control control in this.BoundControls)
+			foreach(Control control in BoundControls)
 			{
 				foreach(Binding b in control.DataBindings)
 				{
@@ -1958,16 +1958,16 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 	{
 		this.pnlDataControl.ForeColor = (isActive ? OrigamColorScheme.TitleActiveForeColor : OrigamColorScheme.TitleInactiveForeColor);
 	}
-	private ArrayList BoundControls
+	private List<Control> BoundControls
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<Control>();
 			GetBoundControls(this, list);
 			return list;
 		}
 	}
-	private void GetBoundControls(Control control, ArrayList list)
+	private void GetBoundControls(Control control, List<Control> list)
 	{
 		foreach(Control child in control.Controls)
 		{
