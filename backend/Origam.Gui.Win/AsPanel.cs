@@ -2020,7 +2020,7 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		DataView view = this._bindingManager.List as DataView;
 		if(view == null) return;
 		StringBuilder sortString = new StringBuilder();
-		ArrayList sortList = new ArrayList(CurrentSort.Values);
+		var sortList = CurrentSort.Values.CastToList<DataSortItem>();
 		sortList.Sort();
 		foreach(DataSortItem item in sortList)
 		{
