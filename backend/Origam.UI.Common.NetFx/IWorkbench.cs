@@ -134,7 +134,6 @@ public interface IWorkbench
 	bool IsConnected{get;}
 	int WorkflowFormsCount{get;}
 	void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Dictionary<string, object> parameters);
-	void ExportToExcel(string name, ArrayList list);
     bool PopulateEmptyDatabaseOnLoad { get; set; }
 	void OpenForm(object owner,Hashtable parameters);
     void UpdateTitle();

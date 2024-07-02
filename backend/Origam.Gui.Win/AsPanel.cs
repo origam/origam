@@ -88,7 +88,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 	private ToolBarButton btnAuditLog;
 	private AuditLogPad _auditLogPad;
 	private IPersistenceService _persistence;
-	private ToolBarButton btnExcel;
 	private DataGridFilterFactory _filterFactory;
 	private ErrorProvider errorProvider1;
 	private readonly ActionButtonManager actionButtonManager;
@@ -164,7 +163,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
         this.btnGrid = new System.Windows.Forms.ToolBarButton();
         this.btnAttachment = new System.Windows.Forms.ToolBarButton();
         this.btnAuditLog = new System.Windows.Forms.ToolBarButton();
-        this.btnExcel = new System.Windows.Forms.ToolBarButton();
         this.btnFilter = new System.Windows.Forms.ToolBarButton();
         this.filterMenu = new System.Windows.Forms.ContextMenu();
         this.mnuSetDefaultFilter = new System.Windows.Forms.MenuItem();
@@ -240,7 +238,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
         this.btnGrid,
         this.btnAttachment,
         this.btnAuditLog,
-        this.btnExcel,
         this.btnFilter});
         this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
         this.toolBar.Divider = false;
@@ -273,12 +270,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
         this.btnAuditLog.ImageIndex = 3;
         this.btnAuditLog.Name = "btnAuditLog";
         this.btnAuditLog.ToolTipText = "Zobrazí historii změn aktuálního záznamu (Ctrl+H)";
-        // 
-        // btnExcel
-        // 
-        this.btnExcel.ImageIndex = 4;
-        this.btnExcel.Name = "btnExcel";
-        this.btnExcel.ToolTipText = "Zkopíruje data do Excelu (Ctrl+E)";
         // 
         // btnFilter
         // 
@@ -884,11 +875,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		if(keyData == (Keys.F | Keys.Control) & this.HideNavigationPanel == false)
 		{
 			this.FilterVisible = ! this.FilterVisible;
-			return true;
-		}
-		if(keyData == (Keys.E | Keys.Control))
-		{
-			this.ExportGrid();
 			return true;
 		}
 		if(keyData == (Keys.K | Keys.Control) & this.HideNavigationPanel == false)
@@ -1616,39 +1602,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 			Workbench.Commands.ViewAuditLogPad cmd = new Workbench.Commands.ViewAuditLogPad();
 			cmd.Run();
 		}
-	}
-	private void ExportGrid()
-	{
-		OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-		ArrayList list = new ArrayList();
-		this.GridVisible = true;
-		ArrayList headerRow = new ArrayList();
-		foreach(DataGridColumnStyle style in (grid as DataGrid).TableStyles[0].GridColumnStyles)
-		{
-			headerRow.Add(style.HeaderText);
-		}
-		list.Add(headerRow);
-		bool finished = false;
-		int i = 0;
-		while(!finished)
-		{
-			ArrayList row = new ArrayList();
-			try
-			{
-				for(int j = 0; j < (grid as DataGrid).TableStyles[0].GridColumnStyles.Count; j++)
-				{
-					object data = (grid as DataGrid)[i, j];
-					row.Add(data);
-				}
-				list.Add(row);
-			}
-			catch
-			{
-				finished = true;
-			}
-			i++;
-		}
-		WorkbenchSingleton.Workbench.ExportToExcel(this.PanelTitle, list);
 	}
 	private void ProcessGridBinding()
 	{
@@ -2395,10 +2348,6 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 			else if( e.Button == btnFilter)
 			{
 				this.FilterVisible = !this.FilterVisible;
-			}
-			else if( e.Button == btnExcel)
-			{
-				ExportGrid();
 			}
 			else if( e.Button == btnAuditLog)
 			{

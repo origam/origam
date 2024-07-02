@@ -108,7 +108,6 @@ internal class frmMain : Form, IWorkbench
     ServerLogPad _serverLogPad;
     ExtensionPad _extensionPad;
 	Hashtable _shortcuts = new Hashtable();
-	private static ICellStyle _dateCellStyle;
 	private string _configFilePath;
     private FormWindowState lastWindowState;
     
@@ -2140,81 +2139,6 @@ public void OpenForm(object owner,Hashtable parameters)
 	{
 		MenuItemClick(e.ClickedItem, EventArgs.Empty);
 	}
-    public void ExportToExcel(string name, ArrayList list)
-    {
-        try
-        {
-            ExcelFormat excelFormat = ExcelTools.StringToExcelFormat(
-                (ConfigurationManager.GetActiveConfiguration()
-                ).GUIExcelExportFormat);
-            SaveFileDialog sfd = GetExportToExcelSaveDialog(excelFormat);
-            if(sfd.ShowDialog(this) == DialogResult.Cancel)
-            {
-                return;
-            }
-            IWorkbook workbook = ExcelTools.GetWorkbook(excelFormat);
-            // CREATE CELL STYLES
-            // So they can be reused later. There is a limit of 4000 cell styles in Excel 2003 and earlier, so
-            // we have to create only as many styles as neccessary.
-            _dateCellStyle = workbook.CreateCellStyle();
-            _dateCellStyle.DataFormat = HSSFDataFormat.GetBuiltinFormat("m/d/yy h:mm");
-            ////create a entry of SummaryInformation
-            if(name != null)
-            {
-                ExcelTools.SetWorkbookSubject(workbook, name);
-            }
-            ISheet sheet1 = workbook.CreateSheet("Data");
-            IRow headerRow = sheet1.CreateRow(0);
-            ArrayList firstRow = list[0] as ArrayList;
-            for(int i = 0; i < firstRow.Count; i++)
-            {
-                headerRow.CreateCell(i).SetCellValue((string)firstRow[i]);
-            }
-            for(int rowNumber = 1; rowNumber < list.Count; rowNumber++)
-            {
-                IRow excelRow = sheet1.CreateRow(rowNumber);
-                ArrayList row = list[rowNumber] as ArrayList;
-                for(int i = 0; i < row.Count; i++)
-                {
-                    object val = row[i];
-                    if(val is DateTime)
-                    {
-                        ICell cell = excelRow.CreateCell(i);
-                        cell.SetCellValue((DateTime)val);
-                        cell.CellStyle = _dateCellStyle;
-                    }
-                    else if(val is int || val is double || val is float || val is decimal)
-                    {
-                        excelRow.CreateCell(i).SetCellValue(Convert.ToDouble(val));
-                    }
-                    else if(val != null)
-                    {
-                        string fieldValue = row[i].ToString();
-                        if(fieldValue.IndexOf("\r") > 0)
-                        {
-                            fieldValue = fieldValue.Replace("\n", "");
-                            fieldValue = fieldValue.Replace("\r", Environment.NewLine);
-                            fieldValue = fieldValue.Replace("\t", " ");
-                            excelRow.CreateCell(i).SetCellValue(fieldValue);
-                        }
-                        else
-                        {
-                            excelRow.CreateCell(i).SetCellValue(fieldValue);
-                        }
-                    }
-                }
-            }
-            using(Stream s = sfd.OpenFile())
-            {
-                workbook.Write(s, false);
-            }
-            System.Diagnostics.Process.Start(sfd.FileName);
-        }
-        catch(Exception ex)
-        {
-            AsMessageBox.ShowError(this, ex.Message, strings.ExcelExportError_Message, ex);
-        }
-    }
     private SaveFileDialog GetExportToExcelSaveDialog(
         ExcelFormat excelFormat)
     {
