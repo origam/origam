@@ -633,7 +633,7 @@ public abstract class SessionStore : IDisposable
             RuleHandler.UnregisterDatasetEvents(XmlData);
         }
     }
-    public virtual IList RestoreData(object parentId)
+    public virtual List<ChangeInfo> RestoreData(object parentId)
     {
         throw new NotImplementedException();
     }

@@ -397,9 +397,9 @@ public class FormSessionStore : SaveableSessionStore
     {
         return !MenuItem.ReadOnlyAccess && Data != null && Data.HasChanges();
     }
-    public override IList RestoreData(object recordId)
+    public override List<ChangeInfo> RestoreData(object recordId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<ChangeInfo>();
         // get the original row and return it to the client, so it updates to 
         // the original state
         DataRow originalRow = this.GetSessionRow(this.DataListEntity, recordId);

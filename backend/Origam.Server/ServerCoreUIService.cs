@@ -271,7 +271,7 @@ public class ServerCoreUIService : IBasicUIService
             INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
             sessionStore.DataListEntity, sessionStore);
     }
-    public IList RestoreData(RestoreDataInput input)
+    public List<ChangeInfo> RestoreData(RestoreDataInput input)
     {
         var sessionStore = sessionManager.GetSession(
             input.SessionFormIdentifier);
