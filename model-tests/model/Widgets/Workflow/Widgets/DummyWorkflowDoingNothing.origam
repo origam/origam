@@ -6,7 +6,6 @@
   <w:Workflow
     asi:abstract="false"
     x:id="0caa17cf-fca6-4453-a44c-ab6ea0ee1b0a"
-    asi:name="DummyWorkflowDoingNotihng"
-    w:onFailure="WorkflowFails"
+    asi:name="DummyWorkflowDoingNothing"
     w:transactionBehavior="InheritExisting" />
 </x:file>
