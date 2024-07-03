@@ -31,4 +31,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: 20px;
     height: 20px;
   }
+
+  &:global(.readOnly) {
+    cursor: not-allowed;
+  }
 }
