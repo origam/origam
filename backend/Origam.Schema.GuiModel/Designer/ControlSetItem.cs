@@ -309,22 +309,22 @@ public class ControlSetItemComparer : IComparer<ISchemaItem>
 		return -1;
 	}
 }
-public class AlternativeControlSetItemComparer : IComparer
+public class AlternativeControlSetItemComparer : IComparer<ControlSetItem>
 {
 	#region IComparer Members
-	public int Compare(object x, object y)
+	public int Compare(ControlSetItem x, ControlSetItem y)
 	{
-		if(!(x is ControlSetItem xItem))
+		if(x is null)
 		{
 			throw new ArgumentOutOfRangeException ("x", x, 
 				"Unsupported type for comparison.");
 		}
-		if(!(y is ControlSetItem yItem))
+		if(y is null)
 		{
 			throw new ArgumentOutOfRangeException ("y", y, 
 				"Unsupported type for comparison.");
 		}
-		return xItem.Level.CompareTo (yItem.Level);
+		return x.Level.CompareTo (y.Level);
 	}
 	#endregion
 }

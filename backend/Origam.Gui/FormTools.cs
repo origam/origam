@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Origam.DA;
@@ -68,7 +69,9 @@ public static class FormTools
     }
     public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
     {
-        ArrayList children = new ArrayList(controlSet.Alternatives);
+        var children = controlSet.Alternatives
+            .Cast<ControlSetItem>()
+            .ToList();
         children.Sort(new AlternativeControlSetItemComparer());
         foreach (ControlSetItem item in children)
         {
