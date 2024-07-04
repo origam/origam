@@ -31,7 +31,7 @@ namespace Origam;
 public class Reflector
 {
 	static public readonly BindingFlags SearchCriteria = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-	static private Hashtable memberTypeCache = new Hashtable();
+	static private Dictionary<Type, Dictionary<Type, List<MemberAttributeInfo>>> memberTypeCache = new();
 	static private IReflectorCache classCache;
     private static readonly log4net.ILog log
         = log4net.LogManager.GetLogger(
@@ -83,32 +83,32 @@ public class Reflector
 		IEnumerable<Type> primaryAttributes)
 	{
 		return primaryAttributes
-			.SelectMany(attr => FindMembers(type, attr).Cast<MemberAttributeInfo>())
+			.SelectMany(attr => FindMembers(type, attr))
 			.ToList();
 	}
 	// this signature causes nothing to be returned.. very strange
 	// static public MemberAttributeInfo[] FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
-	static public IList FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
+	static public List<MemberAttributeInfo> FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
 	{
 		// cache only requests without secondary attributes
 		if(secondaryAttributes.Length == 0)
 		{
 			if(memberTypeCache.ContainsKey(type))
 			{
-				if((memberTypeCache[type] as Hashtable).ContainsKey(primaryAttribute))
+				if(memberTypeCache[type].ContainsKey(primaryAttribute))
 				{
-					return (memberTypeCache[type] as Hashtable)[primaryAttribute] as IList;
+					return memberTypeCache[type][primaryAttribute];
 				}
 			}
 			else
 			{
 				lock(memberTypeCache)
 				{
-					memberTypeCache.Add(type, new Hashtable());
+					memberTypeCache.Add(type, new Dictionary<Type, List<MemberAttributeInfo>>());
 				}
 			}
 		}
-		ArrayList result = new ArrayList();
+		var result = new List<MemberAttributeInfo>();
 		foreach( MemberInfo memberInfo in type.GetMembers( SearchCriteria ) )
 		{
 			object[] attrs = memberInfo.GetCustomAttributes( primaryAttribute, true );
@@ -124,8 +124,8 @@ public class Reflector
 		// return result.ToArray() as MemberAttributeInfo[];
 		lock(memberTypeCache)
 		{
-			if(! (memberTypeCache[type] as Hashtable).Contains(primaryAttribute))
-				(memberTypeCache[type] as Hashtable).Add(primaryAttribute, result);
+			if(! memberTypeCache[type].ContainsKey(primaryAttribute))
+				memberTypeCache[type].Add(primaryAttribute, result);
 		}
 		return result;
 	}

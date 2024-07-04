@@ -127,13 +127,11 @@ public class RuntimeModelConfig : IRuntimeModelConfig
     {
         var xmlMemberAttributeInfo = Reflector
             .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
-            .Cast<MemberAttributeInfo>()
             .FirstOrDefault(memberInfo =>
                 (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName ==
                 configItem.PropertyName);
         var configMemberAttributeInfo = Reflector
             .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
-            .Cast<MemberAttributeInfo>()
             .FirstOrDefault(memberInfo =>
                 (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name ==
                 configItem.PropertyName);

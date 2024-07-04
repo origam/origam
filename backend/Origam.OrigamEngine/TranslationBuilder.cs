@@ -49,7 +49,7 @@ public static class TranslationBuilder
             .RetrieveListByPackage<AbstractSchemaItem>(packageId);
         foreach (AbstractSchemaItem item in list)
         {
-            IList memberList = Reflector.FindMembers(item.GetType(), typeof(LocalizableAttribute), new Type[] { });
+            List<MemberAttributeInfo> memberList = Reflector.FindMembers(item.GetType(), typeof(LocalizableAttribute), new Type[] { });
             Hashtable values = new Hashtable();
             IQueryLocalizable ql = item as IQueryLocalizable;
             foreach (MemberAttributeInfo mai in memberList)

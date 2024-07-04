@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -69,7 +70,7 @@ namespace Origam.DA.Service
         private void SetParentAttributes(Guid parentId, IFilePersistent instance,
             IPersistenceProvider provider)
         {
-            IList parentFolderReferences = Reflector.FindMembers(
+            List<MemberAttributeInfo> parentFolderReferences = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlParentAttribute));
             bool isTopFileElement = parentId == Guid.Empty;
             foreach (MemberAttributeInfo mi in parentFolderReferences)
@@ -125,7 +126,7 @@ namespace Origam.DA.Service
         protected override void SetXmlAttributes(IFilePersistent instance,
             IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
         {
-            IList members = Reflector.FindMembers(
+            List<MemberAttributeInfo> members = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo mi in members)
             {
@@ -143,7 +144,7 @@ namespace Origam.DA.Service
         protected override void SetReferences(IFilePersistent instance,
             PropertyToNamespaceMapping namespaceMapping)
         {
-            IList references = Reflector.FindMembers(
+            List<MemberAttributeInfo> references = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
             {
@@ -183,7 +184,7 @@ namespace Origam.DA.Service
         protected override void SetReferences(IFilePersistent instance, 
             PropertyToNamespaceMapping namespaceMapping)
         {
-            IList references = Reflector.FindMembers(
+            List<MemberAttributeInfo> references = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
             {
@@ -206,7 +207,7 @@ namespace Origam.DA.Service
         protected override void NoteExternalReferences(IFilePersistent instance,
             PropertyToNamespaceMapping namespaceMapping)
         {
-            IList externalFileReferences = Reflector.FindMembers(
+            List<MemberAttributeInfo> externalFileReferences = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlExternalFileReference));
             foreach (MemberAttributeInfo mi in externalFileReferences)
             {
@@ -222,7 +223,7 @@ namespace Origam.DA.Service
         protected override void SetXmlAttributes( IFilePersistent instance,
             IPersistenceProvider provider, PropertyToNamespaceMapping namespaceMapping)
         {
-            IList members = Reflector.FindMembers(
+            List<MemberAttributeInfo> members = Reflector.FindMembers(
                 instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo mi in members)
             {
