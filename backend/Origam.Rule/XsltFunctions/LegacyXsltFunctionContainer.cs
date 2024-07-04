@@ -314,8 +314,8 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         }
         else
         {
-            ArrayList sorted = SortedArray(iterator);
-            return (string)sorted[0];
+            List<string> sorted = SortedArray(iterator);
+            return sorted[0];
         }
     }
 
@@ -327,14 +327,14 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         }
         else
         {
-            ArrayList sorted = SortedArray(iterator);
-            return (string)sorted[sorted.Count - 1];
+            List<string> sorted = SortedArray(iterator);
+            return sorted[sorted.Count - 1];
         }
     }
 
-    private ArrayList SortedArray(XPathNodeIterator iterator)
+    private List<string> SortedArray(XPathNodeIterator iterator)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<string>();
 
         while (iterator.MoveNext())
         {
