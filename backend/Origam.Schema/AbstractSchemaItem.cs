@@ -1413,15 +1413,10 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return _childItemTypes;
 		}
 	}
-	private static ArrayList _extensionChildItemTypes = new ArrayList();
-    public event PropertyChangedEventHandler PropertyChanged;
-	public static ArrayList ExtensionChildItemTypes
-	{
-		get
-		{
-			return _extensionChildItemTypes;
-		}
-	}
+
+	public event PropertyChangedEventHandler PropertyChanged;
+	public static List<Type[]> ExtensionChildItemTypes { get; } = new ();
+
 	public virtual T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group) 
 		where T : AbstractSchemaItem
