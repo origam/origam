@@ -977,7 +977,7 @@ public class FormGenerator : IDisposable
 	private void ClearControls(Control control)
 	{
 		if(control is BaseDropDownControl || control.GetType().FullName == "CrystalDecisions.Windows.Forms.CrystalReportViewer") return;
-		ArrayList controls = new ArrayList(control.Controls);
+		var controls = control.Controls.Cast<Control>().ToList();
 		if(control == this.Form)
 		{
 			foreach(Control component in _tooltipControls)
@@ -1004,7 +1004,7 @@ public class FormGenerator : IDisposable
 		}
 		for (int i = 0; i < controls.Count; i++)
 		{
-			Control child = (Control)controls[i];
+			Control child = controls[i];
 			child.Parent = null;
 			child.Dispose();
 		}
