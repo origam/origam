@@ -508,9 +508,9 @@ public class ControlSetEditor : AbstractEditor
 		
 		cntrl.DataBindings.CollectionChanged += new CollectionChangeEventHandler(DataBindings_CollectionChanged);
 		//adding child controls
-		ArrayList sortedChildControls = new ArrayList(cntrlSet.ChildItemsByType("ControlSetItem"));
+		var sortedChildControls = cntrlSet.ChildItemsByType("ControlSetItem").ToList();
 		sortedChildControls.Sort();
-		ArrayList invalidControls = new ArrayList();
+		var invalidControls = new List<ControlSetItem>();
 		foreach(ControlSetItem childItem in sortedChildControls)
 		{
 			try
