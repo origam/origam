@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Schedule;
@@ -47,7 +48,7 @@ public class TimerJob
 	{
 		if (Enabled == false)
 			return;
-		ArrayList EventList = new ArrayList();
+		var EventList = new List<DateTime>();
 //			Schedule.AddEventsInInterval(Begin, End, EventList);
 		Schedule.AddEventsInInterval(LastTime, End, EventList);
 		if (Filter != null)

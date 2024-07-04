@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Schedule;
 /// <summary>
@@ -26,7 +27,7 @@ public class EventQueue : IScheduledItem
 {
 	public EventQueue()
 	{
-		_List = new ArrayList();
+		_List = new List<IScheduledItem>();
 	}
 	/// <summary>
 	/// Adds a ScheduledTime to the queue.
@@ -49,7 +50,7 @@ public class EventQueue : IScheduledItem
 	/// <param name="Begin">The beginning time of the interval</param>
 	/// <param name="End">The end time of the interval</param>
 	/// <param name="List">The list to add times to.</param>
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+	public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
 	{
 		foreach(IScheduledItem st in _List)
 			st.AddEventsInInterval(Begin, End, List);
@@ -72,5 +73,5 @@ public class EventQueue : IScheduledItem
 		}
 		return next;
 	}
-	private ArrayList _List;
+	private List<IScheduledItem> _List;
 }	 
