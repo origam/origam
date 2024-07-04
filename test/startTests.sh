@@ -15,7 +15,7 @@ sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 ./startServer.sh 
 echo "Trying to connect to SQL server..."
-DATAOUT=$(dotnet origam-utils.dll test-db -attempts 10 -delay 5000 -sql-command "select 1")
+DATAOUT=$(dotnet origam-utils.dll test-db --attempts 10 --delay 5000 --sql-command "select 1")
 if [[ "$DATAOUT" != True ]]; then
   echo "Initial database connection test failed, SQL server is not responding" >&2
   exit 1
@@ -25,7 +25,7 @@ fi
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "Waiting for Origam.Server.dll to initialize DB..."
-DATAOUT=$(dotnet origam-utils.dll test-db -attempts 5 -delay 5000 -sql-command "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
+DATAOUT=$(dotnet origam-utils.dll test-db --attempts 5 --delay 5000 --sql-command "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$DATAOUT" != True ]]; then
   echo "DB initialization timed out" >&2
   echo "Origam.Server.dll output:"
