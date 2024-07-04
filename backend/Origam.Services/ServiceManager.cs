@@ -31,7 +31,7 @@ namespace Origam.Workbench.Services;
 public class ServiceManager
 {
 	private List<IWorkbenchService> serviceList = new ();
-	private Dictionary<Type, IWorkbenchService> servicesHashtable = new ();
+	private Dictionary<Type, IWorkbenchService> services = new ();
 	
 	private static readonly ServiceManager defaultServiceManager = new ();
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -95,7 +95,7 @@ public class ServiceManager
 		service.UnloadService();
 		serviceList.Remove(service);
 		ArrayList hashTypes = new ArrayList();
-		foreach(var entry in servicesHashtable)
+		foreach(var entry in services)
 		{
 			if(entry.Value.Equals(service))
 			{
@@ -104,7 +104,7 @@ public class ServiceManager
 		}
 		foreach(Type hashType in hashTypes)
 		{
-			servicesHashtable.Remove(hashType);
+			services.Remove(hashType);
 		}
 	}
 	
@@ -152,8 +152,7 @@ public class ServiceManager
 	/// </remarks>
 	public IWorkbenchService GetService(Type serviceType)
 	{
-		IWorkbenchService s = (IWorkbenchService)servicesHashtable[serviceType];
-		if (s != null) 
+		if (services.TryGetValue(serviceType, out var s)) 
 		{
 			return s;
 		}
@@ -162,7 +161,7 @@ public class ServiceManager
 		{
 			if (IsInstanceOfType(serviceType, service)) 
 			{
-				servicesHashtable[serviceType] = service;
+				services[serviceType] = service;
 				return service;
 			}
 		}
