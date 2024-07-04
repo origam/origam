@@ -404,15 +404,15 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 		group.Persist();
 		return group;
 	}
-	private ArrayList _childItemTypes = new ArrayList();
+	private List<Type> _childItemTypes = new ();
 	[Browsable(false)]
-	public ArrayList ChildItemTypes
+	public List<Type> ChildItemTypes
 	{
 		get
 		{
 			foreach(Type[] entry in ExtensionChildItemTypes)
 			{
-				if((entry[0].Equals(this.GetType()) || this.GetType().IsSubclassOf((Type)entry[0])) && ! _childItemTypes.Contains( entry[1]))
+				if((entry[0].Equals(GetType()) || GetType().IsSubclassOf(entry[0])) && ! _childItemTypes.Contains( entry[1]))
 				{
 					_childItemTypes.Add(entry[1]);
 				}
@@ -433,7 +433,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	{
 		get
 		{
-			return (Type[])this.ChildItemTypes.ToArray(typeof(Type));
+			return ChildItemTypes.ToArray();
 		}
 	}
 	[Browsable(false)]

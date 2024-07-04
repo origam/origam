@@ -1397,15 +1397,15 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	}
 	#endregion
 	#region ISchemaItemFactory Members
-	private ArrayList _childItemTypes = new ArrayList();
+	private List<Type> _childItemTypes = new ();
 	[Browsable(false)]
-	public ArrayList ChildItemTypes
+	public List<Type> ChildItemTypes
 	{
 		get
 		{
 			foreach(Type[] entry in ExtensionChildItemTypes)
 			{
-				if((entry[0].Equals(this.GetType()) || this.GetType().IsSubclassOf((Type)entry[0])) && ! _childItemTypes.Contains( entry[1]))
+				if((entry[0].Equals(GetType()) || GetType().IsSubclassOf(entry[0])) && ! _childItemTypes.Contains( entry[1]))
 				{
 					_childItemTypes.Add(entry[1]);
 				}
@@ -1464,8 +1464,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		return null;
 	}
 	[Browsable(false)]
-	public virtual Type[] NewItemTypes 
-		=> (Type[])_childItemTypes.ToArray(typeof(Type));
+	public virtual Type[] NewItemTypes => _childItemTypes.ToArray();
 	[Browsable(false)]
 	public virtual IList<string> NewTypeNames
 	{

@@ -318,7 +318,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
     }
 	#endregion
 	#region ISchemaItemFactory Members
-	public ArrayList ChildItemTypes => new(NewItemTypes);
+	public List<Type> ChildItemTypes => new(NewItemTypes);
 	[Browsable(false)]
 	public Type[] NewItemTypes
 	{

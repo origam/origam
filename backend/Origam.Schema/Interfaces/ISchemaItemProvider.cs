@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.UI;
@@ -41,7 +42,7 @@ public interface ISchemaItemProvider : ISchemaItemFactory, IBrowserNode2
 	/// Gets all schema items.
 	/// </summary>
 	ISchemaItemCollection ChildItems{get;}
-	ArrayList ChildItemTypes{get;}
+	List<Type> ChildItemTypes{get;}
 	AbstractSchemaItem GetChildByName(string name, string itemType);
 	List<ISchemaItem> ChildItemsRecursive{get;}
 	List<ISchemaItem> ChildItemsByType(string itemType);
