@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
@@ -74,20 +75,20 @@ public class SchemaService : AbstractService, ISchemaService
     private Hashtable _providers = new Hashtable();
 	
 	#region Public Properties
-	public ArrayList LoadedPackages
+	public List<Package> LoadedPackages
 	{
 		get
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			return persistence.SchemaProvider.RetrieveList<Package>(null).ToArrayList();
+			IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
+			return persistence.SchemaProvider.RetrieveList<Package>(null);
 		}
 	}
-	public ArrayList AllPackages
+	public List<Package> AllPackages
 	{
 		get
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			return persistence.SchemaListProvider.RetrieveList<Package>(null).ToArrayList();
+			IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
+			return persistence.SchemaListProvider.RetrieveList<Package>(null);
 		}
 	}
 	protected Guid _activeSchemaExtensionId;
@@ -228,7 +229,7 @@ public class SchemaService : AbstractService, ISchemaService
 	{
 		_providers.Add(provider.GetType(), provider);
 		provider.PersistenceProvider = (ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService).SchemaProvider;
-		foreach(Package package in this.LoadedPackages)
+		foreach(Package package in LoadedPackages)
 		{
 			package.AddProvider(provider);
 		}
