@@ -106,16 +106,16 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
             return result;
         }
     }
-    public ArrayList EntityRules
+    public List<IEntityRule> EntityRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IEntityRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is EntityRule)
+                if (rule is EntityRule entityRule)
                 {
-                    result.Add(rule);
+                    result.Add(entityRule);
                 }
             }
             return result;

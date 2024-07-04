@@ -32,5 +32,5 @@ public interface IRuleSchemaItemProvider : ISchemaItemProvider
     List<IEndRule> EndRules { get; }
     List<IStartRule> StartRules { get; }
     List<IDataRule> DataRules { get; }
-    ArrayList EntityRules { get; }
+    List<IEntityRule> EntityRules { get; }
 }

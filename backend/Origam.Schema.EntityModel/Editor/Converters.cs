@@ -1840,7 +1840,7 @@ public class EntityRuleConverter : TypeConverter
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
         ArrayList osArray = new ArrayList();
-        foreach (IRule os in rules.EntityRules)
+        foreach (IEntityRule os in rules.EntityRules)
         {
             osArray.Add(os);
         }
@@ -1860,10 +1860,10 @@ public class EntityRuleConverter : TypeConverter
         if (value.GetType() == typeof(string))
         {
             IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-            foreach (AbstractSchemaItem item in rules.EntityRules)
+            foreach (IEntityRule item in rules.EntityRules)
             {
                 if (item.Name == value.ToString())
-                    return item as IRule;
+                    return item;
             }
             return null;
         }
