@@ -145,7 +145,7 @@ public class DatasetGenerator
 	}
     private void AddTableFromEntity(IDataEntity entity, string name, DataSet dataset)
     {
-        ArrayList arrayTypeEntities = new ArrayList();
+        var arrayTypeEntities = new List<string>();
         // Add the table
         DataTable table = new OrigamDataTable(name);
         table.Locale = dataset.Locale;
