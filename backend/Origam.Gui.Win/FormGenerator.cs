@@ -1049,12 +1049,12 @@ public class FormGenerator : IDisposable
 	private void SetDataSourceToConsumers(Hashtable dataConsumers)
 	{
 		this.IgnoreDataChanges = true;
-		ArrayList sortedPanels = new ArrayList();
+		var sortedPanels = new List<AsPanel>();
 		foreach(DictionaryEntry entry in dataConsumers)
 		{
-			if(entry.Key is AsPanel)
+			if(entry.Key is AsPanel asPanel)
 			{
-				sortedPanels.Add(entry.Key);
+				sortedPanels.Add(asPanel);
 			}
 		}
 		sortedPanels.Sort();
@@ -1982,7 +1982,7 @@ public class FormGenerator : IDisposable
 				_dataServiceAgent.Run();
 				DataSet result = _dataServiceAgent.Result as DataSet;
 				_loadedPieces.Add(id, null);
-				ArrayList sortedPanels = new ArrayList(this.Form.Panels);
+				var sortedPanels = this.Form.Panels.ToList();
 				sortedPanels.Sort();
 				foreach(AsPanel panel in sortedPanels)
 				{
