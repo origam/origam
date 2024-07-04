@@ -523,7 +523,7 @@ public class DeleteActiveNode : AbstractMenuCommand
 		if(MessageBox.Show(ResourceUtils.GetString("DoYouWishDelete", _schema.ActiveNode.NodeText), ResourceUtils.GetString("DeleteTile"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 		{
 			// first close an open editor
-			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArrayList())
+			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArray<IViewContent>())
 			{
 				if(content.DisplayedItemId == (_schema.ActiveNode as IPersistent).Id)
 				{
