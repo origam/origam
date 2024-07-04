@@ -104,7 +104,7 @@ public class XmlTools
 	public static XmlDocument GetXmlSlice(XPathNodeIterator iter)
 	{
 		XmlDocument result = new XmlDocument();
-		ArrayList nodes = new ArrayList();
+		var nodes = new List<XmlNode>();
 		// get a copy of a navigator, so we can traverse up to parents
 		XPathNavigator parentNavigator = iter.Current.Clone();
 		
@@ -135,7 +135,7 @@ public class XmlTools
 		XmlNode currentElement = result;
 		for(int i = nodes.Count-1; i >= 0; i--)
 		{
-			currentElement = currentElement.AppendChild(nodes[i] as XmlNode);
+			currentElement = currentElement.AppendChild(nodes[i]);
 		}
 		// finally add our current element and all its children (deep copy)
 		XmlNode deepCopy = result.ImportNode(((IHasXmlNode)iter.Current).GetNode(), true);
