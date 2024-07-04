@@ -43,7 +43,7 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	string ItemType{get;}
 	AbstractSchemaItem GetChildByName(string name);
 	AbstractSchemaItem GetChildById(Guid id);
-	ArrayList ChildItemsByTypeRecursive(string itemType);
+	List<ISchemaItem> ChildItemsByTypeRecursive(string itemType);
 	/// <summary>
 	/// Gets or sets the parent schema item.
 	/// </summary>

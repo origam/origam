@@ -227,9 +227,9 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	}
 	#endregion
 }
-public class EntityUIActionOrderComparer : IComparer
+public class EntityUIActionOrderComparer : IComparer<ISchemaItem>
 {
-    public int Compare(object x, object y) 
+    public int Compare(ISchemaItem x, ISchemaItem y) 
         => (x as EntityUIAction).Order.CompareTo(
             (y as EntityUIAction).Order);
 }

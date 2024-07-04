@@ -984,10 +984,10 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		
 		return list;
 	}
-	public ArrayList ChildItemsByTypeRecursive(string itemType)
+	public List<ISchemaItem> ChildItemsByTypeRecursive(string itemType)
 	{
-		ArrayList list = new ArrayList();
-		foreach(AbstractSchemaItem item in this.ChildItemsRecursive)
+		var list = new List<ISchemaItem>();
+		foreach(ISchemaItem item in ChildItemsRecursive)
 		{
 			if(item.ItemType == itemType)
 				list.Add(item);

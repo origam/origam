@@ -41,7 +41,7 @@ public class UIActionTools
             AbstractDataEntity entity 
                 = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
                 typeof(AbstractDataEntity), new ModelElementKey(entityId));
-            ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
+            var actionsSorted = entity.ChildItemsByTypeRecursive(
                 EntityUIAction.CategoryConst);
             actionsSorted.Sort(new EntityUIActionOrderComparer());
             foreach (EntityUIAction action in actionsSorted)
