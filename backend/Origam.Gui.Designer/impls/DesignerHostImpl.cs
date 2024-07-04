@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
@@ -78,7 +79,7 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 	// component to designer mapping
 	private Hashtable						designers;
 	// extender provider list
-	private IList							extenderProviders;
+	private List<IExtenderProvider>							extenderProviders;
 	// transaction list
 	private int                            transactionCount;          // >0 means we're doing a transaction
 	private StringStack                    transactionDescriptions;   // string descriptions of the current transactions
@@ -91,7 +92,7 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 		// component to designer mapping
 		designers = new Hashtable();
 		// list of extender providers
-		extenderProviders = new ArrayList();
+		extenderProviders = new List<IExtenderProvider>();
 		// services
 		ServiceCreatorCallback callback = new ServiceCreatorCallback(this.OnCreateService);
 		
