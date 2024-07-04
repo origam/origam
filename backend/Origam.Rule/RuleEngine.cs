@@ -974,7 +974,7 @@ public class RuleEngine
 		// check for lookup fields changes
 		if(columnChanged == null)
 		{
-			ArrayList copy = new ArrayList(columnsChanged);
+			var copy = columnsChanged.ToArray<DataColumn>();
 			foreach(DataColumn col in copy)
 			{
                 if (col.Table.TableName == rowChanged.Table.TableName)
