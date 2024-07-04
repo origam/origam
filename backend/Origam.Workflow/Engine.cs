@@ -67,8 +67,8 @@ public class WorkflowEngine : IDisposable
 	}
 
 	#region Properties
-	private readonly Hashtable taskResults = new();
-	public Hashtable TaskResults => taskResults;
+	private readonly Dictionary<Key, WorkflowStepResult> taskResults = new();
+	public Dictionary<Key, WorkflowStepResult> TaskResults => taskResults;
 
 	private Exception workflowException;
 	public Exception WorkflowException
@@ -566,7 +566,7 @@ public class WorkflowEngine : IDisposable
 		{
 			var siblingStep = tasks[i] as IWorkflowStep;
 			if ((siblingStep!.Dependencies.Count == 0) 
-			    && (WorkflowStepResult)taskResults[siblingStep.PrimaryKey] 
+			    && taskResults[siblingStep.PrimaryKey] 
 			    == WorkflowStepResult.Ready)
 			{
 				SetStepStatus(siblingStep, WorkflowStepResult.NotRun);
@@ -607,10 +607,10 @@ public class WorkflowEngine : IDisposable
 	private void HandleWorkflowException(Exception exception)
 	{
 		WorkflowException = exception;
-		var keys = new ArrayList(taskResults.Keys);
-		foreach (object key in keys)
+		var keys = taskResults.Keys.ToList();
+		foreach (Key key in keys)
 		{
-			if ((WorkflowStepResult)taskResults[key] 
+			if (taskResults[key] 
 			    == WorkflowStepResult.Ready)
 			{
 				taskResults[key] = WorkflowStepResult.NotRun;
@@ -657,7 +657,7 @@ public class WorkflowEngine : IDisposable
 
 	private WorkflowStepResult StepStatus(IWorkflowStep step)
 	{
-		return (WorkflowStepResult)taskResults[step.PrimaryKey];
+		return taskResults[step.PrimaryKey];
 	}
 
 	private void EvaluateEndRuleTimed(
@@ -714,9 +714,9 @@ public class WorkflowEngine : IDisposable
 	#region Private Methods
 	private bool WorkflowCompleted()
 	{
-		foreach (DictionaryEntry entry in taskResults)
+		foreach (var entry in taskResults)
 		{
-			var result = (WorkflowStepResult)entry.Value;
+			WorkflowStepResult result = entry.Value;
 			if (result 
 			    is WorkflowStepResult.Ready or WorkflowStepResult.Running)
 			{
@@ -737,7 +737,7 @@ public class WorkflowEngine : IDisposable
 		{
 			try
 			{
-				if (!taskResults.Contains(dependency.Task.PrimaryKey))
+				if (!taskResults.ContainsKey(dependency.Task.PrimaryKey))
 				{
 					throw new Exception(
 						"Workflow task dependency invalid. Task: " 

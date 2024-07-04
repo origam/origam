@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.Workbench;
 using Origam.Schema.WorkflowModel;
@@ -175,10 +176,10 @@ public class WorkflowWatchPad : AbstractPadContent
 			result.Nodes.Add(childWorkflows);
 		}
 		TreeNode tasks = new TreeNode("Tasks");
-		foreach(DictionaryEntry entry in engine.TaskResults)
+		foreach(var entry in engine.TaskResults)
 		{
-			IWorkflowStep step = engine.Step(entry.Key as Key);
-			tasks.Nodes.Add(RenderWorkflowTask(engine, step, (WorkflowStepResult)entry.Value));
+			IWorkflowStep step = engine.Step(entry.Key);
+			tasks.Nodes.Add(RenderWorkflowTask(engine, step, entry.Value));
 		}
 		result.Nodes.Add(tasks);
 		return result;
