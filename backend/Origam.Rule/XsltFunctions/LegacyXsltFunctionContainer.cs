@@ -1416,7 +1416,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             ((XPathNodeIterator)parameters.Evaluate("/parameter"));
 
         int total = 0;
-        ArrayList parameterList = new ArrayList(iter.Count);
+        var parameterList = new List<Tuple<string, int>>(iter.Count);
 
         while (iter.MoveNext())
         {
@@ -1437,17 +1437,16 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             int value = Convert.ToInt32(valueIterator.Current.Value);
             total += value;
 
-            parameterList.Add(new DictionaryEntry(key, value));
+            parameterList.Add(new Tuple<string, int>(key, value));
         }
 
         string[] result = new string[total];
         int min = 0;
         int max = total - 1;
 
-        foreach (DictionaryEntry entry in parameterList)
+        foreach (var entry in parameterList)
         {
-            string key = (string)entry.Key;
-            int quantity = (int)entry.Value;
+            (string key, int quantity) = entry;
             int used = 0;
 
             while (used < quantity)
