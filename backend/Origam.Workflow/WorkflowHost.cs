@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -42,8 +43,8 @@ public class WorkflowHost : IDisposable
 		log4net.LogManager.GetLogger(
 			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 	private static WorkflowHost _defaultHost = new WorkflowHost();
-	private ArrayList _runningWorkflows = new ArrayList();
-	private Hashtable _runningForms = new Hashtable();
+	private List<WorkflowEngine> _runningWorkflows = new ();
+	private Dictionary<Guid, Tasks.UIEngineTask> _runningForms = new ();
 	private bool _supportsUI = false;
 	public event WorkflowHostEvent WorkflowFinished;
 	public event WorkflowHostMessageEvent WorkflowMessage;
@@ -69,7 +70,7 @@ public class WorkflowHost : IDisposable
 			_supportsUI = value;
 		}
 	}
-	public ArrayList RunningWorkflows
+	public List<WorkflowEngine> RunningWorkflows
 	{
 		get
 		{
@@ -157,18 +158,18 @@ public class WorkflowHost : IDisposable
 	}
 	public void AbortWorkflowForm(Guid taskId)
     {
-        Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
+        Tasks.UIEngineTask task = _runningForms[taskId];
         if (task == null)
         {
             throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
         }
         _runningForms.Remove(taskId);
-        Thread thread = new Thread(new ThreadStart(task.Abort));
+        Thread thread = new Thread(task.Abort);
         PrepareAndStartThread(thread, task);
     }
     public void FinishWorkflowForm(Guid taskId, IDataDocument data)
 	{
-		Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
+		Tasks.UIEngineTask task = _runningForms[taskId];
 		if (task == null)
 		{
 			throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
@@ -176,7 +177,7 @@ public class WorkflowHost : IDisposable
 		_runningForms.Remove(taskId);
         
 		task.Result = data;
-        Thread thread = new Thread(new ThreadStart(task.Finish));
+        Thread thread = new Thread(task.Finish);
         PrepareAndStartThread(thread, task);
 	}
     private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
