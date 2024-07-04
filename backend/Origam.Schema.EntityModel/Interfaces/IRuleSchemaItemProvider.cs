@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -28,7 +29,7 @@ namespace Origam.Schema.EntityModel;
 public interface IRuleSchemaItemProvider : ISchemaItemProvider
 {
     ArrayList EndRules { get; }
-    ArrayList StartRules { get; }
+    List<IStartRule> StartRules { get; }
     ArrayList DataRules { get; }
     ArrayList EntityRules { get; }
 }

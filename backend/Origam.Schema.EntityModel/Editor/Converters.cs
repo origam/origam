@@ -1788,7 +1788,7 @@ public class StartRuleConverter : TypeConverter
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
         ArrayList osArray = new ArrayList();
-        foreach (IRule os in rules.StartRules)
+        foreach (IStartRule os in rules.StartRules)
         {
             osArray.Add(os);
         }
@@ -1808,10 +1808,10 @@ public class StartRuleConverter : TypeConverter
         if (value.GetType() == typeof(string))
         {
             IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-            foreach (AbstractSchemaItem item in rules.StartRules)
+            foreach (IStartRule item in rules.StartRules)
             {
                 if (item.Name == value.ToString())
-                    return item as IRule;
+                    return item;
             }
             return null;
         }
