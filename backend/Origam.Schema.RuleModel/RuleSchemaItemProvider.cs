@@ -91,16 +91,16 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
             return result;
         }
     }
-    public ArrayList DataRules
+    public List<IDataRule> DataRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IDataRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is IDataRule)
+                if (rule is IDataRule dataRule)
                 {
-                    result.Add(rule);
+                    result.Add(dataRule);
                 }
             }
             return result;

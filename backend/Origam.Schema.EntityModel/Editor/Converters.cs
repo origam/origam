@@ -1686,7 +1686,7 @@ public class DataRuleConverter : TypeConverter
 	{
 		IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
 		ArrayList osArray = new ArrayList();
-        foreach (IRule os in rules.DataRules)
+        foreach (IDataRule os in rules.DataRules)
 		{
 			osArray.Add(os);
 		}
@@ -1707,10 +1707,10 @@ public class DataRuleConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-            foreach (AbstractSchemaItem item in rules.DataRules)
+            foreach (IDataRule item in rules.DataRules)
 			{
 				if(item.Name == value.ToString())
-					return item as IRule;
+					return item;
 			}
 			return null;
 		}
