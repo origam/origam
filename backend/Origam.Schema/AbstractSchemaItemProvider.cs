@@ -89,9 +89,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         }
 		return result;
 	}
-	public virtual ArrayList ChildItemsByGroup(SchemaItemGroup group)
+	public virtual List<AbstractSchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		ArrayList list = new ArrayList();
+		var list = new List<AbstractSchemaItem>();
 		foreach(AbstractSchemaItem item in this.ChildItems)
 		{
 			if(item.Group == null | group == null)

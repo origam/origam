@@ -245,9 +245,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		}
 		return list;
 	}
-	public ArrayList ChildItemsByGroup(SchemaItemGroup group)
+	public List<AbstractSchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		var list = new ArrayList();
+		var list = new List<AbstractSchemaItem>();
 		foreach(var item in ChildItems)
 		{
 			if((item.Group == null && group == null) ||

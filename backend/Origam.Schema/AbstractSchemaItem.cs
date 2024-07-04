@@ -995,9 +995,9 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		
 		return list;
 	}
-	public ArrayList ChildItemsByGroup(SchemaItemGroup group)
+	public List<AbstractSchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		ArrayList list = new ArrayList();
+		var list = new List<AbstractSchemaItem>();
 		foreach(AbstractSchemaItem item in this.ChildItems)
 		{
 			if((item.Group == null && group == null) || item.Group.PrimaryKey.Equals(group.PrimaryKey))
