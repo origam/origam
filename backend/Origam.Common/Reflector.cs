@@ -51,9 +51,9 @@ public class Reflector
         }
     }
 	
-	static public IList FindConstructors( Type type )
+	static public List<ConstructorInfo> FindConstructors( Type type )
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<ConstructorInfo>();
 		foreach( ConstructorInfo constructorInfo in type.GetConstructors( SearchCriteria ) )
 		{
 			// exclude abstract constructors (weird concept anyway)
@@ -116,7 +116,7 @@ public class Reflector
 			{
                 foreach (object attr in attrs)
                 {
-                    IList memberAttrs = FindAttributes(memberInfo, secondaryAttributes);
+	                List<Attribute> memberAttrs = FindAttributes(memberInfo, secondaryAttributes);
                     result.Add(new MemberAttributeInfo(memberInfo, attr as Attribute, memberAttrs));
                 }
 			}
@@ -130,9 +130,9 @@ public class Reflector
 		return result;
 	}
 	//static public Attribute[] FindAttributes( MemberInfo memberInfo, params Type[] attributes )
-	static public IList FindAttributes( MemberInfo memberInfo, params Type[] attributes )
+	static public List<Attribute> FindAttributes( MemberInfo memberInfo, params Type[] attributes )
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<Attribute>();
 		foreach( Type attribute in attributes )
 		{
 			object[] attrs = memberInfo.GetCustomAttributes( attribute, true );
