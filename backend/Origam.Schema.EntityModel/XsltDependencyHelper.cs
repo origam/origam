@@ -36,7 +36,6 @@ public class XsltDependencyHelper
         IPersistenceProvider persistenceprovider = item.PersistenceProvider;
 		// references
 		int found = 0;
-		ArrayList references = new ArrayList();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf("model://", i);
@@ -59,7 +58,7 @@ public class XsltDependencyHelper
 		}
 		// constants
 		found = 0;
-		ArrayList constants = new ArrayList();
+		var constants = new List<string>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":GetConstant('", i);
@@ -87,7 +86,7 @@ public class XsltDependencyHelper
         
         // strings
         found = 0;
-		ArrayList strings = new ArrayList();
+		var strings = new List<string>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":GetString('", i);
@@ -114,7 +113,7 @@ public class XsltDependencyHelper
 		}
 		// lookups
 		found = 0;
-		ArrayList lookups = new ArrayList();
+		var lookups = new List<Guid>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":LookupValue('", i);
