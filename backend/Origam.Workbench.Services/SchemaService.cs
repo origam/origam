@@ -73,7 +73,7 @@ public class SchemaService : AbstractService, ISchemaService
         _activeSchemaExtensionId = activeSchemaExtensionId;
     }
     
-    private _providers.Keys<Type, ISchemaItemProvider> _providers = new ();
+    private Dictionary<Type, ISchemaItemProvider> _providers = new ();
 	
 	#region Public Properties
 	public List<Package> LoadedPackages
