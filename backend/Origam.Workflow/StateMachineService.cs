@@ -124,7 +124,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                         dynData.Xml.FirstChild.AppendChild(el);
                     }
                 }
-                ArrayList a = new ArrayList();
+                var a = new List<object>();
                 a.Add(currentStateValue);
                 a.AddRange(sm.DynamicOperations(dynData));
                 return a.ToArray();
@@ -139,7 +139,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                 }
                 else
                 {
-                    ArrayList resultList = new ArrayList();
+                    var resultList = new List<object>();
                     resultList.Add(currentStateValue);
                     while (state.ParentItem is StateMachineState | state.ParentItem is StateMachine)
                     {
@@ -156,7 +156,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                         }
                         state = state.ParentItem as StateMachineState;
                     }
-                    return (object[])resultList.ToArray(typeof(object));
+                    return resultList.ToArray();
                 }
             }
         }
@@ -181,7 +181,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     {
         if (changedTable.ExtendedProperties.Contains("EntityId"))
         {
-            ArrayList stateColumns = new ArrayList();
+            var stateColumns = new List<DataColumn>();
             Guid entityId = (Guid)changedTable.ExtendedProperties["EntityId"];
             foreach (DataColumn column in changedTable.Columns)
             {
@@ -224,13 +224,13 @@ public class StateMachineService : AbstractService, IStateMachineService
     }
     public void OnDataChanged(DataSet data, List<string> changedTables, string transactionId)
     {
-        ArrayList rows = new ArrayList();
+        var rows = new List<StateMachineQueueEntry>();
         foreach (string tableName in changedTables)
         {
             DataTable changedTable = data.Tables[tableName];
             if(changedTable.ExtendedProperties.Contains("EntityId"))
             {
-                ArrayList stateColumns = new ArrayList();
+                var stateColumns = new List<DataColumn>();
                 Guid entityId = (Guid)changedTable.ExtendedProperties["EntityId"];
                 foreach(DataColumn column in changedTable.Columns)
                 {
@@ -275,7 +275,7 @@ public class StateMachineService : AbstractService, IStateMachineService
             ExecuteStatelessEvents(entityId, StateMachineServiceStatelessEventType.RecordCreated, row, transactionId);
         }
     }
-    private void ProcessRecordStateTransition(DataRow row, ArrayList stateColumns, Guid entityId, string transactionId)
+    private void ProcessRecordStateTransition(DataRow row, List<DataColumn> stateColumns, Guid entityId, string transactionId)
     {
         if (row.RowState != DataRowState.Deleted)
         {
@@ -562,8 +562,8 @@ public class StateMachineService : AbstractService, IStateMachineService
     }
     public bool ExecuteStatelessEvents(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId)
     {
-        ArrayList stateMachines = GetMachines(entityId, false);
-        ArrayList eventsSorted = new ArrayList();
+        List<StateMachine> stateMachines = GetMachines(entityId, false);
+        var eventsSorted = new List<StateMachineEvent>();
         object rowKey = null;
         object[] keys = DatasetTools.PrimaryKey(dataRow);
         if (keys.Length == 1) rowKey = keys[0];
@@ -584,7 +584,7 @@ public class StateMachineService : AbstractService, IStateMachineService
         ExecuteStatelessWorkQueue(entityId, eventType, dataRow, transactionId, rowKey, workQueueList);
         foreach (StateMachine sm in stateMachines)
         {
-            eventsSorted.AddRange(sm.Events);
+            eventsSorted.AddRange(sm.Events.Cast<StateMachineEvent>());
         }
         eventsSorted.Sort();
         foreach (StateMachineEvent ev in eventsSorted)
@@ -792,7 +792,7 @@ public class StateMachineService : AbstractService, IStateMachineService
             return sm;
         }
     }
-    private ArrayList GetMachines(Guid entityId, bool throwException)
+    private List<StateMachine> GetMachines(Guid entityId, bool throwException)
     {
         StateMachineSchemaItemProvider stateMachines = (ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService).GetProvider(typeof(StateMachineSchemaItemProvider)) as StateMachineSchemaItemProvider;
         if (stateMachines == null)
@@ -801,7 +801,7 @@ public class StateMachineService : AbstractService, IStateMachineService
         }
         else
         {
-            ArrayList result = stateMachines.GetMachines(entityId);
+            List<StateMachine> result = stateMachines.GetMachines(entityId);
             if (result.Count == 0 && throwException) throw new ArgumentOutOfRangeException("entityId", entityId, ResourceUtils.GetString("ErrorStateMachineNotFound"));
             return result;
         }
@@ -983,7 +983,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     }
     private static WorkQueueData.WorkQueueRow[] WorkQueues(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row, bool isRemoval)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<WorkQueueData.WorkQueueRow>();
         DatasetGenerator dg = new DatasetGenerator(true);
         foreach (WorkQueueData.WorkQueueRow wqr in workQueueList.WorkQueue.Rows)
         {
@@ -1085,7 +1085,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                 }
             }
         }
-        return result.ToArray(typeof(WorkQueueData.WorkQueueRow)) as WorkQueueData.WorkQueueRow[];
+        return result.ToArray();
     }
     private void StateMachineService_Initialize(object sender, EventArgs e)
     {

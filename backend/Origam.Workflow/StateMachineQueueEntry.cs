@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Workflow;
 /// <summary>
@@ -30,9 +31,9 @@ namespace Origam.Workflow;
 public class StateMachineQueueEntry
 {
 	private DataRow _row;
-	private ArrayList _stateColumns;
+	private List<DataColumn> _stateColumns;
 	private Guid _entityId;
-	public StateMachineQueueEntry(DataRow row, ArrayList stateColumns, Guid entityId)
+	public StateMachineQueueEntry(DataRow row, List<DataColumn> stateColumns, Guid entityId)
 	{
 		_row = row;
 		_stateColumns = stateColumns;
@@ -60,7 +61,7 @@ public class StateMachineQueueEntry
 			_row = value;
 		}
 	}
-	public ArrayList StateColumns
+	public List<DataColumn> StateColumns
 	{
 		get
 		{
