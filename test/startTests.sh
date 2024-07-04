@@ -1,20 +1,34 @@
 #!/bin/bash
+
+# Function definitions
+print_file_contents() {
+    local filename="$1"
+    if [ -f "$filename" ]; then
+        cat "$filename"
+    else
+        echo "Error: File '$filename' not found."
+    fi
+}
+
+# Main script
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
 ./startServer.sh 
 echo "TEST DB Connection"
 DATAOUT=$(dotnet origam-utils.dll test-db -a 10 -d 5000 -c "select 1")
 if [[ "$DATAOUT" != True ]]; then
-echo "Database connection failed";
-exit 1;
+  echo "Initial database connection failed.";
+  exit 1;
 fi 
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll > origam-output.txt 2>&1 &
 echo "TEST DB Connection"
 DATAOUT=$(dotnet origam-utils.dll test-db -a 5 -d 5000 -c "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$DATAOUT" != True ]]; then
-echo "Database connection failed";
-exit 1;
+  echo "Database connection failed";
+  echo "Origam.Server.dll output:"
+  print_file_contents origam-output.txt
+  exit 1;
 fi
 echo "Running frontend integration tests"
 cd tests_e2e
