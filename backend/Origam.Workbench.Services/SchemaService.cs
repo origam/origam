@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Origam.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
@@ -72,7 +73,7 @@ public class SchemaService : AbstractService, ISchemaService
         _activeSchemaExtensionId = activeSchemaExtensionId;
     }
     
-    private Hashtable _providers = new Hashtable();
+    private _providers.Keys<Type, ISchemaItemProvider> _providers = new ();
 	
 	#region Public Properties
 	public List<Package> LoadedPackages
@@ -263,10 +264,10 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public void RemoveAllProviders()
 	{
-		ArrayList keys = new ArrayList(_providers.Keys);
-		foreach(object key in keys)
+		var keys = _providers.Keys.ToList();
+		foreach(Type key in keys)
 		{
-			this.RemoveProvider(_providers[key] as ISchemaItemProvider);
+			RemoveProvider(_providers[key]);
 		}
 	}
 	public ISchemaItemProvider[] Providers
@@ -287,17 +288,17 @@ public class SchemaService : AbstractService, ISchemaService
 	{
 		if(type.IsInterface)
 		{
-			foreach(DictionaryEntry entry in _providers)
+			foreach(var entry in _providers)
 			{
 				foreach(Type interf in entry.Value.GetType().GetInterfaces())
 				{
-					if(type.Equals(interf)) return entry.Value as ISchemaItemProvider;
+					if(type.Equals(interf)) return entry.Value;
 				}
 			}
 		}
 		else
 		{
-			return _providers[type] as ISchemaItemProvider;
+			return _providers[type];
 		}
 		return null;
 	}
@@ -309,7 +310,7 @@ public class SchemaService : AbstractService, ISchemaService
 		{
 			if(t.FullName == type)
 			{
-				return _providers[t] as ISchemaItemProvider;
+				return _providers[t];
 			}
 		}
 		return null;
