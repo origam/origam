@@ -47,9 +47,13 @@ export class BoolEditor extends React.Component<{
     }
   }
 
+  readOnly = (): string => {
+    return (this.props.isReadOnly) ? "readOnly" : "";
+  }
+
   render() {
     return (
-      <div className={cx(S.editorContainer)}>
+      <div className={cx(S.editorContainer, this.readOnly())}>
         <input
           id={this.props.id ? this.props.id : undefined}
           className="editor"
