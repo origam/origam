@@ -304,14 +304,14 @@ public class DatasetGenerator
 		AddExtendedProperties(dataset.ExtendedProperties, ds.PrimaryKey);
 		//dataset.EndInit();
 		List<DataStructureEntity> entities = ds.Entities;
-		ArrayList aggregatedColumns = new ArrayList();
+		var aggregatedColumns = new List<DataStructureColumn>();
 		// Add tables
 		foreach(DataStructureEntity entity in entities)
 		{
 			// Skip self joins - they will be added only as relations
 			if(!(entity.Entity is IAssociation && (entity.Entity as IAssociation).IsSelfJoin) && entity.Columns.Count > 0)
 			{
-				ArrayList nonPhysicalColumns = new ArrayList();
+				var nonPhysicalColumns = new List<DataStructureColumn>();
 				DataTable table = new OrigamDataTable(entity.Name);
 				//table.BeginInit();
 				table.Locale = dataset.Locale;
