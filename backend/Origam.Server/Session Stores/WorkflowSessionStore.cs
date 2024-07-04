@@ -334,9 +334,9 @@ public class WorkflowSessionStore : SaveableSessionStore
             {
                 StringBuilder message = new StringBuilder();
                 message.Append("<HTML><BODY>");
-                message.Append("<FONT COLOR=\"#FF0000\" SIZE=\"16\"><P>");
+                message.Append("<FONT COLOR=\"#FF0000\" SIZE=\"16\"><DIV>");
                 message.Append(ex.Message);
-                message.Append("</P></FONT>");
+                message.Append("</DIV></FONT>");
                 message.Append("</HTML></BODY>");
                 this.FinishMessage = message.ToString() ;
             }

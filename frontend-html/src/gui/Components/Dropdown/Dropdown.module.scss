@@ -57,7 +57,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       z-index: 100;
     }
     &:read-only {
-      cursor: not-allowed;
+      cursor: default;
       background: var(--background3);
       border: 1px solid var(--background3);
       color: var(--background7);

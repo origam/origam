@@ -178,6 +178,47 @@
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="cb9f8c35-a9c8-4566-b082-fb43a28dbd3d"
+      asi:name="GetTop3">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
+        x:id="54a9e105-f7f4-4696-9fad-bdc6c4237898"
+        adec:isPrimaryKey="false"
+        asi:name="&lt;="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="012dbd15-be4c-4799-b01e-f55a501ce9e3"
+          asi:name="Right"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+            x:id="3d6c2625-fdca-4672-891c-e7ef24291c94"
+            asi:name="_Number_3" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="d37c773f-59c1-491a-8b95-5f2a6ba4026b"
+          asi:name="Left"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+            x:id="31ea799e-b50e-4a4e-9812-237fa9f8702f"
+            asi:name="Integer1" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
       x:id="9a7b8c2c-f8a8-4fed-8470-895d2618499a"
@@ -217,6 +258,37 @@
       aesr:type="Permit"
       esr1:updateCredential="true"
       aesr:valueType="SavedValue" />
+    <ewa:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="89db5c33-c5ea-4165-9a39-e3f67735f128"
+      euia:label="MultistepWorkflowInModalDialog"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="true"
+      euia:modalDialogHeight="600"
+      euia:modalDialogWidth="800"
+      euia:mode="Always"
+      asi:name="MultistepWorkflowInModalDialog"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="03cf98a0-a1d4-438c-997e-b2639c915d21"
+        asi:name="AllDataTypes"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ewa:EntityUIAction>
     <ewa:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"

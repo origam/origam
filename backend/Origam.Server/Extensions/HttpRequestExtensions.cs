@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,28 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
-@import "src/gui/commonStyles";
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
-.root {
-  background:var(--background1);
-  padding: 20px;
-  min-width: fit-content;
-  button {
-    @include dialogButton();
-  }
-  .message {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 5px;
-    margin-top: 15px;
-    > * {
-      margin: 0;
-      padding: 0;
+namespace Origam.Server.Extensions;
+
+public static class HttpRequestExtensions
+{
+    public static string GetUserAgent(this HttpRequest request)
+    {
+        return request.Headers.ContainsKey(HeaderNames.UserAgent)
+            ? request.Headers[HeaderNames.UserAgent].ToString()
+            : string.Empty;
     }
-    * {
-      font-size: 16px;
-    }
-  }
 }

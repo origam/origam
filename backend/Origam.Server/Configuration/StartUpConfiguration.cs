@@ -99,6 +99,21 @@ public class StartUpConfiguration
     public bool ReloadModelWhenFilesChangesDetected =>
         configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
     
+    public int MultipartBodyLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("MultipartBodyLengthLimit", 134_217_728);    
+        
+    public int MultipartHeadersLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("MultipartHeadersLengthLimit", 16_384);    
+        
+    public int ValueLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("ValueLengthLimit", 4_194_304);
+    
     public SecurityProtocolType SecurityProtocol
     {
         get

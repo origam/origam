@@ -18,6 +18,9 @@
       x:id="d1a45ba3-2e86-4097-a2f5-71908475aa81"
       pr:referencedPackage="Chat/.origamPackage#261b7cd5-4ba1-46a0-8963-27793379ac11" />
     <pr:packageReference
+      x:id="da6c885e-ff10-49d7-8ec2-cb128fd9fa1a"
+      pr:referencedPackage="Workflow/.origamPackage#a9c25bbd-9a31-427d-bde5-1a442d4d9c38" />
+    <pr:packageReference
       x:id="e3000c9f-0d78-426c-9506-de91a6a56164"
       pr:referencedPackage="Attachments/.origamPackage#bb8c67fb-44c1-4b41-8fce-4d50cd5a759d" />
     <pr:packageReference

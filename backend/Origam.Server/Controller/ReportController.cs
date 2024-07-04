@@ -32,6 +32,7 @@ using Origam.BI.CrystalReports;
 using Origam.CrystalReportsService.Models;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Server.Extensions;
 using Origam.Server.Model.Report;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -190,7 +191,7 @@ public class ReportController : AbstractController
         Response.Headers.Add(
             HeaderNames.ContentDisposition,
             httpTools.GetFileDisposition(
-                new CoreRequestWrapper(Request), 
+                Request.GetUserAgent(), 
                 fileName));
         var stream = new FileStream(filePath, FileMode.Open);
         // specifying filename forces content-disposition attachment;
