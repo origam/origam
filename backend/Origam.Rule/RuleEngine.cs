@@ -42,6 +42,7 @@ using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench;
 using System.Data.Common;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Rule;
 /// <summary>

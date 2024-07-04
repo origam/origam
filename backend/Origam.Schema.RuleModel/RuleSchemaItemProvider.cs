@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System.Collections;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 /// <summary>
@@ -75,16 +76,16 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
             return result;
         }
     }
-    public ArrayList EndRules
+    public List<IEndRule> EndRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IEndRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is IEndRule)
+                if (rule is IEndRule endRule)
                 {
-                    result.Add(rule);
+                    result.Add(endRule);
                 }
             }
             return result;

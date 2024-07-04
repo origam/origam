@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -28,7 +29,7 @@ namespace Origam.Schema.EntityModel;
 /// </summary>
 public interface IRuleSchemaItemProvider : ISchemaItemProvider
 {
-    ArrayList EndRules { get; }
+    List<IEndRule> EndRules { get; }
     List<IStartRule> StartRules { get; }
     ArrayList DataRules { get; }
     ArrayList EntityRules { get; }

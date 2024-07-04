@@ -28,6 +28,7 @@ using System.Threading;
 using Origam.DA;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.RuleModel;
 using Origam.Service.Core;

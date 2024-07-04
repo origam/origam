@@ -29,6 +29,7 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>

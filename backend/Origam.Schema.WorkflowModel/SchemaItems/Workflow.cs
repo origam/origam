@@ -28,6 +28,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.WorkflowModel;

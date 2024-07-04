@@ -30,6 +30,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.MenuModel;
 

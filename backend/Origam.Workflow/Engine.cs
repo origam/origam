@@ -39,6 +39,7 @@ using Origam.Schema.RuleModel;
 using log4net;
 using System.Linq;
 using Origam.Extensions;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
 
 namespace Origam.Workflow;

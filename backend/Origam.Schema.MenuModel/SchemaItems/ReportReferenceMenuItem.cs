@@ -30,6 +30,7 @@ using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.MenuModel;
 [SchemaItemDescription("Report Reference", "menu_report.png")]

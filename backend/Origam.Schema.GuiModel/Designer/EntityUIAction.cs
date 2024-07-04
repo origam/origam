@@ -30,6 +30,7 @@ using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.Extensions;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.GuiModel;
 /// <summary>

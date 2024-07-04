@@ -53,6 +53,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Server;
 using Origam.Service.Core;
 

@@ -29,6 +29,7 @@ using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.GuiModel;
 

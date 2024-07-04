@@ -28,6 +28,7 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Workbench.Services;
 using Origam.Schema.RuleModel;
 

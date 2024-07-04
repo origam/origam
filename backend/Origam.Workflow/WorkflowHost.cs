@@ -28,6 +28,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using System.Globalization;
 using Origam.Extensions;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 

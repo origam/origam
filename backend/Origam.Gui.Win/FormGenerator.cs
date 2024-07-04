@@ -43,6 +43,7 @@ using System.Linq;
 using Origam.Extensions;
 using Origam.Gui;
 using Origam.Gui.UI;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
 
 namespace Origam.Gui.Win;

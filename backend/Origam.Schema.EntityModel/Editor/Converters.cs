@@ -27,6 +27,7 @@ using Origam.Services;
 using Origam.Workbench.Services;
 using System.Linq;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.EntityModel;
 public class StringItemConverter : TypeConverter
@@ -1737,7 +1738,7 @@ public class EndRuleConverter : TypeConverter
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
         ArrayList osArray = new ArrayList();
-        foreach (IRule os in rules.EndRules)
+        foreach (IEndRule os in rules.EndRules)
         {
             osArray.Add(os);
         }
@@ -1757,10 +1758,10 @@ public class EndRuleConverter : TypeConverter
         if (value.GetType() == typeof(string))
         {
             IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-            foreach (AbstractSchemaItem item in rules.EndRules)
+            foreach (IEndRule item in rules.EndRules)
             {
                 if (item.Name == value.ToString())
-                    return item as IRule;
+                    return item;
             }
             return null;
         }
