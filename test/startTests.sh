@@ -102,7 +102,7 @@ sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSetting
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 
-dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | remove_test_errors
+dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | filter_test_output
 if [[ $? -eq 0 ]]; then
   sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
