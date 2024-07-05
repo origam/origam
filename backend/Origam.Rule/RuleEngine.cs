@@ -1936,7 +1936,7 @@ public class XPathNodeList : XmlNodeList
 	public XPathNodeList(XPathNodeIterator iterator)
 	{
 		this.iterator = iterator;
-		this.list = new ArrayList();
+		this.list = new List<XmlNode>();
 		this.done = false;
 	}
 	public override IEnumerator GetEnumerator()
@@ -1998,7 +1998,7 @@ public class XPathNodeList : XmlNodeList
 	// Fields
 	private bool done;
 	private XPathNodeIterator iterator;
-	private ArrayList list;
+	private List<XmlNode> list;
 	private static readonly object[] nullparams;
 }
 internal class XmlNodeListEnumerator : IEnumerator
