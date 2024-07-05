@@ -62,7 +62,6 @@ describe("Html client", () => {
       `#${dataViewId} .horiz-scrollbar`,
       { visible: true, timeout: 3000 }
     );
-    console.log("table: " + table);
     await sleep(500);
     await waitForRequests
 
