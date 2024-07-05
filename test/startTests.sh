@@ -35,11 +35,11 @@ filter_test_output() {
         if (skip) {
             if ($0 !~ /^\s+at /) {
                 skip = 0
-                $0 = gensub(/\r?\n$/, "", "1")
+                sub(/\r?\n$/, "")
                 if ($0 != "") print $0
             }
         } else {
-            $0 = gensub(/\r?\n$/, "", "1")
+            sub(/\r?\n$/, "")
             if ($0 != "") print $0
         }
     }
