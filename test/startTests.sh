@@ -33,7 +33,7 @@ filter_test_output() {
     /Intentional test error/ { skip = 1; next }
     {
         if (skip) {
-            if ($0 !~ /^\s+at /) {
+            if ($0 !~ /^\s*at /) {
                 skip = 0
                 sub(/\r?\n$/, "")
                 if ($0 != "") print $0
