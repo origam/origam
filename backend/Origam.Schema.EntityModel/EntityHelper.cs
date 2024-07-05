@@ -618,7 +618,7 @@ public static class EntityHelper
 		parentRelationAll.Name += "_all";
 		parentRelationAll.Persist();
 		generatedElements?.Add(parentRelationAll);
-        var indexColumns = new ArrayList();
+        var indexColumns = new List<FieldMappingItem>();
 		// Create reference columns
 		foreach(IDataEntityColumn primaryKey in parentEntity.EntityPrimaryKey)
 		{
@@ -658,7 +658,7 @@ public static class EntityHelper
 			refLanguageIdColumnId) as FieldMappingItem);
 		// create index items
 		var i = 0;
-		foreach(IDataEntityColumn column in indexColumns)
+		foreach(FieldMappingItem column in indexColumns)
 		{
 			var field = dataEntityIndex.NewItem<DataEntityIndexField>(
 				schemaService.ActiveSchemaExtensionId, null);
