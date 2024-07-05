@@ -124,7 +124,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 	{
 		SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 		
-		if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new ArrayList());
+		if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new List<object>());
 		
 		ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
 		var items = new List<ISchemaItem>();
@@ -151,7 +151,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 		{
 			SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 		
-			if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new ArrayList());
+			if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new List<object>());
 		
 			ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
 			foreach(ISchemaItem item in provider.ChildItems)
