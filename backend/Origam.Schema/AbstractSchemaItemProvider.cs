@@ -420,14 +420,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 			return _childItemTypes;
 		}
 	}
-	private static ArrayList _extensionChildItemTypes = new ArrayList();
-	public static ArrayList ExtensionChildItemTypes
-	{
-		get
-		{
-			return _extensionChildItemTypes;
-		}
-	}
+
+	public static List<Type[]> ExtensionChildItemTypes { get; } = new ();
+
 	[Browsable(false)]
 	public virtual Type[] NewItemTypes
 	{
