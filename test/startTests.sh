@@ -11,7 +11,9 @@ print_error() {
 }
 
 print_title() {
+  echo
   echo -e "${GREEN}$1${NC}"
+  echo
 }
 
 print_file_contents() {
@@ -50,7 +52,7 @@ else
   echo "DB initialized"
 fi
 
-print_title "Running frontend integration tests"
+print_title "Run frontend integration tests"
 cd tests_e2e
 yarn install --ignore-engines > /dev/null 2>&1
 yarn test:e2e
@@ -63,7 +65,7 @@ else
   exit 1
 fi
 
-print_title "Running workflow integration tests"
+print_title "Run workflow integration tests"
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
