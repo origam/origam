@@ -28,24 +28,8 @@ print_file_contents() {
 # Will remove exceptions with the error message
 # "Intentional test error" their stack traces and empty lines
 filter_test_output() {
-    awk '
-    BEGIN { skip = 0 }
-    /Intentional test error/ { skip = 1; next }
-    {
-        if (skip) {
-            if ($0 !~ /^\s+at /) {
-                skip = 0
-                sub(/\r?\n$/, "")
-                if ($0 != "") print $0
-            }
-        } else {
-            sub(/\r?\n$/, "")
-            if ($0 != "") print $0
-        }
-    }
-    '
+    awk '{sub(/\r?\n$/, ""); if (NF==0) next; if (/Intentional test error/) {intentional_error=1; next} if (intentional_error) {if ($0 !~ /^\s+at /) {intentional_error=0; print}} else {print}}'
 }
-
 # Main script
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
