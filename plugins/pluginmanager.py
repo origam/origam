@@ -153,6 +153,9 @@ import {{ ISectionPlugin }} from "plugins/interfaces/ISectionPlugin";
 import {{ ISectionPluginData }} from "plugins/interfaces/ISectionPluginData";
 import {{ ILocalizer }} from "plugins/interfaces/ILocalizer";
 
+// This is a section level plugin. If you need a screen level plugin:
+// 1. Remove the ISectionPlugin interface and implement IScreenPlugin instead
+// 2. Change $type_ISectionPlugin: 1 = 1; to  $type_IScreenPlugin: 1 = 1;
 export class {plugin_name} implements ISectionPlugin {{
   $type_ISectionPlugin: 1 = 1;
   id: string = "{plugin_name}";
