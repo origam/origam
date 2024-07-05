@@ -27,15 +27,24 @@ print_file_contents() {
 
 # Will remove exceptions with the error message
 # "Intentional test error" their stack traces and empty lines
-remove_test_errors() {
+filter_test_output() {
     awk '
-        /Intentional test error/ {skip=1; next}
-        /^$/ {next}
-        skip && /^\s+at / {next}
-        {skip=0; print}
+    BEGIN { skip = 0 }
+    /Intentional test error/ { skip = 1; next }
+    {
+        if (skip) {
+            if ($0 !~ /^\s+at /) {
+                skip = 0
+                $0 = gensub(/\r?\n$/, "", "1")
+                if ($0 != "") print $0
+            }
+        } else {
+            $0 = gensub(/\r?\n$/, "", "1")
+            if ($0 != "") print $0
+        }
+    }
     '
 }
-
 
 # Main script
 sudo node /root/https-proxy/index.js &
