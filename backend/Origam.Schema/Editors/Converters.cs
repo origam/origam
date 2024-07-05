@@ -43,7 +43,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
 		AbstractSchemaItem root = reference.RootItem;
 		List<ISchemaItem> parameters = root.Parameters;
-		ArrayList paramArray = new ArrayList(parameters.Count);
+		var paramArray = new List<SchemaItemParameter>(parameters.Count);
         paramArray.Add(null);
 		foreach(SchemaItemParameter parameter in parameters)
 		{
