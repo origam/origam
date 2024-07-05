@@ -75,7 +75,6 @@ internal static class EqualityExtensions
         if (!(testObject is DataEntityConstraint)) return false;
         var testEntityConstraint = (DataEntityConstraint) testObject;
         return testEntityConstraint.Fields
-            .Cast<object>()
             .Any(field =>
                 dataConstraint.Fields.ContainsEqualObject(field));
     }
