@@ -127,7 +127,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 		if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new ArrayList());
 		
 		ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
-		ArrayList items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(ISchemaItem item in provider.ChildItems)
 		{
 			if(item.IsAbstract && (! item.PrimaryKey.Equals(ancestor.SchemaItem.PrimaryKey)))
