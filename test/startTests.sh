@@ -25,6 +25,18 @@ print_file_contents() {
   fi
 }
 
+# Will remove exceptions with the error message
+# "Intentional test error" their stack traces and empty lines
+remove_test_errors() {
+    awk '
+        /Intentional test error/ {skip=1; next}
+        /^$/ {next}
+        skip && /^\s+at / {next}
+        {skip=0; print}
+    '
+}
+
+
 # Main script
 sudo node /root/https-proxy/index.js &
 cd /home/origam/HTML5
@@ -81,7 +93,7 @@ sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSetting
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 
-dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll
+dotnet test --logger "trx;logfilename=workflow-integration-test-results.trx" Origam.WorkflowTests.dll | remove_test_errors
 if [[ $? -eq 0 ]]; then
   sudo cp /home/origam/HTML5_TESTS/TestResults/workflow-integration-test-results.trx /home/origam/output/
   echo "Success."
