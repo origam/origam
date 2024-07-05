@@ -157,7 +157,7 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 			foreach(ISchemaItem item in provider.ChildItems)
 			{
 				if(item.Name == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}

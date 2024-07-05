@@ -147,7 +147,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 			{
 				return new Type[] { };
 			}
-			var types = new ArrayList();
+			var types = new List<Type>();
 			foreach(var type in parent.NewItemTypes)
 			{
 				var description = SchemaItemDescription(type);
@@ -156,7 +156,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 					types.Add(type);
 				}
 			}
-			return types.ToArray(typeof(Type)) as Type[];
+			return types.ToArray();
 		}
 	}
 	public virtual IList<string> NewTypeNames
