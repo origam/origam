@@ -1561,7 +1561,7 @@ public class RuleEngine
 		Guid entityId, Guid fieldId, bool isNewRow,
 		RuleEvaluationCache ruleEvaluationCache = null)
 	{
-		ArrayList rules = new ArrayList();
+		var rules = new List<AbstractEntitySecurityRule>();
 			
 		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		// field-level rules
@@ -1576,7 +1576,7 @@ public class RuleEngine
 			// which does not point to a real entity field id
 			if(column != null)
 			{
-				if (column.RowLevelSecurityRules.Count == 0)
+				if (!column.RowLevelSecurityRules.Any())
 				{
 					// shortcircuit processing of row level security rules
 					// for a column without it's own rules 
@@ -1589,7 +1589,7 @@ public class RuleEngine
 				}
 				else
 				{
-					rules.AddRange(column.RowLevelSecurityRules);
+					rules.AddRange(column.RowLevelSecurityRules.Cast<AbstractEntitySecurityRule>());
 				}
 			}
 		}
@@ -1597,7 +1597,7 @@ public class RuleEngine
 		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
 		if(entityRules.Count > 0)
 		{
-			rules.AddRange(entityRules);
+			rules.AddRange(entityRules.Cast<AbstractEntitySecurityRule>());
 		}
 		// no rules - permit
 		if (rules.Count == 0)
@@ -1715,13 +1715,13 @@ public class RuleEngine
 	}
 	public bool IsExportAllowed(Guid entityId)
 	{
-		var rules = new ArrayList();
+		var rules = new List<AbstractEntitySecurityRule>();
 		var entity = _persistence.SchemaProvider
             .RetrieveInstance<IDataEntity>(entityId);
 		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
 		if (entityRules.Count > 0)
 		{
-			rules.AddRange(entityRules);
+			rules.AddRange(entityRules.Cast<AbstractEntitySecurityRule>());
 		}
 		// no rules - permit
 		if (rules.Count == 0)
