@@ -81,8 +81,12 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
 
     public void CopyTo(AbstractSchemaItem[] array, int index)
     {
-        var keysToCopy = array.Select(x => x.PrimaryKey).ToArray();
-        base.CopyTo(keysToCopy, index);
+        int destinationIndex = index;
+        for (int i = 0; i < Count; i++)
+        {
+            array[destinationIndex] = this[i];
+            destinationIndex++;
+        }
     }
 
     public bool Remove(AbstractSchemaItem item)
