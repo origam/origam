@@ -298,7 +298,8 @@ public class SchemaService : AbstractService, ISchemaService
 		}
 		else
 		{
-			return _providers[type];
+			_providers.TryGetValue(type, out var provider);
+			return provider;
 		}
 		return null;
 	}
