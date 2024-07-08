@@ -1,6 +1,3 @@
-#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-#For more information, please see https://aka.ms/containercompat
-
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
 RUN apt-get -qq update > /dev/null 2>&1 \
@@ -8,7 +5,8 @@ RUN apt-get -qq update > /dev/null 2>&1 \
 RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb \
 && rm packages-microsoft-prod.deb
-#INSTALL YARN 
+
+# INSTALL yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
 && apt-get -qq update > /dev/null 2>&1 \
@@ -16,18 +14,8 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 && useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
-#INSTALL NODE
-#RUN curl -sL https://deb.nodesource.com/setup_17.x | sudo bash - && \
-#apt-get install -yq nodejs 
-#Install ODBC
-#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-#RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
-#RUN apt-get update \
-#&& ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
-#&& ACCEPT_EULA=Y apt-get install -y mssql-tools
-#RUN sed -i "s/\[.*\]/\[SQL Server Native Client 11.0\]/" /etc/odbcinst.ini
-#End install ODBC
-#Install Chrome
+
+# Install Chrome
 RUN apt-get -qq update > /dev/null 2>&1 \
     && apt-get -qq install -y xvfb > /dev/null 2>&1 \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -35,6 +23,7 @@ RUN apt-get -qq update > /dev/null 2>&1 \
     && apt-get -qq update > /dev/null 2>&1 \
     && apt-get -qq install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
+
 # Install GAWK
 RUN apt-get update && apt-get install -y wget build-essential
 RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz && \
@@ -45,7 +34,8 @@ RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz && \
     make install && \
     cd .. && \
     rm -rf gawk-5.1.0 gawk-5.1.0.tar.gz
-#HTTPS PROXY
+
+# HTTPS proxy
 COPY https-proxy /root/https-proxy
 WORKDIR /root/https-proxy
 RUN yarn --ignore-engines
@@ -59,7 +49,9 @@ RUN mv reverse-proxy.conf /etc/nginx/sites-available \
 && nginx -t \
 && chmod +x updateTimezone.sh \
 && cd /home \
-&& su origam 
+&& su origam
+
+# Copy test files
 USER origam
 SHELL ["/bin/bash", "-c"]
 RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
