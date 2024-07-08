@@ -33,11 +33,21 @@ print_file_contents() {
 # Will remove exceptions with the error message
 # "Intentional test error" their stack traces and empty lines
 filter_test_output() {
-    gawk '
-        /Intentional test error/ {skip=1; next}
-        /^$/ {next}
-        skip && /^\s+at / {next}
-        {skip=0; print}
+    awk '
+    BEGIN { skip = 0 }
+    /Intentional test error/ { skip = 1; next }
+    {
+        if (skip) {
+            if ($0 !~ /^\s*at /) {
+                skip = 0
+                sub(/\r?\n$/, "")
+                if ($0 != "") print $0
+            }
+        } else {
+            sub(/\r?\n$/, "")
+            if ($0 != "") print $0
+        }
+    }
     '
 }
 
