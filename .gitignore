@@ -3,3 +3,4 @@
 .DS_Store
 /plugins/__pycache__
 /plugins/pluginmanager_config.json
+/test/HTML5_TESTS/
