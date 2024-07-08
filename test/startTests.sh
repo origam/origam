@@ -3,11 +3,16 @@
 # Constants
 RED='\033[0;31m' # red color
 GREEN='\033[0;32m' # green color
+YELLOW='\033[1;33m' # yellow color
 NC='\033[0m' # no color
 
 # Function definitions
 print_error() {
   echo -e "${RED}$1${NC}"
+}
+
+print_note() {
+  echo -e "${YELLOW}$1${NC}"
 }
 
 print_title() {
@@ -77,6 +82,8 @@ else
 fi
 
 print_title "Run workflow integration tests"
+print_note "Some workflow steps will fail. This is part of the tests."
+echo
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
