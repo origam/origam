@@ -455,7 +455,7 @@ public abstract class AbstractDataService : IDataService
 									}
 									else
 									{
-										ArrayList a = param.Value as ArrayList;
+										var a = param.Value as ArrayList;
 										if(a != null)
 										{
 											string delimiter = "|";

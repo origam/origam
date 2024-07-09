@@ -103,7 +103,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new ArrayList();
 			DataStructureEntity entity = this.DataStructure.Entities[0] as DataStructureEntity;
 			foreach(DataStructureColumn column in entity.Columns)
 			{

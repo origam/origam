@@ -40,7 +40,7 @@ public class DataGridBuilder : IGridBuilder
 	private bool _useUserConfig = true;
 	private AsForm _form;
 	private Control parentControl;
-	private ArrayList _styles;
+	private List<DataGridColumnStyleHolder> _styles;
 	public DataGridBuilder()
 	{
 		_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
@@ -196,7 +196,7 @@ public class DataGridBuilder : IGridBuilder
 		_styles.Sort();
 		if(allHidden & _styles.Count > 0)
 		{
-			(_styles[0] as DataGridColumnStyleHolder).Hidden = false;
+			_styles[0].Hidden = false;
 		}
 		foreach(DataGridColumnStyleHolder style in _styles)
 		{
@@ -251,9 +251,9 @@ public class DataGridBuilder : IGridBuilder
 		ts.SelectionBackColor = datagrid.SelectionBackColor;
 		ts.SelectionForeColor = datagrid.SelectionForeColor;	
 	}
-	private ArrayList GetColumnStylesFromControls (Control control, int offset, OrigamPanelColumnConfig userConfig, RuleEngine ruleEngine)
+	private List<DataGridColumnStyleHolder> GetColumnStylesFromControls (Control control, int offset, OrigamPanelColumnConfig userConfig, RuleEngine ruleEngine)
 	{
-		ArrayList styles = new ArrayList();
+		var styles = new List<DataGridColumnStyleHolder>();
 		
 		//go through all control and their controls 
 		foreach(Control item in control.Controls)
@@ -606,7 +606,7 @@ public class DataGridBuilder : IGridBuilder
 						
 						
 						case MouseButtons.Right:			// By right button we reverse all values in the current column.
-							ArrayList selectedRows = new ArrayList();
+							var selectedRows = new List<DataRow>();
 							int count = cm.Count;
 							for(int i = 0; i < count; i++)
 							{

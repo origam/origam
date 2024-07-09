@@ -31,6 +31,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -170,7 +171,7 @@ public class ToolboxPane : System.Windows.Forms.UserControl
 	/// Get all of our tools.
 	public ToolboxItemCollection GetAllTools()
 	{
-		ArrayList toolsAL = new ArrayList();
+		var toolsAL = new List<object>();
 		foreach (TabPage tab in tabControl.TabPages)
 		{
 			ListBox list = tab.Controls[0] as ListBox;

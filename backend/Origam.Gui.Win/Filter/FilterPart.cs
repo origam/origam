@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Origam.UI;
@@ -49,7 +50,6 @@ public abstract class FilterPart : IDisposable
 	private string _query = null;
 	private Label _label = new Label();
 	private Label _operatorLabelControl = new Label();
-	private ArrayList _filterControls = new ArrayList();
 	private ContextMenu _operatorContextMenu = new ContextMenu();
 	
 	#endregion
@@ -128,13 +128,8 @@ public abstract class FilterPart : IDisposable
 			return _operatorLabelControl;
 		}
 	}
-	public ArrayList FilterControls
-	{
-		get
-		{
-			return _filterControls;
-		}
-	}
+	public List<Control> FilterControls { get; } = new ();
+
 	public object Value1
 	{
 		get

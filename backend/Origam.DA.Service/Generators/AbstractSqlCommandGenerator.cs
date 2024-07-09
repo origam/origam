@@ -2950,7 +2950,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         if (filterPart.IgnoreFilterParameterName != null)
                         {
                             object paramValue = parameters[filterPart.IgnoreFilterParameterName];
-                            ArrayList paramArray = paramValue as ArrayList;
+                            var paramArray = paramValue as ArrayList;
 
                             if ((paramValue == null || paramValue == DBNull.Value) && constant == null)
                             {

@@ -86,7 +86,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                 mapping.Name = parameterName;
             }
         }
-        ArrayList toDelete = new ArrayList();
+        var toDelete = new List<ColumnParameterMapping>();
         // delete all parameter mappings whose's context stores do not exist anymore
         foreach(var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
         {
