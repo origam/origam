@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 
@@ -33,10 +34,10 @@ public sealed class PropertyValueServiceImpl : IPropertyValueUIService
     GetPropertyUIValueItems(ITypeDescriptorContext context,
     PropertyDescriptor propDesc)
     {
-        ArrayList list = null;
+        List<PropertyValueUIItem> list = null;
         if (QueryPropertyUIValueItems != null)
         {
-            list = new ArrayList();
+            list = new List<PropertyValueUIItem>();
             QueryPropertyUIValueItems(context, propDesc, list);
         }
         if (list == null || list.Count == 0)
