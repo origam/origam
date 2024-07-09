@@ -49,7 +49,7 @@ public class StringItemConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		StringSchemaItemProvider strings = _schema.GetProvider(typeof(StringSchemaItemProvider)) as StringSchemaItemProvider;
-		ArrayList stringArray = new ArrayList(strings.ChildItems.Count);
+		var stringArray = new List<StringItem>(strings.ChildItems.Count);
 		foreach(StringItem str in strings.ChildItems)
 		{
 			stringArray.Add(str);
@@ -100,7 +100,7 @@ public class EntityConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		EntityModelSchemaItemProvider entities = _schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
-		ArrayList columnArray = new ArrayList(entities.ChildItems.Count);
+		var columnArray = new List<IDataEntity>(entities.ChildItems.Count);
 		foreach(IDataEntity entity in entities.ChildItems)
 		{
 			columnArray.Add(entity);
@@ -151,7 +151,7 @@ public class FunctionConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FunctionSchemaItemProvider functions = _schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
-		ArrayList columnArray = new ArrayList(functions.ChildItems.Count);
+		var columnArray = new List<Function>(functions.ChildItems.Count);
 		foreach(Function function in functions.ChildItems)
 		{
 			columnArray.Add(function);
@@ -200,7 +200,7 @@ public class DataStructureEntityConverter : TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList columnArray;
+		List<EntityRelationItem> columnArray;
 		List<EntityRelationItem> entities;
 		DataStructureEntity parentEntity = (context.Instance as DataStructureEntity).ParentItem as DataStructureEntity;
 		if(parentEntity == null)
@@ -220,7 +220,7 @@ public class DataStructureEntityConverter : TypeConverter
 			else
 				throw new ArgumentOutOfRangeException("ParentItem", parentEntity, ResourceUtils.GetString("ErrorParentNotIDataEntity"));
 		}
-		columnArray = new ArrayList(entities.Count);
+		columnArray = new List<EntityRelationItem>(entities.Count);
 		
 		foreach(EntityRelationItem entity in entities)
 		{
@@ -543,7 +543,7 @@ public class DataStructureColumnStringConverter : System.ComponentModel.TypeConv
         DataStructureEntity DataEntity = dataStructureSortSet.Entity;
         List<DataStructureColumn> childitem = DataEntity.ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst);
         List<DataStructureColumn> columnEntity = DataEntity.GetColumnsFromEntity();
-        ArrayList columnArray = new ArrayList();
+        var columnArray = new List<string>();
         columnArray.AddRange(childitem.Select(x => x.Name).ToList());
         columnArray.AddRange(columnEntity.Select(x => x.Name).ToList());
         columnArray.Sort();
@@ -877,7 +877,7 @@ public class DataStructureConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		DataStructureSchemaItemProvider dataStructures = _schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-		ArrayList dsArray = new ArrayList(dataStructures.ChildItems.Count);
+		var dsArray = new List<AbstractDataStructure>(dataStructures.ChildItems.Count);
 		foreach(AbstractDataStructure ds in dataStructures.ChildItems)
 		{
 			dsArray.Add(ds);
@@ -928,7 +928,7 @@ public class DataConstantConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		DataConstantSchemaItemProvider dataConstants = _schema.GetProvider(typeof(DataConstantSchemaItemProvider)) as DataConstantSchemaItemProvider;
-		ArrayList dcArray = new ArrayList(dataConstants.ChildItems.Count);
+		var dcArray = new List<DataConstant>(dataConstants.ChildItems.Count);
 		foreach(DataConstant dc in dataConstants.ChildItems)
 		{
 			dcArray.Add(dc);
@@ -979,7 +979,7 @@ public class TransformationConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		TransformationSchemaItemProvider transformations = _schema.GetProvider(typeof(TransformationSchemaItemProvider)) as TransformationSchemaItemProvider;
-		ArrayList osArray = new ArrayList(transformations.ChildItems.Count);
+		var osArray = new List<ITransformation>(transformations.ChildItems.Count);
 		osArray.Add(null);
 		foreach(ITransformation os in transformations.ChildItems)
 		{
@@ -1030,7 +1030,7 @@ public class DataQueryEntityConverter : System.ComponentModel.TypeConverter
 		ISchemaItem currentItem = context.Instance as ISchemaItem;
 		if(!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
 		List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);
@@ -1131,7 +1131,7 @@ public class DataQueryEntityConverterNoSelf : System.ComponentModel.TypeConverte
         ISchemaItem currentItem = context.Instance as ISchemaItem;
         if (!(currentItem.RootItem is DataStructure)) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Root item of current context must be DataStructure");
         List<DataStructureEntity> entities = ((DataStructure)currentItem.RootItem).Entities;
-        ArrayList entityArray = new ArrayList(entities.Count);
+        var entityArray = new List<DataStructureEntity>(entities.Count);
         foreach (DataStructureEntity entity in entities)
         {
             if(!entity.PrimaryKey.Equals(currentItem.ParentItem.PrimaryKey))
@@ -1205,7 +1205,7 @@ public class DataStructureEntityFieldConverter : System.ComponentModel.TypeConve
 		{
 			throw new ArgumentOutOfRangeException("Instance", context.Instance, "Type not supported by DataStructureEntityFieldConverter.");
 		}
-		ArrayList fieldArray = new ArrayList(fields.Count);
+		var fieldArray = new List<IDataEntityColumn>(fields.Count);
 		foreach(IDataEntityColumn field in fields)
 		{
 			fieldArray.Add(field);
@@ -1328,7 +1328,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
 		
 		if(reference.DataStructure == null) return null;
 		List<DataStructureMethod> methods = reference.DataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -1382,7 +1382,7 @@ public class DataStructureReferenceMethodConverter : System.ComponentModel.TypeC
             IDataStructureReference reference = context.Instance as IDataStructureReference;
             if (reference.DataStructure == null) return null;
             List<DataStructureDefaultSet> defaultSets = reference.DataStructure.DefaultSets;
-            ArrayList array = new ArrayList(defaultSets.Count);
+            var array = new List<DataStructureDefaultSet>(defaultSets.Count);
             foreach (DataStructureDefaultSet item in defaultSets)
             {
                 array.Add(item);
@@ -1490,7 +1490,7 @@ public class DataLookupConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		IDataLookupSchemaItemProvider lookups = _schema.GetProvider(typeof(IDataLookupSchemaItemProvider)) as IDataLookupSchemaItemProvider;
-		ArrayList lookupArray = new ArrayList(lookups.ChildItems.Count);
+		var lookupArray = new List<ISchemaItem>(lookups.ChildItems.Count);
 		foreach(ISchemaItem lookup in lookups.ChildItems)
 		{
 			lookupArray.Add(lookup);
@@ -1569,7 +1569,7 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
 		InitLookup(lookup);
 		if(constant.DataType == OrigamDataType.Boolean)
 		{
-			ArrayList list = new ArrayList(2);
+			var list = new List<string>(2);
 			list.Add(ResourceUtils.GetString("Yes"));
 			list.Add(ResourceUtils.GetString("No"));
 			return new StandardValuesCollection(list);
@@ -1582,7 +1582,7 @@ public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConve
 		}
 		catch
 		{
-			return new StandardValuesCollection(new ArrayList());
+			return new StandardValuesCollection(new List<string>());
 		}
 	}
 	public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
@@ -1685,7 +1685,7 @@ public class DataRuleConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-		ArrayList osArray = new ArrayList();
+		var osArray = new List<IDataRule>();
         foreach (IDataRule os in rules.DataRules)
 		{
 			osArray.Add(os);
@@ -1737,7 +1737,7 @@ public class EndRuleConverter : TypeConverter
         GetStandardValues(ITypeDescriptorContext context)
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-        ArrayList osArray = new ArrayList();
+        var osArray = new List<IEndRule>();
         foreach (IEndRule os in rules.EndRules)
         {
             osArray.Add(os);
@@ -1788,7 +1788,7 @@ public class StartRuleConverter : TypeConverter
         GetStandardValues(ITypeDescriptorContext context)
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-        ArrayList osArray = new ArrayList();
+        var osArray = new List<IStartRule>();
         foreach (IStartRule os in rules.StartRules)
         {
             osArray.Add(os);
@@ -1839,7 +1839,7 @@ public class EntityRuleConverter : TypeConverter
         GetStandardValues(ITypeDescriptorContext context)
     {
         IRuleSchemaItemProvider rules = _schema.GetProvider(typeof(IRuleSchemaItemProvider)) as IRuleSchemaItemProvider;
-        ArrayList osArray = new ArrayList();
+        var osArray = new List<IEntityRule>();
         foreach (IEntityRule os in rules.EntityRules)
         {
             osArray.Add(os);
@@ -1947,7 +1947,7 @@ public class DataTypeMappingConverter : TypeConverter
         DatabaseDataTypeSchemaItemProvider mappings = _schema.GetProvider(
             typeof(DatabaseDataTypeSchemaItemProvider)) as DatabaseDataTypeSchemaItemProvider;
         OrigamDataType dataType = (context.Instance as IDatabaseDataTypeMapping).DataType;
-        ArrayList mappingArray = new ArrayList();
+        var mappingArray = new List<DatabaseDataType>();
         foreach (DatabaseDataType mapping in mappings.ChildItems)
         {
             if (mapping.DataType == dataType)
@@ -2002,7 +2002,7 @@ public class DataTypeMappingAvailableTypesConverter : TypeConverter
         IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
         dataServiceAgent.MethodName = "DatabaseSpecificDatatypes";
         dataServiceAgent.Run();
-        ArrayList result = new ArrayList((string[])dataServiceAgent.Result);
+        var result = new List<string>((string[])dataServiceAgent.Result);
         result.Sort();
         return new StandardValuesCollection(result);
     }
