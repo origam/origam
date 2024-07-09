@@ -113,11 +113,11 @@ public class ContextStoreEntityConverter : System.ComponentModel.TypeConverter
 		if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
 		{
 			//return null;
-			return new StandardValuesCollection(new ArrayList());
+			return new StandardValuesCollection(new List<DataStructureEntity>());
 		}
 		DataStructure ds  = (DataStructure) updateContextTask.OutputContextStore.Structure;
 		List<DataStructureEntity> entities = ds.Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);
