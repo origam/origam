@@ -255,14 +255,6 @@ public class ExtensionPad : AbstractPadContent
 			}
 		}
 	}
-	private void DeleteItems(ArrayList items)
-	{
-		foreach(DA.ObjectPersistence.IPersistent item in items)
-		{
-			item.IsDeleted = true;
-			item.Persist();
-		}
-	}
 	private void toolBar1_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
 	{
 		if(e.Button == tbrNew)

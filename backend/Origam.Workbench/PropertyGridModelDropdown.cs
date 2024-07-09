@@ -44,7 +44,7 @@ public partial class PropertyGridModelDropdown : UserControl
         listBox1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         IEnumerable standardValues = 
             context.PropertyDescriptor.Converter.GetStandardValues(context)
-            ?? new TypeConverter.StandardValuesCollection(new ArrayList());
+            ?? new TypeConverter.StandardValuesCollection(new List<object>());
         
         foreach (object item in standardValues)
         {
