@@ -79,7 +79,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
 		var eventHandlerList = eventsField.GetValue(other);
 		eventsField.SetValue(this, eventHandlerList);
 	}
-	public List<ISubmenuBuilder> SubItems { get; } = new ();
+	public List<object> SubItems { get; } = new ();
 	public ICommand Command { get; set; }
 	public string Description { get; } = string.Empty;
 	public bool IsEnabled

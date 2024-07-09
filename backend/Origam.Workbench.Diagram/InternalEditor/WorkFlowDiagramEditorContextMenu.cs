@@ -252,7 +252,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 			AsMenuCommand menuItem = new AsMenuCommand(Strings.WorkFlowDiagramEditor_ContextMenuNode_New, schemaItemUnderMouse);
 			var builder = new SchemaItemEditorsMenuBuilder(true);
 			menuItem.PopulateMenu(builder);
-			menuItem.SubItems.AddRange(menuItem.DropDownItems);
+			menuItem.SubItems.AddRange(menuItem.DropDownItems.Cast<object>());
 			new AsContextMenu(WorkbenchSingleton.Workbench).AddSubItem(menuItem);
 			menuItem.ShowDropDown();
 			newMenu.DropDownItems.AddRange(menuItem.DropDownItems
