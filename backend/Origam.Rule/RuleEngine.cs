@@ -329,9 +329,9 @@ public class RuleEngine
 			{
 				throw new Exception(ResourceUtils.GetString("ErrorOnlyXslRuleSupported"));
 			}
-			XmlNodeReader reader = new XmlNodeReader(result.Xml);
-			RuleExceptionDataCollection exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
 			
+			RuleExceptionDataCollection exceptions = DeserializeRuleExceptions(result.Xml);
+
 			if (rule.Trace == Origam.Trace.Yes ||
 			    rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
 			{
@@ -351,6 +351,28 @@ public class RuleEngine
 		{
 			throw new Exception(ResourceUtils.GetString("ErrorRuleFailed1", rule.Name), ex);
 		}
+	}
+	private RuleExceptionDataCollection DeserializeRuleExceptions(XmlDocument xmlDoc)
+	{
+		if (xmlDoc == null)
+			return null;
+
+		XmlNodeReader reader = new XmlNodeReader(xmlDoc);
+		RuleExceptionDataCollection exceptions = null;
+
+		try
+		{
+			if (reader.ReadToFollowing("RuleExceptionDataCollection"))
+			{
+				exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
+			}
+		}
+		finally
+		{
+			reader.Close();
+		}
+
+		return exceptions;
 	}
 	public object Evaluate(AbstractSchemaItem item)
 	{
