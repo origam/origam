@@ -39,12 +39,12 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	public AbstractDataLookup(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public AbstractDataLookup(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override bool UseFolders => false;
 	public override string ItemType => CategoryConst;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		base.GetParameterReferences(ListMethod, list);
 	}
@@ -139,8 +139,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 			{
 				Id = ListDataStructureId
 			};
-			return (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key) as DataStructure;
+			return (ISchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(ISchemaItem), key) as DataStructure;
 		}
 		set
 		{
@@ -223,8 +223,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     [XmlReference("valueDataStructure", "ValueDataStructureId")]
     public DataStructure ValueDataStructure
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureId)) as DataStructure;
 		set
 		{
@@ -268,7 +268,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureMethod ListMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ListDataStructureMethodId));
 		set => ListDataStructureMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -280,7 +280,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureMethod ValueMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureMethodId));
 		set => ValueDataStructureMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -292,7 +292,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureSortSet ValueSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureSortSetId));
 		set => ValueDataStructureSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -304,7 +304,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureSortSet ListSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ListDataStructureSortSetId));
 		set => ListDataStructureSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

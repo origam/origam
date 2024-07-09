@@ -44,7 +44,7 @@ public class MenuItemConverter : TypeConverter
 	{
 		MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
 		ArrayList menuArray = new ArrayList();
-		foreach(AbstractSchemaItem item in menu.ChildItemsRecursive)
+		foreach(ISchemaItem item in menu.ChildItemsRecursive)
 		{
 			if(item is AbstractMenuItem && !(item is Menu || item is Submenu))
 			{
@@ -67,10 +67,10 @@ public class MenuItemConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-			foreach(AbstractSchemaItem item in menu.ChildItemsRecursive)
+			foreach(ISchemaItem item in menu.ChildItemsRecursive)
 			{
 				if(item.Path == value.ToString())
-					return item as AbstractSchemaItem;
+					return item as ISchemaItem;
 			}
 			return null;
 		}

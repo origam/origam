@@ -63,7 +63,7 @@ public class PageParameterMapping : AbstractSchemaItem
 	[XmlReference("defaultValue", "DataConstantId")]
 	public DataConstant DefaultValue
 	{
-		get => (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
+		get => (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
 		set
 		{
 			this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -80,7 +80,7 @@ public class PageParameterMapping : AbstractSchemaItem
 	[XmlReference("listSeparator", "SeparatorDataConstantId")]
 	public DataConstant ListSeparator
 	{
-		get => (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SeparatorDataConstantId)) as DataConstant;
+		get => (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SeparatorDataConstantId)) as DataConstant;
 		set
 		{
 			this.SeparatorDataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);

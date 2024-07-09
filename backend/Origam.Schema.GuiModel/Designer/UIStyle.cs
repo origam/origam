@@ -72,7 +72,7 @@ public class UIStyle : AbstractSchemaItem
         }
     }
     #endregion
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Widget != null)

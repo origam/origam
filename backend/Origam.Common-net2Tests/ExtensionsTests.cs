@@ -77,7 +77,7 @@ public class TypeExtensionsTests
     [Test]
     public void ShouldRemoveValues()
     {
-        IEnumerable<Type> allPublicSubTypes = typeof(AbstractSchemaItem).GetAllPublicSubTypes().ToList();
+        IEnumerable<Type> allPublicSubTypes = typeof(ISchemaItem).GetAllPublicSubTypes().ToList();
     }
 }
 

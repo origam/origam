@@ -972,8 +972,8 @@ namespace Origam.Gui.Win
 
 		#region IOrigamMetadataConsumer Members
 
-		private AbstractSchemaItem _origamMetadata;
-		public AbstractSchemaItem OrigamMetadata
+		private ISchemaItem _origamMetadata;
+		public ISchemaItem OrigamMetadata
 		{
 			get
 			{
@@ -981,7 +981,7 @@ namespace Origam.Gui.Win
 
 				try
 				{
-					return _origamMetadata.PersistenceProvider.RetrieveInstance(_origamMetadata.GetType(), _origamMetadata.PrimaryKey, true) as AbstractSchemaItem;
+					return _origamMetadata.PersistenceProvider.RetrieveInstance(_origamMetadata.GetType(), _origamMetadata.PrimaryKey, true) as ISchemaItem;
 				}
 				catch
 				{

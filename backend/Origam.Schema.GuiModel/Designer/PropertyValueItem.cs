@@ -243,7 +243,7 @@ public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLoc
     }
 	#endregion
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get

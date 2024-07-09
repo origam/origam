@@ -569,7 +569,7 @@ public class DatasetGenerator
 					} catch (Exception e)
 					{
 						throw new OrigamException(string.Format("Error occured while rendering column `{0}', ({1}) - {2}",
-							(column as AbstractSchemaItem), (column as AbstractSchemaItem).Id, e.Message), e);
+							(column as ISchemaItem), (column as ISchemaItem).Id, e.Message), e);
 					}
 				}
 				dataset.Tables.Add(table);
@@ -973,7 +973,7 @@ public class DatasetGenerator
 	public void RenderFilter(StringBuilder sqlExpression, EntityFilter filter, DataStructureEntity entity)
 	{
 		int i = 0;
-		foreach(AbstractSchemaItem filterItem in filter.ChildItems)
+		foreach(ISchemaItem filterItem in filter.ChildItems)
 		{
 			if(i > 0)
 				sqlExpression.Append(" AND ");
@@ -1242,7 +1242,7 @@ public class DatasetGenerator
 				break;
 			case "Concat":
 				ISchemaItem concatArg = item.GetChildByName("Strings");
-				List<AbstractSchemaItem> concatStrings = concatArg.ChildItems.ToList();
+				List<ISchemaItem> concatStrings = concatArg.ChildItems.ToList();
 				if(concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, ResourceUtils.GetString("ErrorTwoCONCATArguments"));
 				concatStrings.Sort();
 				i = 0;

@@ -107,8 +107,8 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
     [XmlReference("relation", "RelationId")]
 	public IAssociation Relation
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(RelationId)) 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), new ModelElementKey(RelationId)) 
 			as IAssociation;
 		set
 		{
@@ -125,8 +125,8 @@ public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
     [XmlReference("field", "ColumnId")]
     public IDataEntityColumn Field
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ColumnId)) 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), new ModelElementKey(ColumnId)) 
 			as IDataEntityColumn;
 		set
 		{

@@ -342,7 +342,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			if(this._origamMetadata == null)
 				return null;
-			return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
+			return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
 		}
 		set
 		{
@@ -424,9 +424,9 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 				mapping.Name = param.Name;
 			}
 		}
-		var toDelete = new List<AbstractSchemaItem>();
+		var toDelete = new List<ISchemaItem>();
 		// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
-		foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(ISchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 		{
 			if(! this.CrystalReport.ParameterReferences.ContainsKey(mapping.Name) & 
 				this.CrystalReport.GetChildByName(mapping.Name) == null)
@@ -434,7 +434,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 				toDelete.Add(mapping);
 			}
 		}
-		foreach(AbstractSchemaItem mapping in toDelete)
+		foreach(ISchemaItem mapping in toDelete)
 		{
 			mapping.IsDeleted = true;
 		}
@@ -620,7 +620,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
+	private ISchemaItem _origamMetadata;
 	private void pnlToolbar_ReportRefreshRequested(object sender, System.EventArgs e)
 	{
 		this.RefreshReport();
@@ -652,7 +652,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		pnlToolbar.MiddleStartColor = OrigamColorScheme.TitleInactiveMiddleStartColor;
 		pnlToolbar.MiddleEndColor = OrigamColorScheme.TitleInactiveMiddleEndColor;
 	}
-	public AbstractSchemaItem OrigamMetadata
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

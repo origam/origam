@@ -53,7 +53,7 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Filter != null)
 			base.GetParameterReferences(Filter, list);
@@ -112,7 +112,7 @@ public class EntitySecurityFilterReference : AbstractSchemaItem
 	{
 		get
 		{
-			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FilterId));
+			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FilterId));
 		}
 		set
 		{

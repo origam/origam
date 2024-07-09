@@ -89,7 +89,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DescribingFieldId)) as IDataEntityColumn;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DescribingFieldId)) as IDataEntityColumn;
 		}
 		set => DescribingFieldId = (Guid?) value?.PrimaryKey["Id"] ?? Guid.Empty;
 	}
@@ -131,8 +131,8 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
         "AuditingSecondReferenceKeyColumnId")]
 	public IDataEntityColumn AuditingSecondReferenceKeyColumn
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+            typeof(ISchemaItem), 
             new ModelElementKey(AuditingSecondReferenceKeyColumnId)) 
             as IDataEntityColumn;
         set => AuditingSecondReferenceKeyColumnId 
@@ -285,7 +285,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		return false;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Methods
+	#region Overriden ISchemaItem Methods
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.DescribingField != null) dependencies.Add(this.DescribingField);

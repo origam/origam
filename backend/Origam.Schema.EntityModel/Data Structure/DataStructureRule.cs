@@ -80,7 +80,7 @@ public class DataStructureRule : AbstractSchemaItem
 	public IDataEntityColumn TargetField
 	{
 		get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(TargetFieldId));
+			typeof(ISchemaItem), new ModelElementKey(TargetFieldId));
 		set => TargetFieldId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -93,7 +93,7 @@ public class DataStructureRule : AbstractSchemaItem
 	public IDataRule ValueRule
 	{
 		get => (IDataRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ValueRuleId));
+			typeof(ISchemaItem), new ModelElementKey(ValueRuleId));
 		set => ValueRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -105,12 +105,12 @@ public class DataStructureRule : AbstractSchemaItem
 	public IStartRule ConditionRule
 	{
 		get => (IStartRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(CheckRuleId));
+			typeof(ISchemaItem), new ModelElementKey(CheckRuleId));
 		set => CheckRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)

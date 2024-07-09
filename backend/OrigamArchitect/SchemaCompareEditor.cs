@@ -568,7 +568,7 @@ public class SchemaCompareEditor : AbstractViewContent
 				MessageBoxIcon.Question) == DialogResult.Yes)
 			{
 				FindSchemaItemResultsPad findResults = WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad)) as FindSchemaItemResultsPad;
-				findResults.DisplayResults((AbstractSchemaItem[])generatedActivities.ToArray(typeof(AbstractSchemaItem)));
+				findResults.DisplayResults((ISchemaItem[])generatedActivities.ToArray(typeof(ISchemaItem)));
 			}
 		}
 		// deselect all items
@@ -597,9 +597,9 @@ public class SchemaCompareEditor : AbstractViewContent
             lvwResults.SelectedItems[0].Tag as SchemaDbCompareResult;
 		if(result != null)
 		{
-			AbstractSchemaItem toSelect = (result.SchemaItem == null 
-                ? result.ParentSchemaItem as AbstractSchemaItem 
-                : result.SchemaItem as AbstractSchemaItem) ;
+			ISchemaItem toSelect = (result.SchemaItem == null 
+                ? result.ParentSchemaItem as ISchemaItem 
+                : result.SchemaItem as ISchemaItem) ;
 			if(toSelect != null)
 			{
 				try
@@ -639,7 +639,7 @@ public class SchemaCompareEditor : AbstractViewContent
 		{
 			if(result.ResultType == DbCompareResultType.MissingInSchema)
 			{
-			    var schemaItem = result.SchemaItem as AbstractSchemaItem;
+			    var schemaItem = result.SchemaItem as ISchemaItem;
 			    schemaItem.Group = _schema
 			        .GetProvider<EntityModelSchemaItemProvider>()
 			        .GetGroup(_schema.ActiveExtension.Name);

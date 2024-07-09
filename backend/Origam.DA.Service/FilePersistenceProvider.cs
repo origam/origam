@@ -80,7 +80,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
         fileEventQueue.Start();
         InstancePersisted += (sender, persistent) =>
         {
-            if (persistent is AbstractSchemaItem item)
+            if (persistent is ISchemaItem item)
             {
                 ReferenceIndexManager.UpdateNowOrDeffer(item);
             }
@@ -405,7 +405,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
     }
     public DirectoryInfo GetParentPackageDirectory(Guid itemId)
     {
-        var item = (AbstractSchemaItem)RetrieveInstance(
+        var item = (ISchemaItem)RetrieveInstance(
                 type: null, 
                 primaryKey: new Key {{"Id", itemId}});
         if(item == null)

@@ -237,8 +237,8 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
+	private ISchemaItem _origamMetadata;
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

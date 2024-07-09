@@ -57,8 +57,8 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
     [XmlReference("arrayRelation", "ArrayRelationId")]
 	public IAssociation ArrayRelation
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ArrayRelationId)) 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), new ModelElementKey(ArrayRelationId)) 
 			as IAssociation;
 		set
 		{
@@ -85,8 +85,8 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
     [XmlReference("arrayValueField", "ArrayValueFieldId")]
 	public IDataEntityColumn ArrayValueField
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(ArrayValueFieldId)) as IDataEntityColumn;
 		set
 		{
@@ -106,7 +106,7 @@ public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	public override string FieldType => "DetachedField";
 	public override bool ReadOnly => false;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)

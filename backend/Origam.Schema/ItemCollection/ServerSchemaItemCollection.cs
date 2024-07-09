@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.ItemCollection;
 
-class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
+class ServerSchemaItemCollection : SchemaItemCollectionBase<ISchemaItem>,
     ISchemaItemCollection
 {
     
@@ -33,12 +33,12 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
     {
     }
     
-    public ServerSchemaItemCollection(AbstractSchemaItem parentSchemaItem)
+    public ServerSchemaItemCollection(ISchemaItem parentSchemaItem)
     {
         ParentSchemaItem = parentSchemaItem;
     }
     
-    public override void Add(AbstractSchemaItem value)
+    public override void Add(ISchemaItem value)
     {
         base.Add(value);
         if (value.IsAbstract)
@@ -47,7 +47,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
         }
     }
 
-    public override void AddRange(IEnumerable<AbstractSchemaItem> other)
+    public override void AddRange(IEnumerable<ISchemaItem> other)
     {
         foreach (var item in other)
         {
@@ -56,8 +56,8 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
     }
     
 
-    protected override void OnSet(int index, AbstractSchemaItem oldItem,
-        AbstractSchemaItem newItem)
+    protected override void OnSet(int index, ISchemaItem oldItem,
+        ISchemaItem newItem)
     {
         if (UpdateParentItem)
         {
@@ -66,7 +66,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
         }
     }
  
-    protected override void OnInsert(int index, AbstractSchemaItem item)
+    protected override void OnInsert(int index, ISchemaItem item)
     {
         if (item.IsAbstract)
         {
@@ -83,7 +83,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
         if (!disposing)
         {
             clearing = true;
-            foreach (AbstractSchemaItem item in this)
+            foreach (ISchemaItem item in this)
             {
                 if (DeleteItemsOnClear)
                 {
@@ -94,7 +94,7 @@ class ServerSchemaItemCollection : SchemaItemCollectionBase<AbstractSchemaItem>,
         }
     }
 
-    protected override void OnRemove(int index, AbstractSchemaItem item)
+    protected override void OnRemove(int index, ISchemaItem item)
     {
         if (item != null)
         {

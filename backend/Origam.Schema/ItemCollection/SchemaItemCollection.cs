@@ -37,7 +37,7 @@ public static class SchemaItemCollection
     }
     
     public static ISchemaItemCollection Create(IPersistenceProvider persistence,
-        ISchemaItemProvider provider, AbstractSchemaItem parentItem)
+        ISchemaItemProvider provider, ISchemaItem parentItem)
     {
 #if ORIGAM_CLIENT
         return new ServerSchemaItemCollection(parentItem);

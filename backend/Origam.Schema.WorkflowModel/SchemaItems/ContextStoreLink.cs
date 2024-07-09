@@ -48,7 +48,7 @@ public class ContextStoreLink : AbstractSchemaItem
 	public ContextStoreLink() : base() {}
 	public ContextStoreLink(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
@@ -86,7 +86,7 @@ public class ContextStoreLink : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.CallerContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -110,7 +110,7 @@ public class ContextStoreLink : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.TargetContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

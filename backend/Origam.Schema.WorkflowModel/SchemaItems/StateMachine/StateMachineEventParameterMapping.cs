@@ -48,7 +48,7 @@ public class StateMachineEventParameterMapping : AbstractSchemaItem
 	public StateMachineEventParameterMapping() : base() {}
 	public StateMachineEventParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineEventParameterMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -72,7 +72,7 @@ public class StateMachineEventParameterMapping : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.FieldId);
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.FieldId = (Guid)value.PrimaryKey["Id"];
 	}
@@ -85,7 +85,7 @@ public class StateMachineEventParameterMapping : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.ContextStoreId);
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

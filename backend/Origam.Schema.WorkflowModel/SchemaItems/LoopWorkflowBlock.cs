@@ -40,7 +40,7 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
 	public LoopWorkflowBlock() : base() {}
 	public LoopWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public LoopWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
@@ -74,7 +74,7 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

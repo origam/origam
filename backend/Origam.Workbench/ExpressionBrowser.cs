@@ -1048,7 +1048,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 		TreeNode parent = treeNode;
 		while(parent != null)
 		{
-            AbstractSchemaItem item = parent.Tag as AbstractSchemaItem;
+            ISchemaItem item = parent.Tag as ISchemaItem;
 			if(item != null)
 			{
                 if (item.ClearCacheOnPersist)
@@ -1143,7 +1143,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 		}
 		else
 		{
-			AbstractSchemaItem dropElement = dropNode.Tag as AbstractSchemaItem;
+			ISchemaItem dropElement = dropNode.Tag as ISchemaItem;
 			if(item.CanMove(dropElement))
 			{
 					if(item != dropElement)		// cannot move to itself
@@ -1192,11 +1192,11 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 			ServiceManager.Services.GetService(typeof(IPersistenceService)) as
 				IPersistenceService;
 		string text = item.Name;
-        AbstractSchemaItem[] results = null;
+        ISchemaItem[] results = null;
 		do
 		{
 			text = ResourceUtils.GetString("CopyOf", text);
-			results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text)
+			results = persistence.SchemaProvider.FullTextSearch<ISchemaItem>(text)
 				.Where(searchitem=>searchitem.GetType()==item.GetType()).ToArray();
 		} while (results.LongLength != 0);
 		return text;
@@ -1324,16 +1324,16 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 	{
 		toolTip1.SetToolTip(tvwExpressionBrowser, text);
 	}
-	public void SelectItem(AbstractSchemaItem item)
+	public void SelectItem(ISchemaItem item)
 	{
 		ArrayList items = new ArrayList();
-		AbstractSchemaItem parentItem = item;
+		ISchemaItem parentItem = item;
 		while(parentItem != null)
 		{
 			items.Add(parentItem);
 			parentItem = parentItem.ParentItem;
 		}
-		SchemaItemGroup parentGroup = (items[items.Count-1] as AbstractSchemaItem).Group;
+		SchemaItemGroup parentGroup = (items[items.Count-1] as ISchemaItem).Group;
 		while(parentGroup != null)
 		{
 			items.Add(parentGroup);

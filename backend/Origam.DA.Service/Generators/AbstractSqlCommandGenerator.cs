@@ -2350,7 +2350,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         else
         {
             resultExpression = RenderExpression(
-                item: column.Field as AbstractSchemaItem,
+                item: column.Field as ISchemaItem,
                 entity: column.Entity ?? entity,
                 replaceParameterTexts: replaceParameterTexts,
                 dynamicParameters: dynamicParameters,
@@ -2522,10 +2522,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         Hashtable replaceTexts = new Hashtable(1);
 
-        AbstractSchemaItem renderField = field as AbstractSchemaItem;
+        ISchemaItem renderField = field as ISchemaItem;
         if (field is LookupField)
         {
-            renderField = (field as LookupField).Field as AbstractSchemaItem;
+            renderField = (field as LookupField).Field as ISchemaItem;
         }
         string myColumn = RenderExpression(renderField, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
 
@@ -2755,7 +2755,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                 relationBuilder.AppendFormat("{0} {1} AS {2} ON",
                     joinString,
-                    RenderExpression(assoc.AssociatedEntity as AbstractSchemaItem, null, null, null, null),
+                    RenderExpression(assoc.AssociatedEntity as ISchemaItem, null, null, null, null),
                     sqlRenderer.NameLeftBracket + dsEntity.Name + sqlRenderer.NameRightBracket
                     );
                 numberOfJoins++;
@@ -2773,7 +2773,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             relationBuilder.Append("(");
         }
 
-        foreach (AbstractSchemaItem item in assoc.ChildItems)
+        foreach (ISchemaItem item in assoc.ChildItems)
         {
             PrettyIndent(relationBuilder);
             if (i > 0)
@@ -2857,9 +2857,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         Hashtable replaceParameterTexts, Hashtable dynamicParameters,
         Hashtable paremeterReferences)
     {
-        string parentField = RenderExpression(key.BaseEntityField as AbstractSchemaItem,
+        string parentField = RenderExpression(key.BaseEntityField as ISchemaItem,
                 parentEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
-        string relatedField = RenderExpression(key.RelatedEntityField as AbstractSchemaItem,
+        string relatedField = RenderExpression(key.RelatedEntityField as ISchemaItem,
                 relatedEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
         sqlExpression.Append(filterRenderer.Equal(parentField, relatedField));
     }
@@ -3025,7 +3025,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     internal void RenderFilter(StringBuilder sqlExpression, EntityFilter filter, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
     {
         int i = 0;
-        foreach (AbstractSchemaItem filterItem in filter.ChildItems)
+        foreach (ISchemaItem filterItem in filter.ChildItems)
         {
             if (i > 0)
                 sqlExpression.Append(" AND ");
@@ -3236,7 +3236,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
 
             int i = 0;
-            foreach (AbstractSchemaItem relationItem in agg2.Relation.ChildItems)
+            foreach (ISchemaItem relationItem in agg2.Relation.ChildItems)
             {
                 EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
@@ -3280,7 +3280,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                 );
 
             int i = 0;
-            foreach (AbstractSchemaItem relationItem in topLevelItem.Relation.ChildItems)
+            foreach (ISchemaItem relationItem in topLevelItem.Relation.ChildItems)
             {
                 EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
@@ -3328,7 +3328,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         Hashtable replaceTexts = new Hashtable();
 
-        foreach (AbstractSchemaItem paramMapping in lookupReference.ChildItems)
+        foreach (ISchemaItem paramMapping in lookupReference.ChildItems)
         {
             replaceTexts.Add(paramMapping.Name,
                 RenderExpression(paramMapping, entity, replaceParameterTexts, dynamicParameters, parameterReferences)

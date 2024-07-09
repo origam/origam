@@ -42,14 +42,14 @@ public class ScreenCondition: AbstractSchemaItem
     [XmlReference("screen", "ScreenId")]
     public FormControlSet Screen
     {
-        get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+        get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenId));
         set 
         {
             ScreenId = value?.Id ?? Guid.Empty;
             if(ScreenId != null && ScreenId != Guid.Empty)
             {
                 var formControl = (FormControlSet)PersistenceProvider.
-                                  RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+                                  RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenId));
                 Name = formControl.Name;
             }
         }

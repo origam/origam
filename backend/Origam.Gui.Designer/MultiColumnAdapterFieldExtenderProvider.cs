@@ -44,7 +44,7 @@ public class MultiColumnAdapterFieldExtenderProvider : IExtenderProvider
 				= ServiceManager.Services.GetService(typeof(IPersistenceService)) 
 				as IPersistenceService;
 			return (DataConstant)persistence.SchemaProvider
-				.RetrieveInstance(typeof(AbstractSchemaItem), 
+				.RetrieveInstance(typeof(ISchemaItem), 
 				new ModelElementKey(csi.MultiColumnAdapterFieldCondition));
 		}
 		else

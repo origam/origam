@@ -448,7 +448,7 @@ public class ControlSetEditor : AbstractEditor
             }
             ControlSet.ClearCacheOnPersist = false;
             ControlSet.Persist();
-            //			(_controlSet as AbstractSchemaItem).ClearCacheOnPersist = true;
+            //			(_controlSet as ISchemaItem).ClearCacheOnPersist = true;
             //			_controlSet.Persist();
             // If the controlset was cloned, we clone its documentation, too.
             if (ControlSet.OldPrimaryKey != null)
@@ -566,7 +566,7 @@ public class ControlSetEditor : AbstractEditor
 		
 		return (result as Control);
 	}
-	private void UpdateSpecificControlProperties(object control, AbstractSchemaItem metadata)
+	private void UpdateSpecificControlProperties(object control, ISchemaItem metadata)
 	{
 		if(control is IOrigamMetadataConsumer)
 		{
@@ -842,7 +842,7 @@ public class ControlSetEditor : AbstractEditor
 		if(controls == null){ return null;}
 		FDToolboxItem[] tool = new FDToolboxItem[controls.ChildItems.Count];
 		int i=0;
-		List<AbstractSchemaItem> controlList = controls.ChildItems.ToList();
+		List<ISchemaItem> controlList = controls.ChildItems.ToList();
 		controlList.Sort();
 		foreach(ControlItem item in controlList)
 		{
@@ -1053,18 +1053,18 @@ public class ControlSetEditor : AbstractEditor
 	private bool _initializingCombos = false;
 	private void SettingSelectedItemForDataSourceCombo()
 	{
-		AbstractSchemaItem schItem = null;
+		ISchemaItem schItem = null;
 		if(_dataSourceMode == eDataSource.DataStructure) 
 		{
-			schItem = this.Form.DataStructure as AbstractSchemaItem;
+			schItem = this.Form.DataStructure as ISchemaItem;
 		}
 		else
 		{
-			schItem =  this.Panel.DataEntity as AbstractSchemaItem;
+			schItem =  this.Panel.DataEntity as ISchemaItem;
 		}
 		if(schItem != null)
 		{
-			foreach(AbstractSchemaItem  item in cmbDataSources.Items)
+			foreach(ISchemaItem  item in cmbDataSources.Items)
 			{
 				if(schItem.PrimaryKey.Equals(item.PrimaryKey))
 				{
@@ -1118,14 +1118,14 @@ public class ControlSetEditor : AbstractEditor
 	{
 		if(type==eDataSource.DataStructure)
 		{
-			foreach(AbstractSchemaItem  item in _dsProvider.ChildItems)
+			foreach(ISchemaItem  item in _dsProvider.ChildItems)
 			{
 				cmbDataSources.Items.Add(item);						
 			}
 		}
 		else if(type==eDataSource.DataEntity)
 		{
-			foreach(AbstractSchemaItem item in _deProvider.ChildItems)
+			foreach(ISchemaItem item in _deProvider.ChildItems)
 			{
 				cmbDataSources.Items.Add(item);
 			}
@@ -1236,7 +1236,7 @@ public class ControlSetEditor : AbstractEditor
 			{
 				//control is new in designer we create in their tag new ControlSet Item
 				CreateNewControlSetItem(control,evtArgs.Component.Site.Name,null);
-				UpdateSpecificControlProperties(control, control.Tag as AbstractSchemaItem);
+				UpdateSpecificControlProperties(control, control.Tag as ISchemaItem);
 				// set the newly added TabControl as selected because it adds 2 TabPages immediately 
 				// after it is constructed and the selected component is the only way how to assign a parent 
                 if (control is TabControl)
@@ -1430,7 +1430,7 @@ public class ControlSetEditor : AbstractEditor
 	private void txtName_TextChanged(object sender, System.EventArgs e)
 	{
 		string text = (sender as TextBox).Text;
-		AbstractSchemaItem item = this.ModelContent as AbstractSchemaItem;
+		ISchemaItem item = this.ModelContent as ISchemaItem;
 		if(item.Name != text)
 		{
 			this.IsDirty = true;
@@ -1510,7 +1510,7 @@ public class ControlSetEditor : AbstractEditor
 				// doesn't have any children so we create new panel as a copy of the main one
 				ISchemaItem defaultItem = ControlSet.MainItem;
 				foreach (ISchemaItem child in defaultItem.ChildItems) {
-					AbstractSchemaItem copy = child.Clone () as AbstractSchemaItem;
+					ISchemaItem copy = child.Clone () as ISchemaItem;
 					copy.SetExtensionRecursive (_schema.ActiveExtension);
 					_rootControl.ChildItems.Add(copy);
 				}

@@ -198,7 +198,7 @@ public class DocProcessor
             MvpXslTransform processor = new MvpXslTransform(false);
             processor.Load(XsltPath);
         }
-        List<AbstractSchemaItem> menulist = menuprovider.ChildItems.ToList();
+        List<ISchemaItem> menulist = menuprovider.ChildItems.ToList();
         menulist.Sort();
         WriteStartElement("Menu");
         CreateXml(menulist[0]);
@@ -232,9 +232,9 @@ public class DocProcessor
         XPathDocument doc = new XPathDocument(mstream);
         xslTransform.Transform(new XmlInput(doc), null, xmlOutput);
     }
-    private void CreateXml(AbstractSchemaItem menuSublist)
+    private void CreateXml(ISchemaItem menuSublist)
     {
-        foreach (AbstractSchemaItem menuitem in menuSublist.ChildItems)
+        foreach (ISchemaItem menuitem in menuSublist.ChildItems)
         {
             WriteStartElement("Menuitem", menuitem.NodeText, menuitem.Id.ToString(), menuitem.GetType().Name);
             WriteElement("documentation",

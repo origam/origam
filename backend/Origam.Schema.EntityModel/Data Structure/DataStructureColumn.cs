@@ -101,7 +101,7 @@ public class DataStructureColumn : AbstractSchemaItem
 			if(_column != null) return _column;
 			try
 			{
-				_column = (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ColumnId));
+				_column = (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ColumnId));
 				return _column;
 			}
 			catch
@@ -141,7 +141,7 @@ public class DataStructureColumn : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DefaultLookupId;
-			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -370,7 +370,7 @@ public class DataStructureColumn : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -418,10 +418,10 @@ public class DataStructureColumn : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
-			base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
+			base.GetParameterReferences(this.Field as ISchemaItem, list);
 	}
 //		public override void Persist()
 //		{

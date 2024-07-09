@@ -37,7 +37,7 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
 	public WorkflowTask() : base() {}
 	public WorkflowTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public WorkflowTask(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.OutputContextStore);
@@ -71,7 +71,7 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.OutputContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -51,14 +51,14 @@ public class FormControlSet : AbstractControlSet
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataSourceId;
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
 			this.DataSourceId = (Guid)value.PrimaryKey["Id"];
 		}
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

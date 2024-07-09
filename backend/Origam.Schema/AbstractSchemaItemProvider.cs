@@ -71,15 +71,15 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	public ISchemaItemCollection LoadChildItems()
 	{
 		ISchemaItemCollection childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
-		childItems.AddRange(ChildItemsByType(RootItemType).Cast<AbstractSchemaItem>().ToArray());
+		childItems.AddRange(ChildItemsByType(RootItemType).Cast<ISchemaItem>().ToArray());
 		return childItems;
 	}
 	public virtual List<ISchemaItem> ChildItemsByType(string itemType)
 	{
-        List<AbstractSchemaItem> list = this.PersistenceProvider.
-            RetrieveListByCategory<AbstractSchemaItem>(itemType);
+        List<ISchemaItem> list = this.PersistenceProvider.
+            RetrieveListByCategory<ISchemaItem>(itemType);
         var result = new List<ISchemaItem>();
-        foreach (AbstractSchemaItem item in list)
+        foreach (ISchemaItem item in list)
 		{
             if (item.ParentItemId == Guid.Empty)
             {
@@ -89,10 +89,10 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
         }
 		return result;
 	}
-	public virtual List<AbstractSchemaItem> ChildItemsByGroup(SchemaItemGroup group)
+	public virtual List<ISchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		var list = new List<AbstractSchemaItem>();
-		foreach(AbstractSchemaItem item in this.ChildItems)
+		var list = new List<ISchemaItem>();
+		foreach(ISchemaItem item in this.ChildItems)
 		{
 			if(item.Group == null | group == null)
 			{
@@ -301,7 +301,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 		foreach(IBrowserNode2 nod in this.ChildGroups)
 			col.Add(nod);
 		// only return nodes without groups
-		foreach(AbstractSchemaItem item in this.ChildItems)
+		foreach(ISchemaItem item in this.ChildItems)
 		{
 			if(item.Group == null)
 				col.Add(item);
@@ -363,13 +363,13 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	#region ISchemaItemFactory Members
 	public virtual T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
+		where T : class, ISchemaItem
 	{
 		return NewItem<T>(schemaExtensionId, group, null);
 	}
 	protected T NewItem<T>
 		(Guid schemaExtensionId, SchemaItemGroup group, string itemName)
-		where T : AbstractSchemaItem
+		where T : ISchemaItem
 	{
 		T item;
 		if(((IList)NewItemTypes).Contains(typeof(T)))
@@ -456,7 +456,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	private List<ISchemaItem> GetChildItemsRecursive(ISchemaItem parentItem)
 	{
 		var items = new List<ISchemaItem>();
-		foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
+		foreach(ISchemaItem childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
 			items.AddRange(GetChildItemsRecursive(childItem));
@@ -471,9 +471,9 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 		}
 		return null;
 	}
-	public AbstractSchemaItem GetChildByName(string name, string itemType)
+	public ISchemaItem GetChildByName(string name, string itemType)
 	{
-		foreach(AbstractSchemaItem item in this.ChildItems)
+		foreach(ISchemaItem item in this.ChildItems)
 		{
 			if(item.Name == name & item.ItemType == itemType)
 			{

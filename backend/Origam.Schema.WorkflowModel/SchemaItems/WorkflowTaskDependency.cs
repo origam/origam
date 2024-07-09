@@ -82,7 +82,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.WorkflowTaskId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IWorkflowStep;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as IWorkflowStep;
 		}
 		set
 		{
@@ -110,7 +110,7 @@ public class NoParentDependenciesRule : AbstractModelElementRuleAttribute
 		{
 			return null;
 		}
-		AbstractSchemaItem workflowStep = taskDependency.ParentItem;
+		ISchemaItem workflowStep = taskDependency.ParentItem;
 		var parentInDependencies = workflowStep.Parents
 			.OfType<IWorkflowStep>()
 			.Any(parent => taskDependency.Task == parent);

@@ -46,7 +46,7 @@ public class WorkflowReference : AbstractSchemaItem
 	#region Overriden AbstractDataEntityColumn Members
 
 	public override string ItemType => CategoryConst;
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Workflow != null)
 			base.GetParameterReferences(Workflow, list);
@@ -66,8 +66,8 @@ public class WorkflowReference : AbstractSchemaItem
 	[XmlReference("workflow", "WorkflowId")]
 	public Workflow Workflow
 	{
-		get => (AbstractSchemaItem)this.PersistenceProvider
-			.RetrieveInstance(typeof(AbstractSchemaItem)
+		get => (ISchemaItem)this.PersistenceProvider
+			.RetrieveInstance(typeof(ISchemaItem)
 				, new ModelElementKey(this.WorkflowId)) as Workflow;
 		
 		set => this.WorkflowId = (Guid)value.PrimaryKey["Id"];

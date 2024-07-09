@@ -35,7 +35,7 @@ public class ControlStyleProperty : AbstractSchemaItem
     public ControlStyleProperty() : base() { }
     public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
     public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType
     {
         get

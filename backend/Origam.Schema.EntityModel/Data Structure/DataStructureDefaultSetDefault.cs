@@ -121,7 +121,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -140,7 +140,7 @@ public class DataStructureDefaultSetDefault : AbstractSchemaItem
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Parameter != null)
 		{

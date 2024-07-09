@@ -77,7 +77,7 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 	{
 		get
 		{
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
 		}
 		set
 		{

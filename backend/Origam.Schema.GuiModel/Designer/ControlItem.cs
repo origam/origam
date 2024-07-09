@@ -144,7 +144,7 @@ public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
         }
     }
 	#endregion
-#region Overriden AbstractSchemaItem Members
+#region Overriden ISchemaItem Members
 	[Browsable(false)] 
 	public override bool CanDelete
 	{

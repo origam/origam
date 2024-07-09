@@ -40,8 +40,8 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-		AbstractSchemaItem root = reference.RootItem;
+		ISchemaItem reference = context.Instance as ISchemaItem;
+		ISchemaItem root = reference.RootItem;
 		List<ISchemaItem> parameters = root.Parameters;
 		var paramArray = new List<SchemaItemParameter>(parameters.Count);
         paramArray.Add(null);
@@ -64,8 +64,8 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-			AbstractSchemaItem root = reference.RootItem;
+			ISchemaItem reference = context.Instance as ISchemaItem;
+			ISchemaItem root = reference.RootItem;
 			foreach(SchemaItemParameter item in root.Parameters)
 			{
 				if(item.Name == value.ToString())
@@ -90,8 +90,8 @@ public class SchemaItemAncestorConverter : System.ComponentModel.TypeConverter
 //		{
 //			if( value.GetType() == typeof(string) )
 //			{
-////				AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-////				AbstractSchemaItem root = reference.RootItem;
+////				ISchemaItem reference = context.Instance as ISchemaItem;
+////				ISchemaItem root = reference.RootItem;
 ////
 ////				ISchemaItemCollection parameters = root.Parameters;
 ////

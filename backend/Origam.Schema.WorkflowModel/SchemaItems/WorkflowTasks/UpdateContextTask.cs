@@ -37,7 +37,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 	public UpdateContextTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public UpdateContextTask(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(
@@ -136,7 +136,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 				Id = OutputContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -171,7 +171,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 				Id = XPathContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -101,13 +101,13 @@ public abstract class AbstractPersistenceProvider : IPersistenceProvider
             primaryKey: new Key(id), 
             useCache: false) is T;
     }
-    private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)
+    private IEnumerable<object> FindUsages(ISchemaItem item, bool ignoreErrors, Key key)
     {
         List<object> foundUsages = new List<object>();
         try
         {
             List<ISchemaItem> dep = item.GetDependencies(ignoreErrors);
-            foreach (AbstractSchemaItem depItem in dep)
+            foreach (ISchemaItem depItem in dep)
             {
                 if (depItem != null)
                 {

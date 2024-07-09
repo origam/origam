@@ -54,7 +54,7 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 				Id = RelatedEntityId
 			};
 			return (IDataEntity)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -91,7 +91,7 @@ public class EntityRelationItem : AbstractSchemaItem, IAssociation
 		set => _isOR = value;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override bool UseFolders => false;
 	public override string ItemType => CategoryConst;

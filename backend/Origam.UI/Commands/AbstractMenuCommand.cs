@@ -125,7 +125,7 @@ public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand , IRun
         DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
         return dsprovider.ChildItemsByType(itemTypeConst)
                        .ToArray()
-                       .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                       .Select(x => { return ((ISchemaItem)x).Name; })
                        .ToList();
     }
     public ServiceCommandUpdateScriptActivity CreateRole(string role)

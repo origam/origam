@@ -66,7 +66,7 @@ public class StateMachine : AbstractSchemaItem
 		return result;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -193,7 +193,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataEntity Entity
 	{
 		get => (IDataEntity)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+			typeof(ISchemaItem), new ModelElementKey(EntityId));
 		set
 		{
 			EntityId = (value == null) 
@@ -209,7 +209,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataEntityColumn Field
 	{
 		get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(FieldId));
+			typeof(ISchemaItem), new ModelElementKey(FieldId));
 		set
 		{
 			FieldId = (value == null) 
@@ -225,7 +225,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup DynamicStatesLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(DynamicStatesLookupId));
 		set => DynamicStatesLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -238,7 +238,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup DynamicOperationsLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(DynamicOperationsLookupId));
 		set => DynamicOperationsLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -251,7 +251,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup ReverseLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(
+			typeof(ISchemaItem), new ModelElementKey(
 				ReverseLookupId));
 		set => ReverseLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

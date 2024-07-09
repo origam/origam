@@ -85,7 +85,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 		
 		dependencyPainter = new ContextStoreDependencyPainter(
 			gViewer, 
-			graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent);
+			graphParentItemGetter: () => (ISchemaItem)UpToDateGraphParent);
 		
 		ReDrawAndKeepFocus();
     }
@@ -155,7 +155,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
     }
     private void ShowEditor(Guid schemaItemId)
     {
-        AbstractSchemaItem clickedItem = RetrieveItem(schemaItemId);
+        ISchemaItem clickedItem = RetrieveItem(schemaItemId);
         if (clickedItem != null)
         {
 	        EditSchemaItem cmd = new EditSchemaItem
@@ -200,7 +200,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
     }
     private void DeleteDependency(Edge edge)
     {
-        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
+        ISchemaItem dependentItem = RetrieveItem(edge.Target);
 		Guid sourceId = IdTranslator.NodeToSchema(edge.Source);
         var workflowTaskDependency = dependentItem.ChildItems
 	        .OfType<WorkflowTaskDependency>()
@@ -221,7 +221,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
     private WorkflowTaskDependency AddDependency(string source, string target)
     {
         var independentItem = RetrieveItem(source) as IWorkflowStep;
-        AbstractSchemaItem dependentItem = RetrieveItem(target);
+        ISchemaItem dependentItem = RetrieveItem(target);
         var workflowTaskDependency = new WorkflowTaskDependency
         {
 	        SchemaExtensionId = dependentItem.SchemaExtensionId,
@@ -252,9 +252,9 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
     }
 	private void OnInstancePersisted(object sender,IPersistent persistedObject)
 	{
-		if (!(persistedObject is AbstractSchemaItem persistedSchemaItem)) return;
+		if (!(persistedObject is ISchemaItem persistedSchemaItem)) return;
 		
-		bool childPersisted = (UpToDateGraphParent as AbstractSchemaItem)
+		bool childPersisted = (UpToDateGraphParent as ISchemaItem)
 			?.ChildrenRecursive
 			.Any(x => x.Id == persistedSchemaItem.Id)
 			?? false;
@@ -279,7 +279,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 		}
 	}
 	
-	private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
+	private void UpdateNodeOf(ISchemaItem persistedSchemaItem)
 	{
 		Node node = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(persistedSchemaItem.Id));
 		if (node == null)
@@ -293,11 +293,11 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 			ReDrawAndKeepFocus();
 		}
 	}
-	private void TrySelectParentStep(AbstractSchemaItem persistedSchemaItem)
+	private void TrySelectParentStep(ISchemaItem persistedSchemaItem)
 	{
 		if (!(persistedSchemaItem is IWorkflowStep))
 		{
-			AbstractSchemaItem parentStep =
+			ISchemaItem parentStep =
 				persistedSchemaItem.FirstParentOfType<WorkflowTask>();
 			if (parentStep == null) return;
 			Node stepNode =
@@ -307,7 +307,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 	}
 	private IWorkflowBlock UpToDateGraphParent =>
 		persistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem),
+				typeof(ISchemaItem),
 				new Key(graphParentId))
 			as IWorkflowBlock;
 	private void RemoveEdge(Guid sourceId)
@@ -402,27 +402,27 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 		nodeSelector.Selected = node;
 		ReDrawAndKeepFocus();
 	}
-	private AbstractSchemaItem RetrieveItem(Node node)
+	private ISchemaItem RetrieveItem(Node node)
 	{
 		return RetrieveItem(IdTranslator.ToSchemaId(node));
 	}
-	private AbstractSchemaItem RetrieveItem(Guid id)
+	private ISchemaItem RetrieveItem(Guid id)
 	{
 		return persistenceProvider
 				.RetrieveInstance(
-					typeof(AbstractSchemaItem),
+					typeof(ISchemaItem),
 					new Key(id))
-			as AbstractSchemaItem;
+			as ISchemaItem;
 	}
 	
-	private AbstractSchemaItem RetrieveItem(string strId)
+	private ISchemaItem RetrieveItem(string strId)
 	{
 		Guid id = IdTranslator.NodeToSchema(strId);
 		return persistenceProvider
 				.RetrieveInstance(
-					typeof(AbstractSchemaItem),
+					typeof(ISchemaItem),
 					new Key(id))
-			as AbstractSchemaItem;
+			as ISchemaItem;
 	}
 	
 	public void Dispose()

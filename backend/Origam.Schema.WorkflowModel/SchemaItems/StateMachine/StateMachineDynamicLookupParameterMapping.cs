@@ -42,7 +42,7 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 	public StateMachineDynamicLookupParameterMapping() : base() {}
 	public StateMachineDynamicLookupParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineDynamicLookupParameterMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -93,7 +93,7 @@ public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.FieldId);
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

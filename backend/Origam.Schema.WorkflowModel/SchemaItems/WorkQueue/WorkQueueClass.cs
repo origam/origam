@@ -60,7 +60,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommand));
 		this.ChildItemTypes.Add(typeof(WorkqueueLoader));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -95,7 +95,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
     [XmlReference("entity", "EntityId")]
 	public IDataEntity Entity
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(EntityId));
 		set
 		{
 			this.EntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -108,7 +108,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("conditionFilter", "EntityConditionFilterId")]
 	public EntityFilter ConditionFilter
 	{
-		get => (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityConditionFilterId));
+		get => (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(EntityConditionFilterId));
 		set
 		{
 			this.EntityConditionFilterId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -122,7 +122,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("workQueueStructure", "WorkQueueStructureId")]
     public DataStructure WorkQueueStructure
 	{
-		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureId));
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(WorkQueueStructureId));
 		set
 		{
 			this.WorkQueueStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -137,7 +137,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity1", "RelatedEntity1Id")]
 	public IDataEntity RelatedEntity1
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity1Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity1Id));
 		set
 		{
 			this.RelatedEntity1Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -150,7 +150,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity2", "RelatedEntity2Id")]
 	public IDataEntity RelatedEntity2
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity2Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity2Id));
 		set
 		{
 			this.RelatedEntity2Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -162,7 +162,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity3", "RelatedEntity3Id")]
 	public IDataEntity RelatedEntity3
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity3Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity3Id));
 		set
 		{
 			this.RelatedEntity3Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -174,7 +174,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity4", "RelatedEntity4Id")]
 	public IDataEntity RelatedEntity4
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity4Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity4Id));
 		set
 		{
 			this.RelatedEntity4Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -187,7 +187,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity5", "RelatedEntity5Id")]
 	public IDataEntity RelatedEntity5
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity5Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity5Id));
 		set
 		{
 			this.RelatedEntity5Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -200,7 +200,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity6", "RelatedEntity6Id")]
 	public IDataEntity RelatedEntity6
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity6Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity6Id));
 		set
 		{
 			this.RelatedEntity6Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -213,7 +213,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("relatedEntity7", "RelatedEntity7Id")]
 	public IDataEntity RelatedEntity7
 	{
-		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RelatedEntity7Id));
+		get => (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(RelatedEntity7Id));
 		set
 		{
 			this.RelatedEntity7Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -227,7 +227,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("entityStructure", "EntityStructureId")]
     public DataStructure EntityStructure
 	{
-		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructureId));
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(EntityStructureId));
 		set
 		{
 			this.EntityStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -242,7 +242,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("entityStructurePrimaryKeyMethod", "EntityStructurePkMethodId")]
     public DataStructureMethod EntityStructurePrimaryKeyMethod
 	{
-		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(EntityStructurePkMethodId));
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(EntityStructurePkMethodId));
 		set
 		{
 			this.EntityStructurePkMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -255,7 +255,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("workQueueStructureUserListMethod", "WorkQueueStructureUserListMethodId")]
 	public DataStructureMethod WorkQueueStructureUserListMethod
 	{
-		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureUserListMethodId));
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(WorkQueueStructureUserListMethodId));
 		set
 		{
 			this.WorkQueueStructureUserListMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -269,7 +269,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("workQueueStructureSortSet", "WorkQueueStructureSortSetId")]
 	public DataStructureSortSet WorkQueueStructureSortSet
 	{
-		get => (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructureSortSetId));
+		get => (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(WorkQueueStructureSortSetId));
 		set
 		{
 			this.WorkQueueStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -283,7 +283,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("workQueueItemCountLookup", "WorkQueueItemCountLookupId")]
     public IDataLookup WorkQueueItemCountLookup
 	{
-		get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueItemCountLookupId));
+		get => (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(WorkQueueItemCountLookupId));
 		set
 		{
 			this.WorkQueueItemCountLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -296,7 +296,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("notificationStructure", "NotificationStructureId")]
 	public DataStructure NotificationStructure
 	{
-		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationStructureId));
+		get => (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(NotificationStructureId));
 		set
 		{
 			this.NotificationStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -310,7 +310,7 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	[XmlReference("notificationLoadMethod", "NotificationLoadMethodId")]
 	public DataStructureMethod NotificationLoadMethod
 	{
-		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(NotificationLoadMethodId));
+		get => (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(NotificationLoadMethodId));
 		set
 		{
 			this.NotificationLoadMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);

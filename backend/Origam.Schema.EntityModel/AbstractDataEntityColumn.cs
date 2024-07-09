@@ -246,7 +246,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		get
 		{
 			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultLookupId));
+                typeof(ISchemaItem), new ModelElementKey(this.DefaultLookupId));
 		}
 		set
 		{
@@ -266,7 +266,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 			key.Id = this.ForeignEntityId;
 			try
 			{
-				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -299,7 +299,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 			key.Id = this.ForeignEntityColumnId;
 			try
 			{
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -432,7 +432,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     public abstract string FieldType { get; }
     #endregion
-	#region Overriden AbstractSchemaItem Methods
+	#region Overriden ISchemaItem Methods
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
 	{
 		return newNode is IDataEntity;

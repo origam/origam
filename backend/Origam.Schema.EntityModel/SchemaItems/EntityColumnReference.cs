@@ -65,10 +65,10 @@ public class EntityColumnReference : AbstractSchemaItem
 			}
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
-			base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
+			base.GetParameterReferences(this.Field as ISchemaItem, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
@@ -111,7 +111,7 @@ public class EntityColumnReference : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.FieldId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as IDataEntityColumn;
 		}
 		set
 		{

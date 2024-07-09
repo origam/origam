@@ -59,7 +59,7 @@ public class MenuXmlBuilder
         return doc;
     }
     private static void RenderNode(
-        XmlDocument doc, XmlNode parentNode, AbstractSchemaItem item)
+        XmlDocument doc, XmlNode parentNode, ISchemaItem item)
     {
         AbstractMenuItem menuItem = item as AbstractMenuItem;
         bool process;
@@ -205,9 +205,9 @@ public class MenuXmlBuilder
         }
         if (newNode != null)
         {
-            List<AbstractSchemaItem> sortedList = item.ChildItems.ToList();
+            List<ISchemaItem> sortedList = item.ChildItems.ToList();
             sortedList.Sort(new AbstractMenuItem.MenuItemComparer());
-            foreach (AbstractSchemaItem child in sortedList)
+            foreach (ISchemaItem child in sortedList)
             {
                 RenderNode(doc, newNode, child);
             }

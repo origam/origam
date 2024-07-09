@@ -49,7 +49,7 @@ public class PanelDashboardWidget : AbstractDataDashboardWidget
 	{
 		get
 		{
-			return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
+			return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.PanelId));
 		}
 		set
 		{

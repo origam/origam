@@ -70,7 +70,7 @@ public class EntityMenuAction : EntityUIAction
 	{
 		get
 		{
-			return (MenuModel.AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MenuId));
+			return (MenuModel.AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.MenuId));
 		}
 		set
 		{

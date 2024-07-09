@@ -97,7 +97,7 @@ public class UIEngineTask : AbstractWorkflowEngineTask
 		}
 		Hashtable parameters = new Hashtable();
 		// get parameters for the form
-		foreach(AbstractSchemaItem param in task.RefreshParameters)
+		foreach(ISchemaItem param in task.RefreshParameters)
 		{
 			parameters.Add(param.Name, this.Evaluate(param));
 		}

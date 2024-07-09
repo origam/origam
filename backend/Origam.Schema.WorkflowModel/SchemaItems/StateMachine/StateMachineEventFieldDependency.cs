@@ -43,7 +43,7 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 	public StateMachineEventFieldDependency() : base() {}
 	public StateMachineEventFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineEventFieldDependency(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -76,7 +76,7 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.FieldId);
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

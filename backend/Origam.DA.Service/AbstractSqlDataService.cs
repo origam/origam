@@ -2463,8 +2463,8 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     private List<TableMappingItem> GetSchemaTables(IPersistenceProvider provider)
     {
-        List<AbstractSchemaItem> entityList = provider
-            .RetrieveListByCategory<AbstractSchemaItem>(
+        List<ISchemaItem> entityList = provider
+            .RetrieveListByCategory<ISchemaItem>(
 	            AbstractDataEntity.CategoryConst);
         var schemaTables = new List<TableMappingItem>();
         foreach(var tableMappingItem 
@@ -2755,7 +2755,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     private IDataEntityColumn GetField(Guid fieldId)
     {
         return PersistenceProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem),
+            typeof(ISchemaItem),
             new ModelElementKey(fieldId)
             ) as IDataEntityColumn;
     }

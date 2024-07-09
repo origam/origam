@@ -62,7 +62,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
 		}
 		set
 		{
@@ -78,7 +78,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
 		}
 		set
 		{
@@ -92,7 +92,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{

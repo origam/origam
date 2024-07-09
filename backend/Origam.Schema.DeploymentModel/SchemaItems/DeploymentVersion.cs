@@ -61,7 +61,7 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 			DeploymentDependency.ToCsv(deploymentDependencies);
 	}
 	public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool IsDeleted
 	{
 		get => base.IsDeleted;

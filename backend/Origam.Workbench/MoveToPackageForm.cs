@@ -57,7 +57,7 @@ public partial class MoveToPackageForm : Form
     {
         return schema.ActiveNode switch
         {
-            AbstractSchemaItem schemaItem => schemaItem.RootProvider,
+            ISchemaItem schemaItem => schemaItem.RootProvider,
             SchemaItemGroup group => group.RootProvider,
             _ => throw new Exception("Cannot process " +
                                      schema.ActiveNode.GetType())
@@ -80,7 +80,7 @@ public partial class MoveToPackageForm : Form
             {
                 MoveGroupRecursive(targetPackage, targetGroup, activeGroup);
             }
-            else if (schema.ActiveNode is AbstractSchemaItem activeItem)
+            else if (schema.ActiveNode is ISchemaItem activeItem)
             {
                 MoveSchemaItem(targetPackage, targetGroup, activeItem);
             }
@@ -104,13 +104,13 @@ public partial class MoveToPackageForm : Form
     }
 
     private void MoveSchemaItem(Package targetPackage, 
-        SchemaItemGroup targetGroup, AbstractSchemaItem item)
+        SchemaItemGroup targetGroup, ISchemaItem item)
     {
         item.Group = targetGroup;
         MoveSchemaItem(item, targetPackage);
     }
 
-    private void MoveSchemaItem(AbstractSchemaItem item, Package targetPackage)
+    private void MoveSchemaItem(ISchemaItem item, Package targetPackage)
     {
         CheckCanBeMovedOrThrow(item, targetPackage);
         item.SetExtensionRecursive(targetPackage);
@@ -168,7 +168,7 @@ public partial class MoveToPackageForm : Form
         groupComboBox.SelectedIndex = 0;
     }
 
-    private static void CheckCanBeMovedOrThrow(AbstractSchemaItem activeItem,
+    private static void CheckCanBeMovedOrThrow(ISchemaItem activeItem,
             Package targetPackage)
     {
         List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
@@ -189,8 +189,6 @@ public partial class MoveToPackageForm : Form
 
         List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage
             = activeItem.GetUsage()
-                .Cast<object>()
-                .OfType<ISchemaItem>()
                 .Where(item =>
                     !item.Package.IncludedPackages.Contains(targetPackage)
                     && item.Package != targetPackage)

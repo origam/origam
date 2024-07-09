@@ -41,7 +41,7 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
 	public AbstractRule() : base() {}
 	public AbstractRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractRule(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -70,7 +70,7 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataStructureId;
-			return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

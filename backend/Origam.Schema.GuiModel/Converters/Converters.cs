@@ -70,7 +70,7 @@ public class ControlConverter : TypeConverter
         {
             UserControlSchemaItemProvider controls =
                 _schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
-            foreach (AbstractSchemaItem item in controls.ChildItems)
+            foreach (ISchemaItem item in controls.ChildItems)
             {
                 if (item.ToString() == value.ToString())
                     return item as ControlItem;
@@ -121,7 +121,7 @@ public class FormControlSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormSchemaItemProvider forms = _schema.GetProvider(typeof(FormSchemaItemProvider)) as FormSchemaItemProvider;
-			foreach(AbstractSchemaItem item in forms.ChildItems)
+			foreach(ISchemaItem item in forms.ChildItems)
 			{
 				if(item.ToString() == value.ToString())
 					return item as FormControlSet;
@@ -151,7 +151,7 @@ public class PanelControlSetConverter : TypeConverter
 	{
 		PanelSchemaItemProvider forms = _schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
 		ArrayList formArray = new ArrayList(forms.ChildItems.Count);
-		foreach(AbstractSchemaItem item in forms.ChildItems)
+		foreach(ISchemaItem item in forms.ChildItems)
 		{
 			formArray.Add(item);
 		}
@@ -171,7 +171,7 @@ public class PanelControlSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			PanelSchemaItemProvider forms = _schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
-			foreach(AbstractSchemaItem item in forms.ChildItems)
+			foreach(ISchemaItem item in forms.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as PanelControlSet;
@@ -222,7 +222,7 @@ public class ReportConverter : TypeConverter
 		{
 			ReportSchemaItemProvider reports = _schema.GetProvider(typeof(ReportSchemaItemProvider)) as ReportSchemaItemProvider;
 			
-			foreach(AbstractSchemaItem item in reports.ChildItems)
+			foreach(ISchemaItem item in reports.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as AbstractReport;
@@ -274,7 +274,7 @@ public class GraphicsConverter : TypeConverter
 		{
 			GraphicsSchemaItemProvider graphics = _schema.GetProvider(typeof(GraphicsSchemaItemProvider)) as GraphicsSchemaItemProvider;
 			
-			foreach(AbstractSchemaItem item in graphics.ChildItems)
+			foreach(ISchemaItem item in graphics.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as Graphics;
@@ -323,7 +323,7 @@ public class ChartsConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			ChartSchemaItemProvider forms = _schema.GetProvider(typeof(ChartSchemaItemProvider)) as ChartSchemaItemProvider;
-			foreach(AbstractSchemaItem item in forms.ChildItems)
+			foreach(ISchemaItem item in forms.ChildItems)
 			{
 				if(item.ToString() == value.ToString())
 					return item as AbstractChart;
@@ -431,7 +431,7 @@ public class StylesConverter : TypeConverter
 		{
 			StylesSchemaItemProvider styles = _schema.GetProvider(typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
 			
-			foreach(AbstractSchemaItem item in styles.ChildItems)
+			foreach(ISchemaItem item in styles.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as UIStyle;
@@ -483,7 +483,7 @@ public class TreeStructureConverter : TypeConverter
 		{
 			TreeStructureSchemaItemProvider trees = _schema.GetProvider(typeof(TreeStructureSchemaItemProvider)) as TreeStructureSchemaItemProvider;
 			
-			foreach(AbstractSchemaItem item in trees.ChildItems)
+			foreach(ISchemaItem item in trees.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as TreeStructure;
@@ -539,7 +539,7 @@ public class KeyboardShortcutsConverter : TypeConverter
 				_schema.GetProvider(typeof(KeyboardShortcutsSchemaItemProvider)) 
 				as KeyboardShortcutsSchemaItemProvider;
 			
-			foreach(AbstractSchemaItem item in shortcuts.ChildItems)
+			foreach(ISchemaItem item in shortcuts.ChildItems)
 			{
 				if(item.Name == value.ToString())
 					return item as KeyboardShortcut;
@@ -591,7 +591,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
 	        List<ISchemaItem> styleProperties =
                 ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
                 .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
-            foreach (AbstractSchemaItem item in styleProperties)
+            foreach (ISchemaItem item in styleProperties)
             {
                 if (item.Name == value.ToString())
                     return item as ControlStyleProperty;

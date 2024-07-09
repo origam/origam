@@ -58,7 +58,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		this.ChildItemTypes.Add(typeof(StateMachineEventParameterMapping));
 		this.ChildItemTypes.Add(typeof(StateMachineEventFieldDependency));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -107,7 +107,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.ActionId);
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.ActionId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -121,7 +121,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.OldStateId);
-			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.OldStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -135,7 +135,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.NewStateId);
-			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.NewStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}

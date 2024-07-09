@@ -48,7 +48,7 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     public NewRecordScreenBindingParameterMapping(Key primaryKey) 
         : base(primaryKey) {}
     
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
 
     public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();

@@ -20,14 +20,14 @@ public class ScreenSectionCondition: AbstractSchemaItem
     [XmlReference("screenSection", "ScreenSectionId")]
     public PanelControlSet ScreenSection
     {
-        get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+        get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenSectionId));
         set
         {
             ScreenSectionId = value?.Id ?? Guid.Empty;
             if (ScreenSectionId != null && ScreenSectionId != Guid.Empty)
             {
                 var panelControl = (PanelControlSet)PersistenceProvider.
-                                   RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+                                   RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenSectionId));
                 Name = panelControl.Name;
             }
         }

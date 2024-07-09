@@ -52,7 +52,7 @@ public class DataStructureTransformationTemplate : DataStructureTemplate
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.TransformationId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as ITransformation;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as ITransformation;
 		}
 		set
 		{

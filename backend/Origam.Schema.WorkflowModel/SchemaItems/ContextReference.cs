@@ -43,7 +43,7 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 	public ContextReference() : base() {}
 	public ContextReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public ContextReference(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -82,7 +82,7 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

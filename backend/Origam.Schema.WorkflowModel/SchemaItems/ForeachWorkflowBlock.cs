@@ -40,7 +40,7 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
 	public ForeachWorkflowBlock() : base() {}
 	public ForeachWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public ForeachWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.IteratorXPath);
@@ -74,7 +74,7 @@ public class ForeachWorkflowBlock : AbstractWorkflowBlock
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

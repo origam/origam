@@ -81,7 +81,7 @@ public class UIStyleProperty : AbstractSchemaItem
         }
     }
     #endregion
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Property != null)

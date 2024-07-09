@@ -40,10 +40,10 @@ public class NoDuplicateNamesInParentRule : AbstractModelElementRuleAttribute
     {
         if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
         if(memberName != "Name") throw new Exception(nameof(NoDuplicateNamesInParentRule)+" can be only applied to Name properties");  
-        if (!(instance is AbstractSchemaItem abstractSchemaItem)) return null;
+        if (!(instance is ISchemaItem abstractSchemaItem)) return null;
         if (abstractSchemaItem.ParentItem == null) return null;
         string instanceName = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
-        AbstractSchemaItem itemWithDuplicateName = abstractSchemaItem
+        ISchemaItem itemWithDuplicateName = abstractSchemaItem
             .ParentItem.ChildItems
             .Where(item => item is AbstractDataEntityColumn)
             .Where(item => item.Name == instanceName)

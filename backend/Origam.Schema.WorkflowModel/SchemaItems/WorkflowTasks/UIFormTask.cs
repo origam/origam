@@ -55,7 +55,7 @@ public class UIFormTask : WorkflowTask
 	{
 		OutputMethod = ServiceOutputMethod.FullMerge;
 	}
-	#region Override AbstractSchemaItem Members
+	#region Override ISchemaItem Members
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Screen);
@@ -90,7 +90,7 @@ public class UIFormTask : WorkflowTask
 	public FormControlSet Screen
 	{
 		get => (FormControlSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+			typeof(ISchemaItem), new ModelElementKey(ScreenId));
 		set => ScreenId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -101,8 +101,8 @@ public class UIFormTask : WorkflowTask
 	[XmlReference("refreshDataStructure", "RefreshDataStructureId")]
 	public DataStructure RefreshDataStructure
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(RefreshDataStructureId)) as DataStructure;
 		set
 		{
@@ -126,7 +126,7 @@ public class UIFormTask : WorkflowTask
 	public DataStructureMethod RefreshMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(RefreshMethodId));
 		set => RefreshMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -139,7 +139,7 @@ public class UIFormTask : WorkflowTask
 	public DataStructureSortSet RefreshSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(RefreshSortSetId));
 		set => RefreshSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -152,8 +152,8 @@ public class UIFormTask : WorkflowTask
 	[XmlReference("saveDataStructure", "SaveDataStructureId")]
 	public DataStructure SaveDataStructure
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(SaveDataStructureId)) as DataStructure;
 		set => SaveDataStructureId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -175,7 +175,7 @@ public class UIFormTask : WorkflowTask
 	public IEndRule SaveConfirmationRule
 	{
 		get => (IEndRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SaveConfirmationRuleId));
 		set => SaveConfirmationRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

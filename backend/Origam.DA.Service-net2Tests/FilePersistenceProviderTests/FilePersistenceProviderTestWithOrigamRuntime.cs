@@ -68,7 +68,7 @@ public class FilePersistenceProviderTestWithOrigamRuntime: AbstractFileTestClass
 //            OrigamEngine.OrigamEngine.ConnectRuntime("Xml Serialized test");
 //            var settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
 //            var persistor = new PersitHelper(settings.ModelSourceControlLocation);
-//            //List<AbstractSchemaItem> abstractSchemaItems = persistor.RetrieveAll();
+//            //List<ISchemaItem> abstractSchemaItems = persistor.RetrieveAll();
 //            
 ////            int itemsWithNopackageCount = abstractSchemaItems   
 ////                .Count(x => x.SchemaExtensionId == Guid.Empty);

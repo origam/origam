@@ -181,7 +181,7 @@ public class SelectionDialogSessionStore : SessionStore
         DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId,
             this.AfterTransformationId, this.XmlData, profile.Id);
         IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        AbstractSchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as AbstractSchemaItem;
+        ISchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as ISchemaItem;
         SetParameters(request.Parameters, row, item);
         FormReferenceMenuItem formRef = item as FormReferenceMenuItem;
         if (formRef != null)
@@ -192,7 +192,7 @@ public class SelectionDialogSessionStore : SessionStore
         result.Request = request;
         return result;
     }
-    private void SetParameters(IDictionary parameters, DataRow row, AbstractSchemaItem item)
+    private void SetParameters(IDictionary parameters, DataRow row, ISchemaItem item)
     {
         // map the parameters from the selection dialog data row
         foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))

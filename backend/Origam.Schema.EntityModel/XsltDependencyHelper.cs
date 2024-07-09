@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel;
 /// </summary>
 public class XsltDependencyHelper
 {
-	public static void GetDependencies(AbstractSchemaItem item, List<ISchemaItem> dependencies, string text)
+	public static void GetDependencies(ISchemaItem item, List<ISchemaItem> dependencies, string text)
 	{
 		if(text == null) return;
         IPersistenceProvider persistenceprovider = item.PersistenceProvider;
@@ -44,7 +44,7 @@ public class XsltDependencyHelper
 				string id = text.Substring(found + 8, 36);
                 try
                 {
-                    AbstractSchemaItem reference = persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
+                    ISchemaItem reference = persistenceprovider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(new Guid(id))) as ISchemaItem;
                     dependencies.Add(reference);
                 }
                 catch (System.FormatException)
@@ -148,7 +148,7 @@ public class XsltDependencyHelper
 		}
         foreach (Guid l in lookups)
 		{
-            if (persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(l)) is AbstractSchemaItem lookup)
+            if (persistenceprovider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(l)) is ISchemaItem lookup)
             {
                 dependencies.Add(lookup);
             }

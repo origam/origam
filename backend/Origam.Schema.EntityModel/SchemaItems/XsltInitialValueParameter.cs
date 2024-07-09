@@ -90,7 +90,7 @@ public class XsltInitialValueParameter : SchemaItemParameter
         {
             try
             {
-                return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.transformationId)) as XslTransformation;
+                return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.transformationId)) as XslTransformation;
             }
             catch
             {

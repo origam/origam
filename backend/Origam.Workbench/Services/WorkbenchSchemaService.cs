@@ -82,12 +82,12 @@ public class WorkbenchSchemaService : SchemaService
             _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip = value;
 		}
 	}
-	public AbstractSchemaItem ActiveSchemaItem
+	public ISchemaItem ActiveSchemaItem
 	{
 		get
 		{
-			if(_schemaBrowser?.EbrSchemaBrowser?.ActiveNode is AbstractSchemaItem)
-				return _schemaBrowser.EbrSchemaBrowser.ActiveNode as AbstractSchemaItem;
+			if(_schemaBrowser?.EbrSchemaBrowser?.ActiveNode is ISchemaItem)
+				return _schemaBrowser.EbrSchemaBrowser.ActiveNode as ISchemaItem;
 			else
 				return null;
 		}
@@ -152,7 +152,7 @@ public class WorkbenchSchemaService : SchemaService
         }
 		base.SchemaProvider_InstancePersisted(sender, persistedObject);
 	}
-	public void SelectItem(AbstractSchemaItem schemaItem)
+	public void SelectItem(ISchemaItem schemaItem)
 	{
 		SchemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 	}

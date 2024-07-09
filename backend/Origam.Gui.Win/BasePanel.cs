@@ -66,7 +66,7 @@ public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReferen
 	}
 	#endregion
 	#region Properties
-	public AbstractSchemaItem OrigamMetadata { get; set; }
+	public ISchemaItem OrigamMetadata { get; set; }
 	[Browsable(false)]
 	public Guid IndependentDataSourceId { get; set; }
 	[Category("Independent Data Source")]
@@ -75,7 +75,7 @@ public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructure)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceId));
+			return (DataStructure)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceId));
 		}
 		set
 		{
@@ -101,7 +101,7 @@ public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureMethod)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceMethodId));
+			return (DataStructureMethod)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceMethodId));
 		}
 		set
 		{
@@ -127,7 +127,7 @@ public class BasePanel : System.Windows.Forms.UserControl, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureSortSet)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.IndependentDataSourceSortId));
+			return (DataStructureSortSet)this.OrigamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.IndependentDataSourceSortId));
 		}
 		set
 		{

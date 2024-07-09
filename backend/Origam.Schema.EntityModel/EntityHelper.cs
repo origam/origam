@@ -85,7 +85,7 @@ public static class EntityHelper
 		var dataStructureEntity = dataStructure
 			.NewItem<DataStructureEntity>(
 				schemaService.ActiveSchemaExtensionId, null);
-		dataStructureEntity.Entity = entity as AbstractSchemaItem;
+		dataStructureEntity.Entity = entity as ISchemaItem;
 		dataStructureEntity.Name = entity.Name;
 		dataStructureEntity.AllFields = true;
 		if(persist)
@@ -319,10 +319,10 @@ public static class EntityHelper
 		IDataEntity ancestorEntity, 
 		bool persist)
 	{
-		var abstractSchemaItem = entity as AbstractSchemaItem;
+		var abstractSchemaItem = entity as ISchemaItem;
 		var ancestor = new SchemaItemAncestor();
-		ancestor.SchemaItem = entity as AbstractSchemaItem;
-		ancestor.Ancestor = ancestorEntity as AbstractSchemaItem;
+		ancestor.SchemaItem = entity as ISchemaItem;
+		ancestor.Ancestor = ancestorEntity as ISchemaItem;
 		ancestor.PersistenceProvider = abstractSchemaItem.PersistenceProvider;
 		abstractSchemaItem.Ancestors.Add(ancestor);
 		if(persist)
@@ -385,7 +385,7 @@ public static class EntityHelper
 	{
 		var schemaService 
 			= ServiceManager.Services.GetService<ISchemaService>();
-		var entityRelationItem = ((AbstractSchemaItem)parentEntity)
+		var entityRelationItem = ((ISchemaItem)parentEntity)
 			.NewItem<EntityRelationItem>(
 				schemaService.ActiveSchemaExtensionId, null);
 		entityRelationItem.Name = relatedEntity.Name;
@@ -431,7 +431,7 @@ public static class EntityHelper
 		return entityRelationColumnPairItem;
 	}
 	public static DataStructureReference CreateDataStructureReference(
-		AbstractSchemaItem parentItem, 
+		ISchemaItem parentItem, 
 		DataStructure structure, 
 		DataStructureMethod method, 
 		DataStructureSortSet sortSet, 
@@ -481,7 +481,7 @@ public static class EntityHelper
         string functionName, 
         string filterPrefix, 
         bool createParameter, 
-        IList<AbstractSchemaItem> generatedElements)
+        IList<ISchemaItem> generatedElements)
 	{
 		switch (functionName)
 		{
@@ -504,7 +504,7 @@ public static class EntityHelper
 		string leftName, 
 		string rightName, 
 		bool isRightArray, 
-        IList<AbstractSchemaItem> generatedElements)
+        IList<ISchemaItem> generatedElements)
 	{
 		if(field.Name == null)
 		{
@@ -589,7 +589,7 @@ public static class EntityHelper
     }
     public static TableMappingItem CreateLanguageTranslationChildEntity(
         TableMappingItem parentEntity, ICollection selectedFields,
-        IList<AbstractSchemaItem> generatedElements)
+        IList<ISchemaItem> generatedElements)
 	{			
 		var schemaService 
 			= ServiceManager.Services.GetService<ISchemaService>();
@@ -642,7 +642,7 @@ public static class EntityHelper
 		// get localization
 		var localizationKey = new ModelElementKey(ILocalizationEntityId);
 		var localizationEntity = (IDataEntity)persistenceService
-			.SchemaProvider.RetrieveInstance<AbstractSchemaItem>(
+			.SchemaProvider.RetrieveInstance<ISchemaItem>(
 				localizationKey.Id);
 		// and set ancestor
 		AddAncestor(newEntity, localizationEntity, true);
@@ -683,7 +683,7 @@ public static class EntityHelper
     {
         var schemaService 
             = ServiceManager.Services.GetService<ISchemaService>();
-        var dataEntityIndex = ((AbstractSchemaItem)entity)
+        var dataEntityIndex = ((ISchemaItem)entity)
             .NewItem<DataEntityIndex>(
 	            schemaService.ActiveSchemaExtensionId, null);
         dataEntityIndex.Name = $"ix{(unique ? "Unique" : "")}{field.Name}";

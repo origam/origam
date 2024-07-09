@@ -45,7 +45,7 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 		IWorkflow wf = null;
 		try
 		{
-			wf = this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(workflowId)) as IWorkflow;
+			wf = this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(workflowId)) as IWorkflow;
 		}
 		catch
 		{
@@ -69,11 +69,11 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
         // input parameters
         foreach (DictionaryEntry entry in parameters)
 		{
-			AbstractSchemaItem context = wf.GetChildByName((string)entry.Key, ContextStore.CategoryConst);
+			ISchemaItem context = wf.GetChildByName((string)entry.Key, ContextStore.CategoryConst);
 				
 			if(context == null)
 			{
-				throw new ArgumentOutOfRangeException("name", entry.Key, ResourceUtils.GetString("ErrorWorkflowContext", ((AbstractSchemaItem)wf).Path));
+				throw new ArgumentOutOfRangeException("name", entry.Key, ResourceUtils.GetString("ErrorWorkflowContext", ((ISchemaItem)wf).Path));
 			}
 			object contextValue = entry.Value;
 			if(contextValue is DataSet)
@@ -161,7 +161,7 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 				throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
 		}
 	}
-	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	public override IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
 	{
 		var result = new List<string>();
 		IWorkflow wf = item as IWorkflow;
@@ -181,7 +181,7 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 	}
 	private IWorkflow ResolveServiceMethodCallTask(ServiceMethodCallTask task)
 	{
-		AbstractSchemaItem wfParam = task.GetChildByName("Workflow");
+		ISchemaItem wfParam = task.GetChildByName("Workflow");
 		if(wfParam.ChildItems.Count == 1)
 		{
 			WorkflowReference wfRef = wfParam.ChildItems[0] as WorkflowReference;

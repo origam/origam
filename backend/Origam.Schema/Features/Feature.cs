@@ -37,7 +37,7 @@ public class Feature : AbstractSchemaItem
 	public Feature() : base() {}
 	public Feature(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public Feature(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

@@ -37,7 +37,7 @@ class DependencyTaskRunner
         this.persistenceProvider = persistenceProvider;
     }
     public void AddDependencyTask(IWorkflowStep independentItem,
-        AbstractSchemaItem dependentItem, Guid triggerItemId)
+        ISchemaItem dependentItem, Guid triggerItemId)
     {
         deferedTasks.Add(new AddDependencyTask(
             persistenceProvider, independentItem, dependentItem, triggerItemId));
@@ -46,7 +46,7 @@ class DependencyTaskRunner
     {
         deferedTasks.Add(new RemoveDependencyTask( dependency, triggerItemId));
     }
-    internal void UpdateDependencies(AbstractSchemaItem persistedSchemaItem)
+    internal void UpdateDependencies(ISchemaItem persistedSchemaItem)
     {
         deferedTasks
             .ToArray()
@@ -58,7 +58,7 @@ class DependencyTaskRunner
 
 interface IDefferedPersistenceTask
 {
-    bool TryRun(AbstractSchemaItem persistedItem);
+    bool TryRun(ISchemaItem persistedItem);
 }
 
 internal class RemoveDependencyTask : IDefferedPersistenceTask
@@ -71,7 +71,7 @@ internal class RemoveDependencyTask : IDefferedPersistenceTask
 		this.dependency = dependency;
 		this.triggerItemId = triggerItemId;
 	}
-	public bool TryRun(AbstractSchemaItem persistedItem)
+	public bool TryRun(ISchemaItem persistedItem)
 	{
 		if (persistedItem.Id == triggerItemId)
 		{
@@ -87,17 +87,17 @@ internal class AddDependencyTask: IDefferedPersistenceTask
 	private readonly IPersistenceProvider persistenceProvider;
 	private readonly IWorkflowStep independentItem;
 	private readonly Guid triggerItemId;
-	private readonly AbstractSchemaItem dependentItem;
+	private readonly ISchemaItem dependentItem;
 	public AddDependencyTask(IPersistenceProvider persistenceProvider, 
 		IWorkflowStep independentItem,
-		AbstractSchemaItem dependentItem, Guid triggerItemId)
+		ISchemaItem dependentItem, Guid triggerItemId)
 	{
 		this.persistenceProvider = persistenceProvider;
 		this.independentItem = independentItem;
 		this.dependentItem = dependentItem;
 		this.triggerItemId = triggerItemId;
 	}
-	public bool TryRun(AbstractSchemaItem persistedItem)
+	public bool TryRun(ISchemaItem persistedItem)
 	{
 		if (triggerItemId != persistedItem.Id) return false;			
 		var workflowTaskDependency = new WorkflowTaskDependency

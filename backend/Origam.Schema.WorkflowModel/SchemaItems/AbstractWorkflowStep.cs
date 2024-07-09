@@ -47,7 +47,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{
 		this.ChildItemTypes.Add(typeof(WorkflowTaskDependency));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -143,7 +143,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.StartRuleId;
-			return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -169,7 +169,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.StartRuleContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -195,7 +195,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ValidationRuleId;
-			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -221,7 +221,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ValidationRuleContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -48,7 +48,7 @@ public class StateMachineState : AbstractSchemaItem
 	public StateMachineState() {}
 	public StateMachineState(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineState(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override string Icon
@@ -81,11 +81,11 @@ public class StateMachineState : AbstractSchemaItem
 	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
 		// move between same parent type withing the same state machine
-		return ((AbstractSchemaItem)newNode).RootItem.PrimaryKey.Equals(
+		return ((ISchemaItem)newNode).RootItem.PrimaryKey.Equals(
 			       RootItem.PrimaryKey)
-			&& (((AbstractSchemaItem)newNode).ItemType 
+			&& (((ISchemaItem)newNode).ItemType 
 			    == "WorkflowStateMachine"
-			|| (((AbstractSchemaItem)newNode).ItemType 
+			|| (((ISchemaItem)newNode).ItemType 
 			    == "StateMachineState"));
 	}
 	#endregion
@@ -99,7 +99,7 @@ public class StateMachineState : AbstractSchemaItem
 		get
 		{
 			var result = new ArrayList();
-			foreach(AbstractSchemaItem item in ChildItemsRecursive)
+			foreach(ISchemaItem item in ChildItemsRecursive)
 			{
 				if(item is StateMachineState)
 				{
@@ -315,7 +315,7 @@ public class StateMachineState : AbstractSchemaItem
 				Id = DefaultSubstateId
 			};
 			return (StateMachineState)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

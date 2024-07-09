@@ -44,7 +44,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 
 	// with workflow method we consider all the workflows
 	// as input parameters except context stores marked with `IsReturnValue'
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
 		{
@@ -80,7 +80,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LoadWorkflowId)) as Workflow;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LoadWorkflowId)) as Workflow;
 		}
 		set
 		{

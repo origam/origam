@@ -64,7 +64,7 @@ public sealed class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigam
         IPersistenceService persistenceService = ServiceManager.Services
             .GetService(typeof(IPersistenceService)) as IPersistenceService;
         DataStructure dataStructure = (DataStructure) persistenceService
-            .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
+            .SchemaProvider.RetrieveInstance(typeof(ISchemaItem),
                 new ModelElementKey(ORIGAM_USER_DATA_STRUCTURE));
         DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
             dataStructure);

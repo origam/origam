@@ -1403,7 +1403,7 @@ public void OpenForm(object owner,Hashtable parameters)
 			independentPersistenceService
 				.SchemaProvider
 				.RetrieveList<IFilePersistent>()
-				.OfType<AbstractSchemaItem>()
+				.OfType<ISchemaItem>()
 				.AsParallel()
 				.ForEach(item =>
 				{
@@ -1440,7 +1440,7 @@ public void OpenForm(object owner,Hashtable parameters)
 	    FilePersistenceService independentPersistenceService,
 	    CancellationToken cancellationToken)
     {
-	    List<Dictionary<IFilePersistent, string>> errorFragments =
+	    List<Dictionary<ISchemaItem, string>> errorFragments =
             ModelRules.GetErrors(
                 schemaProviders: new OrigamProviderBuilder()
                     .SetSchemaProvider(independentPersistenceService.SchemaProvider)
@@ -2124,7 +2124,7 @@ public void OpenForm(object owner,Hashtable parameters)
                 if (text.Equals(String.Empty)) return;
                 _findSchemaItemResultsPad.ResetResults();
                 IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                AbstractSchemaItem[] results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text);
+                ISchemaItem[] results = persistence.SchemaProvider.FullTextSearch<ISchemaItem>(text);
                 if (results.LongLength > 0)
                 {
                     _findSchemaItemResultsPad.DisplayResults(results);

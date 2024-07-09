@@ -339,8 +339,8 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
             SetUpForm();
         }
     }
-    private AbstractSchemaItem _relatedEntity = null;
-    public AbstractSchemaItem RelatedEntity
+    private ISchemaItem _relatedEntity = null;
+    public ISchemaItem RelatedEntity
     {
         get
         {
@@ -351,8 +351,8 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
             _relatedEntity = value;
         }
     }
-    private AbstractSchemaItem _baseEntityField = null;
-    public AbstractSchemaItem BaseEntityFieldSelect
+    private ISchemaItem _baseEntityField = null;
+    public ISchemaItem BaseEntityFieldSelect
     {
         get
         {
@@ -363,8 +363,8 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
             _baseEntityField = value;
         }
     }
-    private AbstractSchemaItem _relatedEntityField = null;
-    public AbstractSchemaItem RelatedEntityFieldSelect
+    private ISchemaItem _relatedEntityField = null;
+    public ISchemaItem RelatedEntityFieldSelect
     {
         get
         {
@@ -395,7 +395,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         tableRelation.Items.Clear();
         if (this.Entity == null) return;
         txtName.Text = "Transaction " + this.Entity.Name;
-        foreach (AbstractSchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
+        foreach (ISchemaItem abstractSchemaItem in this.Entity.RootProvider.ChildItems)
         {
             tableRelation.Items.Add(abstractSchemaItem);
         }
@@ -406,7 +406,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         RelatedEntityField.Items.Clear();
         if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
-        foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+        foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
         {
             RelatedEntityField.Items.Add(filter);
         }
@@ -418,7 +418,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     #endregion
     private void TableRelation_SelectedIndexChanged(object sender, EventArgs e)
     {
-        RelatedEntity = (AbstractSchemaItem)tableRelation.SelectedItem;
+        RelatedEntity = (ISchemaItem)tableRelation.SelectedItem;
         if (this.tableRelation.Name != "")
         {
             this.groupBoxKey.Enabled = true;
@@ -427,10 +427,10 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
     }
     private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
-        BaseEntityFieldSelect = (AbstractSchemaItem)BaseEntityField.SelectedItem;
+        BaseEntityFieldSelect = (ISchemaItem)BaseEntityField.SelectedItem;
     }
     private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
-        RelatedEntityFieldSelect = (AbstractSchemaItem)RelatedEntityField.SelectedItem;
+        RelatedEntityFieldSelect = (ISchemaItem)RelatedEntityField.SelectedItem;
     }
 }

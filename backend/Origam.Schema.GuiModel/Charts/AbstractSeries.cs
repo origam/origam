@@ -95,7 +95,7 @@ public abstract class AbstractSeries : AbstractSchemaItem
 		get
 		{
 			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(this.ColorsLookupId));
+				typeof(ISchemaItem), new ModelElementKey(this.ColorsLookupId));
 		}
 		set
 		{

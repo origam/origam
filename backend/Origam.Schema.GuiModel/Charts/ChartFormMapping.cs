@@ -70,7 +70,7 @@ public class ChartFormMapping : AbstractSchemaItem
 	{
 		get
 		{
-			return (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
+			return (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ScreenId));
 		}
 		set
 		{
@@ -86,7 +86,7 @@ public class ChartFormMapping : AbstractSchemaItem
 	{
 		get
 		{
-			return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityId));
+			return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.EntityId));
 		}
 		set
 		{

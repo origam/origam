@@ -133,7 +133,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
             i++;
         }
         newEntity.Persist();
-        (entity1 as AbstractSchemaItem).Persist();
+        (entity1 as ISchemaItem).Persist();
     }
     public override int GetImageIndex(string icon)
     {

@@ -32,7 +32,7 @@ namespace Origam.Schema.ItemCollection;
 class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     ISchemaItemCollection
 {
-    private Dictionary<Key, AbstractSchemaItem> nonPersistedItems = new ();
+    private Dictionary<Key, ISchemaItem> nonPersistedItems = new ();
     private readonly IPersistenceProvider persistence;
     private readonly ISchemaItemProvider rootProvider;
     
@@ -41,14 +41,14 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     }
     
     public ArchitectISchemaItemCollection(IPersistenceProvider persistence,
-        ISchemaItemProvider rootProvider, AbstractSchemaItem parentItem)
+        ISchemaItemProvider rootProvider, ISchemaItem parentItem)
     {
         this.persistence = persistence;
         this.rootProvider = rootProvider;
         ParentSchemaItem = parentItem;
     }
 
-    public new IEnumerator<AbstractSchemaItem> GetEnumerator()
+    public new IEnumerator<ISchemaItem> GetEnumerator()
     {
         return new SchemaItemEnumerator(InnerList, GetItem);
     }
@@ -58,7 +58,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
         return GetEnumerator();
     }
 
-    public void Add(AbstractSchemaItem item)
+    public void Add(ISchemaItem item)
     {
         if (!item.IsPersisted || item.IsAbstract || !item.UseObjectCache)
         {
@@ -67,19 +67,19 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
                 SetDerivedFrom(item);
             }
 
-            nonPersistedItems ??= new Dictionary<Key, AbstractSchemaItem>();
+            nonPersistedItems ??= new Dictionary<Key, ISchemaItem>();
             nonPersistedItems.Add(item.PrimaryKey, item);
         }
 
         base.Add(item.PrimaryKey);
     }
 
-    public bool Contains(AbstractSchemaItem item)
+    public bool Contains(ISchemaItem item)
     {
         return base.Contains(item.PrimaryKey);
     }
 
-    public void CopyTo(AbstractSchemaItem[] array, int index)
+    public void CopyTo(ISchemaItem[] array, int index)
     {
         int destinationIndex = index;
         for (int i = 0; i < Count; i++)
@@ -89,28 +89,28 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
         }
     }
 
-    public bool Remove(AbstractSchemaItem item)
+    public bool Remove(ISchemaItem item)
     {
         return base.Remove(item?.PrimaryKey);
     }
     
-    public int IndexOf(AbstractSchemaItem item)
+    public int IndexOf(ISchemaItem item)
     {
         return base.IndexOf(item?.PrimaryKey);
     }
 
-    public void Insert(int index, AbstractSchemaItem item)
+    public void Insert(int index, ISchemaItem item)
     {
         base.Insert(index, item?.PrimaryKey);
     }
     
-    public new AbstractSchemaItem this[int index]
+    public new ISchemaItem this[int index]
     {
         get => GetItem(base[index]);
         set => base[index] = value.PrimaryKey;
     }
     
-    private AbstractSchemaItem GetItem(Key key)
+    private ISchemaItem GetItem(Key key)
     {
         if (nonPersistedItems != null &&
             nonPersistedItems.TryGetValue(key, out var persistedItem))
@@ -119,8 +119,8 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
         }
 
         var item =
-            persistence.RetrieveInstance(typeof(AbstractSchemaItem), key,
-                true, false) as AbstractSchemaItem;
+            persistence.RetrieveInstance(typeof(ISchemaItem), key,
+                true, false) as ISchemaItem;
         if (item == null)
         {
             if (nonPersistedItems != null &&
@@ -155,7 +155,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
             clearing = true;
             foreach (Key key in InnerList)
             {
-                AbstractSchemaItem item;
+                ISchemaItem item;
                 try
                 {
                     item = GetItem(key);
@@ -199,7 +199,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     
     protected override void OnRemove(int index, Key value)
     {
-        AbstractSchemaItem item = null;
+        ISchemaItem item = null;
         try
         {
             item = GetItem(value);
@@ -234,7 +234,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
         newItem.Deleted += SchemaItem_Deleted;
     }
 
-    public override void AddRange(IEnumerable<AbstractSchemaItem> other)
+    public override void AddRange(IEnumerable<ISchemaItem> other)
     {
         foreach (var item in other)
         {
@@ -245,7 +245,7 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     {
         if (!clearing)
         {
-            var si = sender as AbstractSchemaItem;
+            var si = sender as ISchemaItem;
             if (RemoveDeletedItems && Contains(si))
             {
                 Remove(si);
@@ -254,11 +254,11 @@ class ArchitectISchemaItemCollection: SchemaItemCollectionBase<Key>,
     }
 }
 
-class SchemaItemEnumerator : IEnumerator<AbstractSchemaItem>
+class SchemaItemEnumerator : IEnumerator<ISchemaItem>
 {
-    private readonly Func<Key, AbstractSchemaItem> keyToItem;
+    private readonly Func<Key, ISchemaItem> keyToItem;
     private readonly IEnumerator<Key> keyEnumerator;
-    public SchemaItemEnumerator(IList<Key> keys, Func<Key, AbstractSchemaItem> keyToItem)
+    public SchemaItemEnumerator(IList<Key> keys, Func<Key, ISchemaItem> keyToItem)
     {
         this.keyToItem = keyToItem;
         keyEnumerator = keys.GetEnumerator();
@@ -274,7 +274,7 @@ class SchemaItemEnumerator : IEnumerator<AbstractSchemaItem>
         keyEnumerator.Reset();
     }
 
-    public AbstractSchemaItem Current {
+    public ISchemaItem Current {
         get
         {
             Key currentKey = keyEnumerator.Current;

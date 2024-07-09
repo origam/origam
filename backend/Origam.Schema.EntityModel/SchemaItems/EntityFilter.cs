@@ -35,7 +35,7 @@ public class EntityFilter : AbstractSchemaItem
 	public EntityFilter() {}
 	public EntityFilter(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public EntityFilter(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
 		return newNode is IDataEntity;

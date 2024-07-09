@@ -456,7 +456,7 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.IconId;
-			return (Schema.GuiModel.Graphics)_persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (Schema.GuiModel.Graphics)_persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

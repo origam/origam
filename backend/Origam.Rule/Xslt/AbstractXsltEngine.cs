@@ -138,7 +138,7 @@ public abstract class AbstractXsltEngine : IXsltEngine
 		else
 		{
 #endif
-			AbstractSchemaItem transf = this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(transformationId)) as AbstractSchemaItem;
+			ISchemaItem transf = this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(transformationId)) as ISchemaItem;
 			string xsl;
 			if(transf is XslTransformation)
 			{
@@ -173,10 +173,10 @@ public abstract class AbstractXsltEngine : IXsltEngine
 		else
 		{
 #endif
-			AbstractSchemaItem transf = PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), 
+			ISchemaItem transf = PersistenceProvider.RetrieveInstance(
+                typeof(ISchemaItem), 
                 new ModelElementKey(transformationId)) 
-                as AbstractSchemaItem;
+                as ISchemaItem;
 			string xsl;
 			if(transf is XslTransformation)
 			{

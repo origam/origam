@@ -46,7 +46,7 @@ public abstract class AbstractWorkflowBlock : AbstractWorkflowStep, IWorkflowBlo
 		this.ChildItemTypes.Add(typeof(CheckRuleStep));
 		this.ChildItemTypes.Add(typeof(WaitTask));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

@@ -50,7 +50,7 @@ public class WorkflowSchedule : AbstractSchemaItem
 				Id = WorkflowId
 			};
 			return (IWorkflow)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -77,7 +77,7 @@ public class WorkflowSchedule : AbstractSchemaItem
 				Id = ScheduleTimeId
 			};
 			return (AbstractScheduleTime)PersistenceProvider
-				.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -92,7 +92,7 @@ public class WorkflowSchedule : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(

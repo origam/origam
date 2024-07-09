@@ -48,7 +48,7 @@ public class AuditLogPad : AbstractPadContent
 		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
 		{
 			Guid columnId = (Guid)base.GetColumnValueAtRow (source, rowNum);
-			AbstractSchemaItem item;
+			ISchemaItem item;
 			try
 			{
 				SchemaService schema = ServiceManager.Services
@@ -57,7 +57,7 @@ public class AuditLogPad : AbstractPadContent
 				persistence = ServiceManager.Services
 					.GetService<IPersistenceService>();
 				item = persistence.SchemaProvider
-					.RetrieveInstance<AbstractSchemaItem>(columnId);
+					.RetrieveInstance<ISchemaItem>(columnId);
 			}
 			catch
 			{

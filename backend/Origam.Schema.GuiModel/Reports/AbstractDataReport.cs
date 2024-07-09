@@ -48,7 +48,7 @@ public abstract class AbstractDataReport : AbstractReport
     {
         get
         {
-            return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
+            return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
         }
         set
         {
@@ -64,7 +64,7 @@ public abstract class AbstractDataReport : AbstractReport
     {
         get
         {
-            return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
+            return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
         }
         set
         {
@@ -78,7 +78,7 @@ public abstract class AbstractDataReport : AbstractReport
     {
         get
         {
-            return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+            return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
         }
         set
         {
@@ -92,7 +92,7 @@ public abstract class AbstractDataReport : AbstractReport
     {
         get
         {
-            return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TransformationId));
+            return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.TransformationId));
         }
         set
         {
@@ -126,7 +126,7 @@ public abstract class AbstractDataReport : AbstractReport
         }
     }
     #endregion
-    public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+    public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
     {
         if (this.Method != null)
         {

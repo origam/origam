@@ -95,7 +95,7 @@ public class SchemaItemParameter : AbstractSchemaItem
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
 	{
-		AbstractSchemaItem newItem = newNode as AbstractSchemaItem;
+		ISchemaItem newItem = newNode as ISchemaItem;
 		if(newItem != null)
 		{
 			return newItem.ItemType.Equals(this.ParentItem.ItemType);

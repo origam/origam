@@ -49,7 +49,7 @@ public class ChartDashboardWidget : AbstractDataDashboardWidget
 	{
 		get
 		{
-			return (AbstractChart)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ChartId));
+			return (AbstractChart)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ChartId));
 		}
 		set
 		{

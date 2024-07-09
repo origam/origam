@@ -35,7 +35,7 @@ public interface ISchemaItemFactory
 	/// <param name="group"></param>
 	/// <returns>New schema item.</returns>
 	T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem;
+		where T : class, ISchemaItem;
 	
 	/// <summary>
 	/// Returns new valid group for this item.

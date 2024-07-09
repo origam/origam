@@ -87,7 +87,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.InputValidationRuleId));
+			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.InputValidationRuleId));
 		}
 		set
 		{
@@ -124,7 +124,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
         get
         {
             return (DataConstant)PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(CacheMaxAgeDataConstantId));
+                typeof(ISchemaItem), new ModelElementKey(CacheMaxAgeDataConstantId));
         }
         set
         {

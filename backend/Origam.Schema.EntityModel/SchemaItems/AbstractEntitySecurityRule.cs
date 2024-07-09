@@ -66,10 +66,10 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Rule != null)
-			base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
+			base.GetParameterReferences(this.Rule as ISchemaItem, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
@@ -203,7 +203,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 	{
 		get
 		{
-			return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
+			return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleId));
 		}
 		set
 		{

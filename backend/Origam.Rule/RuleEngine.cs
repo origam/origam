@@ -353,7 +353,7 @@ public class RuleEngine
 			throw new Exception(ResourceUtils.GetString("ErrorRuleFailed1", rule.Name), ex);
 		}
 	}
-	public object Evaluate(AbstractSchemaItem item)
+	public object Evaluate(ISchemaItem item)
 	{
 		if(item is DataStructureReference)
 		{
@@ -1366,7 +1366,7 @@ public class RuleEngine
 	{
 		EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
 		var entityRules = new List<ISchemaItem>(); 
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		
 		if(fieldId == Guid.Empty)
 		{
@@ -1438,7 +1438,7 @@ public class RuleEngine
 	{
 		var rules = new List<ISchemaItem>(); 
 		
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
 		if(field == null) return null;	// lookup fields in a data structure
 		rules.AddRange(field.DynamicLabels);
@@ -1481,7 +1481,7 @@ public class RuleEngine
     {
         var result = new List<string>();
         IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), new ModelElementKey(entityId))
+            typeof(ISchemaItem), new ModelElementKey(entityId))
             as IDataEntity;
         foreach(EntityUIAction action in entity.ChildItemsByTypeRecursive(
             EntityUIAction.CategoryConst))
@@ -1563,7 +1563,7 @@ public class RuleEngine
 	{
 		var rules = new List<AbstractEntitySecurityRule>();
 			
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		// field-level rules
 		IDataEntityColumn column = null;
 		if (field != null)
@@ -1708,7 +1708,7 @@ public class RuleEngine
 			}
 			else
 			{
-				throw new ArgumentException("Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: " + ((AbstractSchemaItem)rule).Path);
+				throw new ArgumentException("Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: " + ((ISchemaItem)rule).Path);
 			}
 		}
 		return true;

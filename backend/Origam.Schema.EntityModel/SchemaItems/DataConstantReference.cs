@@ -53,10 +53,10 @@ public class DataConstantReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.DataConstant != null)
-			base.GetParameterReferences(this.DataConstant as AbstractSchemaItem, list);
+			base.GetParameterReferences(this.DataConstant as ISchemaItem, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
@@ -84,7 +84,7 @@ public class DataConstantReference : AbstractSchemaItem
 		{
 			try
 			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
+				return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
 			}
 			catch
 			{

@@ -75,7 +75,7 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ServiceId;
-			return (IService)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IService)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

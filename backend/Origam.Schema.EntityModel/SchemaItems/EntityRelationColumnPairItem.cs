@@ -54,7 +54,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.BaseEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -78,7 +78,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.RelatedEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -93,7 +93,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -108,10 +108,10 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 			return EntityRelationColumnPairItem.CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		(this.BaseEntityField as AbstractSchemaItem).GetParameterReferences (this.BaseEntityField as AbstractSchemaItem, list);
-		(this.RelatedEntityField as AbstractSchemaItem).GetParameterReferences (this.RelatedEntityField as AbstractSchemaItem, list);
+		(this.BaseEntityField as ISchemaItem).GetParameterReferences (this.BaseEntityField as ISchemaItem, list);
+		(this.RelatedEntityField as ISchemaItem).GetParameterReferences (this.RelatedEntityField as ISchemaItem, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{

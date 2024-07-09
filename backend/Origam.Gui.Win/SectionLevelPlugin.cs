@@ -29,7 +29,7 @@ namespace Origam.Gui.Win;
 public class SectionLevelPlugin : Label,
     IOrigamMetadataConsumer, ISupportInitialize, IAsDataConsumer
 {
-    public AbstractSchemaItem OrigamMetadata { get; set; }
+    public ISchemaItem OrigamMetadata { get; set; }
     public void BeginInit()
     {
     }

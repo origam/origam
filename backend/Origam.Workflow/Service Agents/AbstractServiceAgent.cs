@@ -136,7 +136,7 @@ public abstract class AbstractServiceAgent : IServiceAgent
 		}
 		OnFinished(new ServiceFinishedEventArgs(exception));
 	}
-	public virtual IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	public virtual IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
 	{
 		return new List<string>();
 	}

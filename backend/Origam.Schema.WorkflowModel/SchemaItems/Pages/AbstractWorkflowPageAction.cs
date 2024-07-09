@@ -54,7 +54,7 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
 	{
 		get
 		{
-            return (IStartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConditionRuleId));
+            return (IStartRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ConditionRuleId));
 		}
 		set
 		{
@@ -106,7 +106,7 @@ public class AbstractWorkflowPageAction : AbstractSchemaItem
 		}
 	}		
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

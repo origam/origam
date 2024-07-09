@@ -61,10 +61,10 @@ public class DataStructureEntity : AbstractSchemaItem
     [NotNullModelElementRule()]
     [RelationshipWithKeyRule()]
     [XmlReference("entity", "EntityId")]
-    public AbstractSchemaItem Entity
+    public ISchemaItem Entity
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), new ModelElementKey(EntityId));
 		set
 		{
 			if(value == null)
@@ -289,9 +289,9 @@ public class DataStructureEntity : AbstractSchemaItem
 		return columns;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		// relation has parameters (i.e. there are parameters in the JOIN clause
 		if(Entity is IAssociation)

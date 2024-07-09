@@ -63,10 +63,10 @@ public class EntityFilterLookupReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Lookup != null)
-			base.GetParameterReferences(this.Lookup as AbstractSchemaItem, list);
+			base.GetParameterReferences(this.Lookup as ISchemaItem, list);
 		base.GetParameterReferences(this, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -102,7 +102,7 @@ public class EntityFilterLookupReference : AbstractSchemaItem
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
 		}
 		set
 		{

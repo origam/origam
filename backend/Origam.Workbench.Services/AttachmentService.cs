@@ -49,7 +49,7 @@ public class AttachmentService : IWorkbenchService, IAttachmentService
 	{
 		DatasetGenerator dsg = new DatasetGenerator(true);
 		IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f")));
+		DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f")));
 		DataSet data = dsg.CreateDataSet(ds);
 		DataRow r = data.Tables["Attachment"].NewRow();
 		r["Id"] = Guid.NewGuid();

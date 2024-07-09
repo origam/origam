@@ -148,7 +148,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -156,7 +156,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Filter != null)
 		{
@@ -209,7 +209,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 		if(newNode is DataStructureFilterSet)
 		{
 			// only inside the same data structure
-			return this.RootItem.Equals((newNode as AbstractSchemaItem).RootItem);
+			return this.RootItem.Equals((newNode as ISchemaItem).RootItem);
 		}
 		else
 		{

@@ -61,7 +61,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     private ContextStore _mergeBackStore = null;
     private object _dataSource;
     private string _dataMember;
-    private AbstractSchemaItem _origamMetadata;
+    private ISchemaItem _origamMetadata;
     private Guid _workflowId;
     private ColumnParameterMappingCollection _parameterMappingCollection = new ColumnParameterMappingCollection();
     private bool _fillingParameterCache = false;
@@ -87,7 +87,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         }
         ArrayList toDelete = new ArrayList();
         // delete all parameter mappings whose's context stores do not exist anymore
-        foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+        foreach(ISchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
         {
             bool found = false;
             foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
@@ -99,7 +99,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                 toDelete.Add(mapping);
             }
         }
-        foreach(AbstractSchemaItem mapping in toDelete)
+        foreach(ISchemaItem mapping in toDelete)
         {
             mapping.IsDeleted = true;
         }
@@ -218,7 +218,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         {
             if(this._origamMetadata == null)
                 return null;
-            return (IWorkflow)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(_workflowId));
+            return (IWorkflow)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(_workflowId));
         }
         set
         {
@@ -285,7 +285,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
             {
                 return null;
             }
-            return (Origam.Schema.GuiModel.Graphics)_origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(IconId));
+            return (Origam.Schema.GuiModel.Graphics)_origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(IconId));
         }
         set
         {
@@ -530,7 +530,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     }
     #endregion
     #region IOrigamMetadataConsumer Members
-    public AbstractSchemaItem OrigamMetadata
+    public ISchemaItem OrigamMetadata
     {
         get
         {

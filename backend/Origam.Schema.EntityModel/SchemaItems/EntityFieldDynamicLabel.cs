@@ -87,7 +87,7 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
+            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleId));
 		}
 		set
 		{
@@ -107,7 +107,7 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LabelConstantId));
+			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LabelConstantId));
 		}
 		set
 		{
@@ -143,7 +143,7 @@ public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 		this.Name = name;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.Rule != null) dependencies.Add(this.Rule);

@@ -36,7 +36,7 @@ public class TestChecklistRule : AbstractSchemaItem
 	public TestChecklistRule() : base() {}
 	public TestChecklistRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestChecklistRule(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

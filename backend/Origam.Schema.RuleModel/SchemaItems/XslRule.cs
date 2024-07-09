@@ -54,7 +54,7 @@ public class XslRule : AbstractRule
             containerName: nameof(xsl),
             containingObject: this);
     }
-    #region Overriden AbstractSchemaItem members
+    #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.Xsl);

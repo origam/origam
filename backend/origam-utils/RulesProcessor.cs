@@ -44,7 +44,7 @@ class RulesProcessor
         List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
             .SetSchemaProvider(persistence.SchemaProvider)
             .GetAll();
-        List<Dictionary<IFilePersistent, string>> errorFragments
+        List<Dictionary<ISchemaItem, string>> errorFragments
                 = ModelRules.GetErrors(
                     allproviders,
                     persistence,
@@ -54,9 +54,9 @@ class RulesProcessor
             StringBuilder sb = new StringBuilder("Rule violations in ");
             sb.Append(settings.ModelSourceControlLocation.ToUpper());
             sb.Append("\n");
-            foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
+            foreach (Dictionary<ISchemaItem, string> dict in errorFragments)
             {
-                IFilePersistent retrievedObj = dict.First().Key;
+                ISchemaItem retrievedObj = dict.First().Key;
                 sb.Append("Object with Id: \"" + retrievedObj.Id +
                            "\" in file: \"" + retrievedObj.RelativeFilePath +
                             "\" --> " + string.Join("\n", dict.First().Value) + "\n");

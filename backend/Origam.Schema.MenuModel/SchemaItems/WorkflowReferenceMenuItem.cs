@@ -74,7 +74,7 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
 	public IWorkflow Workflow
 	{
 		get => (IWorkflow)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(WorkflowId));
+			typeof(ISchemaItem), new ModelElementKey(WorkflowId));
 		set => WorkflowId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -140,7 +140,7 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
 				var agent = businessServicesService.GetAgent(
 					"WorkflowService", null, null);
 				return agent.ExpectedParameterNames(
-					Workflow as AbstractSchemaItem, 
+					Workflow as ISchemaItem, 
 					"ExecuteWorkflow", 
 					"Parameters");
 			}

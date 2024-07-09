@@ -95,7 +95,7 @@ public class EntityReportAction : EntityUIAction
 	{
 		get
 		{
-			return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
+			return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
 		}
 		set
 		{

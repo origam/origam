@@ -977,7 +977,7 @@ public class FormXmlBuilder
 		}
 		return null;
 	}
-	private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
+	private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, ISchemaItem item, 
 		DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
 		bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null, string parentTabIndex = null)
 	{
@@ -989,7 +989,7 @@ public class FormXmlBuilder
 			{ 
 				return false; 
 			}
-			item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
+			item = (ISchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
 			control = item as ControlSetItem;
 		}
 		if (!RenderTools.ShouldRender(control)) {
@@ -1158,7 +1158,7 @@ public class FormXmlBuilder
 			sortedChildren.Sort (new ControlSetItemComparer ());
 			XmlElement children = xmlOutput.Document.CreateElement ("UIChildren");
 			parentNode.AppendChild (children);
-			foreach (AbstractSchemaItem child in sortedChildren) {
+			foreach (ISchemaItem child in sortedChildren) {
 				XmlElement el = xmlOutput.Document.CreateElement ("UIElement");
 				children.AppendChild (el);
 				if (!RenderUIElement (
@@ -1234,7 +1234,7 @@ public class FormXmlBuilder
 		}
 		return true;
 	}
-	private static AbstractSchemaItem GentControlItem(ControlSetItem control)
+	private static ISchemaItem GentControlItem(ControlSetItem control)
 	{
 		if (control.ControlItem.Ancestors.Count > 1)
 		{
@@ -1335,7 +1335,7 @@ public class FormXmlBuilder
 		}
 	}
 	private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
-		XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
+		XmlElement parentElement, XmlElement propertiesElement, ISchemaItem item,
 		bool processContainers, bool processEditControls, bool forceReadOnly, string parentTabIndex = null)
 	{
 		if (string.IsNullOrWhiteSpace(parentTabIndex))

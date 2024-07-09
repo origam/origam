@@ -31,7 +31,7 @@ public class TestCase : AbstractSchemaItem
 	public TestCase() {}
 	public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestCase(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override string Icon => "26";

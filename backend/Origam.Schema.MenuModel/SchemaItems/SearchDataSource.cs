@@ -78,7 +78,7 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
         get
         {
             return (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), 
+                typeof(ISchemaItem), 
                 new ModelElementKey(DataStructureMethodId));
         }
         set
@@ -132,7 +132,7 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
         get
         {
             return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId));
+                typeof(ISchemaItem), new ModelElementKey(this.LookupId));
         }
         set
         {
@@ -156,7 +156,7 @@ public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
         }
     }
     #endregion
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.DataStructure);

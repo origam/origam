@@ -98,7 +98,7 @@ public class WorkflowSessionStore : SaveableSessionStore
     public override void Init()
     {
         IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IWorkflow workflow = ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId)) as IWorkflow;
+        IWorkflow workflow = ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId)) as IWorkflow;
         WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(workflow, new Hashtable(this.Request.Parameters), false, this.Request.Caption);
         _host = new WorkflowHost();
         _host.SupportsUI = true;

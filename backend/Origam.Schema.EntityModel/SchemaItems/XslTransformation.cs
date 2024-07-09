@@ -62,7 +62,7 @@ public class XslTransformation : AbstractTransformation
         clone.TextStore = TextStore;
         return clone;
     }
-    #region Overriden AbstractSchemaItem members
+    #region Overriden ISchemaItem members
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);

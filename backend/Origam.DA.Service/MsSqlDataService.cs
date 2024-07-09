@@ -214,7 +214,7 @@ public class MsSqlDataService : AbstractSqlDataService
         {
             if (index.IsUnique && sqle.Message.Contains(index.Name))
             {
-                List<AbstractSchemaItem> sortedFields = index.ChildItems.ToList();
+                List<ISchemaItem> sortedFields = index.ChildItems.ToList();
                 sortedFields.Sort();
                 foreach (DataEntityIndexField field in sortedFields)
                 {

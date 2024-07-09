@@ -48,7 +48,7 @@ namespace Origam.DA.Service
         /// 
         /// </summary>
         /// <param name="nameSpaceShortCut"> example: "asi"</param>
-        /// <param name="nameSpace">example: "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"</param>
+        /// <param name="nameSpace">example: "http://schemas.origam.com/Origam.Schema.ISchemaItem/6.0.0"</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public string AddNamespace(string nameSpaceShortCut, string nameSpace)

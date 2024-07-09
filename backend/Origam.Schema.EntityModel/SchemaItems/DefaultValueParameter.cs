@@ -56,7 +56,7 @@ public class DefaultValueParameter : SchemaItemParameter
 		{
 			try
 			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
+				return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
 			}
 			catch
 			{

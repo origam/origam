@@ -41,7 +41,7 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	public WorkQueueClassEntityMapping() : base() {}
 	public WorkQueueClassEntityMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public WorkQueueClassEntityMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
@@ -61,7 +61,7 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 //		{
 //			get
 //			{
-//				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+//				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
 //			}
 //			set
 //			{

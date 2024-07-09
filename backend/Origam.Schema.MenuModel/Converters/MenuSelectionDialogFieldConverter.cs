@@ -42,7 +42,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-		AbstractSchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
+		ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
 		if(currentItem is FormReferenceMenuItem)
 		{
 			selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
@@ -73,7 +73,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-			AbstractSchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
+			ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
 			if(currentItem is FormReferenceMenuItem)
 			{
 				selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;

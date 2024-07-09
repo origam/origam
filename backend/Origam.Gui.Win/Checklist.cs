@@ -239,8 +239,8 @@ public class Checklist : BaseCaptionControl, IOrigamMetadataConsumer
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
+	private ISchemaItem _origamMetadata;
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

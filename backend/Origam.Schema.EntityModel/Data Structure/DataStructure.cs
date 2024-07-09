@@ -149,7 +149,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	private void Init()
 	{
 		this.ChildItemTypes.InsertRange(0,
@@ -164,7 +164,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 					   }
 			   );                        
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		foreach(DataStructureEntity item in Entities)
 		{

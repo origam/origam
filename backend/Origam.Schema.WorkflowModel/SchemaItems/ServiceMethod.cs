@@ -46,7 +46,7 @@ public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFact
 		set => _returnValueDataType = value;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override bool UseFolders => false;

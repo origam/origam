@@ -133,7 +133,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 			try
 			{
 				return (IDataLookup)PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), key);
+					typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -214,14 +214,14 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     [XmlReference("field", "FieldId")]
     public IDataEntityColumn Field
 	{
-		get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+		get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
 		set => this.FieldId = (Guid)value.PrimaryKey["Id"];
 	}
     [Browsable(false)]
     public DataEntityConstraint ForeignKeyConstraint => null;
     public string FieldType { get; } = "LookupField";
     #endregion
-    #region Overriden AbstractSchemaItem Methods
+    #region Overriden ISchemaItem Methods
     [Browsable(false)]
 	public bool ReadOnly => false;
 	public override bool CanMove(UI.IBrowserNode2 newNode) 
@@ -248,7 +248,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		base.GetExtraDependencies (dependencies);
 	}
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
 	public override void UpdateReferences()

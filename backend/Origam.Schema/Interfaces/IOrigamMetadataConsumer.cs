@@ -25,5 +25,5 @@ namespace Origam.Schema;
 /// </summary>
 public interface IOrigamMetadataConsumer
 {
-	AbstractSchemaItem OrigamMetadata {get; set;}
+	ISchemaItem OrigamMetadata {get; set;}
 }

@@ -137,9 +137,9 @@ public class SchemaService : AbstractService, ISchemaService
 	#region Public Methods
 	public bool IsItemFromExtension(object item)
 	{
-		if(item is AbstractSchemaItem)
+		if(item is ISchemaItem)
 		{
-			if((item as AbstractSchemaItem).SchemaExtensionId != this.ActiveSchemaExtensionId)
+			if((item as ISchemaItem).SchemaExtensionId != this.ActiveSchemaExtensionId)
 			{
 				return false;
 			}
@@ -156,7 +156,7 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public bool CanDeleteItem(object item)
 	{
-		if(item is AbstractSchemaItem || item is SchemaItemGroup)
+		if(item is ISchemaItem || item is SchemaItemGroup)
 		{
 			return IsItemFromExtension(item);
 		}
@@ -171,7 +171,7 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public bool CanEditItem(object item)
 	{
-		if(item is AbstractSchemaItem)
+		if(item is ISchemaItem)
 		{
 			if(! IsItemFromExtension(item)) return false;
 			// check if the item is checked out by the user
@@ -316,13 +316,13 @@ public class SchemaService : AbstractService, ISchemaService
 		}
 		return null;
 	}
-	public void AddSchemaItem(AbstractSchemaItem item)
+	public void AddSchemaItem(ISchemaItem item)
 	{
 	}
-	public void RemoveSchemaItem(AbstractSchemaItem item)
+	public void RemoveSchemaItem(ISchemaItem item)
 	{
 	}
-	public void UpdateSchemaItem(AbstractSchemaItem item)
+	public void UpdateSchemaItem(ISchemaItem item)
 	{
 	}
 	

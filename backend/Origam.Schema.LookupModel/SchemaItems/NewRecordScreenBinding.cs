@@ -85,13 +85,13 @@ public class NewRecordScreenBinding
     }
 
 
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
 
     public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(MenuItem);
-        AbstractSchemaItem menu = MenuItem;
+        ISchemaItem menu = MenuItem;
         while (menu.ParentItem != null)
         {
             menu = menu.ParentItem;

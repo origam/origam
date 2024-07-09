@@ -87,7 +87,7 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 		get
 		{
             return (IEntityRule)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(RuleId));
+				typeof(ISchemaItem), new ModelElementKey(RuleId));
 		}
 		set
 		{

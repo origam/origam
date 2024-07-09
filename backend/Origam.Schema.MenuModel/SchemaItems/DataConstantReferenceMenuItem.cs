@@ -65,7 +65,7 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataConstantId;
-			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -90,7 +90,7 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataLookupId;
-            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
         }
         set
         {

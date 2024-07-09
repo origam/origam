@@ -48,7 +48,7 @@ public class AcceptContextStoreChangesTask : AbstractWorkflowStep
 				Id = this.ContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

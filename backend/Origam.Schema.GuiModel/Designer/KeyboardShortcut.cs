@@ -39,7 +39,7 @@ public class KeyboardShortcut : AbstractSchemaItem
 	public KeyboardShortcut() : base(){}
 	public KeyboardShortcut(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public KeyboardShortcut(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

@@ -40,7 +40,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
     public bool RemoveDeletedItems { get; set; } = true;
     public bool UpdateParentItem { get; set; } = true;
     
-    public AbstractSchemaItem ParentSchemaItem { get; set;}
+    public ISchemaItem ParentSchemaItem { get; set;}
 
     public SchemaItemCollectionBase()
     {
@@ -52,7 +52,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         list = new List<T>(capacity);
     }
         
-    protected void SetDerivedFrom(AbstractSchemaItem item)
+    protected void SetDerivedFrom(ISchemaItem item)
     {
         if (item.ParentItem != null)
         {
@@ -159,7 +159,7 @@ public abstract class SchemaItemCollectionBase<T> : IList<T>, IDisposable
         }
     }
 
-    public abstract void AddRange(IEnumerable<AbstractSchemaItem> value);
+    public abstract void AddRange(IEnumerable<ISchemaItem> value);
     
     public bool Contains(T value)
     {

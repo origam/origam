@@ -70,7 +70,7 @@ public class DataStructureRuleDependency : AbstractSchemaItem
 	{
 		get
 		{
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
 		}
 		set
 		{
@@ -79,7 +79,7 @@ public class DataStructureRuleDependency : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

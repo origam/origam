@@ -49,9 +49,9 @@ public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
         {
             Guid schemaId = IdTranslator.ToSchemaId(node);
             if (schemaId == Guid.Empty) return;
-            AbstractSchemaItem clickedItem = 
-                (AbstractSchemaItem)persistenceProvider
-                    .RetrieveInstance(typeof(AbstractSchemaItem), new Key(schemaId));
+            ISchemaItem clickedItem = 
+                (ISchemaItem)persistenceProvider
+                    .RetrieveInstance(typeof(ISchemaItem), new Key(schemaId));
             if(clickedItem != null)
             {
                 EditSchemaItem cmd = new EditSchemaItem

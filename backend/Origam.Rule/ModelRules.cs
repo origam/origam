@@ -30,15 +30,15 @@ using System.Threading;
 namespace Origam.Rule;
 public class ModelRules
 {
-    public static List<Dictionary<IFilePersistent, string>> GetErrors(
+    public static List<Dictionary<ISchemaItem, string>> GetErrors(
         List<AbstractSchemaItemProvider> schemaProviders,
         FilePersistenceService independentPersistenceService,
         CancellationToken cancellationToken)
     {
-        List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
+        List<Dictionary<ISchemaItem, string>> errorFragments = independentPersistenceService
                 .SchemaProvider
                 .RetrieveList<IFilePersistent>()
-                .OfType<AbstractSchemaItem>()
+                .OfType<ISchemaItem>()
                 .AsParallel()
                 .Select(retrievedObj => {
                     retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
@@ -53,7 +53,7 @@ public class ModelRules
                         .Select(exception => exception.Message)
                         .ToList();
                     if (errorMessages.Count == 0) return null;
-                    return new Dictionary<IFilePersistent, string>
+                    return new Dictionary<ISchemaItem, string>
                     {
                         { retrievedObj, string.Join("\n", errorMessages) }
                     };
@@ -63,7 +63,7 @@ public class ModelRules
         return errorFragments;
     }
     private static bool BelongsToProvider(
-        ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
+        ISchemaItemProvider provider, ISchemaItem retrievedObj)
     {
         return String.Compare(
             retrievedObj.ItemType, 

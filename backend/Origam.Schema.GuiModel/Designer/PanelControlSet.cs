@@ -56,7 +56,7 @@ public class PanelControlSet : AbstractControlSet
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataSourceId;
-			return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -80,7 +80,7 @@ public class PanelControlSet : AbstractControlSet
 		}
 	}
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool IsDeleted
 	{
 		get

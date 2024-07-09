@@ -537,7 +537,7 @@ public class DataServiceAgent : AbstractServiceAgent
 				throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
 		}
 	}
-	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	public override IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
 	{
 		var result = new List<string>();
 		ServiceMethodCallTask call = item as ServiceMethodCallTask;
@@ -625,7 +625,7 @@ public class DataServiceAgent : AbstractServiceAgent
 	private void ResolveServiceMethodCallTask(ServiceMethodCallTask task,
 		out DataStructure ds, out DataStructureMethod method)
 	{
-		AbstractSchemaItem dsParam = task.GetChildByName("DataStructure");
+		ISchemaItem dsParam = task.GetChildByName("DataStructure");
 		if(dsParam.ChildItems.Count == 1)
 		{
 			DataStructureReference dsRef = dsParam.ChildItems[0] as DataStructureReference;

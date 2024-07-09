@@ -39,7 +39,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
 	public AbstractMenuItem() : base() {}
 	public AbstractMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractMenuItem(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ToString() => this.Path;
 	
@@ -90,7 +90,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
 	[XmlReference("menuIcon", "GraphicsId")]
 	public GuiModel.Graphics MenuIcon
 	{
-		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.GraphicsId));
+		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.GraphicsId));
 		set
 		{
 			this.GraphicsId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -144,10 +144,10 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         }
         return base.CompareTo(obj);
 	}
-	public class MenuItemComparer : IComparer<AbstractSchemaItem>
+	public class MenuItemComparer : IComparer<ISchemaItem>
 	{
 		#region IComparer Members
-		public int Compare(AbstractSchemaItem x, AbstractSchemaItem y)
+		public int Compare(ISchemaItem x, ISchemaItem y)
 		{
             var orderComparison = (x as AbstractMenuItem).Order
 	            .CompareTo((y as AbstractMenuItem).Order);

@@ -94,7 +94,7 @@ public class FieldMappingItem : AbstractDataEntityColumn,
     [Browsable(false)]
 	public override bool ReadOnly => false;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
 	public override void OnNameChanged(string originalName)

@@ -36,7 +36,7 @@ public class Service : AbstractSchemaItem, IService
 	public Service() {}
 	public Service(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public Service(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	

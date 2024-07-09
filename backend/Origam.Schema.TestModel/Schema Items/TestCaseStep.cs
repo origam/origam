@@ -44,7 +44,7 @@ public class TestCaseStep : AbstractSchemaItem
 	public TestCaseStep() : base() {}
 	public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -108,7 +108,7 @@ public class TestCaseStep : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ChecklistRuleId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as TestChecklistRule;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as TestChecklistRule;
 		}
 		set
 		{

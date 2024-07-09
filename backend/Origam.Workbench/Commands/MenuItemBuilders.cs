@@ -69,10 +69,10 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         if (activeNode == null) return new AsMenuCommand[0];
         ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
         NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
-        AbstractSchemaItem activeItem = activeNode as AbstractSchemaItem;
+        ISchemaItem activeItem = activeNode as ISchemaItem;
         if (nonpersistentNode != null)
         {
-            activeItem = nonpersistentNode.ParentNode as AbstractSchemaItem;
+            activeItem = nonpersistentNode.ParentNode as ISchemaItem;
         }
         var items = new List<AsMenuCommand>();
         if (factory.NewItemTypes != null)
@@ -82,7 +82,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
             foreach (string name in factory.NewTypeNames)
             {
                 bool found = false;
-                foreach (AbstractSchemaItem existing in activeItem.ChildItems)
+                foreach (ISchemaItem existing in activeItem.ChildItems)
                 {
                     if (existing.Name == name)
                     {

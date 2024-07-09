@@ -75,7 +75,7 @@ public class WorkflowPage : AbstractPage
 	[XmlReference("workflow", "WorkflowId")]
 	public Workflow Workflow
 	{
-		get => (Workflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
+		get => (Workflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
 		set
 		{
 			this.WorkflowId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];

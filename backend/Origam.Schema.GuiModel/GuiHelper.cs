@@ -230,7 +230,7 @@ public class GuiHelper
 		}
 	}
 	public static ControlSetItem CreateControl(
-		AbstractSchemaItem parentControl, 
+		ISchemaItem parentControl, 
 		ControlItem controlType)
 	{
 		var schemaService 

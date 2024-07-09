@@ -92,7 +92,7 @@ public class ControlSetItem  : AbstractSchemaItem
 	}
 	#endregion
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType => CategoryConst;
 	public override UI.BrowserNodeCollection ChildNodes()
 	{
@@ -156,8 +156,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(lookupId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(lookupId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -173,8 +173,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(constantId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(constantId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -190,8 +190,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(reportId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(reportId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -207,8 +207,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(graphicsId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(graphicsId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -224,8 +224,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(workflowId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(workflowId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch

@@ -64,7 +64,7 @@ public class ChartBuilder
 		chartElement.AppendChild(axesElement);
 		XmlElement seriesElement = doc.CreateElement("Series");
 		chartElement.AppendChild(seriesElement);
-		foreach(AbstractSchemaItem item in chart.ChildItems)
+		foreach(ISchemaItem item in chart.ChildItems)
 		{
 			if(item.GetType() == typeof(CartesianChartHorizontalAxis))
 			{
@@ -88,7 +88,7 @@ public class ChartBuilder
 	{
 		XmlElement seriesElement = doc.CreateElement("Series");
 		chartElement.AppendChild(seriesElement);
-		foreach(AbstractSchemaItem item in chart.ChildItems)
+		foreach(ISchemaItem item in chart.ChildItems)
 		{
 			if(item.GetType() == typeof(PieSeries))
 			{
@@ -120,7 +120,7 @@ public class ChartBuilder
 		if(fieldLookupId != null) axis.SetAttribute("FieldLookupId", fieldLookupId);
 		axis.SetAttribute("AggregationType", item.AggregationType.ToString());
 	}
-	private static string GetLookupId (DataTable table, string fieldName, AbstractSchemaItem item)
+	private static string GetLookupId (DataTable table, string fieldName, ISchemaItem item)
 	{
 		if(fieldName != "" && fieldName != null)
 		{

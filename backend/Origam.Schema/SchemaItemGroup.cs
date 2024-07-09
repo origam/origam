@@ -76,7 +76,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
     }
 	[Browsable(false)]
-	public AbstractSchemaItem ParentItem { get; set; }
+	public ISchemaItem ParentItem { get; set; }
     [XmlParent(typeof(SchemaItemGroup))]
     public Guid ParentGroupId;
 	[Browsable(false)]
@@ -124,7 +124,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			? parentItem : GetRootGroup(parentItem.ParentGroup);
 	}
 	
-	private List<ISchemaItem> GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(ISchemaItem parentItem)
 	{
 		var items = new List<ISchemaItem>();
 		foreach(var childItem in parentItem.ChildItems)
@@ -134,7 +134,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		}
 		return items;
 	}
-	public AbstractSchemaItem GetChildByName(string name, string itemType)
+	public ISchemaItem GetChildByName(string name, string itemType)
 	{
 		foreach(var item in ChildItems)
 		{
@@ -226,7 +226,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			var provider = ParentItem ?? RootProvider;
 			var ISchemaItemCollection = SchemaItemCollection.Create(
 				PersistenceProvider, provider, ParentItem);
-			foreach(AbstractSchemaItem item 
+			foreach(ISchemaItem item 
 			        in provider.ChildItemsByGroup(this))
 			{
 				ISchemaItemCollection.Add(item);
@@ -239,15 +239,15 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		var list = new List<ISchemaItem>();
 		// We look for all child items of our parent schema item that have this group
 		// We browse the collection because it has all the items correctly set
-		foreach(AbstractSchemaItem item in ParentItem.ChildItemsByGroup(this))
+		foreach(ISchemaItem item in ParentItem.ChildItemsByGroup(this))
 		{
 			list.Add(item);
 		}
 		return list;
 	}
-	public List<AbstractSchemaItem> ChildItemsByGroup(SchemaItemGroup group)
+	public List<ISchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		var list = new List<AbstractSchemaItem>();
+		var list = new List<ISchemaItem>();
 		foreach(var item in ChildItems)
 		{
 			if((item.Group == null && group == null) ||
@@ -367,7 +367,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		};
 	public virtual T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
+		where T : class, ISchemaItem
 	{
 		T newItem;
 		if(ParentItem == null)

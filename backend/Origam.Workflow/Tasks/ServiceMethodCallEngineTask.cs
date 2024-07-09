@@ -116,7 +116,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 				if(parameter.ServiceMethodParameter.DataType == OrigamDataType.Array)
 				{
 					Hashtable paramList = new Hashtable(parameter.ChildItems.Count);
-					foreach(AbstractSchemaItem item in parameter.ChildItems)
+					foreach(ISchemaItem item in parameter.ChildItems)
 					{
 						paramList.Add(item.Name, this.Evaluate(item));
 					}

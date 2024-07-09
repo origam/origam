@@ -115,7 +115,7 @@ class NamespaceInfo
                 ?.LocalName ?? "",
             AbstractSchemaPrefix = xmlAttributes
                 ?.FirstOrDefault(attr => attr.Value.StartsWith(
-                    "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem"))
+                    "http://schemas.origam.com/Origam.Schema.ISchemaItem"))
                 ?.LocalName ?? ""
         };
     }

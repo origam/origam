@@ -73,7 +73,7 @@ public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
 		{
 			OperationTimer.Global.Start(
 				logEntryType: WorkflowItemType,
-				path: Step is AbstractSchemaItem schemItem ? schemItem.Path : "",
+				path: Step is ISchemaItem schemItem ? schemItem.Path : "",
 				hash: _call.GetHashCode(),
 				id: Step.NodeId);
 		}

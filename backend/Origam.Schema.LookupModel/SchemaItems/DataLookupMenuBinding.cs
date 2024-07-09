@@ -45,7 +45,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	public DataLookupMenuBinding() : base() {}
 	public DataLookupMenuBinding(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public DataLookupMenuBinding(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -56,7 +56,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.MenuItem);
-		AbstractSchemaItem menu = this.MenuItem;
+		ISchemaItem menu = this.MenuItem;
 		while(menu.ParentItem != null)
 		{
 			menu = menu.ParentItem;
@@ -95,7 +95,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MenuItemId));
+			return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.MenuItemId));
 		}
 		set
 		{
@@ -128,7 +128,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
+			return this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
 		}
 		set
 		{
@@ -145,7 +145,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
+			return this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
 		}
 		set
 		{

@@ -63,7 +63,7 @@ public class EntityWorkflowAction : EntityUIAction
 			{
 				IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 				IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-				return agent.ExpectedParameterNames(this.Workflow as AbstractSchemaItem, "ExecuteWorkflow", "Parameters");
+				return agent.ExpectedParameterNames(this.Workflow as ISchemaItem, "ExecuteWorkflow", "Parameters");
 			}
 			catch
 			{
@@ -195,7 +195,7 @@ public class EntityWorkflowAction : EntityUIAction
 	{
 		get
 		{
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
 		}
 		set
 		{

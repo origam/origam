@@ -35,7 +35,7 @@ public class WorkflowCallTask : WorkflowTask
 	public WorkflowCallTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
-	#region Override AbstractSchemaItem Members
+	#region Override ISchemaItem Members
 	public override void GetExtraDependencies(
 		List<ISchemaItem> dependencies)
 	{
@@ -57,7 +57,7 @@ public class WorkflowCallTask : WorkflowTask
 				Id = WorkflowId
 			};
 			return (IWorkflow)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

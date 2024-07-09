@@ -52,7 +52,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Dictionary<string, ParameterReference> list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.DataStructure != null)
 			base.GetParameterReferences(DataStructure, list);
@@ -85,7 +85,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataStructureId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as DataStructure;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as DataStructure;
 		}
 		set
 		{
@@ -103,7 +103,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(DataStructureMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(DataStructureMethodId));
 		}
 		set
 		{
@@ -119,7 +119,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{
