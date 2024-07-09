@@ -42,9 +42,9 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new List<DataStructureEntity>());
 		List<DataStructureEntity> entities = currentItem.ListDataStructure.Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);

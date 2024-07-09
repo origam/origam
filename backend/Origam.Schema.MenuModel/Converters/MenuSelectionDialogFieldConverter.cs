@@ -51,7 +51,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		{
 			selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 		}
-		if(selectionDialogPanel == null) return new StandardValuesCollection(new ArrayList());
+		if(selectionDialogPanel == null) return new StandardValuesCollection(new List<object>());
 		List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
 		var array = new List<IDataEntityColumn>(fields.Count);
 		foreach(IDataEntityColumn item in fields)

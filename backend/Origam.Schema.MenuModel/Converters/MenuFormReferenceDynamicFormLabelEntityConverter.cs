@@ -47,10 +47,10 @@ public class MenuFormReferenceDynamicFormLabelEntityConverter : TypeConverter
             = context.Instance as FormReferenceMenuItem;
         if(currentItem.Screen == null)
         {
-            return new StandardValuesCollection(new ArrayList());
+            return new StandardValuesCollection(new List<DataStructureEntity>());
         }
 		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);

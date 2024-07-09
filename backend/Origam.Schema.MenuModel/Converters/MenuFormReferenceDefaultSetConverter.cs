@@ -43,7 +43,7 @@ public class MenuFormReferenceDefaultSetConverter : TypeConverter
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 		List<DataStructureDefaultSet> defaultSets = currentItem.Screen.DataStructure.DefaultSets;
-		ArrayList array = new ArrayList(defaultSets.Count);
+		var array = new List<DataStructureDefaultSet>(defaultSets.Count);
 		foreach(DataStructureDefaultSet item in defaultSets)
 		{
 			array.Add(item);

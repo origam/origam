@@ -45,9 +45,9 @@ public class MenuFormReferenceMethodConverter : TypeConverter
 		List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
 		if (methods == null)
 		{
-			return new StandardValuesCollection(new ArrayList());
+			return new StandardValuesCollection(new List<DataStructureMethod>());
 		}
-		var output = new ArrayList(methods.Count);
+		var output = new List<DataStructureMethod>(methods.Count);
 		foreach (DataStructureMethod method in methods)
 		{
 			output.Add(method);

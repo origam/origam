@@ -42,10 +42,10 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		if(currentItem == null) return new StandardValuesCollection(new ArrayList());
-		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem == null) return new StandardValuesCollection(new List<DataStructureMethod>());
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new List<DataStructureMethod>());
 		List<DataStructureMethod> methods = currentItem.ListDataStructure.Methods;
-		ArrayList array = new ArrayList(methods.Count);
+		var array = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);

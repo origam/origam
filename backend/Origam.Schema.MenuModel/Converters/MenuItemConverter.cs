@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -43,7 +44,7 @@ public class MenuItemConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		MenuSchemaItemProvider menu = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-		ArrayList menuArray = new ArrayList();
+		var menuArray = new List<string>();
 		foreach(ISchemaItem item in menu.ChildItemsRecursive)
 		{
 			if(item is AbstractMenuItem && !(item is Menu || item is Submenu))

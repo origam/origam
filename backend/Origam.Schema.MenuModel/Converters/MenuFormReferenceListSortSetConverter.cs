@@ -42,8 +42,8 @@ public class MenuFormReferenceListSortSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		if(currentItem == null) return new StandardValuesCollection(new ArrayList());
-		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem == null) return new StandardValuesCollection(new List<DataStructureSortSet>());
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new List<DataStructureSortSet>());
 		List<DataStructureSortSet> sortSets = currentItem.ListDataStructure.SortSets;
 		var array = new List<DataStructureSortSet>(sortSets.Count);
 		foreach(DataStructureSortSet item in sortSets)

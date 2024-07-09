@@ -42,7 +42,7 @@ public class MenuFormReferenceTemplateConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		if(currentItem.TemplateSet == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.TemplateSet == null) return new StandardValuesCollection(new List<DataStructureTemplate>());
 		List<DataStructureTemplate> templates = currentItem.TemplateSet.Templates;
 		var array = new List<DataStructureTemplate>(templates.Count);
 		foreach(DataStructureTemplate item in templates)
