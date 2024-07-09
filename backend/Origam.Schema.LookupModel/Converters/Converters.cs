@@ -100,7 +100,7 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
 		
 		if(reference.ValueDataStructure == null) return null;
 		List<DataStructureMethod> methods = reference.ValueDataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -155,7 +155,7 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
 		
 		if(reference.TooltipDataStructure == null) return null;
 		List<DataStructureMethod> methods = reference.TooltipDataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
