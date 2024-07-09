@@ -403,12 +403,12 @@ public class SchemaCompareEditor : AbstractViewContent
         _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
         RenderList();
 	}
-	private ArrayList SelectedResults()
+	private List<SchemaDbCompareResult> SelectedResults()
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<SchemaDbCompareResult>();
 		foreach(ListViewItem item in lvwResults.CheckedItems)
 		{
-			result.Add(item.Tag);
+			result.Add((SchemaDbCompareResult)item.Tag);
 		}
 		return result;
 	}
