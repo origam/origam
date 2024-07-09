@@ -596,9 +596,8 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList methodArray;
 		ISchemaItemCollection methods;
-		IService service = (context.Instance as ServiceMethodCallTask).Service as IService;
+		IService service = (context.Instance as ServiceMethodCallTask).Service;
 		if(service == null)
 		{
 			return null;
@@ -607,7 +606,7 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 		{
 			methods = service.ChildItems;
 		}
-		methodArray = new ArrayList(methods.Count);
+		var methodArray = new List<ISchemaItem>(methods.Count);
 		
 		foreach(ISchemaItem method in methods)
 		{
@@ -814,13 +813,13 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList mappedFields = new ArrayList();
+		var mappedFields = new List<FieldMappingItem>();
 		List<IDataEntityColumn> fields = ((context.Instance as ISchemaItem).RootItem as StateMachine).Entity.EntityColumns;
 		foreach(IDataEntityColumn col in fields)
 		{
-			if(col is FieldMappingItem)
+			if(col is FieldMappingItem item)
 			{
-				mappedFields.Add(col);
+				mappedFields.Add(item);
 			}
 		}
 		mappedFields.Sort();
@@ -875,7 +874,7 @@ public class ScheduleTimeConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ScheduleTimeSchemaItemProvider times = _schema.GetProvider(typeof(ScheduleTimeSchemaItemProvider)) as ScheduleTimeSchemaItemProvider;
-		ArrayList itemArray = new ArrayList(times.ChildItems.Count);
+		var itemArray = new List<AbstractScheduleTime>(times.ChildItems.Count);
 		foreach(AbstractScheduleTime time in times.ChildItems)
 		{
 			itemArray.Add(time);
@@ -924,7 +923,7 @@ public class WorkflowConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkflowSchemaItemProvider workflows = _schema.GetProvider(typeof(WorkflowSchemaItemProvider)) as WorkflowSchemaItemProvider;
-		ArrayList itemArray = new ArrayList(workflows.ChildItems.Count);
+		var itemArray = new List<IWorkflow>(workflows.ChildItems.Count);
 		foreach(IWorkflow wf in workflows.ChildItems)
 		{
 			itemArray.Add(wf);
@@ -991,7 +990,7 @@ public class StateMachineStateLookupReaderConverter : System.ComponentModel.Type
 		if(lookup == null) return null;
 		InitList((Guid)lookup.PrimaryKey["Id"]);
 		_currentList.Sort = lookup.ListDisplayMember;
-		ArrayList list = new ArrayList(_currentList.Count);
+		var list = new List<object>(_currentList.Count);
 		
 		foreach(DataRowView rowview in _currentList)
 		{
@@ -1062,7 +1061,7 @@ public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ContextStore currentItem = context.Instance as ContextStore;
-		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
+		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new List<DataStructureRuleSet>());
 		List<DataStructureRuleSet> ruleSets = (currentItem.Structure as DataStructure).RuleSets;
 		var array = new List<DataStructureRuleSet>(ruleSets.Count);
 		foreach(DataStructureRuleSet item in ruleSets)
@@ -1116,9 +1115,9 @@ public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConvert
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ContextStore currentItem = context.Instance as ContextStore;
-		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
+		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new List<DataStructureDefaultSet>());
 		List<DataStructureDefaultSet> defaultSets = (currentItem.Structure as DataStructure).DefaultSets;
-		ArrayList array = new ArrayList(defaultSets.Count);
+		var array = new List<DataStructureDefaultSet>(defaultSets.Count);
 		foreach(DataStructureDefaultSet item in defaultSets)
 		{
 			array.Add(item);
@@ -1170,7 +1169,7 @@ public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
-		if(currentItem.Entity == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.Entity == null) return new StandardValuesCollection(new List<EntityFilter>());
 		List<EntityFilter> filters = currentItem.Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
 		var array = new List<EntityFilter>(filters.Count);
 		foreach(EntityFilter item in filters)
@@ -1224,9 +1223,9 @@ public class WorkQueueClassEntityStructureFilterConverter : System.ComponentMode
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
-		if(currentItem.EntityStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.EntityStructure == null) return new StandardValuesCollection(new List<DataStructureMethod>());
 		List<DataStructureMethod> methods = currentItem.EntityStructure.Methods;
-		ArrayList array = new ArrayList(methods.Count);
+		var array = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);
@@ -1278,7 +1277,7 @@ public class WorkQueueClassNotificationStructureFilterConverter : System.Compone
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
-		if(currentItem.NotificationStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.NotificationStructure == null) return new StandardValuesCollection(new List<DataStructureMethod>());
 		List<DataStructureMethod> methods = currentItem.NotificationStructure.Methods;
 		var array = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod item in methods)
@@ -1332,7 +1331,7 @@ public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentMode
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
-		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new List<DataStructureMethod>());
 		List<DataStructureMethod> methods = currentItem.WorkQueueStructure.Methods;
 		var array = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod item in methods)
@@ -1387,7 +1386,7 @@ public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentMod
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
-		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new List<DataStructureSortSet>());
 		List<DataStructureSortSet> sorts = currentItem.WorkQueueStructure.SortSets;
 		var array = new List<DataStructureSortSet>(sorts.Count);
 		foreach(DataStructureSortSet item in sorts)
