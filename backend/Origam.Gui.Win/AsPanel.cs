@@ -1597,7 +1597,7 @@ public class AsPanel: BasePanel, IAsDataConsumer, IOrigamMetadataConsumer,
 		SetActualRecordId();
 		if(this.RecordId is Guid)
 		{
-			_auditLogPad.GetAuditLog(this.EntityId, (Guid)this.RecordId, null);
+			_auditLogPad.GetAuditLog(this.EntityId, (Guid)this.RecordId);
 				
 			Workbench.Commands.ViewAuditLogPad cmd = new Workbench.Commands.ViewAuditLogPad();
 			cmd.Run();
