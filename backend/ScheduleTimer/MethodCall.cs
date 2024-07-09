@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Schedule;
@@ -105,7 +106,7 @@ public class ParameterSetterList
 	}
 	public IParameterSetter[] ToArray()
 	{
-		return (IParameterSetter[])_List.ToArray(typeof(IParameterSetter));
+		return _List.ToArray();
 	}
 	public void reset()
 	{
@@ -142,7 +143,7 @@ public class ParameterSetterList
 		}
 		return false;
 	}
-	ArrayList _List = new ArrayList();
+	List<IParameterSetter> _List = new ();
 }
 /// <summary>
 /// IMethodCall represents a partially specified parameter data list and a method.  This allows methods to be 
