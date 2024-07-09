@@ -193,11 +193,11 @@ public class UIFormTask : WorkflowTask
 	[XmlAttribute ("refreshPortalAfterSave")]
     public TrueFalseEnum RefreshPortalAfterSave { get; set; } 
         = TrueFalseEnum.False;
-	public ArrayList RefreshParameters
+	public List<ISchemaItem> RefreshParameters
 	{
 		get
 		{
-			var result = new ArrayList();
+			var result = new List<ISchemaItem>();
 			foreach(var item in ChildItems)
 			{
 				if((item is ContextReference) 

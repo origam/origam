@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -43,7 +44,7 @@ public class TestChecklistRuleConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		TestChecklistRuleSchemaItemProvider rules = _schema.GetProvider(typeof(TestChecklistRuleSchemaItemProvider)) as TestChecklistRuleSchemaItemProvider;
-		ArrayList osArray = new ArrayList(rules.ChildItems.Count);
+		var osArray = new List<ISchemaItem>(rules.ChildItems.Count);
 		foreach(ISchemaItem os in rules.ChildItems)
 		{
 			osArray.Add(os);
