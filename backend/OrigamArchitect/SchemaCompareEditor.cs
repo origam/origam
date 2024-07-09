@@ -534,7 +534,7 @@ public class SchemaCompareEditor : AbstractViewContent
 			return;
 		}
 		DeploymentVersion version = cboDeploymentVersion.SelectedItem as DeploymentVersion;
-		ArrayList generatedActivities = new ArrayList();
+		var generatedActivities = new List<ISchemaItem>();
 		foreach(SchemaDbCompareResult result in SelectedResults())
 		{
 			if(!string.IsNullOrEmpty(result.Script))
@@ -568,7 +568,7 @@ public class SchemaCompareEditor : AbstractViewContent
 				MessageBoxIcon.Question) == DialogResult.Yes)
 			{
 				FindSchemaItemResultsPad findResults = WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad)) as FindSchemaItemResultsPad;
-				findResults.DisplayResults((ISchemaItem[])generatedActivities.ToArray(typeof(ISchemaItem)));
+				findResults.DisplayResults(generatedActivities.ToArray());
 			}
 		}
 		// deselect all items
