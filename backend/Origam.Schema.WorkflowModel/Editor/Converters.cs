@@ -240,7 +240,6 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList contextArray;
 		List<ContextStore> contexts;
 		
 		StateMachineEvent ev = (context.Instance as ISchemaItem).ParentItem as StateMachineEvent;
@@ -253,7 +252,7 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 		{
 			contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 		}
-		contextArray = new ArrayList(contexts.Count);
+		var contextArray = new List<IContextStore>(contexts.Count);
 		StateMachineEventParameterMapping mapping = context.Instance as StateMachineEventParameterMapping;
 		
 		foreach(IContextStore store in contexts)
