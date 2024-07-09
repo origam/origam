@@ -26,6 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -202,9 +203,9 @@ public class Mapi
 	private static extern int MAPISendMail(	IntPtr sess, IntPtr hwnd,
 		MapiMessage message,
 		int flg, int rsv );
-	private MapiRecipDesc	origin	= new MapiRecipDesc();
-	private ArrayList		recpts	= new ArrayList();
-	private ArrayList		attachs = new ArrayList();
+	private MapiRecipDesc	origin	= new ();
+	private List<MapiRecipDesc>		recpts	= new ();
+	private List<string>		attachs = new ();
 	#endregion
 	#region FINDING
 	// ----------------------------------------------------------- FINDING ---------

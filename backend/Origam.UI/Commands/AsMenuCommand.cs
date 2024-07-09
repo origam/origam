@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
@@ -78,7 +79,7 @@ public class AsMenuCommand : ToolStripMenuItem, IStatusUpdate, IDisposable
 		var eventHandlerList = eventsField.GetValue(other);
 		eventsField.SetValue(this, eventHandlerList);
 	}
-	public ArrayList SubItems { get; } = new ArrayList();
+	public List<ISubmenuBuilder> SubItems { get; } = new ();
 	public ICommand Command { get; set; }
 	public string Description { get; } = string.Empty;
 	public bool IsEnabled
