@@ -420,7 +420,7 @@ public class WorkflowEngine : IDisposable
 					{
 						tracingService.TraceStep(
 							workflowInstanceId: WorkflowInstanceId,
-							stepPath: (WorkflowBlock as ISchemaItem)!
+							stepPath: WorkflowBlock
 							.Path,
 							stepId: Guid.Empty,
 							category: "Input Context",
@@ -543,15 +543,15 @@ public class WorkflowEngine : IDisposable
 		if (log.IsErrorEnabled)
 		{
 			log.Error(
-				$"{step?.GetType().Name} {(step as ISchemaItem)?.Path} failed.");
+				$"{step?.GetType().Name} {step?.Path} failed.");
 		}
 		// Trace the error
 		if (IsTrace(step))
 		{
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId, 
-				stepPath: (step as ISchemaItem)!.Path, 
-				stepId: (step as ISchemaItem)!.Id, 
+				stepPath: step!.Path, 
+				stepId: step!.Id, 
 				category: "Process", 
 				subCategory: "Error", 
 				remark: null, 
@@ -630,7 +630,7 @@ public class WorkflowEngine : IDisposable
 			}
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId, 
-				stepPath: (WorkflowBlock as ISchemaItem)?.Path, 
+				stepPath: WorkflowBlock?.Path, 
 				stepId: (Guid)WorkflowBlock.PrimaryKey["Id"], 
 				category: "Process", 
 				subCategory: "Error", 
@@ -684,7 +684,7 @@ public class WorkflowEngine : IDisposable
 		{
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId,
-				stepPath: (step as ISchemaItem)!.Path,
+				stepPath: step!.Path,
 				stepId: (Guid)step.PrimaryKey["Id"],
 				category: "End Rule",
 				subCategory: "Input",
@@ -976,7 +976,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null) 
 			{
                 stepNameLog 
-	                = ", Step '" + (step as ISchemaItem)!.Path + "'";
+	                = ", Step '" + step!.Path + "'";
 			}
 			log.Info("Merging context '" + contextName + "'" + stepNameLog);
 		}
@@ -986,7 +986,7 @@ public class WorkflowEngine : IDisposable
 			{
 				tracingService.TraceStep(
 					workflowInstanceId: WorkflowInstanceId,
-					stepPath: (step as ISchemaItem)!.Path,
+					stepPath: step.Path,
 					stepId: (Guid)step.PrimaryKey["Id"],
 					category: "Merge Context",
 					subCategory: "Input",
@@ -1177,7 +1177,7 @@ public class WorkflowEngine : IDisposable
 			{
 				tracingService.TraceStep(
 					workflowInstanceId: WorkflowInstanceId,
-					stepPath: (step as ISchemaItem)!.Path,
+					stepPath: step.Path,
 					stepId: (Guid)step.PrimaryKey["Id"],
 					category: "Merge Context",
 					subCategory: "Result",
@@ -1200,7 +1200,7 @@ public class WorkflowEngine : IDisposable
 				{
 					tracingService.TraceStep(
 						workflowInstanceId: WorkflowInstanceId,
-						stepPath: (step as ISchemaItem)!.Path,
+						stepPath: step.Path,
 						stepId: (Guid)step.PrimaryKey["Id"],
 						category: "Rule Processing",
 						subCategory: "Result",
@@ -1214,7 +1214,7 @@ public class WorkflowEngine : IDisposable
 				{
 					tracingService.TraceStep(
 						workflowInstanceId: WorkflowInstanceId,
-						stepPath: (WorkflowBlock as ISchemaItem)!.Path,
+						stepPath: WorkflowBlock.Path,
 						stepId: (Guid)WorkflowBlock.PrimaryKey["Id"],
 						category: "Rule Processing",
 						subCategory: "Result",
@@ -1232,7 +1232,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null)
 			{
 				stepNameLog 
-					= ", Step '" + (step as ISchemaItem).Path + "'";
+					= ", Step '" + step.Path + "'";
 			}
 			string inputString = inputContext as string ?? "";
 			throw new Exception(
@@ -1246,7 +1246,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null)
 			{
 				stepNameLog 
-					= ", Step '" + (step as ISchemaItem)?.Path + "'";
+					= ", Step '" + step.Path + "'";
 			}
 			log.Info(
 				"Finished merging context '" + contextName + "'" + stepNameLog);

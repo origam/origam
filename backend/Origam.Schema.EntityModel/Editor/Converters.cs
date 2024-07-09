@@ -1514,7 +1514,7 @@ public class DataLookupConverter : TypeConverter
 			foreach(ISchemaItem item in lookups.ChildItems)
 			{
 				if(item.Name == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}
@@ -1975,7 +1975,7 @@ public class DataTypeMappingConverter : TypeConverter
             foreach (ISchemaItem mapping in mappings.ChildItems)
             {
                 if (mapping.Name == value.ToString())
-                    return mapping as ISchemaItem;
+                    return mapping;
             }
             return null;
         }

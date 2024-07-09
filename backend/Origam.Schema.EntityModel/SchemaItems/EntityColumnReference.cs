@@ -68,7 +68,7 @@ public class EntityColumnReference : AbstractSchemaItem
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
-			base.GetParameterReferences(this.Field as ISchemaItem, list);
+			base.GetParameterReferences(Field, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{

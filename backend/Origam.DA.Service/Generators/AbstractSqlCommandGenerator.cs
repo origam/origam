@@ -2350,7 +2350,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         else
         {
             resultExpression = RenderExpression(
-                item: column.Field as ISchemaItem,
+                item: column.Field,
                 entity: column.Entity ?? entity,
                 replaceParameterTexts: replaceParameterTexts,
                 dynamicParameters: dynamicParameters,
@@ -2522,10 +2522,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         Hashtable replaceTexts = new Hashtable(1);
 
-        ISchemaItem renderField = field as ISchemaItem;
+        ISchemaItem renderField = field;
         if (field is LookupField)
         {
-            renderField = (field as LookupField).Field as ISchemaItem;
+            renderField = (field as LookupField).Field;
         }
         string myColumn = RenderExpression(renderField, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
 
@@ -2755,7 +2755,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                 relationBuilder.AppendFormat("{0} {1} AS {2} ON",
                     joinString,
-                    RenderExpression(assoc.AssociatedEntity as ISchemaItem, null, null, null, null),
+                    RenderExpression(assoc.AssociatedEntity, null, null, null, null),
                     sqlRenderer.NameLeftBracket + dsEntity.Name + sqlRenderer.NameRightBracket
                     );
                 numberOfJoins++;
@@ -2857,9 +2857,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         Hashtable replaceParameterTexts, Hashtable dynamicParameters,
         Hashtable paremeterReferences)
     {
-        string parentField = RenderExpression(key.BaseEntityField as ISchemaItem,
+        string parentField = RenderExpression(key.BaseEntityField,
                 parentEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
-        string relatedField = RenderExpression(key.RelatedEntityField as ISchemaItem,
+        string relatedField = RenderExpression(key.RelatedEntityField,
                 relatedEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
         sqlExpression.Append(filterRenderer.Equal(parentField, relatedField));
     }
@@ -3231,7 +3231,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             aggregationVirtualEntity2.Name = "aggregation" + (level + 1);
 
             joins.AppendFormat(" INNER JOIN {0} AS {1} ON ",
-                RenderExpression(agg2.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                RenderExpression(agg2.Relation.AssociatedEntity, null, replaceParameterTexts, dynamicParameters, parameterReferences),
                 sqlRenderer.NameLeftBracket + aggregationVirtualEntity2.Name + sqlRenderer.NameRightBracket
                 );
 
@@ -3269,13 +3269,13 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             topLevelAggregationVirtualEntity.PersistenceProvider = topLevelEntity.PersistenceProvider;
             topLevelAggregationVirtualEntity.Name = "aggregation1";
             topLevelAggregationVirtualEntity.ParentItem = topLevelEntity.RootItem;
-            string expression = RenderExpression(item.Field as ISchemaItem, aggregationVirtualEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
+            string expression = RenderExpression(item.Field, aggregationVirtualEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
             expression = FixAggregationDataType(item.DataType, expression);
             string aggregationPart = string.Format("{0}({1})", GetAggregationString(item.AggregationType), expression);
             aggregationPart = FixSumAggregation(item.AggregationType, aggregationPart);
             result.AppendFormat("(SELECT {0} FROM {1} AS " + sqlRenderer.NameLeftBracket + "aggregation1" + sqlRenderer.NameRightBracket + " {2} WHERE ",
                 aggregationPart,
-                RenderExpression(topLevelItem.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                RenderExpression(topLevelItem.Relation.AssociatedEntity, null, replaceParameterTexts, dynamicParameters, parameterReferences),
                 joins
                 );
 
@@ -3371,7 +3371,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     private string RenderExpression(EntityRelationItem item)
     {
-        return RenderExpression(item.RelatedEntity as ISchemaItem, null, null, null, null);
+        return RenderExpression(item.RelatedEntity, null, null, null, null);
     }
 
     internal string RenderExpression(

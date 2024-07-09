@@ -254,7 +254,7 @@ public partial class WorkFlowDiagramEditor: IDiagramEditor
 	{
 		if (!(persistedObject is ISchemaItem persistedSchemaItem)) return;
 		
-		bool childPersisted = (UpToDateGraphParent as ISchemaItem)
+		bool childPersisted = UpToDateGraphParent 
 			?.ChildrenRecursive
 			.Any(x => x.Id == persistedSchemaItem.Id)
 			?? false;

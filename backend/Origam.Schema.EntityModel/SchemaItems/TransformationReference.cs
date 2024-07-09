@@ -62,7 +62,7 @@ public class TransformationReference : AbstractSchemaItem
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Transformation != null)
-			base.GetParameterReferences(this.Transformation as ISchemaItem, list);
+			base.GetParameterReferences(Transformation, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{

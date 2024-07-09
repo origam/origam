@@ -569,7 +569,7 @@ public class DatasetGenerator
 					} catch (Exception e)
 					{
 						throw new OrigamException(string.Format("Error occured while rendering column `{0}', ({1}) - {2}",
-							(column as ISchemaItem), (column as ISchemaItem).Id, e.Message), e);
+							column, column.Id, e.Message), e);
 					}
 				}
 				dataset.Tables.Add(table);

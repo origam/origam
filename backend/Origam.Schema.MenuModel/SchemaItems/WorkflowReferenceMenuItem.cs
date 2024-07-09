@@ -140,7 +140,7 @@ public class WorkflowReferenceMenuItem : AbstractMenuItem
 				var agent = businessServicesService.GetAgent(
 					"WorkflowService", null, null);
 				return agent.ExpectedParameterNames(
-					Workflow as ISchemaItem, 
+					Workflow, 
 					"ExecuteWorkflow", 
 					"Parameters");
 			}

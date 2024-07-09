@@ -50,7 +50,7 @@ public class UpdateContextEngineTask : AbstractWorkflowEngineTask
 		{
 			tracingService.TraceStep(
 				this.Engine.WorkflowInstanceId,
-				(this.Step as ISchemaItem).Path,
+				Step.Path,
 				(Guid) this.Step.PrimaryKey["Id"],
 				"Update Context Store",
 				"Input",
@@ -109,7 +109,7 @@ public class UpdateContextEngineTask : AbstractWorkflowEngineTask
         {
 			tracingService.TraceStep(
 				this.Engine.WorkflowInstanceId,
-				(this.Step as ISchemaItem).Path,
+				this.Step.Path,
 				(Guid) this.Step.PrimaryKey["Id"],
 				"Update Context Store",
 				"Result",
@@ -129,7 +129,7 @@ public class UpdateContextEngineTask : AbstractWorkflowEngineTask
             {
 				tracingService.TraceStep(
 					this.Engine.WorkflowInstanceId,
-					(this.Step as ISchemaItem).Path,
+					Step.Path,
 					(Guid)this.Step.PrimaryKey["Id"],
 					"Rule Processing",
 					"Result",

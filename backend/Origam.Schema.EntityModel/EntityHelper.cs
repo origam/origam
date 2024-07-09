@@ -85,7 +85,7 @@ public static class EntityHelper
 		var dataStructureEntity = dataStructure
 			.NewItem<DataStructureEntity>(
 				schemaService.ActiveSchemaExtensionId, null);
-		dataStructureEntity.Entity = entity as ISchemaItem;
+		dataStructureEntity.Entity = entity;
 		dataStructureEntity.Name = entity.Name;
 		dataStructureEntity.AllFields = true;
 		if(persist)
@@ -321,8 +321,8 @@ public static class EntityHelper
 	{
 		var abstractSchemaItem = entity as ISchemaItem;
 		var ancestor = new SchemaItemAncestor();
-		ancestor.SchemaItem = entity as ISchemaItem;
-		ancestor.Ancestor = ancestorEntity as ISchemaItem;
+		ancestor.SchemaItem = entity;
+		ancestor.Ancestor = ancestorEntity;
 		ancestor.PersistenceProvider = abstractSchemaItem.PersistenceProvider;
 		abstractSchemaItem.Ancestors.Add(ancestor);
 		if(persist)

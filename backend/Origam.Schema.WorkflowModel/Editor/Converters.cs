@@ -643,7 +643,7 @@ public class ServiceMethodConverter : System.ComponentModel.TypeConverter
 			foreach(ISchemaItem method in methods)
 			{
 				if(method.Name == value.ToString())
-					return method as ISchemaItem;
+					return method;
 			}
 			return null;
 		}
@@ -793,7 +793,7 @@ public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 			foreach(ISchemaItem item in states)
 			{
 				if(item.Name == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}

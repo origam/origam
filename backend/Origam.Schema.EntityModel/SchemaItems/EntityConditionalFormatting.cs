@@ -57,7 +57,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	}
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		if(this.Rule != null) base.GetParameterReferences(this.Rule as ISchemaItem, list);
+		if(this.Rule != null) base.GetParameterReferences(Rule, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{

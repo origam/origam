@@ -597,9 +597,9 @@ public class SchemaCompareEditor : AbstractViewContent
             lvwResults.SelectedItems[0].Tag as SchemaDbCompareResult;
 		if(result != null)
 		{
-			ISchemaItem toSelect = (result.SchemaItem == null 
+			ISchemaItem toSelect = result.SchemaItem == null 
                 ? result.ParentSchemaItem as ISchemaItem 
-                : result.SchemaItem as ISchemaItem) ;
+                : result.SchemaItem;
 			if(toSelect != null)
 			{
 				try
@@ -639,7 +639,7 @@ public class SchemaCompareEditor : AbstractViewContent
 		{
 			if(result.ResultType == DbCompareResultType.MissingInSchema)
 			{
-			    var schemaItem = result.SchemaItem as ISchemaItem;
+			    var schemaItem = result.SchemaItem;
 			    schemaItem.Group = _schema
 			        .GetProvider<EntityModelSchemaItemProvider>()
 			        .GetGroup(_schema.ActiveExtension.Name);

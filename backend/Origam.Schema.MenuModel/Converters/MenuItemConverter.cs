@@ -70,7 +70,7 @@ public class MenuItemConverter : TypeConverter
 			foreach(ISchemaItem item in menu.ChildItemsRecursive)
 			{
 				if(item.Path == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}

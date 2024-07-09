@@ -63,7 +63,7 @@ public class EntityWorkflowAction : EntityUIAction
 			{
 				IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 				IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-				return agent.ExpectedParameterNames(this.Workflow as ISchemaItem, "ExecuteWorkflow", "Parameters");
+				return agent.ExpectedParameterNames(Workflow, "ExecuteWorkflow", "Parameters");
 			}
 			catch
 			{

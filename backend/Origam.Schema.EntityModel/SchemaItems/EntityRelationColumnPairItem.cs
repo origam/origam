@@ -110,8 +110,8 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 	}
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		(this.BaseEntityField as ISchemaItem).GetParameterReferences (this.BaseEntityField as ISchemaItem, list);
-		(this.RelatedEntityField as ISchemaItem).GetParameterReferences (this.RelatedEntityField as ISchemaItem, list);
+		BaseEntityField.GetParameterReferences(BaseEntityField, list);
+		RelatedEntityField.GetParameterReferences(RelatedEntityField, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{

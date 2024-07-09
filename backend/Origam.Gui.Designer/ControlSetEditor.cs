@@ -1056,11 +1056,11 @@ public class ControlSetEditor : AbstractEditor
 		ISchemaItem schItem = null;
 		if(_dataSourceMode == eDataSource.DataStructure) 
 		{
-			schItem = this.Form.DataStructure as ISchemaItem;
+			schItem = Form.DataStructure;
 		}
 		else
 		{
-			schItem =  this.Panel.DataEntity as ISchemaItem;
+			schItem =  Panel.DataEntity;
 		}
 		if(schItem != null)
 		{
@@ -1246,9 +1246,9 @@ public class ControlSetEditor : AbstractEditor
 			}
 			else
 			{
-				if( control.Parent !=null && (control.Parent as Control).Tag is ControlSetItem)
+				if( control.Parent !=null && control.Parent.Tag is ControlSetItem)
 				{
-					ControlSetItem parentItem=(control.Parent as Control).Tag as ControlSetItem;
+					ControlSetItem parentItem=control.Parent.Tag as ControlSetItem;
 					ControlSetItem cntrSet = control.Tag  as ControlSetItem;
 					
 					if(cntrSet.IsDeleted)
@@ -1430,7 +1430,7 @@ public class ControlSetEditor : AbstractEditor
 	private void txtName_TextChanged(object sender, System.EventArgs e)
 	{
 		string text = (sender as TextBox).Text;
-		ISchemaItem item = this.ModelContent as ISchemaItem;
+		ISchemaItem item = this.ModelContent;
 		if(item.Name != text)
 		{
 			this.IsDirty = true;

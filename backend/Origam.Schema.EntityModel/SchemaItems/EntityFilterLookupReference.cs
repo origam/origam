@@ -66,7 +66,7 @@ public class EntityFilterLookupReference : AbstractSchemaItem
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Lookup != null)
-			base.GetParameterReferences(this.Lookup as ISchemaItem, list);
+			base.GetParameterReferences(Lookup, list);
 		base.GetParameterReferences(this, list);
 	}
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
