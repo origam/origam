@@ -94,16 +94,16 @@ public class StateMachineState : AbstractSchemaItem
 	public List<StateMachineOperation> Operations => ChildItemsByType<StateMachineOperation>(
 		StateMachineOperation.CategoryConst);
 	[Browsable(false)]
-	public ArrayList SubStates
+	public List<StateMachineState> SubStates
 	{
 		get
 		{
-			var result = new ArrayList();
+			var result = new List<StateMachineState>();
 			foreach(ISchemaItem item in ChildItemsRecursive)
 			{
-				if(item is StateMachineState)
+				if(item is StateMachineState state)
 				{
-					result.Add(item);
+					result.Add(state);
 				}
 			}
 			return result;
@@ -112,7 +112,7 @@ public class StateMachineState : AbstractSchemaItem
 	public bool IsState(object value)
 	{
 		return Value.Equals(value) 
-		       || SubStates.Cast<StateMachineState>().Any(state 
+		       || SubStates.Any(state 
 			       => state.Value.Equals(value));
 	}
 	private StateMachineStateType _type;
