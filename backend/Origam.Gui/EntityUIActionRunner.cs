@@ -105,14 +105,14 @@ public abstract class EntityUIActionRunner
                 Properties.Resources.ErrorWorkflowNotSet);
         }
         Key resultContextKey = null;
-        foreach(EntityUIActionParameterMapping mapping
-            in entityWorkflowAction.ChildItemsByType(
+        foreach(var mapping
+            in entityWorkflowAction.ChildItemsByType<EntityUIActionParameterMapping>(
             EntityUIActionParameterMapping.CategoryConst))
         {
             if(DatasetTools.IsParameterViableAsResultContext(mapping))
             {
-                foreach(ContextStore store 
-                    in entityWorkflowAction.Workflow.ChildItemsByType(
+                foreach(var store 
+                    in entityWorkflowAction.Workflow.ChildItemsByType<ContextStore>(
                     ContextStore.CategoryConst))
                 {
                     if(store.Name == mapping.Name)
@@ -197,7 +197,7 @@ public abstract class EntityUIActionRunner
         EntityWorkflowAction entityWorkflowAction,
         ExecuteActionProcessData processData)
     {
-        List<ISchemaItem> scriptCalls = entityWorkflowAction.ChildItemsByType(
+        var scriptCalls = entityWorkflowAction.ChildItemsByType<EntityWorkflowActionScriptCall>(
             EntityWorkflowActionScriptCall.CategoryConst);
         if(scriptCalls.Count == 0)
         {

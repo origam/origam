@@ -117,8 +117,8 @@ public class XsltTests
         functionCollection.XslNameSpacePrefix = "AS";
         functionSchemaItemProvider
             .Setup(x =>
-                x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
-            .Returns(new System.Collections.Generic.List<ISchemaItem> { functionCollection });
+                x.ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst))
+            .Returns(new List<XsltFunctionCollection> { functionCollection });
 
         xsltFunctionDefinitions = XsltFunctionContainerFactory.Create(
             businessServiceMock.Object,

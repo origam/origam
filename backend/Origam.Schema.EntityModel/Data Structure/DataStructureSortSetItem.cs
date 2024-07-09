@@ -131,8 +131,8 @@ public class DataStructureSortSetItem : AbstractSchemaItem
 		dependencies.Add(this.Entity);
 		/* return a column used in a sort set */
 		/* firstly look at columns defined on datastructure level */
-		foreach (DataStructureColumn dsColumn
-				in this.Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
+		foreach (var dsColumn
+				in Entity.ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst))
 		{
 			if (FieldName == dsColumn.Name)
 			{

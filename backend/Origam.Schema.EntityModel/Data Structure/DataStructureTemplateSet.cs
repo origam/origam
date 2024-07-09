@@ -42,7 +42,7 @@ public class DataStructureTemplateSet : AbstractSchemaItem
 
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> Templates => ChildItemsByType(
+	public List<DataStructureTemplate> Templates => ChildItemsByType<DataStructureTemplate>(
 		DataStructureTemplate.CategoryConst);
 	#endregion
 	#region Public Methods

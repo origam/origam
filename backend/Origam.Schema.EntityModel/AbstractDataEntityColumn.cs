@@ -388,31 +388,18 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		}
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> RowLevelSecurityRules
-	{
-		get
-		{
-			return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
-		}
-	}
-	
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules => 
+		ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> ConditionalFormattingRules
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
-		}
-	}
+	public List<EntityConditionalFormatting> ConditionalFormattingRules => 
+		ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> DynamicLabels
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
-		}
-	}
-    [Browsable(false)]
+	public List<EntityFieldDynamicLabel> DynamicLabels => 
+		ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
+
+	[Browsable(false)]
     public DataEntityConstraint ForeignKeyConstraint
     {
         get
@@ -438,13 +425,8 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		return newNode is IDataEntity;
 	}
 	
-	public override string ItemType
-	{
-		get
-		{
-			return AbstractDataEntityColumn.CategoryConst;
-		}
-	}
+	public override string ItemType => CategoryConst;
+
 	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.ForeignKeyEntity != null) dependencies.Add(this.ForeignKeyEntity);

@@ -50,7 +50,7 @@ public class ReportPanelBuilder
 		parentNode.SetAttribute("Text", (report.Caption == null ? report.Name : report.Caption));
 		XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement("ReportParameters");
 		parentNode.AppendChild(reportParametersElement);
-		foreach(ColumnParameterMapping mapping in control.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapping in control.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			XmlElement reportParamElement = parentNode.OwnerDocument.CreateElement("ReportParameterMapping");
 			reportParametersElement.AppendChild(reportParamElement);

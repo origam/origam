@@ -37,7 +37,7 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Parameters of this data entity (in case the entity is query
 	/// </summary>
-	List<ISchemaItem> EntityParameters {get;}
+	List<SchemaItemParameter> EntityParameters {get;}
 	/// <summary>
 	/// Collection of expressions which make up a primary key of this data entity
 	/// </summary>
@@ -50,24 +50,24 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Returns all columns of this data entity
 	/// </summary>
-	List<ISchemaItem> EntityColumns {get;}
+	List<IDataEntityColumn> EntityColumns {get;}
 	/// <summary>
 	/// Returns all relations of this data entity
 	/// </summary>
-	List<ISchemaItem> EntityRelations {get;}
+	List<EntityRelationItem> EntityRelations {get;}
 	/// <summary>
 	/// Returns all filters of this data entity
 	/// </summary>
-	List<ISchemaItem> EntityFilters {get;}
+	List<EntityFilter> EntityFilters {get;}
 	/// <summary>
 	/// Returns all indexes of this data entity
 	/// </summary>
-	List<ISchemaItem> EntityIndexes {get;}
+	List<DataEntityIndex> EntityIndexes {get;}
 	/// <summary>
 	/// Returns all security rules of this data entity
 	/// </summary>
-	List<ISchemaItem> RowLevelSecurityRules {get;}
-	List<ISchemaItem> ConditionalFormattingRules {get;}
+	List<AbstractEntitySecurityRule> RowLevelSecurityRules {get;}
+	List<EntityConditionalFormatting> ConditionalFormattingRules {get;}
 	List<DataEntityConstraint> Constraints {get;}
 	string Caption {get; set;}
 	EntityAuditingType AuditingType {get; set;}

@@ -176,7 +176,7 @@ public class WorkflowEngine : IDisposable
 		get
 		{
 			foreach (IContextStore resultContext 
-			         in WorkflowBlock.ChildItemsByType(
+			         in WorkflowBlock.ChildItemsByType<ContextStore>(
 				         ContextStore.CategoryConst))
 			{
 				if (resultContext.IsReturnValue)
@@ -356,7 +356,7 @@ public class WorkflowEngine : IDisposable
 			ruleEngine = RuleEngine.Create(
 				contextStores, TransactionId, tracingWorkflowId);
 			foreach (IContextStore contextStore 
-			         in WorkflowBlock.ChildItemsByType(
+			         in WorkflowBlock.ChildItemsByType<ContextStore>(
 				         ContextStore.CategoryConst))
 			{
 				if (log.IsDebugEnabled)
@@ -444,10 +444,10 @@ public class WorkflowEngine : IDisposable
 			{
 				contextStores.Add(entry.Key, entry.Value);
 			}
-			List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
+			List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 				AbstractWorkflowStep.CategoryConst);
 			// Set states of each task to "not run"
-			foreach (IWorkflowStep task in tasks)
+			foreach (AbstractWorkflowStep task in tasks)
 			{
 				SetStepStatus(task, WorkflowStepResult.Ready);
 			}
@@ -486,7 +486,7 @@ public class WorkflowEngine : IDisposable
 
 	private void ResumeWorkflow()
 	{
-		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		if (tasks.Count == 0)
 		{
@@ -560,7 +560,7 @@ public class WorkflowEngine : IDisposable
 				exception.Message);
 		}
 		// suppress all tasks that had not run yet and have no dependencies
-		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		for (int i = 0; i < tasks.Count; i++)
 		{
@@ -587,12 +587,11 @@ public class WorkflowEngine : IDisposable
 	/// <returns></returns>
 	private bool IsFailureHandled(IWorkflowStep failedStep)
 	{
-		List<ISchemaItem> tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		foreach (IWorkflowStep step in tasks)
 		{
 			var dependencyOnFailedStep = step.Dependencies
-				.Cast<WorkflowTaskDependency>()
 				.FirstOrDefault(
 					dependency => dependency.Task == failedStep);
 			if (dependencyOnFailedStep 

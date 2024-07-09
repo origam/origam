@@ -584,7 +584,7 @@ public class StateMachineService : AbstractService, IStateMachineService
         ExecuteStatelessWorkQueue(entityId, eventType, dataRow, transactionId, rowKey, workQueueList);
         foreach (StateMachine sm in stateMachines)
         {
-            eventsSorted.AddRange(sm.Events.Cast<StateMachineEvent>());
+            eventsSorted.AddRange(sm.Events);
         }
         eventsSorted.Sort();
         foreach (StateMachineEvent ev in eventsSorted)
@@ -730,7 +730,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     /// For deletes this function will always return True because on delete operation basically 
     /// all fields were changed, no matter if there are any dependencies or not. Also if there are
     /// no dependencies True is always returned.</returns>
-    private bool FieldsChanged(List<ISchemaItem> fields, DataRow row, StateMachineServiceStatelessEventType type)
+    private bool FieldsChanged(List<StateMachineEventFieldDependency> fields, DataRow row, StateMachineServiceStatelessEventType type)
     {
         // if there are no field dependencies all fields changed
         if (fields.Count == 0) return true;
@@ -952,14 +952,14 @@ public class StateMachineService : AbstractService, IStateMachineService
     {
         return ServiceManager.Services.GetService<SchemaService>()
             .GetProvider<WorkQueueClassSchemaItemProvider>()
-            .ChildItemsByType("WorkQueueClass").Cast<WorkQueueClass>()
+            .ChildItemsByType<WorkQueueClass>("WorkQueueClass")
             .Any(workQueueClass => workQueueClass.EntityId == entityId);
     }
     private static bool AnyStateMachineBasedOnEntity(Guid entityId)
     {
         return ServiceManager.Services.GetService<SchemaService>()
             .GetProvider<StateMachineSchemaItemProvider>()
-            .ChildItemsByType("WorkflowStateMachine").Cast<StateMachine>()
+            .ChildItemsByType<StateMachine>("WorkflowStateMachine")
             .Any(stateMachine => stateMachine.EntityId == entityId);
     }
     private static WorkQueueClass WQClass(string name)

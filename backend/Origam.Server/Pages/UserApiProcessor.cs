@@ -274,7 +274,7 @@ public class UserApiProcessor
         // to datastructure could make a use of other parameters while applying
         // dynamic defaults to newly created dataset.
         List<PageParameterMapping> contentParameters = new List<PageParameterMapping>();
-        foreach (PageParameterMapping ppm in page.ChildItemsByType(PageParameterMapping.CategoryConst))
+        foreach (var ppm in page.ChildItemsByType<PageParameterMapping>(PageParameterMapping.CategoryConst))
         {
             PageParameterFileMapping fileMapping = ppm as PageParameterFileMapping;
             if (fileMapping != null)

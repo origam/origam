@@ -89,7 +89,7 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
 		}
 		object workflowResult = core.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
         bool handled = false;
-        List<ISchemaItem> actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.CategoryConst);
+        var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(AbstractWorkflowPageAction.CategoryConst);
         actions.Sort();
         RuleEngine re = RuleEngine.Create(new Hashtable(), null);
         foreach (AbstractWorkflowPageAction action in actions)

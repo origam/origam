@@ -107,7 +107,7 @@ public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 		agent.TransactionId = this.Engine.TransactionId;
 		agent.Parameters.Clear();
 		// Parameters
-		foreach(ServiceMethodCallParameter parameter in task.ChildItemsByType(ServiceMethodCallParameter.CategoryConst))
+		foreach(var parameter in task.ChildItemsByType<ServiceMethodCallParameter>(ServiceMethodCallParameter.CategoryConst))
 		{
 			if(parameter.HasChildItems)
 			{

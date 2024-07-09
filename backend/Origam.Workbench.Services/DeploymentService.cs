@@ -523,8 +523,7 @@ public class DeploymentService : IDeploymentService
 	private List<DeploymentVersion> GetDeploymentVersions(Package extension)
 	{
 		return _schema.GetProvider<DeploymentSchemaItemProvider>()
-			.ChildItemsByType(DeploymentVersion.CategoryConst)
-			.Cast<DeploymentVersion>()
+			.ChildItemsByType<DeploymentVersion>(DeploymentVersion.CategoryConst)
 			.Where(deplVersion => deplVersion.SchemaExtensionId == extension.Id)
 			.OrderBy(deplVersion => deplVersion)
 			.ToList();
@@ -533,8 +532,7 @@ public class DeploymentService : IDeploymentService
 		Package extension)
 	{
 		return _schema.GetProvider<DeploymentSchemaItemProvider>()
-			.ChildItemsByType(DeploymentVersion.CategoryConst)
-		    .Cast<DeploymentVersion>()
+			.ChildItemsByType<DeploymentVersion>(DeploymentVersion.CategoryConst)
 			.Where(depVersion => depVersion.SchemaExtensionId == extension.Id)
 			.OrderBy(depVersion => depVersion.Version)
 			.LastOrDefault(depVersion => depVersion.Version < version)

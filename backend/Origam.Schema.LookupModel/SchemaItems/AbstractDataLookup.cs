@@ -73,20 +73,20 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> MenuBindings => ChildItemsByType(
+	public List<DataLookupMenuBinding> MenuBindings => ChildItemsByType<DataLookupMenuBinding>(
 		DataLookupMenuBinding.CategoryConst);
 	[Browsable(false)]
 	public bool HasTooltip
 	{
 		get
 		{
-			var tooltips = ChildItemsByType(
+			var tooltips = ChildItemsByType<AbstractDataTooltip>(
 				AbstractDataTooltip.CategoryConst);
 			return tooltips.Count > 0;
 		}
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> Tooltips => ChildItemsByType(
+	public List<AbstractDataTooltip> Tooltips => ChildItemsByType<AbstractDataTooltip>(
 		AbstractDataTooltip.CategoryConst);
 	#region List
 	private string _listValueMember;

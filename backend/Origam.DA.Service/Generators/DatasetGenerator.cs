@@ -653,7 +653,7 @@ public class DatasetGenerator
 		// check if the default set has a default for this column
 		if(defaultSet != null)
 		{
-			foreach(DataStructureDefaultSetDefault d in defaultSet.ChildItemsByType(DataStructureDefaultSetDefault.CategoryConst))
+			foreach(var d in defaultSet.ChildItemsByType<DataStructureDefaultSetDefault>(DataStructureDefaultSetDefault.CategoryConst))
 			{
 				if(d.Field.PrimaryKey.Equals(finalColumn.Field.PrimaryKey) & d.Entity.PrimaryKey.Equals(entity.PrimaryKey))
 				{
@@ -700,11 +700,11 @@ public class DatasetGenerator
 		// if there is just 1 dynamic label and it is actually static (never changes)
 		// we take it as the default label so it can be used also in empty form or grid column
 		// label
-		List<ISchemaItem> dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+		var dynamicLabels = column.ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
 		EntityFieldDynamicLabel dynamicLabel = null;
 		if(dynamicLabels.Count == 1)
 		{
-			EntityFieldDynamicLabel lbl = dynamicLabels[0] as EntityFieldDynamicLabel;
+			EntityFieldDynamicLabel lbl = dynamicLabels[0];
 			if(lbl.IsStatic)
 			{
 				dynamicLabel = lbl;
@@ -803,7 +803,7 @@ public class DatasetGenerator
 	}
     private static string AddRelation(DataSet dataset, string debugPath, IAssociation assoc, string baseEntityName, string relatedEntityName, string relationName)
     {
-        List<ISchemaItem> entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
+        var entityItems = assoc.ChildItemsByType<EntityRelationColumnPairItem>(EntityRelationColumnPairItem.CategoryConst);
         DataColumn[] baseColumns = new DataColumn[entityItems.Count];
         DataColumn[] relatedColumns = new DataColumn[entityItems.Count];
         if (assoc.IsSelfJoin)
@@ -814,9 +814,9 @@ public class DatasetGenerator
         {
             DataTable baseTable = dataset.Tables[baseEntityName];
             DataTable relatedTable = dataset.Tables[relatedEntityName];
-            string baseFieldName = (entityItems[i] as EntityRelationColumnPairItem
+            string baseFieldName = (entityItems[i]
                 ).BaseEntityField.Name;
-            string relatedFieldName = (entityItems[i] as EntityRelationColumnPairItem
+            string relatedFieldName = (entityItems[i]
                 ).RelatedEntityField.Name;
             if (baseTable == null)
             {
@@ -995,7 +995,7 @@ public class DatasetGenerator
 	/// <returns></returns>
 	private DataStructureEntity LookupRelation(DataStructureEntity baseEntity, IAssociation relation)
 	{
-		foreach(DataStructureEntity childEntity in baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst))
+		foreach(var childEntity in baseEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
 		{
 			if(childEntity.Entity.PrimaryKey.Equals(relation.PrimaryKey) && childEntity.Columns.Count > 0)
 			{

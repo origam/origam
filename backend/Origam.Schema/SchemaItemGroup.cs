@@ -234,14 +234,14 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			return ISchemaItemCollection;
 		}
 	}
-	public List<ISchemaItem> ChildItemsByType(string itemType)
+	public List<T> ChildItemsByType<T>(string itemType) where T : ISchemaItem
 	{
-		var list = new List<ISchemaItem>();
+		var list = new List<T>();
 		// We look for all child items of our parent schema item that have this group
 		// We browse the collection because it has all the items correctly set
 		foreach(ISchemaItem item in ParentItem.ChildItemsByGroup(this))
 		{
-			list.Add(item);
+			list.Add((T)item);
 		}
 		return list;
 	}
@@ -264,7 +264,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 	}
 	public bool HasChildItems => ChildItems.Count > 0;
 	public bool HasChildItemsByType(string itemType) 
-		=> ChildItemsByType(itemType).Count > 0;
+		=> ChildItemsByType<ISchemaItem>(itemType).Count > 0;
 	public bool HasChildItemsByGroup(SchemaItemGroup group) 
 		=> ChildItemsByGroup(group).Count > 0;
 	public List<SchemaItemGroup> ChildGroups

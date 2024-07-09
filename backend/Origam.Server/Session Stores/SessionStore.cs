@@ -560,7 +560,7 @@ public abstract class SessionStore : IDisposable
         // rule dependencies
         if (this.RuleSet != null)
         {
-            foreach (DataStructureRule rule in this.RuleSet.Rules())
+            foreach (DataStructureRule rule in RuleSet.Rules())
             {
                 if (rule.Entity.Name != table.TableName)
                 {

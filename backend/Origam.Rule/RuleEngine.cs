@@ -1365,7 +1365,7 @@ public class RuleEngine
 	public EntityFormatting Formatting(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
 		EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
-		var entityRules = new List<ISchemaItem>(); 
+		var entityRules = new List<EntityConditionalFormatting>(); 
 		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		
 		if(fieldId == Guid.Empty)
@@ -1436,7 +1436,7 @@ public class RuleEngine
 	}
 	public string DynamicLabel(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
-		var rules = new List<ISchemaItem>(); 
+		var rules = new List<EntityFieldDynamicLabel>(); 
 		
 		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
@@ -1589,15 +1589,15 @@ public class RuleEngine
 				}
 				else
 				{
-					rules.AddRange(column.RowLevelSecurityRules.Cast<AbstractEntitySecurityRule>());
+					rules.AddRange(column.RowLevelSecurityRules);
 				}
 			}
 		}
 		// entity-level rules
-		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
+		List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
 		if(entityRules.Count > 0)
 		{
-			rules.AddRange(entityRules.Cast<AbstractEntitySecurityRule>());
+			rules.AddRange(entityRules);
 		}
 		// no rules - permit
 		if (rules.Count == 0)
@@ -1718,10 +1718,10 @@ public class RuleEngine
 		var rules = new List<AbstractEntitySecurityRule>();
 		var entity = _persistence.SchemaProvider
             .RetrieveInstance<IDataEntity>(entityId);
-		List<ISchemaItem> entityRules = entity.RowLevelSecurityRules;
+		List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
 		if (entityRules.Count > 0)
 		{
-			rules.AddRange(entityRules.Cast<AbstractEntitySecurityRule>());
+			rules.AddRange(entityRules);
 		}
 		// no rules - permit
 		if (rules.Count == 0)

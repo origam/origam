@@ -37,6 +37,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
 using Origam.Rule;
 using System.Collections.Generic;
+using System.Linq;
 using Origam.Workflow;
 using Origam;
 using Origam.Extensions;
@@ -74,7 +75,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
     {
         if(this.Workflow == null) return;
         // create any missing parameter mappings
-        foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
+        foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
         {
             string parameterName = store.Name;
             if(this._origamMetadata.GetChildByName(parameterName) == null)
@@ -87,10 +88,10 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         }
         ArrayList toDelete = new ArrayList();
         // delete all parameter mappings whose's context stores do not exist anymore
-        foreach(ISchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+        foreach(var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
         {
             bool found = false;
-            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
+            foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
             {
                 if(store.Name == mapping.Name) found = true;
             }
@@ -111,7 +112,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         try
         {
             if(_origamMetadata == null) return;
-            ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+            var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
             foreach(ColumnParameterMapping mapping in col)
             {
                 mapping.IsDeleted = true;
@@ -130,7 +131,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         if(controlItem == null) return;
         _fillingParameterCache = true;
         ParameterMappings.Clear();
-        foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+        foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
         {
             if(!mapInfo.IsDeleted)	// skip any deleted mapping infos
             {
@@ -331,7 +332,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
                         string name = (string)entry.Key;
                         ContextStore context = null;
                         Key contextKey = null;
-                        foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
+                        foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
                         {
                             if(store.Name == name)
                             {
@@ -464,7 +465,7 @@ public class ExecuteWorkflowButton : Button, IOrigamMetadataConsumer, IAsDataCon
         {
             ContextStore context = null;
             Key contextKey = null;
-            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
+            foreach(var store in Workflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
             {
                 if(store.Name == mapping.Name)
                 {

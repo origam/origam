@@ -172,7 +172,7 @@ public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 		}
 		if(wf != null && method == "ExecuteWorkflow" && parameter == "Parameters")
 		{
-			foreach(ContextStore cs in wf.ChildItemsByType(ContextStore.CategoryConst))
+			foreach(var cs in wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
 			{
 				result.Add(cs.Name);
 			}

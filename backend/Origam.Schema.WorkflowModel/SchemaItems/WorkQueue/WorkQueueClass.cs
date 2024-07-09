@@ -87,8 +87,8 @@ public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> EntityMappings => 
-		this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
+	public List<WorkQueueClassEntityMapping> EntityMappings => 
+		this.ChildItemsByType<WorkQueueClassEntityMapping>(WorkQueueClassEntityMapping.CategoryConst);
 	public Guid EntityId;
 	[TypeConverter(typeof(EntityConverter))]
 	[RefreshProperties(RefreshProperties.Repaint)]

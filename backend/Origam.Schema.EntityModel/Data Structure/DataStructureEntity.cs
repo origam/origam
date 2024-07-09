@@ -139,7 +139,7 @@ public class DataStructureEntity : AbstractSchemaItem
 			}
 			if(value)
 			{
-				List<ISchemaItem> list = ChildItemsByType(
+				List<DataStructureColumn> list = ChildItemsByType<DataStructureColumn>(
 					DataStructureColumn.CategoryConst);
 				foreach(DataStructureColumn column in list)
 				{
@@ -283,8 +283,8 @@ public class DataStructureEntity : AbstractSchemaItem
 		List<DataStructureColumn> columns = GetColumnsFromEntity();
 		// add all extra columns specified
 		columns.AddRange(
-			ChildItemsByType(DataStructureColumn.CategoryConst)
-				.Cast<DataStructureColumn>());
+			ChildItemsByType<DataStructureColumn>(DataStructureColumn
+				.CategoryConst));
 		columns.Sort();
 		return columns;
 	}

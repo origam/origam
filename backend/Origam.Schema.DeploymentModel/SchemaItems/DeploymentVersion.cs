@@ -181,8 +181,8 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 	private int MaxOrder()
 	{
 		var max = 0;
-		foreach(AbstractUpdateScriptActivity activity 
-		        in ChildItemsByType(
+		foreach(var activity 
+		        in ChildItemsByType<AbstractUpdateScriptActivity>(
 			        AbstractUpdateScriptActivity.CategoryConst))
 		{
 			if(activity.ActivityOrder > max)

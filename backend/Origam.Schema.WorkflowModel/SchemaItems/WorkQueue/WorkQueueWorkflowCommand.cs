@@ -46,13 +46,9 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 		this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
 		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
 	}
-	public new List<ISchemaItem> ParameterMappings
-	{
-		get
-		{
-			return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
-		}
-	}
+	public new List<WorkQueueWorkflowCommandParameterMapping> ParameterMappings =>
+		ChildItemsByType<WorkQueueWorkflowCommandParameterMapping>(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
+
 	#region Overriden AbstractDataEntityColumn Members
 	
 	public override string ItemType

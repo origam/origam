@@ -37,7 +37,7 @@ public class BlobControlBuilder
 		XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement("Parameters");
 		propertyElement.AppendChild(propertiesElement);
 		
-		foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var property in control.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			string name = property.ControlPropertyItem.Name;
 			if(name != "Caption" && name != "CaptionPosition" && name != "CaptionLength" && name != "Height" 

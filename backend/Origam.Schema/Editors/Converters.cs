@@ -42,7 +42,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	{
 		ISchemaItem reference = context.Instance as ISchemaItem;
 		ISchemaItem root = reference.RootItem;
-		List<ISchemaItem> parameters = root.Parameters;
+		List<SchemaItemParameter> parameters = root.Parameters;
 		var paramArray = new List<SchemaItemParameter>(parameters.Count);
         paramArray.Add(null);
 		foreach(SchemaItemParameter parameter in parameters)
@@ -69,7 +69,7 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 			foreach(SchemaItemParameter item in root.Parameters)
 			{
 				if(item.Name == value.ToString())
-					return item as SchemaItemParameter;
+					return item;
 			}
 			return null;
 		}

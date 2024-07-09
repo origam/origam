@@ -186,7 +186,7 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 	private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
 	{
 		IDictionary<Key, Node> nodes = new Dictionary<Key, Node>();
-		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst))
 		{
 			Node shape = step is IWorkflowBlock subBlock
@@ -195,14 +195,14 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 			nodes.Add(step.PrimaryKey, shape);
 		}
 		// add connections
-		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst))
 		{
 			Node destinationShape = nodes[step.PrimaryKey];
 			if (destinationShape == null)
 				throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
 			int i = 0;
-			foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
+			foreach (WorkflowTaskDependency dependency in step.ChildItemsByType<WorkflowTaskDependency>(
 				WorkflowTaskDependency.CategoryConst))
 			{
 				Node sourceShape = nodes[dependency.Task.PrimaryKey];

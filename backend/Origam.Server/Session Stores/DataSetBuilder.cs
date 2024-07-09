@@ -64,8 +64,8 @@ public class DataSetBuilder
         string initialColumns = ListPrimaryKeyColumns(data, listEntity);
         if (sortSet != null)
         {
-            foreach (DataStructureSortSetItem sortItem in
-                sortSet.ChildItemsByType(DataStructureSortSetItem.CategoryConst))
+            foreach (var sortItem in
+                sortSet.ChildItemsByType<DataStructureSortSetItem>(DataStructureSortSetItem.CategoryConst))
             {
                 if (sortItem.Entity.Name == listEntity)
                 {

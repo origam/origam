@@ -195,7 +195,7 @@ public class SelectionDialogSessionStore : SessionStore
     private void SetParameters(IDictionary parameters, DataRow row, ISchemaItem item)
     {
         // map the parameters from the selection dialog data row
-        foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+        foreach (var mapping in item.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
         {
             object value = row[mapping.SelectionDialogField.Name];
             DataColumn column = row.Table.Columns[mapping.SelectionDialogField.Name];

@@ -225,8 +225,7 @@ public class DesignerHostImpl:IDesignerHost,IContainer,IServiceContainer,ICompon
 		}
 		
 		var missingPropertyItems = refControl?
-			.ChildItemsByType(ControlPropertyItem.CategoryConst)
-			.Cast<ControlPropertyItem>()
+			.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst)
 			.Where(propItem => type.GetProperty(propItem.Name) == null)
 			.ToList();
 		

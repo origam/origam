@@ -256,8 +256,8 @@ public class MenuXmlBuilder
     {
         width = 0;
         height = 0;
-        foreach (PropertyValueItem prop 
-            in panel.ChildItems[0].ChildItemsByType(
+        foreach (var prop 
+            in panel.ChildItems[0].ChildItemsByType<PropertyValueItem>(
             PropertyValueItem.CategoryConst))
         {
             switch (prop.ControlPropertyItem.Name)

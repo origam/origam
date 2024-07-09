@@ -508,7 +508,7 @@ public class ControlSetEditor : AbstractEditor
 		
 		cntrl.DataBindings.CollectionChanged += new CollectionChangeEventHandler(DataBindings_CollectionChanged);
 		//adding child controls
-		var sortedChildControls = cntrlSet.ChildItemsByType("ControlSetItem").ToList();
+		var sortedChildControls = cntrlSet.ChildItemsByType<ControlSetItem>("ControlSetItem").ToList();
 		sortedChildControls.Sort();
 		var invalidControls = new List<ControlSetItem>();
 		foreach(ControlSetItem childItem in sortedChildControls)
@@ -659,7 +659,7 @@ public class ControlSetEditor : AbstractEditor
 		{
 			ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
 			
-			foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+			foreach(var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 			{
 				//addinng default properties to control set item
 				Type t = cntrl.GetType();
@@ -688,7 +688,7 @@ public class ControlSetEditor : AbstractEditor
 			return;
 		ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
 	
-		foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+		foreach(var bindItem in cntrSetItem.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
 		{
 			try
 			{
@@ -746,7 +746,7 @@ public class ControlSetEditor : AbstractEditor
 		if(!(cntrl.Tag is ControlSetItem))
 			return null;
 		ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
-		foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+		foreach(var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 		{
 			if(propItem.Name.ToUpper() == propertyName.ToUpper())
 				return propItem;
@@ -760,7 +760,7 @@ public class ControlSetEditor : AbstractEditor
 			bind 
 			? PropertyBindingInfo.CategoryConst 
 			: PropertyValueItem.CategoryConst;
-		foreach(AbstractPropertyValueItem item in controlSetItem.ChildItemsByType(strType))
+		foreach(var item in controlSetItem.ChildItemsByType<AbstractPropertyValueItem>(strType))
 		{
 			if(Equals(item.ControlPropertyItem?.PrimaryKey,propertyToFind.PrimaryKey))
 			{
@@ -806,10 +806,10 @@ public class ControlSetEditor : AbstractEditor
 			IDataEntity dataEntity = this.Panel.DataEntity;
 			Category panelCat2 = new Category();
 			panelCat2.DisplayName =dataEntity.Name;
-			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst).Count];
+			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst).Count];
 			int i = 0;
 			FDToolboxItem fd_item;
-			List<ISchemaItem> fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			var fields = dataEntity.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 			fields.Sort();
 			foreach(IDataEntityColumn column in fields)
 			{

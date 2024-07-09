@@ -91,7 +91,7 @@ public class StateMachineState : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> Operations => ChildItemsByType(
+	public List<StateMachineOperation> Operations => ChildItemsByType<StateMachineOperation>(
 		StateMachineOperation.CategoryConst);
 	[Browsable(false)]
 	public ArrayList SubStates

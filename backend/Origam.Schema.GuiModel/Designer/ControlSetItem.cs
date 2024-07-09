@@ -112,8 +112,8 @@ public class ControlSetItem  : AbstractSchemaItem
 		var graphicsId = Guid.Empty;
 		var workflowId = Guid.Empty;
 		var constantId = Guid.Empty;
-		foreach(PropertyValueItem property 
-		        in ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var property 
+		        in ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			if(property.ControlPropertyItem == null)
 			{
@@ -298,7 +298,7 @@ public class ControlSetItemComparer : IComparer<ISchemaItem>
 	#endregion
 	private int TabIndex(ControlSetItem control)
 	{
-		foreach(PropertyValueItem property in control.ChildItemsByType(
+		foreach(var property in control.ChildItemsByType<PropertyValueItem>(
 			        PropertyValueItem.CategoryConst))
 		{
 			if(property.ControlPropertyItem.Name == "TabIndex")

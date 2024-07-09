@@ -108,7 +108,7 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         RelatedEntityField.Items.Clear();
         if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
-        foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+        foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {
             RelatedEntityField.Items.Add(filter);
         }

@@ -42,7 +42,7 @@ public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribut
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {
-            List<ISchemaItem> schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
+            var schemaItems = dataStructure.Entity.ChildItemsByType<EntityRelationColumnPairItem>(EntityRelationColumnPairItem.CategoryConst);
             if (schemaItems.Count == 0)
             {
                 return new DataException("Relationship has no key");

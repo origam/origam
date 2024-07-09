@@ -196,14 +196,14 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		set => throw new NotSupportedException();
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> RowLevelSecurityRules 
-		=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules 
+		=> ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
 	[Browsable(false)]
-	public List<ISchemaItem> ConditionalFormattingRules 
-		=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
+	public List<EntityConditionalFormatting> ConditionalFormattingRules 
+		=> ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
 	[Browsable(false)]
-	public List<ISchemaItem> DynamicLabels 
-		=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+	public List<EntityFieldDynamicLabel> DynamicLabels 
+		=> ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
 	#endregion
 	#region Properties
 	public Guid FieldId;

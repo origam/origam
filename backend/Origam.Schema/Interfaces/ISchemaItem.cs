@@ -37,7 +37,7 @@ public interface ISchemaItem : IPersistent, ISchemaItemProvider, ICloneable
 	ModelElementKey OldPrimaryKey{get; set;}
 	string Name{get; set;}
 	SchemaItemAncestorCollection AllAncestors{get;}
-	List<ISchemaItem> Parameters{get;}
+	List<SchemaItemParameter> Parameters{get;}
 	Dictionary<string, ParameterReference> ParameterReferences{get;}
 	bool HasParameterReferences{get;}
 	string ItemType{get;}

@@ -42,9 +42,9 @@ public class MenuFormReferenceDefaultSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		List<ISchemaItem> defaultSets = currentItem.Screen.DataStructure.DefaultSets;
+		List<DataStructureDefaultSet> defaultSets = currentItem.Screen.DataStructure.DefaultSets;
 		ArrayList array = new ArrayList(defaultSets.Count);
-		foreach(ISchemaItem item in defaultSets)
+		foreach(DataStructureDefaultSet item in defaultSets)
 		{
 			array.Add(item);
 		}
@@ -64,11 +64,11 @@ public class MenuFormReferenceDefaultSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<ISchemaItem> defaultSets = currentItem.Screen.DataStructure.DefaultSets;
-			foreach(ISchemaItem item in defaultSets)
+			List<DataStructureDefaultSet> defaultSets = currentItem.Screen.DataStructure.DefaultSets;
+			foreach(DataStructureDefaultSet item in defaultSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureDefaultSet;
+					return item;
 			}
 			return null;
 		}

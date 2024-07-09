@@ -86,7 +86,7 @@ public class DocProcessor
         string caption, gridCaption, bindingMember, panelTitle, section;
         caption = gridCaption = bindingMember = panelTitle = section = "";
         int tabIndex = 0;
-        foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
+        foreach (var property in control.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
         {
             if (property.ControlPropertyItem.Name == "TabIndex")
             {
@@ -110,7 +110,7 @@ public class DocProcessor
             }
         }
         caption = (gridCaption == "" | gridCaption == null) ? caption : gridCaption;
-        foreach (PropertyBindingInfo bindItem in control.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+        foreach (var bindItem in control.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
         {
             bindingMember = bindItem.Value;
         }
@@ -131,7 +131,7 @@ public class DocProcessor
             WriteElement("description",
                  documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP));
         }
-        List<ISchemaItem> sortedControls;
+        List<ControlSetItem> sortedControls;
         if (control.ControlItem.IsComplexType)
         {
             if (panelTitle != "")
@@ -154,11 +154,11 @@ public class DocProcessor
             WriteEndElement();
             WriteElement("description",
                 documentation.GetDocumentation(control.ControlItem.PanelControlSet.Id, DocumentationType.USER_LONG_HELP));
-            sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.CategoryConst);
+            sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
         }
         else
         {
-            sortedControls = control.ChildItemsByType(ControlSetItem.CategoryConst);
+            sortedControls = control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
         }
         sortedControls.Sort(new ControlSetItemComparer());
         foreach (ControlSetItem subControl in sortedControls)

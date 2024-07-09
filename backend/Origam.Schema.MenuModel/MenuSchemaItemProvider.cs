@@ -37,7 +37,7 @@ public class MenuSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
 	/// Returns the first child Menu, skipping all the ContextMenu types.
 	/// </summary>
 	public Menu MainMenu =>
-		ChildItemsByType(Menu.CategoryConst)
+		ChildItemsByType<ISchemaItem>(Menu.CategoryConst)
 			.OfType<Menu>()
 			.FirstOrDefault();
 	#region ISchemaItemProvider Members

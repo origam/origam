@@ -176,7 +176,7 @@ public class ModelServiceAgent : AbstractServiceAgent
         table.Columns.Add("Id", typeof(Guid));
         table.Columns.Add("Name", typeof(string));
         data.Tables.Add(table);
-        foreach (ISchemaItem item in parent.ChildItemsByType(itemType))
+        foreach (ISchemaItem item in parent.ChildItemsByType<ISchemaItem>(itemType))
         {
             DataRow row = table.NewRow();
             row["Id"] = item.Id;

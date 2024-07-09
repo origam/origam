@@ -731,7 +731,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             );
 
         int i = 0;
-        List<ISchemaItem> sortedFields = index.ChildItemsByType(DataEntityIndexField.CategoryConst);
+        var sortedFields = index.ChildItemsByType<DataEntityIndexField>(DataEntityIndexField.CategoryConst);
         sortedFields.Sort();
 
         foreach (DataEntityIndexField field in sortedFields)
@@ -780,7 +780,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             sqlRenderer.NameLeftBracket + table.MappedObjectName + sqlRenderer.NameRightBracket);
 
         int i = 0;
-        foreach (ISchemaItem item in table.EntityColumns)
+        foreach (IDataEntityColumn item in table.EntityColumns)
         {
             if (item is FieldMappingItem)
             {
@@ -1067,7 +1067,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (!entity.ParentItem.PrimaryKey.Equals(ds.PrimaryKey))
         {
             // render joins that we need for fields in this entity
-            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
@@ -1085,7 +1085,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             // for the root entity we render all child relation filters (filterParent relations)
             StringBuilder joinedFilterBuilder = new StringBuilder();
             int counter = 0;
-            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
@@ -1569,7 +1569,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             sqlRenderer.NameLeftBracket + entity.Name + sqlRenderer.NameRightBracket
             );
 
-        foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
             {
@@ -1730,7 +1730,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     // When no file name, then the blob field will be emptied. Without dependency it would
                     // not touch the write only field.
                     const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
-                    List<ISchemaItem> dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
+                    var dependenciesSource = column.Field.ChildItemsByType<EntityFieldDependency>(EntityFieldDependency.CategoryConst);
                     var dependencies = new List<EntityFieldDependency>();
                     // skip dependencies to virtual fields
                     foreach (EntityFieldDependency dep in dependenciesSource)
@@ -2234,7 +2234,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             else
             {
                 bool found = false;
-                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                foreach (var childEntity in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
                 {
                     // if we have an aggregation column and
                     // and the aggregation sub-entity with source field
@@ -2605,7 +2605,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         bool stopAtIncluded = false;
         bool notExistsIncluded = false;
 
-        foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in baseEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             if (relation.RelationType != RelationType.LeftJoin)
             {
@@ -2634,7 +2634,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (notExistsIncluded)
         {
             int notExistsCount = (stopAtIncluded ? 1 : 0);
-            foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (DataStructureEntity relation in baseEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.NotExists)
                 {
@@ -2834,7 +2834,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder recursionBuilder = new StringBuilder();
         // Let's go to recursion!
-        foreach (DataStructureEntity relation in (dsEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in dsEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             RenderSelectRelation(recursionBuilder, relation, stopAtEntity, filter, replaceParameterTexts, skipStopAtEntity, includeFilter, numberOfJoins, includeAllRelations, dynamicParameters, parameterReferences);
         }
@@ -2998,7 +2998,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         if (!(ignoreImplicitFilters || entity.IgnoreImplicitFilters))
         {
-            foreach (EntitySecurityFilterReference rowLevel in entity.EntityDefinition.ChildItemsByType(EntitySecurityFilterReference.CategoryConst))
+            foreach (var rowLevel in entity.EntityDefinition.ChildItemsByType<EntitySecurityFilterReference>(EntitySecurityFilterReference.CategoryConst))
             {
                 if (!result.Contains(rowLevel.Filter))
                 {
@@ -3416,9 +3416,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
         var localizationTable 
             = FieldMappingItem.GetLocalizationTable(tableMappingItem);
-        var localizationEntity = dataStructureEntity.ChildItemsByType(
+        var localizationEntity = dataStructureEntity.ChildItemsByType<DataStructureEntity>(
                 DataStructureEntity.CategoryConst)
-            .Cast<DataStructureEntity>()
             .FirstOrDefault(
                 entity => localizationTable.Id == entity.EntityDefinition.Id);
         if (localizationEntity == null)
@@ -4072,8 +4071,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         RenderExpression(arrayRelation as EntityRelationItem));
                     stringBuilder.Append(" WHERE");
                     DataStructureEntity arrayEntity = null;
-                    foreach (DataStructureEntity relatedEntity
-                        in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                    foreach (var relatedEntity
+                        in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
                     {
                         if (relatedEntity.EntityDefinition.Id 
                         == arrayRelation.AssociatedEntity.Id)
@@ -4089,8 +4088,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                             not found among child entities of {entity.Name}");
                     }
                     var andNeeded = false;
-                    foreach (EntityRelationColumnPairItem pairItem 
-                        in arrayRelation.ChildItemsByType(
+                    foreach (var pairItem 
+                        in arrayRelation.ChildItemsByType<EntityRelationColumnPairItem>(
                             EntityRelationColumnPairItem.CategoryConst))
                     {
                         stringBuilder.Append(" ");

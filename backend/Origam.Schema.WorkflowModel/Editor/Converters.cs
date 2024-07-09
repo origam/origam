@@ -46,13 +46,13 @@ public class ContextStoreConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList contextArray = new ArrayList();
-		ISchemaItem item = (context.Instance as ISchemaItem);
+		var contextArray = new List<ContextStore>();
+		ISchemaItem item = context.Instance as ISchemaItem;
 		while(item != null)
 		{
 			// get any context stores on any of parent items
-			List<ISchemaItem> contexts = item.ChildItemsByType(ContextStore.CategoryConst);
-			foreach(ISchemaItem store in contexts)
+			List<ContextStore> contexts = item.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
+			foreach(ContextStore store in contexts)
 			{
 				contextArray.Add(store);
 			}
@@ -78,11 +78,11 @@ public class ContextStoreConverter : System.ComponentModel.TypeConverter
 			while(item != null)
 			{
 				// get any context stores on any of parent items
-				List<ISchemaItem> contexts = item.ChildItemsByType(ContextStore.CategoryConst);
-				foreach(ISchemaItem store in contexts)
+				List<ContextStore> contexts = item.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
+				foreach(ContextStore store in contexts)
 				{
 					if(store.Name == value.ToString())
-						return store as ISchemaItem;
+						return store;
 				}
 				// move up to the next item
 				item = item.ParentItem;
@@ -171,7 +171,7 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList contextArray;
-		List<ISchemaItem> contexts;
+		List<ContextStore> contexts;
 		
 		WorkflowCallTask task = (context.Instance as ISchemaItem).ParentItem as WorkflowCallTask;
 		IWorkflow wf = task.Workflow;
@@ -181,11 +181,11 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 		}
 		else
 		{
-			contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
+			contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 		}
 		contextArray = new ArrayList(contexts.Count);
 		
-		foreach(ISchemaItem store in contexts)
+		foreach(ContextStore store in contexts)
 		{
 			contextArray.Add(store);
 		}
@@ -203,7 +203,7 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> contexts;
+			List<ContextStore> contexts;
 			WorkflowCallTask task = (context.Instance as ISchemaItem).ParentItem as WorkflowCallTask;
 			IWorkflow wf = task.Workflow;
 			if(wf == null)
@@ -212,12 +212,12 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 			}
 			else
 			{
-				contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
+				contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 			}
-			foreach(ISchemaItem store in contexts)
+			foreach(ContextStore store in contexts)
 			{
 				if(store.Name == value.ToString())
-					return store as ISchemaItem;
+					return store;
 			}
 			return null;
 		}
@@ -242,7 +242,7 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList contextArray;
-		List<ISchemaItem> contexts;
+		List<ContextStore> contexts;
 		
 		StateMachineEvent ev = (context.Instance as ISchemaItem).ParentItem as StateMachineEvent;
 		IWorkflow wf = ev.Action;
@@ -252,7 +252,7 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 		}
 		else
 		{
-			contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
+			contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 		}
 		contextArray = new ArrayList(contexts.Count);
 		StateMachineEventParameterMapping mapping = context.Instance as StateMachineEventParameterMapping;
@@ -281,7 +281,7 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> contexts;
+			List<ContextStore> contexts;
 			StateMachineEvent ev = (context.Instance as ISchemaItem).ParentItem as StateMachineEvent;
 			IWorkflow wf = ev.Action;
 			if(wf == null)
@@ -290,12 +290,12 @@ public class StateMachineEventParameterMappingContextStoreConverter : System.Com
 			}
 			else
 			{
-				contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
+				contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 			}
-			foreach(ISchemaItem store in contexts)
+			foreach(ContextStore store in contexts)
 			{
 				if(store.Name == value.ToString())
-					return store as ISchemaItem;
+					return store;
 			}
 			return null;
 		}
@@ -319,14 +319,14 @@ public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<ISchemaItem> fields;
-		ArrayList fieldArray;
+		List<IDataEntityColumn> fields;
+		List<IDataEntityColumn> fieldArray;
 		
 		StateMachine sm = (context.Instance as ISchemaItem).RootItem as StateMachine;
 		fields = sm.Entity.EntityColumns;
-		fieldArray = new ArrayList(fields.Count);
+		fieldArray = new List<IDataEntityColumn>(fields.Count);
 		
-		foreach(ISchemaItem field in fields)
+		foreach(IDataEntityColumn field in fields)
 		{
 			fieldArray.Add(field);
 		}
@@ -344,14 +344,14 @@ public class StateMachineAllFieldConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> fields;
+			List<IDataEntityColumn> fields;
 		
 			StateMachine sm = (context.Instance as ISchemaItem).RootItem as StateMachine;
 			fields = sm.Entity.EntityColumns;
-			foreach(ISchemaItem field in fields)
+			foreach(IDataEntityColumn field in fields)
 			{
-				if(field.Name == value.ToString())
-					return field as ISchemaItem;
+				if (field.Name == value.ToString())
+					return field;
 			}
 			return null;
 		}
@@ -375,8 +375,8 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList stepArray;
-		List<ISchemaItem> steps;
+		List<WorkflowTask> stepArray;
+		List<WorkflowTask> steps;
 		// Get our parent block
 		ISchemaItem currentItem = (context.Instance as ISchemaItem).ParentItem.ParentItem;
 		
@@ -392,11 +392,11 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 		}
 		else
 		{
-			steps = wf.ChildItemsByType(WorkflowTask.CategoryConst);
+			steps = wf.ChildItemsByType<WorkflowTask>(WorkflowTask.CategoryConst);
 		}
-		stepArray = new ArrayList(steps.Count);
+		stepArray = new List<WorkflowTask>(steps.Count);
 		
-		foreach(ISchemaItem step in steps)
+		foreach(WorkflowTask step in steps)
 		{
 			stepArray.Add(step);
 		}
@@ -414,7 +414,7 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> tasks;
+			List<WorkflowTask> tasks;
 			// Get our parent block
 			ISchemaItem currentItem = (context.Instance as ISchemaItem).ParentItem.ParentItem;
 		
@@ -429,12 +429,12 @@ public class WorkflowStepConverter : System.ComponentModel.TypeConverter
 			}
 			else
 			{
-				tasks = wf.ChildItemsByType(WorkflowTask.CategoryConst);
+				tasks = wf.ChildItemsByType<WorkflowTask>(WorkflowTask.CategoryConst);
 			}
-			foreach(ISchemaItem task in tasks)
+			foreach(WorkflowTask task in tasks)
 			{
 				if(task.Name == value.ToString())
-					return task as ISchemaItem;
+					return task;
 			}
 			return null;
 		}
@@ -459,7 +459,7 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList stepArray;
-		List<ISchemaItem> steps;
+		List<WorkflowTask> steps;
 		// Get our parent block
 		ISchemaItem currentItem = (context.Instance as ISchemaItem).ParentItem.ParentItem;
         // Get our parent step to filter it out
@@ -476,11 +476,11 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 		}
 		else
 		{
-			steps = wf.ChildItemsByType(WorkflowTask.CategoryConst);
+			steps = wf.ChildItemsByType<WorkflowTask>(WorkflowTask.CategoryConst);
 		}
 		stepArray = new ArrayList(steps.Count);
 		
-		foreach(ISchemaItem step in steps)
+		foreach(WorkflowTask step in steps)
 		{
             if(step.Id != parentStep?.Id)
             {
@@ -501,7 +501,7 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> tasks;
+			List<WorkflowTask> tasks;
 			// Get our parent block
 			ISchemaItem currentItem = (context.Instance as ISchemaItem).ParentItem.ParentItem;
 		
@@ -516,12 +516,12 @@ public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
 			}
 			else
 			{
-				tasks = wf.ChildItemsByType(WorkflowTask.CategoryConst);
+				tasks = wf.ChildItemsByType<WorkflowTask>(WorkflowTask.CategoryConst);
 			}
-			foreach(ISchemaItem task in tasks)
+			foreach(WorkflowTask task in tasks)
 			{
 				if(task.Name == value.ToString())
-					return task as ISchemaItem;
+					return task;
 			}
 			return null;
 		}
@@ -667,7 +667,7 @@ public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConver
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<ISchemaItem> fields;
+		List<IDataEntityColumn> fields;
 		IDataEntity entity = (context.Instance as StateMachine).Entity;
 		if(entity == null)
 		{
@@ -692,7 +692,7 @@ public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConver
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> fields;
+			List<IDataEntityColumn> fields;
 			IDataEntity entity = (context.Instance as StateMachine).Entity;
 			if(entity == null)
 			{
@@ -702,10 +702,10 @@ public class StateMachineEntityFieldConverter : System.ComponentModel.TypeConver
 			{
 				fields = entity.EntityColumns;
 			}
-			foreach(ISchemaItem field in fields)
+			foreach(IDataEntityColumn field in fields)
 			{
 				if(field.Name == value.ToString())
-					return field as ISchemaItem;
+					return field;
 			}
 			return null;
 		}
@@ -729,7 +729,8 @@ public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<ISchemaItem> states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
+		List<StateMachineState> states = (context.Instance as StateMachineState)
+			.ChildItemsByType<StateMachineState>(StateMachineState.CategoryConst);;
 		states.Sort();
 		return new StandardValuesCollection(states);
 	}
@@ -744,11 +745,12 @@ public class StateMachineSubstateConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
-			foreach(ISchemaItem state in states)
+			List<StateMachineState> states = (context.Instance as StateMachineState)
+				.ChildItemsByType<StateMachineState>(StateMachineState.CategoryConst);;
+			foreach(StateMachineState state in states)
 			{
 				if(state.Name == value.ToString())
-					return state as ISchemaItem;
+					return state;
 			}
 			return null;
 		}
@@ -816,7 +818,7 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ArrayList mappedFields = new ArrayList();
-		List<ISchemaItem> fields = ((context.Instance as ISchemaItem).RootItem as StateMachine).Entity.EntityColumns;
+		List<IDataEntityColumn> fields = ((context.Instance as ISchemaItem).RootItem as StateMachine).Entity.EntityColumns;
 		foreach(IDataEntityColumn col in fields)
 		{
 			if(col is FieldMappingItem)
@@ -838,8 +840,8 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			ArrayList mappedFields = new ArrayList();
-			List<ISchemaItem> fields = ((context.Instance as ISchemaItem).RootItem as StateMachine).Entity.EntityColumns;
+			var mappedFields = new List<IDataEntityColumn>();
+			List<IDataEntityColumn> fields = ((context.Instance as AbstractSchemaItem).RootItem as StateMachine).Entity.EntityColumns;
 			foreach(IDataEntityColumn col in fields)
 			{
 				if(col is FieldMappingItem)
@@ -847,10 +849,10 @@ public class StateMachineMappedFieldConverter : System.ComponentModel.TypeConver
 					mappedFields.Add(col);
 				}
 			}
-			foreach(ISchemaItem item in mappedFields)
+			foreach(IDataEntityColumn item in mappedFields)
 			{
 				if(item.Name == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}
@@ -1064,9 +1066,9 @@ public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 	{
 		ContextStore currentItem = context.Instance as ContextStore;
 		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> ruleSets = (currentItem.Structure as DataStructure).RuleSets;
-		ArrayList array = new ArrayList(ruleSets.Count);
-		foreach(ISchemaItem item in ruleSets)
+		List<DataStructureRuleSet> ruleSets = (currentItem.Structure as DataStructure).RuleSets;
+		var array = new List<DataStructureRuleSet>(ruleSets.Count);
+		foreach(DataStructureRuleSet item in ruleSets)
 		{
 			array.Add(item);
 		}
@@ -1088,11 +1090,11 @@ public class ContextStoreRuleSetConverter : System.ComponentModel.TypeConverter
 		{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return null;
-			List<ISchemaItem> ruleSets = (currentItem.Structure as DataStructure).RuleSets;
-			foreach(ISchemaItem item in ruleSets)
+			List<DataStructureRuleSet> ruleSets = (currentItem.Structure as DataStructure).RuleSets;
+			foreach(DataStructureRuleSet item in ruleSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureRuleSet;
+					return item;
 			}
 			return null;
 		}
@@ -1118,9 +1120,9 @@ public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConvert
 	{
 		ContextStore currentItem = context.Instance as ContextStore;
 		if(!(currentItem.Structure is DataStructure)) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> defaultSets = (currentItem.Structure as DataStructure).DefaultSets;
+		List<DataStructureDefaultSet> defaultSets = (currentItem.Structure as DataStructure).DefaultSets;
 		ArrayList array = new ArrayList(defaultSets.Count);
-		foreach(ISchemaItem item in defaultSets)
+		foreach(DataStructureDefaultSet item in defaultSets)
 		{
 			array.Add(item);
 		}
@@ -1142,11 +1144,11 @@ public class ContextStoreDefaultSetConverter : System.ComponentModel.TypeConvert
 		{
 			ContextStore currentItem = context.Instance as ContextStore;
 			if(!(currentItem.Structure is DataStructure)) return null;
-			List<ISchemaItem> defaultSets = (currentItem.Structure as DataStructure).DefaultSets;
-			foreach(ISchemaItem item in defaultSets)
+			List<DataStructureDefaultSet> defaultSets = (currentItem.Structure as DataStructure).DefaultSets;
+			foreach(DataStructureDefaultSet item in defaultSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureDefaultSet;
+					return item;
 			}
 			return null;
 		}
@@ -1172,9 +1174,9 @@ public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 		if(currentItem.Entity == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.CategoryConst);
-		ArrayList array = new ArrayList(filters.Count);
-		foreach(ISchemaItem item in filters)
+		List<EntityFilter> filters = currentItem.Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
+		var array = new List<EntityFilter>(filters.Count);
+		foreach(EntityFilter item in filters)
 		{
 			array.Add(item);
 		}
@@ -1196,11 +1198,11 @@ public class WorkQueueClassFilterConverter : System.ComponentModel.TypeConverter
 		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.Entity == null) return null;
-			List<ISchemaItem> filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.CategoryConst);
-			foreach(ISchemaItem item in filters)
+			List<EntityFilter> filters = currentItem.Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
+			foreach(EntityFilter item in filters)
 			{
 				if(item.Name == value.ToString())
-					return item as EntityFilter;
+					return item;
 			}
 			return null;
 		}
@@ -1226,9 +1228,9 @@ public class WorkQueueClassEntityStructureFilterConverter : System.ComponentMode
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 		if(currentItem.EntityStructure == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> methods = currentItem.EntityStructure.Methods;
+		List<DataStructureMethod> methods = currentItem.EntityStructure.Methods;
 		ArrayList array = new ArrayList(methods.Count);
-		foreach(ISchemaItem item in methods)
+		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);
 		}
@@ -1250,11 +1252,11 @@ public class WorkQueueClassEntityStructureFilterConverter : System.ComponentMode
 		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.EntityStructure == null) return null;
-			List<ISchemaItem> methods = currentItem.EntityStructure.Methods;
-			foreach(ISchemaItem item in methods)
+			List<DataStructureMethod> methods = currentItem.EntityStructure.Methods;
+			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -1280,9 +1282,9 @@ public class WorkQueueClassNotificationStructureFilterConverter : System.Compone
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 		if(currentItem.NotificationStructure == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> methods = currentItem.NotificationStructure.Methods;
-		ArrayList array = new ArrayList(methods.Count);
-		foreach(ISchemaItem item in methods)
+		List<DataStructureMethod> methods = currentItem.NotificationStructure.Methods;
+		var array = new List<DataStructureMethod>(methods.Count);
+		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);
 		}
@@ -1304,11 +1306,11 @@ public class WorkQueueClassNotificationStructureFilterConverter : System.Compone
 		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.NotificationStructure == null) return null;
-			List<ISchemaItem> methods = currentItem.NotificationStructure.Methods;
-			foreach(ISchemaItem item in methods)
+			List<DataStructureMethod> methods = currentItem.NotificationStructure.Methods;
+			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -1334,9 +1336,9 @@ public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentMode
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> methods = currentItem.WorkQueueStructure.Methods;
-		ArrayList array = new ArrayList(methods.Count);
-		foreach(ISchemaItem item in methods)
+		List<DataStructureMethod> methods = currentItem.WorkQueueStructure.Methods;
+		var array = new List<DataStructureMethod>(methods.Count);
+		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);
 		}
@@ -1358,11 +1360,11 @@ public class WorkQueueClassWQDataStructureFilterConverter : System.ComponentMode
 		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return null;
-			List<ISchemaItem> methods = currentItem.WorkQueueStructure.Methods;
-			foreach(ISchemaItem item in methods)
+			List<DataStructureMethod> methods = currentItem.WorkQueueStructure.Methods;
+			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -1389,9 +1391,9 @@ public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentMod
 	{
 		WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 		if(currentItem.WorkQueueStructure == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> sorts = currentItem.WorkQueueStructure.SortSets;
-		ArrayList array = new ArrayList(sorts.Count);
-		foreach(ISchemaItem item in sorts)
+		List<DataStructureSortSet> sorts = currentItem.WorkQueueStructure.SortSets;
+		var array = new List<DataStructureSortSet>(sorts.Count);
+		foreach(DataStructureSortSet item in sorts)
 		{
 			array.Add(item);
 		}
@@ -1413,11 +1415,11 @@ public class WorkQueueClassWQDataStructureSortSetConverter : System.ComponentMod
 		{
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.WorkQueueStructure == null) return null;
-			List<ISchemaItem> sorts = currentItem.WorkQueueStructure.SortSets;
-			foreach(ISchemaItem item in sorts)
+			List<DataStructureSortSet> sorts = currentItem.WorkQueueStructure.SortSets;
+			foreach(DataStructureSortSet item in sorts)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureSortSet;
+					return item;
 			}
 			return null;
 		}
@@ -1442,7 +1444,7 @@ public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.T
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		List<ISchemaItem> fields;
+		List<IDataEntityColumn> fields;
 		IDataEntity entity = ((context.Instance as WorkQueueClassEntityMapping).ParentItem as WorkQueueClass).Entity;
 		if(entity == null)
 		{
@@ -1466,7 +1468,7 @@ public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.T
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			List<ISchemaItem> fields;
+			List<IDataEntityColumn> fields;
 			IDataEntity entity = ((context.Instance as WorkQueueClassEntityMapping).ParentItem as WorkQueueClass).Entity;
 			if(entity == null)
 			{
@@ -1476,10 +1478,10 @@ public class WorkQueueClassEntityMappingFieldConverter : System.ComponentModel.T
 			{
 				fields = entity.EntityColumns;
 			}
-			foreach(ISchemaItem field in fields)
+			foreach(IDataEntityColumn field in fields)
 			{
 				if(field.Name == value.ToString())
-					return field as ISchemaItem;
+					return field;
 			}
 			return null;
 		}
@@ -1506,8 +1508,8 @@ public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
 		UIFormTask reference = context.Instance as UIFormTask;
 		
 		if(reference.RefreshDataStructure == null) return null;
-		List<ISchemaItem> methods = reference.RefreshDataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		List<DataStructureMethod> methods = reference.RefreshDataStructure.Methods;
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -1530,11 +1532,11 @@ public class UIFormTaskMethodConverter : System.ComponentModel.TypeConverter
 			UIFormTask reference = context.Instance as UIFormTask;
 		
 			if(reference.RefreshDataStructure == null) return null;
-			List<ISchemaItem> methods = reference.RefreshDataStructure.Methods;
+			List<DataStructureMethod> methods = reference.RefreshDataStructure.Methods;
 			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -1561,8 +1563,8 @@ public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
 		UIFormTask reference = context.Instance as UIFormTask;
 		
 		if(reference.RefreshDataStructure == null) return null;
-		List<ISchemaItem> sortSets = reference.RefreshDataStructure.SortSets;
-		ArrayList sortSetArray = new ArrayList(sortSets.Count);
+		List<DataStructureSortSet> sortSets = reference.RefreshDataStructure.SortSets;
+		var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
 		foreach(DataStructureSortSet sortSet in sortSets)
 		{
 			sortSetArray.Add(sortSet);
@@ -1585,11 +1587,11 @@ public class UIFormTaskSortSetConverter : System.ComponentModel.TypeConverter
 			UIFormTask reference = context.Instance as UIFormTask;
 		
 			if(reference.RefreshDataStructure == null) return null;
-			List<ISchemaItem> sortSets = reference.RefreshDataStructure.SortSets;
+			List<DataStructureSortSet> sortSets = reference.RefreshDataStructure.SortSets;
 			foreach(DataStructureSortSet item in sortSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureSortSet;
+					return item;
 			}
 			return null;
 		}

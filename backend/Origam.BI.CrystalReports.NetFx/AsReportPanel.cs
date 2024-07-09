@@ -283,7 +283,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		_fillingParameterCache = true;
 		ParameterMappings.Clear();
 		
-		foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			if(! mapInfo.IsDeleted)	// skip any deleted mapping infos
 			{
@@ -385,8 +385,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			if(!_itemsLoaded)
 				return;
-			var col = _origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst)
-				.Cast<ColumnParameterMapping>()
+			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
 				.ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
@@ -414,7 +413,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 			}
 		}
 		// create any missing report's own parameters
-		foreach(SchemaItemParameter param in this.CrystalReport.ChildItemsByType(SchemaItemParameter.CategoryConst))
+		foreach(var param in CrystalReport.ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst))
 		{
 			if(this._origamMetadata.GetChildByName(param.Name) == null)
 			{
@@ -426,7 +425,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		}
 		var toDelete = new List<ISchemaItem>();
 		// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
-		foreach(ISchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			if(! this.CrystalReport.ParameterReferences.ContainsKey(mapping.Name) & 
 				this.CrystalReport.GetChildByName(mapping.Name) == null)

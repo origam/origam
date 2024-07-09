@@ -89,10 +89,10 @@ public class StateMachine : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> Events => ChildItemsByType(
+	public List<StateMachineEvent> Events => ChildItemsByType<StateMachineEvent>(
 		StateMachineEvent.CategoryConst);
 	[Browsable(false)]
-	public List<ISchemaItem> ParameterMappings => ChildItemsByType(
+	public List<StateMachineDynamicLookupParameterMapping> ParameterMappings => ChildItemsByType<StateMachineDynamicLookupParameterMapping>(
 		StateMachineDynamicLookupParameterMapping.CategoryConst);
 	public object[] DynamicOperations(IXmlContainer data)
 	{

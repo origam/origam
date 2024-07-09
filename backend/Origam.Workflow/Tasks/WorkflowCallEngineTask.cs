@@ -84,7 +84,7 @@ public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
 		this.Engine.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
 		WorkflowCallTask task = this.Step as WorkflowCallTask;
 		// Fill input context stores
-		foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
+		foreach(var link in task.ChildItemsByType<ContextStoreLink>(ContextStoreLink.CategoryConst))
 		{
 			if(link.Direction == ContextStoreLinkDirection.Input)
 			{
@@ -123,7 +123,7 @@ public class WorkflowCallEngineTask : AbstractWorkflowEngineTask
 			// Fill output context stores
 			if(task.OutputMethod != ServiceOutputMethod.Ignore)
 			{
-				foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
+				foreach(var link in task.ChildItemsByType<ContextStoreLink>(ContextStoreLink.CategoryConst))
 				{
 					if(link.Direction == ContextStoreLinkDirection.Output)
 					{

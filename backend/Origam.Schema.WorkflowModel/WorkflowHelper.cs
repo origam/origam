@@ -191,7 +191,7 @@ public static class WorkflowHelper
 			.CreateFilterSet(workQueueClass.EntityStructure, "GetId", true);
         var dataStructureEntity = workQueueClass.EntityStructure.Entities[0] 
             as DataStructureEntity;
-		var primaryKeyFilter = entity.EntityFilters.Cast<EntityFilter>()
+		var primaryKeyFilter = entity.EntityFilters
 			.FirstOrDefault(filter => filter.Name == "GetId");
 		EntityHelper.CreateFilterSetFilter(
 			(DataStructureFilterSet)workQueueClass

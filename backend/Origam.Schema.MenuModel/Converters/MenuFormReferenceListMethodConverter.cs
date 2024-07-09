@@ -44,9 +44,9 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 		if(currentItem == null) return new StandardValuesCollection(new ArrayList());
 		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> methods = currentItem.ListDataStructure.Methods;
+		List<DataStructureMethod> methods = currentItem.ListDataStructure.Methods;
 		ArrayList array = new ArrayList(methods.Count);
-		foreach(ISchemaItem item in methods)
+		foreach(DataStructureMethod item in methods)
 		{
 			array.Add(item);
 		}
@@ -67,11 +67,11 @@ public class MenuFormReferenceListMethodConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<ISchemaItem> methods = currentItem.ListDataStructure.Methods;
-			foreach(ISchemaItem item in methods)
+			List<DataStructureMethod> methods = currentItem.ListDataStructure.Methods;
+			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}

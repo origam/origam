@@ -162,8 +162,8 @@ public class ExecuteSchemaItem : AbstractCommand
 						}
 						else
 						{
-							foreach(SelectionDialogParameterMapping mapping in 
-                                formReferenceMenuItem.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+							foreach(var mapping in 
+                                formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
 							{
 								generator.SelectionParameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 							}
@@ -239,7 +239,7 @@ public class ExecuteSchemaItem : AbstractCommand
 				}
 				else
 				{
-					foreach(SelectionDialogParameterMapping mapping in reportRef.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+					foreach(var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
 					{
 						parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 					}

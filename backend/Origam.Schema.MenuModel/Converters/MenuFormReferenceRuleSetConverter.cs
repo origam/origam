@@ -42,9 +42,9 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		List<ISchemaItem> ruleSets = currentItem.Screen.DataStructure.RuleSets;
-		ArrayList array = new ArrayList(ruleSets.Count);
-		foreach(ISchemaItem item in ruleSets)
+		List<DataStructureRuleSet> ruleSets = currentItem.Screen.DataStructure.RuleSets;
+		var array = new List<DataStructureRuleSet>(ruleSets.Count);
+		foreach(var item in ruleSets)
 		{
 			array.Add(item);
 		}
@@ -65,11 +65,11 @@ public class MenuFormReferenceRuleSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<ISchemaItem> ruleSets = currentItem.Screen.DataStructure.RuleSets;
-			foreach(ISchemaItem item in ruleSets)
+			List<DataStructureRuleSet> ruleSets = currentItem.Screen.DataStructure.RuleSets;
+			foreach(DataStructureRuleSet item in ruleSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureRuleSet;
+					return item;
 			}
 			return null;
 		}

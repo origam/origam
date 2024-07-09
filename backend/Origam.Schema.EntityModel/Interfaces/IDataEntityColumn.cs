@@ -56,9 +56,9 @@ public interface IDataEntityColumn : ISchemaItem, ICaptionSchemaItem
 	SchemaItemParameter DefaultValueParameter {get; set;}
 	EntityColumnXmlMapping XmlMappingType {get; set;}
 	OnCopyActionType OnCopyAction{get; set;}
-	List<ISchemaItem> RowLevelSecurityRules{get;}
-	List<ISchemaItem> ConditionalFormattingRules{get;}
-	List<ISchemaItem> DynamicLabels{get;}
+	List<AbstractEntitySecurityRule> RowLevelSecurityRules{get;}
+	List<EntityConditionalFormatting> ConditionalFormattingRules{get;}
+	List<EntityFieldDynamicLabel> DynamicLabels{get;}
     DataEntityConstraint ForeignKeyConstraint { get;  }
     
     string FieldType { get; }

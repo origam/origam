@@ -791,8 +791,8 @@ public class UIServiceController : AbstractController
         var comboListDataset = datasetGenerator.CreateDataSet(
             dataServiceDataLookup.ListDataStructure);
         var comboListTable = comboListDataset.Tables[
-            ((DataStructureEntity) dataServiceDataLookup.ListDataStructure
-                .ChildItemsByType(DataStructureEntity.CategoryConst)[0])
+            dataServiceDataLookup.ListDataStructure
+                .ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)[0]
             .Name];
         var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
         if(tableName != null)

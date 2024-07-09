@@ -97,13 +97,9 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-	public List<ISchemaItem> Dependencies
-	{
-		get
-		{
-			return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
-		}
-	}
+	public List<WorkflowTaskDependency> Dependencies => 
+		ChildItemsByType<WorkflowTaskDependency>(WorkflowTaskDependency.CategoryConst);
+
 	[Category("Error Handling")]
 	[XmlAttribute("onFailure")]
 	[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]

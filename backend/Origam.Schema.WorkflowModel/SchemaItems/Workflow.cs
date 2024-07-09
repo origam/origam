@@ -66,7 +66,7 @@ public class Workflow : AbstractSchemaItem, IWorkflow
 	 * */
 	public ContextStore GetReturnContext ()
 	{
-		foreach (ContextStore context in ChildItemsByType(ContextStore.CategoryConst))
+		foreach (ContextStore context in ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
 		{
 			if (context.IsReturnValue) return context;
 		}
@@ -93,14 +93,8 @@ public class Workflow : AbstractSchemaItem, IWorkflow
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-    public List<ISchemaItem> Dependencies
-	{
-		get
-		{
-			return new List<ISchemaItem>();
-		}
-	}
-    
+    public List<WorkflowTaskDependency> Dependencies => new();
+
     // It does not really make sense to change this property on Workflow.
     // That is why it is not visible in the Architect and not persisted in XML.
     [Browsable(false)]

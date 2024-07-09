@@ -48,8 +48,8 @@ public class UIStyle : AbstractSchemaItem
     public string StyleDefinition()
     {
         StringBuilder result = new StringBuilder();
-        foreach (UIStyleProperty property in 
-            this.ChildItemsByType(UIStyleProperty.CategoryConst))
+        foreach (var property in 
+            ChildItemsByType<UIStyleProperty>(UIStyleProperty.CategoryConst))
         {
             result.AppendFormat("{0}:{1};", property.Property.Name, property.Value);
         }

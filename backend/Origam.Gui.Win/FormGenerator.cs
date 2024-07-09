@@ -1236,7 +1236,7 @@ public class FormGenerator : IDisposable
 			supportInitialize.BeginInit();
 		}
 		//recursively add child controls
-		List<ISchemaItem> sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.CategoryConst);
+		var sortedChildControls = cntrlSet.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
 		sortedChildControls.Sort();
 		
 		foreach (ControlSetItem childItem in sortedChildControls)
@@ -1423,7 +1423,7 @@ public class FormGenerator : IDisposable
 		{
 			return;
 		}
-		foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+		foreach(var bindItem in cntrSetItem.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
 		{
 			string propertyName=bindItem.ControlPropertyItem.Name;
 			PropertyInfo property = GetPropertyInfo(cntrl.GetType(), propertyName);
@@ -1470,7 +1470,7 @@ public class FormGenerator : IDisposable
 			{
 				itemDataMember = "";
 				
-				foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.CategoryConst))
+				foreach(var item in cntrlSet.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 				{
 					if(item.ControlPropertyItem.Name == "DataMember")
 					{
@@ -1570,7 +1570,7 @@ public class FormGenerator : IDisposable
         
 		bool setProperty=false;
 			
-		foreach(PropertyValueItem propValItem in cntrSetItem.ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var propValItem in cntrSetItem.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			propToSet = GetPropertyInfo(cntrl.GetType(), propValItem.ControlPropertyItem.Name);
 			
@@ -1639,7 +1639,7 @@ public class FormGenerator : IDisposable
 	private PropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind)
 	{
 		PropertyValueItem result=null;
-		foreach(PropertyValueItem item in controlSetItem.ChildItemsByType("PropertyValueItem"))
+		foreach(var item in controlSetItem.ChildItemsByType<PropertyValueItem>("PropertyValueItem"))
 		{
 			if(item.ControlPropertyItem.PrimaryKey.Equals(propertyToFind.PrimaryKey))
 			{

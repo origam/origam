@@ -91,9 +91,11 @@ public class StateMachineEvent : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public List<ISchemaItem> ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.CategoryConst);
+	public List<StateMachineEventParameterMapping> ParameterMappings => 
+		ChildItemsByType<StateMachineEventParameterMapping>(StateMachineEventParameterMapping.CategoryConst);
 	[Browsable(false)]
-	public List<ISchemaItem> FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
+	public List<StateMachineEventFieldDependency> FieldDependencies => 
+		ChildItemsByType<StateMachineEventFieldDependency>(StateMachineEventFieldDependency.CategoryConst);
 	
 	[XmlAttribute ("type")]
 	public StateMachineEventType Type { get; set; }

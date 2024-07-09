@@ -66,8 +66,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	public Hashtable ParameterMappings {
 		get
 		{
-			var mappingDictionary = ChildItemsByType("EntityUIActionParameterMapping")
-				.Cast<EntityUIActionParameterMapping>()
+			var mappingDictionary = ChildItemsByType<EntityUIActionParameterMapping>("EntityUIActionParameterMapping")
 				.ToDictionary(e => e.Name,e => e.Field);
 			
 			return new Hashtable(mappingDictionary);

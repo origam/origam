@@ -71,15 +71,15 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	public ISchemaItemCollection LoadChildItems()
 	{
 		ISchemaItemCollection childItems = SchemaItemCollection.Create(this.PersistenceProvider, this, null);
-		childItems.AddRange(ChildItemsByType(RootItemType).Cast<ISchemaItem>().ToArray());
+		childItems.AddRange(ChildItemsByType<ISchemaItem>(RootItemType).ToArray());
 		return childItems;
 	}
-	public virtual List<ISchemaItem> ChildItemsByType(string itemType)
+	public virtual List<T> ChildItemsByType<T>(string itemType) where T : ISchemaItem
 	{
-        List<ISchemaItem> list = this.PersistenceProvider.
-            RetrieveListByCategory<ISchemaItem>(itemType);
-        var result = new List<ISchemaItem>();
-        foreach (ISchemaItem item in list)
+        List<T> list = PersistenceProvider.
+            RetrieveListByCategory<T>(itemType);
+        var result = new List<T>();
+        foreach (T item in list)
 		{
             if (item.ParentItemId == Guid.Empty)
             {
@@ -92,7 +92,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	public virtual List<ISchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
 		var list = new List<ISchemaItem>();
-		foreach(ISchemaItem item in this.ChildItems)
+		foreach(ISchemaItem item in ChildItems)
 		{
 			if(item.Group == null | group == null)
 			{
@@ -117,7 +117,7 @@ public abstract class AbstractSchemaItemProvider : ISchemaItemProvider
 	}
 	public bool HasChildItemsByType(string itemType)
 	{
-		return this.ChildItemsByType(itemType).Count > 0;
+		return ChildItemsByType<AbstractSchemaItem>(itemType).Count > 0;
 	}
 	public bool HasChildItemsByGroup(SchemaItemGroup group)
 	{

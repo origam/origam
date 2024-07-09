@@ -50,7 +50,7 @@ public class RelationTypeModelElementRuleAttribute : AbstractModelElementRuleAtt
             }
         }
         // pro prohledavani childu a zjistovani jestli tam neni field.
-        List<ISchemaItem> schemaItems = dataStructure.ChildItemsByType(DataStructureColumn.CategoryConst);
+        var schemaItems = dataStructure.ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst);
         if (schemaItems.Count>0 && (relation is RelationType.LeftJoin || relation is RelationType.InnerJoin))
         {
             return new DataException("Child Entities are DataField, but RelationType is set to LeftJoin or InnerJoin");

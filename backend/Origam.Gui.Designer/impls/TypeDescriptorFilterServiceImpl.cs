@@ -88,7 +88,7 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 		{
 			Hashtable finalprops = new Hashtable();
 			// Load all properties we want to see
-			foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+			foreach(var propItem in ctrlSet.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 			{
 				finalprops.Add(propItem.Name, propItem.Name);
 			}
@@ -162,7 +162,7 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 		ControlItem inheritorItem = DynamicTypeFactory
 			.GetAssociatedControlItem(component.GetType());
 		if (inheritorItem == null) return;
-		foreach (ControlPropertyItem propItem in inheritorItem.ChildItemsByType(
+		foreach (var propItem in inheritorItem.ChildItemsByType<ControlPropertyItem>(
 			ControlPropertyItem.CategoryConst))
 		{
 			finalProps[propItem.Name] = propItem.Name;

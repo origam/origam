@@ -283,8 +283,8 @@ public class UIManager
             {
                 List<DataStructureSortSetItem> sorts =
                     new List<DataStructureSortSetItem>();
-                foreach (DataStructureSortSetItem item in sortSet
-                    .ChildItemsByType(
+                foreach (var item in sortSet
+                    .ChildItemsByType<DataStructureSortSetItem>(
                         DataStructureSortSetItem.CategoryConst))
                 {
                     if (item.Entity.Name == panel.Entity)

@@ -43,9 +43,9 @@ public class MenuFormReferenceTemplateConverter : TypeConverter
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 		if(currentItem.TemplateSet == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> templates = currentItem.TemplateSet.Templates;
-		ArrayList array = new ArrayList(templates.Count);
-		foreach(ISchemaItem item in templates)
+		List<DataStructureTemplate> templates = currentItem.TemplateSet.Templates;
+		var array = new List<DataStructureTemplate>(templates.Count);
+		foreach(DataStructureTemplate item in templates)
 		{
 			array.Add(item);
 		}
@@ -66,11 +66,11 @@ public class MenuFormReferenceTemplateConverter : TypeConverter
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 			if(currentItem.TemplateSet == null) return null;
-			List<ISchemaItem> templates = currentItem.TemplateSet.Templates;
-			foreach(ISchemaItem item in templates)
+			List<DataStructureTemplate> templates = currentItem.TemplateSet.Templates;
+			foreach(var item in templates)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureTemplate;
+					return item;
 			}
 			return null;
 		}

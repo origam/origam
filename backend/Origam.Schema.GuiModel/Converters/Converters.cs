@@ -566,9 +566,9 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     public override System.ComponentModel.TypeConverter.StandardValuesCollection
         GetStandardValues(ITypeDescriptorContext context)
     {
-	    List<ISchemaItem> styleProperties = 
+	    List<ControlStyleProperty> styleProperties = 
             ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
-            .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
+            .Widget.ChildItemsByType<ControlStyleProperty>(ControlStyleProperty.CategoryConst);
         ArrayList propertyArray = new ArrayList(styleProperties.Count);
         foreach (ControlStyleProperty property in styleProperties)
         {
@@ -588,13 +588,13 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
     {
         if (value.GetType() == typeof(string))
         {
-	        List<ISchemaItem> styleProperties =
+	        List<ControlStyleProperty> styleProperties =
                 ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
-                .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
-            foreach (ISchemaItem item in styleProperties)
+                .Widget.ChildItemsByType<ControlStyleProperty>(ControlStyleProperty.CategoryConst);
+            foreach (ControlStyleProperty item in styleProperties)
             {
                 if (item.Name == value.ToString())
-                    return item as ControlStyleProperty;
+                    return item;
             }
             return null;
         }

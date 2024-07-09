@@ -42,13 +42,13 @@ public class MenuFormReferenceMethodConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		var currentItem = context.Instance as FormReferenceMenuItem;
-		List<ISchemaItem> methods = currentItem?.Screen?.DataStructure?.Methods;
+		List<DataStructureMethod> methods = currentItem?.Screen?.DataStructure?.Methods;
 		if (methods == null)
 		{
 			return new StandardValuesCollection(new ArrayList());
 		}
 		var output = new ArrayList(methods.Count);
-		foreach (ISchemaItem method in methods)
+		foreach (DataStructureMethod method in methods)
 		{
 			output.Add(method);
 		}
@@ -68,11 +68,11 @@ public class MenuFormReferenceMethodConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<ISchemaItem> methods = currentItem.Screen.DataStructure.Methods;
-			foreach(ISchemaItem item in methods)
+			List<DataStructureMethod> methods = currentItem.Screen.DataStructure.Methods;
+			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}

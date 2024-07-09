@@ -39,8 +39,9 @@ public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 		foreach(var abstractSchemaItem in ChildItems)
 		{
 			var chart = (AbstractChart)abstractSchemaItem;
-			if(chart.ChildItemsByType(ChartFormMapping.CategoryConst)
-			   .Cast<ChartFormMapping>().Any(chartFormMapping => 
+			if(chart
+			   .ChildItemsByType<ChartFormMapping>(ChartFormMapping.CategoryConst)
+			   .Any(chartFormMapping => 
 				   formId.Equals(chartFormMapping.Screen.Id) 
 				   && entity.Equals(chartFormMapping.Entity.Name)))
 			{

@@ -39,12 +39,12 @@ public class DataStructureRuleSet : AbstractSchemaItem
 	public DataStructureRuleSet(Key primaryKey) : base(primaryKey)	{}
 
 	#region Public Methods
-	public List<ISchemaItem> Rules()
+	public List<DataStructureRule> Rules()
 	{
-        var result = ChildItemsByType(DataStructureRule.CategoryConst);
+        var result = ChildItemsByType<DataStructureRule>(DataStructureRule.CategoryConst);
         // add all child rule sets
-        foreach(DataStructureRuleSetReference childRuleSet 
-                 in ChildItemsByType(
+        foreach(var childRuleSet 
+                 in ChildItemsByType<DataStructureRuleSetReference>(
                      DataStructureRuleSetReference.CategoryConst))
         {
             if(childRuleSet.RuleSet != null)
@@ -64,8 +64,8 @@ public class DataStructureRuleSet : AbstractSchemaItem
                 $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found.");
         }
         var addCurrent = true;
-        foreach(DataStructureRuleSetReference ruleSetReference
-            in ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
+        foreach(var ruleSetReference
+            in ChildItemsByType<DataStructureRuleSetReference>(DataStructureRuleSetReference.CategoryConst))
         {
             if(curRuleSetReference != null 
 			&& curRuleSetReference.Id == ruleSetReference.Id)

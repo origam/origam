@@ -24,6 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Schema.GuiModel;
@@ -191,7 +192,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 		{
 			if(!_itemsLoaded)
 				return;
-			ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
 				mapping.IsDeleted = true;
@@ -227,7 +228,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 		
 		ParameterMappings.Clear();
 		
-		foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			if(! mapInfo.IsDeleted)
 			{

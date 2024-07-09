@@ -205,7 +205,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 			return null;
 		}
 		foreach(DataStructureColumn dataStructureColumn 
-		        in Entity.ChildItemsByType(
+		        in Entity.ChildItemsByType<DataStructureColumn>(
 			        DataStructureColumn.CategoryConst))
 		{
 			if(dataStructureColumn.Name == FieldName)

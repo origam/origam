@@ -2177,7 +2177,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            // if there is a different number of fields,
 	            // we consider them non-equal without even checking
 	            // the details
-	            if(rows.Length != index.ChildItemsByType(
+	            if(rows.Length != index.ChildItemsByType<DataEntityIndexField>(
 		               DataEntityIndexField.CategoryConst).Count)
 	            {
 		            different = true;
@@ -2185,7 +2185,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            if(!different)
 	            {
 		            foreach(DataEntityIndexField indexField 
-		                    in index.ChildItemsByType(
+		                    in index.ChildItemsByType<DataEntityIndexField>(
 			                    DataEntityIndexField.CategoryConst))
 		            {
 			            rows = indexFields.Tables[0].Select(

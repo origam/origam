@@ -46,7 +46,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 	// as input parameters except context stores marked with `IsReturnValue'
 	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
+		foreach (var context in LoadWorkflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
 		{
 			if(context.IsReturnValue == false && context.isScalar())
 			{

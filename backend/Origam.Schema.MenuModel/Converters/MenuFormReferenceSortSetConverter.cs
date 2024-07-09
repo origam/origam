@@ -42,9 +42,9 @@ public class MenuFormReferenceSortSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		List<ISchemaItem> sortSets = currentItem.Screen.DataStructure.SortSets;
-		ArrayList array = new ArrayList(sortSets.Count);
-		foreach(ISchemaItem item in sortSets)
+		List<DataStructureSortSet> sortSets = currentItem.Screen.DataStructure.SortSets;
+		var array = new List<DataStructureSortSet>(sortSets.Count);
+		foreach(var item in sortSets)
 		{
 			array.Add(item);
 		}
@@ -65,11 +65,11 @@ public class MenuFormReferenceSortSetConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-			List<ISchemaItem> sortSets = currentItem.Screen.DataStructure.SortSets;
-			foreach(ISchemaItem item in sortSets)
+			List<DataStructureSortSet> sortSets = currentItem.Screen.DataStructure.SortSets;
+			foreach(DataStructureSortSet item in sortSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureSortSet;
+					return item;
 			}
 			return null;
 		}

@@ -42,7 +42,7 @@ public class DataStructureRule : AbstractSchemaItem
 		: base(schemaExtensionId) {}
 	public DataStructureRule(Key primaryKey) : base(primaryKey)	{}
 	#region Properties
-	public List<ISchemaItem> RuleDependencies => ChildItemsByType(
+	public List<DataStructureRuleDependency> RuleDependencies => ChildItemsByType<DataStructureRuleDependency>(
 		DataStructureRuleDependency.CategoryConst);
 	private int _priority = 100;
 	

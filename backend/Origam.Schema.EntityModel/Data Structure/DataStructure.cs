@@ -45,7 +45,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		get
 		{
 			var entities = new List<DataStructureEntity>();
-			foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
+			foreach(var entity in ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
 			{
 				entities.Add(entity);
 				entities.AddRange(GetChildEntities(entity));
@@ -71,49 +71,29 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
         }
     }
 	[Browsable(false)]
-	public List<ISchemaItem> DefaultSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureDefaultSet.CategoryConst);
-		}
-	}
+	public List<DataStructureDefaultSet> DefaultSets =>
+		ChildItemsByType<DataStructureDefaultSet>(DataStructureDefaultSet.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> TemplateSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureTemplateSet.CategoryConst);
-		}
-	}
+	public List<DataStructureTemplateSet> TemplateSets => 
+		ChildItemsByType<DataStructureTemplateSet>(DataStructureTemplateSet.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> Methods
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureMethod.CategoryConst);
-		}
-	}
+	public List<DataStructureMethod> Methods => 
+		ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> RuleSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureRuleSet.CategoryConst);
-		}
-	}
+	public List<DataStructureRuleSet> RuleSets =>
+		ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> SortSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
-		}
-	}
+	public List<DataStructureSortSet> SortSets =>
+		ChildItemsByType<DataStructureSortSet>(DataStructureSortSet.CategoryConst);
+
 	private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
 	{
 		var entities = new List<DataStructureEntity>();
-		foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+		foreach(var childEntity in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
 		{
 			entities.Add(childEntity);
 			entities.AddRange(GetChildEntities(childEntity));

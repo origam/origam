@@ -52,9 +52,9 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 			selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 		}
 		if(selectionDialogPanel == null) return new StandardValuesCollection(new ArrayList());
-		List<ISchemaItem> fields = selectionDialogPanel.DataEntity.EntityColumns;
-		ArrayList array = new ArrayList(fields.Count);
-		foreach(ISchemaItem item in fields)
+		List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+		var array = new List<IDataEntityColumn>(fields.Count);
+		foreach(IDataEntityColumn item in fields)
 		{
 			array.Add(item);
 		}
@@ -83,11 +83,11 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 				selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 			}
 			if(selectionDialogPanel == null) return null;
-			List<ISchemaItem> fields = selectionDialogPanel.DataEntity.EntityColumns;
-			foreach(ISchemaItem item in fields)
+			List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+			foreach(var item in fields)
 			{
 				if(item.Name == value.ToString())
-					return item as IDataEntityColumn;
+					return item;
 			}
 			return null;
 		}

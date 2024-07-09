@@ -52,7 +52,7 @@ public interface IWorkflowStep : ISchemaItem, ITraceable
 	IContextStore ValidationRuleContextStore{get; set;}
 	string Roles{get;set;}
 	string Features{get;set;}
-	List<ISchemaItem> Dependencies{get;}
+	List<WorkflowTaskDependency> Dependencies{get;}
 	StepFailureMode OnFailure { set; get; }
 }
 public enum StepFailureMode

@@ -406,7 +406,7 @@ public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
         RelatedEntityField.Items.Clear();
         if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
-        foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+        foreach (ISchemaItem filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {
             RelatedEntityField.Items.Add(filter);
         }

@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
@@ -720,7 +721,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 	public bool HasChildItems => ChildItems.Count > 0;
     public bool HasChildItemsByType(string itemType)
 	{
-		return this.ChildItemsByType(itemType).Count > 0;
+		return ChildItemsByType<ISchemaItem>(itemType).Count > 0;
 	}
 	public bool HasChildItemsByGroup(SchemaItemGroup group)
 	{
@@ -881,7 +882,7 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 			return null;
 		}
 	}
-	private List<ISchemaItem> GetItemsFromCache(string itemType)
+	private List<T> GetItemsFromCache<T>(string itemType) where T: ISchemaItem
 	{
 		// initialize the cache
 		InitializeItemCache();
@@ -889,21 +890,17 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		{
 			// we copy the array, because of multithreading (collection may change while
 			// another thread is running)
-			return new List<ISchemaItem>(value);
+			return new List<T>(value.Cast<T>());
 		}
 		else
 		{
-			return new List<ISchemaItem>();
+			return new List<T>();
 		}
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> Parameters
-	{
-		get
-		{
-			return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
-		}
-	}
+	public List<SchemaItemParameter> Parameters => 
+		ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
+
 	Dictionary<string, ParameterReference> _parameterReferences = new();
 	[Category("(Schema Item)")]
 	[Browsable(false)]
@@ -966,20 +963,20 @@ public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem,
 		}
 	}
 	
-	public List<ISchemaItem> ChildItemsByType(string itemType)
+	public List<T> ChildItemsByType<T>(string itemType) where T : ISchemaItem
 	{
 #if ORIGAM_CLIENT
 		// if the number of items is different than cached, we go through the whole collection
 		if(_childItemsTypeCacheCount == this.ChildItems.Count) 
 		{
-			return GetItemsFromCache(itemType);
+			return GetItemsFromCache<T>(itemType);
 		}
 #endif
-		var list = new List<ISchemaItem>();
-		foreach(ISchemaItem item in this.ChildItems)
+		var list = new List<T>();
+		foreach(var item in ChildItems)
 		{
 			if(item.ItemType == itemType)
-				list.Add(item);
+				list.Add((T)item);
 		}
 		
 		return list;

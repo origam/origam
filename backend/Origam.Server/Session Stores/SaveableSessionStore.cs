@@ -308,7 +308,7 @@ public abstract class SaveableSessionStore : SessionStore
             foreach (DataStructureColumn column in modelEntity.Columns)
             {
                 // read the dependencies
-                foreach (EntityFieldDependency dep in column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst))
+                foreach (var dep in column.Field.ChildItemsByType<EntityFieldDependency>(EntityFieldDependency.CategoryConst))
                 {
                     IList<Guid> fieldDependencies;
                     Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];

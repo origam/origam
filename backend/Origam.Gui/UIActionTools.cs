@@ -66,8 +66,8 @@ public class UIActionTools
     public static List<string> GetOriginalParameters(EntityUIAction action)
     {
         var originalDataParameters = new List<string>();
-        foreach(EntityUIActionParameterMapping mapping 
-            in action.ChildItemsByType(
+        foreach(var mapping 
+            in action.ChildItemsByType<EntityUIActionParameterMapping>(
             EntityUIActionParameterMapping.CategoryConst))
         {
             if(mapping.Type == EntityUIActionParameterMappingType.Original)

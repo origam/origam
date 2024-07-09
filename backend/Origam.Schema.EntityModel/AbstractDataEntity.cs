@@ -61,13 +61,9 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 	#region IDataEntity Members
 	[Browsable(false)]
-	public List<ISchemaItem> EntityParameters
-	{
-		get
-		{
-			return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
-		}
-	}
+	public List<SchemaItemParameter> EntityParameters => 
+		ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
+
 	[Browsable(false)]
 	public virtual List<IDataEntityColumn> EntityPrimaryKey
 	{
@@ -156,10 +152,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 #if ORIGAM_CLIENT
 	private bool _columnsPopulated = false;
-	private List<ISchemaItem> _columns;
+	private List<IDataEntityColumn> _columns;
 #endif
 	[Browsable(false)]
-	public List<ISchemaItem> EntityColumns
+	public List<IDataEntityColumn> EntityColumns
 	{
 		get
 		{
@@ -170,25 +166,21 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 				{
 					if(!_columnsPopulated)
 					{
-						_columns = this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+						_columns = ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 						_columnsPopulated = true;
 					}
 				}
 			}
 			return _columns;
 #else
-			return this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			return this.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 #endif
 		}
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> EntityRelations
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityRelationItem.CategoryConst);
-		}
-	}
+	public List<EntityRelationItem> EntityRelations => 
+		ChildItemsByType<EntityRelationItem>(EntityRelationItem.CategoryConst);
+
 	[Browsable(false)]
 	public List<IDataEntity> ChildEntities
 	{
@@ -217,37 +209,21 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public List<ISchemaItem> EntityFilters
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityFilter.CategoryConst);
-		}
-	}
+	public List<EntityFilter> EntityFilters => 
+		ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> EntityIndexes
-	{
-		get
-		{
-			return this.ChildItemsByType(DataEntityIndex.CategoryConst);
-		}
-	}
+	public List<DataEntityIndex> EntityIndexes => 
+		ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> RowLevelSecurityRules
-	{
-		get
-		{
-			return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
-		}
-	}
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules => 
+		ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+
 	[Browsable(false)]
-	public List<ISchemaItem> ConditionalFormattingRules
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
-		}
-	}
+	public List<EntityConditionalFormatting> ConditionalFormattingRules =>
+		ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+
 	[Browsable(false)]
 	public List<DataEntityConstraint> Constraints
 	{
