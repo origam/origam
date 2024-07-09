@@ -46,7 +46,7 @@ public class ControlConverter : TypeConverter
     {
         UserControlSchemaItemProvider controls =
             _schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
-        ArrayList controlArray = new ArrayList(controls.ChildItems.Count);
+        var controlArray = new List<ControlItem>(controls.ChildItems.Count);
         foreach (ControlItem control in controls.ChildItems)
         {
             if (control.PanelControlSet == null)
@@ -100,7 +100,7 @@ public class FormControlSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormSchemaItemProvider forms = _schema.GetProvider(typeof(FormSchemaItemProvider)) as FormSchemaItemProvider;
-		ArrayList formArray = new ArrayList(forms.ChildItems.Count);
+		var formArray = new List<FormControlSet>(forms.ChildItems.Count);
 		foreach(FormControlSet form in forms.ChildItems)
 		{
 			formArray.Add(form);
@@ -150,7 +150,7 @@ public class PanelControlSetConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		PanelSchemaItemProvider forms = _schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
-		ArrayList formArray = new ArrayList(forms.ChildItems.Count);
+		var formArray = new List<ISchemaItem>(forms.ChildItems.Count);
 		foreach(ISchemaItem item in forms.ChildItems)
 		{
 			formArray.Add(item);
@@ -201,7 +201,7 @@ public class ReportConverter : TypeConverter
 	{
 		ReportSchemaItemProvider reports = _schema.GetProvider(typeof(ReportSchemaItemProvider)) as ReportSchemaItemProvider;
 		
-		ArrayList dsArray = new ArrayList(reports.ChildItems.Count);
+		var dsArray = new List<AbstractReport>(reports.ChildItems.Count);
 		foreach(AbstractReport ds in reports.ChildItems)
 		{
 			dsArray.Add(ds);
@@ -252,7 +252,7 @@ public class GraphicsConverter : TypeConverter
 	{
 		GraphicsSchemaItemProvider graphics = _schema.GetProvider(typeof(GraphicsSchemaItemProvider)) as GraphicsSchemaItemProvider;
 		
-		ArrayList dsArray = new ArrayList(graphics.ChildItems.Count);
+		var dsArray = new List<Graphics>(graphics.ChildItems.Count);
 		foreach(Graphics g in graphics.ChildItems)
 		{
 			dsArray.Add(g);
@@ -303,7 +303,7 @@ public class ChartsConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ChartSchemaItemProvider forms = _schema.GetProvider(typeof(ChartSchemaItemProvider)) as ChartSchemaItemProvider;
-		ArrayList formArray = new ArrayList(forms.ChildItems.Count);
+		var formArray = new List<AbstractChart>(forms.ChildItems.Count);
 		foreach(AbstractChart form in forms.ChildItems)
 		{
 			formArray.Add(form);
@@ -351,9 +351,9 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ChartFormMapping currentItem = context.Instance as ChartFormMapping;
-		if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
+		if(currentItem.Screen == null) return new StandardValuesCollection(new List<DataStructureEntity>());
 		List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);
@@ -373,7 +373,7 @@ public class ChartFormMappingEntityConverter : System.ComponentModel.TypeConvert
 		if( value.GetType() == typeof(string) )
 		{
 			ChartFormMapping currentItem = context.Instance as ChartFormMapping;
-			if(currentItem.Screen == null) return new StandardValuesCollection(new ArrayList());
+			if(currentItem.Screen == null) return new StandardValuesCollection(new List<DataStructureEntity>());
 			List<DataStructureEntity> entities = currentItem.Screen.DataStructure.Entities;
 			foreach(DataStructureEntity item in entities)
 			{
@@ -406,7 +406,7 @@ public class StylesConverter : TypeConverter
         object control = context.Instance;
         string classPath = control.GetType().FullName;
 		StylesSchemaItemProvider styles = _schema.GetProvider(typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
-		ArrayList dsArray = new ArrayList(styles.ChildItems.Count);
+		var dsArray = new List<UIStyle>(styles.ChildItems.Count);
 		foreach(UIStyle st in styles.ChildItems)
 		{
             if (st.Widget.ControlType == classPath)
@@ -461,7 +461,7 @@ public class TreeStructureConverter : TypeConverter
 	{
 		TreeStructureSchemaItemProvider trees = _schema.GetProvider(typeof(TreeStructureSchemaItemProvider)) as TreeStructureSchemaItemProvider;
 		
-		ArrayList dsArray = new ArrayList(trees.ChildItems.Count);
+		var dsArray = new List<TreeStructure>(trees.ChildItems.Count);
 		foreach(TreeStructure ts in trees.ChildItems)
 		{
 			dsArray.Add(ts);
@@ -515,7 +515,7 @@ public class KeyboardShortcutsConverter : TypeConverter
 			_schema.GetProvider(typeof(KeyboardShortcutsSchemaItemProvider)) 
 			as KeyboardShortcutsSchemaItemProvider;
 		
-		ArrayList dsArray = new ArrayList(shortcuts.ChildItems.Count);
+		var dsArray = new List<KeyboardShortcut>(shortcuts.ChildItems.Count);
 		foreach(KeyboardShortcut ks in shortcuts.ChildItems)
 		{
 			dsArray.Add(ks);
@@ -569,7 +569,7 @@ public class ControlStylePropertyConverter : System.ComponentModel.TypeConverter
 	    List<ControlStyleProperty> styleProperties = 
             ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
             .Widget.ChildItemsByType<ControlStyleProperty>(ControlStyleProperty.CategoryConst);
-        ArrayList propertyArray = new ArrayList(styleProperties.Count);
+        var propertyArray = new List<ControlStyleProperty>(styleProperties.Count);
         foreach (ControlStyleProperty property in styleProperties)
         {
             propertyArray.Add(property);
