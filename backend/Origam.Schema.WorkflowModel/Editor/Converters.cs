@@ -170,7 +170,6 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList contextArray;
 		List<ContextStore> contexts;
 		
 		WorkflowCallTask task = (context.Instance as ISchemaItem).ParentItem as WorkflowCallTask;
@@ -183,7 +182,7 @@ public class WorkflowCallTargetContextStoreConverter : System.ComponentModel.Typ
 		{
 			contexts = wf.ChildItemsByType<ContextStore>(ContextStore.CategoryConst);
 		}
-		contextArray = new ArrayList(contexts.Count);
+		var contextArray = new List<ContextStore>(contexts.Count);
 		
 		foreach(ContextStore store in contexts)
 		{
