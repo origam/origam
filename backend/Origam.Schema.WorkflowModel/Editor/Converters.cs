@@ -774,7 +774,7 @@ public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		ArrayList states = ((context.Instance as ISchemaItem).RootItem as StateMachine).AllStates();
+		List<StateMachineState> states = ((context.Instance as ISchemaItem).RootItem as StateMachine).AllStates();
 		states.Sort();
 		return new StandardValuesCollection(states);
 	}
@@ -789,7 +789,7 @@ public class StateMachineStateConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			ArrayList states = ((context.Instance as ISchemaItem).RootItem as StateMachine).AllStates();
+			List<StateMachineState> states = ((context.Instance as ISchemaItem).RootItem as StateMachine).AllStates();
 			foreach(ISchemaItem item in states)
 			{
 				if(item.Name == value.ToString())

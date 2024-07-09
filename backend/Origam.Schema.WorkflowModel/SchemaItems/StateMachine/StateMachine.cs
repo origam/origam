@@ -48,19 +48,19 @@ public class StateMachine : AbstractSchemaItem
 	#region Public Methods
 	public StateMachineState GetState(object value)
 	{
-		return AllStates().Cast<StateMachineState>()
+		return AllStates()
 			.FirstOrDefault(state => 
 				(state.Type != StateMachineStateType.Group) 
 				&& state.Value.Equals(value));
 	}
-	public ArrayList AllStates()
+	public List<StateMachineState> AllStates()
 	{
-		var result = new ArrayList();
+		var result = new List<StateMachineState>();
 		foreach(ISchemaItem item in ChildItemsRecursive)
 		{
-			if(item is StateMachineState)
+			if(item is StateMachineState state)
 			{
-				result.Add(item);
+				result.Add(state);
 			}
 		}
 		return result;
