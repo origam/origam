@@ -107,7 +107,7 @@ public class StateMachine : AbstractSchemaItem
 	}
 	public object[] InitialStateValues(IXmlContainer data)
 	{
-		var list = new ArrayList();
+		var list = new List<object>();
 		if(DynamicStatesLookup == null)
 		{
 			// states defined in the model
