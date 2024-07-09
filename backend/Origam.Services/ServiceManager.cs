@@ -94,7 +94,7 @@ public class ServiceManager
 		if(log.IsInfoEnabled) log.Info("Unloading workbench service: " + service.GetType());
 		service.UnloadService();
 		serviceList.Remove(service);
-		ArrayList hashTypes = new ArrayList();
+		var hashTypes = new List<Type>();
 		foreach(var entry in services)
 		{
 			if(entry.Value.Equals(service))
