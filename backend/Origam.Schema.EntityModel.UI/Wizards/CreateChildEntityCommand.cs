@@ -100,7 +100,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
         // Create relation from the parent entity
         EntityRelationItem parentRelation = EntityHelper.CreateRelation(entity1, newEntity, true, true);
         GeneratedModelElements.Add(parentRelation);
-        ArrayList entity1keys = new ArrayList();
+        var entity1keys = new List<FieldMappingItem>();
         // Create reference columns
         foreach (IDataEntityColumn pk in entity1.EntityPrimaryKey)
         {
@@ -123,7 +123,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
             }
         }
         int i = 0;
-        foreach (IDataEntityColumn col in entity1keys)
+        foreach (FieldMappingItem col in entity1keys)
         {
             DataEntityIndexField field 
                 = index.NewItem<DataEntityIndexField>(
