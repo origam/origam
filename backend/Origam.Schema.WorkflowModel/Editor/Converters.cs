@@ -544,7 +544,7 @@ public class ServiceConverter : System.ComponentModel.TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		ServiceSchemaItemProvider services = _schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-		ArrayList columnArray = new ArrayList(services.ChildItems.Count);
+		var columnArray = new List<IService>(services.ChildItems.Count);
 		foreach(IService service in services.ChildItems)
 		{
 			columnArray.Add(service);
