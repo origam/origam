@@ -34,10 +34,10 @@ public sealed class PropertyValueServiceImpl : IPropertyValueUIService
     GetPropertyUIValueItems(ITypeDescriptorContext context,
     PropertyDescriptor propDesc)
     {
-        List<PropertyValueUIItem> list = null;
+        ArrayList list = null;
         if (QueryPropertyUIValueItems != null)
         {
-            list = new List<PropertyValueUIItem>();
+            list = new ArrayList();
             QueryPropertyUIValueItems(context, propDesc, list);
         }
         if (list == null || list.Count == 0)
