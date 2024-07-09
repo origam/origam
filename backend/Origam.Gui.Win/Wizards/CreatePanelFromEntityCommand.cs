@@ -57,7 +57,7 @@ public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         List<string> listdsName = GetListDatastructure(PanelControlSet.CategoryConst);
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         PanelControlSet pp = new PanelControlSet();
         list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
         

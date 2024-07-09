@@ -49,7 +49,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	}
 	public override void Run()
 	{
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         TableMappingItem mappingItem = new TableMappingItem();
         list.Add(new ListViewItem(mappingItem.GetType().SchemaItemDescription().Name, mappingItem.Icon));
         Stack stackPage = new Stack();
