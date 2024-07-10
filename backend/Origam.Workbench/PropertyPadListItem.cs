@@ -23,46 +23,38 @@ using System.Windows.Forms;
 
 using Origam.Schema;
 
-namespace Origam.Workbench
+namespace Origam.Workbench;
+/// <summary>
+/// Summary description for PropertyPadListItem.
+/// </summary>
+public class PropertyPadListItem
 {
-	/// <summary>
-	/// Summary description for PropertyPadListItem.
-	/// </summary>
-	public class PropertyPadListItem
+	private Control _control;
+	public PropertyPadListItem(Control control)
 	{
-		private Control _control;
-
-		public PropertyPadListItem(Control control)
-		{
-			_control = control;
-		}
-
-		public Control Control
-		{
-			get
-			{
-				return _control;
-			}
-			set
-			{
-				_control = value;
-			}
-		}
-
-		public override string ToString()
-		{
-			ISchemaItem si = _control.Tag as ISchemaItem;
-
-			if(si == null)
-			{
-				return base.ToString();
-			}
-			else
-			{
-				return si.Name + " [" + _control.GetType().FullName + "]";
-			}
-		}
-
+		_control = control;
 	}
-
+	public Control Control
+	{
+		get
+		{
+			return _control;
+		}
+		set
+		{
+			_control = value;
+		}
+	}
+	public override string ToString()
+	{
+		ISchemaItem si = _control.Tag as ISchemaItem;
+		if(si == null)
+		{
+			return base.ToString();
+		}
+		else
+		{
+			return si.Name + " [" + _control.GetType().FullName + "]";
+		}
+	}
 }

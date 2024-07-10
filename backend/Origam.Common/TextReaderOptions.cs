@@ -24,104 +24,89 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Collections;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+/// <summary>
+/// Summary description for TextReaderAgentSettings.
+/// </summary>
+[Serializable()]
+public class TextReaderOptions
 {
-	/// <summary>
-	/// Summary description for TextReaderAgentSettings.
-	/// </summary>
-	[Serializable()]
-	public class TextReaderOptions
+	public TextReaderOptions()
 	{
-		public TextReaderOptions()
+	}
+	private int _ignoreFirst = 0;
+	private int _ignoreLast = 0;
+	private string _separator = ",";
+	private Hashtable _cache = null;
+	private TextReaderOptionsField[] _fieldOptions;
+	public static TextReaderOptions Deserialize(XmlDocument doc)
+	{
+		if(doc == null) return new TextReaderOptions();
+		XmlSerializer ser = new XmlSerializer(typeof(TextReaderOptions));
+		XmlNodeReader reader = new XmlNodeReader(doc);
+		return (TextReaderOptions)ser.Deserialize(reader);
+	}
+	[XmlAttribute()]
+	public int IgnoreFirst
+	{
+		get
 		{
+			return _ignoreFirst;
 		}
-
-		private int _ignoreFirst = 0;
-		private int _ignoreLast = 0;
-		private string _separator = ",";
-		private Hashtable _cache = null;
-
-		private TextReaderOptionsField[] _fieldOptions;
-
-		public static TextReaderOptions Deserialize(XmlDocument doc)
+		set
 		{
-			if(doc == null) return new TextReaderOptions();
-
-			XmlSerializer ser = new XmlSerializer(typeof(TextReaderOptions));
-
-			XmlNodeReader reader = new XmlNodeReader(doc);
-
-			return (TextReaderOptions)ser.Deserialize(reader);
+			_ignoreFirst = value;
 		}
-
-		[XmlAttribute()]
-		public int IgnoreFirst
+	}
+	[XmlAttribute()]
+	public int IgnoreLast
+	{
+		get
 		{
-			get
-			{
-				return _ignoreFirst;
-			}
-			set
-			{
-				_ignoreFirst = value;
-			}
+			return _ignoreLast;
 		}
-
-		[XmlAttribute()]
-		public int IgnoreLast
+		set
 		{
-			get
-			{
-				return _ignoreLast;
-			}
-			set
-			{
-				_ignoreLast = value;
-			}
+			_ignoreLast = value;
 		}
-
-		[XmlAttribute()]
-		public string Separator
+	}
+	[XmlAttribute()]
+	public string Separator
+	{
+		get
 		{
-			get
-			{
-				return _separator;
-			}
-			set
-			{
-				_separator = value;
-			}
+			return _separator;
 		}
-
-		[XmlArrayItem("Option", typeof(TextReaderOptionsField))]
-		public TextReaderOptionsField[] FieldOptions
+		set
 		{
-			get
-			{
-				return _fieldOptions;
-			}
-			set
-			{
-				_fieldOptions = value;
-			}
+			_separator = value;
 		}
-
-		public TextReaderOptionsField GetFieldOption(string fieldName)
+	}
+	[XmlArrayItem("Option", typeof(TextReaderOptionsField))]
+	public TextReaderOptionsField[] FieldOptions
+	{
+		get
 		{
-			if(_cache == null) 
+			return _fieldOptions;
+		}
+		set
+		{
+			_fieldOptions = value;
+		}
+	}
+	public TextReaderOptionsField GetFieldOption(string fieldName)
+	{
+		if(_cache == null) 
+		{
+			_cache = new Hashtable();
+			if(this.FieldOptions != null)
 			{
-				_cache = new Hashtable();
-
-				if(this.FieldOptions != null)
+				foreach(TextReaderOptionsField fld in this.FieldOptions)
 				{
-					foreach(TextReaderOptionsField fld in this.FieldOptions)
-					{
-						_cache[fld.Name] = fld;
-					}
+					_cache[fld.Name] = fld;
 				}
 			}
-
-			return _cache[fieldName] as TextReaderOptionsField;
 		}
+		return _cache[fieldName] as TextReaderOptionsField;
 	}
 }

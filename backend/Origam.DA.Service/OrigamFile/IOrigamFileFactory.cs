@@ -23,12 +23,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+public interface IOrigamFileFactory
 {
-    public interface IOrigamFileFactory
-    {
-        ITrackeableFile New(FileInfo fileInfo, IDictionary<string, Guid> parentFolderIds, bool isAFullyWrittenFile = false);
-        OrigamFile New(string relativePath, IDictionary<string, Guid> parentFolderIds, bool isGroup, bool isAFullyWrittenFile = false);
-        ITrackeableFile New(string relativePath, string fileHash, IDictionary<string, Guid> parentFolderIds);
-    }
+    ITrackeableFile New(FileInfo fileInfo, IDictionary<string, Guid> parentFolderIds, bool isAFullyWrittenFile = false);
+    OrigamFile New(string relativePath, IDictionary<string, Guid> parentFolderIds, bool isGroup, bool isAFullyWrittenFile = false);
+    ITrackeableFile New(string relativePath, string fileHash, IDictionary<string, Guid> parentFolderIds);
 }

@@ -24,19 +24,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server.Attributes;
 
-namespace Origam.Server.Model.UIService
-
+namespace Origam.Server.Model.UIService;
+public class UpdateRowInput
 {
-    public class UpdateRowInput
-    {
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        [RequiredNonDefault]
-        public Guid RowId { get; set; }
-        [Required]
-        public Dictionary<string,string> NewValues { get; set; }
-        public IEnumerable<string> ColumnNames => NewValues.Keys;
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-    }
+    [RequiredNonDefault]
+    public Guid DataStructureEntityId { get; set; }
+    [RequiredNonDefault]
+    public Guid RowId { get; set; }
+    [Required]
+    public Dictionary<string,string> NewValues { get; set; }
+    public IEnumerable<string> ColumnNames => NewValues.Keys;
+    [RequiredNonDefault]
+    public Guid MenuId { get; set; }
 }

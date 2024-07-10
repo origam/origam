@@ -4,11 +4,9 @@
 
 using Origam.Server.IdentityServerGui.Consent;
 
-namespace Origam.Server.IdentityServerGui.Device
+namespace Origam.Server.IdentityServerGui.Device;
+public class DeviceAuthorizationViewModel : ConsentViewModel
 {
-    public class DeviceAuthorizationViewModel : ConsentViewModel
-    {
-        public string UserCode { get; set; }
-        public bool ConfirmUserCode { get; set; }
-    }
+    public string UserCode { get; set; }
+    public bool ConfirmUserCode { get; set; }
 }

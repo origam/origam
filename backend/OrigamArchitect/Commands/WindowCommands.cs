@@ -22,74 +22,67 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.UI;
 using Origam.Workbench;
 
-namespace OrigamArchitect.Commands
+namespace OrigamArchitect.Commands;
+/// <summary>
+/// Closes an active screen.
+/// </summary>
+public class CloseWindow : AbstractMenuCommand
 {
-    /// <summary>
-    /// Closes an active screen.
-    /// </summary>
-    public class CloseWindow : AbstractMenuCommand
+    public override bool IsEnabled
     {
-        public override bool IsEnabled
+        get
         {
-            get
-            {
-                return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-            }
-            set
-            {
-                base.IsEnabled = value;
-            }
+            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
         }
-
-        public override void Run()
+        set
         {
-            WorkbenchSingleton.Workbench.CloseContent(WorkbenchSingleton.Workbench.ActiveDocument);
+            base.IsEnabled = value;
         }
     }
-
-    /// <summary>
-    /// Closes all open screens.
-    /// </summary>
-    public class CloseAllWindows : AbstractMenuCommand
+    public override void Run()
     {
-        public override bool IsEnabled
+        WorkbenchSingleton.Workbench.CloseContent(WorkbenchSingleton.Workbench.ActiveDocument);
+    }
+}
+/// <summary>
+/// Closes all open screens.
+/// </summary>
+public class CloseAllWindows : AbstractMenuCommand
+{
+    public override bool IsEnabled
+    {
+        get
         {
-            get
-            {
-                return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-            }
-            set
-            {
-                base.IsEnabled = value;
-            }
+            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
         }
-
-        public override void Run()
+        set
         {
-            WorkbenchSingleton.Workbench.CloseAllViews();
+            base.IsEnabled = value;
         }
     }
-
-    /// <summary>
-    /// Closes all open screens except of an active one.
-    /// </summary>
-    public class CloseAllButThis : AbstractMenuCommand
+    public override void Run()
     {
-        public override bool IsEnabled
+        WorkbenchSingleton.Workbench.CloseAllViews();
+    }
+}
+/// <summary>
+/// Closes all open screens except of an active one.
+/// </summary>
+public class CloseAllButThis : AbstractMenuCommand
+{
+    public override bool IsEnabled
+    {
+        get
         {
-            get
-            {
-                return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
-            }
-            set
-            {
-                base.IsEnabled = value;
-            }
+            return WorkbenchSingleton.Workbench.ViewContentCollection.Count > 0;
         }
-
-        public override void Run()
+        set
         {
-            WorkbenchSingleton.Workbench.CloseAllViews(WorkbenchSingleton.Workbench.ActiveDocument);
+            base.IsEnabled = value;
         }
+    }
+    public override void Run()
+    {
+        WorkbenchSingleton.Workbench.CloseAllViews(WorkbenchSingleton.Workbench.ActiveDocument);
     }
 }

@@ -27,94 +27,84 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for DeaultValueParameter.
+/// </summary>
+[SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", "icon_xslt-initial-value-parameter.png")]
+[HelpTopic("Xslt+Initial+ValueParameter")]
+[ClassMetaVersion("6.0.0")]
+public class XsltInitialValueParameter : SchemaItemParameter
 {
-    /// <summary>
-    /// Summary description for DeaultValueParameter.
-    /// </summary>
-    [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", "icon_xslt-initial-value-parameter.png")]
-    [HelpTopic("Xslt+Initial+ValueParameter")]
-    [ClassMetaVersion("6.0.0")]
-    public class XsltInitialValueParameter : SchemaItemParameter
-    {
-        private List<OrigamDataType> osArray ;
-
-        public XsltInitialValueParameter() : base() {
-            InitArray();
-        }
-
-        private void InitArray()
-        {
-            osArray = new List<OrigamDataType>
-            {
-                OrigamDataType.Integer,
-                OrigamDataType.Long,
-                OrigamDataType.UniqueIdentifier,
-                OrigamDataType.Currency,
-                OrigamDataType.Float,
-                OrigamDataType.Date,
-                OrigamDataType.Boolean,
-                OrigamDataType.String,
-                OrigamDataType.Memo
-            };
-        }
-
-        public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { InitArray(); }
-
-        public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { InitArray(); }
-
-        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-        {
-            dependencies.Add(this.Transformation);
-        }
-
-        #region Properties
-        //protected OrigamDataType _dataType;
-        [XmlAttribute("dataType")]
-        [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
-        public override OrigamDataType DataType
-        {
-            get
-            {
-                return _dataType;
-            }
-            set
-            {
-                _dataType = value;
-            }
-        }
-        
-        public Guid transformationId;
-
-        [Category("Reference")]
-        [TypeConverter(typeof(TransformationConverter))]
-        [RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRule()]
-        [XmlReference("transformation", "transformationId")]
-        [Description("XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation.")]
-        public XslTransformation Transformation
-        {
-            get
-            {
-                try
-                {
-                    return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.transformationId)) as XslTransformation;
-                }
-                catch
-                {
-                    throw new Exception(ResourceUtils.GetString("ERRTransformationNotFound", this.transformationId));
-                }
-            }
-            set
-            {
-                this.transformationId = (Guid)value.PrimaryKey["Id"];
-            }
-        }
-
-        public List<OrigamDataType> getOrigamDataType()
-        {
-            return osArray;
-        }
-        #endregion
+    private List<OrigamDataType> osArray ;
+    public XsltInitialValueParameter() : base() {
+        InitArray();
     }
+    private void InitArray()
+    {
+        osArray = new List<OrigamDataType>
+        {
+            OrigamDataType.Integer,
+            OrigamDataType.Long,
+            OrigamDataType.UniqueIdentifier,
+            OrigamDataType.Currency,
+            OrigamDataType.Float,
+            OrigamDataType.Date,
+            OrigamDataType.Boolean,
+            OrigamDataType.String,
+            OrigamDataType.Memo
+        };
+    }
+    public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { InitArray(); }
+    public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { InitArray(); }
+    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    {
+        dependencies.Add(this.Transformation);
+    }
+    #region Properties
+    //protected OrigamDataType _dataType;
+    [XmlAttribute("dataType")]
+    [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
+    public override OrigamDataType DataType
+    {
+        get
+        {
+            return _dataType;
+        }
+        set
+        {
+            _dataType = value;
+        }
+    }
+    
+    public Guid transformationId;
+    [Category("Reference")]
+    [TypeConverter(typeof(TransformationConverter))]
+    [RefreshProperties(RefreshProperties.Repaint)]
+    [NotNullModelElementRule()]
+    [XmlReference("transformation", "transformationId")]
+    [Description("XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation.")]
+    public XslTransformation Transformation
+    {
+        get
+        {
+            try
+            {
+                return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.transformationId)) as XslTransformation;
+            }
+            catch
+            {
+                throw new Exception(ResourceUtils.GetString("ERRTransformationNotFound", this.transformationId));
+            }
+        }
+        set
+        {
+            this.transformationId = (Guid)value.PrimaryKey["Id"];
+        }
+    }
+    public List<OrigamDataType> getOrigamDataType()
+    {
+        return osArray;
+    }
+    #endregion
 }

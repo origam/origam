@@ -26,86 +26,70 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+public enum WorkflowEntityParameterMappingType
 {
-	public enum WorkflowEntityParameterMappingType
+	Original,
+	Current,
+	ChangedFlag
+}
+/// <summary>
+/// Summary description for ContextStoreLink.
+/// </summary>
+[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
+[HelpTopic("Data+Event+Parameter+Mapping")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.1")]
+public class StateMachineEventParameterMapping : AbstractSchemaItem
+{
+	public const string CategoryConst = "WorkflowEntityParameterMapping";
+	public StateMachineEventParameterMapping() : base() {}
+	public StateMachineEventParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public StateMachineEventParameterMapping(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	
+	public override string ItemType => CategoryConst;
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-		Original,
-		Current,
-		ChangedFlag
+		dependencies.Add(this.Field);
+		dependencies.Add(this.ContextStore);
+		base.GetExtraDependencies (dependencies);
 	}
-
-	/// <summary>
-	/// Summary description for ContextStoreLink.
-	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
-    [HelpTopic("Data+Event+Parameter+Mapping")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.1")]
-	public class StateMachineEventParameterMapping : AbstractSchemaItem
+	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	#endregion
+	#region Properties
+	[XmlAttribute ("wfParameterType")]
+	public WorkflowEntityParameterMappingType Type { get; set; } = 
+		WorkflowEntityParameterMappingType.Current;
+	
+	public Guid FieldId;
+	[TypeConverter(typeof(StateMachineAllFieldConverter))]
+	[XmlReference("field", "FieldId")]
+	public IDataEntityColumn Field
 	{
-		public const string CategoryConst = "WorkflowEntityParameterMapping";
-
-		public StateMachineEventParameterMapping() : base() {}
-
-		public StateMachineEventParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public StateMachineEventParameterMapping(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType => CategoryConst;
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		get
 		{
-			dependencies.Add(this.Field);
-			dependencies.Add(this.ContextStore);
-
-			base.GetExtraDependencies (dependencies);
+			ModelElementKey key = new ModelElementKey(this.FieldId);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
 		}
-
-		public override SchemaItemCollection ChildItems => new SchemaItemCollection();
-		#endregion
-
-		#region Properties
-		[XmlAttribute ("wfParameterType")]
-		public WorkflowEntityParameterMappingType Type { get; set; } = 
-			WorkflowEntityParameterMappingType.Current;
-		
-		public Guid FieldId;
-
-		[TypeConverter(typeof(StateMachineAllFieldConverter))]
-		[XmlReference("field", "FieldId")]
-		public IDataEntityColumn Field
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey(this.FieldId);
-
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set => this.FieldId = (Guid)value.PrimaryKey["Id"];
-		}
-		
-		public Guid ContextStoreId;
-
-		[TypeConverter(typeof(StateMachineEventParameterMappingContextStoreConverter))]
-		[XmlReference("contextStore", "ContextStoreId")]
-		public IContextStore ContextStore
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey(this.ContextStoreId);
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
-
-				this.Name = (this.ContextStore == null ? "" : this.ContextStore.Name);
-			}
-		}
-		#endregion
+		set => this.FieldId = (Guid)value.PrimaryKey["Id"];
 	}
+	
+	public Guid ContextStoreId;
+	[TypeConverter(typeof(StateMachineEventParameterMappingContextStoreConverter))]
+	[XmlReference("contextStore", "ContextStoreId")]
+	public IContextStore ContextStore
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey(this.ContextStoreId);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
+			this.Name = (this.ContextStore == null ? "" : this.ContextStore.Name);
+		}
+	}
+	#endregion
 }

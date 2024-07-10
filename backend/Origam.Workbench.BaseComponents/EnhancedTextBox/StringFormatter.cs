@@ -22,29 +22,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+internal class StringFormatter : Formatter
 {
-    internal class StringFormatter : Formatter
+    public StringFormatter(TextBox textBox)
+        : base(textBox,"")
     {
-        public StringFormatter(TextBox textBox)
-            : base(textBox,"")
-        {
-             
-        }
-
-        public override void OnLeave(object sender, EventArgs e)
-        {
-            
-        }
-
-        public override object GetValue()
-        {
-            return Text;
-        }
-
-        protected override bool IsValidChar(char input)
-        {
-            return true;
-        }
+         
+    }
+    public override void OnLeave(object sender, EventArgs e)
+    {
+        
+    }
+    public override object GetValue()
+    {
+        return Text;
+    }
+    protected override bool IsValidChar(char input)
+    {
+        return true;
     }
 }

@@ -22,35 +22,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+/// <summary>
+/// Summary description for NotNullModelElementRuleAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Summary description for NotNullModelElementRuleAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class SelfJoinSameBaseRuleAttribute : AbstractModelElementRuleAttribute 
+	public SelfJoinSameBaseRuleAttribute()
 	{
-		public SelfJoinSameBaseRuleAttribute()
+	}
+    public override Exception CheckRule(object instance)
+	{
+		return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+	}
+	public override Exception CheckRule(object instance, string memberName)
+	{
+		if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
+		if (!(instance is EntityRelationItem relationItem))
 		{
+			throw new Exception(nameof(SelfJoinSameBaseRuleAttribute)+" can only be used in "+nameof(EntityRelationItem));
 		}
-        public override Exception CheckRule(object instance)
+		if(relationItem.BaseEntity != null && relationItem.RelatedEntity != null && relationItem.IsSelfJoin && !relationItem.BaseEntity.PrimaryKey.Equals(relationItem.RelatedEntity.PrimaryKey))
 		{
-			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+			return new ArgumentOutOfRangeException("IsSelfJoin", relationItem.IsSelfJoin, ResourceUtils.GetString("ErrorSelfJoinSameBase"));
 		}
-
-		public override Exception CheckRule(object instance, string memberName)
-		{
-			if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
-			if (!(instance is EntityRelationItem relationItem))
-			{
-				throw new Exception(nameof(SelfJoinSameBaseRuleAttribute)+" can only be used in "+nameof(EntityRelationItem));
-			}
-
-			if(relationItem.BaseEntity != null && relationItem.RelatedEntity != null && relationItem.IsSelfJoin && !relationItem.BaseEntity.PrimaryKey.Equals(relationItem.RelatedEntity.PrimaryKey))
-			{
-				return new ArgumentOutOfRangeException("IsSelfJoin", relationItem.IsSelfJoin, ResourceUtils.GetString("ErrorSelfJoinSameBase"));
-			}
-			return null;
-		}
+		return null;
 	}
 }

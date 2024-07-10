@@ -22,18 +22,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Microsoft.Msagl.Drawing;
 
-namespace Origam.Workbench.Diagram.Graphs
+namespace Origam.Workbench.Diagram.Graphs;
+public class InfrastructureSubgraph : Subgraph, IWorkflowSubgraph
 {
-    public class InfrastructureSubgraph : Subgraph, IWorkflowSubgraph
+    private readonly BlockSubGraph parent;
+    public InfrastructureSubgraph(string id, BlockSubGraph parent) : base(id)
     {
-        private readonly BlockSubGraph parent;
-        public InfrastructureSubgraph(string id, BlockSubGraph parent) : base(id)
-        {
-            this.parent = parent;
-            LabelText = "";
-            DrawNodeDelegate = (node, graphics) => true;
-        }
-
-        public Guid WorkflowItemId => parent.WorkflowItemId;
+        this.parent = parent;
+        LabelText = "";
+        DrawNodeDelegate = (node, graphics) => true;
     }
+    public Guid WorkflowItemId => parent.WorkflowItemId;
 }

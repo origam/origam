@@ -28,95 +28,79 @@ using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+public class SaveDataFromDataStructure : AbstractMenuCommand
 {
-    public class SaveDataFromDataStructure : AbstractMenuCommand
+    WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    IServiceAgent _dataServiceAgent;
+    public override bool IsEnabled
     {
-        WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        IServiceAgent _dataServiceAgent;
-
-        public override bool IsEnabled
+        get
         {
-            get
-            {
-                return Owner is DataStructure 
-                       ||  Owner is DataStructureMethod;
-            }
-            set
-            {
-                throw new ArgumentException("Cannot set this property", "IsEnabled");
-            }
+            return Owner is DataStructure 
+                   ||  Owner is DataStructureMethod;
         }
-
-        public override void Run()
+        set
         {
-            DataStructure structure;
-            DataStructureMethod method = null;
-
-            if(Owner is DataStructureMethod)
-            {
-                structure = (Owner as DataStructureMethod).ParentItem as DataStructure;
-                method = Owner as DataStructureMethod;
-            }
-            else
-            {
-                structure = Owner as DataStructure;
-            }
-			
-
-            _dataServiceAgent = (ServiceManager.Services.GetService(
-                typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-
-            DataStructureQuery query = new DataStructureQuery(structure.Id);
-            if(method != null)	
-            {
-                query.MethodId = method.Id;
-            }
-
-            SaveFileDialog dialog = null;
-
-            try
-            {
-                dialog = new SaveFileDialog();
-
-                dialog.AddExtension = true;
-                dialog.DefaultExt = "xml";
-                dialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*" ;
-                dialog.FilterIndex = 1;
-
-                dialog.Title = strings.SaveXmlResult_Title;
-
-                if(dialog.ShowDialog() == DialogResult.OK)
-                {
-                    LoadData(query).WriteXml(dialog.FileName, XmlWriteMode.WriteSchema);
-                } 
-            }
-            finally
-            {
-                if(dialog != null) dialog.Dispose();
-            }
+            throw new ArgumentException("Cannot set this property", "IsEnabled");
         }
-
-        private DataSet LoadData(DataStructureQuery query)
+    }
+    public override void Run()
+    {
+        DataStructure structure;
+        DataStructureMethod method = null;
+        if(Owner is DataStructureMethod)
         {
-            _dataServiceAgent.MethodName = "LoadDataByQuery";
-            _dataServiceAgent.Parameters.Clear();
-            _dataServiceAgent.Parameters.Add("Query", query);
-
-            _dataServiceAgent.Run();
-
-            return _dataServiceAgent.Result as DataSet;
+            structure = (Owner as DataStructureMethod).ParentItem as DataStructure;
+            method = Owner as DataStructureMethod;
         }
-
-        public override void Dispose()
+        else
         {
-            _schemaService = null;
-            _dataServiceAgent = null;
+            structure = Owner as DataStructure;
         }
-        public override int GetImageIndex(string icon)
+		
+        _dataServiceAgent = (ServiceManager.Services.GetService(
+            typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
+        DataStructureQuery query = new DataStructureQuery(structure.Id);
+        if(method != null)	
         {
-            return _schemaBrowser.ImageIndex(icon);
+            query.MethodId = method.Id;
         }
+        SaveFileDialog dialog = null;
+        try
+        {
+            dialog = new SaveFileDialog();
+            dialog.AddExtension = true;
+            dialog.DefaultExt = "xml";
+            dialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*" ;
+            dialog.FilterIndex = 1;
+            dialog.Title = strings.SaveXmlResult_Title;
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadData(query).WriteXml(dialog.FileName, XmlWriteMode.WriteSchema);
+            } 
+        }
+        finally
+        {
+            if(dialog != null) dialog.Dispose();
+        }
+    }
+    private DataSet LoadData(DataStructureQuery query)
+    {
+        _dataServiceAgent.MethodName = "LoadDataByQuery";
+        _dataServiceAgent.Parameters.Clear();
+        _dataServiceAgent.Parameters.Add("Query", query);
+        _dataServiceAgent.Run();
+        return _dataServiceAgent.Result as DataSet;
+    }
+    public override void Dispose()
+    {
+        _schemaService = null;
+        _dataServiceAgent = null;
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
     }
 }

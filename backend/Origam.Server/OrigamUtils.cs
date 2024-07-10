@@ -26,50 +26,45 @@ using Origam.DA.Service;
 using Origam.Server.Middleware;
 using Origam.Workbench.Services;
 
-namespace Origam.Server
+namespace Origam.Server;
+public static class OrigamUtils
 {
-    public static class OrigamUtils
+    public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
+        bool reloadModelWhenFilesChangesDetected)
     {
-        public static void ConnectOrigamRuntime(ILoggerFactory loggerFactory,
-            bool reloadModelWhenFilesChangesDetected)
+        OrigamEngine.OrigamEngine.ConnectRuntime();
+        if (!reloadModelWhenFilesChangesDetected)
         {
-            OrigamEngine.OrigamEngine.ConnectRuntime();
-
-            if (!reloadModelWhenFilesChangesDetected)
+            return;
+        }
+        IPersistenceService persistence 
+            = ServiceManager.Services.GetService<IPersistenceService>();
+        if (persistence is FilePersistenceService filePersistenceService)
+        {
+            filePersistenceService.ReloadNeeded += (sender, args) =>
             {
-                return;
-            }
-
-            IPersistenceService persistence 
-                = ServiceManager.Services.GetService<IPersistenceService>();
-            if (persistence is FilePersistenceService filePersistenceService)
-            {
-                filePersistenceService.ReloadNeeded += (sender, args) =>
+                string errorMessage = "";
+                try
                 {
-                    string errorMessage = "";
-                    try
+                    Maybe<XmlLoadError> maybeError =
+                        filePersistenceService.Reload();
+                    if (maybeError.HasValue)
                     {
-                        Maybe<XmlLoadError> maybeError =
-                            filePersistenceService.Reload();
-                        if (maybeError.HasValue)
-                        {
-                            errorMessage = maybeError.Value.Message;
-                        }
+                        errorMessage = maybeError.Value.Message;
                     }
-                    catch (Exception ex)
-                    {
-                        errorMessage += ex.Message + "\n" + ex.StackTrace;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(errorMessage))
-                    {
-                        FatalErrorMiddleware.ErrorMessage =
-                            "An error has occured during automatic model reload. Please restart the server.\n" + errorMessage;
-                        loggerFactory.CreateLogger("Model Reload")
-                            .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
-                    }
-                };
-            }
+                }
+                catch (Exception ex)
+                {
+                    errorMessage += ex.Message + "\n" + ex.StackTrace;
+                }
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    FatalErrorMiddleware.ErrorMessage =
+                        "An error has occured during automatic model reload. Please restart the server.\n" + errorMessage;
+                    loggerFactory.CreateLogger("Model Reload")
+                        .Log(LogLevel.Error, FatalErrorMiddleware.ErrorMessage);
+                }
+            };
         }
     }
 }

@@ -23,91 +23,78 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for DataGridImageColumn.
+/// </summary>
+public class DataGridImageColumn : DataGridColumnStyle 
 {
-	/// <summary>
-	/// Summary description for DataGridImageColumn.
-	/// </summary>
-	public class DataGridImageColumn : DataGridColumnStyle 
+	private int _width = 0;
+	private int _height = 0;
+	public DataGridImageColumn(int width, int height) : base()
 	{
-		private int _width = 0;
-		private int _height = 0;
-
-		public DataGridImageColumn(int width, int height) : base()
+		_width = width;
+		_height = height;
+	}
+	protected override int GetPreferredHeight(System.Drawing.Graphics g, object value)
+	{
+		return _height;
+	}
+	protected override int GetMinimumHeight()
+	{
+		return _height;
+	}
+	protected override Size GetPreferredSize(Graphics g, object value)
+	{
+		return new Size(_width, _height);
+	}
+	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, bool alignToRight)
+	{
+		this.Paint(g, bounds, source, rowNum);
+	}
+	protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum)
+	{
+		object imageData = this.GetColumnValueAtRow(source, rowNum);
+		try
 		{
-			_width = width;
-			_height = height;
-		}
-
-		protected override int GetPreferredHeight(System.Drawing.Graphics g, object value)
-		{
-			return _height;
-		}
-
-		protected override int GetMinimumHeight()
-		{
-			return _height;
-		}
-
-		protected override Size GetPreferredSize(Graphics g, object value)
-		{
-			return new Size(_width, _height);
-		}
-
-		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum, bool alignToRight)
-		{
-			this.Paint(g, bounds, source, rowNum);
-		}
-
-		protected override void Paint(Graphics g, Rectangle bounds, CurrencyManager source, int rowNum)
-		{
-			object imageData = this.GetColumnValueAtRow(source, rowNum);
-
-			try
+			if(imageData is byte[])
 			{
-				if(imageData is byte[])
+				byte[] byteArray = (byte[])imageData;
+				MemoryStream ms = new MemoryStream(byteArray);
+				using(Image i = Image.FromStream(ms))
 				{
-					byte[] byteArray = (byte[])imageData;
-					MemoryStream ms = new MemoryStream(byteArray);
-					using(Image i = Image.FromStream(ms))
+					using(Bitmap bm = new Bitmap(bounds.Width, bounds.Height))
 					{
-						using(Bitmap bm = new Bitmap(bounds.Width, bounds.Height))
+						using(Graphics bmgr = Graphics.FromImage(bm))
 						{
-							using(Graphics bmgr = Graphics.FromImage(bm))
-							{
-								bmgr.Clear(Color.White);
-								bmgr.DrawImage(i, 0, 0, i.Width, i.Height);
-							}
-							g.DrawImageUnscaled(bm, bounds);
+							bmgr.Clear(Color.White);
+							bmgr.DrawImage(i, 0, 0, i.Width, i.Height);
 						}
+						g.DrawImageUnscaled(bm, bounds);
 					}
-					ms.Close();
 				}
-				else
-				{
-					g.FillRectangle(new SolidBrush(this.DataGridTableStyle.BackColor), bounds);
-				}
+				ms.Close();
 			}
-			catch
+			else
 			{
 				g.FillRectangle(new SolidBrush(this.DataGridTableStyle.BackColor), bounds);
 			}
 		}
-
-		protected override void Abort(int rowNum)
+		catch
 		{
-			
+			g.FillRectangle(new SolidBrush(this.DataGridTableStyle.BackColor), bounds);
 		}
-
-		protected override bool Commit(CurrencyManager dataSource, int rowNum)
-		{
-			return true;
-		}
-
-		protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
-		{
-			
-		}
-
+	}
+	protected override void Abort(int rowNum)
+	{
+		
+	}
+	protected override bool Commit(CurrencyManager dataSource, int rowNum)
+	{
+		return true;
+	}
+	protected override void Edit(CurrencyManager source, int rowNum, Rectangle bounds, bool readOnly, string instantText, bool cellIsVisible)
+	{
+		
 	}
 }

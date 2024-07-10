@@ -22,41 +22,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+/// <summary>
+/// Checks a validity of a workflow update context task schemaitem - whether the name defined in "FieldName"
+/// corresponds with either a column defined on datastructure level or with an entity column
+/// provided that AllFields flag on datastructure entity is set.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
+public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElementRuleAttribute 
 {
-	/// <summary>
-	/// Checks a validity of a workflow update context task schemaitem - whether the name defined in "FieldName"
-	/// corresponds with either a column defined on datastructure level or with an entity column
-	/// provided that AllFields flag on datastructure entity is set.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple=false, Inherited=true)]
-	public class UpdateContextTaskValidModelElementRuleAttribute : AbstractModelElementRuleAttribute 
+	public UpdateContextTaskValidModelElementRuleAttribute()
 	{
-		public UpdateContextTaskValidModelElementRuleAttribute()
+	}
+	public override Exception CheckRule(object instance)
+	{
+		UpdateContextTask updateContextTask = (UpdateContextTask) instance;
+		if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
 		{
+			// Output context sture is not a structure, don't check
+			return null;
 		}
-
-		public override Exception CheckRule(object instance)
+		
+		if (updateContextTask.GetFieldSchemaItem() == null)
 		{
-			UpdateContextTask updateContextTask = (UpdateContextTask) instance;
-
-			if (updateContextTask.OutputContextStore == null || updateContextTask.OutputContextStore.Structure == null)
-			{
-				// Output context sture is not a structure, don't check
-				return null;
-			}
-			
-			if (updateContextTask.GetFieldSchemaItem() == null)
-			{
-                return new NullReferenceException(ResourceUtils.GetString(
-					"ErrorUpdateContextTaskInvalid", updateContextTask.FieldName));
-			}
-            return null;
+            return new NullReferenceException(ResourceUtils.GetString(
+				"ErrorUpdateContextTaskInvalid", updateContextTask.FieldName));
 		}
-
-		public override Exception CheckRule(object instance, string memberName)
-		{
-			return CheckRule(instance);
-		}
+        return null;
+	}
+	public override Exception CheckRule(object instance, string memberName)
+	{
+		return CheckRule(instance);
 	}
 }

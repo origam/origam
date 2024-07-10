@@ -28,19 +28,16 @@ using Origam.Extensions;
 using Origam.Server.Attributes;
 using Origam.Server;
 
-namespace Origam.Server.Model.UIService
-
+namespace Origam.Server.Model.UIService;
+public class GetGroupsAggregations : IEntityIdentification
 {
-    public class GetGroupsAggregations : IEntityIdentification
-    {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Filter { get; set; }
-        public Dictionary<string, Guid> FilterLookups { get; set; }
-        public List<Aggregation> AggregatedColumns { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        public Guid MasterRowId { get; set; }
-    }
+    [RequiredNonDefault]
+    public Guid MenuId { get; set; }
+    [RequiredNonDefault]
+    public Guid DataStructureEntityId { get; set; }
+    public string Filter { get; set; }
+    public Dictionary<string, Guid> FilterLookups { get; set; }
+    public List<Aggregation> AggregatedColumns { get; set; }
+    public Guid SessionFormIdentifier { get; set; }
+    public Guid MasterRowId { get; set; }
 }

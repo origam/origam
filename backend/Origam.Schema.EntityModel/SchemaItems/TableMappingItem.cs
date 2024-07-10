@@ -28,200 +28,179 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+public enum DatabaseMappingObjectType 
 {
-	public enum DatabaseMappingObjectType 
+	Table = 0,
+	View = 1
+}
+/// <summary>
+/// Maps physical table to an entity.
+/// </summary>
+[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
+[HelpTopic("Entities")]
+[ClassMetaVersion("6.0.0")]
+public class TableMappingItem : AbstractDataEntity
+{
+	public TableMappingItem() {}
+	public TableMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public TableMappingItem(Key primaryKey) : base(primaryKey)	{}
+	#region Properties
+	private string _sourceTableName;
+	[Category("Mapping")]
+	[StringNotEmptyModelElementRule()]
+	[Description("Name of the database table name. When loading data from a database for this entity, this name will be used as the table name.")]
+    [XmlAttribute("mappedObjectName")]
+    public string MappedObjectName
 	{
-		Table = 0,
-		View = 1
+		get
+		{
+			return _sourceTableName;
+		}
+		set
+		{
+			_sourceTableName = value;
+		}
 	}
-
-	/// <summary>
-	/// Maps physical table to an entity.
-	/// </summary>
-	[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
-    [HelpTopic("Entities")]
-    [ClassMetaVersion("6.0.0")]
-	public class TableMappingItem : AbstractDataEntity
+	private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
+	[Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
+	[Description("Type of the database object - View or Table. For views the deployment scripts will not be generated.")]
+    [XmlAttribute("databaseObjectType")]
+    public DatabaseMappingObjectType DatabaseObjectType
 	{
-		public TableMappingItem() {}
-
-		public TableMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public TableMappingItem(Key primaryKey) : base(primaryKey)	{}
-
-		#region Properties
-		private string _sourceTableName;
-		[Category("Mapping")]
-		[StringNotEmptyModelElementRule()]
-		[Description("Name of the database table name. When loading data from a database for this entity, this name will be used as the table name.")]
-        [XmlAttribute("mappedObjectName")]
-        public string MappedObjectName
+		get
 		{
-			get
+			return _databaseObjectType;
+		}
+		set
+		{
+			_databaseObjectType = value;
+		}
+	}
+	private bool _generateDeploymentScript = true;
+	[Category("Mapping"), DefaultValue(true)]
+	[Description("Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one).")]
+    [XmlAttribute("generateDeploymentScript")]
+    public bool GenerateDeploymentScript
+	{
+		get
+		{
+			return _generateDeploymentScript;
+		}
+		set
+		{
+			_generateDeploymentScript = value;
+		}
+	}
+    
+	public Guid LocalizationRelationId = Guid.Empty;
+	[TypeConverter(typeof(EntityRelationConverter))]
+    [XmlReference("localizationRelation", "LocalizationRelationId")]
+    //[RefreshProperties(RefreshProperties.Repaint)]
+    public EntityRelationItem LocalizationRelation
+	{
+		get
+		{
+			return (EntityRelationItem)this.PersistenceProvider.RetrieveInstance(typeof(EntityRelationItem), new ModelElementKey(this.LocalizationRelationId));				
+		}
+		set
+		{   
+			this.LocalizationRelationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];				
+		}
+	}
+    #endregion
+    public override string Icon
+	{
+		get
+		{
+			switch(DatabaseObjectType)
 			{
-				return _sourceTableName;
-			}
-			set
-			{
-				_sourceTableName = value;
+				case DatabaseMappingObjectType.Table:
+					return "icon_database-entity.png";
+				case DatabaseMappingObjectType.View:
+					return "54";
+				default:
+					return "0";
 			}
 		}
-
-		private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
-		[Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
-		[Description("Type of the database object - View or Table. For views the deployment scripts will not be generated.")]
-        [XmlAttribute("databaseObjectType")]
-        public DatabaseMappingObjectType DatabaseObjectType
+	}
+	public override void OnNameChanged(string originalName)
+	{
+		if(MappedObjectName == "" 
+			|| MappedObjectName == null
+			|| MappedObjectName == originalName)
 		{
-			get
-			{
-				return _databaseObjectType;
-			}
-			set
-			{
-				_databaseObjectType = value;
-			}
+			MappedObjectName = this.Name;
 		}
-
-		private bool _generateDeploymentScript = true;
-		[Category("Mapping"), DefaultValue(true)]
-		[Description("Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one).")]
-        [XmlAttribute("generateDeploymentScript")]
-        public bool GenerateDeploymentScript
+	}
+	[Browsable(false)]
+	public override ArrayList EntityPrimaryKey
+	{
+		get
 		{
-			get
+			ArrayList list = new ArrayList();
+			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
-				return _generateDeploymentScript;
+				if(column.IsPrimaryKey && column is FieldMappingItem)
+					list.Add(column);
 			}
-			set
-			{
-				_generateDeploymentScript = value;
-			}
+			return list;
 		}
-        
-		public Guid LocalizationRelationId = Guid.Empty;
-
-		[TypeConverter(typeof(EntityRelationConverter))]
-        [XmlReference("localizationRelation", "LocalizationRelationId")]
-        //[RefreshProperties(RefreshProperties.Repaint)]
-        public EntityRelationItem LocalizationRelation
+	}
+	public override bool CanConvertTo(Type type)
+	{
+		return (type == typeof(DetachedEntity));
+	}
+	public override ISchemaItem ConvertTo(Type type)
+	{
+		if(type == typeof(DetachedEntity))
 		{
-			get
-			{
-				return (EntityRelationItem)this.PersistenceProvider.RetrieveInstance(typeof(EntityRelationItem), new ModelElementKey(this.LocalizationRelationId));				
-			}
-			set
-			{   
-				this.LocalizationRelationId = (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];				
-			}
+			var methodInfo = typeof(Function).GetMethod(
+				"ConvertTo", BindingFlags.NonPublic);
+			var genericMethodInfo = methodInfo.MakeGenericMethod(type);
+			return (ISchemaItem)genericMethodInfo.Invoke(this, null);
 		}
-        #endregion
-
-        public override string Icon
-		{
-			get
-			{
-				switch(DatabaseObjectType)
-				{
-					case DatabaseMappingObjectType.Table:
-						return "icon_database-entity.png";
-
-					case DatabaseMappingObjectType.View:
-						return "54";
-
-					default:
-						return "0";
-				}
-			}
-		}
-
-		public override void OnNameChanged(string originalName)
-		{
-			if(MappedObjectName == "" 
-				|| MappedObjectName == null
-				|| MappedObjectName == originalName)
-			{
-				MappedObjectName = this.Name;
-			}
-		}
-
-		[Browsable(false)]
-		public override ArrayList EntityPrimaryKey
-		{
-			get
-			{
-				ArrayList list = new ArrayList();
-
-				foreach(IDataEntityColumn column in this.EntityColumns)
-				{
-					if(column.IsPrimaryKey && column is FieldMappingItem)
-						list.Add(column);
-				}
-
-				return list;
-			}
-		}
-
-
-		public override bool CanConvertTo(Type type)
-		{
-			return (type == typeof(DetachedEntity));
-		}
-
-		public override ISchemaItem ConvertTo(Type type)
-		{
-			if(type == typeof(DetachedEntity))
-			{
-				var methodInfo = typeof(Function).GetMethod(
-					"ConvertTo", BindingFlags.NonPublic);
-				var genericMethodInfo = methodInfo.MakeGenericMethod(type);
-				return (ISchemaItem)genericMethodInfo.Invoke(this, null);
-			}
-			return base.ConvertTo(type);
-		}
+		return base.ConvertTo(type);
+	}
+	
+	protected override ISchemaItem ConvertTo<T>()
+	{
+		var converted = RootProvider.NewItem<T>(SchemaExtensionId, Group);
+		converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
+		converted.Name = this.Name;
+		converted.IsAbstract = this.IsAbstract;
+		// we have to delete first (also from the cache)
+		DeleteChildItems = false;
+		PersistChildItems = false;
+		IsDeleted = true;
+		var persistenceProvider = ServiceManager.Services
+			.GetService<IPersistenceService>()
+			.SchemaProvider;
+		persistenceProvider.BeginTransaction();
+		Persist();
+		converted.Persist();
+		persistenceProvider.EndTransaction();
+		return converted;
+	}
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
+		dependencies.Add(this.LocalizationRelation);
 		
-		protected override ISchemaItem ConvertTo<T>()
+		base.GetExtraDependencies(dependencies);
+	}
+	public override void UpdateReferences()
+	{
+		foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
 		{
-			var converted = RootProvider.NewItem<T>(SchemaExtensionId, Group);
-			converted.PrimaryKey["Id"] = this.PrimaryKey["Id"];
-			converted.Name = this.Name;
-			converted.IsAbstract = this.IsAbstract;
-			// we have to delete first (also from the cache)
-			DeleteChildItems = false;
-			PersistChildItems = false;
-			IsDeleted = true;
-			var persistenceProvider = ServiceManager.Services
-				.GetService<IPersistenceService>()
-				.SchemaProvider;
-			persistenceProvider.BeginTransaction();
-			Persist();
-			converted.Persist();
-			persistenceProvider.EndTransaction();
-			return converted;
-		}
-		public override void GetExtraDependencies(ArrayList dependencies)
-		{
-			dependencies.Add(this.LocalizationRelation);
-			
-			base.GetExtraDependencies(dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			if (item.OldPrimaryKey != null && this.LocalizationRelation != null)
 			{
-				if (item.OldPrimaryKey != null && this.LocalizationRelation != null)
+				if (item.OldPrimaryKey.Equals(this.LocalizationRelation.PrimaryKey))
 				{
-					if (item.OldPrimaryKey.Equals(this.LocalizationRelation.PrimaryKey))
-					{
-						this.LocalizationRelation = item as EntityRelationItem;
-						break;
-					}
+					this.LocalizationRelation = item as EntityRelationItem;
+					break;
 				}
 			}
-
-			base.UpdateReferences();
 		}
+		base.UpdateReferences();
 	}
 }

@@ -31,204 +31,171 @@ using Origam.Extensions;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+/// <summary>
+/// Summary description for WorkflowHost.
+/// </summary>
+public class WorkflowHost : IDisposable
 {
-	/// <summary>
-	/// Summary description for WorkflowHost.
-	/// </summary>
-	public class WorkflowHost : IDisposable
+	private static readonly log4net.ILog log =
+		log4net.LogManager.GetLogger(
+			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	private static WorkflowHost _defaultHost = new WorkflowHost();
+	private ArrayList _runningWorkflows = new ArrayList();
+	private Hashtable _runningForms = new Hashtable();
+	private bool _supportsUI = false;
+	public event WorkflowHostEvent WorkflowFinished;
+	public event WorkflowHostMessageEvent WorkflowMessage;
+	public event WorkflowHostFormEvent FormRequested;
+	public WorkflowHost()
 	{
-		private static readonly log4net.ILog log =
-			log4net.LogManager.GetLogger(
-				System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		private static WorkflowHost _defaultHost = new WorkflowHost();
-
-		private ArrayList _runningWorkflows = new ArrayList();
-		private Hashtable _runningForms = new Hashtable();
-		private bool _supportsUI = false;
-
-		public event WorkflowHostEvent WorkflowFinished;
-		public event WorkflowHostMessageEvent WorkflowMessage;
-		public event WorkflowHostFormEvent FormRequested;
-
-		public WorkflowHost()
+	}
+	public static WorkflowHost DefaultHost
+	{
+		get
 		{
+			return _defaultHost;
 		}
-
-		public static WorkflowHost DefaultHost
+	}
+	public bool SupportsUI
+	{
+		get
 		{
-			get
+			return _supportsUI;
+		}
+		set
+		{
+			_supportsUI = value;
+		}
+	}
+	public ArrayList RunningWorkflows
+	{
+		get
+		{
+			return _runningWorkflows;
+		}
+	}
+	public void ExecuteWorkflow(WorkflowEngine engine)
+	{
+        lock(_runningWorkflows)
+        {
+            _runningWorkflows.Add(engine);
+        }
+		engine.Host = this;
+		engine.RunWorkflowFromHost();
+	}
+	internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
+	{
+		try
+		{
+			// pass notification texts up to the calling workflow
+			if(engine.CallingWorkflow != null && exception == null)
 			{
-				return _defaultHost;
+				engine.CallingWorkflow.Notification = engine.Notification;
+				engine.CallingWorkflow.ResultMessage = engine.ResultMessage;
+			}
+			// fire event
+			if(WorkflowFinished != null)
+			{
+				Exception exceptionToPassOn =
+					PassExceptionOn(engine, exception)
+						? exception
+						: null;
+				WorkflowFinished(this, new WorkflowHostEventArgs(engine, exceptionToPassOn));
+                if(exception != null)
+                {
+                    log.LogOrigamError(exception);
+                }
 			}
 		}
-
-		public bool SupportsUI
-		{
-			get
-			{
-				return _supportsUI;
-			}
-			set
-			{
-				_supportsUI = value;
-			}
-		}
-
-		public ArrayList RunningWorkflows
-		{
-			get
-			{
-				return _runningWorkflows;
-			}
-		}
-
-		public void ExecuteWorkflow(WorkflowEngine engine)
+		finally
 		{
             lock(_runningWorkflows)
             {
-                _runningWorkflows.Add(engine);
+                _runningWorkflows.Remove(engine);
             }
-			engine.Host = this;
-			engine.RunWorkflowFromHost();
+			engine.Host = null;
 		}
-
-		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
-		{
-			try
-			{
-				// pass notification texts up to the calling workflow
-				if(engine.CallingWorkflow != null && exception == null)
-				{
-					engine.CallingWorkflow.Notification = engine.Notification;
-					engine.CallingWorkflow.ResultMessage = engine.ResultMessage;
-				}
-
-				// fire event
-				if(WorkflowFinished != null)
-				{
-					Exception exceptionToPassOn =
-						PassExceptionOn(engine, exception)
-							? exception
-							: null;
-					WorkflowFinished(this, new WorkflowHostEventArgs(engine, exceptionToPassOn));
-                    if(exception != null)
-                    {
-	                    log.LogOrigamError(exception);
-                    }
-				}
-			}
-			finally
-			{
-                lock(_runningWorkflows)
-                {
-                    _runningWorkflows.Remove(engine);
-                }
-				engine.Host = null;
-			}
-		}
-
-		private bool PassExceptionOn(WorkflowEngine engine, Exception exception)
-		{
-			if (engine.WorkflowBlock is not Schema.WorkflowModel.Workflow)
-			{
-				return true;
-			}
-
-			return
-				exception != null &&
-				exception.Data["onFailure"] is not StepFailureMode.Suppress;
-		}
-
-		internal void OnWorkflowUserMessage(WorkflowEngine engine, string message, Exception exception, bool popup)
-		{
-			UICheck();
-
-			if(WorkflowMessage != null)
-			{
-				this.WorkflowMessage(this, new WorkflowHostMessageEventArgs(engine, message, exception, popup));
-			}
-		}
-
-		internal void OnWorkflowForm(Tasks.UIEngineTask task, IDataDocument data, string description, 
-			string notification, FormControlSet form, DataStructureRuleSet ruleSet, IEndRule endRule, 
-			bool isFinalForm, bool allowSave, bool isAutoNext, AbstractDataStructure structure,
-			DataStructureMethod refreshMethod, DataStructureSortSet refreshSort, bool isRefreshSuppressedBeforeFirstSave,
-			IEndRule saveConfirmationRule, AbstractDataStructure saveStructure, Hashtable parameters,
-            bool refreshPortalAfterSave)
-		{
-			UICheck();
-
-			Guid taskId = Guid.NewGuid();
-
-			_runningForms.Add(taskId, task);
-
-			// fire event
-			if(FormRequested != null)
-			{
-				this.FormRequested(this, new WorkflowHostFormEventArgs(taskId, task.Engine, data, 
-					description, notification, form, ruleSet, endRule, structure, 
-					refreshMethod, refreshSort, saveStructure, isFinalForm, allowSave, isAutoNext, parameters,
-					isRefreshSuppressedBeforeFirstSave, saveConfirmationRule, refreshPortalAfterSave));
-			}
-		}
-
-		public void AbortWorkflowForm(Guid taskId)
-        {
-            Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
-
-            if (task == null)
-            {
-                throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
-            }
-
-            _runningForms.Remove(taskId);
-
-            Thread thread = new Thread(new ThreadStart(task.Abort));
-            PrepareAndStartThread(thread, task);
-        }
-
-        public void FinishWorkflowForm(Guid taskId, IDataDocument data)
-		{
-			Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
-
-			if (task == null)
-			{
-				throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
-			}
-
-			_runningForms.Remove(taskId);
-            
-			task.Result = data;
-
-            Thread thread = new Thread(new ThreadStart(task.Finish));
-            PrepareAndStartThread(thread, task);
-		}
-
-        private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
-        {            
-            thread.Name = "Workflow " + task.Engine.WorkflowInstanceId.ToString();
-            thread.IsBackground = true;
-            thread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-            thread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
-            thread.Start();
-        }
-
-        private void UICheck()
-		{
-			if(! SupportsUI)
-			{
-				throw new NullReferenceException(ResourceUtils.GetString("ErrorNoWorkflowUI"));
-			}
-		}
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-		}
-
-		#endregion
 	}
+	private bool PassExceptionOn(WorkflowEngine engine, Exception exception)
+	{
+		if (engine.WorkflowBlock is not Schema.WorkflowModel.Workflow)
+		{
+			return true;
+		}
+		return
+			exception != null &&
+			exception.Data["onFailure"] is not StepFailureMode.Suppress;
+	}
+	internal void OnWorkflowUserMessage(WorkflowEngine engine, string message, Exception exception, bool popup)
+	{
+		UICheck();
+		if(WorkflowMessage != null)
+		{
+			this.WorkflowMessage(this, new WorkflowHostMessageEventArgs(engine, message, exception, popup));
+		}
+	}
+	internal void OnWorkflowForm(Tasks.UIEngineTask task, IDataDocument data, string description, 
+		string notification, FormControlSet form, DataStructureRuleSet ruleSet, IEndRule endRule, 
+		bool isFinalForm, bool allowSave, bool isAutoNext, AbstractDataStructure structure,
+		DataStructureMethod refreshMethod, DataStructureSortSet refreshSort, bool isRefreshSuppressedBeforeFirstSave,
+		IEndRule saveConfirmationRule, AbstractDataStructure saveStructure, Hashtable parameters,
+        bool refreshPortalAfterSave)
+	{
+		UICheck();
+		Guid taskId = Guid.NewGuid();
+		_runningForms.Add(taskId, task);
+		// fire event
+		if(FormRequested != null)
+		{
+			this.FormRequested(this, new WorkflowHostFormEventArgs(taskId, task.Engine, data, 
+				description, notification, form, ruleSet, endRule, structure, 
+				refreshMethod, refreshSort, saveStructure, isFinalForm, allowSave, isAutoNext, parameters,
+				isRefreshSuppressedBeforeFirstSave, saveConfirmationRule, refreshPortalAfterSave));
+		}
+	}
+	public void AbortWorkflowForm(Guid taskId)
+    {
+        Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
+        if (task == null)
+        {
+            throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
+        }
+        _runningForms.Remove(taskId);
+        Thread thread = new Thread(new ThreadStart(task.Abort));
+        PrepareAndStartThread(thread, task);
+    }
+    public void FinishWorkflowForm(Guid taskId, IDataDocument data)
+	{
+		Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
+		if (task == null)
+		{
+			throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorTaskNotRunning", taskId.ToString()));
+		}
+		_runningForms.Remove(taskId);
+        
+		task.Result = data;
+        Thread thread = new Thread(new ThreadStart(task.Finish));
+        PrepareAndStartThread(thread, task);
+	}
+    private static void PrepareAndStartThread(Thread thread, Tasks.UIEngineTask task)
+    {            
+        thread.Name = "Workflow " + task.Engine.WorkflowInstanceId.ToString();
+        thread.IsBackground = true;
+        thread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+        thread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+        thread.Start();
+    }
+    private void UICheck()
+	{
+		if(! SupportsUI)
+		{
+			throw new NullReferenceException(ResourceUtils.GetString("ErrorNoWorkflowUI"));
+		}
+	}
+	#region IDisposable Members
+	public void Dispose()
+	{
+	}
+	#endregion
 }

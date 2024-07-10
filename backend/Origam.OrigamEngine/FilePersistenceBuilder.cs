@@ -27,81 +27,72 @@ using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 
-namespace Origam.OrigamEngine
+namespace Origam.OrigamEngine;
+public class FilePersistenceBuilder : IPersistenceBuilder
 {
-    public class FilePersistenceBuilder : IPersistenceBuilder
+    private static FilePersistenceService persistenceService;
+    
+    public IDocumentationService GetDocumentationService() =>
+        new FileStorageDocumentationService(
+            (IFilePersistenceProvider) persistenceService.SchemaProvider,
+            persistenceService.FileEventQueue);
+    public IPersistenceService GetPersistenceService() => 
+        GetPersistenceService(watchFileChanges: true,
+            checkRules: true,useBinFile: true);
+    public IPersistenceService GetPersistenceService(bool watchFileChanges,
+        bool checkRules, bool useBinFile)
     {
-        private static FilePersistenceService persistenceService;
+        persistenceService = CreateNewPersistenceService(watchFileChanges,
+            checkRules,useBinFile);
+        return persistenceService;
+    }
+    public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
+        bool checkRules,bool useBinFile)
+    {
+        List<string> defaultFolders = new List<string>
+        {
+            CategoryFactory.Create(typeof(Package)),
+            CategoryFactory.Create(typeof(SchemaItemGroup))
+        };
+        var metaModelUpgradeService = ServiceManager.Services
+            .GetService<MetaModelUpgradeService>();
         
-        public IDocumentationService GetDocumentationService() =>
-            new FileStorageDocumentationService(
-                (IFilePersistenceProvider) persistenceService.SchemaProvider,
-                persistenceService.FileEventQueue);
-
-        public IPersistenceService GetPersistenceService() => 
-            GetPersistenceService(watchFileChanges: true,
-                checkRules: true,useBinFile: true);
-
-        public IPersistenceService GetPersistenceService(bool watchFileChanges,
-            bool checkRules, bool useBinFile)
-        {
-            persistenceService = CreateNewPersistenceService(watchFileChanges,
-                checkRules,useBinFile);
-            return persistenceService;
-        }
-
-        public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
-            bool checkRules,bool useBinFile)
-        {
-            List<string> defaultFolders = new List<string>
-            {
-                CategoryFactory.Create(typeof(Package)),
-                CategoryFactory.Create(typeof(SchemaItemGroup))
-            };
-
-            var metaModelUpgradeService = ServiceManager.Services
-                .GetService<MetaModelUpgradeService>();
-            
-            
+        
 #if !ORIGAM_CLIENT
-            MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
+        MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
 #else
-            MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
+        MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
 #endif
-            string pathToRuntimeModelConfig = ConfigurationManager
-                .GetActiveConfiguration().PathToRuntimeModelConfig;
-            return new FilePersistenceService(
-                metaModelUpgradeService: metaModelUpgradeService,
-                defaultFolders: defaultFolders,
-                watchFileChanges: watchFileChanges,
-                checkRules: checkRules,useBinFile: useBinFile,
-                mode: mode,
-                pathToRuntimeModelConfig: pathToRuntimeModelConfig);
-        }
-
-        public FilePersistenceService CreateNoBinFilePersistenceService()
+        string pathToRuntimeModelConfig = ConfigurationManager
+            .GetActiveConfiguration().PathToRuntimeModelConfig;
+        return new FilePersistenceService(
+            metaModelUpgradeService: metaModelUpgradeService,
+            defaultFolders: defaultFolders,
+            watchFileChanges: watchFileChanges,
+            checkRules: checkRules,useBinFile: useBinFile,
+            mode: mode,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig);
+    }
+    public FilePersistenceService CreateNoBinFilePersistenceService()
+    {
+        List<string> defaultFolders = new List<string>
         {
-            List<string> defaultFolders = new List<string>
-            {
-                CategoryFactory.Create(typeof(Package)),
-                CategoryFactory.Create(typeof(SchemaItemGroup))
-            };
-
-            string pathToRuntimeModelConfig = ConfigurationManager
-                .GetActiveConfiguration().PathToRuntimeModelConfig;
-            
-            return new FilePersistenceService(
-                new NullMetaModelUpgradeService(), 
-                defaultFolders: defaultFolders,
-                watchFileChanges: false,
-                useBinFile: false,
-                mode: MetaModelUpgradeMode.Ignore,
-                pathToRuntimeModelConfig: pathToRuntimeModelConfig);
-        }
-
-        public static void Clear()
-        {
-            persistenceService = null;
-        }
+            CategoryFactory.Create(typeof(Package)),
+            CategoryFactory.Create(typeof(SchemaItemGroup))
+        };
+        string pathToRuntimeModelConfig = ConfigurationManager
+            .GetActiveConfiguration().PathToRuntimeModelConfig;
+        
+        return new FilePersistenceService(
+            new NullMetaModelUpgradeService(), 
+            defaultFolders: defaultFolders,
+            watchFileChanges: false,
+            useBinFile: false,
+            mode: MetaModelUpgradeMode.Ignore,
+            pathToRuntimeModelConfig: pathToRuntimeModelConfig);
+    }
+    public static void Clear()
+    {
+        persistenceService = null;
     }
 }

@@ -28,27 +28,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Server.Model.About;
 
-namespace Origam.Server.Controller
+namespace Origam.Server.Controller;
+[Authorize(IdentityServerConstants.LocalApi.PolicyName)]
+[ApiController]
+[Route("internalApi/[controller]")]
+public class AboutController : AbstractController
 {
-    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-    [ApiController]
-    [Route("internalApi/[controller]")]
-    public class AboutController : AbstractController
+    public AboutController(ILogger<AbstractController> log,
+        SessionObjects sessionObjects) : base(log, sessionObjects)
     {
-        public AboutController(ILogger<AbstractController> log,
-            SessionObjects sessionObjects) : base(log, sessionObjects)
+    }
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(new AboutInfo
         {
-        }
-
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(new AboutInfo
-            {
-                ServerVersion = "ServerVersion Placeholder to be changed at build time",
-                LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
-                CommitId = "CommitId Placeholder to be changed at build time"
-            });
-        }
+            ServerVersion = "ServerVersion Placeholder to be changed at build time",
+            LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
+            CommitId = "CommitId Placeholder to be changed at build time"
+        });
     }
 }

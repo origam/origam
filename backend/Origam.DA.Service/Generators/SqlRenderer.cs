@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Configuration;
+using Origam.DA.Service;
 
 public abstract class SqlRenderer
 {

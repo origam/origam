@@ -25,42 +25,40 @@ using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+public class AsTransform
 {
-	public class AsTransform
-	{
-        public static IXsltEngine GetXsltEngine(
-            XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
+    public static IXsltEngine GetXsltEngine(
+        XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
+    {
+        switch(xsltEngineType)
         {
-            switch(xsltEngineType)
-            {
-                case XsltEngineType.XslTransform:
-                    return new OldXsltEngine(persistence);
-                case XsltEngineType.XslCompiledTransform:
-                    return new CompiledXsltEngine(persistence);
-                default:
-                    throw new Exception("Unknown XsltEngine type.");
-            }
+            case XsltEngineType.XslTransform:
+                return new OldXsltEngine(persistence);
+            case XsltEngineType.XslCompiledTransform:
+                return new CompiledXsltEngine(persistence);
+            default:
+                throw new Exception("Unknown XsltEngine type.");
         }
-        public static IXsltEngine GetXsltEngine(
-            IPersistenceProvider persistence, Guid transformationId)
+    }
+    public static IXsltEngine GetXsltEngine(
+        IPersistenceProvider persistence, Guid transformationId)
+    {
+        AbstractSchemaItem transformation = persistence.RetrieveInstance(
+            typeof(AbstractSchemaItem), 
+            new ModelElementKey(transformationId))
+            as AbstractSchemaItem;
+        if(transformation is XslTransformation)
         {
-            AbstractSchemaItem transformation = persistence.RetrieveInstance(
-                typeof(AbstractSchemaItem), 
-                new ModelElementKey(transformationId))
-                as AbstractSchemaItem;
-            if(transformation is XslTransformation)
-            {
-                return GetXsltEngine(
-                    (transformation as XslTransformation).XsltEngineType,
-                    persistence);
-            }
-            else
-            {
-                return GetXsltEngine(
-                    XsltEngineType.XslTransform,
-                    persistence);
-            }
+            return GetXsltEngine(
+                (transformation as XslTransformation).XsltEngineType,
+                persistence);
         }
-	}
+        else
+        {
+            return GetXsltEngine(
+                XsltEngineType.XslTransform,
+                persistence);
+        }
+    }
 }

@@ -23,162 +23,150 @@ using System;
 using System.Windows.Forms;
 using System.Globalization;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+public class EnhancedTextBox : TextBox
 {
-    public class EnhancedTextBox : TextBox
+    private Type dataType = typeof(string);
+    private IFormatter formatter;
+    private string customFormat;
+    private static readonly object ValueChangedEventKey = new object();
+    private readonly Func<DateTime> timeNowFunc;
+    
+    public EnhancedTextBox(Func<DateTime> timeNowFunc = null)
     {
-        private Type dataType = typeof(string);
-        private IFormatter formatter;
-        private string customFormat;
-        private static readonly object ValueChangedEventKey = new object();
-        private readonly Func<DateTime> timeNowFunc;
-        
-        public EnhancedTextBox(Func<DateTime> timeNowFunc = null)
+        KeyDown += OnKeyDown;
+        KeyPress += OnKeyPress;
+        Leave += OnLeave;
+        LostFocus += OnLeave;
+        formatter = new StringFormatter(this);
+        this.timeNowFunc = timeNowFunc ?? (() => DateTime.Now);
+    }
+    public Type DataType
+    {
+        get => dataType;
+        set
         {
-            KeyDown += OnKeyDown;
-            KeyPress += OnKeyPress;
-            Leave += OnLeave;
-            LostFocus += OnLeave;
-            formatter = new StringFormatter(this);
-            this.timeNowFunc = timeNowFunc ?? (() => DateTime.Now);
-        }
-
-        public Type DataType
-        {
-            get => dataType;
-
-            set
+            if (value == typeof(DateTime))
             {
-                if (value == typeof(DateTime))
-                {
-                    formatter = new DatetimeFormatter(this,customFormat,timeNowFunc);
-                }
-                else if (value == typeof(string))
-                {
-                    formatter = new StringFormatter(this);
-                }
-                else if (value == typeof(long))
-                {
-                    formatter = new WholeNumberFormattrer(
-                        textBox: this,
-                        customFormat: customFormat,
-                        textParseFunc: text => long.Parse(
-                            text,
-                            Formatter.WholeNumberStyle,
-                            CurrentNumFormat)
-                    );
-                }
-                else if (value == typeof(int))
-                {
-                    formatter = new WholeNumberFormattrer(
-                        textBox: this,
-                        customFormat: customFormat,
-                        textParseFunc: text => int.Parse(
-                            text, 
-                            Formatter.WholeNumberStyle,
-                            CurrentNumFormat)
-                    );
-                }
-                else if (value == typeof(decimal))
-                {
-                    formatter = new RealNumberFormatter(
-                        textBox: this,
-                        format: customFormat,
-                        textParseFunc: text => decimal.Parse(
-                            text,  
-                            Formatter.RealNumberStyle, 
-                            CurrentNumFormat)
-                    );
-                }
-                else if (value == typeof(float))
-                {
-                    formatter = new RealNumberFormatter(
-                        textBox: this,
-                        format: customFormat,
-                        textParseFunc: text => float.Parse(
-                            text,  
-                            Formatter.RealNumberStyle, 
-                            CurrentNumFormat)
-                    );
-                }
-                else if (value == typeof(double))
-                {
-                    formatter = new RealNumberFormatter(
-                        textBox: this,
-                        format: customFormat,
-                        textParseFunc: text => double.Parse(
-                            text,  
-                            Formatter.RealNumberStyle, 
-                            CurrentNumFormat)
-                    );
-                }
-                else
-                {
-                    formatter = new StringFormatter(this);
-                }
-                dataType = value;
+                formatter = new DatetimeFormatter(this,customFormat,timeNowFunc);
             }
-        }
-
-        private  NumberFormatInfo CurrentNumFormat 
-            => CultureInfo.CurrentCulture.NumberFormat;
-
-        public object Value
-        {
-            get => formatter.GetValue();
-            set
+            else if (value == typeof(string))
             {
-                if (value == null)
-                {
-                    Text = "";
-                    return;
-                }
-                Text = value.ToString();
-                
-                formatter.OnLeave(null, EventArgs.Empty);
-                OnValueChanged(EventArgs.Empty);
+                formatter = new StringFormatter(this);
             }
-        }
-
-        public string CustomFormat
-        {
-            get => customFormat;
-            set
+            else if (value == typeof(long))
             {
-                customFormat = value;
-                DataType = dataType; // updates format in validator
+                formatter = new WholeNumberFormattrer(
+                    textBox: this,
+                    customFormat: customFormat,
+                    textParseFunc: text => long.Parse(
+                        text,
+                        Formatter.WholeNumberStyle,
+                        CurrentNumFormat)
+                );
             }
-        }
-
-        public event EventHandler ValueChanged
-        {
-            add => Events.AddHandler(ValueChangedEventKey, value);
-            remove => Events.RemoveHandler(ValueChangedEventKey, value);
-        }
-
-        private void OnValueChanged(EventArgs e)
-        {
-            if (!(Events[ValueChangedEventKey] is EventHandler eventHandler))
+            else if (value == typeof(int))
             {
+                formatter = new WholeNumberFormattrer(
+                    textBox: this,
+                    customFormat: customFormat,
+                    textParseFunc: text => int.Parse(
+                        text, 
+                        Formatter.WholeNumberStyle,
+                        CurrentNumFormat)
+                );
+            }
+            else if (value == typeof(decimal))
+            {
+                formatter = new RealNumberFormatter(
+                    textBox: this,
+                    format: customFormat,
+                    textParseFunc: text => decimal.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
+                );
+            }
+            else if (value == typeof(float))
+            {
+                formatter = new RealNumberFormatter(
+                    textBox: this,
+                    format: customFormat,
+                    textParseFunc: text => float.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
+                );
+            }
+            else if (value == typeof(double))
+            {
+                formatter = new RealNumberFormatter(
+                    textBox: this,
+                    format: customFormat,
+                    textParseFunc: text => double.Parse(
+                        text,  
+                        Formatter.RealNumberStyle, 
+                        CurrentNumFormat)
+                );
+            }
+            else
+            {
+                formatter = new StringFormatter(this);
+            }
+            dataType = value;
+        }
+    }
+    private  NumberFormatInfo CurrentNumFormat 
+        => CultureInfo.CurrentCulture.NumberFormat;
+    public object Value
+    {
+        get => formatter.GetValue();
+        set
+        {
+            if (value == null)
+            {
+                Text = "";
                 return;
             }
-            eventHandler(this, e);
+            Text = value.ToString();
+            
+            formatter.OnLeave(null, EventArgs.Empty);
+            OnValueChanged(EventArgs.Empty);
         }
-
-        private void OnKeyDown(object sender, KeyEventArgs e)
+    }
+    public string CustomFormat
+    {
+        get => customFormat;
+        set
         {
-            formatter.OnKeyDown(sender, e);
+            customFormat = value;
+            DataType = dataType; // updates format in validator
         }
-
-        private void OnKeyPress(object sender, KeyPressEventArgs e)
+    }
+    public event EventHandler ValueChanged
+    {
+        add => Events.AddHandler(ValueChangedEventKey, value);
+        remove => Events.RemoveHandler(ValueChangedEventKey, value);
+    }
+    private void OnValueChanged(EventArgs e)
+    {
+        if (!(Events[ValueChangedEventKey] is EventHandler eventHandler))
         {
-            formatter.OnKeyPress(sender, e);
+            return;
         }
-
-        private void OnLeave(object sender, EventArgs e)
-        {
-            formatter.OnLeave(sender, e);
-            OnValueChanged(e);
-        }
+        eventHandler(this, e);
+    }
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        formatter.OnKeyDown(sender, e);
+    }
+    private void OnKeyPress(object sender, KeyPressEventArgs e)
+    {
+        formatter.OnKeyPress(sender, e);
+    }
+    private void OnLeave(object sender, EventArgs e)
+    {
+        formatter.OnLeave(sender, e);
+        OnValueChanged(e);
     }
 }

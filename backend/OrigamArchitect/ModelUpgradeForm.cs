@@ -10,43 +10,38 @@ using System.Windows.Forms;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
-namespace OrigamArchitect
+namespace OrigamArchitect;
+public partial class ModelUpgradeForm : Form
 {
-    public partial class ModelUpgradeForm : Form
+    private readonly IMetaModelUpgradeService metaModelUpgradeService;
+    public ModelUpgradeForm(
+        IMetaModelUpgradeService metaModelUpgradeService)
     {
-        private readonly IMetaModelUpgradeService metaModelUpgradeService;
-
-        public ModelUpgradeForm(
-            IMetaModelUpgradeService metaModelUpgradeService)
+        this.metaModelUpgradeService = metaModelUpgradeService;
+        metaModelUpgradeService.UpgradeProgress += (sender, info) =>
         {
-            this.metaModelUpgradeService = metaModelUpgradeService;
-            metaModelUpgradeService.UpgradeProgress += (sender, info) =>
+            void ProgressAction()
             {
-                void ProgressAction()
+                if (this.Visible)
                 {
-                    if (this.Visible)
-                    {
-                        progressBar.Minimum = 0;
-                        progressBar.Maximum = info.TotalFiles;
-                        progressBar.Step = 1;
-                        progressBar.Value = info.FilesDone;
-                        currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
-                    }
+                    progressBar.Minimum = 0;
+                    progressBar.Maximum = info.TotalFiles;
+                    progressBar.Step = 1;
+                    progressBar.Value = info.FilesDone;
+                    currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
                 }
-
-                this.RunWithInvoke(ProgressAction);
-            };
-            metaModelUpgradeService.UpgradeFinished += (sender, args) =>
-            {
-                this.RunWithInvoke(Close);
-            };
-            InitializeComponent();
-        }
-
-        private void cancelButton_Click(object sender, EventArgs e)
+            }
+            this.RunWithInvoke(ProgressAction);
+        };
+        metaModelUpgradeService.UpgradeFinished += (sender, args) =>
         {
-            metaModelUpgradeService.Cancel();
-            this.RunWithInvoke(() => currentFileLabel.Text = "Canceling...");
-        }
+            this.RunWithInvoke(Close);
+        };
+        InitializeComponent();
+    }
+    private void cancelButton_Click(object sender, EventArgs e)
+    {
+        metaModelUpgradeService.Cancel();
+        this.RunWithInvoke(() => currentFileLabel.Text = "Canceling...");
     }
 }

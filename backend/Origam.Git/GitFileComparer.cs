@@ -26,101 +26,85 @@ using System.Linq;
 using LibGit2Sharp;
 using Origam.Extensions;
 
-namespace Origam.Git
+namespace Origam.Git;
+public class GitFileComparer
 {
-    public class GitFileComparer
+    private readonly Signature autor;
+    private readonly Signature committer;
+    private readonly string internalFileName;
+    private Repository repo;
+    private readonly DirectoryInfo repoDir;
+    public GitFileComparer()
     {
-        private readonly Signature autor;
-        private readonly Signature committer;
-        private readonly string internalFileName;
-        private Repository repo;
-        private readonly DirectoryInfo repoDir;
-
-        public GitFileComparer()
-        {
-            autor = new Signature("GitFileComparer", "@GitFileComparer",
-                DateTime.Now);
-            committer = this.autor;
-            internalFileName = "fileToCommit.txt";
-            repoDir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "GitCompare"));
-        }
-
-        public GitDiff GetGitDiff(FileInfo oldFile, FileInfo newFile)
-        {
-            if (FilesAreIdentical(newFile, oldFile))
-            {
-                return new GitDiff(oldFile, newFile, "");
-            }
-            
-            InitRepo();
-
-            string internalFilePath = Path.Combine(repo.Info.WorkingDirectory,
-                internalFileName);
-            
-            File.Copy(oldFile.FullName, internalFilePath);
-
-            Commit("Old");
-
-            string fileSysXmlText = File.ReadAllText(newFile.FullName);
-            File.WriteAllText(internalFilePath, fileSysXmlText);
-
-            Commit("New");
-
-            string diff = GetDiff();
-            repoDir.DeleteAllIncludingReadOnly();
-            repo.Dispose();
-            return new GitDiff(oldFile, newFile, diff);
-        }
-
-        private bool FilesAreIdentical(FileInfo oldFile, FileInfo newFile)
-        {
-            return oldFile.GetFileBase64Hash() == newFile.GetFileBase64Hash();
-        }
-
-        private string GetDiff()
-        {
-            List<Commit> CommitList = repo.Commits.QueryBy(internalFileName)
-                .Select(entry => entry.Commit)
-                .ToList();
-
-            int ChangeDesired = 0; // Change difference desired
-            Patch repoDifferences = repo.Diff.Compare<Patch>(
-                (Equals(CommitList[ChangeDesired + 1], null))
-                    ? null
-                    : CommitList[ChangeDesired + 1].Tree,
-                (Equals(CommitList[ChangeDesired], null))
-                    ? null
-                    : CommitList[ChangeDesired].Tree);
-            return repoDifferences.First(e => e.Path == internalFileName).Patch;
-        }
-
-        private void Commit(string message)
-        {
-            repo.Index.Add(internalFileName);
-            repo.Commit(message, autor, committer);
-        }
-
-        private void InitRepo()
-        {
-            repoDir.DeleteAllIncludingReadOnly();
-            repoDir.Create();
-            Repository.Init(repoDir.FullName);
-            repo = new Repository(repoDir.FullName);
-        }
+        autor = new Signature("GitFileComparer", "@GitFileComparer",
+            DateTime.Now);
+        committer = this.autor;
+        internalFileName = "fileToCommit.txt";
+        repoDir = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "GitCompare"));
     }
-
-    public class GitDiff
+    public GitDiff GetGitDiff(FileInfo oldFile, FileInfo newFile)
     {
-        public FileInfo OldFile { get; }
-        public FileInfo NewFile { get;  }
-        public string Text { get; }
-        public bool IsEmpty => string.IsNullOrEmpty(Text);
-
-        public GitDiff(FileInfo oldFile, FileInfo newFile, string text)
+        if (FilesAreIdentical(newFile, oldFile))
         {
-            OldFile = oldFile;
-            NewFile = newFile;
-            Text = text;
+            return new GitDiff(oldFile, newFile, "");
         }
+        
+        InitRepo();
+        string internalFilePath = Path.Combine(repo.Info.WorkingDirectory,
+            internalFileName);
+        
+        File.Copy(oldFile.FullName, internalFilePath);
+        Commit("Old");
+        string fileSysXmlText = File.ReadAllText(newFile.FullName);
+        File.WriteAllText(internalFilePath, fileSysXmlText);
+        Commit("New");
+        string diff = GetDiff();
+        repoDir.DeleteAllIncludingReadOnly();
+        repo.Dispose();
+        return new GitDiff(oldFile, newFile, diff);
+    }
+    private bool FilesAreIdentical(FileInfo oldFile, FileInfo newFile)
+    {
+        return oldFile.GetFileBase64Hash() == newFile.GetFileBase64Hash();
+    }
+    private string GetDiff()
+    {
+        List<Commit> CommitList = repo.Commits.QueryBy(internalFileName)
+            .Select(entry => entry.Commit)
+            .ToList();
+        int ChangeDesired = 0; // Change difference desired
+        Patch repoDifferences = repo.Diff.Compare<Patch>(
+            (Equals(CommitList[ChangeDesired + 1], null))
+                ? null
+                : CommitList[ChangeDesired + 1].Tree,
+            (Equals(CommitList[ChangeDesired], null))
+                ? null
+                : CommitList[ChangeDesired].Tree);
+        return repoDifferences.First(e => e.Path == internalFileName).Patch;
+    }
+    private void Commit(string message)
+    {
+        repo.Index.Add(internalFileName);
+        repo.Commit(message, autor, committer);
+    }
+    private void InitRepo()
+    {
+        repoDir.DeleteAllIncludingReadOnly();
+        repoDir.Create();
+        Repository.Init(repoDir.FullName);
+        repo = new Repository(repoDir.FullName);
+    }
+}
+public class GitDiff
+{
+    public FileInfo OldFile { get; }
+    public FileInfo NewFile { get;  }
+    public string Text { get; }
+    public bool IsEmpty => string.IsNullOrEmpty(Text);
+    public GitDiff(FileInfo oldFile, FileInfo newFile, string text)
+    {
+        OldFile = oldFile;
+        NewFile = newFile;
+        Text = text;
     }
 }

@@ -21,12 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server
+namespace Origam.Server;
+public interface IEntityIdentification
 {
-    public interface IEntityIdentification
-    {
-        Guid DataStructureEntityId { get; set; }
-        Guid MenuId { get; set; }
-        Guid SessionFormIdentifier { get; set; }
-    }
+    Guid DataStructureEntityId { get; set; }
+    Guid MenuId { get; set; }
+    Guid SessionFormIdentifier { get; set; }
 }

@@ -24,107 +24,101 @@ using System.Linq;
 using System.Xml;
 using MoreLinq;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service;
+public static class OrigamDocumentSorter
 {
-    public static class OrigamDocumentSorter
+    private class XmlnsComparer : IComparer<string>
     {
-        private class XmlnsComparer : IComparer<string>
+        private const string XmlnsX = "xmlns:x";
+        public int Compare(string x, string y)
         {
-            private const string XmlnsX = "xmlns:x";
-            public int Compare(string x, string y)
+            if ((x == XmlnsX) && (y == XmlnsX))
             {
-                if ((x == XmlnsX) && (y == XmlnsX))
-                {
-                    return 0;
-                }
-                if (x == XmlnsX)
-                {
-                    return 1;
-                }
-                if (y == XmlnsX)
-                {
-                    return -1;
-                }
-                return string.Compare(x, y);
+                return 0;
             }
-        }
-        public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
-        {
-            var nameSpaceInfo = NamespaceInfo.Create(doc);
-            var newDoc = new OrigamXmlDocument();
-            doc.FileElement.Attributes
-                .Cast<XmlAttribute>()
-                .OrderBy(
-                    attribute => attribute.Name, 
-                    new XmlnsComparer(),
-                    OrderByDirection.Ascending)
-                .ForEach(attribute => 
-                    newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value));
-            doc.ChildNodes
-                .Cast<XmlNode>()
-                .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc, nameSpaceInfo));
-            return newDoc;
-        }
-
-        private static void CopyNodes(
-                XmlNode node, 
-                XmlElement targetNode, 
-                OrigamXmlDocument newDoc, 
-                NamespaceInfo namespaceInfo)
-        {
-            var fullId = namespaceInfo.PersistencePrefix + ":id";
-            CopyAttributes(node, targetNode);
-            node.ChildNodes
-                .Cast<XmlNode>()
-                .OrderBy(childNode => childNode.Prefix + childNode.LocalName)
-                .ThenBy(childNode 
-                    => childNode.Attributes?[fullId]?.Value 
-                       ?? childNode.Attributes?["id"]?.Value 
-                       ?? "zzzzzzzz")
-                .ForEach(childNode =>
-                {
-                    var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
-                        ? newDoc.FileElement.Attributes["xmlns"].Value
-                        : childNode.NamespaceURI;
-                    var childCopy = newDoc.CreateElement(childNode.Name, xmlns);
-                    targetNode.AppendChild(childCopy);
-                    CopyNodes(childNode, childCopy, newDoc, namespaceInfo);
-                });
-        }
-
-        private static void CopyAttributes(XmlNode childNode, XmlElement childCopy)
-        {
-            childNode?.Attributes
-                ?.Cast<XmlAttribute>()
-                .OrderBy(attr => attr.LocalName) 
-                .ForEach(attr =>
-                    childCopy.SetAttribute(
-                        localName: attr.LocalName,
-                        namespaceURI: attr.NamespaceURI,
-                        value: attr.Value));
-        }
-    }
-
-    class NamespaceInfo
-    {
-        public static NamespaceInfo Create(OrigamXmlDocument doc)
-        {
-            var xmlAttributes = doc.FileElement?.Attributes?
-                .Cast<XmlAttribute>();
-            return new NamespaceInfo
+            if (x == XmlnsX)
             {
-                PersistencePrefix = xmlAttributes
-                    ?.FirstOrDefault(attr => attr.Value.StartsWith(
-                        "http://schemas.origam.com/model-persistence"))
-                    ?.LocalName ?? "",
-                AbstractSchemaPrefix = xmlAttributes
-                    ?.FirstOrDefault(attr => attr.Value.StartsWith(
-                        "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem"))
-                    ?.LocalName ?? ""
-            };
+                return 1;
+            }
+            if (y == XmlnsX)
+            {
+                return -1;
+            }
+            return string.Compare(x, y);
         }
-
-        public string PersistencePrefix { get; set; }
-        public string AbstractSchemaPrefix { get; set; }
     }
+    public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
+    {
+        var nameSpaceInfo = NamespaceInfo.Create(doc);
+        var newDoc = new OrigamXmlDocument();
+        doc.FileElement.Attributes
+            .Cast<XmlAttribute>()
+            .OrderBy(
+                attribute => attribute.Name, 
+                new XmlnsComparer(),
+                OrderByDirection.Ascending)
+            .ForEach(attribute => 
+                newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value));
+        doc.ChildNodes
+            .Cast<XmlNode>()
+            .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc, nameSpaceInfo));
+        return newDoc;
+    }
+    private static void CopyNodes(
+            XmlNode node, 
+            XmlElement targetNode, 
+            OrigamXmlDocument newDoc, 
+            NamespaceInfo namespaceInfo)
+    {
+        var fullId = namespaceInfo.PersistencePrefix + ":id";
+        CopyAttributes(node, targetNode);
+        node.ChildNodes
+            .Cast<XmlNode>()
+            .OrderBy(childNode => childNode.Prefix + childNode.LocalName)
+            .ThenBy(childNode 
+                => childNode.Attributes?[fullId]?.Value 
+                   ?? childNode.Attributes?["id"]?.Value 
+                   ?? "zzzzzzzz")
+            .ForEach(childNode =>
+            {
+                var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
+                    ? newDoc.FileElement.Attributes["xmlns"].Value
+                    : childNode.NamespaceURI;
+                var childCopy = newDoc.CreateElement(childNode.Name, xmlns);
+                targetNode.AppendChild(childCopy);
+                CopyNodes(childNode, childCopy, newDoc, namespaceInfo);
+            });
+    }
+    private static void CopyAttributes(XmlNode childNode, XmlElement childCopy)
+    {
+        childNode?.Attributes
+            ?.Cast<XmlAttribute>()
+            .OrderBy(attr => attr.LocalName) 
+            .ForEach(attr =>
+                childCopy.SetAttribute(
+                    localName: attr.LocalName,
+                    namespaceURI: attr.NamespaceURI,
+                    value: attr.Value));
+    }
+}
+class NamespaceInfo
+{
+    public static NamespaceInfo Create(OrigamXmlDocument doc)
+    {
+        var xmlAttributes = doc.FileElement?.Attributes?
+            .Cast<XmlAttribute>();
+        return new NamespaceInfo
+        {
+            PersistencePrefix = xmlAttributes
+                ?.FirstOrDefault(attr => attr.Value.StartsWith(
+                    "http://schemas.origam.com/model-persistence"))
+                ?.LocalName ?? "",
+            AbstractSchemaPrefix = xmlAttributes
+                ?.FirstOrDefault(attr => attr.Value.StartsWith(
+                    "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem"))
+                ?.LocalName ?? ""
+        };
+    }
+    public string PersistencePrefix { get; set; }
+    public string AbstractSchemaPrefix { get; set; }
 }

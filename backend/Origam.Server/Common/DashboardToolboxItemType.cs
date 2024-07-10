@@ -40,13 +40,11 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Server
+namespace Origam.Server;
+public enum DashboardToolboxItemType
 {
-    public enum DashboardToolboxItemType
-    {
-        Folder,
-        Component,
-        HBox,
-        VBox
-    }
+    Folder,
+    Component,
+    HBox,
+    VBox
 }

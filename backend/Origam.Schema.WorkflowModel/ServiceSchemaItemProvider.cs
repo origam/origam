@@ -21,54 +21,40 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+public class ServiceSchemaItemProvider : AbstractSchemaItemProvider
 {
-	public class ServiceSchemaItemProvider : AbstractSchemaItemProvider
+	public const string CategoryConst = "Service";
+	
+	public ServiceSchemaItemProvider() {}
+	#region ISchemaItemProvider Members
+	public override string RootItemType => Service.CategoryConst;
+	public override string Group => "BL";
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon =>
+		// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+		"icon_31_services.png";
+	public override string NodeText
 	{
-		public const string CategoryConst = "Service";
-		
-		public ServiceSchemaItemProvider() {}
-
-		#region ISchemaItemProvider Members
-		public override string RootItemType => Service.CategoryConst;
-
-		public override string Group => "BL";
-
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon =>
-			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-			"icon_31_services.png";
-
-		public override string NodeText
-		{
-			get => "Services";
-			set => base.NodeText = value;
-		}
-
-		public override string NodeToolTipText =>
-			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-			null;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(Service)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group, 
-				typeof(T) == typeof(Service) ?
-					"NewService" : null);
-		}
-
-		#endregion
+		get => "Services";
+		set => base.NodeText = value;
 	}
+	public override string NodeToolTipText =>
+		// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+		null;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
+	{
+		typeof(Service)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group, 
+			typeof(T) == typeof(Service) ?
+				"NewService" : null);
+	}
+	#endregion
 }

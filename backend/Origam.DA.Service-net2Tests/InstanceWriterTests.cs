@@ -26,22 +26,20 @@ using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.DA.ServiceTests
+namespace Origam.DA.ServiceTests;
+[TestFixture]
+public class InstanceWriterTests
 {
-    [TestFixture]
-    public class InstanceWriterTests
+    [Test]
+    public void ShouldWriteFile()
     {
-        [Test]
-        public void ShouldWriteFile()
-        {
-            var itemToWrite = new TableMappingItem();
-            itemToWrite.Name = "TestName";
-            itemToWrite.PersistenceProvider = new NullPersistenceProvider();
-            OrigamXmlDocument document = new OrigamXmlDocument();
-            InstanceWriter sut = new InstanceWriter(new NullExternalFileManager(), document);
-            sut.Write(itemToWrite);
-            
-            Assert.That(!document.IsEmpty);
-        }
+        var itemToWrite = new TableMappingItem();
+        itemToWrite.Name = "TestName";
+        itemToWrite.PersistenceProvider = new NullPersistenceProvider();
+        OrigamXmlDocument document = new OrigamXmlDocument();
+        InstanceWriter sut = new InstanceWriter(new NullExternalFileManager(), document);
+        sut.Write(itemToWrite);
+        
+        Assert.That(!document.IsEmpty);
     }
 }

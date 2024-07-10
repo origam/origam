@@ -534,6 +534,37 @@
       aesr:valueType="SavedValue" />
     <ewa:EntityUIAction
       asi:abstract="false"
+      euia:actionType="OpenForm"
+      ewa:cleanDataBeforeMerge="false"
+      ewa:closeType="None"
+      ewa:commitChangesAfterMerge="false"
+      euia:default="false"
+      x:id="89db5c33-c5ea-4165-9a39-e3f67735f128"
+      euia:label="MultistepWorkflowInModalDialog"
+      ewa:mergeType="AppendMergeExisting"
+      euia:modal="true"
+      euia:modalDialogHeight="600"
+      euia:modalDialogWidth="800"
+      euia:mode="Always"
+      asi:name="MultistepWorkflowInModalDialog"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      ewa:refreshAfterWorkflow="RefreshChangedRecords"
+      ewa:refreshPortalAfterFinish="false"
+      ewa:requestSaveBeforeWorkflow="false"
+      euia:roles="*"
+      ewa:saveAfterWorkflow="false"
+      euia:valueType="SavedValue"
+      ewa:workflow="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/20732249-ef09-4238-ba2e-022fbc76c7a6">
+      <sc2:ScreenCondition
+        asi:abstract="false"
+        x:id="03cf98a0-a1d4-438c-997e-b2639c915d21"
+        asi:name="AllDataTypes"
+        sc2:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    </ewa:EntityUIAction>
+    <ewa:EntityUIAction
+      asi:abstract="false"
       euia:actionType="Workflow"
       ewa:cleanDataBeforeMerge="false"
       ewa:closeType="None"

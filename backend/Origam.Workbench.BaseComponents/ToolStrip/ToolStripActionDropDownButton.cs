@@ -28,128 +28,115 @@ using Origam.Extensions;
 using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 
-namespace Origam.Gui.UI
+namespace Origam.Gui.UI;
+
+public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
 {
+    private readonly int imageArrowGap = 10;
     
-    public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
+    public List<ToolStripActionMenuItem> ToolStripMenuItems 
+        => DropDownItems.Cast<ToolStripActionMenuItem>().ToList();
+    /// <summary>
+    /// This constructor should be used for dubugging only
+    /// </summary>
+    public ToolStripActionDropDownButton()
     {
-        private readonly int imageArrowGap = 10;
-        
-        public List<ToolStripActionMenuItem> ToolStripMenuItems 
-            => DropDownItems.Cast<ToolStripActionMenuItem>().ToList();
-
-        /// <summary>
-        /// This constructor should be used for dubugging only
-        /// </summary>
-        public ToolStripActionDropDownButton()
+        ToolStripButtonTools.InitBigButton(this);
+        Padding = new Padding(
+            left: 0,
+            top: 0,
+            right: 5,
+            bottom: 0);
+    }
+    public ToolStripActionDropDownButton(EntityDropdownAction dropdownAction)
+    {
+        AddActionItems(dropdownAction);
+        ToolStripButtonTools.InitBigButton(this);
+        ToolStripButtonTools.InitActionButton(this, dropdownAction);
+    }
+    private void AddActionItems(EntityDropdownAction dropdownAction)
+    {
+        foreach (var item in dropdownAction.ChildItems)
         {
-            ToolStripButtonTools.InitBigButton(this);
-            Padding = new Padding(
-                left: 0,
-                top: 0,
-                right: 5,
-                bottom: 0);
-        }
-
-        public ToolStripActionDropDownButton(EntityDropdownAction dropdownAction)
-        {
-            AddActionItems(dropdownAction);
-            ToolStripButtonTools.InitBigButton(this);
-            ToolStripButtonTools.InitActionButton(this, dropdownAction);
-        }
-
-        private void AddActionItems(EntityDropdownAction dropdownAction)
-        {
-            foreach (var item in dropdownAction.ChildItems)
+            if (item is EntityUIAction action)
             {
-                if (item is EntityUIAction action)
-                {
-                    DropDownItems.Add(new ToolStripActionMenuItem(action));
-                }
+                DropDownItems.Add(new ToolStripActionMenuItem(action));
             }
         }
-
-        public override string Text
+    }
+    public override string Text
+    {
+        get => base.Text;
+        set
         {
-            get => base.Text;
-            set
+            base.Text = value.Wrap(Width, Font);
+            if (!base.Text.Contains(Environment.NewLine))
             {
-                base.Text = value.Wrap(Width, Font);
-                if (!base.Text.Contains(Environment.NewLine))
-                {
-                    base.Text += Environment.NewLine;
-                }
-                if (base.Text.EndsWith(Environment.NewLine))
-                {
-                    base.Text += " ";
-                }
+                base.Text += Environment.NewLine;
             }
-        }
-        
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            PaintButtonBackground(e);
-            ToolStripButtonTools.PaintImage(this,e);
-            this.PaintText(e);
-            PaintDropDownArrow(e);
-        }
-
-        private void PaintButtonBackground(PaintEventArgs e)
-        {
-            var teventArgs = new ToolStripItemRenderEventArgs(e.Graphics, this);
-            Owner
-                .Renderer
-                .DrawDropDownButtonBackground(teventArgs);
-        }
-
-        private void PaintDropDownArrow(PaintEventArgs e)
-        {
-            var arrowRectangle = GetArrowRectangle();
-            var renderer = this.Owner.Renderer;
-            var graphics = e.Graphics;
-            
-            var arrowColor = this.Enabled ? 
-                SystemColors.ControlText :
-                SystemColors.ControlDark;
-            
-            var eventArgs = new ToolStripArrowRenderEventArgs(
-                g: graphics,
-                toolStripItem: this, 
-                arrowRectangle: arrowRectangle,
-                arrowColor: arrowColor,
-                arrowDirection: ArrowDirection.Down);
-            
-            renderer.DrawArrow(eventArgs);
-        }
-
-        private Rectangle GetArrowRectangle()
-        {
-            var imageRectangle =
-                ToolStripButtonTools.GetImageRectangle(this);
-            
-            var yCoord = imageRectangle.Y + imageRectangle.Height/ 2;
-            var xCoord = imageRectangle.X + imageRectangle.Width + imageArrowGap;
-
-            return  new Rectangle(
-                new Point(xCoord, yCoord),
-                new Size(5, 5)); // looks like the rectangle size has nothing to to do with the arrow size
+            if (base.Text.EndsWith(Environment.NewLine))
+            {
+                base.Text += " ";
+            }
         }
     }
     
-    public class ToolStripActionMenuItem:ToolStripMenuItem, IActionContainer
+    protected override void OnPaint(PaintEventArgs e)
     {
+        PaintButtonBackground(e);
+        ToolStripButtonTools.PaintImage(this,e);
+        this.PaintText(e);
+        PaintDropDownArrow(e);
+    }
+    private void PaintButtonBackground(PaintEventArgs e)
+    {
+        var teventArgs = new ToolStripItemRenderEventArgs(e.Graphics, this);
+        Owner
+            .Renderer
+            .DrawDropDownButtonBackground(teventArgs);
+    }
+    private void PaintDropDownArrow(PaintEventArgs e)
+    {
+        var arrowRectangle = GetArrowRectangle();
+        var renderer = this.Owner.Renderer;
+        var graphics = e.Graphics;
+        
+        var arrowColor = this.Enabled ? 
+            SystemColors.ControlText :
+            SystemColors.ControlDark;
+        
+        var eventArgs = new ToolStripArrowRenderEventArgs(
+            g: graphics,
+            toolStripItem: this, 
+            arrowRectangle: arrowRectangle,
+            arrowColor: arrowColor,
+            arrowDirection: ArrowDirection.Down);
+        
+        renderer.DrawArrow(eventArgs);
+    }
+    private Rectangle GetArrowRectangle()
+    {
+        var imageRectangle =
+            ToolStripButtonTools.GetImageRectangle(this);
+        
+        var yCoord = imageRectangle.Y + imageRectangle.Height/ 2;
+        var xCoord = imageRectangle.X + imageRectangle.Width + imageArrowGap;
+        return  new Rectangle(
+            new Point(xCoord, yCoord),
+            new Size(5, 5)); // looks like the rectangle size has nothing to to do with the arrow size
+    }
+}
 
-        private readonly EntityUIAction action;
-
-        public ToolStripActionMenuItem(EntityUIAction action) 
-            : base(action.Caption)
-        {
-            this.action = action;
-        }
-
-        public EntityUIAction GetAction()
-        {
-            return action;
-        }
+public class ToolStripActionMenuItem:ToolStripMenuItem, IActionContainer
+{
+    private readonly EntityUIAction action;
+    public ToolStripActionMenuItem(EntityUIAction action) 
+        : base(action.Caption)
+    {
+        this.action = action;
+    }
+    public EntityUIAction GetAction()
+    {
+        return action;
     }
 }

@@ -21,11 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Server.Model.Search
+namespace Origam.Server.Model.Search;
+public class GetMenuInput
 {
-    public class GetMenuInput
-    {
-        public Guid LookupId { get; set; }
-        public Guid ReferenceId { get; set; }
-    }
+    public Guid LookupId { get; set; }
+    public Guid ReferenceId { get; set; }
 }

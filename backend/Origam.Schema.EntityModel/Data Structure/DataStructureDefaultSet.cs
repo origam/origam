@@ -23,44 +23,33 @@ using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel;
+[SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
+[HelpTopic("Default+Set+Default")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class DataStructureDefaultSet : AbstractSchemaItem
 {
-	[SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
-    [HelpTopic("Default+Set+Default")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class DataStructureDefaultSet : AbstractSchemaItem
+	public const string CategoryConst = "DataStructureDefaultSet";
+	public DataStructureDefaultSet() {}
+	public DataStructureDefaultSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public DataStructureDefaultSet(Key primaryKey) : base(primaryKey)	{}
+
+	#region Overriden AbstractDataEntityColumn Members
+	public override string ItemType => CategoryConst;
+	public override bool UseFolders => false;
+	#endregion
+	#region ISchemaItemFactory Members
+	public override Type[] NewItemTypes => new[]
 	{
-		public const string CategoryConst = "DataStructureDefaultSet";
-
-		public DataStructureDefaultSet() {}
-
-		public DataStructureDefaultSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataStructureDefaultSet(Key primaryKey) : base(primaryKey)	{}
-	
-		#region Overriden AbstractDataEntityColumn Members
-		public override string ItemType => CategoryConst;
-
-		public override bool UseFolders => false;
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(DataStructureDefaultSetDefault)
-		};
-
-		public override T NewItem<T>(
-			Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			return base.NewItem<T>(schemaExtensionId, group,
-				typeof(T) == typeof(DataStructureDefaultSetDefault)
-					? "NewDataStructureDefaultSetDefault" : null);
-		}
-
-		#endregion
+		typeof(DataStructureDefaultSetDefault)
+	};
+	public override T NewItem<T>(
+		Guid schemaExtensionId, SchemaItemGroup group)
+	{
+		return base.NewItem<T>(schemaExtensionId, group,
+			typeof(T) == typeof(DataStructureDefaultSetDefault)
+				? "NewDataStructureDefaultSetDefault" : null);
 	}
+	#endregion
 }

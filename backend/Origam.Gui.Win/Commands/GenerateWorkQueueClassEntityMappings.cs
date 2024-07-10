@@ -24,31 +24,28 @@ using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+public class GenerateWorkQueueClassEntityMappings : AbstractMenuCommand
 {
-    public class GenerateWorkQueueClassEntityMappings : AbstractMenuCommand
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    public override bool IsEnabled
     {
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+        get
         {
-            get
-            {
-                return Owner is WorkQueueClass;
-            }
-            set
-            {
-                throw new ArgumentException("Cannot set this property", "IsEnabled");
-            }
+            return Owner is WorkQueueClass;
         }
-
-        public override void Run()
+        set
         {
-            Origam.Schema.WorkflowModel.WorkflowHelper.GenerateWorkQueueClassEntityMappings(
-                Owner as WorkQueueClass);
+            throw new ArgumentException("Cannot set this property", "IsEnabled");
         }
-        public override int GetImageIndex(string icon)
-        {
-            return _schemaBrowser.ImageIndex(icon);
-        }
+    }
+    public override void Run()
+    {
+        Origam.Schema.WorkflowModel.WorkflowHelper.GenerateWorkQueueClassEntityMappings(
+            Owner as WorkQueueClass);
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
     }
 }

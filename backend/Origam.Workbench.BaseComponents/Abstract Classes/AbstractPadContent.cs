@@ -23,112 +23,106 @@ using System;
 using WeifenLuo.WinFormsUI.Docking;
 using Origam.UI;
 
-namespace Origam.Workbench
+namespace Origam.Workbench;
+public class AbstractPadContent : DockContent, IPadContent
 {
-	public class AbstractPadContent : DockContent, IPadContent
+	string title;
+	string icon;
+	string category = null;
+	string[] shortcut = null;
+	
+	public AbstractPadContent() {}
+	public AbstractPadContent(string title) : this(title, null)
 	{
-		string title;
-		string icon;
-		string category = null;
-		string[] shortcut = null;
-		
-		public AbstractPadContent() {}
-
-		public AbstractPadContent(string title) : this(title, null)
+	}
+	
+	public AbstractPadContent(string title, string iconResoureName)
+	{
+		this.title = title;
+		this.icon  = iconResoureName;
+	}
+	
+	public string Category 
+	{
+		get 
 		{
+			return category;
 		}
-		
-		public AbstractPadContent(string title, string iconResoureName)
+		set 
 		{
-			this.title = title;
-			this.icon  = iconResoureName;
+			category = value;
 		}
-		
-		public string Category 
+	}
+	
+	public string[] Shortcut 
+	{
+		get 
 		{
-			get 
-			{
-				return category;
-			}
-			set 
-			{
-				category = value;
-			}
+			return shortcut;
 		}
-		
-		public string[] Shortcut 
+		set 
 		{
-			get 
-			{
-				return shortcut;
-			}
-			set 
-			{
-				shortcut = value;
-			}
+			shortcut = value;
 		}
-		
-		public virtual string Title 
+	}
+	
+	public virtual string Title 
+	{
+		get 
 		{
-			get 
-			{
-				return this.Name;
-			}
+			return this.Name;
 		}
-		
-		public virtual string IconResource
+	}
+	
+	public virtual string IconResource
+	{
+		get 
 		{
-			get 
-			{
-				return icon;
-			}
+			return icon;
 		}
-
-		public virtual void RedrawContent()
+	}
+	public virtual void RedrawContent()
+	{
+	}
+	
+	protected virtual void OnTitleChanged(EventArgs e)
+	{
+		if (TitleChanged != null) 
 		{
+			TitleChanged(this, e);
 		}
-		
-		protected virtual void OnTitleChanged(EventArgs e)
+	}
+	
+	protected virtual void OnIconChanged(EventArgs e)
+	{
+		if (IconChanged != null) 
 		{
-			if (TitleChanged != null) 
-			{
-				TitleChanged(this, e);
-			}
+			IconChanged(this, e);
 		}
-		
-		protected virtual void OnIconChanged(EventArgs e)
-		{
-			if (IconChanged != null) 
-			{
-				IconChanged(this, e);
-			}
-		}
-
-		private void InitializeComponent()
-		{
-			// 
-			// AbstractPadContent
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(292, 273);
-			this.DockAreas = ((DockAreas)(((((DockAreas.Float | DockAreas.DockLeft) 
-				| DockAreas.DockRight) 
-				| DockAreas.DockTop) 
-				| DockAreas.DockBottom)));
-			this.Name = "AbstractPadContent";
-
-		}
-		
-		public event EventHandler TitleChanged;
-		public event EventHandler IconChanged;
-		
-		public void BringPadToFront()
-		{
+	}
+	private void InitializeComponent()
+	{
+		// 
+		// AbstractPadContent
+		// 
+		this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+		this.ClientSize = new System.Drawing.Size(292, 273);
+		this.DockAreas = ((DockAreas)(((((DockAreas.Float | DockAreas.DockLeft) 
+			| DockAreas.DockRight) 
+			| DockAreas.DockTop) 
+			| DockAreas.DockBottom)));
+		this.Name = "AbstractPadContent";
+	}
+	
+	public event EventHandler TitleChanged;
+	public event EventHandler IconChanged;
+	
+	public void BringPadToFront()
+	{
 //			if (!WorkbenchSingleton.Workbench.WorkbenchLayout.IsVisible(this)) 
 //			{
 //				WorkbenchSingleton.Workbench.WorkbenchLayout.ShowPad(this);
 //			}
 //			WorkbenchSingleton.Workbench.WorkbenchLayout.ActivatePad(this);
-		}
 	}
 }

@@ -21,24 +21,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+/// <summary>
+/// Summary description for TabControlBuilder.
+/// </summary>
+public class CollapsiblePanelBuilder
 {
-	/// <summary>
-	/// Summary description for TabControlBuilder.
-	/// </summary>
-	public class CollapsiblePanelBuilder
+	public static void Build(XmlElement parentNode, UIElementRenderData renderData)
 	{
-		public static void Build(XmlElement parentNode, UIElementRenderData renderData)
+		parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+		parentNode.SetAttribute("Type", "CollapsiblePanel");
+		parentNode.SetAttribute("Label", renderData.Text);
+		parentNode.SetAttribute("IndentLevel", renderData.IndentLevel.ToString());
+		parentNode.SetAttribute("IsOpen", XmlConvert.ToString(renderData.IsOpen));
+		if(! renderData.IsHeightFixed)
 		{
-			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-			parentNode.SetAttribute("Type", "CollapsiblePanel");
-			parentNode.SetAttribute("Label", renderData.Text);
-			parentNode.SetAttribute("IndentLevel", renderData.IndentLevel.ToString());
-			parentNode.SetAttribute("IsOpen", XmlConvert.ToString(renderData.IsOpen));
-			if(! renderData.IsHeightFixed)
-			{
-				parentNode.SetAttribute("Height", "0");
-			}
+			parentNode.SetAttribute("Height", "0");
 		}
 	}
 }

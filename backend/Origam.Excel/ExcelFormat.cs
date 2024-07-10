@@ -19,11 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Excel
+namespace Origam.Excel;
+public enum ExcelFormat
 {
-    public enum ExcelFormat
-    {
-        XLS,
-        XLSX
-    }
+    XLS,
+    XLSX
 }

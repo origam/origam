@@ -27,111 +27,119 @@ using System.Net;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
-namespace Origam.Server.Configuration
+namespace Origam.Server.Configuration;
+public class StartUpConfiguration
 {
-    public class StartUpConfiguration
+    private readonly IConfiguration configuration;
+    public StartUpConfiguration(IConfiguration configuration)
     {
-        private readonly IConfiguration configuration;
-
-        public StartUpConfiguration(IConfiguration configuration)
+        this.configuration = configuration;
+    }
+    
+    public IEnumerable<string> UserApiPublicRoutes =>  
+        configuration
+            .GetSection("UserApiOptions")
+            .GetSection("PublicRoutes")
+            .GetChildren()
+            .Select(c => c.Value);
+    public IEnumerable<string> UserApiRestrictedRoutes =>
+        configuration   
+            .GetSection("UserApiOptions")
+            .GetSection("RestrictedRoutes")
+            .GetChildren()
+            .Select(c => c.Value);
+    public bool EnableSoapInterface => configuration
+        .GetSection("SoapAPI")
+        .GetValue<bool>("Enabled");       
+    
+    public bool SoapInterfaceRequiresAuthentication => configuration
+        .GetSection("SoapAPI")
+        .GetValue("RequiresAuthentication", true);       
+    public bool ExpectAndReturnOldDotNetAssemblyReferences => configuration
+        .GetSection("SoapAPI")
+        .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
+    public string PathToCustomAssetsFolder => 
+        configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
+    public string RouteToCustomAssetsFolder => 
+        configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];    
+    public string IdentityGuiLogoUrl => 
+        configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];    
+    public string Html5ClientLogoUrl => 
+        configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
+    public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
+                                   !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
+                                   (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
+                                    !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
+    public string PathToClientApp
+    {
+        get
         {
-            this.configuration = configuration;
+            string pathToClientApp = configuration["PathToClientApp"];
+            if(!Path.IsPathRooted(pathToClientApp))
+            {
+                throw new Exception($"The PathToClientApp \"{pathToClientApp}\" must be an absolute path");
+            }
+            return pathToClientApp;
         }
-        
-        public IEnumerable<string> UserApiPublicRoutes =>  
-            configuration
-                .GetSection("UserApiOptions")
-                .GetSection("PublicRoutes")
-                .GetChildren()
-                .Select(c => c.Value);
-
-        public IEnumerable<string> UserApiRestrictedRoutes =>
-            configuration   
-                .GetSection("UserApiOptions")
-                .GetSection("RestrictedRoutes")
-                .GetChildren()
-                .Select(c => c.Value);
-
-        public bool EnableSoapInterface => configuration
-            .GetSection("SoapAPI")
-            .GetValue<bool>("Enabled");       
-        
-        public bool SoapInterfaceRequiresAuthentication => configuration
-            .GetSection("SoapAPI")
-            .GetValue("RequiresAuthentication", true);       
-        public bool ExpectAndReturnOldDotNetAssemblyReferences => configuration
-            .GetSection("SoapAPI")
-            .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
-
-        public string PathToCustomAssetsFolder => 
-            configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
-        public string RouteToCustomAssetsFolder => 
-            configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];    
-        public string IdentityGuiLogoUrl => 
-            configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];    
-        public string Html5ClientLogoUrl => 
-            configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
-        public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
-                                       !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
-                                       (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
-                                        !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
-        public string PathToClientApp
+    } 
+    
+    public string[] ExtensionDlls
+    {
+        get
         {
-            get
+            var subSection = configuration.GetSection("ExtensionDlls");
+            if (!subSection.Exists())
             {
-                string pathToClientApp = configuration["PathToClientApp"];
-                if(!Path.IsPathRooted(pathToClientApp))
-                {
-                    throw new Exception($"The PathToClientApp \"{pathToClientApp}\" must be an absolute path");
-                }
-                return pathToClientApp;
+                return Array.Empty<string>();
             }
-        } 
-        
-        public string[] ExtensionDlls
-        {
-            get
-            {
-                var subSection = configuration.GetSection("ExtensionDlls");
-                if (!subSection.Exists())
-                {
-                    return Array.Empty<string>();
-                }
-                return subSection.GetStringArrayOrEmpty();
-            }
-        }   
-        
-        public bool ReloadModelWhenFilesChangesDetected =>
-            configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
-        
-        public SecurityProtocolType SecurityProtocol
-        {
-            get
-            {
-                var protocols = configuration
-                    .GetSection("SupportedSecurityProtocols")
-                    .GetChildren()
-                    .ToArray();
-                if (protocols.Length == 0)
-                {
-                    return SecurityProtocolType.SystemDefault;
-                }
-                return protocols
-                    .Select(ParseSecurityProtocolType)
-                    .Aggregate((current, next) => current | next);
-            }
+            return subSection.GetStringArrayOrEmpty();
         }
-
-        private SecurityProtocolType ParseSecurityProtocolType(IConfigurationSection section)
+    }   
+    
+    public bool ReloadModelWhenFilesChangesDetected =>
+        configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
+    
+    public int MultipartBodyLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("MultipartBodyLengthLimit", 134_217_728);    
+        
+    public int MultipartHeadersLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("MultipartHeadersLengthLimit", 16_384);    
+        
+    public int ValueLengthLimit =>
+        configuration
+            .GetSection("HttpFormSettings")
+            .GetValue("ValueLengthLimit", 4_194_304);
+    
+    public SecurityProtocolType SecurityProtocol
+    {
+        get
         {
-            if (Enum.TryParse(section.Value, out SecurityProtocolType protocolType))
+            var protocols = configuration
+                .GetSection("SupportedSecurityProtocols")
+                .GetChildren()
+                .ToArray();
+            if (protocols.Length == 0)
             {
-                return protocolType;
+                return SecurityProtocolType.SystemDefault;
             }
-            else
-            {
-                throw new ArgumentException($"Cannot parse \"{section.Value}\" to a valid {nameof(SecurityProtocol)} when parsing values of SupportedSecurityProtocols");
-            }
+            return protocols
+                .Select(ParseSecurityProtocolType)
+                .Aggregate((current, next) => current | next);
+        }
+    }
+    private SecurityProtocolType ParseSecurityProtocolType(IConfigurationSection section)
+    {
+        if (Enum.TryParse(section.Value, out SecurityProtocolType protocolType))
+        {
+            return protocolType;
+        }
+        else
+        {
+            throw new ArgumentException($"Cannot parse \"{section.Value}\" to a valid {nameof(SecurityProtocol)} when parsing values of SupportedSecurityProtocols");
         }
     }
 }

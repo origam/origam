@@ -7,4637 +7,4635 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Origam.BI.SSRS.SSRSWebReference
+namespace Origam.BI.SSRS.SSRSWebReference;
+
+
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.ServiceContractAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ConfigurationName="Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap")]
+public interface ReportExecutionServiceSoap
 {
     
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Lis" +
+        "tSecureMethods", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest request);
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ConfigurationName="Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap")]
-    public interface ReportExecutionServiceSoap
-    {
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Lis" +
-            "tSecureMethods", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReport", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReport3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.LoadReport3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReport2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.LoadReport2Request request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReportDefinition", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionResponse> LoadReportDefinitionAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReportDefinition2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Response> LoadReportDefinition2Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Request request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dReportDefinition3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Response> LoadReportDefinition3Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionCredentials", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionCredentials2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionCredentials3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionParameters", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionParameters2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
-            "ExecutionParameters3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
-            "etExecution", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
-            "etExecution2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
-            "etExecution3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
-            "der", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderResponse> RenderAsync(Origam.BI.SSRS.SSRSWebReference.RenderRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
-            "der2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Render2Response> Render2Async(Origam.BI.SSRS.SSRSWebReference.Render2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Del" +
-            "iverReportItem", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
-            "derStream", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderStreamResponse> RenderStreamAsync(Origam.BI.SSRS.SSRSWebReference.RenderStreamRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
-            "ExecutionInfo", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
-            "ExecutionInfo2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
-            "ExecutionInfo3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
-            "DocumentMap", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dDrillthroughTarget", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dDrillthroughTarget2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
-            "dDrillthroughTarget3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Tog" +
-            "gleItem", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Nav" +
-            "igateDocumentMap", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Nav" +
-            "igateBookmark", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkResponse> NavigateBookmarkAsync(Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Fin" +
-            "dString", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> FindStringAsync(Origam.BI.SSRS.SSRSWebReference.FindStringRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
-            "t", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SortResponse> SortAsync(Origam.BI.SSRS.SSRSWebReference.SortRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
-            "t2", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort2Response> Sort2Async(Origam.BI.SSRS.SSRSWebReference.Sort2Request request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
-            "t3", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort3Response> Sort3Async(Origam.BI.SSRS.SSRSWebReference.Sort3Request request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
-            "RenderResource", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetRenderResourceResponse> GetRenderResourceAsync(Origam.BI.SSRS.SSRSWebReference.GetRenderResourceRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Lis" +
-            "tRenderingExtensions", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Log" +
-            "onUser", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> LogonUserAsync(Origam.BI.SSRS.SSRSWebReference.LogonUserRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Log" +
-            "off", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> LogoffAsync(Origam.BI.SSRS.SSRSWebReference.LogoffRequest request);
-    }
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReport", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReport3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.LoadReport3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReport2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.LoadReport2Request request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReportDefinition", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionResponse> LoadReportDefinitionAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReportDefinition2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Response> LoadReportDefinition2Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Request request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dReportDefinition3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Response> LoadReportDefinition3Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionCredentials", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionCredentials2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionCredentials3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionParameters", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionParameters2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set" +
+        "ExecutionParameters3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
+        "etExecution", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
+        "etExecution2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res" +
+        "etExecution3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
+        "der", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderResponse> RenderAsync(Origam.BI.SSRS.SSRSWebReference.RenderRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
+        "der2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Render2Response> Render2Async(Origam.BI.SSRS.SSRSWebReference.Render2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Del" +
+        "iverReportItem", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Ren" +
+        "derStream", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderStreamResponse> RenderStreamAsync(Origam.BI.SSRS.SSRSWebReference.RenderStreamRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
+        "ExecutionInfo", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
+        "ExecutionInfo2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
+        "ExecutionInfo3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
+        "DocumentMap", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dDrillthroughTarget", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dDrillthroughTarget2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa" +
+        "dDrillthroughTarget3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Tog" +
+        "gleItem", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Nav" +
+        "igateDocumentMap", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Nav" +
+        "igateBookmark", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkResponse> NavigateBookmarkAsync(Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Fin" +
+        "dString", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> FindStringAsync(Origam.BI.SSRS.SSRSWebReference.FindStringRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
+        "t", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SortResponse> SortAsync(Origam.BI.SSRS.SSRSWebReference.SortRequest request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
+        "t2", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort2Response> Sort2Async(Origam.BI.SSRS.SSRSWebReference.Sort2Request request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor" +
+        "t3", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort3Response> Sort3Async(Origam.BI.SSRS.SSRSWebReference.Sort3Request request);
+    
+    // CODEGEN: Generating message contract since the operation has multiple return values.
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get" +
+        "RenderResource", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetRenderResourceResponse> GetRenderResourceAsync(Origam.BI.SSRS.SSRSWebReference.GetRenderResourceRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Lis" +
+        "tRenderingExtensions", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Log" +
+        "onUser", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> LogonUserAsync(Origam.BI.SSRS.SSRSWebReference.LogonUserRequest request);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Log" +
+        "off", ReplyAction="*")]
+    [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+    [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ParameterValueOrFieldReference))]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> LogoffAsync(Origam.BI.SSRS.SSRSWebReference.LogoffRequest request);
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class TrustedUserHeader
+{
+    
+    private string userNameField;
+    
+    private byte[] userTokenField;
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class TrustedUserHeader
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string UserName
     {
-        
-        private string userNameField;
-        
-        private byte[] userTokenField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string UserName
+        get
         {
-            get
-            {
-                return this.userNameField;
-            }
-            set
-            {
-                this.userNameField = value;
-            }
+            return this.userNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", Order=1)]
-        public byte[] UserToken
+        set
         {
-            get
-            {
-                return this.userTokenField;
-            }
-            set
-            {
-                this.userTokenField = value;
-            }
+            this.userNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class Extension
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary", Order=1)]
+    public byte[] UserToken
     {
-        
-        private ExtensionTypeEnum extensionTypeField;
-        
-        private string nameField;
-        
-        private string localizedNameField;
-        
-        private bool visibleField;
-        
-        private bool isModelGenerationSupportedField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public ExtensionTypeEnum ExtensionType
+        get
         {
-            get
-            {
-                return this.extensionTypeField;
-            }
-            set
-            {
-                this.extensionTypeField = value;
-            }
+            return this.userTokenField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Name
+        set
         {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+            this.userTokenField = value;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string LocalizedName
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class Extension
+{
+    
+    private ExtensionTypeEnum extensionTypeField;
+    
+    private string nameField;
+    
+    private string localizedNameField;
+    
+    private bool visibleField;
+    
+    private bool isModelGenerationSupportedField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public ExtensionTypeEnum ExtensionType
+    {
+        get
         {
-            get
-            {
-                return this.localizedNameField;
-            }
-            set
-            {
-                this.localizedNameField = value;
-            }
+            return this.extensionTypeField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public bool Visible
+        set
         {
-            get
-            {
-                return this.visibleField;
-            }
-            set
-            {
-                this.visibleField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public bool IsModelGenerationSupported
-        {
-            get
-            {
-                return this.isModelGenerationSupportedField;
-            }
-            set
-            {
-                this.isModelGenerationSupportedField = value;
-            }
+            this.extensionTypeField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public enum ExtensionTypeEnum
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string Name
     {
-        
-        /// <remarks/>
-        Delivery,
-        
-        /// <remarks/>
-        Render,
-        
-        /// <remarks/>
-        Data,
-        
-        /// <remarks/>
-        All,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class DocumentMapNode
-    {
-        
-        private string labelField;
-        
-        private string uniqueNameField;
-        
-        private DocumentMapNode[] childrenField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Label
+        get
         {
-            get
-            {
-                return this.labelField;
-            }
-            set
-            {
-                this.labelField = value;
-            }
+            return this.nameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string UniqueName
+        set
         {
-            get
-            {
-                return this.uniqueNameField;
-            }
-            set
-            {
-                this.uniqueNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        public DocumentMapNode[] Children
-        {
-            get
-            {
-                return this.childrenField;
-            }
-            set
-            {
-                this.childrenField = value;
-            }
+            this.nameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ExtensionSettings
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string LocalizedName
     {
-        
-        private string extensionField;
-        
-        private ParameterValueOrFieldReference[] parameterValuesField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Extension
+        get
         {
-            get
-            {
-                return this.extensionField;
-            }
-            set
-            {
-                this.extensionField = value;
-            }
+            return this.localizedNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterFieldReference))]
-        [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterValue))]
-        public ParameterValueOrFieldReference[] ParameterValues
+        set
         {
-            get
-            {
-                return this.parameterValuesField;
-            }
-            set
-            {
-                this.parameterValuesField = value;
-            }
+            this.localizedNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ParameterFieldReference : ParameterValueOrFieldReference
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public bool Visible
     {
-        
-        private string parameterNameField;
-        
-        private string fieldAliasField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string ParameterName
+        get
         {
-            get
-            {
-                return this.parameterNameField;
-            }
-            set
-            {
-                this.parameterNameField = value;
-            }
+            return this.visibleField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string FieldAlias
+        set
         {
-            get
-            {
-                return this.fieldAliasField;
-            }
-            set
-            {
-                this.fieldAliasField = value;
-            }
+            this.visibleField = value;
         }
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterFieldReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterValue))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ParameterValueOrFieldReference
+    [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+    public bool IsModelGenerationSupported
     {
+        get
+        {
+            return this.isModelGenerationSupportedField;
+        }
+        set
+        {
+            this.isModelGenerationSupportedField = value;
+        }
     }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public enum ExtensionTypeEnum
+{
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ParameterValue : ParameterValueOrFieldReference
+    Delivery,
+    
+    /// <remarks/>
+    Render,
+    
+    /// <remarks/>
+    Data,
+    
+    /// <remarks/>
+    All,
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class DocumentMapNode
+{
+    
+    private string labelField;
+    
+    private string uniqueNameField;
+    
+    private DocumentMapNode[] childrenField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Label
     {
-        
-        private string nameField;
-        
-        private string valueField;
-        
-        private string labelField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Name
+        get
         {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+            return this.labelField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Value
+        set
         {
-            get
-            {
-                return this.valueField;
-            }
-            set
-            {
-                this.valueField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Label
-        {
-            get
-            {
-                return this.labelField;
-            }
-            set
-            {
-                this.labelField = value;
-            }
+            this.labelField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class DataSourceCredentials
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string UniqueName
     {
-        
-        private string dataSourceNameField;
-        
-        private string userNameField;
-        
-        private string passwordField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string DataSourceName
+        get
         {
-            get
-            {
-                return this.dataSourceNameField;
-            }
-            set
-            {
-                this.dataSourceNameField = value;
-            }
+            return this.uniqueNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string UserName
+        set
         {
-            get
-            {
-                return this.userNameField;
-            }
-            set
-            {
-                this.userNameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Password
-        {
-            get
-            {
-                return this.passwordField;
-            }
-            set
-            {
-                this.passwordField = value;
-            }
+            this.uniqueNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class Warning
+    [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+    public DocumentMapNode[] Children
     {
-        
-        private string codeField;
-        
-        private string severityField;
-        
-        private string objectNameField;
-        
-        private string objectTypeField;
-        
-        private string messageField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Code
+        get
         {
-            get
-            {
-                return this.codeField;
-            }
-            set
-            {
-                this.codeField = value;
-            }
+            return this.childrenField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Severity
+        set
         {
-            get
-            {
-                return this.severityField;
-            }
-            set
-            {
-                this.severityField = value;
-            }
+            this.childrenField = value;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string ObjectName
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ExtensionSettings
+{
+    
+    private string extensionField;
+    
+    private ParameterValueOrFieldReference[] parameterValuesField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Extension
+    {
+        get
         {
-            get
-            {
-                return this.objectNameField;
-            }
-            set
-            {
-                this.objectNameField = value;
-            }
+            return this.extensionField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string ObjectType
+        set
         {
-            get
-            {
-                return this.objectTypeField;
-            }
-            set
-            {
-                this.objectTypeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string Message
-        {
-            get
-            {
-                return this.messageField;
-            }
-            set
-            {
-                this.messageField = value;
-            }
+            this.extensionField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ExecutionHeader
+    [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
+    [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterFieldReference))]
+    [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterValue))]
+    public ParameterValueOrFieldReference[] ParameterValues
     {
-        
-        private string executionIDField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string ExecutionID
+        get
         {
-            get
-            {
-                return this.executionIDField;
-            }
-            set
-            {
-                this.executionIDField = value;
-            }
+            return this.parameterValuesField;
+        }
+        set
+        {
+            this.parameterValuesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ParameterFieldReference : ParameterValueOrFieldReference
+{
+    
+    private string parameterNameField;
+    
+    private string fieldAliasField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string ParameterName
+    {
+        get
+        {
+            return this.parameterNameField;
+        }
+        set
+        {
+            this.parameterNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ParametersGridCellDefinition
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string FieldAlias
     {
-        
-        private int rowIndexField;
-        
-        private int columnsIndexField;
-        
-        private string parameterNameField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int RowIndex
+        get
         {
-            get
-            {
-                return this.rowIndexField;
-            }
-            set
-            {
-                this.rowIndexField = value;
-            }
+            return this.fieldAliasField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public int ColumnsIndex
+        set
         {
-            get
-            {
-                return this.columnsIndexField;
-            }
-            set
-            {
-                this.columnsIndexField = value;
-            }
+            this.fieldAliasField = value;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string ParameterName
+    }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterFieldReference))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterValue))]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ParameterValueOrFieldReference
+{
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ParameterValue : ParameterValueOrFieldReference
+{
+    
+    private string nameField;
+    
+    private string valueField;
+    
+    private string labelField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Name
+    {
+        get
         {
-            get
-            {
-                return this.parameterNameField;
-            }
-            set
-            {
-                this.parameterNameField = value;
-            }
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ParametersGridLayoutDefinition
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string Value
     {
-        
-        private int numberOfColumnsField;
-        
-        private int numberOfRowsField;
-        
-        private ParametersGridCellDefinition[] cellDefinitionsField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int NumberOfColumns
+        get
         {
-            get
-            {
-                return this.numberOfColumnsField;
-            }
-            set
-            {
-                this.numberOfColumnsField = value;
-            }
+            return this.valueField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public int NumberOfRows
+        set
         {
-            get
-            {
-                return this.numberOfRowsField;
-            }
-            set
-            {
-                this.numberOfRowsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
-        public ParametersGridCellDefinition[] CellDefinitions
-        {
-            get
-            {
-                return this.cellDefinitionsField;
-            }
-            set
-            {
-                this.cellDefinitionsField = value;
-            }
+            this.valueField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ReportMargins
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string Label
     {
-        
-        private double topField;
-        
-        private double bottomField;
-        
-        private double leftField;
-        
-        private double rightField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public double Top
+        get
         {
-            get
-            {
-                return this.topField;
-            }
-            set
-            {
-                this.topField = value;
-            }
+            return this.labelField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public double Bottom
+        set
         {
-            get
-            {
-                return this.bottomField;
-            }
-            set
-            {
-                this.bottomField = value;
-            }
+            this.labelField = value;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public double Left
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class DataSourceCredentials
+{
+    
+    private string dataSourceNameField;
+    
+    private string userNameField;
+    
+    private string passwordField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string DataSourceName
+    {
+        get
         {
-            get
-            {
-                return this.leftField;
-            }
-            set
-            {
-                this.leftField = value;
-            }
+            return this.dataSourceNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public double Right
+        set
         {
-            get
-            {
-                return this.rightField;
-            }
-            set
-            {
-                this.rightField = value;
-            }
+            this.dataSourceNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ReportPaperSize
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string UserName
     {
-        
-        private double heightField;
-        
-        private double widthField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public double Height
+        get
         {
-            get
-            {
-                return this.heightField;
-            }
-            set
-            {
-                this.heightField = value;
-            }
+            return this.userNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public double Width
+        set
         {
-            get
-            {
-                return this.widthField;
-            }
-            set
-            {
-                this.widthField = value;
-            }
+            this.userNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class PageSettings
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string Password
     {
-        
-        private ReportPaperSize paperSizeField;
-        
-        private ReportMargins marginsField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public ReportPaperSize PaperSize
+        get
         {
-            get
-            {
-                return this.paperSizeField;
-            }
-            set
-            {
-                this.paperSizeField = value;
-            }
+            return this.passwordField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public ReportMargins Margins
+        set
         {
-            get
-            {
-                return this.marginsField;
-            }
-            set
-            {
-                this.marginsField = value;
-            }
+            this.passwordField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class Warning
+{
+    
+    private string codeField;
+    
+    private string severityField;
+    
+    private string objectNameField;
+    
+    private string objectTypeField;
+    
+    private string messageField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Code
+    {
+        get
+        {
+            return this.codeField;
+        }
+        set
+        {
+            this.codeField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class DataSourcePrompt
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string Severity
     {
-        
-        private string nameField;
-        
-        private string dataSourceIDField;
-        
-        private string promptField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Name
+        get
         {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+            return this.severityField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string DataSourceID
+        set
         {
-            get
-            {
-                return this.dataSourceIDField;
-            }
-            set
-            {
-                this.dataSourceIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string Prompt
-        {
-            get
-            {
-                return this.promptField;
-            }
-            set
-            {
-                this.promptField = value;
-            }
+            this.severityField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ValidValue
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string ObjectName
     {
-        
-        private string labelField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Label
+        get
         {
-            get
-            {
-                return this.labelField;
-            }
-            set
-            {
-                this.labelField = value;
-            }
+            return this.objectNameField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string Value
+        set
         {
-            get
-            {
-                return this.valueField;
-            }
-            set
-            {
-                this.valueField = value;
-            }
+            this.objectNameField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ReportParameter
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public string ObjectType
     {
-        
-        private string nameField;
-        
-        private ParameterTypeEnum typeField;
-        
-        private bool typeFieldSpecified;
-        
-        private bool nullableField;
-        
-        private bool nullableFieldSpecified;
-        
-        private bool allowBlankField;
-        
-        private bool allowBlankFieldSpecified;
-        
-        private bool multiValueField;
-        
-        private bool multiValueFieldSpecified;
-        
-        private bool queryParameterField;
-        
-        private bool queryParameterFieldSpecified;
-        
-        private string promptField;
-        
-        private bool promptUserField;
-        
-        private bool promptUserFieldSpecified;
-        
-        private string[] dependenciesField;
-        
-        private bool validValuesQueryBasedField;
-        
-        private bool validValuesQueryBasedFieldSpecified;
-        
-        private ValidValue[] validValuesField;
-        
-        private bool defaultValuesQueryBasedField;
-        
-        private bool defaultValuesQueryBasedFieldSpecified;
-        
-        private string[] defaultValuesField;
-        
-        private ParameterStateEnum stateField;
-        
-        private bool stateFieldSpecified;
-        
-        private string errorMessageField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string Name
+        get
         {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+            return this.objectTypeField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public ParameterTypeEnum Type
+        set
         {
-            get
-            {
-                return this.typeField;
-            }
-            set
-            {
-                this.typeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool TypeSpecified
-        {
-            get
-            {
-                return this.typeFieldSpecified;
-            }
-            set
-            {
-                this.typeFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public bool Nullable
-        {
-            get
-            {
-                return this.nullableField;
-            }
-            set
-            {
-                this.nullableField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool NullableSpecified
-        {
-            get
-            {
-                return this.nullableFieldSpecified;
-            }
-            set
-            {
-                this.nullableFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public bool AllowBlank
-        {
-            get
-            {
-                return this.allowBlankField;
-            }
-            set
-            {
-                this.allowBlankField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AllowBlankSpecified
-        {
-            get
-            {
-                return this.allowBlankFieldSpecified;
-            }
-            set
-            {
-                this.allowBlankFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public bool MultiValue
-        {
-            get
-            {
-                return this.multiValueField;
-            }
-            set
-            {
-                this.multiValueField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool MultiValueSpecified
-        {
-            get
-            {
-                return this.multiValueFieldSpecified;
-            }
-            set
-            {
-                this.multiValueFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public bool QueryParameter
-        {
-            get
-            {
-                return this.queryParameterField;
-            }
-            set
-            {
-                this.queryParameterField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool QueryParameterSpecified
-        {
-            get
-            {
-                return this.queryParameterFieldSpecified;
-            }
-            set
-            {
-                this.queryParameterFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string Prompt
-        {
-            get
-            {
-                return this.promptField;
-            }
-            set
-            {
-                this.promptField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public bool PromptUser
-        {
-            get
-            {
-                return this.promptUserField;
-            }
-            set
-            {
-                this.promptUserField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool PromptUserSpecified
-        {
-            get
-            {
-                return this.promptUserFieldSpecified;
-            }
-            set
-            {
-                this.promptUserFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=8)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("Dependency")]
-        public string[] Dependencies
-        {
-            get
-            {
-                return this.dependenciesField;
-            }
-            set
-            {
-                this.dependenciesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public bool ValidValuesQueryBased
-        {
-            get
-            {
-                return this.validValuesQueryBasedField;
-            }
-            set
-            {
-                this.validValuesQueryBasedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ValidValuesQueryBasedSpecified
-        {
-            get
-            {
-                return this.validValuesQueryBasedFieldSpecified;
-            }
-            set
-            {
-                this.validValuesQueryBasedFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=10)]
-        public ValidValue[] ValidValues
-        {
-            get
-            {
-                return this.validValuesField;
-            }
-            set
-            {
-                this.validValuesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public bool DefaultValuesQueryBased
-        {
-            get
-            {
-                return this.defaultValuesQueryBasedField;
-            }
-            set
-            {
-                this.defaultValuesQueryBasedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DefaultValuesQueryBasedSpecified
-        {
-            get
-            {
-                return this.defaultValuesQueryBasedFieldSpecified;
-            }
-            set
-            {
-                this.defaultValuesQueryBasedFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=12)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("Value")]
-        public string[] DefaultValues
-        {
-            get
-            {
-                return this.defaultValuesField;
-            }
-            set
-            {
-                this.defaultValuesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public ParameterStateEnum State
-        {
-            get
-            {
-                return this.stateField;
-            }
-            set
-            {
-                this.stateField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool StateSpecified
-        {
-            get
-            {
-                return this.stateFieldSpecified;
-            }
-            set
-            {
-                this.stateFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public string ErrorMessage
-        {
-            get
-            {
-                return this.errorMessageField;
-            }
-            set
-            {
-                this.errorMessageField = value;
-            }
+            this.objectTypeField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public enum ParameterTypeEnum
+    [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+    public string Message
     {
-        
-        /// <remarks/>
-        Boolean,
-        
-        /// <remarks/>
-        DateTime,
-        
-        /// <remarks/>
-        Integer,
-        
-        /// <remarks/>
-        Float,
-        
-        /// <remarks/>
-        String,
+        get
+        {
+            return this.messageField;
+        }
+        set
+        {
+            this.messageField = value;
+        }
     }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ExecutionHeader
+{
+    
+    private string executionIDField;
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public enum ParameterStateEnum
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string ExecutionID
     {
-        
-        /// <remarks/>
-        HasValidValue,
-        
-        /// <remarks/>
-        MissingValidValue,
-        
-        /// <remarks/>
-        HasOutstandingDependencies,
-        
-        /// <remarks/>
-        DynamicValuesUnavailable,
+        get
+        {
+            return this.executionIDField;
+        }
+        set
+        {
+            this.executionIDField = value;
+        }
     }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ParametersGridCellDefinition
+{
+    
+    private int rowIndexField;
+    
+    private int columnsIndexField;
+    
+    private string parameterNameField;
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo2))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo3))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ExecutionInfo
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public int RowIndex
     {
-        
-        private bool hasSnapshotField;
-        
-        private bool needsProcessingField;
-        
-        private bool allowQueryExecutionField;
-        
-        private bool credentialsRequiredField;
-        
-        private bool parametersRequiredField;
-        
-        private System.DateTime expirationDateTimeField;
-        
-        private System.DateTime executionDateTimeField;
-        
-        private int numPagesField;
-        
-        private ReportParameter[] parametersField;
-        
-        private DataSourcePrompt[] dataSourcePromptsField;
-        
-        private bool hasDocumentMapField;
-        
-        private string executionIDField;
-        
-        private string reportPathField;
-        
-        private string historyIDField;
-        
-        private PageSettings reportPageSettingsField;
-        
-        private int autoRefreshIntervalField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public bool HasSnapshot
+        get
         {
-            get
-            {
-                return this.hasSnapshotField;
-            }
-            set
-            {
-                this.hasSnapshotField = value;
-            }
+            return this.rowIndexField;
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public bool NeedsProcessing
+        set
         {
-            get
-            {
-                return this.needsProcessingField;
-            }
-            set
-            {
-                this.needsProcessingField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public bool AllowQueryExecution
-        {
-            get
-            {
-                return this.allowQueryExecutionField;
-            }
-            set
-            {
-                this.allowQueryExecutionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public bool CredentialsRequired
-        {
-            get
-            {
-                return this.credentialsRequiredField;
-            }
-            set
-            {
-                this.credentialsRequiredField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public bool ParametersRequired
-        {
-            get
-            {
-                return this.parametersRequiredField;
-            }
-            set
-            {
-                this.parametersRequiredField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public System.DateTime ExpirationDateTime
-        {
-            get
-            {
-                return this.expirationDateTimeField;
-            }
-            set
-            {
-                this.expirationDateTimeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public System.DateTime ExecutionDateTime
-        {
-            get
-            {
-                return this.executionDateTimeField;
-            }
-            set
-            {
-                this.executionDateTimeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public int NumPages
-        {
-            get
-            {
-                return this.numPagesField;
-            }
-            set
-            {
-                this.numPagesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=8)]
-        public ReportParameter[] Parameters
-        {
-            get
-            {
-                return this.parametersField;
-            }
-            set
-            {
-                this.parametersField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=9)]
-        public DataSourcePrompt[] DataSourcePrompts
-        {
-            get
-            {
-                return this.dataSourcePromptsField;
-            }
-            set
-            {
-                this.dataSourcePromptsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public bool HasDocumentMap
-        {
-            get
-            {
-                return this.hasDocumentMapField;
-            }
-            set
-            {
-                this.hasDocumentMapField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string ExecutionID
-        {
-            get
-            {
-                return this.executionIDField;
-            }
-            set
-            {
-                this.executionIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string ReportPath
-        {
-            get
-            {
-                return this.reportPathField;
-            }
-            set
-            {
-                this.reportPathField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=13)]
-        public string HistoryID
-        {
-            get
-            {
-                return this.historyIDField;
-            }
-            set
-            {
-                this.historyIDField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=14)]
-        public PageSettings ReportPageSettings
-        {
-            get
-            {
-                return this.reportPageSettingsField;
-            }
-            set
-            {
-                this.reportPageSettingsField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=15)]
-        public int AutoRefreshInterval
-        {
-            get
-            {
-                return this.autoRefreshIntervalField;
-            }
-            set
-            {
-                this.autoRefreshIntervalField = value;
-            }
+            this.rowIndexField = value;
         }
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo3))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ExecutionInfo2 : ExecutionInfo
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public int ColumnsIndex
     {
-        
-        private PageCountMode pageCountModeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public PageCountMode PageCountMode
+        get
         {
-            get
-            {
-                return this.pageCountModeField;
-            }
-            set
-            {
-                this.pageCountModeField = value;
-            }
+            return this.columnsIndexField;
+        }
+        set
+        {
+            this.columnsIndexField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public enum PageCountMode
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string ParameterName
     {
-        
-        /// <remarks/>
-        Actual,
-        
-        /// <remarks/>
-        Estimate,
+        get
+        {
+            return this.parameterNameField;
+        }
+        set
+        {
+            this.parameterNameField = value;
+        }
     }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ParametersGridLayoutDefinition
+{
+    
+    private int numberOfColumnsField;
+    
+    private int numberOfRowsField;
+    
+    private ParametersGridCellDefinition[] cellDefinitionsField;
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ExecutionInfo3 : ExecutionInfo2
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public int NumberOfColumns
     {
-        
-        private ParametersGridLayoutDefinition parametersLayoutField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public ParametersGridLayoutDefinition ParametersLayout
+        get
         {
-            get
-            {
-                return this.parametersLayoutField;
-            }
-            set
-            {
-                this.parametersLayoutField = value;
-            }
+            return this.numberOfColumnsField;
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public partial class ServerInfoHeader
-    {
-        
-        private string reportServerVersionNumberField;
-        
-        private string reportServerEditionField;
-        
-        private string reportServerVersionField;
-        
-        private string reportServerDateTimeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string ReportServerVersionNumber
-        {
-            get
-            {
-                return this.reportServerVersionNumberField;
-            }
-            set
-            {
-                this.reportServerVersionNumberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string ReportServerEdition
-        {
-            get
-            {
-                return this.reportServerEditionField;
-            }
-            set
-            {
-                this.reportServerEditionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string ReportServerVersion
-        {
-            get
-            {
-                return this.reportServerVersionField;
-            }
-            set
-            {
-                this.reportServerVersionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string ReportServerDateTime
-        {
-            get
-            {
-                return this.reportServerDateTimeField;
-            }
-            set
-            {
-                this.reportServerDateTimeField = value;
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ListSecureMethods", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ListSecureMethodsRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public ListSecureMethodsRequest()
-        {
-        }
-        
-        public ListSecureMethodsRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ListSecureMethodsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ListSecureMethodsResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string[] ListSecureMethodsResult;
-        
-        public ListSecureMethodsResponse()
-        {
-        }
-        
-        public ListSecureMethodsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, string[] ListSecureMethodsResult)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.ListSecureMethodsResult = ListSecureMethodsResult;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Report;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string HistoryID;
-        
-        public LoadReportRequest()
-        {
-        }
-        
-        public LoadReportRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Report = Report;
-            this.HistoryID = HistoryID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        public LoadReportResponse()
-        {
-        }
-        
-        public LoadReportResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReport3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Report;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string HistoryID;
-        
-        public LoadReport3Request()
-        {
-        }
-        
-        public LoadReport3Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Report = Report;
-            this.HistoryID = HistoryID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReport3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        public LoadReport3Response()
-        {
-        }
-        
-        public LoadReport3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReport2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Report;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string HistoryID;
-        
-        public LoadReport2Request()
-        {
-        }
-        
-        public LoadReport2Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Report = Report;
-            this.HistoryID = HistoryID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReport2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        public LoadReport2Response()
-        {
-        }
-        
-        public LoadReport2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinitionRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Definition;
-        
-        public LoadReportDefinitionRequest()
-        {
-        }
-        
-        public LoadReportDefinitionRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Definition = Definition;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinitionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinitionResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
-        
-        public LoadReportDefinitionResponse()
-        {
-        }
-        
-        public LoadReportDefinitionResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-            this.warnings = warnings;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinition2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Definition;
-        
-        public LoadReportDefinition2Request()
-        {
-        }
-        
-        public LoadReportDefinition2Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Definition = Definition;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinition2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
-        
-        public LoadReportDefinition2Response()
-        {
-        }
-        
-        public LoadReportDefinition2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-            this.warnings = warnings;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinition3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Definition;
-        
-        public LoadReportDefinition3Request()
-        {
-        }
-        
-        public LoadReportDefinition3Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Definition = Definition;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadReportDefinition3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
-        
-        public LoadReportDefinition3Response()
-        {
-        }
-        
-        public LoadReportDefinition3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-            this.warnings = warnings;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentialsRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
-        
-        public SetExecutionCredentialsRequest()
-        {
-        }
-        
-        public SetExecutionCredentialsRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Credentials = Credentials;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentialsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentialsResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        public SetExecutionCredentialsResponse()
-        {
-        }
-        
-        public SetExecutionCredentialsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentials2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
-        
-        public SetExecutionCredentials2Request()
-        {
-        }
-        
-        public SetExecutionCredentials2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Credentials = Credentials;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentials2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        public SetExecutionCredentials2Response()
-        {
-        }
-        
-        public SetExecutionCredentials2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentials3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
-        
-        public SetExecutionCredentials3Request()
-        {
-        }
-        
-        public SetExecutionCredentials3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Credentials = Credentials;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionCredentials3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        public SetExecutionCredentials3Response()
-        {
-        }
-        
-        public SetExecutionCredentials3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParametersRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ParameterLanguage;
-        
-        public SetExecutionParametersRequest()
-        {
-        }
-        
-        public SetExecutionParametersRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Parameters = Parameters;
-            this.ParameterLanguage = ParameterLanguage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParametersResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParametersResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        public SetExecutionParametersResponse()
-        {
-        }
-        
-        public SetExecutionParametersResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParameters2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ParameterLanguage;
-        
-        public SetExecutionParameters2Request()
-        {
-        }
-        
-        public SetExecutionParameters2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Parameters = Parameters;
-            this.ParameterLanguage = ParameterLanguage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParameters2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        public SetExecutionParameters2Response()
-        {
-        }
-        
-        public SetExecutionParameters2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParameters3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ParameterLanguage;
-        
-        public SetExecutionParameters3Request()
-        {
-        }
-        
-        public SetExecutionParameters3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Parameters = Parameters;
-            this.ParameterLanguage = ParameterLanguage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SetExecutionParameters3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        public SetExecutionParameters3Response()
-        {
-        }
-        
-        public SetExecutionParameters3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecutionRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public ResetExecutionRequest()
-        {
-        }
-        
-        public ResetExecutionRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecutionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecutionResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        public ResetExecutionResponse()
-        {
-        }
-        
-        public ResetExecutionResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecution2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public ResetExecution2Request()
-        {
-        }
-        
-        public ResetExecution2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecution2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        public ResetExecution2Response()
-        {
-        }
-        
-        public ResetExecution2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecution3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public ResetExecution3Request()
-        {
-        }
-        
-        public ResetExecution3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ResetExecution3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        public ResetExecution3Response()
-        {
-        }
-        
-        public ResetExecution3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Render", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class RenderRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Format;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string DeviceInfo;
-        
-        public RenderRequest()
-        {
-        }
-        
-        public RenderRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Format = Format;
-            this.DeviceInfo = DeviceInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="RenderResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class RenderResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Result;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string Extension;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string MimeType;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
-        public string Encoding;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
-        public Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
-        public string[] StreamIds;
-        
-        public RenderResponse()
-        {
-        }
-        
-        public RenderResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Extension, string MimeType, string Encoding, Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings, string[] StreamIds)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Result = Result;
-            this.Extension = Extension;
-            this.MimeType = MimeType;
-            this.Encoding = Encoding;
-            this.Warnings = Warnings;
-            this.StreamIds = StreamIds;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Render2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Render2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Format;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string DeviceInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
-        
-        public Render2Request()
-        {
-        }
-        
-        public Render2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Format = Format;
-            this.DeviceInfo = DeviceInfo;
-            this.PaginationMode = PaginationMode;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Render2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Render2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Result;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string Extension;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string MimeType;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
-        public string Encoding;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
-        public Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
-        public string[] StreamIds;
-        
-        public Render2Response()
-        {
-        }
-        
-        public Render2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Extension, string MimeType, string Encoding, Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings, string[] StreamIds)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Result = Result;
-            this.Extension = Extension;
-            this.MimeType = MimeType;
-            this.Encoding = Encoding;
-            this.Warnings = Warnings;
-            this.StreamIds = StreamIds;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="DeliverReportItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class DeliverReportItemRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Format;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string DeviceInfo;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
-        public string Description;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
-        public string EventType;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
-        public string MatchData;
-        
-        public DeliverReportItemRequest()
-        {
-        }
-        
-        public DeliverReportItemRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Format = Format;
-            this.DeviceInfo = DeviceInfo;
-            this.ExtensionSettings = ExtensionSettings;
-            this.Description = Description;
-            this.EventType = EventType;
-            this.MatchData = MatchData;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="DeliverReportItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class DeliverReportItemResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        public DeliverReportItemResponse()
-        {
-        }
-        
-        public DeliverReportItemResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="RenderStream", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class RenderStreamRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Format;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string StreamID;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string DeviceInfo;
-        
-        public RenderStreamRequest()
-        {
-        }
-        
-        public RenderStreamRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string StreamID, string DeviceInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Format = Format;
-            this.StreamID = StreamID;
-            this.DeviceInfo = DeviceInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="RenderStreamResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class RenderStreamResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Result;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string Encoding;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string MimeType;
-        
-        public RenderStreamResponse()
-        {
-        }
-        
-        public RenderStreamResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Encoding, string MimeType)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Result = Result;
-            this.Encoding = Encoding;
-            this.MimeType = MimeType;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfoRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public GetExecutionInfoRequest()
-        {
-        }
-        
-        public GetExecutionInfoRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfoResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfoResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
-        
-        public GetExecutionInfoResponse()
-        {
-        }
-        
-        public GetExecutionInfoResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfo2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public GetExecutionInfo2Request()
-        {
-        }
-        
-        public GetExecutionInfo2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfo2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
-        
-        public GetExecutionInfo2Response()
-        {
-        }
-        
-        public GetExecutionInfo2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfo3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public GetExecutionInfo3Request()
-        {
-        }
-        
-        public GetExecutionInfo3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetExecutionInfo3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
-        
-        public GetExecutionInfo3Response()
-        {
-        }
-        
-        public GetExecutionInfo3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.executionInfo = executionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetDocumentMap", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetDocumentMapRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public GetDocumentMapRequest()
-        {
-        }
-        
-        public GetDocumentMapRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetDocumentMapResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetDocumentMapResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.DocumentMapNode result;
-        
-        public GetDocumentMapResponse()
-        {
-        }
-        
-        public GetDocumentMapResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.DocumentMapNode result)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.result = result;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTargetRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string DrillthroughID;
-        
-        public LoadDrillthroughTargetRequest()
-        {
-        }
-        
-        public LoadDrillthroughTargetRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.DrillthroughID = DrillthroughID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTargetResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTargetResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo ExecutionInfo;
-        
-        public LoadDrillthroughTargetResponse()
-        {
-        }
-        
-        public LoadDrillthroughTargetResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo ExecutionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.ExecutionInfo = ExecutionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTarget2Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string DrillthroughID;
-        
-        public LoadDrillthroughTarget2Request()
-        {
-        }
-        
-        public LoadDrillthroughTarget2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.DrillthroughID = DrillthroughID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTarget2Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo;
-        
-        public LoadDrillthroughTarget2Response()
-        {
-        }
-        
-        public LoadDrillthroughTarget2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.ExecutionInfo = ExecutionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTarget3Request
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string DrillthroughID;
-        
-        public LoadDrillthroughTarget3Request()
-        {
-        }
-        
-        public LoadDrillthroughTarget3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.DrillthroughID = DrillthroughID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LoadDrillthroughTarget3Response
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo;
-        
-        public LoadDrillthroughTarget3Response()
-        {
-        }
-        
-        public LoadDrillthroughTarget3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.ExecutionInfo = ExecutionInfo;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ToggleItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ToggleItemRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string ToggleID;
-        
-        public ToggleItemRequest()
-        {
-        }
-        
-        public ToggleItemRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string ToggleID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.ToggleID = ToggleID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ToggleItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ToggleItemResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public bool Found;
-        
-        public ToggleItemResponse()
-        {
-        }
-        
-        public ToggleItemResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, bool Found)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Found = Found;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="NavigateDocumentMap", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class NavigateDocumentMapRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string DocMapID;
-        
-        public NavigateDocumentMapRequest()
-        {
-        }
-        
-        public NavigateDocumentMapRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DocMapID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.DocMapID = DocMapID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="NavigateDocumentMapResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class NavigateDocumentMapResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        public NavigateDocumentMapResponse()
-        {
-        }
-        
-        public NavigateDocumentMapResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="NavigateBookmark", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class NavigateBookmarkRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string BookmarkID;
-        
-        public NavigateBookmarkRequest()
-        {
-        }
-        
-        public NavigateBookmarkRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string BookmarkID)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.BookmarkID = BookmarkID;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="NavigateBookmarkResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class NavigateBookmarkResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string UniqueName;
-        
-        public NavigateBookmarkResponse()
-        {
-        }
-        
-        public NavigateBookmarkResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string UniqueName)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
-            this.UniqueName = UniqueName;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="FindString", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class FindStringRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int StartPage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public int EndPage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string FindValue;
-        
-        public FindStringRequest()
-        {
-        }
-        
-        public FindStringRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, int StartPage, int EndPage, string FindValue)
-        {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.StartPage = StartPage;
-            this.EndPage = EndPage;
-            this.FindValue = FindValue;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="FindStringResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class FindStringResponse
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        public FindStringResponse()
-        {
-        }
-        
-        public FindStringResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber)
+        set
         {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
+            this.numberOfColumnsField = value;
         }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-    public enum SortDirectionEnum
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public int NumberOfRows
     {
-        
-        /// <remarks/>
-        None,
-        
-        /// <remarks/>
-        Ascending,
-        
-        /// <remarks/>
-        Descending,
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Sort", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SortRequest
-    {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string SortItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public bool Clear;
-        
-        public SortRequest()
+        get
         {
+            return this.numberOfRowsField;
         }
-        
-        public SortRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear)
+        set
         {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.SortItem = SortItem;
-            this.Direction = Direction;
-            this.Clear = Clear;
+            this.numberOfRowsField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="SortResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class SortResponse
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=2)]
+    public ParametersGridCellDefinition[] CellDefinitions
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ReportItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public int NumPages;
-        
-        public SortResponse()
+        get
         {
+            return this.cellDefinitionsField;
         }
-        
-        public SortResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, int NumPages)
+        set
         {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
-            this.ReportItem = ReportItem;
-            this.NumPages = NumPages;
+            this.cellDefinitionsField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ReportMargins
+{
+    
+    private double topField;
+    
+    private double bottomField;
+    
+    private double leftField;
+    
+    private double rightField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public double Top
+    {
+        get
+        {
+            return this.topField;
+        }
+        set
+        {
+            this.topField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Sort2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Sort2Request
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public double Bottom
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string SortItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public bool Clear;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
-        public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
-        
-        public Sort2Request()
+        get
         {
+            return this.bottomField;
         }
-        
-        public Sort2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
+        set
         {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.SortItem = SortItem;
-            this.Direction = Direction;
-            this.Clear = Clear;
-            this.PaginationMode = PaginationMode;
+            this.bottomField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Sort2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Sort2Response
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public double Left
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ReportItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo;
-        
-        public Sort2Response()
+        get
         {
+            return this.leftField;
         }
-        
-        public Sort2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo)
+        set
         {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
-            this.ReportItem = ReportItem;
-            this.ExecutionInfo = ExecutionInfo;
+            this.leftField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Sort3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Sort3Request
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public double Right
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string SortItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public bool Clear;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
-        public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
-        
-        public Sort3Request()
+        get
         {
+            return this.rightField;
         }
-        
-        public Sort3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
+        set
         {
-            this.ExecutionHeader = ExecutionHeader;
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.SortItem = SortItem;
-            this.Direction = Direction;
-            this.Clear = Clear;
-            this.PaginationMode = PaginationMode;
+            this.rightField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ReportPaperSize
+{
+    
+    private double heightField;
+    
+    private double widthField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public double Height
+    {
+        get
+        {
+            return this.heightField;
+        }
+        set
+        {
+            this.heightField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Sort3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class Sort3Response
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public double Width
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public int PageNumber;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string ReportItem;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo;
-        
-        public Sort3Response()
+        get
         {
+            return this.widthField;
         }
-        
-        public Sort3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo)
+        set
         {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.PageNumber = PageNumber;
-            this.ReportItem = ReportItem;
-            this.ExecutionInfo = ExecutionInfo;
+            this.widthField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class PageSettings
+{
+    
+    private ReportPaperSize paperSizeField;
+    
+    private ReportMargins marginsField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public ReportPaperSize PaperSize
+    {
+        get
+        {
+            return this.paperSizeField;
+        }
+        set
+        {
+            this.paperSizeField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetRenderResource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetRenderResourceRequest
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public ReportMargins Margins
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string Format;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string DeviceInfo;
-        
-        public GetRenderResourceRequest()
+        get
         {
+            return this.marginsField;
         }
-        
-        public GetRenderResourceRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo)
+        set
         {
-            this.TrustedUserHeader = TrustedUserHeader;
-            this.Format = Format;
-            this.DeviceInfo = DeviceInfo;
+            this.marginsField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class DataSourcePrompt
+{
+    
+    private string nameField;
+    
+    private string dataSourceIDField;
+    
+    private string promptField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Name
+    {
+        get
+        {
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="GetRenderResourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class GetRenderResourceResponse
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string DataSourceID
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
-        public byte[] Result;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string MimeType;
-        
-        public GetRenderResourceResponse()
+        get
         {
+            return this.dataSourceIDField;
         }
-        
-        public GetRenderResourceResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string MimeType)
+        set
         {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Result = Result;
-            this.MimeType = MimeType;
+            this.dataSourceIDField = value;
         }
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string Prompt
+    {
+        get
+        {
+            return this.promptField;
+        }
+        set
+        {
+            this.promptField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ValidValue
+{
+    
+    private string labelField;
+    
+    private string valueField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Label
+    {
+        get
+        {
+            return this.labelField;
+        }
+        set
+        {
+            this.labelField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string Value
+    {
+        get
+        {
+            return this.valueField;
+        }
+        set
+        {
+            this.valueField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ReportParameter
+{
+    
+    private string nameField;
+    
+    private ParameterTypeEnum typeField;
+    
+    private bool typeFieldSpecified;
+    
+    private bool nullableField;
+    
+    private bool nullableFieldSpecified;
+    
+    private bool allowBlankField;
+    
+    private bool allowBlankFieldSpecified;
+    
+    private bool multiValueField;
+    
+    private bool multiValueFieldSpecified;
+    
+    private bool queryParameterField;
+    
+    private bool queryParameterFieldSpecified;
+    
+    private string promptField;
+    
+    private bool promptUserField;
+    
+    private bool promptUserFieldSpecified;
+    
+    private string[] dependenciesField;
+    
+    private bool validValuesQueryBasedField;
+    
+    private bool validValuesQueryBasedFieldSpecified;
+    
+    private ValidValue[] validValuesField;
+    
+    private bool defaultValuesQueryBasedField;
+    
+    private bool defaultValuesQueryBasedFieldSpecified;
+    
+    private string[] defaultValuesField;
+    
+    private ParameterStateEnum stateField;
+    
+    private bool stateFieldSpecified;
+    
+    private string errorMessageField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string Name
+    {
+        get
+        {
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public ParameterTypeEnum Type
+    {
+        get
+        {
+            return this.typeField;
+        }
+        set
+        {
+            this.typeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool TypeSpecified
+    {
+        get
+        {
+            return this.typeFieldSpecified;
+        }
+        set
+        {
+            this.typeFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public bool Nullable
+    {
+        get
+        {
+            return this.nullableField;
+        }
+        set
+        {
+            this.nullableField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool NullableSpecified
+    {
+        get
+        {
+            return this.nullableFieldSpecified;
+        }
+        set
+        {
+            this.nullableFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public bool AllowBlank
+    {
+        get
+        {
+            return this.allowBlankField;
+        }
+        set
+        {
+            this.allowBlankField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool AllowBlankSpecified
+    {
+        get
+        {
+            return this.allowBlankFieldSpecified;
+        }
+        set
+        {
+            this.allowBlankFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+    public bool MultiValue
+    {
+        get
+        {
+            return this.multiValueField;
+        }
+        set
+        {
+            this.multiValueField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool MultiValueSpecified
+    {
+        get
+        {
+            return this.multiValueFieldSpecified;
+        }
+        set
+        {
+            this.multiValueFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+    public bool QueryParameter
+    {
+        get
+        {
+            return this.queryParameterField;
+        }
+        set
+        {
+            this.queryParameterField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool QueryParameterSpecified
+    {
+        get
+        {
+            return this.queryParameterFieldSpecified;
+        }
+        set
+        {
+            this.queryParameterFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+    public string Prompt
+    {
+        get
+        {
+            return this.promptField;
+        }
+        set
+        {
+            this.promptField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+    public bool PromptUser
+    {
+        get
+        {
+            return this.promptUserField;
+        }
+        set
+        {
+            this.promptUserField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool PromptUserSpecified
+    {
+        get
+        {
+            return this.promptUserFieldSpecified;
+        }
+        set
+        {
+            this.promptUserFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=8)]
+    [System.Xml.Serialization.XmlArrayItemAttribute("Dependency")]
+    public string[] Dependencies
+    {
+        get
+        {
+            return this.dependenciesField;
+        }
+        set
+        {
+            this.dependenciesField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+    public bool ValidValuesQueryBased
+    {
+        get
+        {
+            return this.validValuesQueryBasedField;
+        }
+        set
+        {
+            this.validValuesQueryBasedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool ValidValuesQueryBasedSpecified
+    {
+        get
+        {
+            return this.validValuesQueryBasedFieldSpecified;
+        }
+        set
+        {
+            this.validValuesQueryBasedFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=10)]
+    public ValidValue[] ValidValues
+    {
+        get
+        {
+            return this.validValuesField;
+        }
+        set
+        {
+            this.validValuesField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+    public bool DefaultValuesQueryBased
+    {
+        get
+        {
+            return this.defaultValuesQueryBasedField;
+        }
+        set
+        {
+            this.defaultValuesQueryBasedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool DefaultValuesQueryBasedSpecified
+    {
+        get
+        {
+            return this.defaultValuesQueryBasedFieldSpecified;
+        }
+        set
+        {
+            this.defaultValuesQueryBasedFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=12)]
+    [System.Xml.Serialization.XmlArrayItemAttribute("Value")]
+    public string[] DefaultValues
+    {
+        get
+        {
+            return this.defaultValuesField;
+        }
+        set
+        {
+            this.defaultValuesField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+    public ParameterStateEnum State
+    {
+        get
+        {
+            return this.stateField;
+        }
+        set
+        {
+            this.stateField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool StateSpecified
+    {
+        get
+        {
+            return this.stateFieldSpecified;
+        }
+        set
+        {
+            this.stateFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+    public string ErrorMessage
+    {
+        get
+        {
+            return this.errorMessageField;
+        }
+        set
+        {
+            this.errorMessageField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public enum ParameterTypeEnum
+{
+    
+    /// <remarks/>
+    Boolean,
+    
+    /// <remarks/>
+    DateTime,
+    
+    /// <remarks/>
+    Integer,
+    
+    /// <remarks/>
+    Float,
+    
+    /// <remarks/>
+    String,
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public enum ParameterStateEnum
+{
+    
+    /// <remarks/>
+    HasValidValue,
+    
+    /// <remarks/>
+    MissingValidValue,
+    
+    /// <remarks/>
+    HasOutstandingDependencies,
+    
+    /// <remarks/>
+    DynamicValuesUnavailable,
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo2))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo3))]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ExecutionInfo
+{
+    
+    private bool hasSnapshotField;
+    
+    private bool needsProcessingField;
+    
+    private bool allowQueryExecutionField;
+    
+    private bool credentialsRequiredField;
+    
+    private bool parametersRequiredField;
+    
+    private System.DateTime expirationDateTimeField;
+    
+    private System.DateTime executionDateTimeField;
+    
+    private int numPagesField;
+    
+    private ReportParameter[] parametersField;
+    
+    private DataSourcePrompt[] dataSourcePromptsField;
+    
+    private bool hasDocumentMapField;
+    
+    private string executionIDField;
+    
+    private string reportPathField;
+    
+    private string historyIDField;
+    
+    private PageSettings reportPageSettingsField;
+    
+    private int autoRefreshIntervalField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public bool HasSnapshot
+    {
+        get
+        {
+            return this.hasSnapshotField;
+        }
+        set
+        {
+            this.hasSnapshotField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public bool NeedsProcessing
+    {
+        get
+        {
+            return this.needsProcessingField;
+        }
+        set
+        {
+            this.needsProcessingField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public bool AllowQueryExecution
+    {
+        get
+        {
+            return this.allowQueryExecutionField;
+        }
+        set
+        {
+            this.allowQueryExecutionField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public bool CredentialsRequired
+    {
+        get
+        {
+            return this.credentialsRequiredField;
+        }
+        set
+        {
+            this.credentialsRequiredField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+    public bool ParametersRequired
+    {
+        get
+        {
+            return this.parametersRequiredField;
+        }
+        set
+        {
+            this.parametersRequiredField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+    public System.DateTime ExpirationDateTime
+    {
+        get
+        {
+            return this.expirationDateTimeField;
+        }
+        set
+        {
+            this.expirationDateTimeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=6)]
+    public System.DateTime ExecutionDateTime
+    {
+        get
+        {
+            return this.executionDateTimeField;
+        }
+        set
+        {
+            this.executionDateTimeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+    public int NumPages
+    {
+        get
+        {
+            return this.numPagesField;
+        }
+        set
+        {
+            this.numPagesField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=8)]
+    public ReportParameter[] Parameters
+    {
+        get
+        {
+            return this.parametersField;
+        }
+        set
+        {
+            this.parametersField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(Order=9)]
+    public DataSourcePrompt[] DataSourcePrompts
+    {
+        get
+        {
+            return this.dataSourcePromptsField;
+        }
+        set
+        {
+            this.dataSourcePromptsField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=10)]
+    public bool HasDocumentMap
+    {
+        get
+        {
+            return this.hasDocumentMapField;
+        }
+        set
+        {
+            this.hasDocumentMapField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=11)]
+    public string ExecutionID
+    {
+        get
+        {
+            return this.executionIDField;
+        }
+        set
+        {
+            this.executionIDField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=12)]
+    public string ReportPath
+    {
+        get
+        {
+            return this.reportPathField;
+        }
+        set
+        {
+            this.reportPathField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=13)]
+    public string HistoryID
+    {
+        get
+        {
+            return this.historyIDField;
+        }
+        set
+        {
+            this.historyIDField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=14)]
+    public PageSettings ReportPageSettings
+    {
+        get
+        {
+            return this.reportPageSettingsField;
+        }
+        set
+        {
+            this.reportPageSettingsField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=15)]
+    public int AutoRefreshInterval
+    {
+        get
+        {
+            return this.autoRefreshIntervalField;
+        }
+        set
+        {
+            this.autoRefreshIntervalField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(ExecutionInfo3))]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ExecutionInfo2 : ExecutionInfo
+{
+    
+    private PageCountMode pageCountModeField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public PageCountMode PageCountMode
+    {
+        get
+        {
+            return this.pageCountModeField;
+        }
+        set
+        {
+            this.pageCountModeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public enum PageCountMode
+{
+    
+    /// <remarks/>
+    Actual,
+    
+    /// <remarks/>
+    Estimate,
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ExecutionInfo3 : ExecutionInfo2
+{
+    
+    private ParametersGridLayoutDefinition parametersLayoutField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public ParametersGridLayoutDefinition ParametersLayout
+    {
+        get
+        {
+            return this.parametersLayoutField;
+        }
+        set
+        {
+            this.parametersLayoutField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public partial class ServerInfoHeader
+{
+    
+    private string reportServerVersionNumberField;
+    
+    private string reportServerEditionField;
+    
+    private string reportServerVersionField;
+    
+    private string reportServerDateTimeField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+    public string ReportServerVersionNumber
+    {
+        get
+        {
+            return this.reportServerVersionNumberField;
+        }
+        set
+        {
+            this.reportServerVersionNumberField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+    public string ReportServerEdition
+    {
+        get
+        {
+            return this.reportServerEditionField;
+        }
+        set
+        {
+            this.reportServerEditionField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+    public string ReportServerVersion
+    {
+        get
+        {
+            return this.reportServerVersionField;
+        }
+        set
+        {
+            this.reportServerVersionField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+    public string ReportServerDateTime
+    {
+        get
+        {
+            return this.reportServerDateTimeField;
+        }
+        set
+        {
+            this.reportServerDateTimeField = value;
+        }
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ListSecureMethods", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ListSecureMethodsRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public ListSecureMethodsRequest()
+    {
+    }
+    
+    public ListSecureMethodsRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ListSecureMethodsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ListSecureMethodsResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string[] ListSecureMethodsResult;
+    
+    public ListSecureMethodsResponse()
+    {
+    }
+    
+    public ListSecureMethodsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, string[] ListSecureMethodsResult)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.ListSecureMethodsResult = ListSecureMethodsResult;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Report;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string HistoryID;
+    
+    public LoadReportRequest()
+    {
+    }
+    
+    public LoadReportRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Report = Report;
+        this.HistoryID = HistoryID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    public LoadReportResponse()
+    {
+    }
+    
+    public LoadReportResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReport3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Report;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string HistoryID;
+    
+    public LoadReport3Request()
+    {
+    }
+    
+    public LoadReport3Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Report = Report;
+        this.HistoryID = HistoryID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReport3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    public LoadReport3Response()
+    {
+    }
+    
+    public LoadReport3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReport2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Report;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string HistoryID;
+    
+    public LoadReport2Request()
+    {
+    }
+    
+    public LoadReport2Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Report = Report;
+        this.HistoryID = HistoryID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReport2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReport2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    public LoadReport2Response()
+    {
+    }
+    
+    public LoadReport2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinitionRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Definition;
+    
+    public LoadReportDefinitionRequest()
+    {
+    }
+    
+    public LoadReportDefinitionRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Definition = Definition;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinitionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinitionResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
+    
+    public LoadReportDefinitionResponse()
+    {
+    }
+    
+    public LoadReportDefinitionResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+        this.warnings = warnings;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinition2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Definition;
+    
+    public LoadReportDefinition2Request()
+    {
+    }
+    
+    public LoadReportDefinition2Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Definition = Definition;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinition2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
+    
+    public LoadReportDefinition2Response()
+    {
+    }
+    
+    public LoadReportDefinition2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+        this.warnings = warnings;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinition3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Definition;
+    
+    public LoadReportDefinition3Request()
+    {
+    }
+    
+    public LoadReportDefinition3Request(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, byte[] Definition)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Definition = Definition;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadReportDefinition3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadReportDefinition3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.Warning[] warnings;
+    
+    public LoadReportDefinition3Response()
+    {
+    }
+    
+    public LoadReportDefinition3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo, Origam.BI.SSRS.SSRSWebReference.Warning[] warnings)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+        this.warnings = warnings;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentialsRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
+    
+    public SetExecutionCredentialsRequest()
+    {
+    }
+    
+    public SetExecutionCredentialsRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Credentials = Credentials;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentialsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentialsResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    public SetExecutionCredentialsResponse()
+    {
+    }
+    
+    public SetExecutionCredentialsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentials2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
+    
+    public SetExecutionCredentials2Request()
+    {
+    }
+    
+    public SetExecutionCredentials2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Credentials = Credentials;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentials2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    public SetExecutionCredentials2Response()
+    {
+    }
+    
+    public SetExecutionCredentials2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentials3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials;
+    
+    public SetExecutionCredentials3Request()
+    {
+    }
+    
+    public SetExecutionCredentials3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Credentials = Credentials;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionCredentials3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionCredentials3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    public SetExecutionCredentials3Response()
+    {
+    }
+    
+    public SetExecutionCredentials3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParametersRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ParameterLanguage;
+    
+    public SetExecutionParametersRequest()
+    {
+    }
+    
+    public SetExecutionParametersRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Parameters = Parameters;
+        this.ParameterLanguage = ParameterLanguage;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParametersResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParametersResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    public SetExecutionParametersResponse()
+    {
+    }
+    
+    public SetExecutionParametersResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParameters2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ParameterLanguage;
+    
+    public SetExecutionParameters2Request()
+    {
+    }
+    
+    public SetExecutionParameters2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Parameters = Parameters;
+        this.ParameterLanguage = ParameterLanguage;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParameters2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    public SetExecutionParameters2Response()
+    {
+    }
+    
+    public SetExecutionParameters2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParameters3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ParameterLanguage;
+    
+    public SetExecutionParameters3Request()
+    {
+    }
+    
+    public SetExecutionParameters3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Parameters = Parameters;
+        this.ParameterLanguage = ParameterLanguage;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionParameters3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SetExecutionParameters3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    public SetExecutionParameters3Response()
+    {
+    }
+    
+    public SetExecutionParameters3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecutionRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public ResetExecutionRequest()
+    {
+    }
+    
+    public ResetExecutionRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecutionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecutionResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    public ResetExecutionResponse()
+    {
+    }
+    
+    public ResetExecutionResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecution2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public ResetExecution2Request()
+    {
+    }
+    
+    public ResetExecution2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecution2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    public ResetExecution2Response()
+    {
+    }
+    
+    public ResetExecution2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecution3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public ResetExecution3Request()
+    {
+    }
+    
+    public ResetExecution3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ResetExecution3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ResetExecution3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    public ResetExecution3Response()
+    {
+    }
+    
+    public ResetExecution3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Render", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class RenderRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Format;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string DeviceInfo;
+    
+    public RenderRequest()
+    {
+    }
+    
+    public RenderRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Format = Format;
+        this.DeviceInfo = DeviceInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="RenderResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class RenderResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Result;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string Extension;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string MimeType;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
+    public string Encoding;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
+    public Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
+    public string[] StreamIds;
+    
+    public RenderResponse()
+    {
+    }
+    
+    public RenderResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Extension, string MimeType, string Encoding, Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings, string[] StreamIds)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Result = Result;
+        this.Extension = Extension;
+        this.MimeType = MimeType;
+        this.Encoding = Encoding;
+        this.Warnings = Warnings;
+        this.StreamIds = StreamIds;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Render2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Render2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Format;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string DeviceInfo;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
+    
+    public Render2Request()
+    {
+    }
+    
+    public Render2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Format = Format;
+        this.DeviceInfo = DeviceInfo;
+        this.PaginationMode = PaginationMode;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Render2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Render2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Result;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string Extension;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string MimeType;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
+    public string Encoding;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
+    public Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
+    public string[] StreamIds;
+    
+    public Render2Response()
+    {
+    }
+    
+    public Render2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Extension, string MimeType, string Encoding, Origam.BI.SSRS.SSRSWebReference.Warning[] Warnings, string[] StreamIds)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Result = Result;
+        this.Extension = Extension;
+        this.MimeType = MimeType;
+        this.Encoding = Encoding;
+        this.Warnings = Warnings;
+        this.StreamIds = StreamIds;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="DeliverReportItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class DeliverReportItemRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Format;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string DeviceInfo;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
+    public string Description;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=4)]
+    public string EventType;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=5)]
+    public string MatchData;
+    
+    public DeliverReportItemRequest()
+    {
+    }
+    
+    public DeliverReportItemRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Format = Format;
+        this.DeviceInfo = DeviceInfo;
+        this.ExtensionSettings = ExtensionSettings;
+        this.Description = Description;
+        this.EventType = EventType;
+        this.MatchData = MatchData;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="DeliverReportItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class DeliverReportItemResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    public DeliverReportItemResponse()
+    {
+    }
+    
+    public DeliverReportItemResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="RenderStream", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class RenderStreamRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Format;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string StreamID;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string DeviceInfo;
+    
+    public RenderStreamRequest()
+    {
+    }
+    
+    public RenderStreamRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string StreamID, string DeviceInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Format = Format;
+        this.StreamID = StreamID;
+        this.DeviceInfo = DeviceInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="RenderStreamResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class RenderStreamResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Result;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string Encoding;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string MimeType;
+    
+    public RenderStreamResponse()
+    {
+    }
+    
+    public RenderStreamResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string Encoding, string MimeType)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Result = Result;
+        this.Encoding = Encoding;
+        this.MimeType = MimeType;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfoRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public GetExecutionInfoRequest()
+    {
+    }
+    
+    public GetExecutionInfoRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfoResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfoResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo;
+    
+    public GetExecutionInfoResponse()
+    {
+    }
+    
+    public GetExecutionInfoResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfo2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public GetExecutionInfo2Request()
+    {
+    }
+    
+    public GetExecutionInfo2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfo2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo;
+    
+    public GetExecutionInfo2Response()
+    {
+    }
+    
+    public GetExecutionInfo2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfo3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public GetExecutionInfo3Request()
+    {
+    }
+    
+    public GetExecutionInfo3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionInfo3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetExecutionInfo3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo;
+    
+    public GetExecutionInfo3Response()
+    {
+    }
+    
+    public GetExecutionInfo3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 executionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.executionInfo = executionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetDocumentMap", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetDocumentMapRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public GetDocumentMapRequest()
+    {
+    }
+    
+    public GetDocumentMapRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetDocumentMapResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetDocumentMapResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.DocumentMapNode result;
+    
+    public GetDocumentMapResponse()
+    {
+    }
+    
+    public GetDocumentMapResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.DocumentMapNode result)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.result = result;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTargetRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string DrillthroughID;
+    
+    public LoadDrillthroughTargetRequest()
+    {
+    }
+    
+    public LoadDrillthroughTargetRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.DrillthroughID = DrillthroughID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTargetResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTargetResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo ExecutionInfo;
+    
+    public LoadDrillthroughTargetResponse()
+    {
+    }
+    
+    public LoadDrillthroughTargetResponse(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo ExecutionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.ExecutionInfo = ExecutionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTarget2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string DrillthroughID;
+    
+    public LoadDrillthroughTarget2Request()
+    {
+    }
+    
+    public LoadDrillthroughTarget2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.DrillthroughID = DrillthroughID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTarget2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo;
+    
+    public LoadDrillthroughTarget2Response()
+    {
+    }
+    
+    public LoadDrillthroughTarget2Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.ExecutionInfo = ExecutionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTarget3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string DrillthroughID;
+    
+    public LoadDrillthroughTarget3Request()
+    {
+    }
+    
+    public LoadDrillthroughTarget3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.DrillthroughID = DrillthroughID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LoadDrillthroughTarget3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LoadDrillthroughTarget3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo;
+    
+    public LoadDrillthroughTarget3Response()
+    {
+    }
+    
+    public LoadDrillthroughTarget3Response(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.ExecutionInfo = ExecutionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ToggleItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ToggleItemRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string ToggleID;
+    
+    public ToggleItemRequest()
+    {
+    }
+    
+    public ToggleItemRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string ToggleID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.ToggleID = ToggleID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ToggleItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ToggleItemResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public bool Found;
+    
+    public ToggleItemResponse()
+    {
+    }
+    
+    public ToggleItemResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, bool Found)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Found = Found;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="NavigateDocumentMap", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class NavigateDocumentMapRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string DocMapID;
+    
+    public NavigateDocumentMapRequest()
+    {
+    }
+    
+    public NavigateDocumentMapRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DocMapID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.DocMapID = DocMapID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="NavigateDocumentMapResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class NavigateDocumentMapResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    public NavigateDocumentMapResponse()
+    {
+    }
+    
+    public NavigateDocumentMapResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="NavigateBookmark", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class NavigateBookmarkRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string BookmarkID;
+    
+    public NavigateBookmarkRequest()
+    {
+    }
+    
+    public NavigateBookmarkRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string BookmarkID)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.BookmarkID = BookmarkID;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="NavigateBookmarkResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class NavigateBookmarkResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string UniqueName;
+    
+    public NavigateBookmarkResponse()
+    {
+    }
+    
+    public NavigateBookmarkResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string UniqueName)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+        this.UniqueName = UniqueName;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="FindString", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class FindStringRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int StartPage;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public int EndPage;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string FindValue;
+    
+    public FindStringRequest()
+    {
+    }
+    
+    public FindStringRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, int StartPage, int EndPage, string FindValue)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.StartPage = StartPage;
+        this.EndPage = EndPage;
+        this.FindValue = FindValue;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="FindStringResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class FindStringResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    public FindStringResponse()
+    {
+    }
+    
+    public FindStringResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+public enum SortDirectionEnum
+{
+    
+    /// <remarks/>
+    None,
+    
+    /// <remarks/>
+    Ascending,
+    
+    /// <remarks/>
+    Descending,
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Sort", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SortRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string SortItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public bool Clear;
+    
+    public SortRequest()
+    {
+    }
+    
+    public SortRequest(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.SortItem = SortItem;
+        this.Direction = Direction;
+        this.Clear = Clear;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="SortResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class SortResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ReportItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public int NumPages;
+    
+    public SortResponse()
+    {
+    }
+    
+    public SortResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, int NumPages)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+        this.ReportItem = ReportItem;
+        this.NumPages = NumPages;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Sort2", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Sort2Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string SortItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public bool Clear;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
+    public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
+    
+    public Sort2Request()
+    {
+    }
+    
+    public Sort2Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.SortItem = SortItem;
+        this.Direction = Direction;
+        this.Clear = Clear;
+        this.PaginationMode = PaginationMode;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Sort2Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Sort2Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ReportItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo;
+    
+    public Sort2Response()
+    {
+    }
+    
+    public Sort2Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo2 ExecutionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+        this.ReportItem = ReportItem;
+        this.ExecutionInfo = ExecutionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Sort3", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Sort3Request
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader;
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string SortItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public bool Clear;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=3)]
+    public Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode;
+    
+    public Sort3Request()
+    {
+    }
+    
+    public Sort3Request(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string SortItem, Origam.BI.SSRS.SSRSWebReference.SortDirectionEnum Direction, bool Clear, Origam.BI.SSRS.SSRSWebReference.PageCountMode PaginationMode)
+    {
+        this.ExecutionHeader = ExecutionHeader;
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.SortItem = SortItem;
+        this.Direction = Direction;
+        this.Clear = Clear;
+        this.PaginationMode = PaginationMode;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Sort3Response", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class Sort3Response
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public int PageNumber;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string ReportItem;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo;
+    
+    public Sort3Response()
+    {
+    }
+    
+    public Sort3Response(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, int PageNumber, string ReportItem, Origam.BI.SSRS.SSRSWebReference.ExecutionInfo3 ExecutionInfo)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.PageNumber = PageNumber;
+        this.ReportItem = ReportItem;
+        this.ExecutionInfo = ExecutionInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetRenderResource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetRenderResourceRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string Format;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string DeviceInfo;
+    
+    public GetRenderResourceRequest()
+    {
+    }
+    
+    public GetRenderResourceRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+        this.Format = Format;
+        this.DeviceInfo = DeviceInfo;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ServiceModel.MessageContractAttribute(WrapperName="GetRenderResourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class GetRenderResourceResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
+    public byte[] Result;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string MimeType;
+    
+    public GetRenderResourceResponse()
+    {
+    }
+    
+    public GetRenderResourceResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, byte[] Result, string MimeType)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Result = Result;
+        this.MimeType = MimeType;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ListRenderingExtensions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ListRenderingExtensionsRequest
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
+    
+    public ListRenderingExtensionsRequest()
+    {
+    }
+    
+    public ListRenderingExtensionsRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        this.TrustedUserHeader = TrustedUserHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="ListRenderingExtensionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class ListRenderingExtensionsResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public Origam.BI.SSRS.SSRSWebReference.Extension[] Extensions;
+    
+    public ListRenderingExtensionsResponse()
+    {
+    }
+    
+    public ListRenderingExtensionsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.Extension[] Extensions)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+        this.Extensions = Extensions;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LogonUser", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LogonUserRequest
+{
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
+    public string userName;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
+    public string password;
+    
+    [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
+    public string authority;
+    
+    public LogonUserRequest()
+    {
+    }
+    
+    public LogonUserRequest(string userName, string password, string authority)
+    {
+        this.userName = userName;
+        this.password = password;
+        this.authority = authority;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LogonUserResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LogonUserResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    public LogonUserResponse()
+    {
+    }
+    
+    public LogonUserResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="Logoff", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LogoffRequest
+{
+    
+    public LogoffRequest()
+    {
+    }
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+[System.ServiceModel.MessageContractAttribute(WrapperName="LogoffResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
+public partial class LogoffResponse
+{
+    
+    [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
+    public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
+    
+    public LogoffResponse()
+    {
+    }
+    
+    public LogoffResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
+    {
+        this.ServerInfoHeader = ServerInfoHeader;
+    }
+}
+
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+public interface ReportExecutionServiceSoapChannel : Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap, System.ServiceModel.IClientChannel
+{
+}
+
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+public partial class ReportExecutionServiceSoapClient : System.ServiceModel.ClientBase<Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap>, Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap
+{
+    
+    /// <summary>
+    /// Implement this partial method to configure the service endpoint.
+    /// </summary>
+    /// <param name="serviceEndpoint">The endpoint to configure</param>
+    /// <param name="clientCredentials">The client credentials</param>
+    static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
+    
+    public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration) : 
+            base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), ReportExecutionServiceSoapClient.GetEndpointAddress(endpointConfiguration))
+    {
+        this.Endpoint.Name = endpointConfiguration.ToString();
+        ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+    }
+    
+    public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
+            base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
+    {
+        this.Endpoint.Name = endpointConfiguration.ToString();
+        ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+    }
+    
+    public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
+            base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
+    {
+        this.Endpoint.Name = endpointConfiguration.ToString();
+        ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
+    }
+    
+    public ReportExecutionServiceSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+            base(binding, remoteAddress)
+    {
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ListRenderingExtensions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ListRenderingExtensionsRequest
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest request)
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader;
-        
-        public ListRenderingExtensionsRequest()
-        {
-        }
-        
-        public ListRenderingExtensionsRequest(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            this.TrustedUserHeader = TrustedUserHeader;
-        }
+        return base.Channel.ListSecureMethodsAsync(request);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest();
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ListSecureMethodsAsync(inValue);
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ListRenderingExtensionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class ListRenderingExtensionsResponse
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportRequest request)
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public Origam.BI.SSRS.SSRSWebReference.Extension[] Extensions;
-        
-        public ListRenderingExtensionsResponse()
-        {
-        }
-        
-        public ListRenderingExtensionsResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader, Origam.BI.SSRS.SSRSWebReference.Extension[] Extensions)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-            this.Extensions = Extensions;
-        }
+        return base.Channel.LoadReportAsync(request);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadReportRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReportRequest();
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Report = Report;
+        inValue.HistoryID = HistoryID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReportAsync(inValue);
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LogonUser", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LogonUserRequest
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.LoadReport3Request request)
     {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=0)]
-        public string userName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=1)]
-        public string password;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Order=2)]
-        public string authority;
-        
-        public LogonUserRequest()
-        {
-        }
-        
-        public LogonUserRequest(string userName, string password, string authority)
-        {
-            this.userName = userName;
-            this.password = password;
-            this.authority = authority;
-        }
+        return base.Channel.LoadReport3Async(request);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadReport3Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReport3Request();
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Report = Report;
+        inValue.HistoryID = HistoryID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReport3Async(inValue);
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LogonUserResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LogonUserResponse
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.LoadReport2Request request)
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        public LogonUserResponse()
-        {
-        }
-        
-        public LogonUserResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-        }
+        return base.Channel.LoadReport2Async(request);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadReport2Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReport2Request();
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Report = Report;
+        inValue.HistoryID = HistoryID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReport2Async(inValue);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionResponse> LoadReportDefinitionAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionRequest request)
+    {
+        return base.Channel.LoadReportDefinitionAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Response> LoadReportDefinition2Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Request request)
+    {
+        return base.Channel.LoadReportDefinition2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Response> LoadReportDefinition3Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Request request)
+    {
+        return base.Channel.LoadReportDefinition3Async(request);
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="Logoff", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LogoffRequest
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest request)
     {
-        
-        public LogoffRequest()
-        {
-        }
+        return base.Channel.SetExecutionCredentialsAsync(request);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
+    {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Credentials = Credentials;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentialsAsync(inValue);
+    }
+    
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="LogoffResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", IsWrapped=true)]
-    public partial class LogoffResponse
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request request)
     {
-        
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")]
-        public Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader;
-        
-        public LogoffResponse()
-        {
-        }
-        
-        public LogoffResponse(Origam.BI.SSRS.SSRSWebReference.ServerInfoHeader ServerInfoHeader)
-        {
-            this.ServerInfoHeader = ServerInfoHeader;
-        }
+        return base.Channel.SetExecutionCredentials2Async(request);
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    public interface ReportExecutionServiceSoapChannel : Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap, System.ServiceModel.IClientChannel
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
     {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Credentials = Credentials;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentials2Async(inValue);
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    public partial class ReportExecutionServiceSoapClient : System.ServiceModel.ClientBase<Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap>, Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request request)
+    {
+        return base.Channel.SetExecutionCredentials3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
+    {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Credentials = Credentials;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentials3Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest request)
+    {
+        return base.Channel.SetExecutionParametersAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Parameters = Parameters;
+        inValue.ParameterLanguage = ParameterLanguage;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParametersAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request request)
+    {
+        return base.Channel.SetExecutionParameters2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Parameters = Parameters;
+        inValue.ParameterLanguage = ParameterLanguage;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParameters2Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request request)
+    {
+        return base.Channel.SetExecutionParameters3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
+    {
+        Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Parameters = Parameters;
+        inValue.ParameterLanguage = ParameterLanguage;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParameters3Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest request)
+    {
+        return base.Channel.ResetExecutionAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecutionAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request request)
+    {
+        return base.Channel.ResetExecution2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecution2Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request request)
+    {
+        return base.Channel.ResetExecution3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecution3Async(inValue);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderResponse> RenderAsync(Origam.BI.SSRS.SSRSWebReference.RenderRequest request)
+    {
+        return base.Channel.RenderAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Render2Response> Render2Async(Origam.BI.SSRS.SSRSWebReference.Render2Request request)
+    {
+        return base.Channel.Render2Async(request);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest request)
+    {
+        return base.Channel.DeliverReportItemAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData)
+    {
+        Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest inValue = new Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.Format = Format;
+        inValue.DeviceInfo = DeviceInfo;
+        inValue.ExtensionSettings = ExtensionSettings;
+        inValue.Description = Description;
+        inValue.EventType = EventType;
+        inValue.MatchData = MatchData;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).DeliverReportItemAsync(inValue);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderStreamResponse> RenderStreamAsync(Origam.BI.SSRS.SSRSWebReference.RenderStreamRequest request)
+    {
+        return base.Channel.RenderStreamAsync(request);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest request)
+    {
+        return base.Channel.GetExecutionInfoAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfoAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request request)
+    {
+        return base.Channel.GetExecutionInfo2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfo2Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request request)
+    {
+        return base.Channel.GetExecutionInfo3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfo3Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest request)
+    {
+        return base.Channel.GetDocumentMapAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest inValue = new Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetDocumentMapAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest request)
+    {
+        return base.Channel.LoadDrillthroughTargetAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.DrillthroughID = DrillthroughID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTargetAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request request)
+    {
+        return base.Channel.LoadDrillthroughTarget2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.DrillthroughID = DrillthroughID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTarget2Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request request)
+    {
+        return base.Channel.LoadDrillthroughTarget3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.DrillthroughID = DrillthroughID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTarget3Async(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest request)
+    {
+        return base.Channel.ToggleItemAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string ToggleID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.ToggleID = ToggleID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ToggleItemAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest request)
+    {
+        return base.Channel.NavigateDocumentMapAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DocMapID)
+    {
+        Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest inValue = new Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.DocMapID = DocMapID;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).NavigateDocumentMapAsync(inValue);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkResponse> NavigateBookmarkAsync(Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkRequest request)
+    {
+        return base.Channel.NavigateBookmarkAsync(request);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.FindStringAsync(Origam.BI.SSRS.SSRSWebReference.FindStringRequest request)
+    {
+        return base.Channel.FindStringAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> FindStringAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, int StartPage, int EndPage, string FindValue)
+    {
+        Origam.BI.SSRS.SSRSWebReference.FindStringRequest inValue = new Origam.BI.SSRS.SSRSWebReference.FindStringRequest();
+        inValue.ExecutionHeader = ExecutionHeader;
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        inValue.StartPage = StartPage;
+        inValue.EndPage = EndPage;
+        inValue.FindValue = FindValue;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).FindStringAsync(inValue);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SortResponse> SortAsync(Origam.BI.SSRS.SSRSWebReference.SortRequest request)
+    {
+        return base.Channel.SortAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort2Response> Sort2Async(Origam.BI.SSRS.SSRSWebReference.Sort2Request request)
+    {
+        return base.Channel.Sort2Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort3Response> Sort3Async(Origam.BI.SSRS.SSRSWebReference.Sort3Request request)
+    {
+        return base.Channel.Sort3Async(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetRenderResourceResponse> GetRenderResourceAsync(Origam.BI.SSRS.SSRSWebReference.GetRenderResourceRequest request)
+    {
+        return base.Channel.GetRenderResourceAsync(request);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest request)
+    {
+        return base.Channel.ListRenderingExtensionsAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
+    {
+        Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest();
+        inValue.TrustedUserHeader = TrustedUserHeader;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ListRenderingExtensionsAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LogonUserAsync(Origam.BI.SSRS.SSRSWebReference.LogonUserRequest request)
+    {
+        return base.Channel.LogonUserAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> LogonUserAsync(string userName, string password, string authority)
+    {
+        Origam.BI.SSRS.SSRSWebReference.LogonUserRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LogonUserRequest();
+        inValue.userName = userName;
+        inValue.password = password;
+        inValue.authority = authority;
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LogonUserAsync(inValue);
+    }
+    
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LogoffAsync(Origam.BI.SSRS.SSRSWebReference.LogoffRequest request)
+    {
+        return base.Channel.LogoffAsync(request);
+    }
+    
+    public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> LogoffAsync()
+    {
+        Origam.BI.SSRS.SSRSWebReference.LogoffRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LogoffRequest();
+        return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LogoffAsync(inValue);
+    }
+    
+    public virtual System.Threading.Tasks.Task OpenAsync()
+    {
+        return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
+    }
+    
+    public virtual System.Threading.Tasks.Task CloseAsync()
+    {
+        return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginClose(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndClose));
+    }
+    
+    private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
+    {
+        if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap))
+        {
+            System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
+            result.MaxBufferSize = int.MaxValue;
+            result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
+            result.MaxReceivedMessageSize = int.MaxValue;
+            result.AllowCookies = true;
+            return result;
+        }
+        if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap12))
+        {
+            System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
+            System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
+            textBindingElement.MessageVersion = System.ServiceModel.Channels.MessageVersion.CreateVersion(System.ServiceModel.EnvelopeVersion.Soap12, System.ServiceModel.Channels.AddressingVersion.None);
+            result.Elements.Add(textBindingElement);
+            System.ServiceModel.Channels.HttpTransportBindingElement httpBindingElement = new System.ServiceModel.Channels.HttpTransportBindingElement();
+            httpBindingElement.AllowCookies = true;
+            httpBindingElement.MaxBufferSize = int.MaxValue;
+            httpBindingElement.MaxReceivedMessageSize = int.MaxValue;
+            result.Elements.Add(httpBindingElement);
+            return result;
+        }
+        throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
+    }
+    
+    private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
+    {
+        if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap))
+        {
+            return new System.ServiceModel.EndpointAddress("http://localhost/ReportServer/ReportExecution2005.asmx");
+        }
+        if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap12))
+        {
+            return new System.ServiceModel.EndpointAddress("http://localhost/ReportServer/ReportExecution2005.asmx");
+        }
+        throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
+    }
+    
+    public enum EndpointConfiguration
     {
         
-        /// <summary>
-        /// Implement this partial method to configure the service endpoint.
-        /// </summary>
-        /// <param name="serviceEndpoint">The endpoint to configure</param>
-        /// <param name="clientCredentials">The client credentials</param>
-        static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
+        ReportExecutionServiceSoap,
         
-        public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration) : 
-                base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), ReportExecutionServiceSoapClient.GetEndpointAddress(endpointConfiguration))
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
-                base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ReportExecutionServiceSoapClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(ReportExecutionServiceSoapClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ReportExecutionServiceSoapClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress)
-        {
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest request)
-        {
-            return base.Channel.ListSecureMethodsAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsResponse> ListSecureMethodsAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ListSecureMethodsRequest();
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ListSecureMethodsAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportRequest request)
-        {
-            return base.Channel.LoadReportAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportResponse> LoadReportAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadReportRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReportRequest();
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Report = Report;
-            inValue.HistoryID = HistoryID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReportAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.LoadReport3Request request)
-        {
-            return base.Channel.LoadReport3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport3Response> LoadReport3Async(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadReport3Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReport3Request();
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Report = Report;
-            inValue.HistoryID = HistoryID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReport3Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.LoadReport2Request request)
-        {
-            return base.Channel.LoadReport2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReport2Response> LoadReport2Async(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Report, string HistoryID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadReport2Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadReport2Request();
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Report = Report;
-            inValue.HistoryID = HistoryID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadReport2Async(inValue);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionResponse> LoadReportDefinitionAsync(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinitionRequest request)
-        {
-            return base.Channel.LoadReportDefinitionAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Response> LoadReportDefinition2Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition2Request request)
-        {
-            return base.Channel.LoadReportDefinition2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Response> LoadReportDefinition3Async(Origam.BI.SSRS.SSRSWebReference.LoadReportDefinition3Request request)
-        {
-            return base.Channel.LoadReportDefinition3Async(request);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest request)
-        {
-            return base.Channel.SetExecutionCredentialsAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsResponse> SetExecutionCredentialsAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentialsRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Credentials = Credentials;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentialsAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request request)
-        {
-            return base.Channel.SetExecutionCredentials2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Response> SetExecutionCredentials2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials2Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Credentials = Credentials;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentials2Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request request)
-        {
-            return base.Channel.SetExecutionCredentials3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Response> SetExecutionCredentials3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.DataSourceCredentials[] Credentials)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionCredentials3Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Credentials = Credentials;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionCredentials3Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest request)
-        {
-            return base.Channel.SetExecutionParametersAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersResponse> SetExecutionParametersAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParametersRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Parameters = Parameters;
-            inValue.ParameterLanguage = ParameterLanguage;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParametersAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request request)
-        {
-            return base.Channel.SetExecutionParameters2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Response> SetExecutionParameters2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters2Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Parameters = Parameters;
-            inValue.ParameterLanguage = ParameterLanguage;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParameters2Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request request)
-        {
-            return base.Channel.SetExecutionParameters3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Response> SetExecutionParameters3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, Origam.BI.SSRS.SSRSWebReference.ParameterValue[] Parameters, string ParameterLanguage)
-        {
-            Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request inValue = new Origam.BI.SSRS.SSRSWebReference.SetExecutionParameters3Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Parameters = Parameters;
-            inValue.ParameterLanguage = ParameterLanguage;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).SetExecutionParameters3Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest request)
-        {
-            return base.Channel.ResetExecutionAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecutionResponse> ResetExecutionAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecutionRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecutionAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request request)
-        {
-            return base.Channel.ResetExecution2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution2Response> ResetExecution2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecution2Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecution2Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request request)
-        {
-            return base.Channel.ResetExecution3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ResetExecution3Response> ResetExecution3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request inValue = new Origam.BI.SSRS.SSRSWebReference.ResetExecution3Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ResetExecution3Async(inValue);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderResponse> RenderAsync(Origam.BI.SSRS.SSRSWebReference.RenderRequest request)
-        {
-            return base.Channel.RenderAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Render2Response> Render2Async(Origam.BI.SSRS.SSRSWebReference.Render2Request request)
-        {
-            return base.Channel.Render2Async(request);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest request)
-        {
-            return base.Channel.DeliverReportItemAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.DeliverReportItemResponse> DeliverReportItemAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string Format, string DeviceInfo, Origam.BI.SSRS.SSRSWebReference.ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData)
-        {
-            Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest inValue = new Origam.BI.SSRS.SSRSWebReference.DeliverReportItemRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.Format = Format;
-            inValue.DeviceInfo = DeviceInfo;
-            inValue.ExtensionSettings = ExtensionSettings;
-            inValue.Description = Description;
-            inValue.EventType = EventType;
-            inValue.MatchData = MatchData;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).DeliverReportItemAsync(inValue);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.RenderStreamResponse> RenderStreamAsync(Origam.BI.SSRS.SSRSWebReference.RenderStreamRequest request)
-        {
-            return base.Channel.RenderStreamAsync(request);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest request)
-        {
-            return base.Channel.GetExecutionInfoAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoResponse> GetExecutionInfoAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfoRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfoAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request request)
-        {
-            return base.Channel.GetExecutionInfo2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Response> GetExecutionInfo2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo2Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfo2Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request request)
-        {
-            return base.Channel.GetExecutionInfo3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Response> GetExecutionInfo3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request inValue = new Origam.BI.SSRS.SSRSWebReference.GetExecutionInfo3Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetExecutionInfo3Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest request)
-        {
-            return base.Channel.GetDocumentMapAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetDocumentMapResponse> GetDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest inValue = new Origam.BI.SSRS.SSRSWebReference.GetDocumentMapRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).GetDocumentMapAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest request)
-        {
-            return base.Channel.LoadDrillthroughTargetAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetResponse> LoadDrillthroughTargetAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTargetRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.DrillthroughID = DrillthroughID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTargetAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request request)
-        {
-            return base.Channel.LoadDrillthroughTarget2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Response> LoadDrillthroughTarget2Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget2Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.DrillthroughID = DrillthroughID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTarget2Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request request)
-        {
-            return base.Channel.LoadDrillthroughTarget3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Response> LoadDrillthroughTarget3Async(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DrillthroughID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request inValue = new Origam.BI.SSRS.SSRSWebReference.LoadDrillthroughTarget3Request();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.DrillthroughID = DrillthroughID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LoadDrillthroughTarget3Async(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest request)
-        {
-            return base.Channel.ToggleItemAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ToggleItemResponse> ToggleItemAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string ToggleID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ToggleItemRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.ToggleID = ToggleID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ToggleItemAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest request)
-        {
-            return base.Channel.NavigateDocumentMapAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapResponse> NavigateDocumentMapAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, string DocMapID)
-        {
-            Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest inValue = new Origam.BI.SSRS.SSRSWebReference.NavigateDocumentMapRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.DocMapID = DocMapID;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).NavigateDocumentMapAsync(inValue);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkResponse> NavigateBookmarkAsync(Origam.BI.SSRS.SSRSWebReference.NavigateBookmarkRequest request)
-        {
-            return base.Channel.NavigateBookmarkAsync(request);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.FindStringAsync(Origam.BI.SSRS.SSRSWebReference.FindStringRequest request)
-        {
-            return base.Channel.FindStringAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.FindStringResponse> FindStringAsync(Origam.BI.SSRS.SSRSWebReference.ExecutionHeader ExecutionHeader, Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader, int StartPage, int EndPage, string FindValue)
-        {
-            Origam.BI.SSRS.SSRSWebReference.FindStringRequest inValue = new Origam.BI.SSRS.SSRSWebReference.FindStringRequest();
-            inValue.ExecutionHeader = ExecutionHeader;
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            inValue.StartPage = StartPage;
-            inValue.EndPage = EndPage;
-            inValue.FindValue = FindValue;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).FindStringAsync(inValue);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.SortResponse> SortAsync(Origam.BI.SSRS.SSRSWebReference.SortRequest request)
-        {
-            return base.Channel.SortAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort2Response> Sort2Async(Origam.BI.SSRS.SSRSWebReference.Sort2Request request)
-        {
-            return base.Channel.Sort2Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.Sort3Response> Sort3Async(Origam.BI.SSRS.SSRSWebReference.Sort3Request request)
-        {
-            return base.Channel.Sort3Async(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.GetRenderResourceResponse> GetRenderResourceAsync(Origam.BI.SSRS.SSRSWebReference.GetRenderResourceRequest request)
-        {
-            return base.Channel.GetRenderResourceAsync(request);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest request)
-        {
-            return base.Channel.ListRenderingExtensionsAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsResponse> ListRenderingExtensionsAsync(Origam.BI.SSRS.SSRSWebReference.TrustedUserHeader TrustedUserHeader)
-        {
-            Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest inValue = new Origam.BI.SSRS.SSRSWebReference.ListRenderingExtensionsRequest();
-            inValue.TrustedUserHeader = TrustedUserHeader;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).ListRenderingExtensionsAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LogonUserAsync(Origam.BI.SSRS.SSRSWebReference.LogonUserRequest request)
-        {
-            return base.Channel.LogonUserAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogonUserResponse> LogonUserAsync(string userName, string password, string authority)
-        {
-            Origam.BI.SSRS.SSRSWebReference.LogonUserRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LogonUserRequest();
-            inValue.userName = userName;
-            inValue.password = password;
-            inValue.authority = authority;
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LogonUserAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap.LogoffAsync(Origam.BI.SSRS.SSRSWebReference.LogoffRequest request)
-        {
-            return base.Channel.LogoffAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<Origam.BI.SSRS.SSRSWebReference.LogoffResponse> LogoffAsync()
-        {
-            Origam.BI.SSRS.SSRSWebReference.LogoffRequest inValue = new Origam.BI.SSRS.SSRSWebReference.LogoffRequest();
-            return ((Origam.BI.SSRS.SSRSWebReference.ReportExecutionServiceSoap)(this)).LogoffAsync(inValue);
-        }
-        
-        public virtual System.Threading.Tasks.Task OpenAsync()
-        {
-            return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
-        }
-        
-        public virtual System.Threading.Tasks.Task CloseAsync()
-        {
-            return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginClose(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndClose));
-        }
-        
-        private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
-        {
-            if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap))
-            {
-                System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
-                result.MaxBufferSize = int.MaxValue;
-                result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
-                result.MaxReceivedMessageSize = int.MaxValue;
-                result.AllowCookies = true;
-                return result;
-            }
-            if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap12))
-            {
-                System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
-                System.ServiceModel.Channels.TextMessageEncodingBindingElement textBindingElement = new System.ServiceModel.Channels.TextMessageEncodingBindingElement();
-                textBindingElement.MessageVersion = System.ServiceModel.Channels.MessageVersion.CreateVersion(System.ServiceModel.EnvelopeVersion.Soap12, System.ServiceModel.Channels.AddressingVersion.None);
-                result.Elements.Add(textBindingElement);
-                System.ServiceModel.Channels.HttpTransportBindingElement httpBindingElement = new System.ServiceModel.Channels.HttpTransportBindingElement();
-                httpBindingElement.AllowCookies = true;
-                httpBindingElement.MaxBufferSize = int.MaxValue;
-                httpBindingElement.MaxReceivedMessageSize = int.MaxValue;
-                result.Elements.Add(httpBindingElement);
-                return result;
-            }
-            throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
-        }
-        
-        private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
-        {
-            if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap))
-            {
-                return new System.ServiceModel.EndpointAddress("http://localhost/ReportServer/ReportExecution2005.asmx");
-            }
-            if ((endpointConfiguration == EndpointConfiguration.ReportExecutionServiceSoap12))
-            {
-                return new System.ServiceModel.EndpointAddress("http://localhost/ReportServer/ReportExecution2005.asmx");
-            }
-            throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
-        }
-        
-        public enum EndpointConfiguration
-        {
-            
-            ReportExecutionServiceSoap,
-            
-            ReportExecutionServiceSoap12,
-        }
+        ReportExecutionServiceSoap12,
     }
 }

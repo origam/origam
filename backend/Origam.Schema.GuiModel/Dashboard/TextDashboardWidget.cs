@@ -23,27 +23,22 @@ using Origam.DA.Common;
 using System;
 
 
-namespace Origam.Schema.GuiModel
+namespace Origam.Schema.GuiModel;
+[SchemaItemDescription("Text Widget", "icon_text-widget.png")]
+[ClassMetaVersion("6.0.0")]
+public class TextDashboardWidget : AbstractSimpleDashboardWidget
 {
-	[SchemaItemDescription("Text Widget", "icon_text-widget.png")]
-    [ClassMetaVersion("6.0.0")]
-	public class TextDashboardWidget : AbstractSimpleDashboardWidget
+	public TextDashboardWidget() : base() {Init();}
+	public TextDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
+	public TextDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
+	private void Init()
 	{
-		public TextDashboardWidget() : base() {Init();}
-		public TextDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
-		public TextDashboardWidget(Key primaryKey) : base(primaryKey) {Init();}
-
-		private void Init()
+	}
+	public override OrigamDataType DataType
+	{
+		get
 		{
+			return OrigamDataType.String;
 		}
-
-		public override OrigamDataType DataType
-		{
-			get
-			{
-				return OrigamDataType.String;
-			}
-		}
-
 	}
 }

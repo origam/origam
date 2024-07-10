@@ -22,47 +22,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Workbench.Editors
+namespace Origam.Workbench.Editors;
+public class MemoryListBox : ListBox
 {
-    public class MemoryListBox : ListBox
+    private object previouslySelectedItem;
+    public object PreviouslySelectedItem
     {
-        private object previouslySelectedItem;
-
-        public object PreviouslySelectedItem
+        get
         {
-            get
+            if (previouslySelectedItem == null) return null;
+            if (!Items.Contains(previouslySelectedItem))
             {
-                if (previouslySelectedItem == null) return null;
-                if (!Items.Contains(previouslySelectedItem))
-                {
-                    return null;
-                }
-                return previouslySelectedItem; 
+                return null;
             }
-            private set => previouslySelectedItem = value;
+            return previouslySelectedItem; 
         }
-
-        protected override void OnSelectedIndexChanged(EventArgs e)
+        private set => previouslySelectedItem = value;
+    }
+    protected override void OnSelectedIndexChanged(EventArgs e)
+    {
+        base.OnSelectedIndexChanged(e);
+        PreviouslySelectedItem = SelectedItem;
+    }
+    public void SelectFirstIfAny()
+    {
+        if (Items.Count > 0)
         {
-            base.OnSelectedIndexChanged(e);
-            PreviouslySelectedItem = SelectedItem;
+            SelectedIndex = 0;
         }
-
-        public void SelectFirstIfAny()
+    }
+    public void RemoveAndKeepSomeSelected(object item)
+    {
+        Items.Remove(item);
+        if (SelectedItem == null)
         {
-            if (Items.Count > 0)
-            {
-                SelectedIndex = 0;
-            }
-        }
-
-        public void RemoveAndKeepSomeSelected(object item)
-        {
-            Items.Remove(item);
-            if (SelectedItem == null)
-            {
-                SelectFirstIfAny();
-            }
+            SelectFirstIfAny();
         }
     }
 }

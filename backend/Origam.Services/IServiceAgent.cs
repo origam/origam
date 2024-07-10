@@ -27,40 +27,32 @@ using Origam.DA.ObjectPersistence;
 using System.Collections.Generic;
 using Origam.Workflow;
 
-namespace Origam.Workbench.Services
+namespace Origam.Workbench.Services;
+/// <summary>
+/// Summary description for IServiceAgent.
+/// </summary>
+public interface IServiceAgent
 {
-	/// <summary>
-	/// Summary description for IServiceAgent.
-	/// </summary>
-	public interface IServiceAgent
-	{
-		event ServiceFinished Finished;
-
-		IPersistenceProvider PersistenceProvider{get; set;}
-		object RuleEngine{get; set;}
-		object WorkflowEngine{get; set;}
-		Hashtable Parameters{get;}
-		string MethodName{get; set;}
-		ISchemaItem OutputStructure{get; set;}
-        bool DisableOutputStructureConstraints { get; set; }
-		ServiceOutputMethod OutputMethod{get; set;}
-        void SetDataService(DA.IDataService dataService);
-
-        string TransactionId{get; set;}
-
-		string Info{get;}
-
-		string TraceStepName{get; set;}
-		Guid TraceStepId{get; set;}
-		Guid TraceWorkflowId{get; set;}
-		bool Trace{get; set;}
-		
-		string ExecuteUpdate(string command, string transactionId);
-
-		object Result{get;}
-		void Run();
-		void RunAsync();
-
-		IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter);
-	}
+	event ServiceFinished Finished;
+	IPersistenceProvider PersistenceProvider{get; set;}
+	object RuleEngine{get; set;}
+	object WorkflowEngine{get; set;}
+	Hashtable Parameters{get;}
+	string MethodName{get; set;}
+	ISchemaItem OutputStructure{get; set;}
+    bool DisableOutputStructureConstraints { get; set; }
+	ServiceOutputMethod OutputMethod{get; set;}
+    void SetDataService(DA.IDataService dataService);
+    string TransactionId{get; set;}
+	string Info{get;}
+	string TraceStepName{get; set;}
+	Guid TraceStepId{get; set;}
+	Guid TraceWorkflowId{get; set;}
+	bool Trace{get; set;}
+	
+	string ExecuteUpdate(string command, string transactionId);
+	object Result{get;}
+	void Run();
+	void RunAsync();
+	IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter);
 }

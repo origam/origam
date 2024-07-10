@@ -22,41 +22,33 @@ using System;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 
-namespace Origam.UI.WizardForm
+namespace Origam.UI.WizardForm;
+public class ChildEntityForm : AbstractWizardForm
 {
-    public class ChildEntityForm : AbstractWizardForm
+    public IDataEntity Entity2 { get; set; }
+    public IDataEntity Entity1 { get; set; }
+    public string EntityName { get; set; }
+    public string EnterAllInfo { get; set; }
+    public string ChildEntityWiz { get; set; }
+    internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
     {
-        public IDataEntity Entity2 { get; set; }
-
-        public IDataEntity Entity1 { get; set; }
-        public string EntityName { get; set; }
-        public string EnterAllInfo { get; set; }
-        public string ChildEntityWiz { get; set; }
-
-        internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
+        if (cboEntity1.Items.Count == 0)
         {
-            if (cboEntity1.Items.Count == 0)
+            txtchildEntityName.Text = "";
+            cboEntity1.Items.Clear();
+            cboEntity2.Items.Clear();
+            if (this.Entity1 == null) return;
+            object selectedItem = null;
+            foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
             {
-                txtchildEntityName.Text = "";
-
-                cboEntity1.Items.Clear();
-                cboEntity2.Items.Clear();
-
-                if (this.Entity1 == null) return;
-
-                object selectedItem = null;
-                foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
+                cboEntity1.Items.Add(entity);
+                cboEntity2.Items.Add(entity);
+                if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
                 {
-                    cboEntity1.Items.Add(entity);
-                    cboEntity2.Items.Add(entity);
-
-                    if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
-                    {
-                        selectedItem = entity;
-                    }
+                    selectedItem = entity;
                 }
-                cboEntity1.SelectedItem = selectedItem;
             }
+            cboEntity1.SelectedItem = selectedItem;
         }
     }
 }

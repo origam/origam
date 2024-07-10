@@ -23,28 +23,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Origam.Server.Attributes
+namespace Origam.Server.Attributes;
+public class DecodeQueryParameterAttribute : ActionFilterAttribute
 {
-    public class DecodeQueryParameterAttribute : ActionFilterAttribute
+    private readonly string parameterName;
+    public DecodeQueryParameterAttribute(string parameterName)
     {
-        private readonly string parameterName;
-
-        public DecodeQueryParameterAttribute(string parameterName)
+        this.parameterName = parameterName;
+    }
+    public override void OnActionExecuting(ActionExecutingContext context)
+    {
+        if (!context.ActionArguments.ContainsKey(parameterName))
         {
-            this.parameterName = parameterName;
+            return;
         }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (!context.ActionArguments.ContainsKey(parameterName))
-            {
-                return;
-            }
-
-            string param = context.ActionArguments[parameterName] as string;
-            context.ActionArguments[parameterName] = WebUtility.UrlDecode(param);
-            base.OnActionExecuting(context);
-        }
+        string param = context.ActionArguments[parameterName] as string;
+        context.ActionArguments[parameterName] = WebUtility.UrlDecode(param);
+        base.OnActionExecuting(context);
     }
 }
-

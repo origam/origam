@@ -23,47 +23,42 @@ using Origam.Schema.EntityModel;
 using System;
 using System.Collections.Generic;
 
-namespace Origam.Rule
+namespace Origam.Rule;
+public class RuleEvaluationCache
 {
-    public class RuleEvaluationCache
+    private readonly Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> 
+        rules = new();
+    private readonly Dictionary<Tuple<Guid, CredentialType>, bool>
+        rulelessFieldSecurityRuleResults = new();
+    public bool? Get(AbstractEntitySecurityRule rule, Guid entityId)
     {
-        private readonly Dictionary<Tuple<Guid, CredentialValueType, Guid>, bool> 
-            rules = new();
-        private readonly Dictionary<Tuple<Guid, CredentialType>, bool>
-            rulelessFieldSecurityRuleResults = new();
-
-        public bool? Get(AbstractEntitySecurityRule rule, Guid entityId)
+        if (rules.TryGetValue(new Tuple<Guid, CredentialValueType,
+                Guid>(rule.Id, rule.ValueType, entityId), out var result))
         {
-            if (rules.TryGetValue(new Tuple<Guid, CredentialValueType,
-                    Guid>(rule.Id, rule.ValueType, entityId), out var result))
-            {
-                return result;
-            }
-            return null;
+            return result;
         }
-        public void Put(AbstractEntitySecurityRule rule, Guid entityId,
-            bool value)
+        return null;
+    }
+    public void Put(AbstractEntitySecurityRule rule, Guid entityId,
+        bool value)
+    {
+        rules.Add(new Tuple<Guid, CredentialValueType, Guid>
+            (rule.Id, rule.ValueType, entityId), value);
+    }
+    public bool? GetRulelessFieldResult(Guid entityId, CredentialType type)
+    {
+        if (rulelessFieldSecurityRuleResults.TryGetValue(
+                new Tuple<Guid, CredentialType>(entityId, type), 
+                out var result))
         {
-            rules.Add(new Tuple<Guid, CredentialValueType, Guid>
-                (rule.Id, rule.ValueType, entityId), value);
+            return result;
         }
-
-        public bool? GetRulelessFieldResult(Guid entityId, CredentialType type)
-        {
-            if (rulelessFieldSecurityRuleResults.TryGetValue(
-                    new Tuple<Guid, CredentialType>(entityId, type), 
-                    out var result))
-            {
-                return result;
-            }
-            return null;
-        }
-
-        public void PutRulelessFieldResult(Guid entityId, CredentialType type,
-            bool value)
-        {
-            rulelessFieldSecurityRuleResults.Add(
-                new Tuple<Guid, CredentialType>(entityId, type), value);
-        }
+        return null;
+    }
+    public void PutRulelessFieldResult(Guid entityId, CredentialType type,
+        bool value)
+    {
+        rulelessFieldSecurityRuleResults.Add(
+            new Tuple<Guid, CredentialType>(entityId, type), value);
     }
 }

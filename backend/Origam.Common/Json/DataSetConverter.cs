@@ -24,81 +24,69 @@ using newton = Newtonsoft.Json.Converters;
 using System.Data;
 using Newtonsoft.Json.Serialization;
 
-namespace Origam.JSON
+namespace Origam.JSON;
+class DataSetConverter : newton.DataSetConverter
 {
-    class DataSetConverter : newton.DataSetConverter
+    private readonly bool omitRootElement;
+    private readonly bool omitMainElement;
+    public DataSetConverter(bool omitRootElement, bool omitMainElement)
     {
-        private readonly bool omitRootElement;
-        private readonly bool omitMainElement;
-
-        public DataSetConverter(bool omitRootElement, bool omitMainElement)
+        this.omitRootElement = omitRootElement;
+        this.omitMainElement = omitMainElement;
+    }
+    public override bool CanConvert(Type valueType)
+    {
+        return typeof(DataSet).IsAssignableFrom(valueType);
+    }
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
+        Newtonsoft.Json.JsonSerializer serializer)
+    {
+        DataSet dataSet = (DataSet)value;
+        DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+        DataTableConverter converter = new DataTableConverter();
+        if (!omitRootElement)
         {
-            this.omitRootElement = omitRootElement;
-            this.omitMainElement = omitMainElement;
+            string name = dataSet.DataSetName;
+            writer.WriteStartObject();
+            writer.WritePropertyName((resolver != null) 
+                ? resolver.GetResolvedPropertyName(name) 
+                : name);
         }
-
-        public override bool CanConvert(Type valueType)
+        if (!omitMainElement)
         {
-            return typeof(DataSet).IsAssignableFrom(valueType);
+            writer.WriteStartObject();
         }
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, 
-            Newtonsoft.Json.JsonSerializer serializer)
+        foreach (DataTable table in dataSet.Tables)
         {
-            DataSet dataSet = (DataSet)value;
-            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
-
-            DataTableConverter converter = new DataTableConverter();
-
-            if (!omitRootElement)
+            if (IsRoot(table))
             {
-                string name = dataSet.DataSetName;
-                writer.WriteStartObject();
-                writer.WritePropertyName((resolver != null) 
-                    ? resolver.GetResolvedPropertyName(name) 
-                    : name);
-            }
-
-            if (!omitMainElement)
-            {
-                writer.WriteStartObject();
-            }
-
-            foreach (DataTable table in dataSet.Tables)
-            {
-                if (IsRoot(table))
+                if (!omitMainElement)
                 {
-                    if (!omitMainElement)
-                    {
-                        writer.WritePropertyName((resolver != null)
-                            ? resolver.GetResolvedPropertyName(table.TableName)
-                            : table.TableName);
-                    }
-
-                    converter.WriteJson(writer, table, serializer);
+                    writer.WritePropertyName((resolver != null)
+                        ? resolver.GetResolvedPropertyName(table.TableName)
+                        : table.TableName);
                 }
-            }
-
-            if (!omitMainElement)
-            {
-                writer.WriteEndObject();
-            }
-
-            if (!omitRootElement)
-            {
-                writer.WriteEndObject();
+                converter.WriteJson(writer, table, serializer);
             }
         }
-
-        private bool IsRoot(DataTable table)
+        if (!omitMainElement)
         {
-            foreach (DataRelation relation in table.DataSet.Relations)
-            {
-                if (relation.Nested && relation.ChildTable.Equals(table))
-                {
-                    return false;
-                }
-            }
-            return true;
+            writer.WriteEndObject();
         }
+        if (!omitRootElement)
+        {
+            writer.WriteEndObject();
+        }
+    }
+    private bool IsRoot(DataTable table)
+    {
+        foreach (DataRelation relation in table.DataSet.Relations)
+        {
+            if (relation.Nested && relation.ChildTable.Equals(table))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -27,50 +27,45 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
-namespace Origam.OrigamEngine.ModelXmlBuilders
+namespace Origam.OrigamEngine.ModelXmlBuilders;
+public class SectionLevelPluginBuilder
 {
-    public class SectionLevelPluginBuilder
+    public static void Build(XmlElement parentNode, string text,
+        DataTable table, DataStructure dataStructure, bool isPreloaded,
+        bool isIndependent, Hashtable dataSources, string modelId, string dataMember)
     {
-        public static void Build(XmlElement parentNode, string text,
-            DataTable table, DataStructure dataStructure, bool isPreloaded,
-            bool isIndependent, Hashtable dataSources, string modelId, string dataMember)
+        DataStructureEntity entity = dataStructure
+            .ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst)
+            .Cast<DataStructureEntity>()
+            .First(item => item.Name == table.TableName);
+        parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+        parentNode.SetAttribute("Type", "SectionLevelPlugin");
+        parentNode.SetAttribute("Name", text);
+        parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString (true));
+        parentNode.SetAttribute("Entity", entity.Name);
+        parentNode.SetAttribute("ModelId", modelId);
+        parentNode.SetAttribute("DataMember", dataMember);
+        FormXmlBuilder.AddDataSource(dataSources, table, modelId, isIndependent);
+        
+        XmlElement propertiesElement = parentNode.OwnerDocument.CreateElement("Properties");
+        parentNode.AppendChild(propertiesElement);
+        
+        XmlElement propertyNamesElement = parentNode.OwnerDocument.CreateElement("PropertyNames");
+        // parentNode.AppendChild(propertyNamesElement);
+        string primaryKeyColumnName = table.PrimaryKey[0].ColumnName;
+        XmlElement idPropertyElement = parentNode.OwnerDocument.CreateElement("Property");
+        propertiesElement.AppendChild(idPropertyElement);
+        idPropertyElement.SetAttribute("Id", primaryKeyColumnName);
+        idPropertyElement.SetAttribute("Name", primaryKeyColumnName);
+        idPropertyElement.SetAttribute("Entity", "String");
+        idPropertyElement.SetAttribute("Column", "Text");
+        DataStructureColumn memoColumn = null;
+        int lastPos = 5;
+        
+        foreach(var column in entity.Columns)
         {
-            DataStructureEntity entity = dataStructure
-                .ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst)
-                .Cast<DataStructureEntity>()
-                .First(item => item.Name == table.TableName);
-            parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-            parentNode.SetAttribute("Type", "SectionLevelPlugin");
-            parentNode.SetAttribute("Name", text);
-            parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString (true));
-            parentNode.SetAttribute("Entity", entity.Name);
-            parentNode.SetAttribute("ModelId", modelId);
-            parentNode.SetAttribute("DataMember", dataMember);
-
-            FormXmlBuilder.AddDataSource(dataSources, table, modelId, isIndependent);
-            
-            XmlElement propertiesElement = parentNode.OwnerDocument.CreateElement("Properties");
-            parentNode.AppendChild(propertiesElement);
-            
-            XmlElement propertyNamesElement = parentNode.OwnerDocument.CreateElement("PropertyNames");
-            // parentNode.AppendChild(propertyNamesElement);
-
-            string primaryKeyColumnName = table.PrimaryKey[0].ColumnName;
-            XmlElement idPropertyElement = parentNode.OwnerDocument.CreateElement("Property");
-            propertiesElement.AppendChild(idPropertyElement);
-            idPropertyElement.SetAttribute("Id", primaryKeyColumnName);
-            idPropertyElement.SetAttribute("Name", primaryKeyColumnName);
-            idPropertyElement.SetAttribute("Entity", "String");
-            idPropertyElement.SetAttribute("Column", "Text");
-
-            DataStructureColumn memoColumn = null;
-            int lastPos = 5;
-            
-            foreach(var column in entity.Columns)
-            {
-                FormXmlBuilder.AddColumn(entity, column.Name, ref memoColumn, 
-                    ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-            }
+            FormXmlBuilder.AddColumn(entity, column.Name, ref memoColumn, 
+                ref lastPos, propertiesElement,	propertyNamesElement, table, null);
         }
     }
 }

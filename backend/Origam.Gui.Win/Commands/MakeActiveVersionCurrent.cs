@@ -27,56 +27,52 @@ using Origam.Workbench;
 using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win.Commands
+namespace Origam.Gui.Win.Commands;
+/// <summary>
+/// Makes the selected version the current version of the package
+/// </summary>
+public class MakeActiveVersionCurrent : AbstractMenuCommand
 {
-    /// <summary>
-    /// Makes the selected version the current version of the package
-    /// </summary>
-    public class MakeActiveVersionCurrent : AbstractMenuCommand
+    WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+    SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+    public override bool IsEnabled
     {
-        WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        public override bool IsEnabled
+        get
         {
-            get
-            {
-                return Owner is DeploymentVersion 
-                       && (Owner as DeploymentVersion).IsCurrentVersion == false 
-                       & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
-                           _schemaService.ActiveExtension.PrimaryKey);
-            }
-            set
-            {
-                throw new ArgumentException("Cannot set this property", "IsEnabled");
-            }
+            return Owner is DeploymentVersion 
+                   && (Owner as DeploymentVersion).IsCurrentVersion == false 
+                   & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
+                       _schemaService.ActiveExtension.PrimaryKey);
         }
-
-        public override void Run()
+        set
         {
-            bool dirtyDocumentExists = WorkbenchSingleton.Workbench.ViewContentCollection
-                .Cast<IViewContent>()
-                .Any(x => x.IsDirty);
-            if (dirtyDocumentExists)
-            {
-                throw new Exception(
-                    "Model not saved. Please, save the model before setting the version.");
-            }
-            MakeVersionCurrent cmd = new MakeVersionCurrent();
-            cmd.Owner = Owner as DeploymentVersion;
-            cmd.Run();
-            WorkbenchSingleton.Workbench.UpdateTitle();
-            ExtensionPad extensionPad = WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
-            WorkbenchSchemaService schema = ServiceManager.Services.GetService<WorkbenchSchemaService>();
-            extensionPad!.UpdateExtensionInfo(schema.ActiveExtension);
+            throw new ArgumentException("Cannot set this property", "IsEnabled");
         }
-
-        public override void Dispose()
+    }
+    public override void Run()
+    {
+        bool dirtyDocumentExists = WorkbenchSingleton.Workbench.ViewContentCollection
+            .Cast<IViewContent>()
+            .Any(x => x.IsDirty);
+        if (dirtyDocumentExists)
         {
-            _schemaService = null;
+            throw new Exception(
+                "Model not saved. Please, save the model before setting the version.");
         }
-        public override int GetImageIndex(string icon)
-        {
-            return _schemaBrowser.ImageIndex(icon);
-        }
+        MakeVersionCurrent cmd = new MakeVersionCurrent();
+        cmd.Owner = Owner as DeploymentVersion;
+        cmd.Run();
+        WorkbenchSingleton.Workbench.UpdateTitle();
+        ExtensionPad extensionPad = WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+        WorkbenchSchemaService schema = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+        extensionPad!.UpdateExtensionInfo(schema.ActiveExtension);
+    }
+    public override void Dispose()
+    {
+        _schemaService = null;
+    }
+    public override int GetImageIndex(string icon)
+    {
+        return _schemaBrowser.ImageIndex(icon);
     }
 }

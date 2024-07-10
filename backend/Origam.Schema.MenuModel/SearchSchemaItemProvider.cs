@@ -19,65 +19,58 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.MenuModel
+namespace Origam.Schema.MenuModel;
+/// <summary>
+/// Summary description for Class1.
+/// </summary>
+public class SearchSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class SearchSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public SearchSchemaItemProvider() 
 	{
-		public SearchSchemaItemProvider() 
-		{
-			this.ChildItemTypes.Add(typeof(SearchDataSource));
-		}
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return SearchDataSource.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
-		#endregion
-
-		#region IBrowserNode Members
-
-		public override string Icon
-		{
-			get
-			{
-				return "icon_23_search-data-sources.png";
-			}
-		}
-
-		public override string NodeText
-		{
-			get
-			{
-				return "Search Data Sources";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
-		}
-
-		public override string NodeToolTipText
-		{
-			get
-			{
-				return "List of search data sources";
-			}
-		}
-
-		#endregion
+		this.ChildItemTypes.Add(typeof(SearchDataSource));
 	}
+	
+	#region ISchemaItemProvider Members
+	public override string RootItemType
+	{
+		get
+		{
+			return SearchDataSource.CategoryConst;
+		}
+	}
+	public override string Group
+	{
+		get
+		{
+			return "UI";
+		}
+	}
+	#endregion
+	#region IBrowserNode Members
+	public override string Icon
+	{
+		get
+		{
+			return "icon_23_search-data-sources.png";
+		}
+	}
+	public override string NodeText
+	{
+		get
+		{
+			return "Search Data Sources";
+		}
+		set
+		{
+			base.NodeText = value;
+		}
+	}
+	public override string NodeToolTipText
+	{
+		get
+		{
+			return "List of search data sources";
+		}
+	}
+	#endregion
 }

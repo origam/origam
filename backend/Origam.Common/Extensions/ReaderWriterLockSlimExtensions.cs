@@ -17,67 +17,66 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Threading;
 
-namespace Origam.Extensions
+namespace Origam.Extensions;
+public static class ReaderWriterLockSlimExtensions
 {
-    public static class ReaderWriterLockSlimExtensions
+    
+    public static void RunWriter(this ReaderWriterLockSlim rwLock, Action action)
     {
-        
-        public static void RunWriter(this ReaderWriterLockSlim rwLock, Action action)
+        rwLock.EnterWriteLock();
+        try
         {
-            rwLock.EnterWriteLock();
-            try
-            {
-                action();
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
-            }
+            action();
         }
-        
-        public static T RunWriter<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
+        finally
         {
-            rwLock.EnterWriteLock();
-            try
-            {
-                return func();
-            }
-            finally
-            {
-                rwLock.ExitWriteLock();
-            }
+            rwLock.ExitWriteLock();
         }
-        
-        public static void RunReader(this ReaderWriterLockSlim rwLock,Action action)
-        {
-            rwLock.EnterReadLock();
-            try
-            {
-                action();
-            }
-            finally
-            {
-                rwLock.ExitReadLock();
-            }
-        }
-        
-        public static T RunReader<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
-        {
-            rwLock.EnterReadLock();
-            try
-            {
-                return func();
-            }
-            finally
-            {
-                rwLock.ExitReadLock();
-            }
-        }
-        
-        
     }
+    
+    public static T RunWriter<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
+    {
+        rwLock.EnterWriteLock();
+        try
+        {
+            return func();
+        }
+        finally
+        {
+            rwLock.ExitWriteLock();
+        }
+    }
+    
+    public static void RunReader(this ReaderWriterLockSlim rwLock,Action action)
+    {
+        rwLock.EnterReadLock();
+        try
+        {
+            action();
+        }
+        finally
+        {
+            rwLock.ExitReadLock();
+        }
+    }
+    
+    public static T RunReader<T>(this ReaderWriterLockSlim rwLock, Func<T> func)
+    {
+        rwLock.EnterReadLock();
+        try
+        {
+            return func();
+        }
+        finally
+        {
+            rwLock.ExitReadLock();
+        }
+    }
+    
+    
 }

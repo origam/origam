@@ -21,30 +21,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 
-namespace Origam
+namespace Origam;
+public class StreamTools
 {
-	public class StreamTools
+	public static byte[] ReadToEnd(Stream input)
 	{
-		public static byte[] ReadToEnd(Stream input)
+		byte[] buffer = new byte[16 * 1024];
+		using (MemoryStream ms = new MemoryStream())
 		{
-			byte[] buffer = new byte[16 * 1024];
-			using (MemoryStream ms = new MemoryStream())
+			int read;
+			while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
 			{
-				int read;
-				while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-				{
-					ms.Write(buffer, 0, read);
-				}
-				return ms.ToArray();
+				ms.Write(buffer, 0, read);
 			}
+			return ms.ToArray();
 		}
-
-		public static void Write(Stream output, byte[] bytes)
-		{
-			BinaryWriter bw = new BinaryWriter(output);
-			bw.Write(bytes);
-			bw.Flush();
-			bw.Close();
-		}
+	}
+	public static void Write(Stream output, byte[] bytes)
+	{
+		BinaryWriter bw = new BinaryWriter(output);
+		bw.Write(bytes);
+		bw.Flush();
+		bw.Close();
 	}
 }

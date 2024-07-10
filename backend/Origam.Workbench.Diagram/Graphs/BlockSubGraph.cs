@@ -27,83 +27,74 @@ using Microsoft.Msagl.Layout.Layered;
 using Origam.Workbench.Diagram.NodeDrawing;
 using Node = Microsoft.Msagl.Drawing.Node;
 
-namespace Origam.Workbench.Diagram.Graphs
+namespace Origam.Workbench.Diagram.Graphs;
+public class BlockSubGraph : Subgraph, IWorkflowSubgraph
 {
-    public class BlockSubGraph : Subgraph, IWorkflowSubgraph
+    private readonly string contextStoreSubgraphId;
+    private readonly string mainSubgraphId;
+    public bool IsEmpty =>
+        (ContextStoreSubgraph == null ||
+        !ContextStoreSubgraph.Nodes.Any()) &&
+        !MainDrawingSubgraf.Nodes.Any() &&
+        !MainDrawingSubgraf.Subgraphs.Any();
+    public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
+    public BlockSubGraph(string id) : base(id)
     {
-        private readonly string contextStoreSubgraphId;
-        private readonly string mainSubgraphId;
-
-        public bool IsEmpty =>
-            (ContextStoreSubgraph == null ||
-            !ContextStoreSubgraph.Nodes.Any()) &&
-            !MainDrawingSubgraf.Nodes.Any() &&
-            !MainDrawingSubgraf.Subgraphs.Any();
-
-        public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
-        public BlockSubGraph(string id) : base(id)
+        contextStoreSubgraphId = "contextStores_"+id;
+        mainSubgraphId = "mainSubGraph_"+id;
+        LayoutSettings = new SugiyamaLayoutSettings
         {
-            contextStoreSubgraphId = "contextStores_"+id;
-            mainSubgraphId = "mainSubGraph_"+id;
-            LayoutSettings = new SugiyamaLayoutSettings
-            {
-                PackingAspectRatio = 1000,
-                AdditionalClusterTopMargin = 30,
-                ClusterMargin = 20,
-                PackingMethod = PackingMethod.CompactTop
-            };
+            PackingAspectRatio = 1000,
+            AdditionalClusterTopMargin = 30,
+            ClusterMargin = 20,
+            PackingMethod = PackingMethod.CompactTop
+        };
+    }
+    public InfrastructureSubgraph ContextStoreSubgraph
+    {
+        get
+        {
+            return Subgraphs
+                .OfType<InfrastructureSubgraph>()
+                .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
         }
-
-        public InfrastructureSubgraph ContextStoreSubgraph
+    }
+    private void InitContextStoreSubgraph()
+    {
+        InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
+        child.LayoutSettings = new SugiyamaLayoutSettings
         {
-            get
+            ClusterMargin = 20,
+            PackingAspectRatio = 2.0 / 5.0,
+            SelfMarginsOverride = new Margins{Left = 0.1}
+        };
+        AddSubgraph(child);
+    }
+    public InfrastructureSubgraph MainDrawingSubgraf
+    {
+        get
+        {
+            InfrastructureSubgraph child = Subgraphs
+                .OfType<InfrastructureSubgraph>()
+                .SingleOrDefault(x => x.Id == mainSubgraphId);
+            if (child == null)
             {
-                return Subgraphs
-                    .OfType<InfrastructureSubgraph>()
-                    .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
+                child = new InfrastructureSubgraph(mainSubgraphId, this);
+                child.LayoutSettings = new SugiyamaLayoutSettings
+                    {
+                        PackingAspectRatio = 0.001,
+                    };
+                AddSubgraph(child);
             }
+            return child;
         }
-
-        private void InitContextStoreSubgraph()
+    }
+    public void AddContextStore(Node node)
+    {
+        if (ContextStoreSubgraph == null)
         {
-            InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
-            child.LayoutSettings = new SugiyamaLayoutSettings
-            {
-                ClusterMargin = 20,
-                PackingAspectRatio = 2.0 / 5.0,
-                SelfMarginsOverride = new Margins{Left = 0.1}
-            };
-            AddSubgraph(child);
+            InitContextStoreSubgraph();
         }
-
-        public InfrastructureSubgraph MainDrawingSubgraf
-        {
-            get
-            {
-                InfrastructureSubgraph child = Subgraphs
-                    .OfType<InfrastructureSubgraph>()
-                    .SingleOrDefault(x => x.Id == mainSubgraphId);
-                if (child == null)
-                {
-                    child = new InfrastructureSubgraph(mainSubgraphId, this);
-                    child.LayoutSettings = new SugiyamaLayoutSettings
-                        {
-                            PackingAspectRatio = 0.001,
-                        };
-                    AddSubgraph(child);
-                }
-
-                return child;
-            }
-        }
-
-        public void AddContextStore(Node node)
-        {
-            if (ContextStoreSubgraph == null)
-            {
-                InitContextStoreSubgraph();
-            }
-            ContextStoreSubgraph.AddNode(node);
-        }
+        ContextStoreSubgraph.AddNode(node);
     }
 }

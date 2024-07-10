@@ -26,36 +26,32 @@ using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.Service_net2Tests;
+[TestFixture]
+class OrigamDocumentSorterTests : AbstractFileTestClass
 {
-    [TestFixture]
-    class OrigamDocumentSorterTests : AbstractFileTestClass
+    [Test]
+    public void ShouldSortAttributes()
     {
-        [Test]
-        public void ShouldSortAttributes()
+        var doc = new OrigamXmlDocument();
+        string unsortedXmlPath = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
+        string unsortedXml = File.ReadAllText(unsortedXmlPath);
+        doc.LoadXml(unsortedXml);
+        XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
         {
-            var doc = new OrigamXmlDocument();
-            string unsortedXmlPath = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
-            string unsortedXml = File.ReadAllText(unsortedXmlPath);
-            doc.LoadXml(unsortedXml);
-
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
-            {
-                Indent = true,
-                NewLineOnAttributes = true,
-                NewLineChars = "\r\n",
-            };
-
-            string sortedXml = OrigamDocumentSorter
-                .CopyAndSort(doc)
-                .ToBeautifulString(xmlWriterSettings);
-            
-            string sortedXmlPath = Path.Combine(TestFilesDir.FullName, "Sorted.origam");
-            string expectedXml = File.ReadAllText(sortedXmlPath);
-            Assert.That(sortedXml, Is.EqualTo(expectedXml));
-        } 
+            Indent = true,
+            NewLineOnAttributes = true,
+            NewLineChars = "\r\n",
+        };
+        string sortedXml = OrigamDocumentSorter
+            .CopyAndSort(doc)
+            .ToBeautifulString(xmlWriterSettings);
         
-        protected override TestContext TestContext => TestContext.CurrentContext;
-        protected override string DirName => "OrigamDocumentSorter";
-    }
+        string sortedXmlPath = Path.Combine(TestFilesDir.FullName, "Sorted.origam");
+        string expectedXml = File.ReadAllText(sortedXmlPath);
+        Assert.That(sortedXml, Is.EqualTo(expectedXml));
+    } 
+    
+    protected override TestContext TestContext => TestContext.CurrentContext;
+    protected override string DirName => "OrigamDocumentSorter";
 }

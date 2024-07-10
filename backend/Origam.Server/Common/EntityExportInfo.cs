@@ -43,70 +43,61 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Data;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class EntityExportInfo
 {
-    public class EntityExportInfo
+    private string _entity;
+    private List<EntityExportField> _fields = new List<EntityExportField>();
+    private List<object> _rowIds = new List<object>();
+    private string _sessionFormIdentifier;
+    private SessionStore _ss;
+    public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
+    
+    public string Entity
     {
-        private string _entity;
-        private List<EntityExportField> _fields = new List<EntityExportField>();
-        private List<object> _rowIds = new List<object>();
-        private string _sessionFormIdentifier;
-        private SessionStore _ss;
-
-        public ILazyRowLoadInput LazyLoadedEntityInput { get; set; }
-        
-        public string Entity
+        get { return _entity; }
+        set { _entity = value; }
+    }
+    public List<EntityExportField> Fields
+    {
+        get { return _fields; }
+        set { _fields = value; }
+    }
+    public List<object> RowIds
+    {
+        get { return _rowIds; }
+        set { _rowIds = value; }
+    }
+    public string SessionFormIdentifier
+    {
+        get { return _sessionFormIdentifier; }
+        set { _sessionFormIdentifier = value; }
+    }
+    public DataTable Table
+    {
+        get 
         {
-            get { return _entity; }
-            set { _entity = value; }
+            return Store.GetDataTable(Entity, DataSource);
         }
-
-        public List<EntityExportField> Fields
+    }
+    public DataSet DataSource
+    {
+        get
         {
-            get { return _fields; }
-            set { _fields = value; }
-        }
-
-        public List<object> RowIds
-        {
-            get { return _rowIds; }
-            set { _rowIds = value; }
-        }
-
-        public string SessionFormIdentifier
-        {
-            get { return _sessionFormIdentifier; }
-            set { _sessionFormIdentifier = value; }
-        }
-
-        public DataTable Table
-        {
-            get 
+            if (Store.IsPagedLoading 
+				&& Store.DataListEntity == Entity)
             {
-                return Store.GetDataTable(Entity, DataSource);
+                return Store.DataList;
+            }
+            else
+            {
+                return Store.Data;
             }
         }
-
-        public DataSet DataSource
-        {
-            get
-            {
-                if (Store.IsPagedLoading 
-					&& Store.DataListEntity == Entity)
-                {
-                    return Store.DataList;
-                }
-                else
-                {
-                    return Store.Data;
-                }
-            }
-        }
-
-        public SessionStore Store
-        {
-            get { return _ss; }
-            set { _ss = value; }
-        }
+    }
+    public SessionStore Store
+    {
+        get { return _ss; }
+        set { _ss = value; }
     }
 }

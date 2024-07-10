@@ -26,125 +26,105 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+public enum ContextStoreLinkDirection
 {
-	public enum ContextStoreLinkDirection
+	Input,
+	Output,
+	Return
+}
+/// <summary>
+/// Summary description for ContextStoreLink.
+/// </summary>
+[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
+[HelpTopic("Workflow+Call+Context+Mapping")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class ContextStoreLink : AbstractSchemaItem
+{
+	public const string CategoryConst = "ContextStoreLink";
+	public ContextStoreLink() : base() {}
+	public ContextStoreLink(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	public override string ItemType => CategoryConst;
+	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 	{
-		Input,
-		Output,
-		Return
+		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
+		dependencies.Add(this.CallerContextStore);
+		dependencies.Add(this.TargetContextStore);
+		base.GetExtraDependencies (dependencies);
 	}
-
-	/// <summary>
-	/// Summary description for ContextStoreLink.
-	/// </summary>
-	[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
-    [HelpTopic("Workflow+Call+Context+Mapping")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class ContextStoreLink : AbstractSchemaItem
+	public override void UpdateReferences()
 	{
-		public const string CategoryConst = "ContextStoreLink";
-
-		public ContextStoreLink() : base() {}
-
-		public ContextStoreLink(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-
-		public override string ItemType => CategoryConst;
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
 		{
-			XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
-
-			dependencies.Add(this.CallerContextStore);
-			dependencies.Add(this.TargetContextStore);
-
-			base.GetExtraDependencies (dependencies);
-		}
-
-		public override void UpdateReferences()
-		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			if(item.OldPrimaryKey != null)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey.Equals(this.CallerContextStore.PrimaryKey))
 				{
-					if(item.OldPrimaryKey.Equals(this.CallerContextStore.PrimaryKey))
-					{
-						this.CallerContextStore = item as IContextStore;
-						break;
-					}
-				}
-			}
-
-			base.UpdateReferences ();
-		}
-
-		public override SchemaItemCollection ChildItems => new SchemaItemCollection();
-		#endregion
-
-		#region Properties
-		[XmlAttribute ("direction")]
-		public ContextStoreLinkDirection Direction { get; set; } = ContextStoreLinkDirection.Input;
-
-		public Guid CallerContextStoreId;
-
-		[TypeConverter(typeof(ContextStoreConverter))]
-		[XmlReference("callerContextStore", "CallerContextStoreId")]
-		public IContextStore CallerContextStore
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.CallerContextStoreId;
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(value == null)
-				{
-					this.CallerContextStoreId = Guid.Empty;
-				}
-				else
-				{
-					this.CallerContextStoreId = (Guid)value.PrimaryKey["Id"];
+					this.CallerContextStore = item as IContextStore;
+					break;
 				}
 			}
 		}
-		
-		public Guid TargetContextStoreId;
-
-		[TypeConverter(typeof(WorkflowCallTargetContextStoreConverter))]
-		[XmlReference("targetContextStore", "TargetContextStoreId")]
-		public IContextStore TargetContextStore
-		{
-			get
-			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.TargetContextStoreId;
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
-			}
-			set
-			{
-				if(value == null)
-				{
-					this.TargetContextStoreId = Guid.Empty;
-				}
-				else
-				{
-					this.TargetContextStoreId = (Guid)value.PrimaryKey["Id"];
-				}
-			}
-		}
-		
-        [DefaultValue("/")]
-		[XmlAttribute ("xPath")]
-		public string XPath { get; set; } = "/";
-		#endregion
+		base.UpdateReferences ();
 	}
+	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	#endregion
+	#region Properties
+	[XmlAttribute ("direction")]
+	public ContextStoreLinkDirection Direction { get; set; } = ContextStoreLinkDirection.Input;
+	public Guid CallerContextStoreId;
+	[TypeConverter(typeof(ContextStoreConverter))]
+	[XmlReference("callerContextStore", "CallerContextStoreId")]
+	public IContextStore CallerContextStore
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.CallerContextStoreId;
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				this.CallerContextStoreId = Guid.Empty;
+			}
+			else
+			{
+				this.CallerContextStoreId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+	}
+	
+	public Guid TargetContextStoreId;
+	[TypeConverter(typeof(WorkflowCallTargetContextStoreConverter))]
+	[XmlReference("targetContextStore", "TargetContextStoreId")]
+	public IContextStore TargetContextStore
+	{
+		get
+		{
+			ModelElementKey key = new ModelElementKey();
+			key.Id = this.TargetContextStoreId;
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+		}
+		set
+		{
+			if(value == null)
+			{
+				this.TargetContextStoreId = Guid.Empty;
+			}
+			else
+			{
+				this.TargetContextStoreId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+	}
+	
+    [DefaultValue("/")]
+	[XmlAttribute ("xPath")]
+	public string XPath { get; set; } = "/";
+	#endregion
 }

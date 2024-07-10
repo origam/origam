@@ -26,82 +26,71 @@ using System.Threading;
 using System.Threading.Tasks;
 using Origam.Extensions;
 
-namespace Origam.Workflow
+namespace Origam.Workflow;
+public class TaskRunner
 {
-    public class TaskRunner
+    private static readonly log4net.ILog log 
+        = log4net.LogManager
+            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    
+    private readonly List<Task> tasks = new List<Task>();
+    private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
+    private readonly Action<CancellationToken> funcToRun;
+    private readonly int workerCount;
+    public TaskRunner(Action<CancellationToken> funcToRun, int workerCount)
     {
-        private static readonly log4net.ILog log 
-            = log4net.LogManager
-                .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
-        private readonly List<Task> tasks = new List<Task>();
-        private readonly CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private readonly Action<CancellationToken> funcToRun;
-        private readonly int workerCount;
-
-
-        public TaskRunner(Action<CancellationToken> funcToRun, int workerCount)
+        this.funcToRun = funcToRun;
+        this.workerCount = workerCount;
+    }
+    public void Run()
+    {
+        var cancToken = tokenSource.Token;
+        for (int i = 0; i < workerCount; i++)
         {
-            this.funcToRun = funcToRun;
-            this.workerCount = workerCount;
+            tasks.Add(Task.Factory.StartNew(
+                ()=> funcToRun(cancToken),
+                cancToken)
+            );
         }
-
-        public void Run()
+    }
+    public void CleanUp()
+    {
+        tasks
+            .Where(t => t.Exception != null)
+            .Select(t => t.Exception)
+            .Peek(aggrEx => aggrEx.Flatten())
+            .SelectMany(aggrEx => aggrEx.InnerExceptions)
+            .ToList()
+            .ForEach(LogTaskException);
+    }
+    public void Cancel()
+    {
+        tokenSource.Cancel();
+    }
+    public bool AllTasksFinished()
+    {
+        return tasks.All(task => task.IsCompleted || task.IsCanceled );
+    }
+    public void Wait()
+    {
+        try
         {
-            var cancToken = tokenSource.Token;
-
-            for (int i = 0; i < workerCount; i++)
-            {
-                tasks.Add(Task.Factory.StartNew(
-                    ()=> funcToRun(cancToken),
-                    cancToken)
-                );
-            }
+            Task.WaitAll(tasks.ToArray());
         }
-
-        public void CleanUp()
+        catch (AggregateException aggrEx)
         {
-            tasks
-                .Where(t => t.Exception != null)
-                .Select(t => t.Exception)
-                .Peek(aggrEx => aggrEx.Flatten())
-                .SelectMany(aggrEx => aggrEx.InnerExceptions)
+            aggrEx.Flatten()
+                .InnerExceptions
+                .AsEnumerable()
                 .ToList()
                 .ForEach(LogTaskException);
         }
-
-        public void Cancel()
-        {
-            tokenSource.Cancel();
-        }
-
-        public bool AllTasksFinished()
-        {
-            return tasks.All(task => task.IsCompleted || task.IsCanceled );
-        }
-
-        public void Wait()
-        {
-            try
-            {
-                Task.WaitAll(tasks.ToArray());
-            }
-            catch (AggregateException aggrEx)
-            {
-                aggrEx.Flatten()
-                    .InnerExceptions
-                    .AsEnumerable()
-                    .ToList()
-                    .ForEach(LogTaskException);
-            }
-        }
-
-        private void LogTaskException(Exception ex)
-        {
-            log.Error("THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");
-            log.Error(ex);
-            log.Error(ex.Message);
-            log.Error("---------------------------------------");
-        }
+    }
+    private void LogTaskException(Exception ex)
+    {
+        log.Error("THIS UNHANDLED EXCEPTION OCCURED IN A TASK WHEN IT WAS RUNNING:");
+        log.Error(ex);
+        log.Error(ex.Message);
+        log.Error("---------------------------------------");
     }
 }

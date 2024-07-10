@@ -24,61 +24,51 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Origam.UI
+namespace Origam.UI;
+/// <summary>
+/// Summary description for AsMenu.
+/// </summary>
+public class AsMenu : ToolStripMenuItem, IStatusUpdate
 {
-	/// <summary>
-	/// Summary description for AsMenu.
-	/// </summary>
-	public class AsMenu : ToolStripMenuItem, IStatusUpdate
+	private readonly object caller;
+	public AsMenu(object caller, string text) : base (text)
 	{
-		private readonly object caller;
-
-		public AsMenu(object caller, string text) : base (text)
+		this.caller = caller;
+		this.Text = text;
+        this.DropDownOpening += AsMenu_DropDownOpening;
+	}
+	public List<ToolStripItem> SubItems { get; } = new List<ToolStripItem>();
+	public void Clear()
+	{
+        ToolStripItem[] array = new ToolStripItem[this.SubItems.Count];
+		this.SubItems.CopyTo(array, 0);
+		this.SubItems.Clear();
+        this.DropDownItems.Clear();
+		foreach(ToolStripItem item in array)
 		{
-			this.caller = caller;
-			this.Text = text;
-            this.DropDownOpening += AsMenu_DropDownOpening;
-		}
-
-		public List<ToolStripItem> SubItems { get; } = new List<ToolStripItem>();
-
-		public void Clear()
-		{
-            ToolStripItem[] array = new ToolStripItem[this.SubItems.Count];
-			this.SubItems.CopyTo(array, 0);
-			this.SubItems.Clear();
-            this.DropDownItems.Clear();
-			foreach(ToolStripItem item in array)
+			if(item is IDisposable disposeable)
 			{
-				if(item is IDisposable disposeable)
-				{
-					disposeable.Dispose();
-				}
+				disposeable.Dispose();
 			}
 		}
-
-		#region IStatusUpdate Members
-
-		public void UpdateItemsToDisplay()
-		{
-			MenuItemTools.UpdateMenuItems(
-				itemsToUpdate: DropDownItems,
-				itemsToAdd: SubItems,
-				caller: caller);
-			
-            this.Enabled = (this.SubItems.Count != 0);
-		}
-
-		public void PopulateMenu()
-		{
-			UpdateItemsToDisplay();
-		}
-
-		#endregion
-
-        void AsMenu_DropDownOpening(object sender, EventArgs e)
-        {
-			this.UpdateItemsToDisplay();
-		}
+	}
+	#region IStatusUpdate Members
+	public void UpdateItemsToDisplay()
+	{
+		MenuItemTools.UpdateMenuItems(
+			itemsToUpdate: DropDownItems,
+			itemsToAdd: SubItems,
+			caller: caller);
+		
+        this.Enabled = (this.SubItems.Count != 0);
+	}
+	public void PopulateMenu()
+	{
+		UpdateItemsToDisplay();
+	}
+	#endregion
+    void AsMenu_DropDownOpening(object sender, EventArgs e)
+    {
+		this.UpdateItemsToDisplay();
 	}
 }

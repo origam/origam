@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Text;
+using Origam.DA.Service;
 
 class PgSqlRenderer : SqlRenderer
 {

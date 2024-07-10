@@ -22,30 +22,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for FilterOperatorMenuItem.
+/// </summary>
+public class FilterOperatorMenuItem : MenuItem
 {
-	/// <summary>
-	/// Summary description for FilterOperatorMenuItem.
-	/// </summary>
-	public class FilterOperatorMenuItem : MenuItem
+	private FilterOperator _operator;
+	public FilterOperatorMenuItem(string text, EventHandler eventHandler, FilterOperator oper) : base(text, eventHandler)
 	{
-		private FilterOperator _operator;
-
-		public FilterOperatorMenuItem(string text, EventHandler eventHandler, FilterOperator oper) : base(text, eventHandler)
+		this.Operator = oper;
+	}
+	public FilterOperator Operator
+	{
+		get
 		{
-			this.Operator = oper;
+			return _operator;
 		}
-
-		public FilterOperator Operator
+		set
 		{
-			get
-			{
-				return _operator;
-			}
-			set
-			{
-				_operator = value;
-			}
+			_operator = value;
 		}
 	}
 }

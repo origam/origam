@@ -19,10 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.GuiModel.Designer
+namespace Origam.Schema.GuiModel.Designer;
+public interface IActionContainer
 {
-    public interface IActionContainer
-    {
-        EntityUIAction GetAction();
-    }
+    EntityUIAction GetAction();
 }

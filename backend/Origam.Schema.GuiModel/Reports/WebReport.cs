@@ -25,89 +25,81 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.GuiModel
-{
-	[SchemaItemDescription("Web Report", "icon_web-report.png")]
-    [HelpTopic("Web+Report")]
-    [ClassMetaVersion("6.0.1")]
-	public class WebReport : AbstractReport
-	{	
-		public WebReport() {}
-		
-		public WebReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public WebReport(Key primaryKey) : base(primaryKey)	{}
-
-		private string _url;
-		private string _externalUrlScheme;
-		private bool _forceExternalUrl;
-		private bool _isUrlEscaped = false;
-		private WebPageOpenMethod _openMethod = WebPageOpenMethod.OrigamTab;
-		
-        [XmlAttribute("url")]
-		public string Url
+namespace Origam.Schema.GuiModel;
+[SchemaItemDescription("Web Report", "icon_web-report.png")]
+[HelpTopic("Web+Report")]
+[ClassMetaVersion("6.0.1")]
+public class WebReport : AbstractReport
+{	
+	public WebReport() {}
+	
+	public WebReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public WebReport(Key primaryKey) : base(primaryKey)	{}
+	private string _url;
+	private string _externalUrlScheme;
+	private bool _forceExternalUrl;
+	private bool _isUrlEscaped = false;
+	private WebPageOpenMethod _openMethod = WebPageOpenMethod.OrigamTab;
+	
+    [XmlAttribute("url")]
+	public string Url
+	{
+		get
 		{
-			get
-			{
-				return _url;
-			}
-			set
-			{
-				_url = value;
-			}
+			return _url;
 		}
-
-        [XmlAttribute("externalUrlScheme")]
-        public string ExternalUrlScheme
+		set
 		{
-			get
-			{
-				return _externalUrlScheme;
-			}
-			set
-			{
-				_externalUrlScheme = value;
-			}
+			_url = value;
 		}
-
-        [XmlAttribute("forceExternalUrl")]
-        public bool ForceExternalUrl
+	}
+    [XmlAttribute("externalUrlScheme")]
+    public string ExternalUrlScheme
+	{
+		get
 		{
-			get
-			{
-				return _forceExternalUrl;
-			}
-			set
-			{
-				_forceExternalUrl = value;
-			}
+			return _externalUrlScheme;
 		}
-
-        [XmlAttribute("isUrlEscaped")]
-		public bool IsUrlEscaped
+		set
 		{
-			get
-			{
-				return _isUrlEscaped;
-			}
-			set
-			{
-				_isUrlEscaped = value;
-			}
+			_externalUrlScheme = value;
 		}
-
-		[DefaultValue(WebPageOpenMethod.OrigamTab)]
-        [XmlAttribute("openMethod")]
-        public WebPageOpenMethod OpenMethod
+	}
+    [XmlAttribute("forceExternalUrl")]
+    public bool ForceExternalUrl
+	{
+		get
 		{
-			get
-			{
-				return _openMethod;
-			}
-			set
-			{
-				_openMethod = value;
-			}
+			return _forceExternalUrl;
+		}
+		set
+		{
+			_forceExternalUrl = value;
+		}
+	}
+    [XmlAttribute("isUrlEscaped")]
+	public bool IsUrlEscaped
+	{
+		get
+		{
+			return _isUrlEscaped;
+		}
+		set
+		{
+			_isUrlEscaped = value;
+		}
+	}
+	[DefaultValue(WebPageOpenMethod.OrigamTab)]
+    [XmlAttribute("openMethod")]
+    public WebPageOpenMethod OpenMethod
+	{
+		get
+		{
+			return _openMethod;
+		}
+		set
+		{
+			_openMethod = value;
 		}
 	}
 }

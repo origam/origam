@@ -27,83 +27,75 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui.Win;
+/// <summary>
+/// Summary description for CollapsiblePanel.
+/// </summary>
+public class CollapsiblePanel : TabPage
 {
-	/// <summary>
-	/// Summary description for CollapsiblePanel.
-	/// </summary>
-	public class CollapsiblePanel : TabPage
+	private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+	private int _indentLevel = 0;
+	private bool _isHeightFixed = false;
+	private bool _isOpen = false;
+	public CollapsiblePanel() : base()
 	{
-		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		private int _indentLevel = 0;
-		private bool _isHeightFixed = false;
-		private bool _isOpen = false;
-
-		public CollapsiblePanel() : base()
+	}
+	public int IndentLevel
+	{
+		get
 		{
+			return _indentLevel;
 		}
-
-		public int IndentLevel
+		set
 		{
-			get
-			{
-				return _indentLevel;
-			}
-			set
-			{
-				_indentLevel = value;
-			}
+			_indentLevel = value;
 		}
-
-		public bool IsHeightFixed
+	}
+	public bool IsHeightFixed
+	{
+		get
 		{
-			get
-			{
-				return _isHeightFixed;
-			}
-			set
-			{
-				_isHeightFixed = value;
-			}
+			return _isHeightFixed;
 		}
-
-		public bool IsOpen
+		set
 		{
-			get
-			{
-				return _isOpen;
-			}
-			set
-			{
-				_isOpen = value;
-			}
+			_isHeightFixed = value;
 		}
-
-		private Guid _styleId;
-		[Browsable(false)]
-		public Guid StyleId
+	}
+	public bool IsOpen
+	{
+		get
 		{
-			get
-			{
-				return _styleId;
-			}
-			set
-			{
-				_styleId = value;
-			}
+			return _isOpen;
 		}
-
-		[TypeConverter(typeof(StylesConverter))]
-		public UIStyle Style
+		set
 		{
-			get
-			{
-				return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
-			}
-			set
-			{
-				this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			_isOpen = value;
+		}
+	}
+	private Guid _styleId;
+	[Browsable(false)]
+	public Guid StyleId
+	{
+		get
+		{
+			return _styleId;
+		}
+		set
+		{
+			_styleId = value;
+		}
+	}
+	[TypeConverter(typeof(StylesConverter))]
+	public UIStyle Style
+	{
+		get
+		{
+			return (UIStyle)_persistence.SchemaProvider.RetrieveInstance(typeof(UIStyle), new ModelElementKey(this.StyleId));
+		}
+		set
+		{
+			this.StyleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 		}
 	}
 }

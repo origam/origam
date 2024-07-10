@@ -16,133 +16,117 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-namespace Origam.Windows.Editor
+namespace Origam.Windows.Editor;
+/// <summary>
+/// Represents the path to an xml element starting from the root of the
+/// document.
+/// </summary>
+public class XmlElementPath
 {
-    /// <summary>
-    /// Represents the path to an xml element starting from the root of the
-    /// document.
-    /// </summary>
-    public class XmlElementPath
+    QualifiedNameCollection elements = new QualifiedNameCollection();
+    XmlNamespaceCollection namespacesInScope = new XmlNamespaceCollection();
+    public XmlElementPath()
     {
-        QualifiedNameCollection elements = new QualifiedNameCollection();
-        XmlNamespaceCollection namespacesInScope = new XmlNamespaceCollection();
-
-        public XmlElementPath()
+    }
+    /// <summary>
+    /// Gets the elements specifying the path.
+    /// </summary>
+    /// <remarks>The order of the elements determines the path.</remarks>
+    public QualifiedNameCollection Elements
+    {
+        get { return elements; }
+    }
+    public void AddElement(QualifiedName category)
+    {
+        elements.Add(category);
+    }
+    public bool IsEmpty
+    {
+        get { return elements.IsEmpty; }
+    }
+    /// <summary>
+    /// Compacts the path so it only contains the elements that are from 
+    /// the namespace of the last element in the path. 
+    /// </summary>
+    /// <remarks>This method is used when we need to know the path for a
+    /// particular namespace and do not care about the complete path.
+    /// </remarks>
+    public void Compact()
+    {
+        if (elements.HasItems)
         {
-        }
-
-        /// <summary>
-        /// Gets the elements specifying the path.
-        /// </summary>
-        /// <remarks>The order of the elements determines the path.</remarks>
-        public QualifiedNameCollection Elements
-        {
-            get { return elements; }
-        }
-
-        public void AddElement(QualifiedName category)
-        {
-            elements.Add(category);
-        }
-
-        public bool IsEmpty
-        {
-            get { return elements.IsEmpty; }
-        }
-
-        /// <summary>
-        /// Compacts the path so it only contains the elements that are from 
-        /// the namespace of the last element in the path. 
-        /// </summary>
-        /// <remarks>This method is used when we need to know the path for a
-        /// particular namespace and do not care about the complete path.
-        /// </remarks>
-        public void Compact()
-        {
-            if (elements.HasItems)
+            QualifiedName lastName = Elements.GetLast();
+            int index = 0;
+            while (index != -1)
             {
-                QualifiedName lastName = Elements.GetLast();
-                int index = 0;
-                while (index != -1)
+                index = LastIndexNotMatchingNamespace(lastName.Namespace);
+                if (index != -1)
                 {
-                    index = LastIndexNotMatchingNamespace(lastName.Namespace);
-                    if (index != -1)
-                    {
-                        elements.RemoveAt(index);
-                    }
+                    elements.RemoveAt(index);
                 }
             }
         }
-
-        public XmlNamespaceCollection NamespacesInScope
+    }
+    public XmlNamespaceCollection NamespacesInScope
+    {
+        get { return namespacesInScope; }
+    }
+    public string GetNamespaceForPrefix(string prefix)
+    {
+        return namespacesInScope.GetNamespaceForPrefix(prefix);
+    }
+    /// <summary>
+    /// An xml element path is considered to be equal if 
+    /// each path item has the same name and namespace.
+    /// </summary>
+    public override bool Equals(object obj)
+    {
+        XmlElementPath rhsPath = obj as XmlElementPath;
+        if (rhsPath == null)
         {
-            get { return namespacesInScope; }
+            return false;
         }
-
-        public string GetNamespaceForPrefix(string prefix)
+        return elements.Equals(rhsPath.elements);
+    }
+    public override int GetHashCode()
+    {
+        return elements.GetHashCode();
+    }
+    public override string ToString()
+    {
+        return elements.ToString();
+    }
+    public string GetRootNamespace()
+    {
+        return elements.GetRootNamespace();
+    }
+    /// <summary>
+    /// Only updates those names without a namespace.
+    /// </summary>
+    public void SetNamespaceForUnqualifiedNames(string namespaceUri)
+    {
+        foreach (QualifiedName name in elements)
         {
-            return namespacesInScope.GetNamespaceForPrefix(prefix);
-        }
-
-        /// <summary>
-        /// An xml element path is considered to be equal if 
-        /// each path item has the same name and namespace.
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            XmlElementPath rhsPath = obj as XmlElementPath;
-            if (rhsPath == null)
+            if (!name.HasNamespace)
             {
-                return false;
+                name.Namespace = namespaceUri;
             }
-
-            return elements.Equals(rhsPath.elements);
         }
-
-        public override int GetHashCode()
+    }
+    int LastIndexNotMatchingNamespace(string namespaceUri)
+    {
+        if (elements.Count > 1)
         {
-            return elements.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return elements.ToString();
-        }
-
-        public string GetRootNamespace()
-        {
-            return elements.GetRootNamespace();
-        }
-
-        /// <summary>
-        /// Only updates those names without a namespace.
-        /// </summary>
-        public void SetNamespaceForUnqualifiedNames(string namespaceUri)
-        {
-            foreach (QualifiedName name in elements)
+            // Start the check from the last but one item.
+            for (int i = elements.Count - 2; i >= 0; --i)
             {
-                if (!name.HasNamespace)
+                QualifiedName name = elements[i];
+                if (name.Namespace != namespaceUri)
                 {
-                    name.Namespace = namespaceUri;
+                    return i;
                 }
             }
         }
-
-        int LastIndexNotMatchingNamespace(string namespaceUri)
-        {
-            if (elements.Count > 1)
-            {
-                // Start the check from the last but one item.
-                for (int i = elements.Count - 2; i >= 0; --i)
-                {
-                    QualifiedName name = elements[i];
-                    if (name.Namespace != namespaceUri)
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;
-        }
+        return -1;
     }
 }

@@ -25,48 +25,36 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.ServerCore.Controller;
 
-namespace Origam.ServerCoreTests
+namespace Origam.ServerCoreTests;
+[TestFixture]
+class UIControllerTests: ControllerTests
 {
-    [TestFixture]
-    class UIControllerTests: ControllerTests
+    private UIController sut;
+    private Guid sessionId;
+    private Guid rowId;
+    public UIControllerTests()
     {
-        private UIController sut;
-        private Guid sessionId;
-        private Guid rowId;
-
-
-        public UIControllerTests()
-        {
-            sut = new UIController(new NullLogger<UIController>());
-            sut.ControllerContext = context;
-        }
-
-        [Test, Order(201)]
-        public void ShouldReturnMenuXml()
-        {
-            var actionResult = sut.GetMenu();
-            Assert.IsInstanceOf<OkObjectResult>(actionResult);
-            OkObjectResult okObjectResult = (OkObjectResult)actionResult;
-
-            Assert.IsInstanceOf<string>(okObjectResult.Value);
-            string menuXml = (string)okObjectResult.Value;
-
-            Assert.That(menuXml, Is.Not.Empty);
-        }
-
-
-        [Test, Order(202)]
-        public void ShouldReturnScreenXml()
-        {
-            var actionResult = sut.GetUI(new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd"));
-            Assert.IsInstanceOf<OkObjectResult>(actionResult);
-            OkObjectResult okObjectResult = (OkObjectResult)actionResult;
-
-            Assert.IsInstanceOf<string>(okObjectResult.Value);
-            string menuXml = (string)okObjectResult.Value;
-
-            Assert.That(menuXml, Is.Not.Empty);
-        }
-
+        sut = new UIController(new NullLogger<UIController>());
+        sut.ControllerContext = context;
+    }
+    [Test, Order(201)]
+    public void ShouldReturnMenuXml()
+    {
+        var actionResult = sut.GetMenu();
+        Assert.IsInstanceOf<OkObjectResult>(actionResult);
+        OkObjectResult okObjectResult = (OkObjectResult)actionResult;
+        Assert.IsInstanceOf<string>(okObjectResult.Value);
+        string menuXml = (string)okObjectResult.Value;
+        Assert.That(menuXml, Is.Not.Empty);
+    }
+    [Test, Order(202)]
+    public void ShouldReturnScreenXml()
+    {
+        var actionResult = sut.GetUI(new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd"));
+        Assert.IsInstanceOf<OkObjectResult>(actionResult);
+        OkObjectResult okObjectResult = (OkObjectResult)actionResult;
+        Assert.IsInstanceOf<string>(okObjectResult.Value);
+        string menuXml = (string)okObjectResult.Value;
+        Assert.That(menuXml, Is.Not.Empty);
     }
 }

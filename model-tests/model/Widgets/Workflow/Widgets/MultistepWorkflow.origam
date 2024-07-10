@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="20732249-ef09-4238-ba2e-022fbc76c7a6"
+    asi:name="MultistepWorkflow"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="d0f083e2-8cc9-4206-8e64-a8bb68e804f3"
+      cs:isReturnValue="false"
+      asi:name="AllDataTypes"
+      cs:structure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="22606646-8a88-4c93-b0fc-7e59e722f42b"
+      asi:name="0300_LoadOtherData"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/AllDataTypes/d0f083e2-8cc9-4206-8e64-a8bb68e804f3"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="11028bb8-67d4-4213-9835-6d76e1f6625f"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="b2129aac-f221-4b1a-b969-890b33cd9b76"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="5b91af49-804e-4b2f-a834-62324e47682e"
+          dsr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="b2b9d734-7f94-43ed-ab72-37cddd71b72b"
+        asi:name="After_0200_UI"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/0200_UI/5c7c0b1a-8822-45aa-bbed-456221e6b332" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="ecea48b7-3152-463c-a731-b1da9a058e32"
+      asi:name="0100_LoadData"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/AllDataTypes/d0f083e2-8cc9-4206-8e64-a8bb68e804f3"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="2f6a2e2a-0a50-4c33-bc48-ec8182079f36"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/31791c3b-7265-439e-ac96-ddd57aa82579"
+          x:id="951cf17b-97b1-46e7-acd8-8a1af1c70950"
+          dsr:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+          asi:name="AllDataTypes" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8948f4f2-9506-420f-b1b3-946765221d32"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="5c7c0b1a-8822-45aa-bbed-456221e6b332"
+      uift:isFinalForm="false"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="0200_UI"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/AllDataTypes/d0f083e2-8cc9-4206-8e64-a8bb68e804f3"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="e9e30398-62cb-47f8-bf2e-d18a590b6cbd"
+        asi:name="After_0100_LoadData"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/MultistepWorkflow.origam#MultistepWorkflow/0100_LoadData/ecea48b7-3152-463c-a731-b1da9a058e32" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>

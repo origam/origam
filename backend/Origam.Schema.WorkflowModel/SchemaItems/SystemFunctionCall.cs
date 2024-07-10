@@ -24,58 +24,49 @@ using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel;
+public enum SystemFunction
 {
-
-	public enum SystemFunction
+	ActiveProfileId = 0,
+	ResourceIdByActiveProfile = 1
+}
+/// <summary>
+/// Summary description for SystemFunctionCall.
+/// </summary>
+[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
+[HelpTopic("System+Function+Call")]
+[XmlModelRoot(CategoryConst)]
+[ClassMetaVersion("6.0.0")]
+public class SystemFunctionCall : AbstractSchemaItem
+{
+	public const string CategoryConst = "SystemFunctionCall";
+	public SystemFunctionCall() : base() {}
+	public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
+	public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
+	#region Overriden AbstractSchemaItem Members
+	
+	public override string ItemType
 	{
-		ActiveProfileId = 0,
-		ResourceIdByActiveProfile = 1
+		get
+		{
+			return CategoryConst;
+		}
 	}
-
-	/// <summary>
-	/// Summary description for SystemFunctionCall.
-	/// </summary>
-	[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
-    [HelpTopic("System+Function+Call")]
-	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-	public class SystemFunctionCall : AbstractSchemaItem
+	#endregion
+	#region Properties
+	private SystemFunction _function;
+	
+    [XmlAttribute("function")]
+	public SystemFunction Function
 	{
-		public const string CategoryConst = "SystemFunctionCall";
-
-		public SystemFunctionCall() : base() {}
-
-		public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
-
-		#region Overriden AbstractSchemaItem Members
-		
-		public override string ItemType
+		get
 		{
-			get
-			{
-				return CategoryConst;
-			}
+			return _function;
 		}
-		#endregion
-
-		#region Properties
-		private SystemFunction _function;
-		
-        [XmlAttribute("function")]
-		public SystemFunction Function
+		set
 		{
-			get
-			{
-				return _function;
-			}
-			set
-			{
-				_function = value;
-			}
+			_function = value;
 		}
-		#endregion
 	}
+	#endregion
 }

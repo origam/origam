@@ -45,54 +45,44 @@ using System.Collections.Generic;
 using log4net;
 using log4net.Core;
 
-namespace Origam.Server
+namespace Origam.Server;
+public class Analytics
 {
-    public class Analytics
+    private static Analytics instance;
+    public static Analytics Instance => instance ?? (instance = new Analytics());
+    private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
+    public const string PropertyNamePrefix = "log4net_app_";
+    public void SetProperty(string propertyName, object value)
     {
-        private static Analytics instance;
-        public static Analytics Instance => instance ?? (instance = new Analytics());
-
-        private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
-        public const string PropertyNamePrefix = "log4net_app_";
-
-
-        public void SetProperty(string propertyName, object value)
-        {
-            log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
-        }
-
-        public void Log(string message)
-        {
-            if (perfLog.IsInfoEnabled)
-            {
-                perfLog.Info(message);
-            }
-        }
-
-        public void Log(Type type, string message, IDictionary<string, string> properties)
-        {
-            if (perfLog.IsInfoEnabled)
-            {
-                LoggingEvent loggingEvent = new LoggingEvent(
-                  type,
-                  perfLog.Logger.Repository,
-                  perfLog.Logger.Name,
-                  Level.Info,
-                  message,
-                  null);
-
-                foreach (KeyValuePair<string, string> item in properties)
-                {
-                    loggingEvent.Properties[item.Key] = item.Value;
-                }
-                perfLog.Logger.Log(loggingEvent);                
-            }
-        }
-
-        public bool IsAnalyticsEnabled => perfLog.IsInfoEnabled;
+        log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
     }
-
-    class NullPropertyProvider : IAdaptivePropertyProvider
+    public void Log(string message)
     {
+        if (perfLog.IsInfoEnabled)
+        {
+            perfLog.Info(message);
+        }
     }
+    public void Log(Type type, string message, IDictionary<string, string> properties)
+    {
+        if (perfLog.IsInfoEnabled)
+        {
+            LoggingEvent loggingEvent = new LoggingEvent(
+              type,
+              perfLog.Logger.Repository,
+              perfLog.Logger.Name,
+              Level.Info,
+              message,
+              null);
+            foreach (KeyValuePair<string, string> item in properties)
+            {
+                loggingEvent.Properties[item.Key] = item.Value;
+            }
+            perfLog.Logger.Log(loggingEvent);                
+        }
+    }
+    public bool IsAnalyticsEnabled => perfLog.IsInfoEnabled;
+}
+class NullPropertyProvider : IAdaptivePropertyProvider
+{
 }
