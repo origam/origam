@@ -1,0 +1,8 @@
+﻿ALTER TABLE [AllDataTypes] ADD CONSTRAINT [FK_AllDataTypes_refWidgetRichTextTestId_WidgetRichTextTest]
+	FOREIGN KEY (
+		[refWidgetRichTextTestId]
+	)
+
+	REFERENCES [WidgetRichTextTest] (
+		[Id]
+	);

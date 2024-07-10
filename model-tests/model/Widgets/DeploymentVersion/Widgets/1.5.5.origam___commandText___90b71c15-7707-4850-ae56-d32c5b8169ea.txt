@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AllDataTypes] ADD [refWidgetPlainTextTestId] UniqueIdentifier NULL
