@@ -25,13 +25,13 @@ RUN apt-get -qq update > /dev/null 2>&1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GAWK
-RUN apt-get update && apt-get install -y wget build-essential
-RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz && \
-    tar -xzf gawk-5.1.0.tar.gz && \
+RUN apt-get update > /dev/null 2>&1 && apt-get install -y wget build-essential > /dev/null 2>&1
+RUN wget https://ftp.gnu.org/gnu/gawk/gawk-5.1.0.tar.gz > /dev/null 2>&1 && \
+    tar -xzf gawk-5.1.0.tar.gz > /dev/null 2>&1 && \
     cd gawk-5.1.0 && \
-    ./configure && \
-    make && \
-    make install && \
+    ./configure > /dev/null 2>&1 && \
+    make > /dev/null 2>&1 && \
+    make install > /dev/null 2>&1 && \
     cd .. && \
     rm -rf gawk-5.1.0 gawk-5.1.0.tar.gz
 
