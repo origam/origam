@@ -355,11 +355,11 @@ public class RuleEngine
 	private RuleExceptionDataCollection DeserializeRuleExceptions(XmlDocument xmlDoc)
 	{
 		if (xmlDoc == null)
+		{
 			return null;
-
+		}
 		XmlNodeReader reader = new XmlNodeReader(xmlDoc);
 		RuleExceptionDataCollection exceptions = null;
-
 		try
 		{
 			if (reader.ReadToFollowing("RuleExceptionDataCollection"))
@@ -371,7 +371,6 @@ public class RuleEngine
 		{
 			reader.Close();
 		}
-
 		return exceptions;
 	}
 	public object Evaluate(AbstractSchemaItem item)
