@@ -7,7 +7,7 @@ const envFilePath = ".env.production.local";
 const pluginVersionsVariableName = "VITE_REACT_APP_ORIGAM_UI_PLUGINS";
 
 function getPackagePath(pluginName, registrationFile) {
-  const pluginPackageRegEx = new RegExp('import\\s*{\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
+  const pluginPackageRegEx = new RegExp('import\\s*{?\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}?\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
   let packageMatch = pluginPackageRegEx.exec(registrationFile);
   if(!packageMatch){
     throw new Error(`Could not find import of plugin ${pluginName}`)
