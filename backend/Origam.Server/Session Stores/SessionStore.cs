@@ -1190,7 +1190,7 @@ namespace Origam.Server
                     .SchemaProvider
                     .RetrieveInstance<DataStructureEntity>(
                         dataStructureEntityId);
-            return dataStructureEntity.EntityId;
+            return dataStructureEntity.EntityDefinition.Id;
         }
 
         internal static object ShortGuid(Guid guid)
