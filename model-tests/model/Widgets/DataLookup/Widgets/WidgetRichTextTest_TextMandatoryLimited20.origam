@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="be4c8791-be6f-4889-90cb-bd64f819240c"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupWidgetRichTextTest_TextMandatoryLimited20.origam#LookupWidgetRichTextTest_TextMandatoryLimited20/3e4dbdb4-fcff-442d-8f31-71de85e9ee6e"
+    adl:listDisplayMember="TextMandatoryLimited20"
+    adl:listValueMember="Id"
+    asi:name="WidgetRichTextTest_TextMandatoryLimited20"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupWidgetRichTextTest_TextMandatoryLimited20.origam#LookupWidgetRichTextTest_TextMandatoryLimited20/3e4dbdb4-fcff-442d-8f31-71de85e9ee6e"
+    adl:valueDisplayMember="TextMandatoryLimited20"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupWidgetRichTextTest_TextMandatoryLimited20.origam#LookupWidgetRichTextTest_TextMandatoryLimited20/GetId/32727357-e005-4e25-8d58-3aedeb7ca32b"
+    adl:valueValueMember="Id" />
+</x:file>

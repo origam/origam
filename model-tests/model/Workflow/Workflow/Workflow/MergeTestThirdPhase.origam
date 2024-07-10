@@ -30,7 +30,7 @@
       x:id="a4844bb8-90eb-495d-b3ae-0a6d02b9a774"
       asi:name="0100_Save"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/WorkflowMergeTestEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/MergeThroughDifferentEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
@@ -70,7 +70,7 @@
       x:id="f60b2e84-0aab-42ea-9891-3ca4a23a5183"
       asi:name="0200_Reset"
       aws:onFailure="WorkflowFails"
-      wt:outputContextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/WorkflowMergeTestEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
+      wt:outputContextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/MergeThroughDifferentEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
       wt:outputMethod="FullMerge"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
@@ -99,7 +99,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="Xml"
-          cr:contextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/WorkflowMergeTestEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
+          cr:contextStore="Workflow/Workflow/Workflow/MergeTestThirdPhase.origam#MergeTestThirdPhase/MergeThroughDifferentEntity/18f72143-f543-4608-b41e-4dabb8dfa4d8"
           x:id="5b258b5a-3edd-4817-8460-4b7f95e9556d"
           asi:name="WorkflowMergeTestEntity"
           cr:xPath="/" />

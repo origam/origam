@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="2c6e598f-dd4c-4980-8d40-ba5ad015f03f"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes_Integer1_GetTop30.origam#LookupAllDataTypes_Integer1_GetTop30/708339cc-586b-46b2-a5d2-f12fd50c9e1b"
+    adl:listDisplayMember="Integer1"
+    adl:listValueMember="Id"
+    asi:name="AllDataTypes_Integer1"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes_Integer1_GetTop30.origam#LookupAllDataTypes_Integer1_GetTop30/708339cc-586b-46b2-a5d2-f12fd50c9e1b"
+    adl:valueDisplayMember="Integer1"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes_Integer1_GetTop30.origam#LookupAllDataTypes_Integer1_GetTop30/GetTop30/a58741cd-6e4c-42d7-aa96-5a635d8a2e87"
+    adl:valueValueMember="Id" />
+</x:file>

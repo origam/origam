@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="449f48ef-7d4a-493c-9766-702282f3178e"
+    ds1:localized="false"
+    asi:name="LookupAllDataTypes_LookupWith5Parameters">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+      x:id="a876d0f8-f286-419b-a38a-193a9ab6c86d"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AllDataTypes"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="553dfe35-99a8-4cda-b8a2-f52b7047edf0"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="Count"
+        dsc:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+        dsc:hideInOutput="false"
+        x:id="90f09645-dc20-42d3-b563-52d2676edc10"
+        asi:name="Integer1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="50d360d0-bd21-44d4-a032-f802ab608840"
+      asi:name="GetBy5Filters">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetBetweenDate1/9dc3f71b-f563-45ff-846f-488119014c3a"
+        x:id="12568bfd-fe32-471a-928f-89d4bfc72cc6"
+        asi:name="AllDataTypes_GetBetweenDate1"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByWidgetPlainTextTestId/31e0cfb3-d025-4880-a1d8-bebd07c58cb2"
+        x:id="3d53d75c-7aa0-475a-9ac9-03e9e2e4362d"
+        asi:name="AllDataTypes_GetByWidgetPlainTextTestId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByTagInputSourceId/f8aab054-4be3-4b2e-8ac9-3e4fd0b92a29"
+        x:id="515c91d8-202a-4bca-b6ea-a02bfb701e90"
+        asi:name="AllDataTypes_GetByTagInputSourceId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByDate1Interval/3b12fd52-6d52-4e5d-8473-5fca315dcbbc"
+        x:id="9bfaa110-2f7f-4f8c-a739-8bbca0205430"
+        asi:name="AllDataTypes_GetByDate1Interval"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByWidgetRichText/2c9f3ecd-8a58-4a5f-8dc4-324197e01c88"
+        x:id="bf4e695d-8650-404f-b28b-64b7de1cbe0d"
+        asi:name="AllDataTypes_GetByWidgetRichText"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds1:DataStructure>
+</x:file>

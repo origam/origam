@@ -9,6 +9,9 @@
     p:name="Widgets"
     p:version="1.5.4">
     <pr:packageReference
+      x:id="2f789379-4b36-49ac-9c74-374e83b6fb5d"
+      pr:referencedPackage="Workflow/.origamPackage#a9c25bbd-9a31-427d-bde5-1a442d4d9c38" />
+    <pr:packageReference
       x:id="3de8351f-ea09-4ffd-a5eb-f847b4355614"
       pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
     <pr:packageReference

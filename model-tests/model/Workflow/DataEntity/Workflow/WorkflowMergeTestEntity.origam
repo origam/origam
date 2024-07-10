@@ -124,8 +124,8 @@
       <euiapm:EntityUIActionParameterMapping
         asi:abstract="false"
         euiapm:field="."
-        x:id="43f55d69-7648-4850-abd6-1ab5c31ddd04"
-        asi:name="WorkflowMergeTestEntity"
+        x:id="7739dd61-d2e3-4546-8679-ce84e2d05f26"
+        asi:name="MergeThroughDifferentEntity"
         euiapm:type="Current" />
       <sc2:ScreenCondition
         asi:abstract="false"

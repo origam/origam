@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="5a9dcccc-4d9e-4801-b744-52677e129f93"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/449f48ef-7d4a-493c-9766-702282f3178e"
+    adl:listDisplayMember="Integer1"
+    adl:listMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/GetBy5Filters/50d360d0-bd21-44d4-a032-f802ab608840"
+    adl:listValueMember="Id"
+    asi:name="AllDataTypes_LookupWith5Parameters"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/449f48ef-7d4a-493c-9766-702282f3178e"
+    adl:valueDisplayMember="Integer1"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/GetBy5Filters/50d360d0-bd21-44d4-a032-f802ab608840"
+    adl:valueValueMember="Id" />
+</x:file>

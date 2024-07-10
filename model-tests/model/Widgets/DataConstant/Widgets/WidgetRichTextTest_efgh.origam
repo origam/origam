@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="43473d1c-3bee-44b5-8619-a396cd929c59"
+    dc:lookup="Widgets/DataLookup/Widgets/WidgetRichTextTest_TextMandatoryLimited20.origam#WidgetRichTextTest_TextMandatoryLimited20/be4c8791-be6f-4889-90cb-bd64f819240c"
+    asi:name="WidgetRichTextTest_efgh"
+    dc:userDefinable="false"
+    dc:value="d01681c8-7fe5-48ca-9f6a-19bd75c39b89" />
+</x:file>
