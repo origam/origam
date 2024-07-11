@@ -24,14 +24,12 @@ afterEach(async () => {
 });
 
 async function clickElement(elementText, elementType){
-  console.log("Waiting for: " + elementText)
   const tag = elementType ? elementType : "div";
   const element = await page.waitForXPath(
     `//${tag}[contains(text(),'${elementText}')]`,
     {visible: true}
   );
   await sleep(200);
-  console.log("Clicking: " + elementText)
   await element.click();
 }
 
