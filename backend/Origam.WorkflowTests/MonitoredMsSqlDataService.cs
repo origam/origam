@@ -32,7 +32,6 @@ public class MonitoredMsSqlDataService : MsSqlDataService
 
     private void AddOperation(Operation operation)
     {
-        Console.WriteLine(operation);
         Operations.Add(operation);
     }
 
