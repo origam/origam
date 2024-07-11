@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -41,6 +42,15 @@ public class PageParameterMapping : AbstractSchemaItem
 	private void Init()
 	{
 	}
+	
+	public override void GetExtraDependencies(ArrayList dependencies)
+	{
+		if (DefaultValue != null)
+		{
+			dependencies.Add(DefaultValue);
+		}
+	}	
+	
 	#region Properties
 	[Category("Mapping")]
 	[Description("Name of url query string parameter, e.g. in case http://my-api/my-page?searchstring=value the mapped parametr should be 'searchstring'")]
