@@ -32,7 +32,6 @@ public class LookupXsltFunctionContainer: AbstractOrigamDependentXsltFunctionCon
         Hashtable parameterTable = ToHashtable(parameters);
         object result = LookupService.GetDisplayText(new Guid(lookupId),
             parameterTable, false, false, this.TransactionId);
-
         return XmlTools.FormatXmlString(result);
     }
     
