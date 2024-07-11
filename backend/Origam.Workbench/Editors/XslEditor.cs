@@ -814,7 +814,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 			"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
 			"\txmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"" + Environment.NewLine +
-			"\txmlns:date=\"http://exslt.org/dates-and-times\" exclude-result-prefixes=\"AS date\">" + Environment.NewLine + Environment.NewLine +
+			"\txmlns:lookup=\"http://xsl.origam.com/lookup\"" + Environment.NewLine +
+			"\txmlns:date=\"http://exslt.org/dates-and-times\" exclude-result-prefixes=\"AS lookup date\">" + Environment.NewLine + Environment.NewLine +
 		    "\t<xsl:include href=\"model://e1c65fcd-118d-4eb3-9c2f-aa27fec132ba\"/>" + Environment.NewLine + Environment.NewLine +
 			"\t<xsl:template match=\"ROOT\">" + Environment.NewLine +   
 			"\t\t<RuleExceptionDataCollection xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + Environment.NewLine +
@@ -850,7 +851,8 @@ public class XslEditor : AbstractEditor, IToolStripContainer
 									   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 									   "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
 									   "\txmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"" + Environment.NewLine +
-									   "\txmlns:date=\"http://exslt.org/dates-and-times\" exclude-result-prefixes=\"AS date\">" + Environment.NewLine + Environment.NewLine +
+									   "\txmlns:lookup=\"http://xsl.origam.com/lookup\"" + Environment.NewLine +
+									   "\txmlns:date=\"http://exslt.org/dates-and-times\" exclude-result-prefixes=\"AS lookup date\">" + Environment.NewLine + Environment.NewLine +
 									   "\t<xsl:template match=\"ROOT\">" + Environment.NewLine +
 									   "\t\t<ROOT>" + Environment.NewLine +
 									   "\t\t\t<xsl:apply-templates select=\"\"/>" + Environment.NewLine +
