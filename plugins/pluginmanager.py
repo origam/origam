@@ -130,7 +130,7 @@ def init_new_plugin():
     with open(plugin_folder / "package.json", "w") as package_json_file:
         package_json_file.write(json.dumps(package_json_contents, indent=4))
 
-    registration_contents = f'''import {{ {plugin_name} }} from "plugins/implementations/plugins/src/{plugin_name}";
+    registration_contents = f'''import {{ {plugin_name} }} from "plugins/implementations/{plugin_name}/src/{plugin_name}";
 import {{ registerPlugin }} from "plugins/tools/PluginLibrary";
 
 
@@ -148,8 +148,14 @@ export function registerPlugins() {{
 import {{ observer }} from "mobx-react";
 import {{ observable }} from "mobx";
 import S from "./{plugin_name}.module.scss";
-import {{ ILocalization, ILocalizer, ISectionPlugin, ISectionPluginData }} from "@origam/plugins";
+import {{ ILocalization }} from "plugins/interfaces/ILocalization";
+import {{ ISectionPlugin }} from "plugins/interfaces/ISectionPlugin";
+import {{ ISectionPluginData }} from "plugins/interfaces/ISectionPluginData";
+import {{ ILocalizer }} from "plugins/interfaces/ILocalizer";
 
+// This is a section level plugin. If you need a screen level plugin:
+// 1. Remove the ISectionPlugin interface and implement IScreenPlugin instead
+// 2. Change $type_ISectionPlugin: 1 = 1; to  $type_IScreenPlugin: 1 = 1;
 export class {plugin_name} implements ISectionPlugin {{
   $type_ISectionPlugin: 1 = 1;
   id: string = "{plugin_name}";
