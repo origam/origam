@@ -83,13 +83,6 @@
         x:id="9bfaa110-2f7f-4f8c-a739-8bbca0205430"
         asi:name="AllDataTypes_GetByDate1Interval"
         dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes_LookupWith5Parameters.origam#LookupAllDataTypes_LookupWith5Parameters/AllDataTypes/a876d0f8-f286-419b-a38a-193a9ab6c86d"
-        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetByWidgetRichText/2c9f3ecd-8a58-4a5f-8dc4-324197e01c88"
-        x:id="bf4e695d-8650-404f-b28b-64b7de1cbe0d"
-        asi:name="AllDataTypes_GetByWidgetRichText"
-        dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
   </ds1:DataStructure>
 </x:file>

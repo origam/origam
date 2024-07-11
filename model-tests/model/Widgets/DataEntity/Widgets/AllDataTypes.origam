@@ -100,52 +100,6 @@
       asi:name="parDate1From" />
     <ef:EntityFilter
       asi:abstract="false"
-      x:id="2c9f3ecd-8a58-4a5f-8dc4-324197e01c88"
-      asi:name="GetByWidgetRichText">
-      <fc1:DataEntityColumn
-        asi:abstract="false"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/In.origam#In/ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
-        x:id="b49bec28-7df6-422a-9922-3109e5808da7"
-        adec:isPrimaryKey="false"
-        asi:name="In"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="13cdc953-6c5a-423d-a66d-2bfe0c703e4b"
-          asi:name="FilterExpression"
-          fcp:parameter="Root/Function/In.origam#In/FilterExpression/32e47284-2c22-4aa8-b9d5-445012257b52">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/refWidgetRichTextTestId/a4dfc42e-9e7d-483d-9635-dbf0a01064da"
-            x:id="3e6a9371-41a5-4954-8e1a-4a2dff1ea97e"
-            asi:name="refWidgetRichTextTestId" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="66aedf8b-2f6c-45e1-893e-060e50ea85b8"
-          asi:name="List"
-          fcp:parameter="Root/Function/In.origam#In/List/06ad3693-55ff-404c-a813-16b41cd5751b">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Widgets/DataConstant/Widgets/WidgetRichTextTest_abcd.origam#WidgetRichTextTest_abcd/62d9a60a-cfd3-4512-8ea4-aa09e2275829"
-            x:id="174b743b-7306-427a-ab31-6a44dba7bc77"
-            asi:name="WidgetRichTextTest_abcd" />
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Widgets/DataConstant/Widgets/WidgetRichTextTest_efgh.origam#WidgetRichTextTest_efgh/43473d1c-3bee-44b5-8619-a396cd929c59"
-            x:id="bfa6fd0c-90b4-43ef-83b5-f949f9d6b0f0"
-            asi:name="WidgetRichTextTest_efgh" />
-        </fcp:FunctionCallParameter>
-      </fc1:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="false"
       x:id="31e0cfb3-d025-4880-a1d8-bebd07c58cb2"
       asi:name="GetByWidgetPlainTextTestId">
       <fc1:DataEntityColumn
@@ -400,47 +354,6 @@
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
-     <ef:EntityFilter
-      asi:abstract="false"
-      x:id="cb9f8c35-a9c8-4566-b082-fb43a28dbd3d"
-      asi:name="GetTop3">
-      <fc1:DataEntityColumn
-        asi:abstract="false"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc1:forceDatabaseCalculation="false"
-        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
-        x:id="54a9e105-f7f4-4696-9fad-bdc6c4237898"
-        adec:isPrimaryKey="false"
-        asi:name="&lt;="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="012dbd15-be4c-4799-b01e-f55a501ce9e3"
-          asi:name="Right"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
-            x:id="3d6c2625-fdca-4672-891c-e7ef24291c94"
-            asi:name="_Number_3" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="d37c773f-59c1-491a-8b95-5f2a6ba4026b"
-          asi:name="Left"
-          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
-            x:id="31ea799e-b50e-4a4e-9812-237fa9f8702f"
-            asi:name="Integer1" />
-        </fcp:FunctionCallParameter>
-      </fc1:DataEntityColumn>
-    </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="false"
       x:id="9dc3f71b-f563-45ff-846f-488119014c3a"
@@ -490,6 +403,47 @@
             ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Date1/591b8777-70c9-4526-99f9-c3de3ebc3a91"
             x:id="ae95a542-e102-4f7d-835a-49f178a25b79"
             asi:name="Date1" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="cb9f8c35-a9c8-4566-b082-fb43a28dbd3d"
+      asi:name="GetTop3">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/be0784a0-8a51-4003-a9cd-aa8467ca4f93"
+        x:id="54a9e105-f7f4-4696-9fad-bdc6c4237898"
+        adec:isPrimaryKey="false"
+        asi:name="&lt;="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="012dbd15-be4c-4799-b01e-f55a501ce9e3"
+          asi:name="Right"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Right/c3749287-8436-4123-bc75-0eb57f62969a">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+            x:id="3d6c2625-fdca-4672-891c-e7ef24291c94"
+            asi:name="_Number_3" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="d37c773f-59c1-491a-8b95-5f2a6ba4026b"
+          asi:name="Left"
+          fcp:parameter="Root/Function/LessThanOrEqual.origam#LessThanOrEqual/Left/fbc7a40a-2e85-4fa0-b919-7f7cb528e574">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Integer1/c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+            x:id="31ea799e-b50e-4a4e-9812-237fa9f8702f"
+            asi:name="Integer1" />
         </fcp:FunctionCallParameter>
       </fc1:DataEntityColumn>
     </ef:EntityFilter>
