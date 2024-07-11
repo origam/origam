@@ -38,8 +38,7 @@ public class LookupXsltFunctionContainer: AbstractOrigamDependentXsltFunctionCon
     
     private Hashtable ToHashtable(XPathNavigator parametersNavigator)
     {
-        Hashtable paramTable = new Hashtable();
-        
+        var paramTable = new Hashtable();        
         XPathNavigator paramNav = parametersNavigator.Clone();
         if (paramNav.MoveToFirstChild())
         {
@@ -47,7 +46,6 @@ public class LookupXsltFunctionContainer: AbstractOrigamDependentXsltFunctionCon
             {
                 string name = paramNav.SelectSingleNode("name")?.Value;
                 string value = paramNav.SelectSingleNode("value")?.Value;
-
                 if (!string.IsNullOrEmpty(name))
                 {
                     paramTable[name] = value;
