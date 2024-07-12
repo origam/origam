@@ -50,8 +50,7 @@ export class ResultItem extends React.Component<{
     this.props.onResultItemClick();
     this.props.result.onClick();
   }
-
-  render() {
+ render() {
     return (
       <div
         className={S.resultIemRow + " " + (this.mouseOver ? S.resultIemRowHovered : "") + " " +
@@ -67,10 +66,8 @@ export class ResultItem extends React.Component<{
           <div className={S.itemTitle}>
             {this.props.result.label}
           </div>
-          <div className={S.itemTextSeparator}>
-            {" "}
-          </div>
-          <div>
+          <div className={S.itemTextSeparator}/>
+          <div className={S.itemDescription}>
             {this.props.result.description}
           </div>
         </div>
