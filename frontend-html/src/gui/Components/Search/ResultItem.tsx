@@ -50,7 +50,6 @@ export class ResultItem extends React.Component<{
   checkDescriptionTruncation = () => {
     if (this.descriptionRef.current) {
       const { offsetWidth, scrollWidth } = this.descriptionRef.current;
-      debugger;
       this.isDescriptionTruncated = scrollWidth > offsetWidth;
     }
   }
