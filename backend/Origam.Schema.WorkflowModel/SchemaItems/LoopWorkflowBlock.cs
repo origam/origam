@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -39,8 +40,8 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
 	public LoopWorkflowBlock() : base() {}
 	public LoopWorkflowBlock(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public LoopWorkflowBlock(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	#region Overriden ISchemaItem Members
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.LoopConditionXPath);
 		dependencies.Add(this.LoopConditionContextStore);
@@ -73,7 +74,7 @@ public class LoopWorkflowBlock : AbstractWorkflowBlock
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

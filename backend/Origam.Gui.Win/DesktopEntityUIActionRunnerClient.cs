@@ -85,9 +85,9 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             // get action
             processData.Action = UIActionTools.GetAction(actionId);
             // retrieve parameter mappings
-            ArrayList originalDataParameters 
+            List<string> originalDataParameters 
                 = UIActionTools.GetOriginalParameters(processData.Action);
-            processData.Parameters = DatasetTools.RetrieveParemeters(
+            processData.Parameters = DatasetTools.RetrieveParameters(
                 parameterMappings, processData.SelectedRows, originalDataParameters,
                 processData.DataTable.DataSet);
             // add input parameters
@@ -101,13 +101,13 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
     public void CheckActionConditions(ExecuteActionProcessData processData)
     {
     }
-    public void SetModalDialogSize(ArrayList resultList,
+    public void SetModalDialogSize(List<object> resultList,
         ExecuteActionProcessData processData)
     {
     }
     public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
         DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes)
+        List<ChangeInfo> changes)
     {
         EntityWorkflowAction action 
             = processData.Action as EntityWorkflowAction;
@@ -232,7 +232,7 @@ public class DesktopEntityUIActionRunnerClient : IEntityUIActionRunnerClient
             }
     }
     public void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        EntityWorkflowAction entityWorkflowAction, List<ChangeInfo> changes)
     {
     }       
    

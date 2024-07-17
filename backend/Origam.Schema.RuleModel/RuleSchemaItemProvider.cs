@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Schema.EntityModel;
 using System.Collections;
+using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 /// <summary>
@@ -59,61 +61,61 @@ public class RuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFac
 			return "BL";
 		}
 	}
-    public ArrayList StartRules
+    public List<IStartRule> StartRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IStartRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if(rule is StartRule)
+                if(rule is StartRule startRule)
                 {
-                    result.Add(rule);
+                    result.Add(startRule);
                 }
             }
             return result;
         }
     }
-    public ArrayList EndRules
+    public List<IEndRule> EndRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IEndRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is IEndRule)
+                if (rule is IEndRule endRule)
                 {
-                    result.Add(rule);
+                    result.Add(endRule);
                 }
             }
             return result;
         }
     }
-    public ArrayList DataRules
+    public List<IDataRule> DataRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IDataRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is IDataRule)
+                if (rule is IDataRule dataRule)
                 {
-                    result.Add(rule);
+                    result.Add(dataRule);
                 }
             }
             return result;
         }
     }
-    public ArrayList EntityRules
+    public List<IEntityRule> EntityRules
     {
         get
         {
-            ArrayList result = new ArrayList();
+            var result = new List<IEntityRule>();
             foreach (AbstractRule rule in this.ChildItems)
             {
-                if (rule is EntityRule)
+                if (rule is EntityRule entityRule)
                 {
-                    result.Add(rule);
+                    result.Add(entityRule);
                 }
             }
             return result;

@@ -30,6 +30,7 @@ using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.Extensions;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.GuiModel;
 /// <summary>
@@ -54,7 +55,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
 		ChildItemTypes.Add(typeof(ScreenSectionCondition));
 	}
 	
-	#region Overriden AbstractSchemaItem members
+	#region Overriden ISchemaItem members
 	public override Type[] NameableTypes
 		=> new[] { typeof(EntityUIActionParameterMapping) };
 	
@@ -65,14 +66,13 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	public Hashtable ParameterMappings {
 		get
 		{
-			var mappingDictionary = ChildItemsByType("EntityUIActionParameterMapping")
-				.Cast<EntityUIActionParameterMapping>()
+			var mappingDictionary = ChildItemsByType<EntityUIActionParameterMapping>("EntityUIActionParameterMapping")
 				.ToDictionary(e => e.Name,e => e.Field);
 			
 			return new Hashtable(mappingDictionary);
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
         if (this.Rule != null)
         {
@@ -107,12 +107,10 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	public string Roles { get; set; } = "";
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenIds => ChildItems
-		.ToGeneric()
 		.OfType<ScreenCondition>()
 		.Select(reference => reference.ScreenId);
 	[Browsable(false)]
 	public IEnumerable<Guid> ScreenSectionIds  => ChildItems
-		.ToGeneric()
 		.OfType<ScreenSectionCondition>()
 		.Select(reference => reference.ScreenSectionId);
 	[StringNotEmptyModelElementRule()]
@@ -149,7 +147,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
     [XmlReference("buttonIcon", "GraphicsId")]
 	public GuiModel.Graphics ButtonIcon
 	{
-		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.GraphicsId));
+		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.GraphicsId));
 		set => this.GraphicsId = value?.Id ?? Guid.Empty;
 	}
 	public Guid RuleId;
@@ -159,7 +157,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
     [XmlReference("rule", "RuleId")]
     public IEntityRule Rule
 	{
-		get => (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
+		get => (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleId));
 		set => this.RuleId = value?.Id ?? Guid.Empty;
 	}
 	public Guid KeyboardShortcutId;
@@ -169,7 +167,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
     [XmlReference("keyboardShortcut", "KeyboardShortcutId")]
     public KeyboardShortcut KeyboardShortcut
 	{
-		get => (KeyboardShortcut)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.KeyboardShortcutId));
+		get => (KeyboardShortcut)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.KeyboardShortcutId));
 		set => this.KeyboardShortcutId = value?.Id ?? Guid.Empty;
 	}
 	[Category("Keyboard")]
@@ -201,7 +199,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
     [XmlReference("confirmationMessage", "ConfirmationMessageId")]
     public StringItem ConfirmationMessage
     {
-        get => (StringItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConfirmationMessageId));
+        get => (StringItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ConfirmationMessageId));
         set => this.ConfirmationMessageId =  value?.Id ?? Guid.Empty;
     }
     public Guid ConfirmationRuleId;
@@ -211,7 +209,7 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	[Description("Validation rule, that is executed before the action is invoked. Input xml root element is rows and records are represented by row elements.")]
     public IEndRule ConfirmationRule
     {
-        get => (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConfirmationRuleId));
+        get => (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ConfirmationRuleId));
         set => this.ConfirmationRuleId = value?.Id ?? Guid.Empty;
     }
 	#endregion
@@ -229,9 +227,9 @@ public abstract class EntityUIAction : AbstractSchemaItem
 	}
 	#endregion
 }
-public class EntityUIActionOrderComparer : IComparer
+public class EntityUIActionOrderComparer : IComparer<ISchemaItem>
 {
-    public int Compare(object x, object y) 
+    public int Compare(ISchemaItem x, ISchemaItem y) 
         => (x as EntityUIAction).Order.CompareTo(
             (y as EntityUIAction).Order);
 }

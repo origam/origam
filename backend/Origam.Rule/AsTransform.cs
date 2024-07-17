@@ -44,10 +44,10 @@ public class AsTransform
     public static IXsltEngine GetXsltEngine(
         IPersistenceProvider persistence, Guid transformationId)
     {
-        AbstractSchemaItem transformation = persistence.RetrieveInstance(
-            typeof(AbstractSchemaItem), 
+        ISchemaItem transformation = persistence.RetrieveInstance(
+            typeof(ISchemaItem), 
             new ModelElementKey(transformationId))
-            as AbstractSchemaItem;
+            as ISchemaItem;
         if(transformation is XslTransformation)
         {
             return GetXsltEngine(

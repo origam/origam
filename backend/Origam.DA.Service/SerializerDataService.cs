@@ -143,10 +143,6 @@ public class SerializerDataService : IDataService
 	{
 		throw new NotSupportedException("ExecuteProcedure is not supported by SerializerDataService");
 	}
-	public ArrayList CompareSchema(IPersistenceProvider provider)
-	{
-		throw new NotSupportedException("CompareSchema is not supported by SerializerDataService");
-	}
 	public string ExecuteUpdate(string command, string transactionId)
 	{
 		throw new NotImplementedException("ExecuteUpdate() is not implemented by this data service");

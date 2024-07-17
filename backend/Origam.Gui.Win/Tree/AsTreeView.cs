@@ -29,6 +29,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
@@ -677,7 +678,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
 			this.WireDataSource();
 			if (this.PrepareDescriptors())
 			{
-				ArrayList unsortedNodes = new ArrayList();			
+				var unsortedNodes = new List<DataTreeViewNode>();			
 				for (int i = 0; i < this.listManager.Count; i++)
 				{
 					unsortedNodes.Add(this.CreateNode(this.listManager, i));
@@ -689,7 +690,7 @@ public class AsTreeView : TreeView, IAsDataConsumer
 					startCount = unsortedNodes.Count;
 					for (int i = unsortedNodes.Count-1; i >= 0 ; i--)
 					{					
-						if (this.TryAddNode((DataTreeViewNode)unsortedNodes[i]))
+						if (this.TryAddNode(unsortedNodes[i]))
 						{
 							unsortedNodes.RemoveAt(i);
 						}

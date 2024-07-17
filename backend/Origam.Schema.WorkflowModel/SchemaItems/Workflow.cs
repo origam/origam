@@ -22,11 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.WorkflowModel;
@@ -64,7 +66,7 @@ public class Workflow : AbstractSchemaItem, IWorkflow
 	 * */
 	public ContextStore GetReturnContext ()
 	{
-		foreach (ContextStore context in ChildItemsByType(ContextStore.CategoryConst))
+		foreach (ContextStore context in ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
 		{
 			if (context.IsReturnValue) return context;
 		}
@@ -79,7 +81,7 @@ public class Workflow : AbstractSchemaItem, IWorkflow
     public WorkflowTransactionBehavior TransactionBehavior { get; set; } 
 		= WorkflowTransactionBehavior.InheritExisting;
 	#endregion
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     
 	public override string ItemType
 	{
@@ -91,14 +93,8 @@ public class Workflow : AbstractSchemaItem, IWorkflow
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-    public ArrayList Dependencies
-	{
-		get
-		{
-			return new ArrayList();
-		}
-	}
-    
+    public List<WorkflowTaskDependency> Dependencies => new();
+
     // It does not really make sense to change this property on Workflow.
     // That is why it is not visible in the Architect and not persisted in XML.
     [Browsable(false)]

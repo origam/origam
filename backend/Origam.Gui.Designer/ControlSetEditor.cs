@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
@@ -447,14 +448,14 @@ public class ControlSetEditor : AbstractEditor
             }
             ControlSet.ClearCacheOnPersist = false;
             ControlSet.Persist();
-            //			(_controlSet as AbstractSchemaItem).ClearCacheOnPersist = true;
+            //			(_controlSet as ISchemaItem).ClearCacheOnPersist = true;
             //			_controlSet.Persist();
             // If the controlset was cloned, we clone its documentation, too.
             if (ControlSet.OldPrimaryKey != null)
             {
-                ArrayList items = ControlSet.ChildItemsRecursive;
+	            List<ISchemaItem> items = ControlSet.ChildItemsRecursive;
                 items.Add(ControlSet);
-                _documentation.CloneDocumentation(items.ToList<ISchemaItem>());
+                _documentation.CloneDocumentation(items);
             }
             ControlSet.OldPrimaryKey = null;
             if (saveControl && IsPanel && _panelControlItemRef != null)
@@ -507,9 +508,9 @@ public class ControlSetEditor : AbstractEditor
 		
 		cntrl.DataBindings.CollectionChanged += new CollectionChangeEventHandler(DataBindings_CollectionChanged);
 		//adding child controls
-		ArrayList sortedChildControls = new ArrayList(cntrlSet.ChildItemsByType("ControlSetItem"));
+		var sortedChildControls = cntrlSet.ChildItemsByType<ControlSetItem>("ControlSetItem").ToList();
 		sortedChildControls.Sort();
-		ArrayList invalidControls = new ArrayList();
+		var invalidControls = new List<ControlSetItem>();
 		foreach(ControlSetItem childItem in sortedChildControls)
 		{
 			try
@@ -565,7 +566,7 @@ public class ControlSetEditor : AbstractEditor
 		
 		return (result as Control);
 	}
-	private void UpdateSpecificControlProperties(object control, AbstractSchemaItem metadata)
+	private void UpdateSpecificControlProperties(object control, ISchemaItem metadata)
 	{
 		if(control is IOrigamMetadataConsumer)
 		{
@@ -658,7 +659,7 @@ public class ControlSetEditor : AbstractEditor
 		{
 			ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
 			
-			foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+			foreach(var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 			{
 				//addinng default properties to control set item
 				Type t = cntrl.GetType();
@@ -687,7 +688,7 @@ public class ControlSetEditor : AbstractEditor
 			return;
 		ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
 	
-		foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+		foreach(var bindItem in cntrSetItem.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
 		{
 			try
 			{
@@ -745,7 +746,7 @@ public class ControlSetEditor : AbstractEditor
 		if(!(cntrl.Tag is ControlSetItem))
 			return null;
 		ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
-		foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+		foreach(var propItem in cntrSetItem.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 		{
 			if(propItem.Name.ToUpper() == propertyName.ToUpper())
 				return propItem;
@@ -759,7 +760,7 @@ public class ControlSetEditor : AbstractEditor
 			bind 
 			? PropertyBindingInfo.CategoryConst 
 			: PropertyValueItem.CategoryConst;
-		foreach(AbstractPropertyValueItem item in controlSetItem.ChildItemsByType(strType))
+		foreach(var item in controlSetItem.ChildItemsByType<AbstractPropertyValueItem>(strType))
 		{
 			if(Equals(item.ControlPropertyItem?.PrimaryKey,propertyToFind.PrimaryKey))
 			{
@@ -805,10 +806,10 @@ public class ControlSetEditor : AbstractEditor
 			IDataEntity dataEntity = this.Panel.DataEntity;
 			Category panelCat2 = new Category();
 			panelCat2.DisplayName =dataEntity.Name;
-			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst).Count];
+			FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst).Count];
 			int i = 0;
 			FDToolboxItem fd_item;
-			ArrayList fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			var fields = dataEntity.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 			fields.Sort();
 			foreach(IDataEntityColumn column in fields)
 			{
@@ -841,7 +842,7 @@ public class ControlSetEditor : AbstractEditor
 		if(controls == null){ return null;}
 		FDToolboxItem[] tool = new FDToolboxItem[controls.ChildItems.Count];
 		int i=0;
-		ArrayList controlList = new ArrayList(controls.ChildItems);
+		List<ISchemaItem> controlList = controls.ChildItems.ToList();
 		controlList.Sort();
 		foreach(ControlItem item in controlList)
 		{
@@ -1052,18 +1053,18 @@ public class ControlSetEditor : AbstractEditor
 	private bool _initializingCombos = false;
 	private void SettingSelectedItemForDataSourceCombo()
 	{
-		AbstractSchemaItem schItem = null;
+		ISchemaItem schItem = null;
 		if(_dataSourceMode == eDataSource.DataStructure) 
 		{
-			schItem = this.Form.DataStructure as AbstractSchemaItem;
+			schItem = Form.DataStructure;
 		}
 		else
 		{
-			schItem =  this.Panel.DataEntity as AbstractSchemaItem;
+			schItem =  Panel.DataEntity;
 		}
 		if(schItem != null)
 		{
-			foreach(AbstractSchemaItem  item in cmbDataSources.Items)
+			foreach(ISchemaItem  item in cmbDataSources.Items)
 			{
 				if(schItem.PrimaryKey.Equals(item.PrimaryKey))
 				{
@@ -1117,14 +1118,14 @@ public class ControlSetEditor : AbstractEditor
 	{
 		if(type==eDataSource.DataStructure)
 		{
-			foreach(AbstractSchemaItem  item in _dsProvider.ChildItems)
+			foreach(ISchemaItem  item in _dsProvider.ChildItems)
 			{
 				cmbDataSources.Items.Add(item);						
 			}
 		}
 		else if(type==eDataSource.DataEntity)
 		{
-			foreach(AbstractSchemaItem item in _deProvider.ChildItems)
+			foreach(ISchemaItem item in _deProvider.ChildItems)
 			{
 				cmbDataSources.Items.Add(item);
 			}
@@ -1235,7 +1236,7 @@ public class ControlSetEditor : AbstractEditor
 			{
 				//control is new in designer we create in their tag new ControlSet Item
 				CreateNewControlSetItem(control,evtArgs.Component.Site.Name,null);
-				UpdateSpecificControlProperties(control, control.Tag as AbstractSchemaItem);
+				UpdateSpecificControlProperties(control, control.Tag as ISchemaItem);
 				// set the newly added TabControl as selected because it adds 2 TabPages immediately 
 				// after it is constructed and the selected component is the only way how to assign a parent 
                 if (control is TabControl)
@@ -1245,9 +1246,9 @@ public class ControlSetEditor : AbstractEditor
 			}
 			else
 			{
-				if( control.Parent !=null && (control.Parent as Control).Tag is ControlSetItem)
+				if( control.Parent !=null && control.Parent.Tag is ControlSetItem)
 				{
-					ControlSetItem parentItem=(control.Parent as Control).Tag as ControlSetItem;
+					ControlSetItem parentItem=control.Parent.Tag as ControlSetItem;
 					ControlSetItem cntrSet = control.Tag  as ControlSetItem;
 					
 					if(cntrSet.IsDeleted)
@@ -1429,7 +1430,7 @@ public class ControlSetEditor : AbstractEditor
 	private void txtName_TextChanged(object sender, System.EventArgs e)
 	{
 		string text = (sender as TextBox).Text;
-		AbstractSchemaItem item = this.ModelContent as AbstractSchemaItem;
+		ISchemaItem item = this.ModelContent;
 		if(item.Name != text)
 		{
 			this.IsDirty = true;
@@ -1509,7 +1510,7 @@ public class ControlSetEditor : AbstractEditor
 				// doesn't have any children so we create new panel as a copy of the main one
 				ISchemaItem defaultItem = ControlSet.MainItem;
 				foreach (ISchemaItem child in defaultItem.ChildItems) {
-					AbstractSchemaItem copy = child.Clone () as AbstractSchemaItem;
+					ISchemaItem copy = child.Clone () as ISchemaItem;
 					copy.SetExtensionRecursive (_schema.ActiveExtension);
 					_rootControl.ChildItems.Add(copy);
 				}

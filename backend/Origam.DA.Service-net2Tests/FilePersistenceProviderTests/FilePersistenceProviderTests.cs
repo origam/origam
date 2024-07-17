@@ -394,7 +394,7 @@ internal class TestItem : IFilePersistent
         remove { }
     }
     public IPersistenceProvider PersistenceProvider { get; set; }
-    public Key PrimaryKey { get; private set; }
+    public Key PrimaryKey { get; set; }
     public Guid Id
     {
         get => (Guid) PrimaryKey["Id"];

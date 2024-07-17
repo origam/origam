@@ -46,7 +46,7 @@ public static class TemplateTools
             DataSet slice = formData.Clone();
             DatasetTools.GetDataSlice(
                 slice, new List<DataRow> { parentRow },
-                null, false, new ArrayList());
+                null, false, new List<string>());
             try
             {
                 doc = DataDocumentFactory.New(slice);
@@ -82,7 +82,7 @@ public static class TemplateTools
     public static DataSet NewRecord(DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId)
     {
         XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
-        IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
+        IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
         IXsltEngine transform = AsTransform.GetXsltEngine(
             xslt.XsltEngineType, template.PersistenceProvider);
         IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, null, outputStructure, false);

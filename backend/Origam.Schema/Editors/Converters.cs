@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema;
 public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
@@ -39,10 +40,10 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 		GetStandardValues(ITypeDescriptorContext context)
 	{
-		AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-		AbstractSchemaItem root = reference.RootItem;
-		ArrayList parameters = root.Parameters;
-		ArrayList paramArray = new ArrayList(parameters.Count);
+		ISchemaItem reference = context.Instance as ISchemaItem;
+		ISchemaItem root = reference.RootItem;
+		List<SchemaItemParameter> parameters = root.Parameters;
+		var paramArray = new List<SchemaItemParameter>(parameters.Count);
         paramArray.Add(null);
 		foreach(SchemaItemParameter parameter in parameters)
 		{
@@ -63,12 +64,12 @@ public class ParameterReferenceConverter : System.ComponentModel.TypeConverter
 	{
 		if( value.GetType() == typeof(string) )
 		{
-			AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-			AbstractSchemaItem root = reference.RootItem;
+			ISchemaItem reference = context.Instance as ISchemaItem;
+			ISchemaItem root = reference.RootItem;
 			foreach(SchemaItemParameter item in root.Parameters)
 			{
 				if(item.Name == value.ToString())
-					return item as SchemaItemParameter;
+					return item;
 			}
 			return null;
 		}
@@ -89,10 +90,10 @@ public class SchemaItemAncestorConverter : System.ComponentModel.TypeConverter
 //		{
 //			if( value.GetType() == typeof(string) )
 //			{
-////				AbstractSchemaItem reference = context.Instance as AbstractSchemaItem;
-////				AbstractSchemaItem root = reference.RootItem;
+////				ISchemaItem reference = context.Instance as ISchemaItem;
+////				ISchemaItem root = reference.RootItem;
 ////
-////				SchemaItemCollection parameters = root.Parameters;
+////				ISchemaItemCollection parameters = root.Parameters;
 ////
 ////				foreach(SchemaItemParameter item in parameters)
 ////				{
@@ -123,10 +124,10 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 	{
 		SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 		
-		if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new ArrayList());
+		if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new List<object>());
 		
 		ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
-		ArrayList items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(ISchemaItem item in provider.ChildItems)
 		{
 			if(item.IsAbstract && (! item.PrimaryKey.Equals(ancestor.SchemaItem.PrimaryKey)))
@@ -150,13 +151,13 @@ public class AncestorItemConverter : System.ComponentModel.TypeConverter
 		{
 			SchemaItemAncestor ancestor = context.Instance as SchemaItemAncestor;
 		
-			if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new ArrayList());
+			if(ancestor.SchemaItem.ParentItem != null) return new StandardValuesCollection(new List<object>());
 		
 			ISchemaItemProvider provider = ancestor.SchemaItem.RootProvider;
 			foreach(ISchemaItem item in provider.ChildItems)
 			{
 				if(item.Name == value.ToString())
-					return item as ISchemaItem;
+					return item;
 			}
 			return null;
 		}

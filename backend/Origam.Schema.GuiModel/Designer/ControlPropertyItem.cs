@@ -24,6 +24,7 @@ using Origam.DA.ObjectPersistence;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 /// <summary>
@@ -84,7 +85,7 @@ public class ControlPropertyItem : AbstractSchemaItem
 	}
 	#endregion
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -92,11 +93,11 @@ public class ControlPropertyItem : AbstractSchemaItem
 			return ControlPropertyItem.CategoryConst;
 		}
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	[Browsable(false)]

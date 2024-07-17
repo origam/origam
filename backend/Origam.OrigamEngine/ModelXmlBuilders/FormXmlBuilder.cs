@@ -100,8 +100,8 @@ public class FormXmlBuilder
             form.SchemaExtensionId, form.Group);
 		control.PrimaryKey = new ModelElementKey(instanceId);
 		control.ControlItem = panel.PanelControl;
-		foreach(PropertyValueItem panelProperty in
-		    FormTools.GetItemFromControlSet(panel).ChildItemsByType(
+		foreach(var panelProperty in
+		    FormTools.GetItemFromControlSet(panel).ChildItemsByType<PropertyValueItem>(
                 PropertyValueItem.CategoryConst))
 		{
 			PropertyValueItem copy = panelProperty.Clone() as PropertyValueItem;
@@ -330,9 +330,9 @@ public class FormXmlBuilder
 		DataStructureColumn memoColumn = null;
 		// Panel controls
 		int lastPos = 5;
-		ArrayList mappedColumns = wqc.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
+		var mappedColumns = wqc.ChildItemsByType<WorkQueueClassEntityMapping>(WorkQueueClassEntityMapping.CategoryConst);
 		mappedColumns.Sort();
-		DataStructureEntity entity = wqc.WorkQueueStructure.Entities[0] as DataStructureEntity;
+		DataStructureEntity entity = wqc.WorkQueueStructure.Entities[0];
 		foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
 		{
 			// don't add RecordCreated twice
@@ -641,7 +641,7 @@ public class FormXmlBuilder
                 false, "OrigamRecord_parOrigamEntityId", 
                 column.IsrefLookupOrigamEntityIdNull() ? null : "'" + column.refLookupOrigamEntityId.ToString() + "'");
         }
-        ArrayList validActions = new ArrayList();
+        var validActions = new List<EntityUIAction>();
         UIActionTools.GetValidActions(
             formId: entityRow.Id,
             panelId: entityRow.Id,
@@ -977,7 +977,7 @@ public class FormXmlBuilder
 		}
 		return null;
 	}
-	private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
+	private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, ISchemaItem item, 
 		DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
 		bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null, string parentTabIndex = null)
 	{
@@ -985,11 +985,11 @@ public class FormXmlBuilder
 		IParameterService parameterService = ServiceManager.Services.GetService (typeof(IParameterService)) as IParameterService;
 		if (control.ControlItem.Name == "AsForm") {
 			// for the Form we find its root control and we continue
-			if(control.ChildItemsByType(ControlSetItem.CategoryConst).Count==0) 
+			if(control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst).Count==0) 
 			{ 
 				return false; 
 			}
-			item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
+			item = control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst) [0];
 			control = item as ControlSetItem;
 		}
 		if (!RenderTools.ShouldRender(control)) {
@@ -1121,7 +1121,7 @@ public class FormXmlBuilder
             if (table.PrimaryKey.Length == 0)
                 throw new Exception("Panel's data source has no primary key. Cannot render panel. " + control.Path);
             // get list of valid actions and set the panel multi-select-checkbox column visibility
-            ArrayList validActions = new ArrayList();
+            var validActions = new List<EntityUIAction>();
             bool hasMultipleSelection = UIActionTools.GetValidActions(
                 formId, control.ControlItem.PanelControlSet.Id, 
                 renderData.DisableActionButtons, 
@@ -1153,12 +1153,12 @@ public class FormXmlBuilder
         }
         // add config
         SetUserConfig (xmlOutput.Document, parentNode, renderData.DefaultConfiguration, control.Id, menuWorkflowId);
-		ArrayList sortedChildren = new ArrayList (item.ChildItemsByType (ControlSetItem.CategoryConst));
+        var sortedChildren = new List<ControlSetItem> (item.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst));
 		if (sortedChildren.Count > 0) {
 			sortedChildren.Sort (new ControlSetItemComparer ());
 			XmlElement children = xmlOutput.Document.CreateElement ("UIChildren");
 			parentNode.AppendChild (children);
-			foreach (AbstractSchemaItem child in sortedChildren) {
+			foreach (ControlSetItem child in sortedChildren) {
 				XmlElement el = xmlOutput.Document.CreateElement ("UIElement");
 				children.AppendChild (el);
 				if (!RenderUIElement (
@@ -1234,7 +1234,7 @@ public class FormXmlBuilder
 		}
 		return true;
 	}
-	private static AbstractSchemaItem GentControlItem(ControlSetItem control)
+	private static ISchemaItem GentControlItem(ControlSetItem control)
 	{
 		if (control.ControlItem.Ancestors.Count > 1)
 		{
@@ -1253,14 +1253,14 @@ public class FormXmlBuilder
 		}
 	}
 	private static void RenderActions(IParameterService parameterService, 
-        ArrayList validActions, XmlElement actionsElement, Hashtable inputParameters)
+		List<EntityUIAction> validActions, XmlElement actionsElement, Hashtable inputParameters)
     {
         // render action buttons
         foreach (EntityUIAction action in validActions)
         {
             Hashtable parameters = new Hashtable(inputParameters);
-            foreach (EntityUIActionParameterMapping mapping
-                in action.ChildItemsByType(
+            foreach (var mapping
+                in action.ChildItemsByType<EntityUIActionParameterMapping>(
                 EntityUIActionParameterMapping.CategoryConst))
             {
                 parameters.Add(mapping.Name, mapping.Field);
@@ -1335,13 +1335,12 @@ public class FormXmlBuilder
 		}
 	}
 	private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
-		XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
+		XmlElement parentElement, XmlElement propertiesElement, ISchemaItem item,
 		bool processContainers, bool processEditControls, bool forceReadOnly, string parentTabIndex = null)
 	{
 		if (string.IsNullOrWhiteSpace(parentTabIndex))
 		{
-			int itemTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
-				.Cast<PropertyValueItem>()
+			int itemTabIndex = item.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst)
 				.FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")?.IntValue ?? -1;
 			parentTabIndex = itemTabIndex.ToString();
 		}
@@ -1352,7 +1351,9 @@ public class FormXmlBuilder
 		XmlElement formExclusiveControlsElement = xmlOutput.Document.CreateElement("FormExclusiveControls");
 		parentElement.AppendChild(formExclusiveControlsElement);
 		// other properties
-		ArrayList childItems = new ArrayList(item.ChildItemsByType(ControlSetItem.CategoryConst));
+		var childItems = item
+			.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)
+			.ToList();
 		childItems.Sort(new ControlSetItemComparer());
 		foreach(ControlSetItem csi in childItems)
 		{
@@ -1392,7 +1393,7 @@ public class FormXmlBuilder
 				Guid dataConstantId = Guid.Empty;
 				string controlMember = "";
                 string customNumericFormat = "";
-				foreach(PropertyValueItem property in csi.ChildItemsByType(PropertyValueItem.CategoryConst))
+				foreach(var property in csi.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 				{
 					string stringValue = property.Value;
 					if(stringValue != null && DatasetGenerator.IsCaptionExpression(stringValue))
@@ -1464,13 +1465,13 @@ public class FormXmlBuilder
 						}
 					}
 				}
-				foreach(PropertyBindingInfo bindItem in csi.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+				foreach(var bindItem in csi.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
 				{
 					bindingMember = bindItem.Value;
 				}
 				var fieldType = csi.FirstParentOfType<PanelControlSet>()
 					?.DataEntity
-					?.ChildItems?.ToGeneric()
+					?.ChildItems
 					?.OfType<IDataEntityColumn>()
 					?.FirstOrDefault(child => child.Name == bindingMember)
 					?.FieldType ?? "";
@@ -1608,7 +1609,7 @@ public class FormXmlBuilder
 							// set parameters
 							XmlElement comboParametersElement = xmlOutput.Document.CreateElement("DropDownParameters");
 							propertyElement.AppendChild(comboParametersElement);
-							foreach(ColumnParameterMapping mapping in csi.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+							foreach(var mapping in csi.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 							{
 								XmlElement comboParamElement = xmlOutput.Document.CreateElement("ComboBoxParameterMapping");
 								comboParametersElement.AppendChild(comboParamElement);

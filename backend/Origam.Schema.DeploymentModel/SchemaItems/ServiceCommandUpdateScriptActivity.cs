@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -55,7 +56,7 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
             containerName: nameof(commandText),
             containingObject: this);
     }
-    public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Service);
 		base.GetExtraDependencies (dependencies);
@@ -74,7 +75,7 @@ public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ServiceId;
-			return (IService)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IService)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

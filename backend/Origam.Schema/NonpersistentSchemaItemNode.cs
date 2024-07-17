@@ -62,10 +62,10 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 	public BrowserNodeCollection ChildNodes()
 	{
 		var result = new BrowserNodeCollection();
-		AbstractSchemaItem parent;
+		ISchemaItem parent;
 		if(ParentNode is not SchemaItemAncestor ancestor)
 		{
-			parent = ParentNode as AbstractSchemaItem;
+			parent = ParentNode as ISchemaItem;
 		}
 		else
 		{
@@ -118,7 +118,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 	#region ISchemaItemFactory Members
 	public virtual T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
+		where T : class, ISchemaItem
 	{
 		T newItem;
 		if(ParentNode is ISchemaItemFactory)
@@ -147,7 +147,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 			{
 				return new Type[] { };
 			}
-			var types = new ArrayList();
+			var types = new List<Type>();
 			foreach(var type in parent.NewItemTypes)
 			{
 				var description = SchemaItemDescription(type);
@@ -156,7 +156,7 @@ public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 					types.Add(type);
 				}
 			}
-			return types.ToArray(typeof(Type)) as Type[];
+			return types.ToArray();
 		}
 	}
 	public virtual IList<string> NewTypeNames

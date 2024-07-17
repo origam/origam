@@ -31,6 +31,7 @@ using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Extensions;
+using Origam.Gui;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;

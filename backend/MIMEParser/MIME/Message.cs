@@ -59,6 +59,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace OpenPOP.MIMEParser;
@@ -68,7 +69,7 @@ namespace OpenPOP.MIMEParser;
 public class Message
 {
 	#region Member Variables
-	private ArrayList _attachments=new ArrayList();
+	private List<Attachment> _attachments=new ();
 	private string _rawHeader=null;
 	private string _rawMessage=null;
 	private string _rawMessageBody=null;
@@ -83,7 +84,7 @@ public class Message
 	private string[] _to=new string[0];
 	private string[] _cc=new string[0];
 	private string[] _bcc=new string[0];
-	private ArrayList _keywords=new ArrayList();
+	private List<string>  _keywords=new ();
 	private string _contentType=null;
 	private string _contentCharset=null;
 	private string _reportType=null;
@@ -100,7 +101,7 @@ public class Message
 	private string _attachmentboundry2=null;		
 	private bool _hasAttachment=false;
 	private string _dispositionNotificationTo=null;
-	private ArrayList _messageBody=new ArrayList();
+	private List<string> _messageBody=new ();
 	private string _basePath=null;
 	private bool _autoDecodeMSTNEF=false;
 	private Hashtable _customHeaders=new Hashtable();
@@ -145,7 +146,7 @@ public class Message
 	/// <summary>
 	/// message keywords
 	/// </summary>
-	public ArrayList Keywords
+	public List<string>  Keywords
 	{
 		get{return _keywords;}
 	}
@@ -210,7 +211,7 @@ public class Message
 	/// <summary>
 	/// Message Bodies
 	/// </summary>
-	public ArrayList MessageBody
+	public List<string> MessageBody
 	{
 		get{return _messageBody;}
 	}
@@ -238,7 +239,7 @@ public class Message
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public ArrayList Attachments
+	public List<Attachment> Attachments
 	{
 		get{return _attachments;}
 	}
@@ -854,7 +855,7 @@ public class Message
 			else
 			{
 				this.GetMessageBody(attItem.DecodeAsText());
-				da=Encoding.Default.GetBytes((string)this.MessageBody[this.MessageBody.Count-1]);
+				da=Encoding.Default.GetBytes(MessageBody[MessageBody.Count-1]);
 			}
 			return Utility.SaveByteContentToFile(strFileName,da);
 		}
@@ -999,7 +1000,7 @@ public class Message
 									,StringReader srdReader
 									,string strValue
 									,ref string strLine
-									,ArrayList alCollection)
+									,List<string> alCollection)
 	{
 		string strFormmated;
 		int intLines=0;

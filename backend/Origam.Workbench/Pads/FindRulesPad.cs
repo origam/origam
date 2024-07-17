@@ -45,7 +45,6 @@ public class FindRulesPad : AbstractResultPad
 	private SchemaBrowser _schemaBrowser;
     private ColumnHeader colPackage;
     private ColumnHeader colMessage;
-    ArrayList _results = new ArrayList();
 	public FindRulesPad()
 	{
 		// This call is required by the Windows Form Designer.
@@ -177,19 +176,18 @@ public class FindRulesPad : AbstractResultPad
 	public void ResetResults()
 	{
 		lvwResults.Items.Clear();
-		_results.Clear();
 		if(_schemaBrowser != null)
 		{
 			_schemaBrowser.RedrawContent();
 		}
 	}
-	public void DisplayResults(AbstractSchemaItem[] results)
+	public void DisplayResults(ISchemaItem[] results)
 	{
 		lvwResults.BeginUpdate();
 		ResetResults();
 		if(results.Length > 0)
 		{
-			foreach(AbstractSchemaItem item in results)
+			foreach(ISchemaItem item in results)
 			{
 				AddResult(item);
 			}
@@ -199,15 +197,15 @@ public class FindRulesPad : AbstractResultPad
 		lvwResults.EndUpdate();
 		_schemaBrowser.RedrawContent();
 	}
-    public void DisplayResults(List<Dictionary<IFilePersistent, string>> results)
+    public void DisplayResults(List<Dictionary<ISchemaItem, string>> results)
     {
         lvwResults.BeginUpdate();
         ResetResults();
         if (results.Capacity > 0)
         {
-            foreach (Dictionary<IFilePersistent, string> dict in results)
+            foreach (Dictionary<ISchemaItem, string> dict in results)
             {
-                AddResult((AbstractSchemaItem)(dict.First().Key), (dict.First().Value));
+                AddResult(dict.First().Key, dict.First().Value);
             }
             ViewFindRuleResultsPad cmd = new ViewFindRuleResultsPad();
             cmd.Run();
@@ -215,18 +213,11 @@ public class FindRulesPad : AbstractResultPad
         lvwResults.EndUpdate();
         _schemaBrowser.RedrawContent();
     }
-    public ArrayList Results
-	{
-		get
-		{
-			return _results;
-		}
-	}
-    private void AddResult(AbstractSchemaItem item)
+    private void AddResult(ISchemaItem item)
     {
         AddResult(item, null);
     }
-    private void AddResult(AbstractSchemaItem item,string text)
+    private void AddResult(ISchemaItem item,string text)
 	{
 		if (item == null)
 		{
@@ -258,7 +249,7 @@ public class FindRulesPad : AbstractResultPad
                 {
                     IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
                     FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-                    AbstractSchemaItem refreshitem = persprovider.RetrieveInstance(item.GetType(), item.PrimaryKey, true) as AbstractSchemaItem;
+                    ISchemaItem refreshitem = persprovider.RetrieveInstance(item.GetType(), item.PrimaryKey, true) as ISchemaItem;
                     _schemaBrowser.EbrSchemaBrowser.SelectItem(refreshitem);
                     ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                     cmd.Run();

@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using Origam.DA;
@@ -38,6 +39,7 @@ using Origam.Schema.RuleModel;
 using log4net;
 using System.Linq;
 using Origam.Extensions;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
 
 namespace Origam.Workflow;
@@ -65,8 +67,8 @@ public class WorkflowEngine : IDisposable
 	}
 
 	#region Properties
-	private readonly Hashtable taskResults = new();
-	public Hashtable TaskResults => taskResults;
+	private readonly Dictionary<Key, WorkflowStepResult> taskResults = new();
+	public Dictionary<Key, WorkflowStepResult> TaskResults => taskResults;
 
 	private Exception workflowException;
 	public Exception WorkflowException
@@ -174,7 +176,7 @@ public class WorkflowEngine : IDisposable
 		get
 		{
 			foreach (IContextStore resultContext 
-			         in WorkflowBlock.ChildItemsByType(
+			         in WorkflowBlock.ChildItemsByType<ContextStore>(
 				         ContextStore.CategoryConst))
 			{
 				if (resultContext.IsReturnValue)
@@ -257,7 +259,7 @@ public class WorkflowEngine : IDisposable
 		foreach (DictionaryEntry entry in parameters)
 		{
 			string parameterName = (string)entry.Key;
-			AbstractSchemaItem context = workflow.GetChildByName(
+			ISchemaItem context = workflow.GetChildByName(
 				parameterName, ContextStore.CategoryConst);
 			if (context == null)
 			{
@@ -266,7 +268,7 @@ public class WorkflowEngine : IDisposable
 					string.Format(
 						ResourceUtils.GetString(
 							"ErrorWorkflowParameterNotFound"), 
-						((AbstractSchemaItem)workflow).Path));
+						((ISchemaItem)workflow).Path));
 			}
 			workflowEngine.InputContexts.Add(
 				context.PrimaryKey, entry.Value);
@@ -305,7 +307,7 @@ public class WorkflowEngine : IDisposable
 	{
 		ProfilingTools.LogDuration(
 			logEntryType: "Iteration",
-			path: $"{((AbstractSchemaItem) WorkflowBlock).Path}/{iterationNumber}",
+			path: $"{((ISchemaItem) WorkflowBlock).Path}/{iterationNumber}",
 			id: workflowInstanceId.ToString(),
 			stoppedStopwatch: stopwatch);
 	}
@@ -354,7 +356,7 @@ public class WorkflowEngine : IDisposable
 			ruleEngine = RuleEngine.Create(
 				contextStores, TransactionId, tracingWorkflowId);
 			foreach (IContextStore contextStore 
-			         in WorkflowBlock.ChildItemsByType(
+			         in WorkflowBlock.ChildItemsByType<ContextStore>(
 				         ContextStore.CategoryConst))
 			{
 				if (log.IsDebugEnabled)
@@ -418,7 +420,7 @@ public class WorkflowEngine : IDisposable
 					{
 						tracingService.TraceStep(
 							workflowInstanceId: WorkflowInstanceId,
-							stepPath: (WorkflowBlock as AbstractSchemaItem)!
+							stepPath: WorkflowBlock
 							.Path,
 							stepId: Guid.Empty,
 							category: "Input Context",
@@ -442,10 +444,10 @@ public class WorkflowEngine : IDisposable
 			{
 				contextStores.Add(entry.Key, entry.Value);
 			}
-			ArrayList tasks = WorkflowBlock.ChildItemsByType(
+			List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 				AbstractWorkflowStep.CategoryConst);
 			// Set states of each task to "not run"
-			foreach (IWorkflowStep task in tasks)
+			foreach (AbstractWorkflowStep task in tasks)
 			{
 				SetStepStatus(task, WorkflowStepResult.Ready);
 			}
@@ -484,7 +486,7 @@ public class WorkflowEngine : IDisposable
 
 	private void ResumeWorkflow()
 	{
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		if (tasks.Count == 0)
 		{
@@ -541,15 +543,15 @@ public class WorkflowEngine : IDisposable
 		if (log.IsErrorEnabled)
 		{
 			log.Error(
-				$"{step?.GetType().Name} {(step as AbstractSchemaItem)?.Path} failed.");
+				$"{step?.GetType().Name} {step?.Path} failed.");
 		}
 		// Trace the error
 		if (IsTrace(step))
 		{
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId, 
-				stepPath: (step as AbstractSchemaItem)!.Path, 
-				stepId: (step as AbstractSchemaItem)!.Id, 
+				stepPath: step!.Path, 
+				stepId: step!.Id, 
 				category: "Process", 
 				subCategory: "Error", 
 				remark: null, 
@@ -558,13 +560,13 @@ public class WorkflowEngine : IDisposable
 				exception.Message);
 		}
 		// suppress all tasks that had not run yet and have no dependencies
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		for (int i = 0; i < tasks.Count; i++)
 		{
 			var siblingStep = tasks[i] as IWorkflowStep;
 			if ((siblingStep!.Dependencies.Count == 0) 
-			    && (WorkflowStepResult)taskResults[siblingStep.PrimaryKey] 
+			    && taskResults[siblingStep.PrimaryKey] 
 			    == WorkflowStepResult.Ready)
 			{
 				SetStepStatus(siblingStep, WorkflowStepResult.NotRun);
@@ -585,12 +587,11 @@ public class WorkflowEngine : IDisposable
 	/// <returns></returns>
 	private bool IsFailureHandled(IWorkflowStep failedStep)
 	{
-		ArrayList tasks = WorkflowBlock.ChildItemsByType(
+		List<AbstractWorkflowStep> tasks = WorkflowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst);
 		foreach (IWorkflowStep step in tasks)
 		{
 			var dependencyOnFailedStep = step.Dependencies
-				.Cast<WorkflowTaskDependency>()
 				.FirstOrDefault(
 					dependency => dependency.Task == failedStep);
 			if (dependencyOnFailedStep 
@@ -605,10 +606,10 @@ public class WorkflowEngine : IDisposable
 	private void HandleWorkflowException(Exception exception)
 	{
 		WorkflowException = exception;
-		var keys = new ArrayList(taskResults.Keys);
-		foreach (object key in keys)
+		var keys = taskResults.Keys.ToList();
+		foreach (Key key in keys)
 		{
-			if ((WorkflowStepResult)taskResults[key] 
+			if (taskResults[key] 
 			    == WorkflowStepResult.Ready)
 			{
 				taskResults[key] = WorkflowStepResult.NotRun;
@@ -629,7 +630,7 @@ public class WorkflowEngine : IDisposable
 			}
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId, 
-				stepPath: (WorkflowBlock as AbstractSchemaItem)?.Path, 
+				stepPath: WorkflowBlock?.Path, 
 				stepId: (Guid)WorkflowBlock.PrimaryKey["Id"], 
 				category: "Process", 
 				subCategory: "Error", 
@@ -655,7 +656,7 @@ public class WorkflowEngine : IDisposable
 
 	private WorkflowStepResult StepStatus(IWorkflowStep step)
 	{
-		return (WorkflowStepResult)taskResults[step.PrimaryKey];
+		return taskResults[step.PrimaryKey];
 	}
 
 	private void EvaluateEndRuleTimed(
@@ -683,7 +684,7 @@ public class WorkflowEngine : IDisposable
 		{
 			tracingService.TraceStep(
 				workflowInstanceId: WorkflowInstanceId,
-				stepPath: (step as AbstractSchemaItem)!.Path,
+				stepPath: step!.Path,
 				stepId: (Guid)step.PrimaryKey["Id"],
 				category: "End Rule",
 				subCategory: "Input",
@@ -712,9 +713,9 @@ public class WorkflowEngine : IDisposable
 	#region Private Methods
 	private bool WorkflowCompleted()
 	{
-		foreach (DictionaryEntry entry in taskResults)
+		foreach (var entry in taskResults)
 		{
-			var result = (WorkflowStepResult)entry.Value;
+			WorkflowStepResult result = entry.Value;
 			if (result 
 			    is WorkflowStepResult.Ready or WorkflowStepResult.Running)
 			{
@@ -735,7 +736,7 @@ public class WorkflowEngine : IDisposable
 		{
 			try
 			{
-				if (!taskResults.Contains(dependency.Task.PrimaryKey))
+				if (!taskResults.ContainsKey(dependency.Task.PrimaryKey))
 				{
 					throw new Exception(
 						"Workflow task dependency invalid. Task: " 
@@ -811,7 +812,7 @@ public class WorkflowEngine : IDisposable
 
 	private bool EvaluateStartRuleTimed(IWorkflowStep task)
 	{
-		string path = task is AbstractSchemaItem schemaItem 
+		string path = task is ISchemaItem schemaItem 
 			? schemaItem.Path 
 			: "";
 		return ProfilingTools.ExecuteAndLogDuration(
@@ -975,7 +976,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null) 
 			{
                 stepNameLog 
-	                = ", Step '" + (step as AbstractSchemaItem)!.Path + "'";
+	                = ", Step '" + step!.Path + "'";
 			}
 			log.Info("Merging context '" + contextName + "'" + stepNameLog);
 		}
@@ -985,7 +986,7 @@ public class WorkflowEngine : IDisposable
 			{
 				tracingService.TraceStep(
 					workflowInstanceId: WorkflowInstanceId,
-					stepPath: (step as AbstractSchemaItem)!.Path,
+					stepPath: step.Path,
 					stepId: (Guid)step.PrimaryKey["Id"],
 					category: "Merge Context",
 					subCategory: "Input",
@@ -1176,7 +1177,7 @@ public class WorkflowEngine : IDisposable
 			{
 				tracingService.TraceStep(
 					workflowInstanceId: WorkflowInstanceId,
-					stepPath: (step as AbstractSchemaItem)!.Path,
+					stepPath: step.Path,
 					stepId: (Guid)step.PrimaryKey["Id"],
 					category: "Merge Context",
 					subCategory: "Result",
@@ -1199,7 +1200,7 @@ public class WorkflowEngine : IDisposable
 				{
 					tracingService.TraceStep(
 						workflowInstanceId: WorkflowInstanceId,
-						stepPath: (step as AbstractSchemaItem)!.Path,
+						stepPath: step.Path,
 						stepId: (Guid)step.PrimaryKey["Id"],
 						category: "Rule Processing",
 						subCategory: "Result",
@@ -1213,7 +1214,7 @@ public class WorkflowEngine : IDisposable
 				{
 					tracingService.TraceStep(
 						workflowInstanceId: WorkflowInstanceId,
-						stepPath: (WorkflowBlock as AbstractSchemaItem)!.Path,
+						stepPath: WorkflowBlock.Path,
 						stepId: (Guid)WorkflowBlock.PrimaryKey["Id"],
 						category: "Rule Processing",
 						subCategory: "Result",
@@ -1231,7 +1232,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null)
 			{
 				stepNameLog 
-					= ", Step '" + (step as AbstractSchemaItem).Path + "'";
+					= ", Step '" + step.Path + "'";
 			}
 			string inputString = inputContext as string ?? "";
 			throw new Exception(
@@ -1245,7 +1246,7 @@ public class WorkflowEngine : IDisposable
 			if (step != null)
 			{
 				stepNameLog 
-					= ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
+					= ", Step '" + step.Path + "'";
 			}
 			log.Info(
 				"Finished merging context '" + contextName + "'" + stepNameLog);

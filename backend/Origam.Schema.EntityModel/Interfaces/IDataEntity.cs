@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
 public enum EntityAuditingType
@@ -36,11 +37,11 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Parameters of this data entity (in case the entity is query
 	/// </summary>
-	ArrayList EntityParameters {get;}
+	List<SchemaItemParameter> EntityParameters {get;}
 	/// <summary>
 	/// Collection of expressions which make up a primary key of this data entity
 	/// </summary>
-	ArrayList EntityPrimaryKey {get;}
+	List<IDataEntityColumn> EntityPrimaryKey {get;}
 	
 	/// <summary>
 	/// Returns true if complete data entity is read only
@@ -49,30 +50,30 @@ public interface IDataEntity : ISchemaItem
 	/// <summary>
 	/// Returns all columns of this data entity
 	/// </summary>
-	ArrayList EntityColumns {get;}
+	List<IDataEntityColumn> EntityColumns {get;}
 	/// <summary>
 	/// Returns all relations of this data entity
 	/// </summary>
-	ArrayList EntityRelations {get;}
+	List<EntityRelationItem> EntityRelations {get;}
 	/// <summary>
 	/// Returns all filters of this data entity
 	/// </summary>
-	ArrayList EntityFilters {get;}
+	List<EntityFilter> EntityFilters {get;}
 	/// <summary>
 	/// Returns all indexes of this data entity
 	/// </summary>
-	ArrayList EntityIndexes {get;}
+	List<DataEntityIndex> EntityIndexes {get;}
 	/// <summary>
 	/// Returns all security rules of this data entity
 	/// </summary>
-	ArrayList RowLevelSecurityRules {get;}
-	ArrayList ConditionalFormattingRules {get;}
-	ArrayList Constraints {get;}
+	List<AbstractEntitySecurityRule> RowLevelSecurityRules {get;}
+	List<EntityConditionalFormatting> ConditionalFormattingRules {get;}
+	List<DataEntityConstraint> Constraints {get;}
 	string Caption {get; set;}
 	EntityAuditingType AuditingType {get; set;}
 	IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }
-	ArrayList ChildEntitiesRecursive {get;}
-	ArrayList ChildEntities {get;}
+	List<IDataEntity> ChildEntitiesRecursive {get;}
+	List<IDataEntity> ChildEntities {get;}
 	IDataEntityColumn DescribingField {get; set;}
 	bool HasEntityAFieldDenyReadRule();
 }

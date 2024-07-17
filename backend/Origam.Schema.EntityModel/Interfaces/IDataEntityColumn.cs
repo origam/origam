@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.DA;
 
 namespace Origam.Schema.EntityModel;
@@ -56,9 +56,9 @@ public interface IDataEntityColumn : ISchemaItem, ICaptionSchemaItem
 	SchemaItemParameter DefaultValueParameter {get; set;}
 	EntityColumnXmlMapping XmlMappingType {get; set;}
 	OnCopyActionType OnCopyAction{get; set;}
-	ArrayList RowLevelSecurityRules{get;}
-	ArrayList ConditionalFormattingRules{get;}
-	ArrayList DynamicLabels{get;}
+	List<AbstractEntitySecurityRule> RowLevelSecurityRules{get;}
+	List<EntityConditionalFormatting> ConditionalFormattingRules{get;}
+	List<EntityFieldDynamicLabel> DynamicLabels{get;}
     DataEntityConstraint ForeignKeyConstraint { get;  }
     
     string FieldType { get; }

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.UI;
 /// <summary>
@@ -132,8 +133,7 @@ public interface IWorkbench
 	bool UnloadSchema();
 	bool IsConnected{get;}
 	int WorkflowFormsCount{get;}
-	void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters);
-	void ExportToExcel(string name, ArrayList list);
+	void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Dictionary<string, object> parameters);
     bool PopulateEmptyDatabaseOnLoad { get; set; }
 	void OpenForm(object owner,Hashtable parameters);
     void UpdateTitle();

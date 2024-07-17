@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Origam.UI;
@@ -51,7 +52,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
 		IDataEntity entity = Owner as IDataEntity;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         TableMappingItem table = new TableMappingItem();
         DataEntityIndex entityIndex = new DataEntityIndex();
         EntityRelationItem entityRelation = new EntityRelationItem();
@@ -99,7 +100,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
         // Create relation from the parent entity
         EntityRelationItem parentRelation = EntityHelper.CreateRelation(entity1, newEntity, true, true);
         GeneratedModelElements.Add(parentRelation);
-        ArrayList entity1keys = new ArrayList();
+        var entity1keys = new List<FieldMappingItem>();
         // Create reference columns
         foreach (IDataEntityColumn pk in entity1.EntityPrimaryKey)
         {
@@ -122,7 +123,7 @@ public class CreateChildEntityCommand : AbstractMenuCommand
             }
         }
         int i = 0;
-        foreach (IDataEntityColumn col in entity1keys)
+        foreach (FieldMappingItem col in entity1keys)
         {
             DataEntityIndexField field 
                 = index.NewItem<DataEntityIndexField>(
@@ -132,8 +133,8 @@ public class CreateChildEntityCommand : AbstractMenuCommand
             field.Persist();
             i++;
         }
-        newEntity.Persist();
-        (entity1 as AbstractSchemaItem).Persist();
+        newEntity.Persist(); 
+        entity1.Persist();
     }
     public override int GetImageIndex(string icon)
     {

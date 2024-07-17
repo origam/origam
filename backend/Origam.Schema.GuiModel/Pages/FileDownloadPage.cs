@@ -41,7 +41,7 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		this.ChildItemTypes.Add(typeof(PageParameterMapping));
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		if(this.Method != null) dependencies.Add(this.Method);
@@ -73,7 +73,7 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		get
 		{
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
 		}
 		set
 		{
@@ -89,7 +89,7 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
 		}
 		set
 		{
@@ -103,7 +103,7 @@ public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{

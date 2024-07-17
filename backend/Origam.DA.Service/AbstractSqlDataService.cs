@@ -37,6 +37,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Services;
 using Origam.Workbench.Services;
+using ArgumentOutOfRangeException = System.ArgumentOutOfRangeException;
 
 namespace Origam.DA.Service;
 #region Data Loader
@@ -278,7 +279,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			throw new NullReferenceException(
 				ResourceUtils.GetString("NoProviderForMS"));
 		}
-		ArrayList entities;
+		List<DataStructureEntity> entities;
 		DataStructure dataStructure = null;
 		DataStructureFilterSet filterSet = null;
 		DataStructureSortSet sortSet = null;
@@ -295,7 +296,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
                 else
                 {
-                    entities = new ArrayList();
+                    entities = new List<DataStructureEntity>();
                     foreach(DataStructureEntity dataStructureEntity 
                             in dataStructure.Entities)
                     {
@@ -319,7 +320,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
 			case QueryDataSourceType.DataStructureEntity:
 			{
-				entities = new ArrayList();
+				entities = new List<DataStructureEntity>();
                 filterSet = GetFilterSet(query.MethodId);
                 entities.Add(GetDataStructureEntity(query));
 				if(dataset == null)
@@ -498,9 +499,9 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		IDbConnection connection = transaction.Connection;
 		var currentEntityName = "";
 		var lastTableName = "";
-		ArrayList entities = dataStructure.Entities;
-		var changedTables = new ArrayList();
-        var deletedRowIds = new ArrayList();
+		List<DataStructureEntity> entities = dataStructure.Entities;
+		var changedTables = new List<string>();
+        var deletedRowIds = new List<Guid>();
 		var rowStates = new[]
 		{
 			DataRowState.Deleted, DataRowState.Added, DataRowState.Modified
@@ -514,7 +515,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				// for delete use reverse entity order
 				if(rowState == DataRowState.Deleted)
 				{
-					actualEntities = new ArrayList(entities.Count);
+					actualEntities = new List<DataStructureEntity>(entities.Count);
 					for(var i = entities.Count - 1; i >= 0; i--)
 					{
 						actualEntities.Add(entities[i]);
@@ -850,7 +851,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         DataStructure dataStructure, 
         IDbTransaction transaction, 
         IDbConnection connection, 
-		ArrayList deletedRowIds, 
+		List<Guid> deletedRowIds, 
         DataTable changedTable, 
         DataRowState rowState, 
         DataStructureEntity entity, 
@@ -925,9 +926,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		                // entity has a primary key Id taken from IOrigamEntity2
 		                foreach (DataRow row in changedTable.Rows)
 		                {
-			                deletedRowIds.Add(
-				                row[changedTable.PrimaryKey[0].ColumnName, 
-					                DataRowVersion.Original]);
+			                var id = (Guid)row[
+				                changedTable.PrimaryKey[0].ColumnName, 
+				                DataRowVersion.Original];
+			                deletedRowIds.Add(id);
 		                }
 	                }
 	                break;
@@ -1190,14 +1192,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
 				{
 					// make a sorted list of entities that corresponds to
 					// an output from SP
-					ArrayList entitiesOrdered;
+					List<DataStructureEntity> entitiesOrdered;
 					if(entityOrder == null)
 					{
 						entitiesOrdered = dataStructure.Entities;
 					}
 					else
 					{
-						entitiesOrdered = new ArrayList();
+						entitiesOrdered = new List<DataStructureEntity>();
 						foreach(string entityName in entityOrder.Split(';'))
 						{
 							var found = false;
@@ -1846,14 +1848,14 @@ public abstract class AbstractSqlDataService : AbstractDataService
         {
 	        case QueryDataSourceType.DataStructure:
 	        {
-                ArrayList entities;
+		        List<DataStructureEntity> entities;
                 if(string.IsNullOrEmpty(query.Entity))
                 {
                     entities = dataStructure.Entities;
                 }
                 else
                 {
-                    entities = new ArrayList();
+                    entities = new List<DataStructureEntity>();
                     foreach(DataStructureEntity dataStructureEntity 
                             in dataStructure.Entities)
                     {
@@ -1926,10 +1928,10 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	#region Compare Schema
 	
     internal abstract string GetAllTablesSql();
-	public override ArrayList CompareSchema(IPersistenceProvider provider)
+	public override List<SchemaDbCompareResult> CompareSchema(IPersistenceProvider provider)
 	{
-		var results = new ArrayList();
-        ArrayList schemaTables = GetSchemaTables(provider);
+		var results = new List<SchemaDbCompareResult>();
+		List<TableMappingItem> schemaTables = GetSchemaTables(provider);
         // tables
         Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 		var schemaColumnList = new Hashtable();
@@ -1978,7 +1980,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return results;
 	}
     private void DoCompareIndexExistingTables(
-        ArrayList results, ArrayList schemaTables, DataSet foreignKeys, 
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet foreignKeys, 
         DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2000,7 +2002,6 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 foreach(DataRow row in dbRows)
                 {
 	                bool found = table.Constraints
-		                .Cast<DataEntityConstraint>()
 		                .Where(constraint => 
 			                (constraint.Type == ConstraintType.ForeignKey) 
 			                && (constraint.ForeignEntity is TableMappingItem))
@@ -2027,8 +2028,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
                 }
             }
             // we compare what is missing in the database
-            foreach (DataEntityConstraint constraint 
-                     in table.Constraints)
+            foreach (DataEntityConstraint constraint in table.Constraints)
             {
                 CompareConstraintMissingInDatabase(constraint, table,
 	                foreignKeys, columns, results);
@@ -2037,7 +2037,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     private void CompareConstraintMissingInDatabase(
         DataEntityConstraint constraint, TableMappingItem table,
-        DataSet foreignKeys, DataSet columns, ArrayList results)
+        DataSet foreignKeys, DataSet columns, List<SchemaDbCompareResult> results)
     {
 		if((constraint.Type != ConstraintType.ForeignKey) 
 		   || !(constraint.ForeignEntity is TableMappingItem) 
@@ -2145,7 +2145,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     }
     internal abstract string GetSqlFk();
     private void DoCompareIndex(
-        ArrayList results, ArrayList schemaTables, DataSet indexFields)
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, DataSet indexFields)
     {
         foreach(TableMappingItem table in schemaTables)
         {
@@ -2177,7 +2177,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            // if there is a different number of fields,
 	            // we consider them non-equal without even checking
 	            // the details
-	            if(rows.Length != index.ChildItemsByType(
+	            if(rows.Length != index.ChildItemsByType<DataEntityIndexField>(
 		               DataEntityIndexField.CategoryConst).Count)
 	            {
 		            different = true;
@@ -2185,7 +2185,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	            if(!different)
 	            {
 		            foreach(DataEntityIndexField indexField 
-		                    in index.ChildItemsByType(
+		                    in index.ChildItemsByType<DataEntityIndexField>(
 			                    DataEntityIndexField.CategoryConst))
 		            {
 			            rows = indexFields.Tables[0].Select(
@@ -2233,13 +2233,13 @@ public abstract class AbstractSqlDataService : AbstractDataService
     internal abstract Hashtable GetDbIndexList(
         DataSet indexes, Hashtable schemaTableList);
     internal abstract Hashtable GetSchemaIndexListGenerate(
-        ArrayList schemaTables, Hashtable dbTableList, 
+	    List<TableMappingItem> schemaTables, Hashtable dbTableList, 
         Hashtable schemaIndexListAll);
     
     internal abstract string GetSqlIndexFields();
     internal abstract string GetSqlIndexes();
     private void DoCompareDatabaseInModel(
-        ArrayList results, Hashtable schemaTableList, 
+        List<SchemaDbCompareResult> results, Hashtable schemaTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
         var abstractSqlCommandGenerator 
@@ -2358,7 +2358,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 		return stringBuilder.ToString().ToUpper();
 	}
     private void DoCompareModelInDatabase(
-        ArrayList results, ArrayList schemaTables, Hashtable dbTableList, 
+        List<SchemaDbCompareResult> results, List<TableMappingItem> schemaTables, Hashtable dbTableList, 
         Hashtable schemaColumnList, DataSet columns)
     {
         foreach(TableMappingItem table in schemaTables)
@@ -2449,7 +2449,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
         return dbTableList;
     }
     
-    private Hashtable GetSchemaTableList(ArrayList schemaTables)
+    private Hashtable GetSchemaTableList(List<TableMappingItem> schemaTables)
     {
         var schemaTableList = new Hashtable();
         foreach(TableMappingItem table in schemaTables)
@@ -2461,12 +2461,12 @@ public abstract class AbstractSqlDataService : AbstractDataService
         }
         return schemaTableList;
     }
-    private ArrayList GetSchemaTables(IPersistenceProvider provider)
+    private List<TableMappingItem> GetSchemaTables(IPersistenceProvider provider)
     {
-        List<AbstractSchemaItem> entityList = provider
-            .RetrieveListByCategory<AbstractSchemaItem>(
+        List<ISchemaItem> entityList = provider
+            .RetrieveListByCategory<ISchemaItem>(
 	            AbstractDataEntity.CategoryConst);
-        var schemaTables = new ArrayList();
+        var schemaTables = new List<TableMappingItem>();
         foreach(var tableMappingItem 
                 in entityList.OfType<TableMappingItem>())
         {
@@ -2485,7 +2485,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             + "_" 
             + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
     }
-	private void DoCompare(ArrayList results, Hashtable dbList, 
+	private void DoCompare(List<SchemaDbCompareResult> results, Hashtable dbList, 
         Hashtable schemaList, DataSet columns, 
         DbCompareResultType direction, Type schemaItemType,
         IPersistenceProvider provider)
@@ -2506,7 +2506,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 			}
         }
 	}
-    private void CompareMissingInModel(ArrayList results, Hashtable dbList, 
+    private void CompareMissingInModel(List<SchemaDbCompareResult> results, Hashtable dbList, 
         Hashtable schemaList, DataSet columns, Type schemaItemType, 
         IPersistenceProvider provider)
     {
@@ -2577,7 +2577,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
             results.Add(result);
         }
     }
-    private void CompareMissingInDatabase(ArrayList results,
+    private void CompareMissingInDatabase(List<SchemaDbCompareResult> results,
         Hashtable dbList, Hashtable schemaList, Type schemaItemType)
     {
         var sqlGenerator 
@@ -2653,7 +2653,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 	#endregion
     
 	#region Private Methods
-	private void AcceptChanges(DataSet dataset, ArrayList changedTables, 
+	private void AcceptChanges(DataSet dataset, List<string> changedTables, 
 		DataStructureQuery query, string transactionId, 
 		IPrincipal userProfile)
 	{
@@ -2693,7 +2693,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
 								throw new Exception(ResourceUtils
 									.GetString("NoDataRowAfterUpdate"));
 							}
-							var detachedColumns = new ArrayList();
+							var detachedColumns = new List<string>();
 							foreach(var column in entity.Columns.Where(
 								        column => !(column.Field 
 									        is FieldMappingItem)))
@@ -2755,7 +2755,7 @@ public abstract class AbstractSqlDataService : AbstractDataService
     private IDataEntityColumn GetField(Guid fieldId)
     {
         return PersistenceProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem),
+            typeof(ISchemaItem),
             new ModelElementKey(fieldId)
             ) as IDataEntityColumn;
     }

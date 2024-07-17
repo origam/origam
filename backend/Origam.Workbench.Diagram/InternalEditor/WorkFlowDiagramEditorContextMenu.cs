@@ -79,8 +79,8 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
          	}
             addNewCommand.ItemCreated += (sender, newItem) =>
          	{ 
-                AbstractSchemaItem sourceItem = RetrieveItem(edge.Edge.Source);
-                AbstractSchemaItem targetItem = RetrieveItem(edge.Edge.Target);
+                ISchemaItem sourceItem = RetrieveItem(edge.Edge.Source);
+                ISchemaItem targetItem = RetrieveItem(edge.Edge.Target);
                 taskRunner.AddDependencyTask(
 	                independentItem: (IWorkflowStep)newItem, 
 	                dependentItem: targetItem, 
@@ -147,7 +147,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 	}
 	
 	private bool IsObjectSelectionInconsistent(
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		bool objectSelectionIsInconsistent =
 			schemaItemUnderMouse != null &&
@@ -158,7 +158,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 	}
 	
 	private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse,
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		if (objectUnderMouse == null) return false;
 		if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf)) return false;
@@ -192,7 +192,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		return nodeId == nodeSelector.SelectedNodeId;
 	}
 	private ToolStripMenuItem MakeAddAfterItem(DNode dNodeUnderMouse,
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		ToolStripMenuItem addAfterMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After);
 		addAfterMenu.Image = ImageRes.icon_new;
@@ -218,7 +218,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		return addAfterMenu;
 	}
 	private static ToolStripMenuItem MakeActionsItem(
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		ToolStripMenuItem actionsMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Actions);
 		actionsMenu.Image = ImageRes.icon_actions;
@@ -230,7 +230,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		return actionsMenu;
 	}
 	private ToolStripMenuItem MakeNewItem(DNode dNodeUnderMouse,
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		ToolStripMenuItem newMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_New);
 		newMenu.Image = ImageRes.icon_new;
@@ -238,7 +238,6 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		if (schemaItemUnderMouse is ServiceMethodCallTask)
 		{
 			schemaItemUnderMouse.ChildItems
-				.ToGeneric()
 				.Where(item => !(item is WorkflowTaskDependency))
 				.ForEach(schemaItem =>
 				{
@@ -253,7 +252,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 			AsMenuCommand menuItem = new AsMenuCommand(Strings.WorkFlowDiagramEditor_ContextMenuNode_New, schemaItemUnderMouse);
 			var builder = new SchemaItemEditorsMenuBuilder(true);
 			menuItem.PopulateMenu(builder);
-			menuItem.SubItems.AddRange(menuItem.DropDownItems);
+			menuItem.SubItems.AddRange(menuItem.DropDownItems.Cast<object>());
 			new AsContextMenu(WorkbenchSingleton.Workbench).AddSubItem(menuItem);
 			menuItem.ShowDropDown();
 			newMenu.DropDownItems.AddRange(menuItem.DropDownItems
@@ -288,7 +287,7 @@ public partial class WorkFlowDiagramEditor : IDiagramEditor
 		return hideDataFlowItem;
 	}
 	private ToolStripMenuItem MakeDeleteItem(DNode dNodeUnderMouse,
-		AbstractSchemaItem schemaItemUnderMouse)
+		ISchemaItem schemaItemUnderMouse)
 	{
 		var deleteMenuItem = new ToolStripMenuItem();
 		deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Delete;

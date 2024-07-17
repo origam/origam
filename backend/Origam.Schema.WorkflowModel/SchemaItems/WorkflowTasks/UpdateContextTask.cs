@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -36,11 +37,11 @@ public class UpdateContextTask : AbstractWorkflowStep
 	public UpdateContextTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public UpdateContextTask(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(
 			this, dependencies, ValueXPath);
@@ -135,7 +136,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 				Id = OutputContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -170,7 +171,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 				Id = XPathContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -204,7 +205,7 @@ public class UpdateContextTask : AbstractWorkflowStep
 			return null;
 		}
 		foreach(DataStructureColumn dataStructureColumn 
-		        in Entity.ChildItemsByType(
+		        in Entity.ChildItemsByType<DataStructureColumn>(
 			        DataStructureColumn.CategoryConst))
 		{
 			if(dataStructureColumn.Name == FieldName)

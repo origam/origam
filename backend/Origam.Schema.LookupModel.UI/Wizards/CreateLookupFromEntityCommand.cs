@@ -52,7 +52,7 @@ public class CreateLookupFromEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         DataServiceDataLookup dd = new DataServiceDataLookup();
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
         Stack stackPage = new Stack();
         stackPage.Push(PagesList.Finish);

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using Origam.DA;
@@ -94,12 +95,12 @@ public class StateMachineService : AbstractService, IStateMachineService
             {
                 // original value is null, meaning that this is a new row
                 // we only allow the initial state to be selected, no other
-                ArrayList resultList = new ArrayList();
+                var resultList = new List<object>();
                 foreach (object val in sm.InitialStateValues(data))
                 {
                     resultList.Add(val);
                 }
-                return (object[])resultList.ToArray(typeof(object));
+                return resultList.ToArray();
             }
             else if (sm.DynamicOperationsLookup != null)
             {
@@ -123,7 +124,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                         dynData.Xml.FirstChild.AppendChild(el);
                     }
                 }
-                ArrayList a = new ArrayList();
+                var a = new List<object>();
                 a.Add(currentStateValue);
                 a.AddRange(sm.DynamicOperations(dynData));
                 return a.ToArray();
@@ -138,7 +139,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                 }
                 else
                 {
-                    ArrayList resultList = new ArrayList();
+                    var resultList = new List<object>();
                     resultList.Add(currentStateValue);
                     while (state.ParentItem is StateMachineState | state.ParentItem is StateMachine)
                     {
@@ -155,7 +156,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                         }
                         state = state.ParentItem as StateMachineState;
                     }
-                    return (object[])resultList.ToArray(typeof(object));
+                    return resultList.ToArray();
                 }
             }
         }
@@ -180,7 +181,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     {
         if (changedTable.ExtendedProperties.Contains("EntityId"))
         {
-            ArrayList stateColumns = new ArrayList();
+            var stateColumns = new List<DataColumn>();
             Guid entityId = (Guid)changedTable.ExtendedProperties["EntityId"];
             foreach (DataColumn column in changedTable.Columns)
             {
@@ -221,15 +222,15 @@ public class StateMachineService : AbstractService, IStateMachineService
             }
         }
     }
-    public void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId)
+    public void OnDataChanged(DataSet data, List<string> changedTables, string transactionId)
     {
-        ArrayList rows = new ArrayList();
+        var rows = new List<StateMachineQueueEntry>();
         foreach (string tableName in changedTables)
         {
             DataTable changedTable = data.Tables[tableName];
             if(changedTable.ExtendedProperties.Contains("EntityId"))
             {
-                ArrayList stateColumns = new ArrayList();
+                var stateColumns = new List<DataColumn>();
                 Guid entityId = (Guid)changedTable.ExtendedProperties["EntityId"];
                 foreach(DataColumn column in changedTable.Columns)
                 {
@@ -274,7 +275,7 @@ public class StateMachineService : AbstractService, IStateMachineService
             ExecuteStatelessEvents(entityId, StateMachineServiceStatelessEventType.RecordCreated, row, transactionId);
         }
     }
-    private void ProcessRecordStateTransition(DataRow row, ArrayList stateColumns, Guid entityId, string transactionId)
+    private void ProcessRecordStateTransition(DataRow row, List<DataColumn> stateColumns, Guid entityId, string transactionId)
     {
         if (row.RowState != DataRowState.Deleted)
         {
@@ -561,8 +562,8 @@ public class StateMachineService : AbstractService, IStateMachineService
     }
     public bool ExecuteStatelessEvents(Guid entityId, StateMachineServiceStatelessEventType eventType, DataRow dataRow, string transactionId)
     {
-        ArrayList stateMachines = GetMachines(entityId, false);
-        ArrayList eventsSorted = new ArrayList();
+        List<StateMachine> stateMachines = GetMachines(entityId, false);
+        var eventsSorted = new List<StateMachineEvent>();
         object rowKey = null;
         object[] keys = DatasetTools.PrimaryKey(dataRow);
         if (keys.Length == 1) rowKey = keys[0];
@@ -729,7 +730,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     /// For deletes this function will always return True because on delete operation basically 
     /// all fields were changed, no matter if there are any dependencies or not. Also if there are
     /// no dependencies True is always returned.</returns>
-    private bool FieldsChanged(ArrayList fields, DataRow row, StateMachineServiceStatelessEventType type)
+    private bool FieldsChanged(List<StateMachineEventFieldDependency> fields, DataRow row, StateMachineServiceStatelessEventType type)
     {
         // if there are no field dependencies all fields changed
         if (fields.Count == 0) return true;
@@ -791,7 +792,7 @@ public class StateMachineService : AbstractService, IStateMachineService
             return sm;
         }
     }
-    private ArrayList GetMachines(Guid entityId, bool throwException)
+    private List<StateMachine> GetMachines(Guid entityId, bool throwException)
     {
         StateMachineSchemaItemProvider stateMachines = (ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService).GetProvider(typeof(StateMachineSchemaItemProvider)) as StateMachineSchemaItemProvider;
         if (stateMachines == null)
@@ -800,7 +801,7 @@ public class StateMachineService : AbstractService, IStateMachineService
         }
         else
         {
-            ArrayList result = stateMachines.GetMachines(entityId);
+            List<StateMachine> result = stateMachines.GetMachines(entityId);
             if (result.Count == 0 && throwException) throw new ArgumentOutOfRangeException("entityId", entityId, ResourceUtils.GetString("ErrorStateMachineNotFound"));
             return result;
         }
@@ -951,14 +952,14 @@ public class StateMachineService : AbstractService, IStateMachineService
     {
         return ServiceManager.Services.GetService<SchemaService>()
             .GetProvider<WorkQueueClassSchemaItemProvider>()
-            .ChildItemsByType("WorkQueueClass").Cast<WorkQueueClass>()
+            .ChildItemsByType<WorkQueueClass>("WorkQueueClass")
             .Any(workQueueClass => workQueueClass.EntityId == entityId);
     }
     private static bool AnyStateMachineBasedOnEntity(Guid entityId)
     {
         return ServiceManager.Services.GetService<SchemaService>()
             .GetProvider<StateMachineSchemaItemProvider>()
-            .ChildItemsByType("WorkflowStateMachine").Cast<StateMachine>()
+            .ChildItemsByType<StateMachine>("WorkflowStateMachine")
             .Any(stateMachine => stateMachine.EntityId == entityId);
     }
     private static WorkQueueClass WQClass(string name)
@@ -982,7 +983,7 @@ public class StateMachineService : AbstractService, IStateMachineService
     }
     private static WorkQueueData.WorkQueueRow[] WorkQueues(WorkQueueData workQueueList, StateMachineServiceStatelessEventType eventType, Guid entityId, DataRow row, bool isRemoval)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<WorkQueueData.WorkQueueRow>();
         DatasetGenerator dg = new DatasetGenerator(true);
         foreach (WorkQueueData.WorkQueueRow wqr in workQueueList.WorkQueue.Rows)
         {
@@ -1084,7 +1085,7 @@ public class StateMachineService : AbstractService, IStateMachineService
                 }
             }
         }
-        return result.ToArray(typeof(WorkQueueData.WorkQueueRow)) as WorkQueueData.WorkQueueRow[];
+        return result.ToArray();
     }
     private void StateMachineService_Initialize(object sender, EventArgs e)
     {

@@ -22,38 +22,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Rule;
 
-namespace Origam.Server;
+namespace Origam.Gui;
 /// <summary>
 /// Wrapper class to be used as return object to inform client about changes in data.
 /// </summary>
 public class ChangeInfo
 {
-    #region Private Fields
-    private string entity = string.Empty;
-    private string requestingGrid;
-    private Operation operation;
-    private object objectId = string.Empty;
-    private object wrappedObject = null;
-    private RowSecurityState _state;
-    #endregion
     #region Public Properties
     /// <summary>
     /// Entity id.
     /// In Flex client it will be used as a part of data source name (in form of entityName_rawDataHolder).
     /// </summary>
-    public string Entity
-    {
-        get { return entity; }
-        set { entity = value; }
-    }
+    public string Entity { get; set; } = string.Empty;
+
     /// <summary>
     /// Grid id. It is necessary to have this info to be able to proper react on ADD operation.
     /// </summary>
-    public string RequestingGrid
-    {
-        get { return requestingGrid; }
-        set { requestingGrid = value; }
-    }
+    public string RequestingGrid { get; set; }
 
     /// <summary>
     /// Operation. Possible values:
@@ -65,32 +50,20 @@ public class ChangeInfo
     ///  3 - FORM NEEDS REFRESH
     ///  4 - CURRENT RECORD NEEDS RELOAD
     /// </summary>
-    public Operation Operation
-    {
-        get { return operation; }
-        set { operation = value; }
-    }
+    public Operation Operation { get; set; }
+
     /// <summary>
     /// Id of the object. Used only in case of DELETE operation.
     /// </summary>
-    public object ObjectId
-    {
-        get { return objectId; }
-        set { objectId = value; }
-    }
+    public object ObjectId { get; set; } = string.Empty;
+
     /// <summary>
     /// New object/new state of the object. Used in cases of ADD or UPDATE operation.
     /// </summary>
-    public object WrappedObject
-    {
-        get { return wrappedObject; }
-        set { wrappedObject = value; }
-    }
-    public RowSecurityState State
-    {
-        get { return _state; }
-        set { _state = value; }
-    }
+    public object WrappedObject { get; set; } = null;
+
+    public RowSecurityState State { get; set; }
+
     #endregion
     public static ChangeInfo SavedChangeInfo()
     {
@@ -124,7 +97,7 @@ public class ChangeInfo
     }
     protected bool Equals(ChangeInfo other)
     {
-        return entity == other.entity && operation == other.operation && Equals(objectId, other.objectId);
+        return Entity == other.Entity && Operation == other.Operation && Equals(ObjectId, other.ObjectId);
     }
     public override bool Equals(object obj)
     {
@@ -144,6 +117,6 @@ public class ChangeInfo
     }
     public override int GetHashCode()
     {
-        return HashCode.Combine(entity, (int)operation, objectId);
+        return HashCode.Combine(Entity, (int)Operation, ObjectId);
     }
 }

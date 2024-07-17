@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 [SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]

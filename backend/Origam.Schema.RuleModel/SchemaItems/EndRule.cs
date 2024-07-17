@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.RuleModel;
 [SchemaItemDescription("Validation Rule", "validation-rule.png")]

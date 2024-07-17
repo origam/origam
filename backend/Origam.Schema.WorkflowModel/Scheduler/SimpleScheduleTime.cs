@@ -57,7 +57,7 @@ public class SimpleScheduleTime : AbstractScheduleTime
 	}
 	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
-		return ((AbstractSchemaItem)newNode).RootProvider == RootProvider;
+		return ((ISchemaItem)newNode).RootProvider == RootProvider;
 	}
 	#endregion
 	#region Properties

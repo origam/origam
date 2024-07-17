@@ -13,6 +13,7 @@
  * 
  **************************************************************************/
 using System;
+using System.Collections.Generic;
 
 namespace Schedule;
 /// <summary>Single event represents an event which only fires once.</summary>
@@ -23,7 +24,7 @@ public class SingleEvent : IScheduledItem
 		_EventTime = eventTime;
 	}
 	#region IScheduledItem Members
-	public void AddEventsInInterval(DateTime Begin, DateTime End, System.Collections.ArrayList List)
+	public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
 	{
 		if (Begin <= _EventTime && End > _EventTime)
 			List.Add(_EventTime);

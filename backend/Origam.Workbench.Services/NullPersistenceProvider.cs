@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema;
 
 namespace Origam.Workbench.Services;
 public class NullPersistenceProvider : IPersistenceProvider
@@ -138,9 +139,9 @@ public class NullPersistenceProvider : IPersistenceProvider
     {
         return new List<string>();
     }
-    public ArrayList GetReference(Key key)
+    public List<T> GetReference<T>(Key key)
     {
-        return new ArrayList();
+        return new List<T>();
     }
     public bool IsOfType<T>(Guid id)
     {

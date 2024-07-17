@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.RuleModel;
 /// <summary>
@@ -38,14 +40,14 @@ public class XPathRule : AbstractRule
 	public XPathRule() : base() {}
 	public XPathRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public XPathRule(Key primaryKey) : base(primaryKey)	{}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 		base.GetExtraDependencies (dependencies);

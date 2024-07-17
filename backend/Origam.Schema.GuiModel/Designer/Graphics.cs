@@ -61,7 +61,7 @@ public class Graphics : AbstractSchemaItem
 			containingObject: this);
 	}
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

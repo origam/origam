@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -52,7 +54,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.BaseEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -76,7 +78,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.RelatedEntityColumnId;
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -91,7 +93,7 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -106,12 +108,12 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 			return EntityRelationColumnPairItem.CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		(this.BaseEntityField as AbstractSchemaItem).GetParameterReferences (this.BaseEntityField as AbstractSchemaItem, list);
-		(this.RelatedEntityField as AbstractSchemaItem).GetParameterReferences (this.RelatedEntityField as AbstractSchemaItem, list);
+		BaseEntityField.GetParameterReferences(BaseEntityField, list);
+		RelatedEntityField.GetParameterReferences(RelatedEntityField, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.BaseEntityField);
 		dependencies.Add(this.RelatedEntityField);
@@ -132,11 +134,11 @@ public class EntityRelationColumnPairItem : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Schedule;
 public enum EventTimeBase
@@ -66,7 +67,7 @@ public class ScheduledTime : IScheduledItem
 			return 0;
 		return int.Parse(Arr[i]);
 	}
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+	public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
 	{
 		DateTime Next = NextRunTime(Begin, true);
 		

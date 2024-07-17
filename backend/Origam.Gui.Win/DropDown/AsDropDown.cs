@@ -24,6 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using Origam.DA;
 using Origam.Schema;
@@ -540,7 +541,7 @@ namespace Origam.Gui.Win
 				if(!_itemsLoaded)
 					return;
 
-				ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+				var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
 
 				foreach(ColumnParameterMapping mapping in col)
 				{
@@ -591,7 +592,7 @@ namespace Origam.Gui.Win
 			
 			parameterMappings.Clear();
 			
-			foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+			foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 			{
 				if(! mapInfo.IsDeleted)
 				{
@@ -972,8 +973,8 @@ namespace Origam.Gui.Win
 
 		#region IOrigamMetadataConsumer Members
 
-		private AbstractSchemaItem _origamMetadata;
-		public AbstractSchemaItem OrigamMetadata
+		private ISchemaItem _origamMetadata;
+		public ISchemaItem OrigamMetadata
 		{
 			get
 			{
@@ -981,7 +982,7 @@ namespace Origam.Gui.Win
 
 				try
 				{
-					return _origamMetadata.PersistenceProvider.RetrieveInstance(_origamMetadata.GetType(), _origamMetadata.PrimaryKey, true) as AbstractSchemaItem;
+					return _origamMetadata.PersistenceProvider.RetrieveInstance(_origamMetadata.GetType(), _origamMetadata.PrimaryKey, true) as ISchemaItem;
 				}
 				catch
 				{

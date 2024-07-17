@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -134,11 +135,11 @@ public class TableMappingItem : AbstractDataEntity
 		}
 	}
 	[Browsable(false)]
-	public override ArrayList EntityPrimaryKey
+	public override List<IDataEntityColumn> EntityPrimaryKey
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<IDataEntityColumn>();
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
 				if(column.IsPrimaryKey && column is FieldMappingItem)
@@ -182,7 +183,7 @@ public class TableMappingItem : AbstractDataEntity
 		persistenceProvider.EndTransaction();
 		return converted;
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.LocalizationRelation);
 		

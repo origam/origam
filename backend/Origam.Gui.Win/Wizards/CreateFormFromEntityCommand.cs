@@ -55,7 +55,7 @@ public class CreateFormFromEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         DataStructure dd = new DataStructure();
         PanelControlSet pp = new PanelControlSet();
         FormControlSet ff = new FormControlSet();
@@ -139,7 +139,7 @@ public class CreateCompleteUICommand : AbstractMenuCommand
 	{
         IDataEntity entity = Owner as IDataEntity;
         List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         DataStructure ds = new DataStructure();
         PanelControlSet panel1 = new PanelControlSet();
         FormControlSet frmSet = new FormControlSet();
@@ -245,7 +245,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
         DataStructure ds = new DataStructure();
         FormControlSet frmSet = new FormControlSet();
         List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst); 
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
         list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));
         Stack stackPage = new Stack();
@@ -323,7 +323,7 @@ public class CreateFormFromPanelCommand : AbstractMenuCommand
 	public override void Run()
 	{
         FormControlSet form = Owner as FormControlSet;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         FormReferenceMenuItem form1 = new FormReferenceMenuItem();
         list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
         Stack stackPage = new Stack();
@@ -399,7 +399,7 @@ public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	public override void Run()
 	{
 		DataConstant constant = Owner as DataConstant;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         DataConstantReferenceMenuItem form1 = new DataConstantReferenceMenuItem();
         list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
         Stack stackPage = new Stack();
@@ -472,7 +472,7 @@ public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
 	public override void Run()
 	{
 		Schema.WorkflowModel.Workflow wf = Owner as Schema.WorkflowModel.Workflow;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         WorkflowReferenceMenuItem workflowReference = new WorkflowReferenceMenuItem();
         list.Add(new ListViewItem(workflowReference.GetType().SchemaItemDescription().Name, workflowReference.Icon));
         Stack stackPage = new Stack();

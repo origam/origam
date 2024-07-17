@@ -24,6 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Schema.GuiModel;
@@ -191,7 +192,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 		{
 			if(!_itemsLoaded)
 				return;
-			ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst).ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
 				mapping.IsDeleted = true;
@@ -208,9 +209,9 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 			return;
 		if(this.DataLookup != null)
 		{
-			foreach(DictionaryEntry entry in this.DataLookup.ParameterReferences)
+			foreach(var entry in this.DataLookup.ParameterReferences)
 			{
-				string parameterName = entry.Key.ToString();
+				string parameterName = entry.Key;
 				ColumnParameterMapping mapping = _origamMetadata
 					.NewItem<ColumnParameterMapping>(
 						_origamMetadata.SchemaExtensionId, null);
@@ -227,7 +228,7 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 		
 		ParameterMappings.Clear();
 		
-		foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			if(! mapInfo.IsDeleted)
 			{
@@ -237,8 +238,8 @@ public class TagInput : BaseCaptionControl, IOrigamMetadataConsumer, ILookupCont
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
+	private ISchemaItem _origamMetadata;
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

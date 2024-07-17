@@ -48,7 +48,7 @@ public class ModelXmlResolver : XmlResolver
 //			{
 		Guid g = new Guid(absoluteUri.Authority.ToString());
 		IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		AbstractSchemaItem item = persistence.SchemaProvider.RetrieveInstance(typeof(XslTransformation), new ModelElementKey(g)) as AbstractSchemaItem;
+		ISchemaItem item = persistence.SchemaProvider.RetrieveInstance(typeof(XslTransformation), new ModelElementKey(g)) as ISchemaItem;
 		string xsl;
 		if(item is XslTransformation)
 		{

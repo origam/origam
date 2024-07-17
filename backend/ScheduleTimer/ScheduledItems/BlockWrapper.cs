@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Schedule;
 /// <summary>
@@ -29,7 +30,7 @@ public class BlockWrapper : IScheduledItem
 		_Begin = new ScheduledTime(StrBase, BeginOffset);
 		_End = new ScheduledTime(StrBase, EndOffset);
 	}
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+	public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
 	{
 		DateTime Next = NextRunTime(Begin, true);
 		while (Next < End)

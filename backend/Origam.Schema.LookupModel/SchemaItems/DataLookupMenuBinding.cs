@@ -21,12 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.MenuModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.LookupModel;
 /// <summary>
@@ -43,7 +45,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	public DataLookupMenuBinding() : base() {}
 	public DataLookupMenuBinding(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public DataLookupMenuBinding(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -51,10 +53,10 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.MenuItem);
-		AbstractSchemaItem menu = this.MenuItem;
+		ISchemaItem menu = this.MenuItem;
 		while(menu.ParentItem != null)
 		{
 			menu = menu.ParentItem;
@@ -70,11 +72,11 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
@@ -93,7 +95,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MenuItemId));
+			return (AbstractMenuItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.MenuItemId));
 		}
 		set
 		{
@@ -126,7 +128,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
+			return this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SelectionLookupId)) as AbstractDataLookup;
 		}
 		set
 		{
@@ -143,7 +145,7 @@ public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
+			return this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SelectionConstantId)) as DataConstant;
 		}
 		set
 		{

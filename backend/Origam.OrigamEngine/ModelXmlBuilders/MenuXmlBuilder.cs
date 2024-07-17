@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -57,7 +59,7 @@ public class MenuXmlBuilder
         return doc;
     }
     private static void RenderNode(
-        XmlDocument doc, XmlNode parentNode, AbstractSchemaItem item)
+        XmlDocument doc, XmlNode parentNode, ISchemaItem item)
     {
         AbstractMenuItem menuItem = item as AbstractMenuItem;
         bool process;
@@ -203,10 +205,9 @@ public class MenuXmlBuilder
         }
         if (newNode != null)
         {
-            ArrayList sortedList = new ArrayList(item.ChildItems);
-            sortedList.Sort(new Origam.Schema.MenuModel
-                .AbstractMenuItem.MenuItemComparer());
-            foreach (AbstractSchemaItem child in sortedList)
+            List<ISchemaItem> sortedList = item.ChildItems.ToList();
+            sortedList.Sort(new AbstractMenuItem.MenuItemComparer());
+            foreach (ISchemaItem child in sortedList)
             {
                 RenderNode(doc, newNode, child);
             }
@@ -255,8 +256,8 @@ public class MenuXmlBuilder
     {
         width = 0;
         height = 0;
-        foreach (PropertyValueItem prop 
-            in panel.ChildItems[0].ChildItemsByType(
+        foreach (var prop 
+            in panel.ChildItems[0].ChildItemsByType<PropertyValueItem>(
             PropertyValueItem.CategoryConst))
         {
             switch (prop.ControlPropertyItem.Name)

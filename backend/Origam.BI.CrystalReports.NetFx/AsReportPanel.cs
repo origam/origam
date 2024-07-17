@@ -21,12 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 //using System.Reflection;
 using System.Data;
+using System.Linq;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.UI;
@@ -281,7 +283,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		_fillingParameterCache = true;
 		ParameterMappings.Clear();
 		
-		foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapInfo in controlItem.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
 			if(! mapInfo.IsDeleted)	// skip any deleted mapping infos
 			{
@@ -340,7 +342,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			if(this._origamMetadata == null)
 				return null;
-			return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
+			return (CrystalReport)this._origamMetadata.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
 		}
 		set
 		{
@@ -383,7 +385,8 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		{
 			if(!_itemsLoaded)
 				return;
-			ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
+			var col = _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst)
+				.ToList();
 			foreach(ColumnParameterMapping mapping in col)
 			{
 				mapping.IsDeleted = true;
@@ -398,9 +401,9 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	{
 		if(this.CrystalReport == null) return;
 		// create any missing parameter mappings
-		foreach(DictionaryEntry entry in this.CrystalReport.ParameterReferences)
+		foreach(var entry in this.CrystalReport.ParameterReferences)
 		{
-			string parameterName = entry.Key.ToString();
+			string parameterName = entry.Key;
 			if(this._origamMetadata.GetChildByName(parameterName) == null)
 			{
 				ColumnParameterMapping mapping = _origamMetadata
@@ -410,7 +413,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 			}
 		}
 		// create any missing report's own parameters
-		foreach(SchemaItemParameter param in this.CrystalReport.ChildItemsByType(SchemaItemParameter.CategoryConst))
+		foreach(var param in CrystalReport.ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst))
 		{
 			if(this._origamMetadata.GetChildByName(param.Name) == null)
 			{
@@ -420,17 +423,17 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 				mapping.Name = param.Name;
 			}
 		}
-		ArrayList toDelete = new ArrayList();
+		var toDelete = new List<ISchemaItem>();
 		// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
-		foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
+		foreach(var mapping in _origamMetadata.ChildItemsByType<ColumnParameterMapping>(ColumnParameterMapping.CategoryConst))
 		{
-			if(! this.CrystalReport.ParameterReferences.Contains(mapping.Name) & 
+			if(! this.CrystalReport.ParameterReferences.ContainsKey(mapping.Name) & 
 				this.CrystalReport.GetChildByName(mapping.Name) == null)
 			{
 				toDelete.Add(mapping);
 			}
 		}
-		foreach(AbstractSchemaItem mapping in toDelete)
+		foreach(ISchemaItem mapping in toDelete)
 		{
 			mapping.IsDeleted = true;
 		}
@@ -616,7 +619,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
+	private ISchemaItem _origamMetadata;
 	private void pnlToolbar_ReportRefreshRequested(object sender, System.EventArgs e)
 	{
 		this.RefreshReport();
@@ -648,7 +651,7 @@ public class AsReportPanel : System.Windows.Forms.UserControl, IAsDataConsumer, 
 		pnlToolbar.MiddleStartColor = OrigamColorScheme.TitleInactiveMiddleStartColor;
 		pnlToolbar.MiddleEndColor = OrigamColorScheme.TitleInactiveMiddleEndColor;
 	}
-	public AbstractSchemaItem OrigamMetadata
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

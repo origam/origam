@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -41,7 +42,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-		AbstractSchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
+		ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
 		if(currentItem is FormReferenceMenuItem)
 		{
 			selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
@@ -50,10 +51,10 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		{
 			selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 		}
-		if(selectionDialogPanel == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList fields = selectionDialogPanel.DataEntity.EntityColumns;
-		ArrayList array = new ArrayList(fields.Count);
-		foreach(AbstractSchemaItem item in fields)
+		if(selectionDialogPanel == null) return new StandardValuesCollection(new List<object>());
+		List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+		var array = new List<IDataEntityColumn>(fields.Count);
+		foreach(IDataEntityColumn item in fields)
 		{
 			array.Add(item);
 		}
@@ -72,7 +73,7 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 		if( value.GetType() == typeof(string) )
 		{
 			Origam.Schema.GuiModel.PanelControlSet selectionDialogPanel = null;
-			AbstractSchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
+			ISchemaItem currentItem = (context.Instance as SelectionDialogParameterMapping).ParentItem;
 			if(currentItem is FormReferenceMenuItem)
 			{
 				selectionDialogPanel = (currentItem as FormReferenceMenuItem).SelectionDialogPanel;
@@ -82,11 +83,11 @@ public class MenuSelectionDialogFieldConverter : TypeConverter
 				selectionDialogPanel = (currentItem as ReportReferenceMenuItem).SelectionDialogPanel;
 			}
 			if(selectionDialogPanel == null) return null;
-			ArrayList fields = selectionDialogPanel.DataEntity.EntityColumns;
-			foreach(AbstractSchemaItem item in fields)
+			List<IDataEntityColumn> fields = selectionDialogPanel.DataEntity.EntityColumns;
+			foreach(var item in fields)
 			{
 				if(item.Name == value.ToString())
-					return item as IDataEntityColumn;
+					return item;
 			}
 			return null;
 		}

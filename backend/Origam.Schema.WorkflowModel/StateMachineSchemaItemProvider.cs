@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.WorkflowModel;
 public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
@@ -29,7 +30,7 @@ public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
 	#region Public Methods
 	public StateMachine GetMachine(Guid entityId, Guid fieldId)
 	{
-        var result = new ArrayList();
+        var result = new List<StateMachine>();
 		var childItems = ChildItems;
 		foreach(StateMachine stateMachine in childItems)
 		{
@@ -41,19 +42,19 @@ public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
 		}
         if(result.Count == 1)
         {
-            return (StateMachine)result[0];
+            return result[0];
         }
         if(result.Count > 1)
         {
-            var stateMachine = (StateMachine)result[0];
+            var stateMachine = result[0];
             throw new Exception(
 	            $"More than 1 state machine defined on an entity {stateMachine.Entity.Name} field {stateMachine.Field.Name}. Only one state machine can be defined.");
         }
         return null;
 	}
-    public ArrayList GetMachines(Guid entityId)
+    public List<StateMachine> GetMachines(Guid entityId)
     {
-        var result = new ArrayList();
+        var result = new List<StateMachine>();
         var childItems = ChildItems;
         foreach (StateMachine stateMachine in childItems)
         {

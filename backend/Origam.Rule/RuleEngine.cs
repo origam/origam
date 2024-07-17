@@ -42,6 +42,7 @@ using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench;
 using System.Data.Common;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Rule;
 /// <summary>
@@ -373,7 +374,7 @@ public class RuleEngine
 		}
 		return exceptions;
 	}
-	public object Evaluate(AbstractSchemaItem item)
+	public object Evaluate(ISchemaItem item)
 	{
 		if(item is DataStructureReference)
 		{
@@ -633,7 +634,7 @@ public class RuleEngine
 		/********************************************************************
 		 * Row bound rules
 		 ********************************************************************/
-		ArrayList sortedTables = GetSortedTables(data.DataSet);
+		List<DataTable> sortedTables = GetSortedTables(data.DataSet);
 		try
 		{
 			foreach(DataTable table in sortedTables)
@@ -689,9 +690,9 @@ public class RuleEngine
 			}
 		}
 	}
-	private ArrayList GetSortedTables(DataSet dataset)
+	private List<DataTable> GetSortedTables(DataSet dataset)
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<DataTable>();
 		foreach(DataTable table in dataset.Tables)
 		{
 			if(table.ParentRelations.Count == 0)
@@ -701,7 +702,7 @@ public class RuleEngine
 		}
 		return result;
 	}
-	private void GetChildTables(DataTable table, ArrayList list)
+	private void GetChildTables(DataTable table, List<DataTable> list)
 	{
 		foreach(DataRelation childRelation in table.ChildRelations)
 		{
@@ -782,10 +783,10 @@ public class RuleEngine
 	}
 	private void EnqueueAllRows(IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 	{
-		ArrayList tables = GetSortedTables(data.DataSet);
+		List<DataTable> tables = GetSortedTables(data.DataSet);
 		for(int i=tables.Count-1; i >= 0; i--)
 		{
-			foreach(DataRow row in ((DataTable)tables[i]).Rows)
+			foreach(DataRow row in tables[i].Rows)
 			{
 				EnqueueEntry(row, data, ruleSet, columns);
 			}
@@ -810,7 +811,7 @@ public class RuleEngine
 	}
 	private void EnqueueParentRows(DataRow childRow, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns, DataRow[] parentRows)
 	{
-		ArrayList rows = new ArrayList();
+		var rows = new List<DataRow>();
 		if(parentRows == null)
 		{
 			foreach(DataRelation parentRelation in childRow.Table.ParentRelations)
@@ -932,7 +933,7 @@ public class RuleEngine
 		var outputPad = GetOutputPad();
 	    if(ruleSet != null)
 		{
-			ArrayList rules;
+			List<DataStructureRule> rules;
 			if(columnChanged == null)
 			{
 				rules = ruleSet.Rules(rowChanged.Table.TableName);
@@ -942,7 +943,7 @@ public class RuleEngine
 					if(col.ExtendedProperties.Contains("Id"))
 					{
 						Guid fieldId = (Guid)col.ExtendedProperties["Id"];
-						ArrayList r = ruleSet.Rules(col.Table.TableName, fieldId, isFromRuleQueue);
+						List<DataStructureRule> r = ruleSet.Rules(col.Table.TableName, fieldId, isFromRuleQueue);
 						foreach(DataStructureRule rule in r)
 						{
 							if(rule.Entity.Name.Equals(rowChanged.Table.TableName))
@@ -994,7 +995,7 @@ public class RuleEngine
 		// check for lookup fields changes
 		if(columnChanged == null)
 		{
-			ArrayList copy = new ArrayList(columnsChanged);
+			var copy = columnsChanged.ToArray<DataColumn>();
 			foreach(DataColumn col in copy)
 			{
                 if (col.Table.TableName == rowChanged.Table.TableName)
@@ -1068,10 +1069,10 @@ public class RuleEngine
         
 		return changed;
 	}
-	private bool ProcessRulesInternalFinish(ArrayList rules, IDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
+	private bool ProcessRulesInternalFinish(List<DataStructureRule> rules, IDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
 	{
 		bool changed = false;
-		ArrayList myRules = new ArrayList(rules);
+		var myRules = new List<DataStructureRule>(rules);
 		foreach(DataStructureRule rule in myRules)
 		{
 			if(log.IsDebugEnabled)
@@ -1273,8 +1274,8 @@ public class RuleEngine
 				}
 				else
 				{
-					ArrayList changedColumns = new ArrayList();
-					ArrayList changedTargetColumns = new ArrayList(changedColumns.Count);
+					var changedColumns = new List<DataColumn>();
+					var changedTargetColumns = new List<DataColumn>(changedColumns.Count);
 					foreach(DataColumn col in resultRow.Table.Columns)
 					{
 						if(rowChanged.Table.Columns.Contains(col.ColumnName) && ! (resultRow[col].Equals(rowChanged[col.ColumnName])))
@@ -1385,8 +1386,8 @@ public class RuleEngine
 	public EntityFormatting Formatting(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
 		EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
-		ArrayList entityRules = new ArrayList(); 
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		var entityRules = new List<EntityConditionalFormatting>(); 
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		
 		if(fieldId == Guid.Empty)
 		{
@@ -1456,9 +1457,9 @@ public class RuleEngine
 	}
 	public string DynamicLabel(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 	{
-		ArrayList rules = new ArrayList(); 
+		var rules = new List<EntityFieldDynamicLabel>(); 
 		
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		IDataEntityColumn field = entity.GetChildById(fieldId) as IDataEntityColumn;
 		if(field == null) return null;	// lookup fields in a data structure
 		rules.AddRange(field.DynamicLabels);
@@ -1496,12 +1497,12 @@ public class RuleEngine
 			return true;
 		}
 	}
-    public ArrayList GetDisabledActions(
+    public List<string> GetDisabledActions(
         XmlContainer originalData, XmlContainer actualData, Guid entityId, Guid formId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<string>();
         IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), new ModelElementKey(entityId))
+            typeof(ISchemaItem), new ModelElementKey(entityId))
             as IDataEntity;
         foreach(EntityUIAction action in entity.ChildItemsByTypeRecursive(
             EntityUIAction.CategoryConst))
@@ -1581,9 +1582,9 @@ public class RuleEngine
 		Guid entityId, Guid fieldId, bool isNewRow,
 		RuleEvaluationCache ruleEvaluationCache = null)
 	{
-		ArrayList rules = new ArrayList();
+		var rules = new List<AbstractEntitySecurityRule>();
 			
-		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+		IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
 		// field-level rules
 		IDataEntityColumn column = null;
 		if (field != null)
@@ -1596,7 +1597,7 @@ public class RuleEngine
 			// which does not point to a real entity field id
 			if(column != null)
 			{
-				if (column.RowLevelSecurityRules.Count == 0)
+				if (!column.RowLevelSecurityRules.Any())
 				{
 					// shortcircuit processing of row level security rules
 					// for a column without it's own rules 
@@ -1614,7 +1615,7 @@ public class RuleEngine
 			}
 		}
 		// entity-level rules
-		ArrayList entityRules = entity.RowLevelSecurityRules;
+		List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
 		if(entityRules.Count > 0)
 		{
 			rules.AddRange(entityRules);
@@ -1728,17 +1729,17 @@ public class RuleEngine
 			}
 			else
 			{
-				throw new ArgumentException("Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: " + ((AbstractSchemaItem)rule).Path);
+				throw new ArgumentException("Rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Rule: " + ((ISchemaItem)rule).Path);
 			}
 		}
 		return true;
 	}
 	public bool IsExportAllowed(Guid entityId)
 	{
-		var rules = new ArrayList();
+		var rules = new List<AbstractEntitySecurityRule>();
 		var entity = _persistence.SchemaProvider
             .RetrieveInstance<IDataEntity>(entityId);
-		ArrayList entityRules = entity.RowLevelSecurityRules;
+		List<AbstractEntitySecurityRule> entityRules = entity.RowLevelSecurityRules;
 		if (entityRules.Count > 0)
 		{
 			rules.AddRange(entityRules);
@@ -1956,7 +1957,7 @@ public class XPathNodeList : XmlNodeList
 	public XPathNodeList(XPathNodeIterator iterator)
 	{
 		this.iterator = iterator;
-		this.list = new ArrayList();
+		this.list = new List<XmlNode>();
 		this.done = false;
 	}
 	public override IEnumerator GetEnumerator()
@@ -2018,7 +2019,7 @@ public class XPathNodeList : XmlNodeList
 	// Fields
 	private bool done;
 	private XPathNodeIterator iterator;
-	private ArrayList list;
+	private List<XmlNode> list;
 	private static readonly object[] nullparams;
 }
 internal class XmlNodeListEnumerator : IEnumerator
@@ -2064,13 +2065,13 @@ internal class XmlNodeListEnumerator : IEnumerator
 }
 #endregion
 #region IComparer Members
-public class ProcessRuleComparer : IComparer
+public class ProcessRuleComparer : IComparer<DataStructureRule>
 {
-	int IComparer.Compare(Object x, Object y)
+	public int Compare(DataStructureRule x, DataStructureRule y)
 	{
-		if ((x as DataStructureRule) != null && (y as DataStructureRule) != null)
+		if (x  != null && y  != null)
 		{
-			return (x as DataStructureRule).Priority.CompareTo((y as DataStructureRule).Priority);
+			return x.Priority.CompareTo(y.Priority);
 		}
 		else
 		{

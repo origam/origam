@@ -30,13 +30,12 @@ namespace Origam.Schema.EntityModel;
 /// </summary>
 public class XsltDependencyHelper
 {
-	public static void GetDependencies(AbstractSchemaItem item, ArrayList dependencies, string text)
+	public static void GetDependencies(ISchemaItem item, List<ISchemaItem> dependencies, string text)
 	{
 		if(text == null) return;
         IPersistenceProvider persistenceprovider = item.PersistenceProvider;
 		// references
 		int found = 0;
-		ArrayList references = new ArrayList();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf("model://", i);
@@ -45,7 +44,7 @@ public class XsltDependencyHelper
 				string id = text.Substring(found + 8, 36);
                 try
                 {
-                    AbstractSchemaItem reference = persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
+                    ISchemaItem reference = persistenceprovider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(new Guid(id))) as ISchemaItem;
                     dependencies.Add(reference);
                 }
                 catch (System.FormatException)
@@ -59,7 +58,7 @@ public class XsltDependencyHelper
 		}
 		// constants
 		found = 0;
-		ArrayList constants = new ArrayList();
+		var constants = new List<string>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":GetConstant('", i);
@@ -87,7 +86,7 @@ public class XsltDependencyHelper
         
         // strings
         found = 0;
-		ArrayList strings = new ArrayList();
+		var strings = new List<string>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":GetString('", i);
@@ -114,7 +113,7 @@ public class XsltDependencyHelper
 		}
 		// lookups
 		found = 0;
-		ArrayList lookups = new ArrayList();
+		var lookups = new List<Guid>();
 		for (int i = 0; i < text.Length; i++) 
 		{
 			found = text.IndexOf(":LookupValue('", i);
@@ -149,7 +148,7 @@ public class XsltDependencyHelper
 		}
         foreach (Guid l in lookups)
 		{
-            if (persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(l)) is AbstractSchemaItem lookup)
+            if (persistenceprovider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(l)) is ISchemaItem lookup)
             {
                 dependencies.Add(lookup);
             }

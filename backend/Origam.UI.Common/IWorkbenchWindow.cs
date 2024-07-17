@@ -46,14 +46,6 @@ public interface IWorkbenchWindow
 		get;
 	}
 	
-	/// <summary>
-	/// returns null if no sub view contents are attached.
-	/// </summary>
-	ArrayList SubViewContents 
-	{
-		get;
-	}
-	
 	IBaseViewContent ActiveViewContent 
 	{
 		get;

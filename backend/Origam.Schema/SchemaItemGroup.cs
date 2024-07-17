@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
 using Origam.DA.Common.ObjectPersistence.Attributes;
+using Origam.Schema.ItemCollection;
 using InvalidCastException = System.InvalidCastException;
 
 namespace Origam.Schema;
@@ -75,7 +76,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
     }
 	[Browsable(false)]
-	public AbstractSchemaItem ParentItem { get; set; }
+	public ISchemaItem ParentItem { get; set; }
     [XmlParent(typeof(SchemaItemGroup))]
     public Guid ParentGroupId;
 	[Browsable(false)]
@@ -123,9 +124,9 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 			? parentItem : GetRootGroup(parentItem.ParentGroup);
 	}
 	
-	private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
+	private List<ISchemaItem> GetChildItemsRecursive(ISchemaItem parentItem)
 	{
-		var items = new ArrayList();
+		var items = new List<ISchemaItem>();
 		foreach(var childItem in parentItem.ChildItems)
 		{
 			items.Add(childItem);
@@ -133,7 +134,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		}
 		return items;
 	}
-	public AbstractSchemaItem GetChildByName(string name, string itemType)
+	public ISchemaItem GetChildByName(string name, string itemType)
 	{
 		foreach(var item in ChildItems)
 		{
@@ -216,37 +217,37 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 	public string Icon => "37_folder-3.png";
 	#endregion
 	#region ISchemaItemProvider Members
-	public SchemaItemCollection ChildItems
+	public ISchemaItemCollection ChildItems
 	{
 		get
 		{
 			// We look for all child items of our parent schema item that have this group
 			// We browse the collection because it has all the items correctly set
 			var provider = ParentItem ?? RootProvider;
-			var schemaItemCollection = new SchemaItemCollection(
+			var ISchemaItemCollection = SchemaItemCollection.Create(
 				PersistenceProvider, provider, ParentItem);
-			foreach(AbstractSchemaItem item 
+			foreach(ISchemaItem item 
 			        in provider.ChildItemsByGroup(this))
 			{
-				schemaItemCollection.Add(item);
+				ISchemaItemCollection.Add(item);
 			}
-			return schemaItemCollection;
+			return ISchemaItemCollection;
 		}
 	}
-	public ArrayList ChildItemsByType(string itemType)
+	public List<T> ChildItemsByType<T>(string itemType) where T : ISchemaItem
 	{
-		var list = new ArrayList();
+		var list = new List<T>();
 		// We look for all child items of our parent schema item that have this group
 		// We browse the collection because it has all the items correctly set
-		foreach(AbstractSchemaItem item in ParentItem.ChildItemsByGroup(this))
+		foreach(ISchemaItem item in ParentItem.ChildItemsByGroup(this))
 		{
-			list.Add(item);
+			list.Add((T)item);
 		}
 		return list;
 	}
-	public ArrayList ChildItemsByGroup(SchemaItemGroup group)
+	public List<ISchemaItem> ChildItemsByGroup(SchemaItemGroup group)
 	{
-		var list = new ArrayList();
+		var list = new List<ISchemaItem>();
 		foreach(var item in ChildItems)
 		{
 			if((item.Group == null && group == null) ||
@@ -263,7 +264,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 	}
 	public bool HasChildItems => ChildItems.Count > 0;
 	public bool HasChildItemsByType(string itemType) 
-		=> ChildItemsByType(itemType).Count > 0;
+		=> ChildItemsByType<ISchemaItem>(itemType).Count > 0;
 	public bool HasChildItemsByGroup(SchemaItemGroup group) 
 		=> ChildItemsByGroup(group).Count > 0;
 	public List<SchemaItemGroup> ChildGroups
@@ -298,11 +299,11 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
         }
     }
     public ISchemaItemProvider RootProvider { get; set; } = null;
-	public ArrayList ChildItemsRecursive
+	public List<ISchemaItem> ChildItemsRecursive
 	{
 		get
 		{
-			var items = new ArrayList();
+			var items = new List<ISchemaItem>();
 			foreach(var item in ChildItems)
 			{
 				items.Add(item);
@@ -317,7 +318,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
     }
 	#endregion
 	#region ISchemaItemFactory Members
-	public ArrayList ChildItemTypes => new(NewItemTypes);
+	public List<Type> ChildItemTypes => new(NewItemTypes);
 	[Browsable(false)]
 	public Type[] NewItemTypes
 	{
@@ -366,7 +367,7 @@ public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider,
 		};
 	public virtual T NewItem<T>(
 		Guid schemaExtensionId, SchemaItemGroup group) 
-		where T : AbstractSchemaItem
+		where T : class, ISchemaItem
 	{
 		T newItem;
 		if(ParentItem == null)

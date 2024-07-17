@@ -21,8 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.TestModel;
 public enum TestCaseStepType
@@ -42,7 +44,7 @@ public class TestCaseStep : AbstractSchemaItem
 	public TestCaseStep() : base() {}
 	public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -68,16 +70,16 @@ public class TestCaseStep : AbstractSchemaItem
 			return "0";
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.ChecklistRule);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -106,7 +108,7 @@ public class TestCaseStep : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ChecklistRuleId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as TestChecklistRule;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as TestChecklistRule;
 		}
 		set
 		{

@@ -41,7 +41,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 	private SchemaBrowser _schemaBrowser;
     private ColumnHeader colPackageName;
     private ColumnHeader colPackageReference;
-    ArrayList _results = new ArrayList();
+    private List<ISchemaItem> _results = new ();
 	public FindSchemaItemResultsPad()
 	{
 		// This call is required by the Windows Form Designer.
@@ -179,7 +179,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 			_schemaBrowser.RedrawContent();
 		}
 	}
-	public void DisplayResults(AbstractSchemaItem[] results)
+	public void DisplayResults(ISchemaItem[] results)
 	{
 		ResetResults();
         if (results.Length > 0)
@@ -207,14 +207,14 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 		}
 		_schemaBrowser.RedrawContent();
 	}
-	public ArrayList Results
+	public List<ISchemaItem> Results
 	{
 		get
 		{
 			return _results;
 		}
 	}
-	private ListViewItem GetResult(AbstractSchemaItem item, List<Guid> referencePackages)
+	private ListViewItem GetResult(ISchemaItem item, List<Guid> referencePackages)
 	{
 		if (item == null)
 		{
@@ -240,7 +240,7 @@ public class FindSchemaItemResultsPad : AbstractResultPad
 		{
 			try
 			{
-                AbstractSchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
+                ISchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as ISchemaItem;
                 OpenParentPackage(schemaItem.SchemaExtensionId);
                 _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 				ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();

@@ -23,7 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
@@ -38,7 +38,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	private void Init()
 	{
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		if(this.Method != null) dependencies.Add(this.Method);
@@ -62,7 +62,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
 		}
 		set
 		{
@@ -78,7 +78,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureMethodId));
 		}
 		set
 		{
@@ -92,7 +92,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{
@@ -103,7 +103,7 @@ public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructu
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new ArrayList();
 			DataStructureEntity entity = this.DataStructure.Entities[0] as DataStructureEntity;
 			foreach(DataStructureColumn column in entity.Columns)
 			{

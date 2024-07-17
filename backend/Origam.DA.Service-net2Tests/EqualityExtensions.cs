@@ -63,10 +63,10 @@ internal static class EqualityExtensions
             .All(itemFromDb =>
                 testCollection.ContainsEqualObject(itemFromDb));
     }
-    private static bool IsEqualTo(this AbstractSchemaItem item,
+    private static bool IsEqualTo(this ISchemaItem item,
         object testObject)
     {
-        if (!(testObject is AbstractSchemaItem testItem)) return false;
+        if (!(testObject is ISchemaItem testItem)) return false;
         return item.Id == testItem.Id;
     }
     private static bool IsEqualTo(this DataEntityConstraint dataConstraint,
@@ -75,7 +75,6 @@ internal static class EqualityExtensions
         if (!(testObject is DataEntityConstraint)) return false;
         var testEntityConstraint = (DataEntityConstraint) testObject;
         return testEntityConstraint.Fields
-            .Cast<object>()
             .Any(field =>
                 dataConstraint.Fields.ContainsEqualObject(field));
     }
@@ -123,7 +122,7 @@ internal static class EqualityExtensions
     {
         switch (item)
         {
-            case AbstractSchemaItem schemaItem:
+            case ISchemaItem schemaItem:
                 return schemaItem.IsEqualTo(testObject);
             case DataEntityConstraint dataConstraint:
                 return dataConstraint.IsEqualTo(testObject);

@@ -212,7 +212,7 @@ public class ExcelEntityExporter
         EntityExportInfo info, EntityExportField field, DataRow row)
     {
         // returns list of array elements
-        ArrayList arrayElements =
+        List<object> arrayElements =
             SessionStore.GetRowColumnArrayValue(row,
                 info.Table.Columns[field.FieldName]);
         // try to use default lookup
@@ -224,7 +224,7 @@ public class ExcelEntityExporter
         if ((field.LookupId != null) && (field.LookupId != ""))
         {
             // lookup array elements
-            ArrayList lookupedArrayElements = new ArrayList(arrayElements.Count);
+            var lookupedArrayElements = new List<object>(arrayElements.Count);
             foreach (object arrayElement in arrayElements)
             {
                 // get lookup value

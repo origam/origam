@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -41,7 +42,7 @@ public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 	public EntityFieldDependency() : base() {}
 	public EntityFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public EntityFieldDependency(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
 	{
 		return newNode is IDataEntity;
@@ -61,7 +62,7 @@ public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 			return false;
 		}
 	}
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(this.Field);
         base.GetExtraDependencies(dependencies);
@@ -80,7 +81,7 @@ public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.FieldId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as IDataEntityColumn;
 		}
 		set
 		{

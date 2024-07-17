@@ -127,7 +127,7 @@ public class WorkQueueServiceAgent : AbstractServiceAgent
     private void TraceLog(string parameter)
     {
         ITracingService trace = ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
-        if (this.Trace && this.OutputMethod == ServiceOutputMethod.Ignore && ((Origam.Schema.AbstractSchemaItem)this.OutputStructure)?.Path == "_any")
+        if (this.Trace && this.OutputMethod == ServiceOutputMethod.Ignore && ((Origam.Schema.ISchemaItem)this.OutputStructure)?.Path == "_any")
         {
             trace.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, this.OutputMethod.ToString(), "Input", this.OutputStructure.Name,
                 Workflow.WorkflowEngine.ContextData(this.Parameters[parameter]), "", null);

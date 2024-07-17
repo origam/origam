@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA;
@@ -245,7 +246,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		get
 		{
 			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultLookupId));
+                typeof(ISchemaItem), new ModelElementKey(this.DefaultLookupId));
 		}
 		set
 		{
@@ -265,7 +266,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 			key.Id = this.ForeignEntityId;
 			try
 			{
-				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -298,7 +299,7 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 			key.Id = this.ForeignEntityColumnId;
 			try
 			{
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -387,31 +388,18 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
 		}
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules
-	{
-		get
-		{
-			return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
-		}
-	}
-	
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules => 
+		ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
-		}
-	}
+	public List<EntityConditionalFormatting> ConditionalFormattingRules => 
+		ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList DynamicLabels
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
-		}
-	}
-    [Browsable(false)]
+	public List<EntityFieldDynamicLabel> DynamicLabels => 
+		ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
+
+	[Browsable(false)]
     public DataEntityConstraint ForeignKeyConstraint
     {
         get
@@ -431,20 +419,15 @@ public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntity
     }
     public abstract string FieldType { get; }
     #endregion
-	#region Overriden AbstractSchemaItem Methods
+	#region Overriden ISchemaItem Methods
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
 	{
 		return newNode is IDataEntity;
 	}
 	
-	public override string ItemType
-	{
-		get
-		{
-			return AbstractDataEntityColumn.CategoryConst;
-		}
-	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override string ItemType => CategoryConst;
+
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.ForeignKeyEntity != null) dependencies.Add(this.ForeignKeyEntity);
 		if(this.ForeignKeyField != null) dependencies.Add(this.ForeignKeyField);

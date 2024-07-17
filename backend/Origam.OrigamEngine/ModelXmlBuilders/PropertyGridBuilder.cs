@@ -32,7 +32,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders;
 /// </summary>
 public class PropertyGridBuilder
 {
-	public static XmlDocument Build(AbstractSchemaItem item)
+	public static XmlDocument Build(ISchemaItem item)
 	{
 		XmlDocument doc = FormXmlBuilder.GetWindowBaseXml(
 			item.Name, item.Id, 0, false, false, false);

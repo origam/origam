@@ -320,13 +320,8 @@ public class UIGridFilterConfiguration
         get { return _isGlobal; }
         set { _isGlobal = value; }
     }
-    private IList _details = new ArrayList();
-    public IList Details
-    {
-        get { return _details; }
-        set { _details = value; }
-    }
 
+    public List<UIGridFilterFieldConfiguration> Details { get; set; } = new ();
 }
 public class UIGridFilterFieldConfiguration
 {

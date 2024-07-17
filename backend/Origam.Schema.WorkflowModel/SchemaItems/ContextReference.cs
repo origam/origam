@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -42,10 +43,10 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 	public ContextReference() : base() {}
 	public ContextReference(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public ContextReference(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 		dependencies.Add(this.ContextStore);
@@ -81,7 +82,7 @@ public class ContextReference : AbstractSchemaItem, IContextReference
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Origam.Workbench.Services;
 /// <summary>
@@ -28,10 +30,10 @@ namespace Origam.Workbench.Services;
 /// </summary>
 public class ServiceManager
 {
-	ArrayList serviceList       = new ArrayList();
-	Hashtable servicesHashtable = new Hashtable();
+	private List<IWorkbenchService> serviceList = new ();
+	private Dictionary<Type, IWorkbenchService> services = new ();
 	
-	private static readonly ServiceManager defaultServiceManager = new ServiceManager();
+	private static readonly ServiceManager defaultServiceManager = new ();
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 	
 	/// <summary>
@@ -77,7 +79,7 @@ public class ServiceManager
 	/// </remarks>
 	public void UnloadAllServices()
 	{
-		ArrayList copy = new ArrayList(serviceList);
+		var copy = serviceList.ToList();
 		foreach (IWorkbenchService service in copy) 
 		{
 			UnloadService(service);
@@ -92,8 +94,8 @@ public class ServiceManager
 		if(log.IsInfoEnabled) log.Info("Unloading workbench service: " + service.GetType());
 		service.UnloadService();
 		serviceList.Remove(service);
-		ArrayList hashTypes = new ArrayList();
-		foreach(DictionaryEntry entry in servicesHashtable)
+		var hashTypes = new List<Type>();
+		foreach(var entry in services)
 		{
 			if(entry.Value.Equals(service))
 			{
@@ -102,7 +104,7 @@ public class ServiceManager
 		}
 		foreach(Type hashType in hashTypes)
 		{
-			servicesHashtable.Remove(hashType);
+			services.Remove(hashType);
 		}
 	}
 	
@@ -150,8 +152,7 @@ public class ServiceManager
 	/// </remarks>
 	public IWorkbenchService GetService(Type serviceType)
 	{
-		IWorkbenchService s = (IWorkbenchService)servicesHashtable[serviceType];
-		if (s != null) 
+		if (services.TryGetValue(serviceType, out var s)) 
 		{
 			return s;
 		}
@@ -160,7 +161,7 @@ public class ServiceManager
 		{
 			if (IsInstanceOfType(serviceType, service)) 
 			{
-				servicesHashtable[serviceType] = service;
+				services[serviceType] = service;
 				return service;
 			}
 		}

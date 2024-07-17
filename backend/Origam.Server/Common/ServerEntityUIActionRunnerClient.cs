@@ -79,9 +79,9 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             // get action
             processData.Action = UIActionTools.GetAction(actionId);
             // retrieve parameter mappings
-            ArrayList originalDataParameters 
+            List<string> originalDataParameters 
                 = UIActionTools.GetOriginalParameters(processData.Action);
-            processData.Parameters = DatasetTools.RetrieveParemeters(
+            processData.Parameters = DatasetTools.RetrieveParameters(
                 parameterMappings, processData.SelectedRows, originalDataParameters,
                 processData.DataTable.DataSet);
             // add input parameters
@@ -132,7 +132,7 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
             }
         }
     }
-    public void SetModalDialogSize(ArrayList resultList,ExecuteActionProcessData processData)
+    public void SetModalDialogSize(List<object> resultList,ExecuteActionProcessData processData)
     {
         PanelActionResult result = (PanelActionResult)resultList[0];
         if ((processData.Action != null) 
@@ -162,7 +162,7 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
     }
     public void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
         DataSet sourceData,DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes)
+        List<ChangeInfo> changes)
     {
         try
         {
@@ -323,12 +323,12 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
         }
     }
     
-    private static void AddSavedInfo(ArrayList changes)
+    private static void AddSavedInfo(List<ChangeInfo> changes)
     {
         int i = 0;
         while (changes.Count > i)
         {
-            if (((ChangeInfo)changes[i]).Operation == Operation.FormSaved)
+            if (changes[i].Operation == Operation.FormSaved)
             {
                 changes.RemoveAt(i);
             }
@@ -340,11 +340,11 @@ public class ServerEntityUIActionRunnerClient: IEntityUIActionRunnerClient
         changes.Add(ChangeInfo.SavedChangeInfo());
     }
     public void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes)
+        EntityWorkflowAction entityWorkflowAction, List<ChangeInfo> changes)
     {
         if (entityWorkflowAction.SaveAfterWorkflow)
         {
-            ArrayList saveChanges = sessionStore.ExecuteAction(SessionStore.ACTION_SAVE) as ArrayList;
+            var saveChanges = sessionStore.ExecuteAction(SessionStore.ACTION_SAVE) as List<ChangeInfo>;
             changes.AddRange(saveChanges);
             // notify the form that the content has been saved, so it can hide the dirty sign (*)
             AddSavedInfo(changes);

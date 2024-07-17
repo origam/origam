@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -42,7 +43,7 @@ public class Submenu : AbstractMenuItem
 		get
 		{
 			var children = ChildItemsRecursive;
-			var roles = new ArrayList();
+			var roles = new List<string>();
 			foreach(var child in children)
 			{
 				if(child is AbstractMenuItem menuItem 
@@ -82,7 +83,7 @@ public class Submenu : AbstractMenuItem
 		get
 		{
 			var children = ChildItemsRecursive;
-			var features = new ArrayList();
+			var features = new List<string>();
 			foreach(var child in children)
 			{
 				if(child is AbstractMenuItem menuItem 

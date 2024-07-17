@@ -72,8 +72,7 @@ public static class XsltFunctionContainerFactory
         string transactionId)
     {
         return xsltFunctionSchemaItemProvider
-            .ChildItemsByType(XsltFunctionCollection.CategoryConst)
-            .Cast<XsltFunctionCollection>()
+            .ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst)
             .Select(collection =>
             {
                 object container = Reflector.InvokeObject(

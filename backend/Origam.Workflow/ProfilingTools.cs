@@ -117,7 +117,7 @@ public static class ProfilingTools
     private static (string id, string path) GetIdAndPath(IWorkflowStep task,
         string logEntryType)
     {
-        string taskPath = task is AbstractSchemaItem schemaItem
+        string taskPath = task is ISchemaItem schemaItem
             ? schemaItem.Path
             : "";
         string id = task == null ? "" : task.NodeId;

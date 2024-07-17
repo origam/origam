@@ -43,9 +43,9 @@ public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2,
 		this.PrimaryKey = new ModelElementKey();
 	}
 	public SchemaItemAncestor(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray)	{}
-	private AbstractSchemaItem _schemaItem;
+	private ISchemaItem _schemaItem;
 	[Browsable(false)]
-	public AbstractSchemaItem SchemaItem
+	public ISchemaItem SchemaItem
 	{
 		get
 		{
@@ -71,7 +71,7 @@ public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2,
 	}
 	[TypeConverter(typeof(AncestorItemConverter))]
     [XmlReference("ancestor", "AncestorId")]
-	public AbstractSchemaItem Ancestor
+	public ISchemaItem Ancestor
 	{
 		get
 		{
@@ -79,7 +79,7 @@ public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2,
 			key.Id = this.AncestorId;
 			try
 			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -183,7 +183,7 @@ public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2,
 //			foreach(SchemaItemGroup group in this.SchemaItem.ChildGroups)
 //				col.Add(group);
 		// All child items derived by this ancestor
-		foreach(AbstractSchemaItem item in this.SchemaItem.ChildItems)
+		foreach(ISchemaItem item in this.SchemaItem.ChildItems)
 		{
 			if(item.DerivedFrom != null && item.DerivedFrom.PrimaryKey.Equals(this.Ancestor.PrimaryKey) & item.IsDeleted == false)
 			{

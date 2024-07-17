@@ -55,7 +55,7 @@ public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
 	public override void Run()
 	{
         FieldMappingItem baseField = Owner as FieldMappingItem;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         TableMappingItem table1 = new TableMappingItem();
         FieldMappingItem fieldMapping = new FieldMappingItem();
         DataServiceDataLookup data = new DataServiceDataLookup();

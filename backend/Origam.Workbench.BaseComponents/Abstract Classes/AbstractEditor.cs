@@ -52,11 +52,11 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     private ISubmenuBuilder _newElementsBuilder = null;
     protected bool showMenusInAppToolStrip = false;
     public override object Content { get; set; }
-	public AbstractSchemaItem ModelContent
+	public ISchemaItem ModelContent
     {
         get
         {
-            return Content as AbstractSchemaItem;
+            return Content as ISchemaItem;
         }
         set
         {
@@ -378,7 +378,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
     }
     protected override void ViewSpecificLoad(object objectToLoad)
 	{
-        AbstractSchemaItem schemaItem = objectToLoad as AbstractSchemaItem;
+        ISchemaItem schemaItem = objectToLoad as ISchemaItem;
         if (schemaItem != null)
 		{
             SchemaItemDescriptionAttribute attr = schemaItem.GetType().SchemaItemDescription();
@@ -414,7 +414,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 // this is a copy
                 // first we copy all original-new key pairs
                 Hashtable oldKeys = new Hashtable();
-                foreach (AbstractSchemaItem child in ModelContent.ChildItemsRecursive)
+                foreach (ISchemaItem child in ModelContent.ChildItemsRecursive)
                 {
                     if (child.OldPrimaryKey != null)
                     {
@@ -427,7 +427,7 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 ModelContent.Persist();
                 // then we return the old keys to the persisted elements
                 // since they lost them while being persisted
-                foreach (AbstractSchemaItem child in ModelContent.ChildItemsRecursive)
+                foreach (ISchemaItem child in ModelContent.ChildItemsRecursive)
                 {
                     if (oldKeys.Contains(child.PrimaryKey))
                     {
@@ -439,9 +439,9 @@ public class AbstractEditor : AbstractViewContent, IToolStripContainer
                 // and persist again
                 ModelContent.ThrowEventOnPersist = true;
                 ModelContent.Persist();
-                ArrayList items = ModelContent.ChildItemsRecursive;
+                List<ISchemaItem> items = ModelContent.ChildItemsRecursive;
                 items.Add(ModelContent);
-                _documentation.CloneDocumentation(items.ToList<ISchemaItem>());
+                _documentation.CloneDocumentation(items);
                 ModelContent.OldPrimaryKey = null;
             }
         }

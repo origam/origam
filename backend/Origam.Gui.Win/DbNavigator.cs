@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
@@ -477,7 +478,7 @@ public class DbNavigator : System.Windows.Forms.Panel
                 }
                 finally
                 {
-                    ArrayList parentRows = new ArrayList();
+                    var parentRows = new List<DataRow>();
                     foreach (DataRelation relation in row.Row.Table.ParentRelations)
                     {
                         parentRows.AddRange(row.Row.GetParentRows(relation, DataRowVersion.Default));
@@ -497,7 +498,7 @@ public class DbNavigator : System.Windows.Forms.Panel
                     {
                         DatasetTools.CheckRowErrorRecursive(DatasetTools.RootRow(parentRow), null, false);
                     }
-                    (this.FindForm() as AsForm).FormGenerator.table_RowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row.Row);
+                    (FindForm() as AsForm).FormGenerator.table_RowDeleted(parentRows.ToArray(), row.Row);
                     //AsPanel panel = this.Parent.Parent as AsPanel;
                     //panel.BindGrid(true);
                 }

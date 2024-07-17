@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace Origam.UI.Interfaces;
 public interface IWizardForm
 {
-    ArrayList ItemTypeList { get; set; }
+    List<ListViewItem> ItemTypeList { get; set; }
     Stack Pages { get; set; }
     string Description { get; set; }
     string Title { get; set; }

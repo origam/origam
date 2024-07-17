@@ -54,5 +54,5 @@ public interface IServiceAgent
 	object Result{get;}
 	void Run();
 	void RunAsync();
-	IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter);
+	IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter);
 }

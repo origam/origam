@@ -36,7 +36,7 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static ConcurrentQueue<AbstractSchemaItem> updatesRequestedBeforeFullInitialization = new ();
+    private static ConcurrentQueue<ISchemaItem> updatesRequestedBeforeFullInitialization = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
@@ -60,12 +60,12 @@ public static class ReferenceIndexManager
         Initialized = false;
         if (fullClear)
         {
-            updatesRequestedBeforeFullInitialization = new ConcurrentQueue<AbstractSchemaItem>();
+            updatesRequestedBeforeFullInitialization = new ConcurrentQueue<ISchemaItem>();
         }
         referenceDictionary.Clear();
     }
     
-    internal static void UpdateNowOrDeffer(AbstractSchemaItem item)
+    internal static void UpdateNowOrDeffer(ISchemaItem item)
     {
         if (!Initialized)
         { 
@@ -77,7 +77,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void UpdateNow(AbstractSchemaItem item)
+    private static void UpdateNow(ISchemaItem item)
     {
         RemoveAllReferences(item);
         if (!item.IsDeleted)
@@ -86,7 +86,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void RemoveAllReferences(AbstractSchemaItem item)
+    private static void RemoveAllReferences(ISchemaItem item)
     {
         var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
         var referencesToRemove = referenceDictionary
@@ -103,14 +103,14 @@ public static class ReferenceIndexManager
         }
     }
 
-    public static void Add(AbstractSchemaItem item)
+    public static void Add(ISchemaItem item)
     {
         AddReference(item);
         GetReferencesFromText(item);
         GetTypeSpecificReferences(item);
     }
 
-    private static void GetTypeSpecificReferences(AbstractSchemaItem item)
+    private static void GetTypeSpecificReferences(ISchemaItem item)
     {
         if (item is EntityUIAction uiAction)
         {
@@ -118,7 +118,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void GetReferencesFromText(AbstractSchemaItem item)
+    private static void GetReferencesFromText(ISchemaItem item)
     {
         MatchCollection matchCollection = null;
         if (item is XslTransformation transformation)
@@ -150,18 +150,18 @@ public static class ReferenceIndexManager
             }
         }
     }
-    private static void AddReference(AbstractSchemaItem item)
+    private static void AddReference(ISchemaItem item)
     {
         GetReferencesFromDependencies(item);
-        foreach (AbstractSchemaItem childItem in item.ChildItems)
+        foreach (ISchemaItem childItem in item.ChildItems)
         {
             GetReferencesFromDependencies(childItem);
         }
     }
-    private static void GetReferencesFromDependencies(AbstractSchemaItem item)
+    private static void GetReferencesFromDependencies(ISchemaItem item)
     {
-        ArrayList dependencies = item.GetDependencies(false);
-        foreach (AbstractSchemaItem dependency in dependencies)
+        List<ISchemaItem> dependencies = item.GetDependencies(false);
+        foreach (ISchemaItem dependency in dependencies)
         {
             if (dependency != null)
             {
@@ -170,7 +170,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddToIndex(Guid dependencyItemId, AbstractSchemaItem reference)
+    private static void AddToIndex(Guid dependencyItemId, ISchemaItem reference)
     {
         var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
         referenceDictionary.AddOrUpdate(dependencyItemId,

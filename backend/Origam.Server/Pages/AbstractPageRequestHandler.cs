@@ -47,6 +47,7 @@ using System.Web;
 using System.Collections;
 using System.Xml;
 using Origam.Rule;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 using Origam.Service.Core;
 

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Origam.UI;
@@ -161,7 +162,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
 		this.ResumeLayout(false);
 	}
 	#endregion
-	private ArrayList _columns;
+	private List<DataGridColumnStyleHolder> _columns;
 	private void listView1_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
 	{
 		DataGridColumnStyleHolder column = listView1.Items[e.Index].Tag as DataGridColumnStyleHolder;
@@ -245,7 +246,7 @@ public class DataGridColumnConfig : System.Windows.Forms.Form
 			_tableStyle = value;
 		}
 	}
-	public ArrayList Columns
+	public List<DataGridColumnStyleHolder> Columns
 	{
 		get
 		{

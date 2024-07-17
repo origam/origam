@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 [SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
@@ -79,7 +80,7 @@ public  class DatabaseDataType : AbstractSchemaItem
 		}
 	}
     #endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -88,11 +89,11 @@ public  class DatabaseDataType : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

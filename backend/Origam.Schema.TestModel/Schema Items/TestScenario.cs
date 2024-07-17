@@ -31,7 +31,7 @@ public class TestScenario : AbstractSchemaItem
 	public TestScenario() {}
 	public TestScenario(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestScenario(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override string Icon => "16";

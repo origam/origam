@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
@@ -50,14 +51,14 @@ public class FormControlSet : AbstractControlSet
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataSourceId;
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
 			this.DataSourceId = (Guid)value.PrimaryKey["Id"];
 		}
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -76,7 +77,7 @@ public class FormControlSet : AbstractControlSet
 			return base.Alternatives;
         }
     }
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		base.GetExtraDependencies (dependencies);

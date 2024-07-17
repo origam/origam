@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -117,7 +118,7 @@ public class PropertyPad : AbstractPadContent, IPropertyPad
 		if(item != null)
 		{
 			ISelectionService svc = item.Control.Site.GetService(typeof(ISelectionService)) as ISelectionService;
-			ArrayList list = new ArrayList();
+			var list = new List<Control>();
 			list.Add(item.Control);
 			svc.SetSelectedComponents(list);
 		}

@@ -39,6 +39,8 @@ using System.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
+using Origam.Gui;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
 
 namespace Origam.Server;
@@ -79,7 +81,7 @@ public abstract class SessionStore : IDisposable
     private Dictionary<string, bool> _entityHasRuleDependencies = new Dictionary<string, bool>();
     private IList<string> _dirtyEnabledEntities = new List<string>();
     private bool _isModalDialog = false;
-    private ArrayList _pendingChanges = null;
+    private List<ChangeInfo> _pendingChanges = null;
     private bool _isModalDialogCommited = false;
     private IEndRule _confirmationRule = null;
     private IDictionary<string, IDictionary> _variables = new Dictionary<string, IDictionary>();
@@ -158,7 +160,7 @@ public abstract class SessionStore : IDisposable
         }
         set { _parentSession = value; }
     }
-    public ArrayList PendingChanges
+    public List<ChangeInfo> PendingChanges
     {
         get { return _pendingChanges; }
         set { _pendingChanges = value; }
@@ -558,7 +560,7 @@ public abstract class SessionStore : IDisposable
         // rule dependencies
         if (this.RuleSet != null)
         {
-            foreach (DataStructureRule rule in this.RuleSet.Rules())
+            foreach (DataStructureRule rule in RuleSet.Rules())
             {
                 if (rule.Entity.Name != table.TableName)
                 {
@@ -632,7 +634,7 @@ public abstract class SessionStore : IDisposable
             RuleHandler.UnregisterDatasetEvents(XmlData);
         }
     }
-    public virtual IList RestoreData(object parentId)
+    public virtual List<ChangeInfo> RestoreData(object parentId)
     {
         throw new NotImplementedException();
     }
@@ -733,7 +735,7 @@ public abstract class SessionStore : IDisposable
                 requestingGrid: requestingGrid,
                 row: row,
                 operation: operation,
-                rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
             listOfChanges.Add(ci);
         }
         if (this.SuppressSave && hasChanges)
@@ -804,7 +806,7 @@ public abstract class SessionStore : IDisposable
                     requestingGrid: requestingGrid,
                     row: row,
                     operation: operation,
-                    rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                    rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
                 changes.Add(ci);
             }
             else if (ignoreKeys == null || !ignoreKeys.Contains(ignoreRowIndex))
@@ -830,7 +832,7 @@ public abstract class SessionStore : IDisposable
                         requestingGrid: null,
                         row: row,
                         operation: op,
-                        rowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
+                        rowStateProcessor: includeRowStates ? new Func<string, object[], List<RowSecurityState>>(RowStates) : null);
                     changes.Add(ci);
                     // we processed it once so we do not want to get it again in a next iteration
                     if (ignoreKeys != null)
@@ -911,7 +913,7 @@ public abstract class SessionStore : IDisposable
     {
         return GetChangeInfo(requestingGrid, row, operation, RowStates);
     }
-    public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], ArrayList> rowStateProcessor)
+    public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], List<RowSecurityState>> rowStateProcessor)
     {
         ChangeInfo ci = new ChangeInfo();
         ci.Entity = row.Table.TableName;
@@ -925,7 +927,7 @@ public abstract class SessionStore : IDisposable
             ci.WrappedObject = GetRowData(row, columns);
             if (rowStateProcessor != null)
             {
-                ci.State = rowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0] as RowSecurityState;
+                ci.State = rowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0];
             }
         }
         return ci;
@@ -935,13 +937,13 @@ public abstract class SessionStore : IDisposable
     {
         return text.Replace("\r\n", "\n");
     }
-    public static ArrayList GetRowData(DataRow row, string[] columns)
+    public static List<object> GetRowData(DataRow row, string[] columns)
     {
         return GetRowData(row, columns, true);
     }
-    public static ArrayList GetRowData(DataRow row, string[] columns, bool withErrors)
+    private static List<object> GetRowData(DataRow row, string[] columns, bool withErrors)
     {
-        ArrayList result = new ArrayList(columns.Length);
+        var result = new List<object>(columns.Length);
         foreach (string col in columns)
         {
             if (col != LIST_LOADED_COLUMN_NAME)
@@ -1009,13 +1011,12 @@ public abstract class SessionStore : IDisposable
         }
         return value;
     }
-    public static ArrayList GetRowColumnArrayValue(DataRow row, DataColumn dataColumn)
+    public static List<object> GetRowColumnArrayValue(DataRow row, DataColumn dataColumn)
     {
         string relatedTableName = (string)dataColumn.ExtendedProperties[Const.ArrayRelation];
         string relatedColumnName = (string)dataColumn.ExtendedProperties[Const.ArrayRelationField];
-        DataTable relatedTable = row.Table.DataSet.Tables[relatedTableName];
         DataRow[] childRows = row.GetChildRows(relatedTableName);
-        ArrayList list = new ArrayList(childRows.Length);
+        var list = new List<object>(childRows.Length);
         foreach (DataRow childRow in childRows)
         {
             list.Add(childRow[relatedColumnName]);
@@ -1122,9 +1123,9 @@ public abstract class SessionStore : IDisposable
             }
         }
     }
-    public ArrayList RowStates(string entity, object[] ids)
+    public List<RowSecurityState> RowStates(string entity, object[] ids)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<RowSecurityState>();
         object profileId = SecurityTools.CurrentUserProfile().Id;
         if (dataRequested)
         {
@@ -1142,7 +1143,7 @@ public abstract class SessionStore : IDisposable
                         catch
                         {
                             // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
-                            return new ArrayList();
+                            return new List<RowSecurityState>();
                         }
                         var formIdBeforeLock = FormId;
                         lock (_lock)    // no update should be done in the meantime when rules are not handled
@@ -1151,7 +1152,7 @@ public abstract class SessionStore : IDisposable
                             // screen to load while this thread was waiting for the lock.
                             if (formIdBeforeLock != FormId)
                             {
-                                return new ArrayList();
+                                return new List<RowSecurityState>();
                             }
                             if (IsLazyLoadedRow(row))
                             {
@@ -1186,9 +1187,9 @@ public abstract class SessionStore : IDisposable
             return RowStatesForDataLessSessions(entity, ids, profileId);
         }
     }
-    private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
+    private List<RowSecurityState> RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<RowSecurityState>();
         RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
         foreach (var row in rowSearchResult.Rows)
         {
@@ -1261,7 +1262,7 @@ public abstract class SessionStore : IDisposable
         if (rowSearchResult.IdsNotFoundInStore.Count > 0)
         {
             var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
-            rowSearchResult.Rows.AddRange(loadedRows.ToList<DataRow>());
+            rowSearchResult.Rows.AddRange(loadedRows.CastToList<DataRow>());
         }
         return rowSearchResult.Rows;
     }
@@ -1470,8 +1471,8 @@ public abstract class SessionStore : IDisposable
         {
             newArray = new object[] { };
         }
-        ArrayList rowsToDelete = new ArrayList();
-        ArrayList valuesToAdd = new ArrayList();
+        var rowsToDelete = new List<DataRow>();
+        var valuesToAdd = new List<object>();
         // values to add
         foreach (object arrayValue in newArray)
         {
@@ -1575,7 +1576,7 @@ public abstract class SessionStore : IDisposable
             deletedItems.Add(GetChangeInfo(null, row, Operation.Delete));
             AddChildDeletedItems(deletedItems, row);
             // get the parent rows for the rule handler in order to update them
-            ArrayList parentRows = new ArrayList();
+            var parentRows = new List<DataRow>();
             foreach(DataRelation relation in row.Table.ParentRelations)
             {
                 parentRows.AddRange(row.GetParentRows(relation, DataRowVersion.Default));
@@ -1617,7 +1618,7 @@ public abstract class SessionStore : IDisposable
                     RegisterEvents();
                     row.Delete();
                     // handle rules for the data changes after the row has been deleted
-                    this.RuleHandler.OnRowDeleted((DataRow[])parentRows.ToArray(typeof(DataRow)), row, this.XmlData, this.RuleSet, this.RuleEngine);
+                    this.RuleHandler.OnRowDeleted(parentRows.ToArray(), row, this.XmlData, this.RuleSet, this.RuleEngine);
                 }
                 finally
                 {
@@ -1648,7 +1649,7 @@ public abstract class SessionStore : IDisposable
                         table.AcceptChanges();
                     }
                     // save the data
-                    var actionResult = ((IList)ExecuteAction(ACTION_SAVE)).ToList<ChangeInfo>();
+                    var actionResult = ((IList)ExecuteAction(ACTION_SAVE)).CastToList<ChangeInfo>();
                     listOfChanges.AddRange(actionResult);
                 }
                 return listOfChanges;
@@ -1684,47 +1685,6 @@ public abstract class SessionStore : IDisposable
             }
         }
     }
-    public List<ArrayList> GetDataForMatrix(string entity, string[] rows, string[] columns)
-    {
-        lock (_lock)
-        {
-            List<ArrayList> result = new List<ArrayList>();
-            DataTable table = GetDataTable(entity, DataList);
-            if (table.PrimaryKey.Length != 1)
-            {
-                throw new Exception("There must be exactly 1 primary key column for GetDataForMatrix.");
-            }
-            foreach (string rowId in rows)
-            {
-                object pk = GetPrimaryKey(table, rowId);
-                DataRow row = table.Rows.Find(pk);
-                if (row == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        string.Format("Could not find row {0} in entity {1}.",
-                        rowId, entity));
-                }
-                LazyLoadListRowData(pk, row);
-                ArrayList resultRow = SessionStore.GetRowData(row, columns, false);
-                resultRow.Insert(0, rowId);
-                result.Add(resultRow);
-            }
-            return result;
-        }
-    }
-    public static object GetPrimaryKey(DataTable table, string rowId)
-    {
-        object pk;
-        if (table.PrimaryKey[0].DataType == typeof(Guid))
-        {
-            pk = new Guid(rowId);
-        }
-        else
-        {
-            pk = rowId;
-        }
-        return pk;
-    }
     private static Dictionary<string, List<DeletedRowInfo>> BackupDeletedRows(DataRow row)
     {
         Dictionary<string, List<DeletedRowInfo>> backup = new Dictionary<string, List<DeletedRowInfo>>();
@@ -1746,7 +1706,7 @@ public abstract class SessionStore : IDisposable
         }
     }
     public List<ChangeInfo> CopyObject(string entity, object originalId,
-        string requestingGrid, ArrayList entities,
+        string requestingGrid, List<string> entities,
         IDictionary<string, object> forcedValues)
     {
         lock (_lock)
@@ -1758,7 +1718,7 @@ public abstract class SessionStore : IDisposable
             DataTable table = GetDataTable(entity, this.Data);
             DataRow row = GetSessionRow(entity, originalId);
             UserProfile profile = SecurityTools.CurrentUserProfile();
-            ArrayList toSkip = new ArrayList();
+            var toSkip = new List<string>();
             foreach (DataTable t in this.Data.Tables)
             {
                 if (!entities.Contains(t.TableName) && !IsArrayChild(t))
@@ -1913,11 +1873,11 @@ public abstract class SessionStore : IDisposable
     /// <param name="entity"></param>
     /// <param name="parentId"></param>
     /// <returns></returns>
-    public virtual ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
+    public virtual List<List<object>> GetData(string childEntity, object parentRecordId, object rootRecordId)
     {
         throw new Exception("GetData not available for " + this.GetType().Name);
     }
-    public virtual ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+    public virtual List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
         throw new Exception("GetRowData not available for " + this.GetType().Name);
     }        

@@ -23,7 +23,7 @@ public class LookupForm : AbstractWizardForm
         if (this.Entity == null) return;
         txtName.Text = this.Entity.Name;
         EntityFilter idFilter = null;
-        foreach (EntityFilter filter in this.Entity.ChildItemsByType(EntityFilter.CategoryConst))
+        foreach (var filter in Entity.ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst))
         {
             cboListFilter.Items.Add(filter);
             cboIdFilter.Items.Add(filter);

@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -45,7 +47,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 	#region Overriden AbstractDataEntityColumn Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Task);
 		base.GetExtraDependencies (dependencies);
@@ -65,7 +67,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	#endregion
 	#region Properties
 	public Guid WorkflowTaskId;
@@ -80,7 +82,7 @@ public class WorkflowTaskDependency : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.WorkflowTaskId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IWorkflowStep;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as IWorkflowStep;
 		}
 		set
 		{
@@ -108,7 +110,7 @@ public class NoParentDependenciesRule : AbstractModelElementRuleAttribute
 		{
 			return null;
 		}
-		AbstractSchemaItem workflowStep = taskDependency.ParentItem;
+		ISchemaItem workflowStep = taskDependency.ParentItem;
 		var parentInDependencies = workflowStep.Parents
 			.OfType<IWorkflowStep>()
 			.Any(parent => taskDependency.Task == parent);

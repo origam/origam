@@ -37,7 +37,7 @@ public class AsMenu : ToolStripMenuItem, IStatusUpdate
 		this.Text = text;
         this.DropDownOpening += AsMenu_DropDownOpening;
 	}
-	public List<ToolStripItem> SubItems { get; } = new List<ToolStripItem>();
+	public List<ToolStripItem> SubItems { get; } = new ();
 	public void Clear()
 	{
         ToolStripItem[] array = new ToolStripItem[this.SubItems.Count];

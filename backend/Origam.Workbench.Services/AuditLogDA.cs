@@ -122,8 +122,8 @@ public class AuditLogDA
             var persistenceService = ServiceManager.Services
                 .GetService<IPersistenceService>();
             if(!(persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(columnId)) 
-                is AbstractSchemaItem schemaItem))
+                typeof(ISchemaItem), new ModelElementKey(columnId)) 
+                is ISchemaItem schemaItem))
             {
                 return columnId.ToString();
             }
@@ -152,8 +152,8 @@ public class AuditLogDA
             var persistenceService = ServiceManager.Services
                 .GetService<IPersistenceService>();
             if(!(persistenceService.SchemaProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(entityId)) 
-                is AbstractSchemaItem schemaItem))
+                typeof(ISchemaItem), new ModelElementKey(entityId)) 
+                is ISchemaItem schemaItem))
             {
                 return entityId.ToString();
             }

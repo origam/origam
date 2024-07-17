@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Data;
 using System.Linq;
+using Origam.Gui;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Session_Stores;
@@ -80,9 +81,9 @@ public class WorkQueueSessionStore : SessionStore
     {
         return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
     }
-    public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+    public override List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<ChangeInfo>();
         lock (_getRowDataLock)
         {
             if (id == null)

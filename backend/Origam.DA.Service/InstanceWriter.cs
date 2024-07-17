@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -150,7 +151,7 @@ namespace Origam.DA.Service
         private static void WriteXmlReferenceAttributes(XmlElement node,
             IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
         {
-            IList references =
+            List<MemberAttributeInfo> references =
                 Reflector.FindMembers(instance.GetType(), typeof(XmlReferenceAttribute));
             foreach (MemberAttributeInfo mi in references)
             {
@@ -193,7 +194,7 @@ namespace Origam.DA.Service
         private void WriteXmlAttributes(XmlElement node,
             IFilePersistent instance, PropertyToNamespaceMapping namespaceMapping)
         {
-            IList members = Reflector.FindMembers(instance.GetType(), typeof(XmlAttributeAttribute));
+            List<MemberAttributeInfo> members = Reflector.FindMembers(instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo memberInfo in members)
             {
                 XmlAttributeAttribute attribute = (XmlAttributeAttribute)memberInfo.Attribute;
@@ -221,7 +222,7 @@ namespace Origam.DA.Service
             IFilePersistent instance,
             PropertyToNamespaceMapping namespaceMapping)
         {
-            IList references =
+            List<MemberAttributeInfo> references =
                 Reflector.FindMembers(instance.GetType(),
                     typeof(XmlExternalFileReference));
             foreach (MemberAttributeInfo mi in references)

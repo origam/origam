@@ -29,7 +29,7 @@ namespace Origam.DA.Service;
 /// </summary>
 public static class CustomParameterService
 {
-	private static ArrayList _customParameters = new ArrayList();
+	private static ArrayList _customParameters = new ();
 	private static bool _isInitialized = false;
 	private static ArrayList CustomParameters
 	{
@@ -62,7 +62,6 @@ public static class CustomParameterService
         else
         {
             return method.ParameterReferences.Keys
-                .Cast<string>()
                 .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
         }
     }

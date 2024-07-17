@@ -34,12 +34,12 @@ public interface IEntityUIActionRunnerClient
         string actionId, Hashtable parameterMappings,
         Hashtable inputParameters);
     void CheckActionConditions(ExecuteActionProcessData processData);
-    void SetModalDialogSize(ArrayList results,ExecuteActionProcessData processData);
+    void SetModalDialogSize(List<object> results,ExecuteActionProcessData processData);
     void ProcessWorkflowResults(UserProfile profile, ExecuteActionProcessData processData,
         DataSet sourceData, DataSet targetData,EntityWorkflowAction entityWorkflowAction,
-        ArrayList changes);
+        List<ChangeInfo> changes);
     void PostProcessWorkflowAction(DataSet data,
-        EntityWorkflowAction entityWorkflowAction, ArrayList changes);
+        EntityWorkflowAction entityWorkflowAction, List<ChangeInfo> changes);
     void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
         EntityWorkflowAction entityWorkflowAction);
 }

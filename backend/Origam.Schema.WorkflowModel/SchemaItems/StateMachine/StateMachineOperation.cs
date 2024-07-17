@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -41,7 +42,7 @@ public class StateMachineOperation : AbstractSchemaItem
 	public StateMachineOperation() : base() {}
 	public StateMachineOperation(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineOperation(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -50,7 +51,7 @@ public class StateMachineOperation : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.TargetState);
 		if(this.Rule != null)	dependencies.Add(this.Rule);
@@ -111,7 +112,7 @@ public class StateMachineOperation : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.RuleId);
-            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -128,7 +129,7 @@ public class StateMachineOperation : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.TargetStateId);
-			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

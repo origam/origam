@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -39,15 +41,15 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	public WorkQueueClassEntityMapping() : base() {}
 	public WorkQueueClassEntityMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public WorkQueueClassEntityMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, this.XPath);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems => new SchemaItemCollection();
+	public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode.GetType().Equals(this.ParentItem.GetType());
 	#endregion
 	#region Properties
@@ -59,7 +61,7 @@ public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 //		{
 //			get
 //			{
-//				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+//				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
 //			}
 //			set
 //			{

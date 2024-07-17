@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Origam.DA;
@@ -68,7 +69,9 @@ public static class FormTools
     }
     public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
     {
-        ArrayList children = new ArrayList(controlSet.Alternatives);
+        var children = controlSet.Alternatives
+            .Cast<ControlSetItem>()
+            .ToList();
         children.Sort(new AlternativeControlSetItemComparer());
         foreach (ControlSetItem item in children)
         {
@@ -166,7 +169,7 @@ public static class FormTools
     public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId, Hashtable parameters)
     {
         IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
         DatasetGenerator gen = new DatasetGenerator(true);
         DataSet sdData = gen.CreateDataSet(entity);
         sdData.RemoveNullConstraints();
@@ -199,7 +202,7 @@ public static class FormTools
     public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
     {
         IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+        IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(entityId)) as IDataEntity;
         // TRANSFORMATION - AFTER
         if (transformationAfterId != Guid.Empty)
         {

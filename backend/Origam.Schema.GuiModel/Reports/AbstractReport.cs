@@ -46,7 +46,7 @@ public abstract class AbstractReport : AbstractSchemaItem
 		}
 		#endregion
        
-		#region Overriden AbstractSchemaItem Members
+		#region Overriden ISchemaItem Members
 		public override string ItemType => CategoryConst;
 		#endregion			
 		#region ISchemaItemFactory Members

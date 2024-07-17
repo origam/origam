@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -47,7 +48,7 @@ public class StateMachineState : AbstractSchemaItem
 	public StateMachineState() {}
 	public StateMachineState(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineState(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override string Icon
@@ -69,7 +70,7 @@ public class StateMachineState : AbstractSchemaItem
 			}
 		}
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(DefaultSubstate != null)
 		{
@@ -80,29 +81,29 @@ public class StateMachineState : AbstractSchemaItem
 	public override bool CanMove(UI.IBrowserNode2 newNode)
 	{
 		// move between same parent type withing the same state machine
-		return ((AbstractSchemaItem)newNode).RootItem.PrimaryKey.Equals(
+		return ((ISchemaItem)newNode).RootItem.PrimaryKey.Equals(
 			       RootItem.PrimaryKey)
-			&& (((AbstractSchemaItem)newNode).ItemType 
+			&& (((ISchemaItem)newNode).ItemType 
 			    == "WorkflowStateMachine"
-			|| (((AbstractSchemaItem)newNode).ItemType 
+			|| (((ISchemaItem)newNode).ItemType 
 			    == "StateMachineState"));
 	}
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Operations => ChildItemsByType(
+	public List<StateMachineOperation> Operations => ChildItemsByType<StateMachineOperation>(
 		StateMachineOperation.CategoryConst);
 	[Browsable(false)]
-	public ArrayList SubStates
+	public List<StateMachineState> SubStates
 	{
 		get
 		{
-			var result = new ArrayList();
-			foreach(AbstractSchemaItem item in ChildItemsRecursive)
+			var result = new List<StateMachineState>();
+			foreach(ISchemaItem item in ChildItemsRecursive)
 			{
-				if(item is StateMachineState)
+				if(item is StateMachineState state)
 				{
-					result.Add(item);
+					result.Add(state);
 				}
 			}
 			return result;
@@ -111,7 +112,7 @@ public class StateMachineState : AbstractSchemaItem
 	public bool IsState(object value)
 	{
 		return Value.Equals(value) 
-		       || SubStates.Cast<StateMachineState>().Any(state 
+		       || SubStates.Any(state 
 			       => state.Value.Equals(value));
 	}
 	private StateMachineStateType _type;
@@ -314,7 +315,7 @@ public class StateMachineState : AbstractSchemaItem
 				Id = DefaultSubstateId
 			};
 			return (StateMachineState)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -60,7 +60,7 @@ class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
         XPathNavigator nav = doc.Xml.CreateNavigator();
         string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
         Hashtable parameters = new Hashtable();
-        foreach (WorkflowPageActionParameter actionParameter in action.ChildItemsByType(WorkflowPageActionParameter.CategoryConst))
+        foreach (var actionParameter in action.ChildItemsByType<WorkflowPageActionParameter>(WorkflowPageActionParameter.CategoryConst))
         {
             string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
             parameters.Add(actionParameter.Name, parameterResult);

@@ -37,7 +37,7 @@ public abstract class AbstractSimpleDashboardWidget : AbstractDashboardWidget
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new ArrayList();
 			result.Add(new DashboardWidgetProperty("Value",
 				ResourceUtils.GetString("DashboardWidgetValueProperty"),
 				this.DataType));

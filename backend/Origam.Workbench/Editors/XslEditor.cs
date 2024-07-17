@@ -747,7 +747,7 @@ public class XslEditor : AbstractEditor, IToolStripContainer
         if (cboDataStructure.SelectedItem != null)
         {
             IDataStructure structure = cboDataStructure.SelectedItem as IDataStructure;
-            foreach (DataStructureRuleSet ruleSet in structure.ChildItemsByType(DataStructureRuleSet.CategoryConst))
+            foreach (DataStructureRuleSet ruleSet in structure.ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst))
             {
                 cboRuleSet.Items.Add(ruleSet);
             }

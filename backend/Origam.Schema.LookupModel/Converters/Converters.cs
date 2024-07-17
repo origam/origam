@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel;
@@ -44,8 +44,8 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
 		DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 		if(reference.ListDataStructure == null) return null;
-		ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.CategoryConst);
-		ArrayList methodArray = new ArrayList(methods.Count);
+		List<DataStructureMethod> methods = reference.ListDataStructure.ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -68,11 +68,11 @@ public class DataServiceDataLookupListMethodConverter : System.ComponentModel.Ty
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 			if(reference.ListDataStructure == null) return null;
-			ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.CategoryConst);
+			List<DataStructureMethod> methods = reference.ListDataStructure.ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
 			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -99,8 +99,8 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
 		DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 		if(reference.ValueDataStructure == null) return null;
-		ArrayList methods = reference.ValueDataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		List<DataStructureMethod> methods = reference.ValueDataStructure.Methods;
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -123,11 +123,11 @@ public class DataServiceDataLookupValueFilterConverter : System.ComponentModel.T
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 			if(reference.ValueDataStructure == null) return null;
-			ArrayList methods = reference.ValueDataStructure.Methods;
+			List<DataStructureMethod> methods = reference.ValueDataStructure.Methods;
 			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -154,8 +154,8 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
 		AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
 		
 		if(reference.TooltipDataStructure == null) return null;
-		ArrayList methods = reference.TooltipDataStructure.Methods;
-		ArrayList methodArray = new ArrayList(methods.Count);
+		List<DataStructureMethod> methods = reference.TooltipDataStructure.Methods;
+		var methodArray = new List<DataStructureMethod>(methods.Count);
 		foreach(DataStructureMethod method in methods)
 		{
 			methodArray.Add(method);
@@ -178,11 +178,11 @@ public class DataServiceDataTooltipFilterConverter : System.ComponentModel.TypeC
 			AbstractDataTooltip reference = context.Instance as AbstractDataTooltip;
 		
 			if(reference.TooltipDataStructure == null) return null;
-			ArrayList methods = reference.TooltipDataStructure.Methods;
+			List<DataStructureMethod> methods = reference.TooltipDataStructure.Methods;
 			foreach(DataStructureMethod item in methods)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureMethod;
+					return item;
 			}
 			return null;
 		}
@@ -209,8 +209,8 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
 		DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 		if(reference.ValueDataStructure == null) return null;
-		ArrayList sortSets = reference.ValueDataStructure.SortSets;
-		ArrayList sortSetArray = new ArrayList(sortSets.Count);
+		List<DataStructureSortSet> sortSets = reference.ValueDataStructure.SortSets;
+		var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
 		foreach(DataStructureSortSet sortSet in sortSets)
 		{
 			sortSetArray.Add(sortSet);
@@ -233,11 +233,11 @@ public class DataServiceDataLookupValueSortSetConverter : System.ComponentModel.
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 			if(reference.ValueDataStructure == null) return null;
-			ArrayList sortSets = reference.ValueDataStructure.SortSets;
+			List<DataStructureSortSet> sortSets = reference.ValueDataStructure.SortSets;
 			foreach(DataStructureSortSet item in sortSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureSortSet;
+					return item;
 			}
 			return null;
 		}
@@ -264,8 +264,8 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
 		DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 		if(reference.ListDataStructure == null) return null;
-		ArrayList sortSets = reference.ListDataStructure.SortSets;
-		ArrayList sortSetArray = new ArrayList(sortSets.Count);
+		List<DataStructureSortSet> sortSets = reference.ListDataStructure.SortSets;
+		var sortSetArray = new List<DataStructureSortSet>(sortSets.Count);
 		foreach(DataStructureSortSet sortSet in sortSets)
 		{
 			sortSetArray.Add(sortSet);
@@ -288,11 +288,11 @@ public class DataServiceDataLookupListSortSetConverter : System.ComponentModel.T
 			DataServiceDataLookup reference = context.Instance as DataServiceDataLookup;
 		
 			if(reference.ListDataStructure == null) return null;
-			ArrayList sortSets = reference.ListDataStructure.SortSets;
+			List<DataStructureSortSet> sortSets = reference.ListDataStructure.SortSets;
 			foreach(DataStructureSortSet item in sortSets)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureSortSet;
+					return item;
 			}
 			return null;
 		}

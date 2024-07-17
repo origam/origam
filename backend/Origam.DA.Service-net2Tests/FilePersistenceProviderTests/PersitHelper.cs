@@ -72,11 +72,11 @@ internal class PersitHelper
         return (IFilePersistent)persistenceService.SchemaProvider
             .RetrieveInstance(type, primaryKey);
     }
-    public List<AbstractSchemaItem> RetrieveAll()
+    public List<ISchemaItem> RetrieveAll()
     {
-        List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
+        List<ISchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
             .Select(TypeTools.GetAllItems)
-            .SelectMany(itemCollection => itemCollection.ToGeneric())
+            .SelectMany(itemCollection => itemCollection)
             .ToList();
         return abstractSchemaItems;
     }
@@ -95,7 +95,7 @@ internal class PersitHelper
     private void PersistAllProviderItems(Type providerType)
     {
         var allItems = TypeTools.GetAllItems(providerType); 
-        foreach (AbstractSchemaItem item in allItems)
+        foreach (ISchemaItem item in allItems)
         {
             persistenceService.SchemaProvider.BeginTransaction();
             Persist(item);
@@ -119,7 +119,7 @@ internal class PersitHelper
         persistenceService.SchemaProvider.Persist(item); 
         persistenceService.SchemaProvider.EndTransaction();
     }
-    private void Persist( AbstractSchemaItem item)
+    private void Persist( ISchemaItem item)
     {
         persistenceService.SchemaProvider.Persist(item);
         foreach (var ancestor in item.Ancestors)

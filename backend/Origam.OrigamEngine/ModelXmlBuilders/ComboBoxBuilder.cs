@@ -52,7 +52,7 @@ public class ComboBoxBuilder
 		DataServiceDataLookup lookup = persistence.SchemaProvider.RetrieveInstance(typeof(DataServiceDataLookup), new ModelElementKey(lookupId)) as DataServiceDataLookup;
 		DatasetGenerator gen = new DatasetGenerator(true);
 		DataSet comboListDataset = gen.CreateDataSet(lookup.ListDataStructure);
-		DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType(DataStructureEntity.CategoryConst)[0] as DataStructureEntity).Name];
+		DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst)[0]).Name];
 		propertyElement.SetAttribute("LookupId", lookupId.ToString());
 		propertyElement.SetAttribute("Identifier", lookup.ListValueMember);
 		propertyElement.SetAttribute("IdentifierIndex", comboListTable.Columns[lookup.ListValueMember].Ordinal.ToString());

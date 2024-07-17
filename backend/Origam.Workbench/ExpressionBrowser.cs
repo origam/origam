@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -661,7 +662,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 			IBrowserNode bnode = parentNode.Tag as IBrowserNode;
 			if(bnode != null && HasChildNodes(bnode))
 			{
-				ArrayList childNodes = new ArrayList(bnode.ChildNodes());
+				var childNodes = new ArrayList(bnode.ChildNodes());
 				Sort(childNodes);
 				foreach(IBrowserNode2 child in childNodes)
 				{
@@ -1048,7 +1049,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 		TreeNode parent = treeNode;
 		while(parent != null)
 		{
-            AbstractSchemaItem item = parent.Tag as AbstractSchemaItem;
+            ISchemaItem item = parent.Tag as ISchemaItem;
 			if(item != null)
 			{
                 if (item.ClearCacheOnPersist)
@@ -1143,7 +1144,7 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 		}
 		else
 		{
-			AbstractSchemaItem dropElement = dropNode.Tag as AbstractSchemaItem;
+			ISchemaItem dropElement = dropNode.Tag as ISchemaItem;
 			if(item.CanMove(dropElement))
 			{
 					if(item != dropElement)		// cannot move to itself
@@ -1192,11 +1193,11 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 			ServiceManager.Services.GetService(typeof(IPersistenceService)) as
 				IPersistenceService;
 		string text = item.Name;
-        AbstractSchemaItem[] results = null;
+        ISchemaItem[] results = null;
 		do
 		{
 			text = ResourceUtils.GetString("CopyOf", text);
-			results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text)
+			results = persistence.SchemaProvider.FullTextSearch<ISchemaItem>(text)
 				.Where(searchitem=>searchitem.GetType()==item.GetType()).ToArray();
 		} while (results.LongLength != 0);
 		return text;
@@ -1324,16 +1325,16 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 	{
 		toolTip1.SetToolTip(tvwExpressionBrowser, text);
 	}
-	public void SelectItem(AbstractSchemaItem item)
+	public void SelectItem(ISchemaItem item)
 	{
-		ArrayList items = new ArrayList();
-		AbstractSchemaItem parentItem = item;
+		var items = new List<IPersistent>();
+		ISchemaItem parentItem = item;
 		while(parentItem != null)
 		{
 			items.Add(parentItem);
 			parentItem = parentItem.ParentItem;
 		}
-		SchemaItemGroup parentGroup = (items[items.Count-1] as AbstractSchemaItem).Group;
+		SchemaItemGroup parentGroup = (items[items.Count-1] as ISchemaItem).Group;
 		while(parentGroup != null)
 		{
 			items.Add(parentGroup);
@@ -1353,10 +1354,10 @@ public class ExpressionBrowser : System.Windows.Forms.UserControl
 				{
 					foreach(IBrowserNode firstChild in provider.ChildNodes())
 					{
-						if(firstChild is DA.ObjectPersistence.IPersistent)
+						if(firstChild is IPersistent)
 						{
-							Key key = (firstChild as DA.ObjectPersistence.IPersistent).PrimaryKey;
-							if(key.Equals((items[items.Count-1] as DA.ObjectPersistence.IPersistent).PrimaryKey))
+							Key key = (firstChild as IPersistent).PrimaryKey;
+							if(key.Equals(items[items.Count-1].PrimaryKey))
 							{
 								modelGroupNode.Expand();
 								foreach(TreeNode providerNode in modelGroupNode.Nodes)

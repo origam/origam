@@ -99,7 +99,7 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 		ProfilingTools.ExecuteAndLogDuration(
 			action: OnExecute,
 			logEntryType: WorkflowItemType,
-			path: _step is AbstractSchemaItem schemItem1 ? schemItem1.Path : "",
+			path: _step is ISchemaItem schemItem1 ? schemItem1.Path : "",
 			id: _step.NodeId);
 	}
 	public virtual void Execute()
@@ -115,7 +115,7 @@ public abstract class AbstractWorkflowEngineTask : IWorkflowEngineTask
 		}
 		OnFinished(new WorkflowEngineTaskEventArgs(exception));	
 	}
-	internal object Evaluate(AbstractSchemaItem item)
+	internal object Evaluate(ISchemaItem item)
 	{
 		try
 		{

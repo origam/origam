@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
@@ -34,9 +35,9 @@ public class ServiceMethodCallTask : WorkflowTask
 	public ServiceMethodCallTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public ServiceMethodCallTask(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem members
+	#region Overriden ISchemaItem members
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Service);
 		dependencies.Add(ServiceMethod);
@@ -57,7 +58,7 @@ public class ServiceMethodCallTask : WorkflowTask
 				Id = this.ServiceMethodId
 			};
 			return (ServiceMethod)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -104,7 +105,7 @@ public class ServiceMethodCallTask : WorkflowTask
 				Id = ServiceId
 			};
 			return (IService)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

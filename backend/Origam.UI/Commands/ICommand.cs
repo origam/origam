@@ -42,5 +42,5 @@ public interface ICommand
 	/// Invokes the command.
 	/// </summary>
 	void Run();
-    List<AbstractSchemaItem> GeneratedModelElements { get; }
+    List<ISchemaItem> GeneratedModelElements { get; }
 }

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -57,10 +58,10 @@ public class StateMachineEvent : AbstractSchemaItem
 		this.ChildItemTypes.Add(typeof(StateMachineEventParameterMapping));
 		this.ChildItemTypes.Add(typeof(StateMachineEventFieldDependency));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Action);
 		if(this.OldState != null)	dependencies.Add(this.OldState);
@@ -90,9 +91,11 @@ public class StateMachineEvent : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.CategoryConst);
+	public List<StateMachineEventParameterMapping> ParameterMappings => 
+		ChildItemsByType<StateMachineEventParameterMapping>(StateMachineEventParameterMapping.CategoryConst);
 	[Browsable(false)]
-	public ArrayList FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
+	public List<StateMachineEventFieldDependency> FieldDependencies => 
+		ChildItemsByType<StateMachineEventFieldDependency>(StateMachineEventFieldDependency.CategoryConst);
 	
 	[XmlAttribute ("type")]
 	public StateMachineEventType Type { get; set; }
@@ -106,7 +109,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.ActionId);
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.ActionId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -120,7 +123,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.OldStateId);
-			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.OldStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -134,7 +137,7 @@ public class StateMachineEvent : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.NewStateId);
-			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set => this.NewStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}

@@ -44,12 +44,12 @@ public static class TranslationBuilder
         xtw.WriteStartElement("OrigamLocalization");
         IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
         IDocumentationService docSvc = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-        List<AbstractSchemaItem> list = persistence
+        List<ISchemaItem> list = persistence
             .SchemaProvider
-            .RetrieveListByPackage<AbstractSchemaItem>(packageId);
-        foreach (AbstractSchemaItem item in list)
+            .RetrieveListByPackage<ISchemaItem>(packageId);
+        foreach (ISchemaItem item in list)
         {
-            IList memberList = Reflector.FindMembers(item.GetType(), typeof(LocalizableAttribute), new Type[] { });
+            List<MemberAttributeInfo> memberList = Reflector.FindMembers(item.GetType(), typeof(LocalizableAttribute), new Type[] { });
             Hashtable values = new Hashtable();
             IQueryLocalizable ql = item as IQueryLocalizable;
             foreach (MemberAttributeInfo mai in memberList)

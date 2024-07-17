@@ -32,6 +32,7 @@ using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema;
 using System.Collections.Generic;
+using Origam.Gui;
 using Origam.Server;
 using Origam.Server.Session_Stores;
 
@@ -149,8 +150,8 @@ public class FormSessionStore : SaveableSessionStore
     public override void LoadColumns(IList<string> columns)
     {
         QueryParameterCollection qparams = Request.QueryParameters;
-        ArrayList finalColumns = new ArrayList();
-        ArrayList arrayColumns = new ArrayList();
+        var finalColumns = new List<string>();
+        var arrayColumns = new List<string>();
         foreach (var column in columns)
         {
             if (!DataListLoadedColumns.Contains(column))
@@ -169,7 +170,7 @@ public class FormSessionStore : SaveableSessionStore
         LoadArrayColumns(this.DataList, this.DataListEntity, qparams, arrayColumns);
     }
     private void LoadArrayColumns(DataSet dataset, string entity,
-        QueryParameterCollection qparams, ArrayList arrayColumns)
+        QueryParameterCollection qparams, List<string> arrayColumns)
     {
         lock (_lock)
         {
@@ -187,7 +188,7 @@ public class FormSessionStore : SaveableSessionStore
             }
         }
     }
-    private void LoadStandardColumns(QueryParameterCollection qparams, ArrayList finalColumns)
+    private void LoadStandardColumns(QueryParameterCollection qparams, List<string> finalColumns)
     {
         lock (_lock)
         {
@@ -201,7 +202,7 @@ public class FormSessionStore : SaveableSessionStore
             core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                 Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
                 this.DataListEntity,
-                string.Join(";", (string[])finalColumns.ToArray(typeof(string))));
+                string.Join(";", finalColumns));
             listTable.BeginLoadData();
             try
             {
@@ -246,17 +247,17 @@ public class FormSessionStore : SaveableSessionStore
         {
             object value = this.Request.Parameters["id"];
             this.Request.Parameters.Clear();
-            foreach (DictionaryEntry entry in method.ParameterReferences)
+            foreach (var entry in method.ParameterReferences)
             {
                 this.Request.Parameters[entry.Key] = value;
             }
-            foreach (DictionaryEntry entry in DataStructure().ParameterReferences)
+            foreach (var entry in DataStructure().ParameterReferences)
             {
                 this.Request.Parameters[entry.Key] = value;
             }
         }
     }
-    internal override object Save()
+    internal override List<ChangeInfo> Save()
     {
         if (MenuItem.ReadOnlyAccess)
         {
@@ -288,9 +289,9 @@ public class FormSessionStore : SaveableSessionStore
     /// <param name="entity"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+    public override List<ChangeInfo> GetRowData(string entity, object id, bool ignoreDirtyState)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<ChangeInfo>();
         lock (_getRowDataLock)
         {
             if (id == null)
@@ -344,16 +345,16 @@ public class FormSessionStore : SaveableSessionStore
             Data.RejectChanges();
         }
     }
-    public override ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
+    public override List<List<object>> GetData(string childEntity, object parentRecordId, object rootRecordId)
     {
         // check validity of the request
         if (!rootRecordId.Equals(this.CurrentRecordId))
         {
             // we do not hold the data anymore, we throw-out the request
-            return new ArrayList();
+            return new List<List<object>>();
         }
         DataTable childTable = GetDataTable(childEntity);
-        ArrayList result = new ArrayList();
+        var result = new List<List<object>>();
         if (childTable.ParentRelations.Count == 0)
         {
             throw new Exception("Requested entity " + childEntity + " has no parent relations. Cannot load child records.");
@@ -396,9 +397,9 @@ public class FormSessionStore : SaveableSessionStore
     {
         return !MenuItem.ReadOnlyAccess && Data != null && Data.HasChanges();
     }
-    public override IList RestoreData(object recordId)
+    public override List<ChangeInfo> RestoreData(object recordId)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<ChangeInfo>();
         // get the original row and return it to the client, so it updates to 
         // the original state
         DataRow originalRow = this.GetSessionRow(this.DataListEntity, recordId);

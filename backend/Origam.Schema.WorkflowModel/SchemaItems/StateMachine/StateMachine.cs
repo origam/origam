@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Xml.XPath;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
@@ -47,28 +48,28 @@ public class StateMachine : AbstractSchemaItem
 	#region Public Methods
 	public StateMachineState GetState(object value)
 	{
-		return AllStates().Cast<StateMachineState>()
+		return AllStates()
 			.FirstOrDefault(state => 
 				(state.Type != StateMachineStateType.Group) 
 				&& state.Value.Equals(value));
 	}
-	public ArrayList AllStates()
+	public List<StateMachineState> AllStates()
 	{
-		var result = new ArrayList();
+		var result = new List<StateMachineState>();
 		foreach(ISchemaItem item in ChildItemsRecursive)
 		{
-			if(item is StateMachineState)
+			if(item is StateMachineState state)
 			{
-				result.Add(item);
+				result.Add(state);
 			}
 		}
 		return result;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Entity);
 		if(Field != null)
@@ -88,10 +89,10 @@ public class StateMachine : AbstractSchemaItem
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Events => ChildItemsByType(
+	public List<StateMachineEvent> Events => ChildItemsByType<StateMachineEvent>(
 		StateMachineEvent.CategoryConst);
 	[Browsable(false)]
-	public ArrayList ParameterMappings => ChildItemsByType(
+	public List<StateMachineDynamicLookupParameterMapping> ParameterMappings => ChildItemsByType<StateMachineDynamicLookupParameterMapping>(
 		StateMachineDynamicLookupParameterMapping.CategoryConst);
 	public object[] DynamicOperations(IXmlContainer data)
 	{
@@ -106,7 +107,7 @@ public class StateMachine : AbstractSchemaItem
 	}
 	public object[] InitialStateValues(IXmlContainer data)
 	{
-		var list = new ArrayList();
+		var list = new List<object>();
 		if(DynamicStatesLookup == null)
 		{
 			// states defined in the model
@@ -149,7 +150,7 @@ public class StateMachine : AbstractSchemaItem
 			}
 			else
 			{
-				var parameters = new Hashtable();
+				var parameters = new Dictionary<string, object>();
 				foreach(StateMachineDynamicLookupParameterMapping 
 					        parameterMapping in ParameterMappings)
 				{
@@ -192,7 +193,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataEntity Entity
 	{
 		get => (IDataEntity)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+			typeof(ISchemaItem), new ModelElementKey(EntityId));
 		set
 		{
 			EntityId = (value == null) 
@@ -208,7 +209,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataEntityColumn Field
 	{
 		get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(FieldId));
+			typeof(ISchemaItem), new ModelElementKey(FieldId));
 		set
 		{
 			FieldId = (value == null) 
@@ -224,7 +225,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup DynamicStatesLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(DynamicStatesLookupId));
 		set => DynamicStatesLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -237,7 +238,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup DynamicOperationsLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(DynamicOperationsLookupId));
 		set => DynamicOperationsLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -250,7 +251,7 @@ public class StateMachine : AbstractSchemaItem
 	public IDataLookup ReverseLookup
 	{
 		get => (IDataLookup)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(
+			typeof(ISchemaItem), new ModelElementKey(
 				ReverseLookupId));
 		set => ReverseLookupId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

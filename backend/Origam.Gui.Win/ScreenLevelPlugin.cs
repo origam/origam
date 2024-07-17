@@ -27,7 +27,7 @@ namespace Origam.Gui.Win;
 public class ScreenLevelPlugin : Label,
     IOrigamMetadataConsumer, ISupportInitialize
 {
-    public AbstractSchemaItem OrigamMetadata { get; set; }
+    public ISchemaItem OrigamMetadata { get; set; }
     public void BeginInit()
     {
     }

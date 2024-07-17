@@ -52,6 +52,8 @@ using Origam.BI.CrystalReports;
 using MoreLinq;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.Schema.EntityModel.Interfaces;
+using Origam.Schema.ItemCollection;
 using Origam.Service.Core;
 
 namespace OrigamArchitect.Commands;
@@ -160,8 +162,8 @@ public class ExecuteSchemaItem : AbstractCommand
 						}
 						else
 						{
-							foreach(SelectionDialogParameterMapping mapping in 
-                                formReferenceMenuItem.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+							foreach(var mapping in 
+                                formReferenceMenuItem.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
 							{
 								generator.SelectionParameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 							}
@@ -237,7 +239,7 @@ public class ExecuteSchemaItem : AbstractCommand
 				}
 				else
 				{
-					foreach(SelectionDialogParameterMapping mapping in reportRef.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+					foreach(var mapping in reportRef.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
 					{
 						parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 					}
@@ -319,7 +321,7 @@ public class ExecuteSchemaItem : AbstractCommand
             wf = wfRef.Workflow;
             // set parameters
             RuleEngine ruleEngine = RuleEngine.Create(null, null);
-            foreach (AbstractSchemaItem parameter in item.ChildItems)
+            foreach (ISchemaItem parameter in item.ChildItems)
             {
                 if (parameter != null)
                 {
@@ -338,7 +340,7 @@ public class ExecuteSchemaItem : AbstractCommand
             wf = schedule.Workflow;
             // set parameters
             RuleEngine ruleEngine = RuleEngine.Create(null, null);
-            foreach (AbstractSchemaItem parameter in schedule.ChildItems)
+            foreach (ISchemaItem parameter in schedule.ChildItems)
             {
                 if (parameter != null)
                 {
@@ -610,7 +612,7 @@ public class ShowEditorXml : AbstractMenuCommand
 	{
 		get
 		{
-			return _schemaService.ActiveNode is AbstractSchemaItem;
+			return _schemaService.ActiveNode is ISchemaItem;
 		}
 		set
 		{
@@ -620,7 +622,7 @@ public class ShowEditorXml : AbstractMenuCommand
 	public override void Run()
 	{
 		OutputPad p = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
-		AbstractSchemaItem item = _schemaService.ActiveNode as AbstractSchemaItem;
+		ISchemaItem item = _schemaService.ActiveNode as ISchemaItem;
 		System.Text.StringBuilder sb = new System.Text.StringBuilder();
 		System.IO.StringWriter sw = new System.IO.StringWriter(sb);
 		XmlTextWriter xw = new XmlTextWriter(sw);
@@ -688,11 +690,11 @@ public class ShowTrace : AbstractMenuCommand
 		formMenu.MethodId 
             = new Guid("77cdbb0c-430e-4552-a0c2-f494cfb0c782");
         formMenu.ListSortSet = _persistence.SchemaProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), new ModelElementKey(
+            typeof(ISchemaItem), new ModelElementKey(
                 new Guid("d20be524-2178-42c0-943d-7d84ee6bb53b")), 
             true, false) as DataStructureSortSet;
         formMenu.SortSet = _persistence.SchemaProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), new ModelElementKey(
+            typeof(ISchemaItem), new ModelElementKey(
                 new Guid("f68c419b-6130-4665-bee1-d81f2769c5ad")), 
             true, false) as DataStructureSortSet;
 		formMenu.Roles = "*";
@@ -725,7 +727,7 @@ public class ShowRuleTrace : AbstractMenuCommand
             = new Guid("57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
 		formMenu.Roles = "*";
 		formMenu.SortSet = _persistence.SchemaProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(
+			typeof(ISchemaItem), new ModelElementKey(
 				new Guid("6b22f4c9-bc05-4e52-88f9-486e64dc7b1b")), 
 			true, false) as DataStructureSortSet;
 		ExecuteSchemaItem cmd = new ExecuteSchemaItem();
@@ -987,7 +989,7 @@ public abstract class StorageConvertor : AbstractMenuCommand
 			.GetService<SchemaService>()
 			.Providers
 			.Select(provider => provider.GetType());
-	private SchemaItemCollection GetAllItems(Type providerType) => 
+	private ISchemaItemCollection GetAllItems(Type providerType) => 
 		schemaService.GetProvider(providerType).ChildItems;
 	private void UpdateStatusBar(Type type, int typeNumber)
 	{
@@ -1026,17 +1028,17 @@ public abstract class StorageConvertor : AbstractMenuCommand
 	}
 	private void PersistAllProviderItems(Type providerType)
 	{
-		SchemaItemCollection allItems = GetAllItems(providerType); 
+		ISchemaItemCollection allItems = GetAllItems(providerType); 
 		if(log.IsDebugEnabled)
 		{
 			log.Debug($"ProviderType:{providerType}, items: {allItems.Count}");
 		}
-		foreach (AbstractSchemaItem item in allItems)
+		foreach (ISchemaItem item in allItems)
 		{
 			Persist(item);
 		}
 	}
-	private void Persist( AbstractSchemaItem item)
+	private void Persist( ISchemaItem item)
 	{
 		newPersistenceService.SchemaProvider.Persist(item);
 		foreach (var ancestor in item.Ancestors)

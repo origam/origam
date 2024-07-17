@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -93,7 +94,7 @@ public class FieldMappingItem : AbstractDataEntityColumn,
     [Browsable(false)]
 	public override bool ReadOnly => false;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
 	public override void OnNameChanged(string originalName)

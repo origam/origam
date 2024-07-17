@@ -80,7 +80,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
         fileEventQueue.Start();
         InstancePersisted += (sender, persistent) =>
         {
-            if (persistent is AbstractSchemaItem item)
+            if (persistent is ISchemaItem item)
             {
                 ReferenceIndexManager.UpdateNowOrDeffer(item);
             }
@@ -283,12 +283,12 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
                 CategoryFactory.Create(typeof(T)),
                 typeof(T),
                 useCache)
-            .ToList<T>();
+            .CastToList<T>();
     }
-    private ArrayList RetrieveListByParent(Guid id, string category,
+    private List<IFilePersistent> RetrieveListByParent(Guid id, string category,
         Type type, bool useCache)
     {         
-        var result = new ArrayList();
+        var result = new List<IFilePersistent>();
         foreach (var objInfo in index.GetByParentId(id))
         {
             if(!string.IsNullOrWhiteSpace(category)
@@ -296,7 +296,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
             {
                 continue;
             }
-            object instance = RetrieveInstance(objInfo, useCache);
+            IFilePersistent instance = RetrieveInstance(objInfo, useCache);
             if(type == null || type.IsInstanceOfType(instance))
             {
                 result.Add(instance);
@@ -405,7 +405,7 @@ public class FilePersistenceProvider : AbstractPersistenceProvider,
     }
     public DirectoryInfo GetParentPackageDirectory(Guid itemId)
     {
-        var item = (AbstractSchemaItem)RetrieveInstance(
+        var item = (ISchemaItem)RetrieveInstance(
                 type: null, 
                 primaryKey: new Key {{"Id", itemId}});
         if(item == null)

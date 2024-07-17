@@ -112,13 +112,13 @@ public abstract class SaveableSessionStore : SessionStore
         get { return _template; }
         set { _template = value; }
     }
-    internal virtual object Save()
+    internal virtual List<ChangeInfo> Save()
     {
         if (Data.HasErrors)
         {
             throw new UIException(Resources.ErrorInForm);
         }
-        ArrayList listOfChanges = new ArrayList();
+        var listOfChanges = new List<ChangeInfo>();
         IList<DataRow> changedRows = new List<DataRow>();
         Hashtable changedKeys = new Hashtable();
         foreach (DataTable t in Data.Tables)
@@ -308,7 +308,7 @@ public abstract class SaveableSessionStore : SessionStore
             foreach (DataStructureColumn column in modelEntity.Columns)
             {
                 // read the dependencies
-                foreach (EntityFieldDependency dep in column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst))
+                foreach (var dep in column.Field.ChildItemsByType<EntityFieldDependency>(EntityFieldDependency.CategoryConst))
                 {
                     IList<Guid> fieldDependencies;
                     Guid fieldId = (Guid)dep.Field.PrimaryKey["Id"];

@@ -27,12 +27,12 @@ using NUnit.Framework;
 namespace Origam.DA.Service_net2Tests;
 internal class SchemaItemComparator
 {
-    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromDataBaseDict
+    public Dictionary<Type, List<ISchemaItem>> ItemsFromDataBaseDict
     {
         private get;
         set;
     }
-    public Dictionary<Type, List<AbstractSchemaItem>> ItemsFromXmlDict
+    public Dictionary<Type, List<ISchemaItem>> ItemsFromXmlDict
     {
         private get;
         set;
@@ -52,7 +52,7 @@ internal class SchemaItemComparator
         {
             Type type = typeItemsPair.Key;
             var itemList = typeItemsPair.Value;
-            foreach (AbstractSchemaItem itemFromDb in itemList)
+            foreach (ISchemaItem itemFromDb in itemList)
             {
                 var itemFromXml = ItemsFromXmlDict[type].Find(x =>
                     x.Id == itemFromDb.Id);

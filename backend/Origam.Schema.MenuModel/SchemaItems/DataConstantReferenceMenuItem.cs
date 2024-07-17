@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.MenuModel;
 /// <summary>
@@ -38,17 +40,17 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
 	public DataConstantReferenceMenuItem() : base() {}
 	public DataConstantReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public DataConstantReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Constant);
         if(DataLookup != null) dependencies.Add(DataLookup);
         base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#region Properties
@@ -63,7 +65,7 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataConstantId;
-			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -88,7 +90,7 @@ public class DataConstantReferenceMenuItem : AbstractMenuItem
         {
             ModelElementKey key = new ModelElementKey();
             key.Id = this.DataLookupId;
-            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+            return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
         }
         set
         {

@@ -208,24 +208,24 @@ public class ReflectorCache : IReflectorCache
 	}
 	public bool SetValue(object instance, string property, object value)
 	{
-		if(instance is Origam.Schema.AbstractSchemaItem)
+		if(instance is Origam.Schema.ISchemaItem)
 		{
 			switch(property)
 			{
 				case "IsAbstract":
-					(instance as Origam.Schema.AbstractSchemaItem).IsAbstract = (System.Boolean)value;
+					(instance as Origam.Schema.ISchemaItem).IsAbstract = (System.Boolean)value;
 					return true;
 				case "Name":
-					(instance as Origam.Schema.AbstractSchemaItem).Name = value == null ? null : (string)value;
+					(instance as Origam.Schema.ISchemaItem).Name = value == null ? null : (string)value;
 					return true;
 				case "ParentItemId":
-					(instance as Origam.Schema.AbstractSchemaItem).ParentItemId = value == null ? Guid.Empty : (Guid)value;
+					(instance as Origam.Schema.ISchemaItem).ParentItemId = value == null ? Guid.Empty : (Guid)value;
 					return true;
 				case "SchemaExtensionId":
-					(instance as Origam.Schema.AbstractSchemaItem).SchemaExtensionId = value == null ? Guid.Empty : (Guid)value;
+					(instance as Origam.Schema.ISchemaItem).SchemaExtensionId = value == null ? Guid.Empty : (Guid)value;
 					return true;
 				case "GroupId":
-					(instance as Origam.Schema.AbstractSchemaItem).GroupId = value == null ? Guid.Empty : (Guid)value;
+					(instance as Origam.Schema.ISchemaItem).GroupId = value == null ? Guid.Empty : (Guid)value;
 					return true;
 			}
 		}

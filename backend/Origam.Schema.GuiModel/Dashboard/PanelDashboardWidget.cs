@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
@@ -34,7 +35,7 @@ public class PanelDashboardWidget : AbstractDataDashboardWidget
 	private void Init()
 	{
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Panel);
 		base.GetExtraDependencies (dependencies);
@@ -48,7 +49,7 @@ public class PanelDashboardWidget : AbstractDataDashboardWidget
 	{
 		get
 		{
-			return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
+			return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.PanelId));
 		}
 		set
 		{

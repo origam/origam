@@ -24,6 +24,7 @@ using System.IO;
 using System.Xml;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -168,7 +169,7 @@ public class ExcelAgent : AbstractServiceAgent
         _dateCellStyle = wb.CreateCellStyle();
         _dateCellStyle.DataFormat
             = wb.CreateDataFormat().GetFormat("m/d/yy h:mm");
-        ArrayList columnNamesSorted = new ArrayList();
+        var columnNamesSorted = new List<string>();
         foreach(DataColumn col in table.Columns)
         {
             columnNamesSorted.Add(col.ColumnName);
@@ -178,7 +179,7 @@ public class ExcelAgent : AbstractServiceAgent
         IRow headerRow = sheet.CreateRow(0);
         for(int i = 0; i < columnNamesSorted.Count; i++)
         {
-            DataColumn column = table.Columns[(string)columnNamesSorted[i]];
+            DataColumn column = table.Columns[columnNamesSorted[i]];
             headerRow.CreateCell(i).SetCellValue(column.Caption);
         }
         // data rows
@@ -188,7 +189,7 @@ public class ExcelAgent : AbstractServiceAgent
             DataRow row = table.Rows[rowNumber];
             for(int i = 0; i < columnNamesSorted.Count; i++)
             {
-                DataColumn column = table.Columns[(string)columnNamesSorted[i]];
+                DataColumn column = table.Columns[columnNamesSorted[i]];
                 TextReaderOptionsField fieldOptions = options.GetFieldOption(column.ColumnName);
                 object val = row[column];
                 ExcelTools.SetCellValue(excelRow, i, fieldOptions,

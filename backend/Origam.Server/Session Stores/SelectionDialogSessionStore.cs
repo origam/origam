@@ -53,6 +53,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Server;
 using Origam.Service.Core;
 
@@ -180,7 +181,7 @@ public class SelectionDialogSessionStore : SessionStore
         DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId,
             this.AfterTransformationId, this.XmlData, profile.Id);
         IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        AbstractSchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as AbstractSchemaItem;
+        ISchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as ISchemaItem;
         SetParameters(request.Parameters, row, item);
         FormReferenceMenuItem formRef = item as FormReferenceMenuItem;
         if (formRef != null)
@@ -191,17 +192,17 @@ public class SelectionDialogSessionStore : SessionStore
         result.Request = request;
         return result;
     }
-    private void SetParameters(IDictionary parameters, DataRow row, AbstractSchemaItem item)
+    private void SetParameters(IDictionary parameters, DataRow row, ISchemaItem item)
     {
         // map the parameters from the selection dialog data row
-        foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
+        foreach (var mapping in item.ChildItemsByType<SelectionDialogParameterMapping>(SelectionDialogParameterMapping.CategoryConst))
         {
             object value = row[mapping.SelectionDialogField.Name];
             DataColumn column = row.Table.Columns[mapping.SelectionDialogField.Name];
             if (column.ExtendedProperties.Contains(Const.ArrayRelation))
             {
                 string childColumnName = (string)column.ExtendedProperties[Const.ArrayRelationField];
-                ArrayList list = new ArrayList();
+                var list = new ArrayList();
                 foreach (DataRow childRow in
                     row.GetChildRows((string)column.ExtendedProperties[Const.ArrayRelation]))
                 {

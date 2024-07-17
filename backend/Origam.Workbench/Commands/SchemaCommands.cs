@@ -89,7 +89,7 @@ public class AddNewSchemaItem : AbstractMenuCommand
 			_name = value;
 		}
 	}
-    public event EventHandler<AbstractSchemaItem> ItemCreated ;
+    public event EventHandler<ISchemaItem> ItemCreated ;
     public override void Run()
 	{
 		var newItemMethodInfo 
@@ -99,7 +99,7 @@ public class AddNewSchemaItem : AbstractMenuCommand
 		var item = newItemGenericMethodInfo.Invoke(
 			ParentElement,
 			new object[] { _schema.ActiveSchemaExtensionId, null });
-		var abstractSchemaItem = (AbstractSchemaItem)item;
+		var abstractSchemaItem = (ISchemaItem)item;
 		if(_name != null)
 		{
 			abstractSchemaItem.Name = _name;
@@ -149,7 +149,7 @@ public class AddRepeatingSchemaItem : AbstractMenuCommand
 		var item = newItemGenericMethodInfo.Invoke(
 			_schema.LastAddedNodeParent,
 			new object[] { _schema.ActiveSchemaExtensionId, null });
-		var abstractSchemaItem = (AbstractSchemaItem)item;
+		var abstractSchemaItem = (ISchemaItem)item;
 		// set abstract, if parent is abstract
 		if((abstractSchemaItem.ParentItem != null)
 		&& abstractSchemaItem.ParentItem.IsAbstract)
@@ -234,7 +234,7 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
 	IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 	public override void Run()
 	{
-        AbstractSchemaItem item = this.Owner as AbstractSchemaItem;
+        ISchemaItem item = this.Owner as ISchemaItem;
         // First we test, if the item is not opened already
         foreach (IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
 		{
@@ -253,7 +253,7 @@ public class EditDiagramActiveSchemaItem : AbstractCommand
 		else
 		{
 			// Get a copy of the item to edit (no cache usage => we get a fresh copy)
-			AbstractSchemaItem freshItem = _persistence.SchemaProvider.RetrieveInstance(item.GetType(), item.PrimaryKey, false) as AbstractSchemaItem;
+			ISchemaItem freshItem = _persistence.SchemaProvider.RetrieveInstance(item.GetType(), item.PrimaryKey, false) as ISchemaItem;
 			freshItem.ParentItem = item.ParentItem;
 			item = freshItem;
 		}
@@ -308,7 +308,7 @@ public class ExpandAllActiveSchemaItem : AbstractMenuCommand
     {
         get
         {
-            return _schema.ActiveNode is AbstractSchemaItem;
+            return _schema.ActiveNode is ISchemaItem;
         }
         set
         {
@@ -361,7 +361,7 @@ public class EditSchemaItem : AbstractCommand
 		}
 		IViewContent editor;
 		IPersistent item;
-		if(Owner is AbstractSchemaItem || Owner is Package)
+		if(Owner is ISchemaItem || Owner is Package)
 		{
 			item = this.Owner as IPersistent;
 		}
@@ -448,18 +448,18 @@ public class EditSchemaItem : AbstractCommand
 		}
 		editor.LoadObject(item);
 		editor.DisplayedItemId = item.Id;
-		if(item is AbstractSchemaItem)
+		if(item is ISchemaItem)
 		{
-			editor.TitleName = (item as AbstractSchemaItem).Name;
-			if((item as AbstractSchemaItem).NodeImage == null)
+			editor.TitleName = (item as ISchemaItem).Name;
+			if((item as ISchemaItem).NodeImage == null)
 			{
 				(editor as Form).Icon = System.Drawing.Icon.FromHandle(
                     ((System.Drawing.Bitmap)_schemaService.SchemaBrowser.ImageList.Images[
-                        _schemaService.SchemaBrowser.ImageIndex((item as AbstractSchemaItem).Icon)]).GetHicon());
+                        _schemaService.SchemaBrowser.ImageIndex((item as ISchemaItem).Icon)]).GetHicon());
 			}
 			else
 			{
-				(editor as Form).Icon = System.Drawing.Icon.FromHandle((item as AbstractSchemaItem)
+				(editor as Form).Icon = System.Drawing.Icon.FromHandle((item as ISchemaItem)
 					.NodeImage.ToBitmap()
 					.GetHicon());
 			}
@@ -515,7 +515,7 @@ public class DeleteActiveNode : AbstractMenuCommand
 	}
 	public override void Run()
 	{
-		if((_schema.ActiveNode is AbstractSchemaItem && (_schema.ActiveNode as AbstractSchemaItem).SchemaExtensionId != _schema.ActiveSchemaExtensionId)
+		if((_schema.ActiveNode is ISchemaItem && (_schema.ActiveNode as ISchemaItem).SchemaExtensionId != _schema.ActiveSchemaExtensionId)
 			| (_schema.ActiveNode is SchemaItemGroup && (_schema.ActiveNode as SchemaItemGroup).SchemaExtensionId != _schema.ActiveSchemaExtensionId))
 		{
 			throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteItemNotActiveExtension"));
@@ -523,7 +523,7 @@ public class DeleteActiveNode : AbstractMenuCommand
 		if(MessageBox.Show(ResourceUtils.GetString("DoYouWishDelete", _schema.ActiveNode.NodeText), ResourceUtils.GetString("DeleteTile"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 		{
 			// first close an open editor
-			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArrayList())
+			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArray<IViewContent>())
 			{
 				if(content.DisplayedItemId == (_schema.ActiveNode as IPersistent).Id)
 				{
@@ -563,7 +563,7 @@ public class MoveToAnotherPackage : AbstractMenuCommand
 	{
 		get
 		{
-            if ((_schema.ActiveNode is not AbstractSchemaItem &&
+            if ((_schema.ActiveNode is not ISchemaItem &&
 				_schema.ActiveNode is not SchemaItemGroup)  || 
 				!_schema.IsSchemaLoaded ||
                 _schema.LoadedPackages.Count < 2 ||
@@ -638,7 +638,7 @@ public class ShowDependencies : AbstractMenuCommand
 		Pads.FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
 		var dependencies =_schema.ActiveSchemaItem
 		    .GetDependencies(false)
-		    .Cast<AbstractSchemaItem>()
+		    .Cast<ISchemaItem>()
 		    .Where(x => x!=null)
 		    .ToArray();
 		pad.DisplayResults(dependencies);
@@ -675,7 +675,7 @@ public class ShowUsage : AbstractMenuCommand
         var referenceList = _schema.ActiveSchemaItem.GetUsage();
         if (referenceList != null)
         {
-            pad.DisplayResults((AbstractSchemaItem[])referenceList.ToArray(typeof(AbstractSchemaItem)));
+            pad.DisplayResults(referenceList.ToArray());
         }
 		ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 		cmd.Run();
