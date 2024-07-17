@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -18,8 +17,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={async () => await axios.get('/WeatherForecast').then(r => console.log(r.data))}>
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
