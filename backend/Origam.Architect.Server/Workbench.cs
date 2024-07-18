@@ -21,12 +21,16 @@ public class Workbench
     private readonly CancellationTokenSource modelCheckCancellationTokenSource = new ();
     private SchemaService schema;
 
+    public Workbench(SchemaService schema)
+    {
+        this.schema = schema;
+    }
+
     public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
     
     public void InitializeDefaultServices()
     {
         ServiceManager.Services.AddService(new MetaModelUpgradeService());
-        schema = new SchemaService();
         ServiceManager.Services.AddService(schema);
         schema.SchemaLoaded += _schema_SchemaLoaded;
     }

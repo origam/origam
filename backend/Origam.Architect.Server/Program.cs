@@ -1,4 +1,5 @@
 using Origam.Architect.Server.Wrappers;
+using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server
 {
@@ -6,17 +7,19 @@ namespace Origam.Architect.Server
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var schema = new SchemaService();
+            var workbench = new Workbench(schema);
+            workbench.InitializeDefaultServices();
+            workbench.Connect("Demo");
             
+            var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<ConfigManager>();
-            var workbench = new Workbench();
+            builder.Services.AddSingleton(schema);
             builder.Services.AddSingleton(workbench);
             var app = builder.Build();
-            workbench.InitializeDefaultServices();
-            workbench.Connect("Demo");
             
             if (app.Environment.IsDevelopment())
             {

@@ -10,7 +10,13 @@ export default defineConfig({
 			'/WeatherForecast':{
 				target: "https://localhost:7099",
 				secure: false
-			}
+			},'/Model':{
+				target: "https://localhost:7099",
+				secure: false
+			},'/Package':{
+				target: "https://localhost:7099",
+				secure: false
+			},
 		}
 	},
 })

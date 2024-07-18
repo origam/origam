@@ -1,33 +1,30 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import LazyLoadedTree, { TreeNode } from './LazyLoadedTree';
 import axios from "axios";
+import { Packages } from "./Packages.tsx";
 
-function App() {
+const App: React.FC = () => {
+  const [topNodes, setTopNodes] = useState<TreeNode[]>([])
+
+  const loadChildren = async (node: TreeNode): Promise<TreeNode[]> => {
+    return (await axios.get(`/Model/GetChildren?id=${node.id}`)).data;
+  };
+
+  async function loadTopNodes() {
+    setTopNodes((await axios.get(`/Model/GetTopNodes`)).data);
+  }
+
+  useEffect(() => {
+    loadTopNodes();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={async () => await axios.get('/WeatherForecast').then(r => console.log(r.data))}>
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <Packages onPackageLoaded={loadTopNodes}/>
+      <h3>Model</h3>
+      <LazyLoadedTree topNodes={topNodes} onLoadChildren={loadChildren}/>
+    </div>
+);
+};
 
-export default App
+export default App;
