@@ -20,11 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.RuleModel;
 
 
@@ -37,7 +39,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
 	public AbstractPage() : base() {Init();}
 	public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 	public AbstractPage(Key primaryKey) : base(primaryKey) {Init();}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{		
 		if (this.InputValidationRule != null) dependencies.Add(this.InputValidationRule);			
 		base.GetExtraDependencies(dependencies); 
@@ -85,7 +87,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
 	{
 		get
 		{
-			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.InputValidationRuleId));
+			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.InputValidationRuleId));
 		}
 		set
 		{
@@ -122,7 +124,7 @@ public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextCo
         get
         {
             return (DataConstant)PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(CacheMaxAgeDataConstantId));
+                typeof(ISchemaItem), new ModelElementKey(CacheMaxAgeDataConstantId));
         }
         set
         {

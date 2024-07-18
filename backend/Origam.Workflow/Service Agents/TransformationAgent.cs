@@ -254,7 +254,7 @@ public class TransformationAgent : AbstractServiceAgent
                 "ErrorOutputFileNotString"));
         }
     }
-	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	public override IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
 	{
 		IList<string> result = new List<string>();
 		XslTransformation transformation = null;
@@ -272,7 +272,7 @@ public class TransformationAgent : AbstractServiceAgent
 	}
 	private XslTransformation ResolveServiceMethodCallTask(ServiceMethodCallTask task)
 	{
-		AbstractSchemaItem tParam = task.GetChildByName("XslScript");
+		ISchemaItem tParam = task.GetChildByName("XslScript");
 		if(tParam.ChildItems.Count == 1)
 		{
 			TransformationReference tfRef = tParam.ChildItems[0] as TransformationReference;

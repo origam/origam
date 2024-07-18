@@ -25,6 +25,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -43,9 +44,9 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 
 	// with workflow method we consider all the workflows
 	// as input parameters except context stores marked with `IsReturnValue'
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
+		foreach (var context in LoadWorkflow.ChildItemsByType<ContextStore>(ContextStore.CategoryConst))
 		{
 			if(context.IsReturnValue == false && context.isScalar())
 			{
@@ -60,7 +61,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 			}
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.LoadWorkflow);
 		base.GetExtraDependencies (dependencies);
@@ -79,7 +80,7 @@ public class DataStructureWorkflowMethod : DataStructureMethod
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LoadWorkflowId)) as Workflow;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LoadWorkflowId)) as Workflow;
 		}
 		set
 		{

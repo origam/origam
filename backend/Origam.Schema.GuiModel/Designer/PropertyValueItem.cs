@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 [XmlModelRoot(CategoryConst)]
@@ -241,7 +243,7 @@ public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLoc
     }
 	#endregion
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -250,17 +252,17 @@ public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLoc
 		}
 	}		
 	
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.ControlPropertyItem);
 		base.GetExtraDependencies (dependencies);
 	}
 	
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

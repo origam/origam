@@ -299,8 +299,8 @@ public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, I
 	}
 	#endregion
 	#region IOrigamMetadataConsumer Members
-	private AbstractSchemaItem _origamMetadata;
-	public AbstractSchemaItem OrigamMetadata
+	private ISchemaItem _origamMetadata;
+	public ISchemaItem OrigamMetadata
 	{
 		get
 		{

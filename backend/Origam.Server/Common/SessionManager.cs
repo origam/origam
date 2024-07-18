@@ -240,7 +240,7 @@ public class SessionManager
                         : new FormSessionStore(basicUIService, request, menuItem.Name, analytics);
                     break;
                 case UIRequestType.WorkflowReferenceMenuItem:
-                    AbstractSchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractSchemaItem;
+                    ISchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(new Guid(request.ObjectId))) as ISchemaItem;
                     WorkflowReferenceMenuItem wfMenuItem = item as WorkflowReferenceMenuItem;
                     IWorkflow wf = item as IWorkflow;
                     if (wfMenuItem != null)
@@ -248,7 +248,7 @@ public class SessionManager
                         wf = wfMenuItem.Workflow;
                         // set default workflow menu item parameters (assigned constants to the menu item)
                         RuleEngine ruleEngine = RuleEngine.Create(null, null);
-                        foreach (AbstractSchemaItem parameter in wfMenuItem.ChildItems)
+                        foreach (ISchemaItem parameter in wfMenuItem.ChildItems)
                         {
                             if (parameter != null)
                             {

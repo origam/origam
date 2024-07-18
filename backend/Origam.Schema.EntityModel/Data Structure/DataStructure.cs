@@ -40,12 +40,12 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 	public DataStructure(Key primaryKey) : base(primaryKey)	{ Init(); }
 	#region Properties
 	[Browsable(false)]
-	public ArrayList Entities
+	public List<DataStructureEntity> Entities
 	{
 		get
 		{
-			ArrayList entities = new ArrayList();
-			foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
+			var entities = new List<DataStructureEntity>();
+			foreach(var entity in ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
 			{
 				entities.Add(entity);
 				entities.AddRange(GetChildEntities(entity));
@@ -71,49 +71,29 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
         }
     }
 	[Browsable(false)]
-	public ArrayList DefaultSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureDefaultSet.CategoryConst);
-		}
-	}
+	public List<DataStructureDefaultSet> DefaultSets =>
+		ChildItemsByType<DataStructureDefaultSet>(DataStructureDefaultSet.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList TemplateSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureTemplateSet.CategoryConst);
-		}
-	}
+	public List<DataStructureTemplateSet> TemplateSets => 
+		ChildItemsByType<DataStructureTemplateSet>(DataStructureTemplateSet.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList Methods
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureMethod.CategoryConst);
-		}
-	}
+	public List<DataStructureMethod> Methods => 
+		ChildItemsByType<DataStructureMethod>(DataStructureMethod.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList RuleSets
-	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureRuleSet.CategoryConst);
-		}
-	}
+	public List<DataStructureRuleSet> RuleSets =>
+		ChildItemsByType<DataStructureRuleSet>(DataStructureRuleSet.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList SortSets
+	public List<DataStructureSortSet> SortSets =>
+		ChildItemsByType<DataStructureSortSet>(DataStructureSortSet.CategoryConst);
+
+	private List<DataStructureEntity> GetChildEntities(DataStructureEntity entity)
 	{
-		get
-		{
-			return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
-		}
-	}
-	private ArrayList GetChildEntities(DataStructureEntity entity)
-	{
-		ArrayList entities = new ArrayList();
-		foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+		var entities = new List<DataStructureEntity>();
+		foreach(var childEntity in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
 		{
 			entities.Add(childEntity);
 			entities.AddRange(GetChildEntities(childEntity));
@@ -149,7 +129,7 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	private void Init()
 	{
 		this.ChildItemTypes.InsertRange(0,
@@ -164,13 +144,13 @@ public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 					   }
 			   );                        
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		foreach(DataStructureEntity item in this.Entities)
+		foreach(DataStructureEntity item in Entities)
 		{
 			item.GetParameterReferences(item, list);
 		}
-		foreach(DataStructureDefaultSet defset in this.DefaultSets)
+		foreach(DataStructureDefaultSet defset in DefaultSets)
 		{
 			defset.GetParameterReferences(defset, list);
 		}

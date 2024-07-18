@@ -23,6 +23,8 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Origam.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
@@ -71,23 +73,23 @@ public class SchemaService : AbstractService, ISchemaService
         _activeSchemaExtensionId = activeSchemaExtensionId;
     }
     
-    private Hashtable _providers = new Hashtable();
+    private Dictionary<Type, ISchemaItemProvider> _providers = new ();
 	
 	#region Public Properties
-	public ArrayList LoadedPackages
+	public List<Package> LoadedPackages
 	{
 		get
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			return persistence.SchemaProvider.RetrieveList<Package>(null).ToArrayList();
+			IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
+			return persistence.SchemaProvider.RetrieveList<Package>(null);
 		}
 	}
-	public ArrayList AllPackages
+	public List<Package> AllPackages
 	{
 		get
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			return persistence.SchemaListProvider.RetrieveList<Package>(null).ToArrayList();
+			IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>();
+			return persistence.SchemaListProvider.RetrieveList<Package>(null);
 		}
 	}
 	protected Guid _activeSchemaExtensionId;
@@ -135,9 +137,9 @@ public class SchemaService : AbstractService, ISchemaService
 	#region Public Methods
 	public bool IsItemFromExtension(object item)
 	{
-		if(item is AbstractSchemaItem)
+		if(item is ISchemaItem)
 		{
-			if((item as AbstractSchemaItem).SchemaExtensionId != this.ActiveSchemaExtensionId)
+			if((item as ISchemaItem).SchemaExtensionId != this.ActiveSchemaExtensionId)
 			{
 				return false;
 			}
@@ -154,7 +156,7 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public bool CanDeleteItem(object item)
 	{
-		if(item is AbstractSchemaItem || item is SchemaItemGroup)
+		if(item is ISchemaItem || item is SchemaItemGroup)
 		{
 			return IsItemFromExtension(item);
 		}
@@ -169,7 +171,7 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public bool CanEditItem(object item)
 	{
-		if(item is AbstractSchemaItem)
+		if(item is ISchemaItem)
 		{
 			if(! IsItemFromExtension(item)) return false;
 			// check if the item is checked out by the user
@@ -228,7 +230,7 @@ public class SchemaService : AbstractService, ISchemaService
 	{
 		_providers.Add(provider.GetType(), provider);
 		provider.PersistenceProvider = (ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService).SchemaProvider;
-		foreach(Package package in this.LoadedPackages)
+		foreach(Package package in LoadedPackages)
 		{
 			package.AddProvider(provider);
 		}
@@ -262,10 +264,10 @@ public class SchemaService : AbstractService, ISchemaService
 	}
 	public void RemoveAllProviders()
 	{
-		ArrayList keys = new ArrayList(_providers.Keys);
-		foreach(object key in keys)
+		var keys = _providers.Keys.ToList();
+		foreach(Type key in keys)
 		{
-			this.RemoveProvider(_providers[key] as ISchemaItemProvider);
+			RemoveProvider(_providers[key]);
 		}
 	}
 	public ISchemaItemProvider[] Providers
@@ -286,17 +288,18 @@ public class SchemaService : AbstractService, ISchemaService
 	{
 		if(type.IsInterface)
 		{
-			foreach(DictionaryEntry entry in _providers)
+			foreach(var entry in _providers)
 			{
 				foreach(Type interf in entry.Value.GetType().GetInterfaces())
 				{
-					if(type.Equals(interf)) return entry.Value as ISchemaItemProvider;
+					if(type.Equals(interf)) return entry.Value;
 				}
 			}
 		}
 		else
 		{
-			return _providers[type] as ISchemaItemProvider;
+			_providers.TryGetValue(type, out var provider);
+			return provider;
 		}
 		return null;
 	}
@@ -308,18 +311,18 @@ public class SchemaService : AbstractService, ISchemaService
 		{
 			if(t.FullName == type)
 			{
-				return _providers[t] as ISchemaItemProvider;
+				return _providers[t];
 			}
 		}
 		return null;
 	}
-	public void AddSchemaItem(AbstractSchemaItem item)
+	public void AddSchemaItem(ISchemaItem item)
 	{
 	}
-	public void RemoveSchemaItem(AbstractSchemaItem item)
+	public void RemoveSchemaItem(ISchemaItem item)
 	{
 	}
-	public void UpdateSchemaItem(AbstractSchemaItem item)
+	public void UpdateSchemaItem(ISchemaItem item)
 	{
 	}
 	

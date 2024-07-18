@@ -129,7 +129,7 @@ public class ServerCoreUIService : IBasicUIService
             {
                 var clearAll = portalSessionStore.ShouldBeCleared();
             // running session, we get all the form sessions
-            var sessionsToDestroy = new ArrayList();
+            var sessionsToDestroy = new List<Guid>();
             foreach(var mainSessionStore in portalSessionStore.FormSessions)
             {
                 if(clearAll)
@@ -267,11 +267,11 @@ public class ServerCoreUIService : IBasicUIService
             // (primary keys + all the initial sort columns)
             columns = sessionStore.DataListLoadedColumns;
         }
-        return DataTools.DatasetToHashtable(result as DataSet, columns, 
+        return DataTools.DatasetToDictionary(result as DataSet, columns, 
             INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
             sessionStore.DataListEntity, sessionStore);
     }
-    public IList RestoreData(RestoreDataInput input)
+    public List<ChangeInfo> RestoreData(RestoreDataInput input)
     {
         var sessionStore = sessionManager.GetSession(
             input.SessionFormIdentifier);
@@ -375,12 +375,12 @@ public class ServerCoreUIService : IBasicUIService
             sessionManager.GetSessionStats()));
         return changes;
     }
-    public ArrayList GetRowData(MasterRecordInput input)
+    public List<ChangeInfo> GetRowData(MasterRecordInput input)
     {
         SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
         if(sessionStore == null)
         {
-            return new ArrayList();
+            return new List<ChangeInfo>();
         }
         return sessionStore.GetRowData(
             input.Entity, input.RowId, false);
@@ -401,12 +401,12 @@ public class ServerCoreUIService : IBasicUIService
         return sessionStore == null 
             ? new Hashtable() : sessionStore.Request.Parameters;
     }
-    public ArrayList GetData(GetDataInput input)
+    public List<List<object>> GetData(GetDataInput input)
     {
         SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
         if(sessionStore == null)
         {
-            return new ArrayList();
+            return new List<List<object>>();
         }
         return sessionStore.GetData(
             input.ChildEntity, 
@@ -895,12 +895,12 @@ public class ServerCoreUIService : IBasicUIService
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             favorites, false, null);
     }
-    public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+    public List<ChangeInfo> GetPendingChanges(Guid sessionFormIdentifier)
     {
         var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
         var changes = sessionStore.PendingChanges;
         sessionStore.PendingChanges = null;
-        return changes ?? new ArrayList();
+        return changes ?? new List<ChangeInfo>();
     }
     public List<ChangeInfo> GetChanges(ChangesInput input)
     {
@@ -1284,7 +1284,7 @@ public class ServerCoreUIService : IBasicUIService
         NotificationBox logoNotificationBox = LogoNotificationBox();
         if (logoNotificationBox != null)
         {
-            ArrayList tooltips = logoNotificationBox.ChildItemsByType(
+            List<DataServiceDataTooltip> tooltips = logoNotificationBox.ChildItemsByType<DataServiceDataTooltip>(
                 DataServiceDataTooltip.CategoryConst);
             doc = GetTooltip(null, tooltips)?.Xml;
         }
@@ -1294,7 +1294,7 @@ public class ServerCoreUIService : IBasicUIService
         }
         return doc;
     }
-    private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
+    private static IXmlContainer GetTooltip(object id, List<DataServiceDataTooltip> tooltips)
     {
         tooltips.Sort();
         DataServiceDataTooltip tooltip = null;

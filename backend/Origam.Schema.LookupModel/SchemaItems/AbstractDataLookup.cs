@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -38,16 +39,16 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	public AbstractDataLookup(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public AbstractDataLookup(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override bool UseFolders => false;
 	public override string ItemType => CategoryConst;
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		base.GetParameterReferences(ListMethod, list);
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ListDataStructure);
 		dependencies.Add(ValueDataStructure);
@@ -72,20 +73,20 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	#endregion
 	#region Properties
 	[Browsable(false)]
-	public ArrayList MenuBindings => ChildItemsByType(
+	public List<DataLookupMenuBinding> MenuBindings => ChildItemsByType<DataLookupMenuBinding>(
 		DataLookupMenuBinding.CategoryConst);
 	[Browsable(false)]
 	public bool HasTooltip
 	{
 		get
 		{
-			var tooltips = ChildItemsByType(
+			var tooltips = ChildItemsByType<AbstractDataTooltip>(
 				AbstractDataTooltip.CategoryConst);
 			return tooltips.Count > 0;
 		}
 	}
 	[Browsable(false)]
-	public ArrayList Tooltips => ChildItemsByType(
+	public List<AbstractDataTooltip> Tooltips => ChildItemsByType<AbstractDataTooltip>(
 		AbstractDataTooltip.CategoryConst);
 	#region List
 	private string _listValueMember;
@@ -138,8 +139,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 			{
 				Id = ListDataStructureId
 			};
-			return (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key) as DataStructure;
+			return (ISchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(ISchemaItem), key) as DataStructure;
 		}
 		set
 		{
@@ -222,8 +223,8 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     [XmlReference("valueDataStructure", "ValueDataStructureId")]
     public DataStructure ValueDataStructure
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureId)) as DataStructure;
 		set
 		{
@@ -267,7 +268,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureMethod ListMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ListDataStructureMethodId));
 		set => ListDataStructureMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -279,7 +280,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureMethod ValueMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureMethodId));
 		set => ValueDataStructureMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -291,7 +292,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureSortSet ValueSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ValueDataStructureSortSetId));
 		set => ValueDataStructureSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -303,7 +304,7 @@ public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
     public DataStructureSortSet ListSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ListDataStructureSortSetId));
 		set => ListDataStructureSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

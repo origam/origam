@@ -36,6 +36,6 @@ public abstract class AbstractCommand : ICommand
 	/// Invokes the command.
 	/// </summary>
 	public abstract void Run();
-    public List<AbstractSchemaItem> GeneratedModelElements { get; } 
-        = new List<AbstractSchemaItem>();
+    public List<ISchemaItem> GeneratedModelElements { get; } 
+        = new List<ISchemaItem>();
 }

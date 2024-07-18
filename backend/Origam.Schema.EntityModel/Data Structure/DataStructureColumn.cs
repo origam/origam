@@ -27,7 +27,9 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence.Attributes;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.Attributes;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 public enum DataStructureColumnSortDirection
@@ -99,7 +101,7 @@ public class DataStructureColumn : AbstractSchemaItem
 			if(_column != null) return _column;
 			try
 			{
-				_column = (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ColumnId));
+				_column = (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ColumnId));
 				return _column;
 			}
 			catch
@@ -139,7 +141,7 @@ public class DataStructureColumn : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DefaultLookupId;
-			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -368,7 +370,7 @@ public class DataStructureColumn : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -416,10 +418,10 @@ public class DataStructureColumn : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Field != null)
-			base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
+			base.GetParameterReferences(Field, list);
 	}
 //		public override void Persist()
 //		{
@@ -435,7 +437,7 @@ public class DataStructureColumn : AbstractSchemaItem
 //				}
 //			}
 //		}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Field);
 		if(this.DefaultLookup != null) dependencies.Add(this.DefaultLookup);
@@ -457,11 +459,11 @@ public class DataStructureColumn : AbstractSchemaItem
         }
         base.UpdateReferences();
     }
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override string NodeText

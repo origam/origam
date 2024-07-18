@@ -30,6 +30,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.MenuModel;
 
@@ -44,7 +45,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 		: base(schemaExtensionId) {}
 	public FormReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Screen);
 		if(DefaultSet != null)
@@ -134,7 +135,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public FormControlSet Screen
 	{
 		get => (FormControlSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+			typeof(ISchemaItem), new ModelElementKey(ScreenId));
 		set
 		{
 			if((value == null) 
@@ -160,7 +161,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureTemplateSet TemplateSet
 	{
 		get => (DataStructureTemplateSet)PersistenceProvider
-			.RetrieveInstance(typeof(AbstractSchemaItem), 
+			.RetrieveInstance(typeof(ISchemaItem), 
 				new ModelElementKey(TemplateSetId));
 		set
 		{
@@ -176,7 +177,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureTemplate DefaultTemplate
 	{
 		get => (DataStructureTemplate)PersistenceProvider.RetrieveInstance(
-		typeof(AbstractSchemaItem), new ModelElementKey(DefaultTemplateId));
+		typeof(ISchemaItem), new ModelElementKey(DefaultTemplateId));
 		set => DefaultTemplateId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -188,7 +189,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureDefaultSet DefaultSet
 	{
 		get => (DataStructureDefaultSet)PersistenceProvider
-			.RetrieveInstance(typeof(AbstractSchemaItem), 
+			.RetrieveInstance(typeof(ISchemaItem), 
 				new ModelElementKey(DefaultSetId));
 		set => DefaultSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -202,7 +203,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureMethod Method
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(MethodId));
+			typeof(ISchemaItem), new ModelElementKey(MethodId));
 		set => MethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -214,7 +215,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructure ListDataStructure
 	{
 		get => (DataStructure)PersistenceProvider.RetrieveInstance
-			(typeof(AbstractSchemaItem), 
+			(typeof(ISchemaItem), 
 				new ModelElementKey(ListDataStructureId));
 		set
 		{
@@ -232,7 +233,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureMethod ListMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ListMethodId));
+			typeof(ISchemaItem), new ModelElementKey(ListMethodId));
 		set => ListMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -244,7 +245,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureSortSet ListSortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ListSortSetId));
+			typeof(ISchemaItem), new ModelElementKey(ListSortSetId));
 		set => ListSortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -277,7 +278,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureMethod RecordEditMethod
 	{
 		get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(RecordEditMethodId));
 		set => RecordEditMethodId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -291,7 +292,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureEntity ListEntity
 	{
 		get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ListEntityId));
+			typeof(ISchemaItem), new ModelElementKey(ListEntityId));
 		set => ListEntityId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -302,7 +303,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public PanelControlSet SelectionDialogPanel
 	{
 		get => (PanelControlSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelId));
 		set => SelectionPanelId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -314,7 +315,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public AbstractTransformation TransformationBeforeSelection
 	{
 		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelBeforeTransformationId));
 		set => SelectionPanelBeforeTransformationId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -326,7 +327,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public AbstractTransformation TransformationAfterSelection
 	{
 		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelAfterTransformationId));
 		set => SelectionPanelAfterTransformationId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -339,7 +340,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public IEndRule SelectionDialogEndRule
 	{
 		get => (IEndRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionEndRuleId));
 		set => SelectionEndRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -356,7 +357,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureRuleSet RuleSet
 	{
 		get => (DataStructureRuleSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(RuleSetId));
+			typeof(ISchemaItem), new ModelElementKey(RuleSetId));
 		set => RuleSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -368,7 +369,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public DataStructureSortSet SortSet
 	{
 		get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(SortSetId));
+			typeof(ISchemaItem), new ModelElementKey(SortSetId));
 		set => SortSetId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -379,7 +380,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
 	public IEndRule ConfirmationRule
 	{
 		get => (IEndRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(ConfirmationRuleId));
 		set => ConfirmationRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -408,7 +409,7 @@ public class FormReferenceMenuItem : AbstractMenuItem
     public DataStructureEntity DynamicFormLabelEntity
     {
         get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), 
+            typeof(ISchemaItem), 
             new ModelElementKey(DynamicFormLabelEntityId));
         set
         {
@@ -475,7 +476,6 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 		if (menuItem.ListEntity == null) return null;
 		string errorMessages = string.Join("\n", 
 			menuItem.ListEntity.Entity.ChildItems
-				.ToGeneric()
 				.OfType<EntityWorkflowAction>()
 				.Select(action => GetErrorOrNull(action, menuItem))
 				.Where(error => error != null));
@@ -496,7 +496,6 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 		}
 		
 		var screenConditions = action.ChildItems
-			.ToGeneric()
 			.OfType<ScreenCondition>()
 			.ToList();
 		bool shouldShowOnScreen = screenConditions.Any(
@@ -507,12 +506,10 @@ public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribut
 			return null;
 		}
 		var screenSectionIds = menuItem.Screen.ChildItems
-			.ToGeneric()
 			.OfType<ControlSetItem>()
 			.Select(x => x.Id)
 			.ToList();
 		var screenSectionConditions = action.ChildItems
-			.ToGeneric()
 			.OfType<ScreenSectionCondition>()
 			.ToList();
 		bool shouldShowOnScreenSection = screenSectionConditions

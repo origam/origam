@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
@@ -91,7 +92,7 @@ public class ControlSetItem  : AbstractSchemaItem
 	}
 	#endregion
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType => CategoryConst;
 	public override UI.BrowserNodeCollection ChildNodes()
 	{
@@ -99,7 +100,7 @@ public class ControlSetItem  : AbstractSchemaItem
 		return ParentItem.ParentItem == null 
 			? new UI.BrowserNodeCollection() : base.ChildNodes();
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ControlItem);
 		if(ControlItem.PanelControlSet != null)
@@ -111,8 +112,8 @@ public class ControlSetItem  : AbstractSchemaItem
 		var graphicsId = Guid.Empty;
 		var workflowId = Guid.Empty;
 		var constantId = Guid.Empty;
-		foreach(PropertyValueItem property 
-		        in ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var property 
+		        in ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			if(property.ControlPropertyItem == null)
 			{
@@ -155,8 +156,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(lookupId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(lookupId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -172,8 +173,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(constantId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(constantId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -189,8 +190,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(reportId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(reportId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -206,8 +207,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(graphicsId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(graphicsId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -223,8 +224,8 @@ public class ControlSetItem  : AbstractSchemaItem
 			try
 			{
 				var item = PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), 
-					new ModelElementKey(workflowId)) as AbstractSchemaItem;
+					typeof(ISchemaItem), 
+					new ModelElementKey(workflowId)) as ISchemaItem;
 				dependencies.Add(item);
 			}
 			catch
@@ -271,10 +272,10 @@ public class ControlSetItem  : AbstractSchemaItem
 	}
 	#endregion
 }
-public class ControlSetItemComparer : IComparer
+public class ControlSetItemComparer : IComparer<ISchemaItem>
 {
 	#region IComparer Members
-	public int Compare(object x, object y)
+	public int Compare(ISchemaItem x, ISchemaItem y)
 	{
 		if(!(x is ControlSetItem xItem))
 		{
@@ -297,7 +298,7 @@ public class ControlSetItemComparer : IComparer
 	#endregion
 	private int TabIndex(ControlSetItem control)
 	{
-		foreach(PropertyValueItem property in control.ChildItemsByType(
+		foreach(var property in control.ChildItemsByType<PropertyValueItem>(
 			        PropertyValueItem.CategoryConst))
 		{
 			if(property.ControlPropertyItem.Name == "TabIndex")
@@ -308,22 +309,22 @@ public class ControlSetItemComparer : IComparer
 		return -1;
 	}
 }
-public class AlternativeControlSetItemComparer : IComparer
+public class AlternativeControlSetItemComparer : IComparer<ControlSetItem>
 {
 	#region IComparer Members
-	public int Compare(object x, object y)
+	public int Compare(ControlSetItem x, ControlSetItem y)
 	{
-		if(!(x is ControlSetItem xItem))
+		if(x is null)
 		{
 			throw new ArgumentOutOfRangeException ("x", x, 
 				"Unsupported type for comparison.");
 		}
-		if(!(y is ControlSetItem yItem))
+		if(y is null)
 		{
 			throw new ArgumentOutOfRangeException ("y", y, 
 				"Unsupported type for comparison.");
 		}
-		return xItem.Level.CompareTo (yItem.Level);
+		return x.Level.CompareTo (y.Level);
 	}
 	#endregion
 }

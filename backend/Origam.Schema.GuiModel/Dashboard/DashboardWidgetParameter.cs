@@ -80,7 +80,7 @@ public class DashboardWidgetParameter : AbstractSchemaItem
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
 		}
 		set
 		{
@@ -96,7 +96,7 @@ public class DashboardWidgetParameter : AbstractSchemaItem
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LookupId)) as IDataLookup;
 		}
 		set
 		{

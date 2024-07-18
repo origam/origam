@@ -43,6 +43,7 @@ using System.Linq;
 using Origam.Extensions;
 using Origam.Gui;
 using Origam.Gui.UI;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Service.Core;
 
 namespace Origam.Gui.Win;
@@ -976,7 +977,7 @@ public class FormGenerator : IDisposable
 	private void ClearControls(Control control)
 	{
 		if(control is BaseDropDownControl || control.GetType().FullName == "CrystalDecisions.Windows.Forms.CrystalReportViewer") return;
-		ArrayList controls = new ArrayList(control.Controls);
+		var controls = control.Controls.Cast<Control>().ToList();
 		if(control == this.Form)
 		{
 			foreach(Control component in _tooltipControls)
@@ -1003,7 +1004,7 @@ public class FormGenerator : IDisposable
 		}
 		for (int i = 0; i < controls.Count; i++)
 		{
-			Control child = (Control)controls[i];
+			Control child = controls[i];
 			child.Parent = null;
 			child.Dispose();
 		}
@@ -1048,12 +1049,12 @@ public class FormGenerator : IDisposable
 	private void SetDataSourceToConsumers(Hashtable dataConsumers)
 	{
 		this.IgnoreDataChanges = true;
-		ArrayList sortedPanels = new ArrayList();
+		var sortedPanels = new List<AsPanel>();
 		foreach(DictionaryEntry entry in dataConsumers)
 		{
-			if(entry.Key is AsPanel)
+			if(entry.Key is AsPanel asPanel)
 			{
-				sortedPanels.Add(entry.Key);
+				sortedPanels.Add(asPanel);
 			}
 		}
 		sortedPanels.Sort();
@@ -1235,7 +1236,7 @@ public class FormGenerator : IDisposable
 			supportInitialize.BeginInit();
 		}
 		//recursively add child controls
-		ArrayList sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.CategoryConst);
+		var sortedChildControls = cntrlSet.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
 		sortedChildControls.Sort();
 		
 		foreach (ControlSetItem childItem in sortedChildControls)
@@ -1311,7 +1312,7 @@ public class FormGenerator : IDisposable
 	}
     private void ShowToolStrip(AsPanel panel, string table, ControlSetItem childItem)
     {
-        ArrayList validActions = new ArrayList();
+        var validActions = new List<EntityUIAction>();
         Guid entityId = new Guid(_mainFormData.Tables[table]
             .ExtendedProperties["EntityId"].ToString());
         UIActionTools.GetValidActions(
@@ -1354,7 +1355,7 @@ public class FormGenerator : IDisposable
 			}
 		}
 	}
-	private void CreatePanelToolStrip(AsPanel panel, ArrayList actions)
+	private void CreatePanelToolStrip(AsPanel panel, List<EntityUIAction> actions)
 	{
 		AsForm parentForm = AsyncForm ?? Form;
 		var toolStrip = new LabeledToolStrip(parentForm);
@@ -1362,7 +1363,6 @@ public class FormGenerator : IDisposable
 		_toolStripContainer.Controls.Add(toolStrip);
         panel.ToolStrip = toolStrip;
         var dropDownActions = actions
-	        .Cast<EntityUIAction>()
 	        .Where(action => action is EntityDropdownAction)
 	        .Cast<EntityDropdownAction>()
 	        .SelectMany(GetChildActions)
@@ -1423,7 +1423,7 @@ public class FormGenerator : IDisposable
 		{
 			return;
 		}
-		foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+		foreach(var bindItem in cntrSetItem.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
 		{
 			string propertyName=bindItem.ControlPropertyItem.Name;
 			PropertyInfo property = GetPropertyInfo(cntrl.GetType(), propertyName);
@@ -1470,7 +1470,7 @@ public class FormGenerator : IDisposable
 			{
 				itemDataMember = "";
 				
-				foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.CategoryConst))
+				foreach(var item in cntrlSet.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 				{
 					if(item.ControlPropertyItem.Name == "DataMember")
 					{
@@ -1570,7 +1570,7 @@ public class FormGenerator : IDisposable
         
 		bool setProperty=false;
 			
-		foreach(PropertyValueItem propValItem in cntrSetItem.ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var propValItem in cntrSetItem.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			propToSet = GetPropertyInfo(cntrl.GetType(), propValItem.ControlPropertyItem.Name);
 			
@@ -1639,7 +1639,7 @@ public class FormGenerator : IDisposable
 	private PropertyValueItem FindPropertyValueItem (ControlSetItem controlSetItem, ControlPropertyItem propertyToFind)
 	{
 		PropertyValueItem result=null;
-		foreach(PropertyValueItem item in controlSetItem.ChildItemsByType("PropertyValueItem"))
+		foreach(var item in controlSetItem.ChildItemsByType<PropertyValueItem>("PropertyValueItem"))
 		{
 			if(item.ControlPropertyItem.PrimaryKey.Equals(propertyToFind.PrimaryKey))
 			{
@@ -1982,7 +1982,7 @@ public class FormGenerator : IDisposable
 				_dataServiceAgent.Run();
 				DataSet result = _dataServiceAgent.Result as DataSet;
 				_loadedPieces.Add(id, null);
-				ArrayList sortedPanels = new ArrayList(this.Form.Panels);
+				var sortedPanels = this.Form.Panels.ToList();
 				sortedPanels.Sort();
 				foreach(AsPanel panel in sortedPanels)
 				{

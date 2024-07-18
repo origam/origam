@@ -23,21 +23,15 @@ using System;
 using System.Collections.Generic;
 
 namespace Origam.DA.ObjectPersistence;
-/// <summary>
-/// All persistable items implement this interface.
-/// </summary>
-public interface IPersistent : IDisposable
+
+public interface IPersistent : IDisposable, IProviderContainer
 {
 	event EventHandler Changed;
 	event EventHandler Deleted;
 	/// <summary>
-	/// Gets or sets persistence provider to this object.
-	/// </summary>
-	IPersistenceProvider PersistenceProvider {get; set;}
-	/// <summary>
 	/// Gets primary key of the object.
 	/// </summary>
-	Key PrimaryKey {get;}
+	Key PrimaryKey { get; set; }
 	Guid Id { get; }
 	/// <summary>
 	/// Insert or update the current object instance.

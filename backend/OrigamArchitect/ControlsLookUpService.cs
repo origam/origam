@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
+using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
 using Origam.Schema.LookupModel;
@@ -73,7 +74,7 @@ public class ControlsLookUpService: IControlsLookUpService
     }
     public void RemoveLookupControlsByForm(Form form)
     {
-        ArrayList controls = new ArrayList(_controls.Keys);
+        var controls =_controls.Keys.Cast<Control>().ToList();
         foreach (Control control in controls)
         {
             if (_controls[control].Equals(form))
@@ -100,7 +101,7 @@ public class ControlsLookUpService: IControlsLookUpService
         if (binding != null)
         {
             ParameterizedEventArgs args = new ParameterizedEventArgs();
-            foreach (DictionaryEntry entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue))
+            foreach (var entry in dataLookupService.LinkParameters(binding.MenuItem, control.LookupValue))
             {
                 args.Parameters.Add(entry.Key, entry.Value);
             }

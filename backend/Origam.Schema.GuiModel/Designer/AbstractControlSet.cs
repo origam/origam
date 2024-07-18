@@ -32,8 +32,8 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
 	{
 		get {
 			var result = new BrowserNodeCollection ();
-			foreach (ControlSetItem item 
-			         in ChildItemsByType(ControlSetItem.CategoryConst)) {
+			foreach (var item 
+			         in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)) {
 				if (item.IsAlternative) {
 					result.Add (item);
 				}
@@ -44,8 +44,8 @@ public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet
 	public ControlSetItem MainItem
 	{
 		get {
-			foreach (ControlSetItem item 
-			         in ChildItemsByType(ControlSetItem.CategoryConst)) {
+			foreach (var item 
+			         in ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst)) {
 				if(!item.IsAlternative) {
 					return item;
 				}

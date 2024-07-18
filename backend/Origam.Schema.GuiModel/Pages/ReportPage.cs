@@ -40,7 +40,7 @@ public class ReportPage : AbstractPage
 	{
 		this.ChildItemTypes.Add(typeof(PageParameterMapping));
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Report);
 		base.GetExtraDependencies(dependencies);
@@ -70,7 +70,7 @@ public class ReportPage : AbstractPage
 	{
 		get
 		{
-			return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
+			return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ReportId));
 		}
 		set
 		{

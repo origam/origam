@@ -122,7 +122,7 @@ public class UIElementRenderData
     public static UIElementRenderData GetRenderData(ControlSetItem control, bool forceReadOnly)
 	{
 		UIElementRenderData renderData = new UIElementRenderData();
-		foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
+		foreach(var property in control.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
 		{
 			string stringValue = property.Value;
 			if(stringValue != null && DatasetGenerator.IsCaptionExpression(stringValue))

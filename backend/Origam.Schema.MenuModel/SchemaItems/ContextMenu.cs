@@ -49,7 +49,7 @@ public class ContextMenu : AbstractSchemaItem, ISchemaItemFactory
 		ChildItemTypes.Add(typeof(DashboardMenuItem));
 		ChildItemTypes.Add(typeof(DynamicMenu));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

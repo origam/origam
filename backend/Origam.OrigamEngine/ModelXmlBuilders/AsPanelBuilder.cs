@@ -23,7 +23,7 @@ using System;
 using System.Data;
 using System.Xml;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
@@ -223,7 +223,7 @@ public class AsPanelBuilder
 		parentNode.AppendChild(formRootElement);
 		SchemaService ss = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		ChartSchemaItemProvider chartProvider = ss.GetProvider(typeof(ChartSchemaItemProvider)) as ChartSchemaItemProvider;
-		ArrayList charts = chartProvider.Charts(formId, table.TableName);
+		List<AbstractChart> charts = chartProvider.Charts(formId, table.TableName);
 		if(charts.Count > 0)
 		{
 			parentNode.SetAttribute("IsChartSupported", XmlConvert.ToString(true));

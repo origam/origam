@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Services;
 using Origam.Schema.EntityModel;
@@ -55,7 +56,7 @@ public class PanelControlSet : AbstractControlSet
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataSourceId;
-			return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -79,7 +80,7 @@ public class PanelControlSet : AbstractControlSet
 		}
 	}
 	
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool IsDeleted
 	{
 		get
@@ -121,7 +122,7 @@ public class PanelControlSet : AbstractControlSet
 			return base.Alternatives;
         }
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataEntity);
 		

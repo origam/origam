@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -36,8 +37,8 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
 	public WorkflowTask() : base() {}
 	public WorkflowTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public WorkflowTask(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	#region Overriden ISchemaItem Members
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.OutputContextStore);
 		base.GetExtraDependencies (dependencies);
@@ -70,7 +71,7 @@ public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, I
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.OutputContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

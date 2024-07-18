@@ -37,7 +37,7 @@ public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 	
 	public AbstractDataStructure(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractDataStructure(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

@@ -166,7 +166,7 @@ public partial class Wizard : Form
     {
         SetPageTitle(sender);
         GetNextPage(PagesList.Finish, sender);
-        AbstractSchemaItem[] results = new AbstractSchemaItem[0] ;
+        ISchemaItem[] results = new ISchemaItem[0] ;
         try
         {
             iwizard.Command.Execute();
@@ -180,7 +180,7 @@ public partial class Wizard : Form
         }
         for (int i = 0; i < results.LongLength; i++)
         {
-            AbstractSchemaItem item = results[i];
+            ISchemaItem item = results[i];
             ListViewItem newItem = new ListViewItem(new string[] { item.Path, item.ModelDescription() })
             {
                 ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon)
@@ -364,7 +364,7 @@ public partial class Wizard : Form
         var fieldSegment 
             = (cboDisplayField.SelectedItem as IDataEntityColumn)?.Name ?? "";
         var filterSegment 
-            = (cboIdFilter.SelectedItem as AbstractSchemaItem)?.Name ?? "";
+            = (cboIdFilter.SelectedItem as ISchemaItem)?.Name ?? "";
         var lookupName = form.Entity.Name;
         if (fieldSegment != "")
         {
@@ -452,7 +452,7 @@ public partial class Wizard : Form
     private void TableRelation_SelectedIndexChanged(object sender, EventArgs e)
     {
         CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
-        relations.RelatedEntity = (AbstractSchemaItem)tableRelation.SelectedItem;
+        relations.RelatedEntity = (ISchemaItem)tableRelation.SelectedItem;
         if (this.tableRelation.Name != "")
         {
             this.groupBoxKey.Enabled = true;
@@ -462,12 +462,12 @@ public partial class Wizard : Form
     private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
         CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
-        relations.BaseEntityFieldSelect = (AbstractSchemaItem)BaseEntityField.SelectedItem;
+        relations.BaseEntityFieldSelect = (ISchemaItem)BaseEntityField.SelectedItem;
     }
     private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
     {
         CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
-        relations.RelatedEntityFieldSelect = (AbstractSchemaItem)RelatedEntityField.SelectedItem;
+        relations.RelatedEntityFieldSelect = (ISchemaItem)RelatedEntityField.SelectedItem;
     }
     private void CboEntity1_SelectedIndexChanged(object sender, EventArgs e)
     {

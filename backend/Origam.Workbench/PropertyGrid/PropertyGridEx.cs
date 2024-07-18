@@ -68,7 +68,7 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
                 }
             }
         }
-        var element = propDesc.GetValue(context.Instance) as AbstractSchemaItem;
+        var element = propDesc.GetValue(context.Instance) as ISchemaItem;
         if (element != null)
         {
             var editHandler = new ModelElementEditHandler();
@@ -89,7 +89,7 @@ class PropertyGridEx : System.Windows.Forms.PropertyGrid
             {
                 // navigate in model browser
                 var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-                schemaBrowser.EbrSchemaBrowser.SelectItem(descriptor.GetValue(context.Instance) as AbstractSchemaItem);
+                schemaBrowser.EbrSchemaBrowser.SelectItem(descriptor.GetValue(context.Instance) as ISchemaItem);
                 ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                 cmd.Run();
                 // edit

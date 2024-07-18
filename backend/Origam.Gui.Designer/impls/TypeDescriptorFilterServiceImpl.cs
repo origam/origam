@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
@@ -87,7 +88,7 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 		{
 			Hashtable finalprops = new Hashtable();
 			// Load all properties we want to see
-			foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+			foreach(var propItem in ctrlSet.ControlItem.ChildItemsByType<ControlPropertyItem>(ControlPropertyItem.CategoryConst))
 			{
 				finalprops.Add(propItem.Name, propItem.Name);
 			}
@@ -129,7 +130,7 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
             if (!finalprops.ContainsKey("VisualStyle")) finalprops.Add("VisualStyle", "VisualStyle");
             if (!finalprops.ContainsKey("CalendarViewStyle")) finalprops.Add("CalendarViewStyle", "CalendarViewStyle");
 			
-			ArrayList keys = new ArrayList(properties.Count);
+			var keys = new List<object>(properties.Count);
 			// Sometimes keys are not exactly the member names, they are renamed (e.g. Feature_118 instead of just Feature.
 			// Therefore we must dig into the member definition to get the real name.
 			foreach(DictionaryEntry entry in properties)
@@ -161,7 +162,7 @@ public class TypeDescriptorFilterServiceImpl:ITypeDescriptorFilterService
 		ControlItem inheritorItem = DynamicTypeFactory
 			.GetAssociatedControlItem(component.GetType());
 		if (inheritorItem == null) return;
-		foreach (ControlPropertyItem propItem in inheritorItem.ChildItemsByType(
+		foreach (var propItem in inheritorItem.ChildItemsByType<ControlPropertyItem>(
 			ControlPropertyItem.CategoryConst))
 		{
 			finalProps[propItem.Name] = propItem.Name;

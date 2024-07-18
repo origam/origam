@@ -38,8 +38,8 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
             _entity = value;
         }
     }
-    private AbstractSchemaItem _relatedEntity = null;
-    public AbstractSchemaItem RelatedEntity
+    private ISchemaItem _relatedEntity = null;
+    public ISchemaItem RelatedEntity
     {
         get
         {
@@ -50,8 +50,8 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
             _relatedEntity = value;
         }
     }
-    private AbstractSchemaItem _baseEntityField = null;
-    public AbstractSchemaItem BaseEntityFieldSelect
+    private ISchemaItem _baseEntityField = null;
+    public ISchemaItem BaseEntityFieldSelect
     {
         get
         {
@@ -62,8 +62,8 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
             _baseEntityField = value;
         }
     }
-    private AbstractSchemaItem _relatedEntityField = null;
-    public AbstractSchemaItem RelatedEntityFieldSelect
+    private ISchemaItem _relatedEntityField = null;
+    public ISchemaItem RelatedEntityFieldSelect
     {
         get
         {
@@ -96,7 +96,7 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         {
             if (this.Entity == null) return;
             txtRelationName.Text = this.Entity.Name;
-            foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
+            foreach (ISchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
             {
                 tableRelation.Items.Add(abstractSchemaIttem);
             }
@@ -108,7 +108,7 @@ public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
         RelatedEntityField.Items.Clear();
         if (this.Entity == null) return;
         txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
-        foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+        foreach (var filter in RelatedEntity.ChildItemsByType<ISchemaItem>("DataEntityColumn"))
         {
             RelatedEntityField.Items.Add(filter);
         }

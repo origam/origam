@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -19,14 +20,14 @@ public class ScreenSectionCondition: AbstractSchemaItem
     [XmlReference("screenSection", "ScreenSectionId")]
     public PanelControlSet ScreenSection
     {
-        get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+        get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenSectionId));
         set
         {
             ScreenSectionId = value?.Id ?? Guid.Empty;
             if (ScreenSectionId != null && ScreenSectionId != Guid.Empty)
             {
                 var panelControl = (PanelControlSet)PersistenceProvider.
-                                   RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+                                   RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(ScreenSectionId));
                 Name = panelControl.Name;
             }
         }
@@ -41,7 +42,7 @@ public class ScreenSectionCondition: AbstractSchemaItem
     {
     }
     
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(ScreenSection);
     }

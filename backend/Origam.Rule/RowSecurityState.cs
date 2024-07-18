@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Rule;
 /// <summary>
@@ -32,8 +33,8 @@ public class RowSecurityState
     public int ForegroundColor { get; set; }
     public bool AllowDelete { get; set; }
     public bool AllowCreate { get; set; }
-    public ArrayList Columns { get; } = new ArrayList();
-    public ArrayList Relations { get; } = new ArrayList();
-    public ArrayList DisabledActions { get; set; } = new ArrayList();
+    public List<FieldSecurityState> Columns { get; } = new ();
+    public List<RelationSecurityState> Relations { get; } = new ();
+    public List<string> DisabledActions { get; set; } = new ();
     public bool NotFound { get; set; }
 }

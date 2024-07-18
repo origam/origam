@@ -30,7 +30,7 @@ public static class RuleTools
 {
     public static IEnumerable<Exception> GetExceptions(object instance)
     {
-        IList members = Reflector.FindMembers(instance.GetType(), typeof(IModelElementRule), new Type[0]);
+        List<MemberAttributeInfo> members = Reflector.FindMembers(instance.GetType(), typeof(IModelElementRule), new Type[0]);
         foreach (MemberAttributeInfo mi in members)
         {
             IModelElementRule rule = mi.Attribute as IModelElementRule;

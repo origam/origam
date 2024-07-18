@@ -56,7 +56,7 @@ public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
     {
         List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
         IDataEntity entity = Owner as IDataEntity;
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         DataStructure dd = new DataStructure();
         list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
         Stack stackPage = new Stack();

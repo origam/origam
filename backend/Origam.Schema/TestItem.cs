@@ -34,7 +34,7 @@ public class TestItem : AbstractSchemaItem
 	public TestItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public TestItem(ModelElementKey primaryKey) : base(primaryKey)	{}
 	public string TestField = "";
-	#region Overriden AbstractSchemaItem Methods
+	#region Overriden ISchemaItem Methods
 	public override string ItemType
 	{
 		get

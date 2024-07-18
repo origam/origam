@@ -47,7 +47,7 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 	public override string ItemType => CategoryConst;
 	[Browsable(false)]
 	public override bool UseFolders => false;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(ServiceMethodParameter);
 		base.GetExtraDependencies(dependencies);
@@ -77,7 +77,7 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 	{
 		get
 		{
-			var result = new ArrayList();
+			var result = new List<Type>();
 			if(ServiceMethodParameter.AllowContextReference)
 			{
 				result.Add(typeof(ContextReference));
@@ -106,7 +106,7 @@ public class ServiceMethodCallParameter : AbstractSchemaItem
 			{
 				result.Add(typeof(WorkflowReference));
 			}
-			return (Type[])result.ToArray(typeof(Type));
+			return result.ToArray();
 		}
 	}
 	public override T NewItem<T>(

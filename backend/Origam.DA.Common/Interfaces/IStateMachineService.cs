@@ -23,6 +23,7 @@ using System;
 using System.Data;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Service.Core;
 
 namespace Origam.DA;
@@ -42,6 +43,6 @@ public interface IStateMachineService
 	object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IXmlContainer dataRow, string transactionId);
 	bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId);
 	void OnDataChanging(DataTable changedTable, string transactionId);
-	void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId);
+	void OnDataChanged(DataSet data, List<string> changedTables, string transactionId);
 	bool IsInState(Guid entityId, Guid fieldId, object currentStateValue, Guid targetStateId);
 }

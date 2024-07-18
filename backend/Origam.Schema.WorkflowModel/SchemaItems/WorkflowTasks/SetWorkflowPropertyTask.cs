@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -47,11 +48,11 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
 	public SetWorkflowPropertyTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public SetWorkflowPropertyTask(Key primaryKey) : base(primaryKey) {}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType => CategoryConst;
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		XsltDependencyHelper.GetDependencies(this, dependencies, XPath);
 		dependencies.Add(this.ContextStore);
@@ -83,7 +84,7 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
 				Id = ContextStoreId
 			};
 			return (IContextStore)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -103,8 +104,8 @@ public class SetWorkflowPropertyTask : AbstractWorkflowStep
     [XmlReference("transformation", "TransformationId")]
 	public ITransformation Transformation
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), 
 			new ModelElementKey(TransformationId)) as ITransformation;
 		set => TransformationId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

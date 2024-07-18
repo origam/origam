@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Attributes;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -46,9 +48,9 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 	{
 		return this.Structure == null;
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType => CategoryConst;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.Structure != null)
 		{
@@ -64,11 +66,11 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 		}
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
@@ -108,7 +110,7 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataStructureId;
-			return (AbstractDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (AbstractDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -137,7 +139,7 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 	{
 		get
 		{
-			return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleSetId));
+			return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleSetId));
 		}
 		set
 		{
@@ -152,7 +154,7 @@ public class ContextStore : AbstractSchemaItem, IContextStore
 	{
 		get
 		{
-			return (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultSetId));
+			return (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DefaultSetId));
 		}
 		set
 		{

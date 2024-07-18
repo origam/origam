@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Origam.Schema.DeploymentModel;
@@ -50,7 +51,7 @@ class CreateRoleCommand : AbstractMenuCommand
 	public override void Run()
 	{
 		ServiceCommandUpdateScriptActivity scriptActivity = new ServiceCommandUpdateScriptActivity();
-		ArrayList list = new ArrayList();
+		var list = new List<ListViewItem>();
 		list.Add(new ListViewItem(scriptActivity.ModelDescription(), scriptActivity.Icon));
 		Stack stackPage = new Stack();
 		stackPage.Push(PagesList.Finish);

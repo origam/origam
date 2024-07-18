@@ -156,7 +156,7 @@ public class ParameterService : IParameterService
 		if(_stringsByName.Contains(name))
 		{
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			StringItem s = (StringItem)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey((Guid)_stringsByName[name]));
+			StringItem s = (StringItem)ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey((Guid)_stringsByName[name]));
 			string rawString = s.String;
 			return string.Format(rawString, args);
 		}

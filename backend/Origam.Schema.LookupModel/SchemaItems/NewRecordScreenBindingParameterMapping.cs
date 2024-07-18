@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.LookupModel;
 
@@ -47,10 +48,10 @@ public class NewRecordScreenBindingParameterMapping : AbstractSchemaItem
     public NewRecordScreenBindingParameterMapping(Key primaryKey) 
         : base(primaryKey) {}
     
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
 
-    public override SchemaItemCollection ChildItems => new();
+    public override ISchemaItemCollection ChildItems => SchemaItemCollection.Create();
 
     #endregion
     

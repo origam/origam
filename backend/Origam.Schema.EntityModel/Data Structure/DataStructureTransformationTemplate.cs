@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence; 
@@ -51,7 +52,7 @@ public class DataStructureTransformationTemplate : DataStructureTemplate
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.TransformationId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as ITransformation;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as ITransformation;
 		}
 		set
 		{
@@ -61,7 +62,7 @@ public class DataStructureTransformationTemplate : DataStructureTemplate
 	}
 	#endregion
 	#region Overriden Members
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.Transformation != null) dependencies.Add(this.Transformation);
 		base.GetExtraDependencies (dependencies);

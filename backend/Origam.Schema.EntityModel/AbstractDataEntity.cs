@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -60,19 +61,15 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 	#region IDataEntity Members
 	[Browsable(false)]
-	public ArrayList EntityParameters
-	{
-		get
-		{
-			return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
-		}
-	}
+	public List<SchemaItemParameter> EntityParameters => 
+		ChildItemsByType<SchemaItemParameter>(SchemaItemParameter.CategoryConst);
+
 	[Browsable(false)]
-	public virtual ArrayList EntityPrimaryKey
+	public virtual List<IDataEntityColumn> EntityPrimaryKey
 	{
 		get
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<IDataEntityColumn>();
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
 				if(column.IsPrimaryKey)
@@ -88,7 +85,7 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DescribingFieldId)) as IDataEntityColumn;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DescribingFieldId)) as IDataEntityColumn;
 		}
 		set => DescribingFieldId = (Guid?) value?.PrimaryKey["Id"] ?? Guid.Empty;
 	}
@@ -130,8 +127,8 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
         "AuditingSecondReferenceKeyColumnId")]
 	public IDataEntityColumn AuditingSecondReferenceKeyColumn
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-            typeof(AbstractSchemaItem), 
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+            typeof(ISchemaItem), 
             new ModelElementKey(AuditingSecondReferenceKeyColumnId)) 
             as IDataEntityColumn;
         set => AuditingSecondReferenceKeyColumnId 
@@ -155,10 +152,10 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 	}
 #if ORIGAM_CLIENT
 	private bool _columnsPopulated = false;
-	private ArrayList _columns;
+	private List<IDataEntityColumn> _columns;
 #endif
 	[Browsable(false)]
-	public ArrayList EntityColumns
+	public List<IDataEntityColumn> EntityColumns
 	{
 		get
 		{
@@ -169,31 +166,27 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 				{
 					if(!_columnsPopulated)
 					{
-						_columns = this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+						_columns = ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 						_columnsPopulated = true;
 					}
 				}
 			}
 			return _columns;
 #else
-			return this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
+			return this.ChildItemsByType<IDataEntityColumn>(AbstractDataEntityColumn.CategoryConst);
 #endif
 		}
 	}
 	[Browsable(false)]
-	public ArrayList EntityRelations
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityRelationItem.CategoryConst);
-		}
-	}
+	public List<EntityRelationItem> EntityRelations => 
+		ChildItemsByType<EntityRelationItem>(EntityRelationItem.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList ChildEntities
+	public List<IDataEntity> ChildEntities
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<IDataEntity>();
 			foreach(EntityRelationItem relation in this.EntityRelations)
 			{
 				if(relation.IsParentChild) result.Add(relation.RelatedEntity);
@@ -202,11 +195,11 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList ChildEntitiesRecursive
+	public List<IDataEntity> ChildEntitiesRecursive
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<IDataEntity>();
 			foreach(IDataEntity entity in this.ChildEntities)
 			{
 				result.Add(entity);
@@ -216,43 +209,27 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		}
 	}
 	[Browsable(false)]
-	public ArrayList EntityFilters
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityFilter.CategoryConst);
-		}
-	}
+	public List<EntityFilter> EntityFilters => 
+		ChildItemsByType<EntityFilter>(EntityFilter.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList EntityIndexes
-	{
-		get
-		{
-			return this.ChildItemsByType(DataEntityIndex.CategoryConst);
-		}
-	}
+	public List<DataEntityIndex> EntityIndexes => 
+		ChildItemsByType<DataEntityIndex>(DataEntityIndex.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules
-	{
-		get
-		{
-			return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
-		}
-	}
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules => 
+		ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules
-	{
-		get
-		{
-			return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
-		}
-	}
+	public List<EntityConditionalFormatting> ConditionalFormattingRules =>
+		ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
+
 	[Browsable(false)]
-	public ArrayList Constraints
+	public List<DataEntityConstraint> Constraints
 	{
 		get
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<DataEntityConstraint>();
 			DataEntityConstraint pk = new DataEntityConstraint(ConstraintType.PrimaryKey);
 			foreach(IDataEntityColumn column in this.EntityColumns)
 			{
@@ -284,8 +261,8 @@ public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISch
 		return false;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Methods
-	public override void GetExtraDependencies(ArrayList dependencies)
+	#region Overriden ISchemaItem Methods
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.DescribingField != null) dependencies.Add(this.DescribingField);
 		base.GetExtraDependencies (dependencies);

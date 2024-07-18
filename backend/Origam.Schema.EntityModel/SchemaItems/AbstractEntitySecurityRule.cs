@@ -20,10 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 public enum PermissionType
@@ -64,12 +66,12 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Rule != null)
-			base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
+			base.GetParameterReferences(Rule, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Rule);
 		base.GetExtraDependencies (dependencies);
@@ -89,11 +91,11 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
@@ -201,7 +203,7 @@ public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparab
 	{
 		get
 		{
-			return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
+			return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleId));
 		}
 		set
 		{

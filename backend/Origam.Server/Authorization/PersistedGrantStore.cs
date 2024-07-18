@@ -63,7 +63,7 @@ public class PersistedGrantStore: IPersistedGrantStore
             .GetService<IPersistenceService>()
             .SchemaProvider;
         DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
-        DataStructure dataStructure = (DataStructure)schemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
+        DataStructure dataStructure = (DataStructure)schemaProvider.RetrieveInstance(typeof(ISchemaItem), 
             new ModelElementKey(OrigamIdentityGrantDataStructureId));
         
         DataSet dataSet = dataSetGenerator.CreateDataSet(dataStructure);

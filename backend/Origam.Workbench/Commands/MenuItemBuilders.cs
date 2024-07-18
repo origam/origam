@@ -69,20 +69,20 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
         if (activeNode == null) return new AsMenuCommand[0];
         ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
         NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
-        AbstractSchemaItem activeItem = activeNode as AbstractSchemaItem;
+        ISchemaItem activeItem = activeNode as ISchemaItem;
         if (nonpersistentNode != null)
         {
-            activeItem = nonpersistentNode.ParentNode as AbstractSchemaItem;
+            activeItem = nonpersistentNode.ParentNode as ISchemaItem;
         }
         var items = new List<AsMenuCommand>();
         if (factory.NewItemTypes != null)
         {
-            ArrayList names = new ArrayList();
+            var names = new List<string>();
             // filter out only the names that do not exist already in the children collection
             foreach (string name in factory.NewTypeNames)
             {
                 bool found = false;
-                foreach (AbstractSchemaItem existing in activeItem.ChildItems)
+                foreach (ISchemaItem existing in activeItem.ChildItems)
                 {
                     if (existing.Name == name)
                     {
@@ -95,7 +95,7 @@ public class SchemaItemEditorsMenuBuilder : ISubmenuBuilder
                     names.Add(name);
                 }
             }
-            ArrayList nameableTypes = new ArrayList();
+            var nameableTypes = new List<Type>();
             foreach (Type type in factory.NewItemTypes)
             {
                 if (names.Count == 0 || !IsNameableType(factory, type))
@@ -272,10 +272,10 @@ public class SchemaItemConvertMenuBuilder : ISubmenuBuilder
 }
 public class SchemaItemEditorNamesBuilder : ISubmenuBuilder
 {
-    private ArrayList _types;
+    private List<Type> _types;
 	private string _name;
     private ISchemaItemFactory _parentElement;
-    public SchemaItemEditorNamesBuilder (ArrayList types, string name,
+    public SchemaItemEditorNamesBuilder (List<Type> types, string name,
         ISchemaItemFactory parentElement, bool showDialog)
 	{
 		_types = types;

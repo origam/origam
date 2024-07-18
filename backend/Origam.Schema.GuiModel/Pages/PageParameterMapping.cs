@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -43,7 +44,7 @@ public class PageParameterMapping : AbstractSchemaItem
 	{
 	}
 	
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if (DefaultValue != null)
 		{
@@ -73,7 +74,7 @@ public class PageParameterMapping : AbstractSchemaItem
 	[XmlReference("defaultValue", "DataConstantId")]
 	public DataConstant DefaultValue
 	{
-		get => (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
+		get => (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataConstantId)) as DataConstant;
 		set
 		{
 			this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -90,7 +91,7 @@ public class PageParameterMapping : AbstractSchemaItem
 	[XmlReference("listSeparator", "SeparatorDataConstantId")]
 	public DataConstant ListSeparator
 	{
-		get => (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SeparatorDataConstantId)) as DataConstant;
+		get => (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.SeparatorDataConstantId)) as DataConstant;
 		set
 		{
 			this.SeparatorDataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);

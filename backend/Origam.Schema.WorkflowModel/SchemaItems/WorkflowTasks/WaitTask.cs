@@ -56,7 +56,7 @@ public class WaitTask : AbstractWorkflowStep
 	{
 		get
 		{
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WaitTimeDataConstantId)) as DataConstant;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WaitTimeDataConstantId)) as DataConstant;
 		}
 		set
 		{

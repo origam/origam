@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -50,23 +52,23 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.DataStructure != null)
-			base.GetParameterReferences(this.DataStructure as AbstractSchemaItem, list);
+			base.GetParameterReferences(DataStructure, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DataStructure);
 		if(this.Method  != null) dependencies.Add(this.Method);
 		if(this.SortSet != null) dependencies.Add(this.SortSet);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -83,7 +85,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataStructureId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as DataStructure;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as DataStructure;
 		}
 		set
 		{
@@ -101,7 +103,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(DataStructureMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(DataStructureMethodId));
 		}
 		set
 		{
@@ -117,7 +119,7 @@ public  class DataStructureReference : AbstractSchemaItem, IDataStructureReferen
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{

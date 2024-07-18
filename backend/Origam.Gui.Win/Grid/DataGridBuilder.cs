@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using Origam.UI;
@@ -39,7 +40,7 @@ public class DataGridBuilder : IGridBuilder
 	private bool _useUserConfig = true;
 	private AsForm _form;
 	private Control parentControl;
-	private ArrayList _styles;
+	private List<DataGridColumnStyleHolder> _styles;
 	public DataGridBuilder()
 	{
 		_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
@@ -195,7 +196,7 @@ public class DataGridBuilder : IGridBuilder
 		_styles.Sort();
 		if(allHidden & _styles.Count > 0)
 		{
-			(_styles[0] as DataGridColumnStyleHolder).Hidden = false;
+			_styles[0].Hidden = false;
 		}
 		foreach(DataGridColumnStyleHolder style in _styles)
 		{
@@ -250,9 +251,9 @@ public class DataGridBuilder : IGridBuilder
 		ts.SelectionBackColor = datagrid.SelectionBackColor;
 		ts.SelectionForeColor = datagrid.SelectionForeColor;	
 	}
-	private ArrayList GetColumnStylesFromControls (Control control, int offset, OrigamPanelColumnConfig userConfig, RuleEngine ruleEngine)
+	private List<DataGridColumnStyleHolder> GetColumnStylesFromControls (Control control, int offset, OrigamPanelColumnConfig userConfig, RuleEngine ruleEngine)
 	{
-		ArrayList styles = new ArrayList();
+		var styles = new List<DataGridColumnStyleHolder>();
 		
 		//go through all control and their controls 
 		foreach(Control item in control.Controls)
@@ -605,7 +606,7 @@ public class DataGridBuilder : IGridBuilder
 						
 						
 						case MouseButtons.Right:			// By right button we reverse all values in the current column.
-							ArrayList selectedRows = new ArrayList();
+							var selectedRows = new List<DataRow>();
 							int count = cm.Count;
 							for(int i = 0; i < count; i++)
 							{
@@ -645,7 +646,7 @@ public class DataGridBuilder : IGridBuilder
 			CurrencyManager cm = grid.BindingContext[grid.DataSource, grid.DataMember] as CurrencyManager;
 			object value = (cm.List[hti.Row] as DataRowView).Row[col.MappingName];
 			object linkTarget = lookupService.LinkTarget(col.DropDown, value);
-			Hashtable parameters = lookupService.LinkParameters(linkTarget, value);
+			Dictionary<string, object> parameters = lookupService.LinkParameters(linkTarget, value);
 			Workbench.WorkbenchSingleton.Workbench.ProcessGuiLink(_form, linkTarget, parameters);
 		}
 	}

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -38,7 +39,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
 	public AbstractMenuItem() : base() {}
 	public AbstractMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractMenuItem(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ToString() => this.Path;
 	
@@ -55,7 +56,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
 	public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode is Submenu | newNode is Menu;
 	[Browsable(false)]
 	public override bool UseFolders => false;
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.MenuIcon != null) dependencies.Add(this.MenuIcon);
 		base.GetExtraDependencies (dependencies);
@@ -89,7 +90,7 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
 	[XmlReference("menuIcon", "GraphicsId")]
 	public GuiModel.Graphics MenuIcon
 	{
-		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.GraphicsId));
+		get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.GraphicsId));
 		set
 		{
 			this.GraphicsId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
@@ -143,10 +144,10 @@ public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationConte
         }
         return base.CompareTo(obj);
 	}
-	public class MenuItemComparer : System.Collections.IComparer
+	public class MenuItemComparer : IComparer<ISchemaItem>
 	{
 		#region IComparer Members
-		public int Compare(object x, object y)
+		public int Compare(ISchemaItem x, ISchemaItem y)
 		{
             var orderComparison = (x as AbstractMenuItem).Order
 	            .CompareTo((y as AbstractMenuItem).Order);

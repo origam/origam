@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -409,7 +410,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
         }
         return dbIndexList;
     }
-    internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+    internal override Hashtable GetSchemaIndexListGenerate(List<TableMappingItem> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
     {
         Hashtable schemaIndexListGenerate = new Hashtable();
         foreach (TableMappingItem t in schemaTables)

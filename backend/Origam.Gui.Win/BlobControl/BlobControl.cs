@@ -449,7 +449,7 @@ namespace Origam.Gui.Win
 		{
 			get
 			{
-				return (IDataLookup)_persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.BlobLookupId));
+				return (IDataLookup)_persistence.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.BlobLookupId));
 			}
 			set
 			{

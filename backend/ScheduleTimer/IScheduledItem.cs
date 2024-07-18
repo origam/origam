@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Schedule;
 /// <summary>
@@ -30,7 +31,7 @@ public interface IScheduledItem
 	/// <param name="Begin">The beginning of the interval</param>
 	/// <param name="End">The end of the interval</param>
 	/// <returns>All events >= Begin and &lt; End </returns>
-	void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List);
+	void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List);
 	/// <summary>
 	/// Returns the next run time of the scheduled item.  Optionally excludes the starting time.
 	/// </summary>

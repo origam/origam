@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA;
@@ -132,7 +133,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 			try
 			{
 				return (IDataLookup)PersistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem), key);
+					typeof(ISchemaItem), key);
 			}
 			catch
 			{
@@ -195,14 +196,14 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		set => throw new NotSupportedException();
 	}
 	[Browsable(false)]
-	public ArrayList RowLevelSecurityRules 
-		=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
+	public List<AbstractEntitySecurityRule> RowLevelSecurityRules 
+		=> ChildItemsByType<AbstractEntitySecurityRule>(AbstractEntitySecurityRule.CategoryConst);
 	[Browsable(false)]
-	public ArrayList ConditionalFormattingRules 
-		=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
+	public List<EntityConditionalFormatting> ConditionalFormattingRules 
+		=> ChildItemsByType<EntityConditionalFormatting>(EntityConditionalFormatting.CategoryConst);
 	[Browsable(false)]
-	public ArrayList DynamicLabels 
-		=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+	public List<EntityFieldDynamicLabel> DynamicLabels 
+		=> ChildItemsByType<EntityFieldDynamicLabel>(EntityFieldDynamicLabel.CategoryConst);
 	#endregion
 	#region Properties
 	public Guid FieldId;
@@ -213,20 +214,20 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
     [XmlReference("field", "FieldId")]
     public IDataEntityColumn Field
 	{
-		get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FieldId));
+		get => (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.FieldId));
 		set => this.FieldId = (Guid)value.PrimaryKey["Id"];
 	}
     [Browsable(false)]
     public DataEntityConstraint ForeignKeyConstraint => null;
     public string FieldType { get; } = "LookupField";
     #endregion
-    #region Overriden AbstractSchemaItem Methods
+    #region Overriden ISchemaItem Methods
     [Browsable(false)]
 	public bool ReadOnly => false;
 	public override bool CanMove(UI.IBrowserNode2 newNode) 
 		=> newNode is IDataEntity;
 	public override string ItemType => AbstractDataEntityColumn.CategoryConst;
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(DefaultLookup != null)
 		{
@@ -247,7 +248,7 @@ public class LookupField : AbstractSchemaItem, IDataEntityColumn
 		base.GetExtraDependencies (dependencies);
 	}
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 	}
 	public override void UpdateReferences()

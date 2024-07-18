@@ -50,7 +50,7 @@ public class EntityWorkflowAction : EntityUIAction
 
 	#region Overriden AbstractDataEntityColumn Members
 	
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Workflow);
 		base.GetExtraDependencies (dependencies);
@@ -63,7 +63,7 @@ public class EntityWorkflowAction : EntityUIAction
 			{
 				IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 				IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-				return agent.ExpectedParameterNames(this.Workflow as AbstractSchemaItem, "ExecuteWorkflow", "Parameters");
+				return agent.ExpectedParameterNames(Workflow, "ExecuteWorkflow", "Parameters");
 			}
 			catch
 			{
@@ -195,7 +195,7 @@ public class EntityWorkflowAction : EntityUIAction
 	{
 		get
 		{
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
 		}
 		set
 		{

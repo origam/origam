@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 
@@ -34,9 +35,9 @@ public class WorkflowCallTask : WorkflowTask
 	public WorkflowCallTask(Guid schemaExtensionId) 
 		: base(schemaExtensionId) {}
 	public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
-	#region Override AbstractSchemaItem Members
+	#region Override ISchemaItem Members
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Workflow);
 		base.GetExtraDependencies(dependencies);
@@ -56,7 +57,7 @@ public class WorkflowCallTask : WorkflowTask
 				Id = WorkflowId
 			};
 			return (IWorkflow)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), key);
+				typeof(ISchemaItem), key);
 		}
 		set
 		{

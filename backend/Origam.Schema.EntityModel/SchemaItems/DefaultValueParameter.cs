@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -38,7 +39,7 @@ public class DefaultValueParameter : SchemaItemParameter
 	public DefaultValueParameter() : base() {}
 	public DefaultValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public DefaultValueParameter(Key primaryKey) : base(primaryKey)	{}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.DefaultValue);
 	}
@@ -55,7 +56,7 @@ public class DefaultValueParameter : SchemaItemParameter
 		{
 			try
 			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
+				return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DefaultValueId)) as DataConstant;
 			}
 			catch
 			{

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel;
 public enum ConstraintType
@@ -61,12 +62,6 @@ public class DataEntityConstraint
 			_foreignEntity = value;
 		}
 	}
-	private ArrayList _fields = new ArrayList();
-	public ArrayList Fields
-	{
-		get
-		{
-			return _fields;
-		}
-	}
+
+	public List<IDataEntityColumn> Fields { get; } = new ();
 }

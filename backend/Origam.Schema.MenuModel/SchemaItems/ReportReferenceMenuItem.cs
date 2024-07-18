@@ -30,6 +30,7 @@ using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.MenuModel;
 [SchemaItemDescription("Report Reference", "menu_report.png")]
@@ -42,7 +43,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 		: base(schemaExtensionId) {}
 	public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey) {}
 	public override void GetExtraDependencies(
-		System.Collections.ArrayList dependencies)
+		List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Report);
 		if(SelectionDialogEndRule != null)
@@ -80,7 +81,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 	public AbstractReport Report
 	{
 		get => (AbstractReport)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(ReportId));
+			typeof(ISchemaItem), new ModelElementKey(ReportId));
 		set => ReportId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 	}
@@ -91,7 +92,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 	public PanelControlSet SelectionDialogPanel
 	{
 		get => (PanelControlSet)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelId));
 		set => SelectionPanelId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -104,7 +105,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 	public AbstractTransformation TransformationBeforeSelection
 	{
 		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelBeforeTransformationId));
 		set => SelectionPanelBeforeTransformationId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -117,7 +118,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
     public AbstractTransformation TransformationAfterSelection
 	{
 		get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionPanelAfterTransformationId));
 		set => SelectionPanelAfterTransformationId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];
@@ -129,7 +130,7 @@ public class ReportReferenceMenuItem : AbstractMenuItem
 	public IEndRule SelectionDialogEndRule
 	{
 		get => (IEndRule)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), 
+			typeof(ISchemaItem), 
 			new ModelElementKey(SelectionEndRuleId));
 		set => SelectionEndRuleId = (value == null) 
 			? Guid.Empty : (Guid)value.PrimaryKey["Id"];

@@ -85,13 +85,13 @@ public class NewRecordScreenBinding
     }
 
 
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType => CategoryConst;
 
-    public override void GetExtraDependencies(ArrayList dependencies)
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         dependencies.Add(MenuItem);
-        AbstractSchemaItem menu = MenuItem;
+        ISchemaItem menu = MenuItem;
         while (menu.ParentItem != null)
         {
             menu = menu.ParentItem;
@@ -157,7 +157,6 @@ public class NewRecordScreenBinding
     public NewRecordScreenBindingParameterMapping[] GetParameterMappings()
     {
         return ChildItems
-            .ToGeneric()
             .OfType<NewRecordScreenBindingParameterMapping>()
             .ToArray();
     }
@@ -193,7 +192,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
             })
             .Distinct();
         var conflictingNewRecordBindingIds = allLookups
-            .Select(lookup => lookup.ChildItems.ToGeneric().OfType<NewRecordScreenBinding>().FirstOrDefault())
+            .Select(lookup => lookup.ChildItems.OfType<NewRecordScreenBinding>().FirstOrDefault())
             .Where(binding => binding != null)
             .Select(binding => binding.Id.ToString())
             .ToList();
@@ -208,7 +207,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 
     private IEnumerable<PanelControlSet> FindScreenSections(ControlSetItem controlSetItem)
     {
-        var dependencies = new ArrayList();
+        var dependencies = new List<ISchemaItem>();
         controlSetItem.GetExtraDependencies(dependencies);
         return dependencies.OfType<PanelControlSet>();
     }
@@ -226,7 +225,7 @@ class NoRecursiveNewRecordScreenBindingsRule : AbstractModelElementRuleAttribute
 
     private IEnumerable<IDataLookup> GetLookups(ControlSetItem comboBox)
     {
-        var dependencies = new ArrayList();
+        var dependencies = new List<ISchemaItem>();
         comboBox.GetExtraDependencies(dependencies);
         return dependencies.OfType<IDataLookup>();
     }

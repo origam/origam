@@ -61,7 +61,7 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 			DeploymentDependency.ToCsv(deploymentDependencies);
 	}
 	public DeploymentVersion(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool IsDeleted
 	{
 		get => base.IsDeleted;
@@ -123,7 +123,6 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
     [Browsable(false)]
     public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
 		ChildItems
-			.ToGeneric()
 			.OrderBy(activity => 
 				((AbstractUpdateScriptActivity)activity).ActivityOrder)
 			.Cast<AbstractUpdateScriptActivity>();
@@ -182,8 +181,8 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 	private int MaxOrder()
 	{
 		var max = 0;
-		foreach(AbstractUpdateScriptActivity activity 
-		        in ChildItemsByType(
+		foreach(var activity 
+		        in ChildItemsByType<AbstractUpdateScriptActivity>(
 			        AbstractUpdateScriptActivity.CategoryConst))
 		{
 			if(activity.ActivityOrder > max)

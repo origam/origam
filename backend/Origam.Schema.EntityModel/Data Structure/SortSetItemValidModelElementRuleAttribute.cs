@@ -45,8 +45,8 @@ public class SortSetItemValidModelElementRuleAttribute : AbstractModelElementRul
         }
 		// look into columns defined on data structure level and find out
 		// if there is a column from "FieldName" property
-		foreach (DataStructureColumn col in
-			     sortSetItem.Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
+		foreach (var col in
+			     sortSetItem.Entity.ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst))
 		{
 			if (col.Name == sortSetItem.FieldName)
 			{

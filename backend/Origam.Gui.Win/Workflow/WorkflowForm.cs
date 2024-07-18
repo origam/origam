@@ -25,6 +25,7 @@ using System.Xml;
 
 using Origam.DA;
 using Origam.Gui.Win;
+using Origam.Schema.EntityModel.Interfaces;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;

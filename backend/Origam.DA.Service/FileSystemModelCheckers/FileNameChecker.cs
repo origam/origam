@@ -47,7 +47,7 @@ public class FileNameChecker : IFileSystemModelChecker
             .RetrieveList<IFilePersistent>()
             .ToArray();
         HashSet<Guid> allChildrenIds = new HashSet<Guid>(allPersistedObjects
-            .OfType<AbstractSchemaItem>()
+            .OfType<ISchemaItem>()
             .SelectMany(GetChildrenIds));
         List<ErrorMessage> errors = allPersistedObjects
             .Where(instance => !(instance is SchemaItemAncestor))
@@ -69,10 +69,9 @@ public class FileNameChecker : IFileSystemModelChecker
             text: $"but is in:    {actualFilePath}",
             link: actualFilePath);
     }
-    private IEnumerable<Guid> GetChildrenIds(AbstractSchemaItem item)
+    private IEnumerable<Guid> GetChildrenIds(ISchemaItem item)
     {
         return item.ChildItems
-            .ToGeneric()
             .Select(x=>x.Id);
     }
     private bool IsPersistedInWrongFile(IFilePersistent instance)

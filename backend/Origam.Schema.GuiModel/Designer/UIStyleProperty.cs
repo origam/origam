@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.GuiModel;
@@ -80,8 +81,8 @@ public class UIStyleProperty : AbstractSchemaItem
         }
     }
     #endregion
-    #region Overriden AbstractSchemaItem Members
-    public override void GetExtraDependencies(ArrayList dependencies)
+    #region Overriden ISchemaItem Members
+    public override void GetExtraDependencies(List<ISchemaItem> dependencies)
     {
         if (this.Property != null)
         {

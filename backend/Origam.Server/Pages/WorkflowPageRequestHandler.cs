@@ -50,6 +50,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Rule;
 using System.Xml;
+using Origam.Schema;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
@@ -88,7 +89,7 @@ class WorkflowPageRequestHandler : AbstractPageRequestHandler
 		}
 		object workflowResult = core.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
         bool handled = false;
-        ArrayList actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.CategoryConst);
+        var actions = workflowPage.ChildItemsByType<AbstractWorkflowPageAction>(AbstractWorkflowPageAction.CategoryConst);
         actions.Sort();
         RuleEngine re = RuleEngine.Create(new Hashtable(), null);
         foreach (AbstractWorkflowPageAction action in actions)

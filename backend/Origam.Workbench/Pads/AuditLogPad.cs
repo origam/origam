@@ -48,7 +48,7 @@ public class AuditLogPad : AbstractPadContent
 		protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
 		{
 			Guid columnId = (Guid)base.GetColumnValueAtRow (source, rowNum);
-			AbstractSchemaItem item;
+			ISchemaItem item;
 			try
 			{
 				SchemaService schema = ServiceManager.Services
@@ -57,7 +57,7 @@ public class AuditLogPad : AbstractPadContent
 				persistence = ServiceManager.Services
 					.GetService<IPersistenceService>();
 				item = persistence.SchemaProvider
-					.RetrieveInstance<AbstractSchemaItem>(columnId);
+					.RetrieveInstance<ISchemaItem>(columnId);
 			}
 			catch
 			{
@@ -352,25 +352,12 @@ public class AuditLogPad : AbstractPadContent
 			_parentEntityId = value;
 		}
 	}
-	private ArrayList _childReferences;
-	private ArrayList ChildReferences
-	{
-		get
-		{
-			return _childReferences;
-		}
-		set
-		{
-			_childReferences = value;
-		}
-	}
 	#endregion
 	#region Public Methods
-	public void GetAuditLog(Guid mainEntityId, Guid mainRecordId, ArrayList childReferences)
+	public void GetAuditLog(Guid mainEntityId, Guid mainRecordId)
 	{
 		this.ParentId = mainRecordId;
 		this.ParentEntityId = mainEntityId;
-		this.ChildReferences = childReferences;
 		GetLog();
 	}
 	public void GetLog()
@@ -405,10 +392,6 @@ public class AuditLogPad : AbstractPadContent
 	{
 		if(disposing)
 		{
-			if(ChildReferences != null)
-			{
-				_childReferences.Clear();
-			}
 			if(_dataset != null)
 			{
 				_dataset.Dispose();

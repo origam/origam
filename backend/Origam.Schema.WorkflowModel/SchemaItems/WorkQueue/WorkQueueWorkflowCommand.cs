@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
@@ -45,13 +46,9 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 		this.ChildItemTypes.Remove(typeof(EntityUIActionParameterMapping));
 		this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
 	}
-	public new ArrayList ParameterMappings
-	{
-		get
-		{
-			return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
-		}
-	}
+	public new List<WorkQueueWorkflowCommandParameterMapping> ParameterMappings =>
+		ChildItemsByType<WorkQueueWorkflowCommandParameterMapping>(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
+
 	#region Overriden AbstractDataEntityColumn Members
 	
 	public override string ItemType
@@ -61,7 +58,7 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Workflow);
 		base.GetExtraDependencies (dependencies);
@@ -76,7 +73,7 @@ public class WorkQueueWorkflowCommand : EntityUIAction
 	{
 		get
 		{
-			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
+			return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId));
 		}
 		set
 		{

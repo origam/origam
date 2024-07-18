@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -86,7 +87,7 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 		get
 		{
             return (IEntityRule)PersistenceProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem), new ModelElementKey(RuleId));
+				typeof(ISchemaItem), new ModelElementKey(RuleId));
 		}
 		set
 		{
@@ -116,7 +117,7 @@ public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 		get { return _script; }
 		set { _script = value; }
 	}
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(Rule != null) dependencies.Add(Rule);
 		base.GetExtraDependencies (dependencies);

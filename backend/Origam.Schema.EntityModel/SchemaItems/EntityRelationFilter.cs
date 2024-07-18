@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -53,7 +55,7 @@ public class EntityRelationFilter : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.FilterId;
-			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -70,7 +72,7 @@ public class EntityRelationFilter : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string Icon
 	{
 		get
@@ -86,7 +88,7 @@ public class EntityRelationFilter : AbstractSchemaItem
 			return EntityRelationFilter.CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Filter);
 		base.GetExtraDependencies (dependencies);
@@ -106,11 +108,11 @@ public class EntityRelationFilter : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

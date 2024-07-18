@@ -39,7 +39,7 @@ public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, ICompar
 	public AbstractUpdateScriptActivity() : base() {}
 	public AbstractUpdateScriptActivity(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractUpdateScriptActivity(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

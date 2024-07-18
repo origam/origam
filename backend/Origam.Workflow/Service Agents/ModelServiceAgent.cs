@@ -162,7 +162,7 @@ public class ModelServiceAgent : AbstractServiceAgent
         var persistence = ServiceManager.Services.GetService
             <IPersistenceService>();
         var element = persistence.SchemaProvider.RetrieveInstance
-            <AbstractSchemaItem>(id);
+            <ISchemaItem>(id);
         return Reflector.GetValue(element.GetType(), element, attributeName)?.ToString() ?? "";
     }
     private IDataDocument ElementList(Guid parentId, string itemType)
@@ -170,13 +170,13 @@ public class ModelServiceAgent : AbstractServiceAgent
         var persistence = ServiceManager.Services.GetService
             <IPersistenceService>();
         var parent = persistence.SchemaProvider.RetrieveInstance
-            <AbstractSchemaItem>(parentId);
+            <ISchemaItem>(parentId);
         DataSet data = new DataSet("ROOT");
         DataTable table = new DataTable("Element");
         table.Columns.Add("Id", typeof(Guid));
         table.Columns.Add("Name", typeof(string));
         data.Tables.Add(table);
-        foreach (AbstractSchemaItem item in parent.ChildItemsByType(itemType))
+        foreach (ISchemaItem item in parent.ChildItemsByType<ISchemaItem>(itemType))
         {
             DataRow row = table.NewRow();
             row["Id"] = item.Id;

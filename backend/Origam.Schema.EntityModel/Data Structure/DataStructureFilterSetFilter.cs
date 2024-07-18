@@ -22,10 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -146,7 +148,7 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -154,30 +156,30 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Filter != null)
 		{
-			Hashtable references = new Hashtable();
+			var references = new Dictionary<string, ParameterReference>();
 			base.GetParameterReferences(this.Filter, references);
-			foreach(DictionaryEntry entry in references)
+			foreach(var entry in references)
 			{
 				string key = this.Entity.Name + "_" + (string)entry.Key;
-				if(! list.Contains(key))
+				if(! list.ContainsKey(key))
 				{
 					list.Add(key, entry.Value);
 				}
 			}
 			if(this.IgnoreFilterParameterName != null)
 			{
-				if(! list.Contains(this.IgnoreFilterParameterName))
+				if(! list.ContainsKey(IgnoreFilterParameterName))
 				{
-					list.Add(this.IgnoreFilterParameterName, null);
+					list.Add(IgnoreFilterParameterName, null);
 				}
 			}
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Entity);
 		dependencies.Add(this.Filter);
@@ -207,18 +209,18 @@ public class DataStructureFilterSetFilter : AbstractSchemaItem
 		if(newNode is DataStructureFilterSet)
 		{
 			// only inside the same data structure
-			return this.RootItem.Equals((newNode as AbstractSchemaItem).RootItem);
+			return this.RootItem.Equals((newNode as ISchemaItem).RootItem);
 		}
 		else
 		{
 			return false;
 		}
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

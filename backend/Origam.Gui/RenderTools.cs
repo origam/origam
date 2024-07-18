@@ -33,7 +33,7 @@ public class RenderTools
 	{
 		if(action is EntityDropdownAction)
 		{
-			foreach(EntityUIAction subAction in action.ChildItemsByType(
+			foreach(var subAction in action.ChildItemsByType<EntityUIAction>(
                 EntityUIAction.CategoryConst))
 			{
 				if(ShouldRenderAction(subAction, formId, panelId))

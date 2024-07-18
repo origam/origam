@@ -51,10 +51,10 @@ public class CreatePackageFolders : AbstractMenuCommand
 		}
 		(_schema.ActiveNode as Package).Refresh();
 	}
-	private static void SetInheritance(AbstractSchemaItem item, bool value)
+	private static void SetInheritance(ISchemaItem item, bool value)
 	{
 		item.Inheritable = value;
-		foreach(AbstractSchemaItem child in item.ChildItems)
+		foreach(ISchemaItem child in item.ChildItems)
 		{
 			if(child.DerivedFrom == null)
 			{

@@ -68,7 +68,7 @@ public class UIManager
         // Stack can't handle resending DataDocumentFx, 
         // it needs to be converted to XmlDocument 
         // and then converted back to DataDocumentFx
-        foreach (object key in request.Parameters.Keys.ToList<object>())
+        foreach (object key in request.Parameters.Keys.CastToList<object>())
         {
             object value = request.Parameters[key];
             if (value is XmlDocument xmlDoc)
@@ -171,7 +171,7 @@ public class UIManager
         DatasetTools.CheckRowErrorOfChangedRows(ss.InitialData);
         UIResult result = new UIResult(
             sessionId: ss.Id, 
-            data: DataTools.DatasetToHashtable(
+            data: DataTools.DatasetToDictionary(
                 ss.InitialData, columns, initialPageNumberOfRecords,
                 ss.CurrentRecordId, ss.DataListEntity, ss), 
             variables: ss.Variables, 
@@ -283,8 +283,8 @@ public class UIManager
             {
                 List<DataStructureSortSetItem> sorts =
                     new List<DataStructureSortSetItem>();
-                foreach (DataStructureSortSetItem item in sortSet
-                    .ChildItemsByType(
+                foreach (var item in sortSet
+                    .ChildItemsByType<DataStructureSortSetItem>(
                         DataStructureSortSetItem.CategoryConst))
                 {
                     if (item.Entity.Name == panel.Entity)

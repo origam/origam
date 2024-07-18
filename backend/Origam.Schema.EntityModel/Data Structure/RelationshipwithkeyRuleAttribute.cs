@@ -22,7 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Schema.EntityModel;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
+using Origam.Schema;
 
 namespace Origam.DA.ObjectPersistence.Attributes;
 public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribute
@@ -40,7 +42,7 @@ public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribut
         var dataStructure = (DataStructureEntity)instance;
         if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
         {
-            ArrayList schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
+            var schemaItems = dataStructure.Entity.ChildItemsByType<EntityRelationColumnPairItem>(EntityRelationColumnPairItem.CategoryConst);
             if (schemaItems.Count == 0)
             {
                 return new DataException("Relationship has no key");

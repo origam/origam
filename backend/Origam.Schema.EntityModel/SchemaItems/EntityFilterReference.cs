@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -49,12 +51,12 @@ public class EntityFilterReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Filter != null)
-			base.GetParameterReferences(this.Filter as AbstractSchemaItem, list);
+			base.GetParameterReferences(Filter, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Filter);
 		base.GetExtraDependencies (dependencies);
@@ -74,11 +76,11 @@ public class EntityFilterReference : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -94,7 +96,7 @@ public class EntityFilterReference : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.FilterId;
-			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (EntityFilter)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

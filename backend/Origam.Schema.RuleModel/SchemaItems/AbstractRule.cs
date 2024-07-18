@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
@@ -40,7 +41,7 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
 	public AbstractRule() : base() {}
 	public AbstractRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public AbstractRule(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -49,7 +50,7 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.Structure != null) dependencies.Add(this.Structure);
 		base.GetExtraDependencies (dependencies);
@@ -69,7 +70,7 @@ public abstract class AbstractRule : AbstractSchemaItem, IRule
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataStructureId;
-			return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

@@ -40,7 +40,7 @@ public class SelectionDialogParameterMapping : AbstractSchemaItem
 	public SelectionDialogParameterMapping() : base() {}
 	public SelectionDialogParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public SelectionDialogParameterMapping(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	[XmlAttribute(AttributeName = "itemType")] 
 	public override string ItemType
@@ -74,7 +74,7 @@ public class SelectionDialogParameterMapping : AbstractSchemaItem
 	{
 		get
 		{
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityFieldId));
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.EntityFieldId));
 		}
 		set
 		{

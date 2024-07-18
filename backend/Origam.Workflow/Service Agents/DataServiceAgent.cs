@@ -261,7 +261,7 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
 		}
-		ArrayList pkList = originalEntity.EntityPrimaryKey;
+		List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
 		if(pkList.Count == 0) throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path));
 		if(pkList.Count > 1) throw new InvalidOperationException(ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path));
 		FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
@@ -338,12 +338,12 @@ public class DataServiceAgent : AbstractServiceAgent
 		{
 			throw new ArgumentException(ResourceUtils.GetString("ErrorTableMappingNotFound", entityId.ToString()));
 		}
-		ArrayList pkList = originalEntity.EntityPrimaryKey;
+		List<IDataEntityColumn> pkList = originalEntity.EntityPrimaryKey;
 		if(pkList.Count == 0) throw new InvalidOperationException(ResourceUtils.GetString("ErrorNoPrimaryKey", originalEntity.Path));
 		if(pkList.Count > 1) throw new InvalidOperationException(ResourceUtils.GetString("ErrorMultiColumnPrimaryKey", originalEntity.Path));
 		FieldMappingItem originalKey = pkList[0] as FieldMappingItem;
 		if(originalKey == null) throw new InvalidOperationException(ResourceUtils.GetString("ErrorPrimaryKeyNotMapped", originalEntity.Path));
-		ArrayList skipRelationships = originalEntity.ChildEntitiesRecursive;
+		List<IDataEntity> skipRelationships = originalEntity.ChildEntitiesRecursive;
 		SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		EntityModelSchemaItemProvider entities = schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
 		int result = 0;
@@ -537,7 +537,7 @@ public class DataServiceAgent : AbstractServiceAgent
 				throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
 		}
 	}
-	public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+	public override IList<string> ExpectedParameterNames(ISchemaItem item, string method, string parameter)
 	{
 		var result = new List<string>();
 		ServiceMethodCallTask call = item as ServiceMethodCallTask;
@@ -599,7 +599,7 @@ public class DataServiceAgent : AbstractServiceAgent
 					sqlGenerator.ResolveAllFilters = true;
 					foreach(DataStructureEntity entity in ds.Entities)
 					{
-						ArrayList parameters = sqlGenerator.Parameters(ds, entity, fs, null, false, null);
+						List<string> parameters = sqlGenerator.Parameters(ds, entity, fs, null, false, null);
 						foreach(string newParameter in parameters)
 						{
 							if(!result.Contains(newParameter))
@@ -625,7 +625,7 @@ public class DataServiceAgent : AbstractServiceAgent
 	private void ResolveServiceMethodCallTask(ServiceMethodCallTask task,
 		out DataStructure ds, out DataStructureMethod method)
 	{
-		AbstractSchemaItem dsParam = task.GetChildByName("DataStructure");
+		ISchemaItem dsParam = task.GetChildByName("DataStructure");
 		if(dsParam.ChildItems.Count == 1)
 		{
 			DataStructureReference dsRef = dsParam.ChildItems[0] as DataStructureReference;

@@ -58,6 +58,7 @@ using Origam.Schema.MenuModel;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Gui;
+using Origam.Schema.EntityModel.Interfaces;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema.RuleModel;
 using Origam.Server;
@@ -97,7 +98,7 @@ public class WorkflowSessionStore : SaveableSessionStore
     public override void Init()
     {
         IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-        IWorkflow workflow = ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId)) as IWorkflow;
+        IWorkflow workflow = ps.SchemaProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.WorkflowId)) as IWorkflow;
         WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(workflow, new Hashtable(this.Request.Parameters), false, this.Request.Caption);
         _host = new WorkflowHost();
         _host.SupportsUI = true;
@@ -328,7 +329,6 @@ public class WorkflowSessionStore : SaveableSessionStore
             this.Notifications.Clear();
             this.RefreshPortalAfterSave = false;
             // get the messages in reverse order
-            ArrayList messages = new ArrayList();
             Exception ex = handler.Result.Exception;
             if (ex != null)
             {
@@ -337,20 +337,6 @@ public class WorkflowSessionStore : SaveableSessionStore
                 message.Append("<FONT COLOR=\"#FF0000\" SIZE=\"16\"><DIV>");
                 message.Append(ex.Message);
                 message.Append("</DIV></FONT>");
-                /*
-                if (ex.StackTrace != null)
-                {
-                    message.Append("<FONT COLOR=\"#808080\" SIZE=\"10\"><P>");
-                    Exception innerException = ex;
-                    while (innerException != null)
-                    {
-                        message.Append("<BR/>");
-                        message.Append(innerException.StackTrace.Replace("\n", "<BR/>").Replace("\r", ""));
-                        innerException = innerException.InnerException;
-                    }
-                    message.Append("</P></FONT>");
-                }
-                */
                 message.Append("</HTML></BODY>");
                 this.FinishMessage = message.ToString() ;
             }

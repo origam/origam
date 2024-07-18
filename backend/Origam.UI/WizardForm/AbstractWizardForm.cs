@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Origam.UI.WizardForm;
 public class AbstractWizardForm : IWizardForm
 {
-    public ArrayList ItemTypeList { get ; set ; }
+    public List<ListViewItem> ItemTypeList { get ; set ; }
     public  Stack Pages { get; set; }
     public  string Description { get ; set ; }
     public  List<string> StructureList { get ; set ; }

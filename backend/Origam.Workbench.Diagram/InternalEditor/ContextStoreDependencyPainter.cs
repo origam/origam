@@ -33,11 +33,11 @@ using Origam.Workbench.Services;
 namespace Origam.Workbench.Diagram.InternalEditor;
 class ContextStoreDependencyPainter
 {
-    private readonly Func<AbstractSchemaItem> graphParentItemGetter;
+    private readonly Func<ISchemaItem> graphParentItemGetter;
     private readonly GViewer gViewer;
     private readonly List<IArrowPainter> arrowPainters = new List<IArrowPainter>();
     public ContextStoreDependencyPainter(GViewer gViewer,
-        Func<AbstractSchemaItem> graphParentItemGetter)
+        Func<ISchemaItem> graphParentItemGetter)
     {
         this.gViewer = gViewer;
         this.graphParentItemGetter = graphParentItemGetter;
@@ -134,7 +134,7 @@ class ContextStoreDependencyPainter
         }
         arrowPainters.Clear();
     }
-    private bool IsOutpuContextStore(AbstractSchemaItem item,  IContextStore contextStore)
+    private bool IsOutpuContextStore(ISchemaItem item,  IContextStore contextStore)
     {
         if (item is WorkflowTask workflowTask)
         {
@@ -148,7 +148,7 @@ class ContextStoreDependencyPainter
         }
         return false;
     }
-    private bool IsInputContextStore(AbstractSchemaItem item,  IContextStore contextStore)
+    private bool IsInputContextStore(ISchemaItem item,  IContextStore contextStore)
     {
         if (item is WorkflowTask workflowTask)
         {
@@ -177,14 +177,14 @@ interface IArrowPainter
 {
     void Draw(Node contextStoreNode);
     Edge Edge { get; }
-    AbstractSchemaItem SchemaItem { get; }
+    ISchemaItem SchemaItem { get; }
 }
 abstract class ArrowPainter: IArrowPainter
 {
     protected readonly GViewer gViewer;
     public Edge Edge { get; protected set; }
-    public AbstractSchemaItem SchemaItem { get; }
-    public ArrowPainter(GViewer gViewer, AbstractSchemaItem schemaItem)
+    public ISchemaItem SchemaItem { get; }
+    public ArrowPainter(GViewer gViewer, ISchemaItem schemaItem)
     {
         this.gViewer = gViewer;
         SchemaItem = schemaItem;
@@ -194,7 +194,7 @@ abstract class ArrowPainter: IArrowPainter
 }
 class ToArrowPainter: ArrowPainter
 {
-    public ToArrowPainter(GViewer gViewer, AbstractSchemaItem sourceItem)
+    public ToArrowPainter(GViewer gViewer, ISchemaItem sourceItem)
         : base(gViewer, sourceItem)
     {
     }
@@ -211,7 +211,7 @@ class ToArrowPainter: ArrowPainter
 class FromArrowPainter: ArrowPainter
 {
     public FromArrowPainter(GViewer gViewer,
-        AbstractSchemaItem targetItem) : base(gViewer,  targetItem)
+        ISchemaItem targetItem) : base(gViewer,  targetItem)
     {
     }
     public override void Draw(Node contextStoreNode)
@@ -227,7 +227,7 @@ class FromArrowPainter: ArrowPainter
 class BidirectionalArrowPainter: ArrowPainter
 {
     public BidirectionalArrowPainter(GViewer gViewer, 
-        AbstractSchemaItem targetItem) : base(gViewer,  targetItem)
+        ISchemaItem targetItem) : base(gViewer,  targetItem)
     {
     }
     public override void Draw(Node contextStoreNode)

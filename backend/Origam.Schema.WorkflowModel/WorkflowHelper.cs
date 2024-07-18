@@ -68,7 +68,7 @@ public static class WorkflowHelper
 		return serviceMethodCallTask;
 	}
 	public static ContextReference CreateContextReference(
-		AbstractSchemaItem parentItem, 
+		ISchemaItem parentItem, 
 		ContextStore contextStore, 
 		string xpath, 
 		bool persist)
@@ -175,7 +175,7 @@ public static class WorkflowHelper
 	public static WorkQueueClass CreateWorkQueueClass(
         IDataEntity entity, 
         ICollection fields, 
-        IList<AbstractSchemaItem> generatedElements)
+        IList<ISchemaItem> generatedElements)
 	{
 		var schemaService 
 			= ServiceManager.Services.GetService<ISchemaService>();
@@ -191,7 +191,7 @@ public static class WorkflowHelper
 			.CreateFilterSet(workQueueClass.EntityStructure, "GetId", true);
         var dataStructureEntity = workQueueClass.EntityStructure.Entities[0] 
             as DataStructureEntity;
-		var primaryKeyFilter = entity.EntityFilters.Cast<EntityFilter>()
+		var primaryKeyFilter = entity.EntityFilters
 			.FirstOrDefault(filter => filter.Name == "GetId");
 		EntityHelper.CreateFilterSetFilter(
 			(DataStructureFilterSet)workQueueClass
@@ -200,7 +200,7 @@ public static class WorkflowHelper
 		var persistenceService = ServiceManager.Services
 			.GetService<IPersistenceService>();
 		var countLookup = persistenceService.SchemaProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem),
+			typeof(ISchemaItem),
 			new ModelElementKey(
 				new Guid("2a953c7d-0276-42c4-99b9-aa484808bbcb"))
 			) as IDataLookup;
@@ -208,7 +208,7 @@ public static class WorkflowHelper
 		// load wq_template data structure
 		var workQueueTemplateStructure = persistenceService.SchemaProvider
 			.RetrieveInstance(
-				typeof(AbstractSchemaItem), 
+				typeof(ISchemaItem), 
 				new ModelElementKey(
 					new Guid("e9d8e455-02de-4ae7-914e-9a3064e52bd6"))
 			) as DataStructure;

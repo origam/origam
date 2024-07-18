@@ -14,6 +14,7 @@
  **************************************************************************/
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Schedule;
@@ -42,7 +43,7 @@ public class SimpleInterval : IScheduledItem
 		_StartTime = StartTime;
 		_EndTime = EndTime;
 	}
-	public void AddEventsInInterval(DateTime Begin, DateTime End, ArrayList List)
+	public void AddEventsInInterval(DateTime Begin, DateTime End, List<DateTime> List)
 	{
 		if (End <= _StartTime)
 			return;

@@ -32,7 +32,7 @@ public class SetInheritanceOff : AbstractMenuCommand
 	{
 		get
 		{
-            AbstractSchemaItem item = Owner as AbstractSchemaItem;
+            ISchemaItem item = Owner as ISchemaItem;
             return item != null && item.Inheritable;
 		}
 		set
@@ -42,16 +42,16 @@ public class SetInheritanceOff : AbstractMenuCommand
 	}
 	public override void Run()
 	{
-		AbstractSchemaItem item = Owner as AbstractSchemaItem;
+		ISchemaItem item = Owner as ISchemaItem;
 		SetInheritance(item, false);
 		item.ClearCacheOnPersist = false;
 		item.Persist();
 		item.ClearCacheOnPersist = true;
 	}
-	private static void SetInheritance(AbstractSchemaItem item, bool value)
+	private static void SetInheritance(ISchemaItem item, bool value)
 	{
 		item.Inheritable = value;
-		foreach(AbstractSchemaItem child in item.ChildItems)
+		foreach(ISchemaItem child in item.ChildItems)
 		{
 			if(child.DerivedFrom == null)
 			{

@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 using Origam.UI;
@@ -59,7 +60,7 @@ public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
         //{
         //    Entity = baseEntity
         //};
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         TableMappingItem table1 = new TableMappingItem();
         EntityRelationItem entityRelation = new EntityRelationItem();
         list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));

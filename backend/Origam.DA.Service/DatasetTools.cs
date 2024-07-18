@@ -571,7 +571,7 @@ public class DatasetTools
 			{
 				adcPK = in_dtSource.PrimaryKey;
 				aRowKey = new object[adcPK.Length];
-				ArrayList rowsToDelete = new ArrayList();					
+				var rowsToDelete = new List<DataRow>();					
 				int nbRowTarget = inout_dtTarget.Rows.Count;
 				for (int iRowTarget = 0 ; nbRowTarget > iRowTarget ; ++iRowTarget) 
 				{
@@ -858,11 +858,11 @@ public class DatasetTools
 	}
 	
 	public static void GetDataSlice(DataSet target, IList<DataRow> rows, 
-        object profileId, bool copy, ArrayList tablesToSkip)
+        object profileId, bool copy, List<string> tablesToSkip)
 	{
         if (tablesToSkip == null)
         {
-            tablesToSkip = new ArrayList();
+            tablesToSkip = new List<string>();
         }
 		target.EnforceConstraints = false;
 		// parent
@@ -885,7 +885,7 @@ public class DatasetTools
             // last parent will get all the parent's children until the current row
             if (!copy && parentRow.Table.ParentRelations.Count == 0)
             {
-                ArrayList skipCurrent = new ArrayList(tablesToSkip);
+                var skipCurrent = new List<string>(tablesToSkip);
                 skipCurrent.Add(rows[0].Table.TableName);
                 ImportChildRows(parentRow, target, copy, skipCurrent);
             }
@@ -903,7 +903,7 @@ public class DatasetTools
             }
         }
 	}
-	private static void ImportChildRows(DataRow row, DataSet target, bool onlyParentChildRelations, ArrayList tablesToSkip)
+	private static void ImportChildRows(DataRow row, DataSet target, bool onlyParentChildRelations, List<string> tablesToSkip)
 	{
 		foreach(DataRelation relation in row.Table.ChildRelations)
 		{
@@ -1059,7 +1059,6 @@ public class DatasetTools
 			result.Tables.Add(CloneTable(table, false));
 		}
 		DataRelation[] relations = new DataRelation[dataset.Relations.Count];
-		ArrayList constraints = new ArrayList();
 		for(int i=0; i < relations.Length; i++)
 		{
 			DataRelation relation = dataset.Relations[i];
@@ -1368,23 +1367,23 @@ public class DatasetTools
 		}
 		return version;
 	}
-	public static Hashtable RetrieveParemeters(Hashtable parameterMappings, IList<DataRow> rows)
+	public static Hashtable RetrieveParameters(Hashtable parameterMappings, IList<DataRow> rows)
 	{
-		return RetrieveParemeters(parameterMappings, rows, new ArrayList());
+		return RetrieveParameters(parameterMappings, rows, new List<string>());
 	}
-    public static Hashtable RetrieveParemeters(Hashtable parameterMappings,
-        IList<DataRow> rows, ArrayList originalDataParameters)
+    public static Hashtable RetrieveParameters(Hashtable parameterMappings,
+        IList<DataRow> rows, List<string> originalDataParameters)
     {
         DataSet fullData = null;
         if (rows != null && rows.Count > 0)
         {
             fullData = rows[0].Table.DataSet;
         }
-        return RetrieveParemeters(parameterMappings, rows, originalDataParameters,
+        return RetrieveParameters(parameterMappings, rows, originalDataParameters,
             fullData);
     }
-    public static Hashtable RetrieveParemeters(Hashtable parameterMappings, 
-        IList<DataRow> rows, ArrayList originalDataParameters, DataSet fullData)
+    public static Hashtable RetrieveParameters(Hashtable parameterMappings, 
+        IList<DataRow> rows, List<string> originalDataParameters, DataSet fullData)
 	{
 		Hashtable result = new Hashtable();
 		foreach(DictionaryEntry entry in parameterMappings)
@@ -1580,7 +1579,7 @@ public class DatasetTools
         if (column.ExtendedProperties.Contains(Const.ArrayRelation))
         {
             string childColumnName = (string)column.ExtendedProperties[Const.ArrayRelationField];
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
             foreach (DataRow childRow in
                 row.GetChildRows((string)column.ExtendedProperties[Const.ArrayRelation]))
             {

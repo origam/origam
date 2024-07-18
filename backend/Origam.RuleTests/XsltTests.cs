@@ -117,8 +117,8 @@ public class XsltTests
         functionCollection.XslNameSpacePrefix = "AS";
         functionSchemaItemProvider
             .Setup(x =>
-                x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
-            .Returns(new ArrayList { functionCollection });
+                x.ChildItemsByType<XsltFunctionCollection>(XsltFunctionCollection.CategoryConst))
+            .Returns(new List<XsltFunctionCollection> { functionCollection });
 
         xsltFunctionDefinitions = XsltFunctionContainerFactory.Create(
             businessServiceMock.Object,
@@ -315,7 +315,7 @@ public class XsltTests
             string.Format(xpathTemplate, formatArguments.ToArray());
         object expectedResult = "lookupResult";
 
-        var paramTable = new Hashtable(3);
+        var paramTable = new Dictionary<string, object>(3);
         if (args.Length >= 4)
         {
             paramTable[args[0]] = args[1];
@@ -380,7 +380,7 @@ public class XsltTests
         dataTable.AcceptChanges();
         var dataView = new DataView(dataTable);
 
-        var parameters = new Hashtable();
+        var parameters = new Dictionary<string, object>();
         if (args.Length >= 2)
         {
             parameters[args[0]] = args[1];
@@ -445,8 +445,10 @@ public class XsltTests
         var document = new XmlDocument();
         document.LoadXml("<ROOT></ROOT>");
 
-        var parameters = new Hashtable();
-        parameters["par1"] = "val1";
+        var parameters = new Dictionary<string, object>
+        {
+            ["par1"] = "val1"
+        };
         lookupServiceMock
             .Setup(service => service.GetDisplayText(Guid.Parse(lookupId),
                 parameters, false, false, null))

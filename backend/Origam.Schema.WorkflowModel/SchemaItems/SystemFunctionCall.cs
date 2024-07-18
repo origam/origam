@@ -43,7 +43,7 @@ public class SystemFunctionCall : AbstractSchemaItem
 	public SystemFunctionCall() : base() {}
 	public SystemFunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public SystemFunctionCall(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

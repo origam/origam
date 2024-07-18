@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.MenuModel;
@@ -41,9 +42,9 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
 		GetStandardValues(ITypeDescriptorContext context)
 	{
 		FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
-		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new ArrayList());
-		ArrayList entities = currentItem.ListDataStructure.Entities;
-		ArrayList entityArray = new ArrayList(entities.Count);
+		if(currentItem.ListDataStructure == null) return new StandardValuesCollection(new List<DataStructureEntity>());
+		List<DataStructureEntity> entities = currentItem.ListDataStructure.Entities;
+		var entityArray = new List<DataStructureEntity>(entities.Count);
 		foreach(DataStructureEntity entity in entities)
 		{
 			entityArray.Add(entity);
@@ -64,11 +65,11 @@ public class MenuFormReferenceListEntityConverter : TypeConverter
 		{
 			FormReferenceMenuItem currentItem = context.Instance as FormReferenceMenuItem;
 			if(currentItem.ListDataStructure == null) return null;
-			ArrayList entities = currentItem.ListDataStructure.Entities;
-			foreach(AbstractSchemaItem item in entities)
+			List<DataStructureEntity> entities = currentItem.ListDataStructure.Entities;
+			foreach(DataStructureEntity item in entities)
 			{
 				if(item.Name == value.ToString())
-					return item as DataStructureEntity;
+					return item;
 			}
 			return null;
 		}

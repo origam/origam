@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -30,7 +31,7 @@ namespace Origam.Gui;
 public class UIActionTools
 {
     public static bool GetValidActions(Guid formId, Guid panelId, 
-        bool disableActionButtons, Guid entityId, ArrayList validActions)
+        bool disableActionButtons, Guid entityId, List<EntityUIAction> validActions)
     {
         bool hasMultipleSelection = false;
         if (entityId != Guid.Empty)
@@ -40,7 +41,7 @@ public class UIActionTools
             AbstractDataEntity entity 
                 = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
                 typeof(AbstractDataEntity), new ModelElementKey(entityId));
-            ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
+            var actionsSorted = entity.ChildItemsByTypeRecursive(
                 EntityUIAction.CategoryConst);
             actionsSorted.Sort(new EntityUIActionOrderComparer());
             foreach (EntityUIAction action in actionsSorted)
@@ -62,11 +63,11 @@ public class UIActionTools
         }
         return hasMultipleSelection;
     }
-    public static ArrayList GetOriginalParameters(EntityUIAction action)
+    public static List<string> GetOriginalParameters(EntityUIAction action)
     {
-        ArrayList originalDataParameters = new ArrayList();
-        foreach(EntityUIActionParameterMapping mapping 
-            in action.ChildItemsByType(
+        var originalDataParameters = new List<string>();
+        foreach(var mapping 
+            in action.ChildItemsByType<EntityUIActionParameterMapping>(
             EntityUIActionParameterMapping.CategoryConst))
         {
             if(mapping.Type == EntityUIActionParameterMappingType.Original)

@@ -29,6 +29,7 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -46,7 +47,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{
 		this.ChildItemTypes.Add(typeof(WorkflowTaskDependency));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -67,7 +68,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
         }
         return true;
     }
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.StartConditionRule != null) dependencies.Add(this.StartConditionRule);
 		if(this.StartConditionRuleContextStore != null) dependencies.Add(this.StartConditionRuleContextStore);
@@ -96,13 +97,9 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	#endregion
 	#region IWorkflowStep Members
     [Browsable(false)]
-	public ArrayList Dependencies
-	{
-		get
-		{
-			return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
-		}
-	}
+	public List<WorkflowTaskDependency> Dependencies => 
+		ChildItemsByType<WorkflowTaskDependency>(WorkflowTaskDependency.CategoryConst);
+
 	[Category("Error Handling")]
 	[XmlAttribute("onFailure")]
 	[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]
@@ -142,7 +139,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.StartRuleId;
-			return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (StartRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -168,7 +165,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.StartRuleContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -194,7 +191,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ValidationRuleId;
-			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -220,7 +217,7 @@ public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ValidationRuleContextStoreId;
-			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

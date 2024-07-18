@@ -59,8 +59,8 @@ public class GuiHelper
 			var panelControl = CreateControl(rootControl, 
 				defaultPanel.PanelControl);
 			// clone the panel's properties
-			foreach(PropertyValueItem originalProperty 
-			        in defaultPanel.ChildItems[0].ChildItemsByType(
+			foreach(var originalProperty 
+			        in defaultPanel.ChildItems[0].ChildItemsByType<PropertyValueItem>(
 				        PropertyValueItem.CategoryConst))
 			{
 				var property = panelControl.NewItem<PropertyValueItem>(
@@ -230,7 +230,7 @@ public class GuiHelper
 		}
 	}
 	public static ControlSetItem CreateControl(
-		AbstractSchemaItem parentControl, 
+		ISchemaItem parentControl, 
 		ControlItem controlType)
 	{
 		var schemaService 
@@ -322,8 +322,8 @@ public class GuiHelper
 	{
 		var schema 
 			= ServiceManager.Services.GetService<ISchemaService>();
-		foreach(ControlPropertyItem propertyDef 
-		        in control.ControlItem.ChildItemsByType(
+		foreach(var propertyDef 
+		        in control.ControlItem.ChildItemsByType<ControlPropertyItem>(
 			        ControlPropertyItem.CategoryConst))
 		{
 			var propertyValueItem = control.NewItem<PropertyValueItem>(

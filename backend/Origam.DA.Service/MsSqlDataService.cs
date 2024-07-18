@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -208,19 +209,12 @@ public class MsSqlDataService : AbstractSqlDataService
         TableMappingItem entity =
             (TableMappingItem)persistence.SchemaProvider.RetrieveInstance(
             typeof(TableMappingItem), new ModelElementKey(entityId));
-        ArrayList sortedIndexes = new ArrayList(entity.EntityIndexes);
-        sortedIndexes.Sort();
-        // sort descending for cases where one index name would be
-        // a subset of another, so they will come e.g.
-        // ix_NameAndFirstName
-        // ix_Name
-        sortedIndexes.Reverse();
         StringBuilder fieldNames = new StringBuilder();
         foreach (DataEntityIndex index in entity.EntityIndexes)
         {
             if (index.IsUnique && sqle.Message.Contains(index.Name))
             {
-                ArrayList sortedFields = new ArrayList(index.ChildItems);
+                List<ISchemaItem> sortedFields = index.ChildItems.ToList();
                 sortedFields.Sort();
                 foreach (DataEntityIndexField field in sortedFields)
                 {
@@ -476,7 +470,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
         }
         return dbIndexList;
     }
-    internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+    internal override Hashtable GetSchemaIndexListGenerate(List<TableMappingItem> schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
     {
         Hashtable schemaIndexListGenerate = new Hashtable();
         foreach (TableMappingItem t in schemaTables)

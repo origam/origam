@@ -23,6 +23,7 @@ using System;
 using System.Text;
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using Origam;
@@ -46,7 +47,7 @@ namespace OrigamArchitect;
 /// </summary>
 public class SchemaCompareEditor : AbstractViewContent
 {
-	ArrayList _results = new ArrayList();
+	private List<SchemaDbCompareResult> _results = new ();
 	WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 	private System.Windows.Forms.ColumnHeader colType;
 	private System.Windows.Forms.ColumnHeader colName;
@@ -78,14 +79,13 @@ public class SchemaCompareEditor : AbstractViewContent
 		//
 		InitializeComponent();
 		this.Icon = Icon.FromHandle(new Bitmap(Images.DeploymentScriptGenerator).GetHicon());
-		cboFilter.Items.AddRange(new string[] {"Missing in Database", "Missing in Model", "Different"});
+		cboFilter.Items.AddRange(new object[] {"Missing in Database", "Missing in Model", "Different"});
 		cboFilter.SelectedIndex = 0;
 		lvwResults.SmallImageList = _schema.SchemaBrowser.ImageList;
 		DeploymentVersion currentVersion = null;
 		// load versions combo box
 		var deploymentVersions = _schema.GetProvider<DeploymentSchemaItemProvider>()
 			.ChildItems
-			.ToGeneric()
 			.Cast<DeploymentVersion>()
 			.OrderBy(deploymentVersion => deploymentVersion.Version);
 		foreach(DeploymentVersion version in deploymentVersions)
@@ -401,15 +401,14 @@ public class SchemaCompareEditor : AbstractViewContent
         AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
         DaPlatform.PersistenceProvider = persistence.SchemaProvider;
         _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
-        _results.ToArray().Select(x => ((SchemaDbCompareResult)x).Platform = platform).ToList();
         RenderList();
 	}
-	private ArrayList SelectedResults()
+	private List<SchemaDbCompareResult> SelectedResults()
 	{
-		ArrayList result = new ArrayList();
+		var result = new List<SchemaDbCompareResult>();
 		foreach(ListViewItem item in lvwResults.CheckedItems)
 		{
-			result.Add(item.Tag);
+			result.Add((SchemaDbCompareResult)item.Tag);
 		}
 		return result;
 	}
@@ -535,7 +534,7 @@ public class SchemaCompareEditor : AbstractViewContent
 			return;
 		}
 		DeploymentVersion version = cboDeploymentVersion.SelectedItem as DeploymentVersion;
-		ArrayList generatedActivities = new ArrayList();
+		var generatedActivities = new List<ISchemaItem>();
 		foreach(SchemaDbCompareResult result in SelectedResults())
 		{
 			if(!string.IsNullOrEmpty(result.Script))
@@ -569,7 +568,7 @@ public class SchemaCompareEditor : AbstractViewContent
 				MessageBoxIcon.Question) == DialogResult.Yes)
 			{
 				FindSchemaItemResultsPad findResults = WorkbenchSingleton.Workbench.GetPad(typeof(FindSchemaItemResultsPad)) as FindSchemaItemResultsPad;
-				findResults.DisplayResults((AbstractSchemaItem[])generatedActivities.ToArray(typeof(AbstractSchemaItem)));
+				findResults.DisplayResults(generatedActivities.ToArray());
 			}
 		}
 		// deselect all items
@@ -598,9 +597,9 @@ public class SchemaCompareEditor : AbstractViewContent
             lvwResults.SelectedItems[0].Tag as SchemaDbCompareResult;
 		if(result != null)
 		{
-			AbstractSchemaItem toSelect = (result.SchemaItem == null 
-                ? result.ParentSchemaItem as AbstractSchemaItem 
-                : result.SchemaItem as AbstractSchemaItem) ;
+			ISchemaItem toSelect = result.SchemaItem == null 
+                ? result.ParentSchemaItem as ISchemaItem 
+                : result.SchemaItem;
 			if(toSelect != null)
 			{
 				try
@@ -640,7 +639,7 @@ public class SchemaCompareEditor : AbstractViewContent
 		{
 			if(result.ResultType == DbCompareResultType.MissingInSchema)
 			{
-			    var schemaItem = result.SchemaItem as AbstractSchemaItem;
+			    var schemaItem = result.SchemaItem;
 			    schemaItem.Group = _schema
 			        .GetProvider<EntityModelSchemaItemProvider>()
 			        .GetGroup(_schema.ActiveExtension.Name);

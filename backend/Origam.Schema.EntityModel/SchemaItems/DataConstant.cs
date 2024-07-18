@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Xml;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -179,7 +181,7 @@ public class DataConstant : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.DataLookupId;
-			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{
@@ -377,7 +379,7 @@ public class DataConstant : AbstractSchemaItem
         }
     }
     #endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -386,16 +388,16 @@ public class DataConstant : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		if(this.DataLookup != null) dependencies.Add(this.DataLookup);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

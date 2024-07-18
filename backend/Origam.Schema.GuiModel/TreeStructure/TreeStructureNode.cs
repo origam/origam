@@ -44,7 +44,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		this.ChildItemTypes.Add(typeof(TreeStructureNode));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -84,7 +84,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		get
 		{
-			return (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.NodeIconId));
+			return (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.NodeIconId));
 		}
 		set
 		{
@@ -99,7 +99,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		get
 		{
-			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureId));
+			return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureId));
 		}
 		set
 		{
@@ -115,7 +115,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LoadByParentMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LoadByParentMethodId));
 		}
 		set
 		{
@@ -142,7 +142,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		get
 		{
-			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.LoadByPrimaryKeyMethodId));
+			return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.LoadByPrimaryKeyMethodId));
 		}
 		set
 		{
@@ -156,7 +156,7 @@ public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataSt
 	{
 		get
 		{
-			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DataStructureSortSetId));
+			return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DataStructureSortSetId));
 		}
 		set
 		{

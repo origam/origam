@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
@@ -51,7 +52,7 @@ public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
 	}
 	public override void Run()
 	{
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         WorkQueueClass workQueue = new WorkQueueClass();
         list.Add(new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon));
         Stack stackPage = new Stack();

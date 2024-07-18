@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -104,7 +105,7 @@ public class DebugInfo : IDebugInfoProvider
 			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			param.RefreshParameters();
 			FeatureSchemaItemProvider p = schema.GetProvider(typeof(FeatureSchemaItemProvider)) as FeatureSchemaItemProvider;
-			ArrayList features = new ArrayList(p.ChildItems);
+			var features = p.ChildItems.ToList();
 			features.Sort();
 			foreach(Feature f in features)
 			{

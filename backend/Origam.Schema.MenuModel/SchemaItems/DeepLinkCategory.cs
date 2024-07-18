@@ -75,7 +75,7 @@ public class DeepLinkCategory : AbstractSchemaItem , ILookupReference
         get
         {
             return (IDataLookup)this.PersistenceProvider.RetrieveInstance(
-                typeof(AbstractSchemaItem), new ModelElementKey(this.LookupId));
+                typeof(ISchemaItem), new ModelElementKey(this.LookupId));
         }
         set
         {

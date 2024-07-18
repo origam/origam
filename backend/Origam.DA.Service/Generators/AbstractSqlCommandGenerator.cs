@@ -33,6 +33,7 @@ using Origam.DA.Service.Generators;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
 
@@ -168,7 +169,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return adapter;
     }
 
-    public DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered,
+    public DbDataAdapter CreateDataAdapter(string procedureName, List<DataStructureEntity> entitiesOrdered,
         IDbConnection connection, IDbTransaction transaction)
     {
         IDbCommand cmd = GetCommand(procedureName);
@@ -385,10 +386,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         {
             foreach (EntityFilter filter in Filters(filterSet, entity, parameters, false))
             {
-                Hashtable paramReferences = filter.ParameterReferences;
-                foreach (DictionaryEntry entry in paramReferences)
+                Dictionary<string, ParameterReference> paramReferences = filter.ParameterReferences;
+                foreach (var entry in paramReferences)
                 {
-                    ParameterReference parameterRef = entry.Value as ParameterReference;
+                    ParameterReference parameterRef = entry.Value;
                     string paramName = RenderExpression(parameterRef, entity, replaceParameterTexts, null, null);
 
                     if (!command.Parameters.Contains(paramName))
@@ -570,7 +571,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     #region Main SQL Command Rendering
 
-    public string TableListDefinitionDdl(SchemaItemCollection tables)
+    public string TableListDefinitionDdl(ISchemaItemCollection tables)
     {
         StringBuilder ddl = new StringBuilder();
 
@@ -730,7 +731,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             );
 
         int i = 0;
-        ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.CategoryConst);
+        var sortedFields = index.ChildItemsByType<DataEntityIndexField>(DataEntityIndexField.CategoryConst);
         sortedFields.Sort();
 
         foreach (DataEntityIndexField field in sortedFields)
@@ -779,7 +780,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             sqlRenderer.NameLeftBracket + table.MappedObjectName + sqlRenderer.NameRightBracket);
 
         int i = 0;
-        foreach (ISchemaItem item in table.EntityColumns)
+        foreach (IDataEntityColumn item in table.EntityColumns)
         {
             if (item is FieldMappingItem)
             {
@@ -846,10 +847,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return result.ToString();
     }
 
-    internal ArrayList Parameters(IDbCommand cmd)
+    internal List<string> Parameters(IDbCommand cmd)
     {
         int declarationLength = sqlRenderer.ParameterDeclarationChar.Length;
-        ArrayList list = new ArrayList(cmd.Parameters.Count);
+        var list = new List<string>(cmd.Parameters.Count);
         foreach (IDataParameter param in cmd.Parameters)
         {
             list.Add(param.ParameterName.Substring(declarationLength));
@@ -877,7 +878,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         return ((IDbDataAdapter)adapter).SelectCommand;
     }
 
-    public ArrayList Parameters(DataStructure ds, DataStructureEntity entity,
+    public List<string> Parameters(DataStructure ds, DataStructureEntity entity,
         DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
         string columnName)
     {
@@ -890,7 +891,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 	DataStructureSortSet sort, bool paging, string columnName)
     {
         IDbCommand cmd = SelectCommand(ds, entity, filter, sort, paging, columnName);
-        ArrayList list = Parameters(cmd);
+        List<string> list = Parameters(cmd);
         foreach (string paramName in list)
         {
             IDataParameter param = cmd.Parameters[sqlRenderer.ParameterDeclarationChar + paramName] as IDataParameter;
@@ -1066,7 +1067,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (!entity.ParentItem.PrimaryKey.Equals(ds.PrimaryKey))
         {
             // render joins that we need for fields in this entity
-            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
@@ -1084,7 +1085,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             // for the root entity we render all child relation filters (filterParent relations)
             StringBuilder joinedFilterBuilder = new StringBuilder();
             int counter = 0;
-            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
@@ -1281,7 +1282,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             .Concat(new[] { entity })
             .SelectMany(entity =>
             {
-                var dataStructureColumnNames = entity.ChildItems.ToGeneric()
+                var dataStructureColumnNames = entity.ChildItems
                     .OfType<DataStructureColumn>()
                     .Where(x => x.UseLookupValue)
                     .Select(x => x.Name);
@@ -1512,7 +1513,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     internal void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
     {
-        ArrayList primaryKeys = new ArrayList();
+        var primaryKeys = new List<DataStructureColumn>();
         foreach (DataStructureColumn column in entity.Columns)
         {
             if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
@@ -1522,7 +1523,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
         }
         PrettyLine(sqlExpression);
-        sqlExpression.Append(sqlRenderer.Sequence(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
+        sqlExpression.Append(sqlRenderer.Sequence(entity.Name, (primaryKeys[0]).Name));
     }
 
     public string SelectRowSql(DataStructureEntity entity,
@@ -1531,7 +1532,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     {
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList primaryKeys = new ArrayList();
+        var primaryKeys = new List<DataStructureColumn>();
         StringBuilder primaryDetachKeys = new StringBuilder();
         sqlExpression.Append("SELECT ");
 
@@ -1568,7 +1569,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             sqlRenderer.NameLeftBracket + entity.Name + sqlRenderer.NameRightBracket
             );
 
-        foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
             {
@@ -1603,7 +1604,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList selectKeys = new ArrayList();
+        var selectKeys = new List<DataStructureColumn>();
         sqlExpression.Append("SELECT ");
 
         int i = 0;
@@ -1656,7 +1657,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder sqlExpression = new StringBuilder();
 
-        ArrayList selectKeys = new ArrayList();
+        var selectKeys = new List<DataStructureColumn>();
         sqlExpression.Append("SELECT " + sqlRenderer.CountAggregate() + "(*) ");
 
         foreach (DataStructureColumn column in entity.Columns)
@@ -1729,8 +1730,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     // When no file name, then the blob field will be emptied. Without dependency it would
                     // not touch the write only field.
                     const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
-                    ArrayList dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
-                    ArrayList dependencies = new ArrayList();
+                    var dependenciesSource = column.Field.ChildItemsByType<EntityFieldDependency>(EntityFieldDependency.CategoryConst);
+                    var dependencies = new List<EntityFieldDependency>();
                     // skip dependencies to virtual fields
                     foreach (EntityFieldDependency dep in dependenciesSource)
                     {
@@ -2233,7 +2234,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             else
             {
                 bool found = false;
-                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                foreach (var childEntity in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
                 {
                     // if we have an aggregation column and
                     // and the aggregation sub-entity with source field
@@ -2349,7 +2350,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         else
         {
             resultExpression = RenderExpression(
-                item: column.Field as AbstractSchemaItem,
+                item: column.Field,
                 entity: column.Entity ?? entity,
                 replaceParameterTexts: replaceParameterTexts,
                 dynamicParameters: dynamicParameters,
@@ -2521,10 +2522,10 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         Hashtable replaceTexts = new Hashtable(1);
 
-        AbstractSchemaItem renderField = field as AbstractSchemaItem;
+        ISchemaItem renderField = field;
         if (field is LookupField)
         {
-            renderField = (field as LookupField).Field as AbstractSchemaItem;
+            renderField = (field as LookupField).Field;
         }
         string myColumn = RenderExpression(renderField, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
 
@@ -2534,9 +2535,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
 
         // replace lookup parameters with keys from the entity
-        foreach (object key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
+        foreach (string key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
         {
-            string finalKey = key as string;
+            string finalKey = key;
             if (lookupRenamed)
             {
                 if (finalKey != null)
@@ -2604,7 +2605,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         bool stopAtIncluded = false;
         bool notExistsIncluded = false;
 
-        foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in baseEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             if (relation.RelationType != RelationType.LeftJoin)
             {
@@ -2633,7 +2634,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         if (notExistsIncluded)
         {
             int notExistsCount = (stopAtIncluded ? 1 : 0);
-            foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+            foreach (DataStructureEntity relation in baseEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
             {
                 if (relation.RelationType == RelationType.NotExists)
                 {
@@ -2754,7 +2755,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
                 relationBuilder.AppendFormat("{0} {1} AS {2} ON",
                     joinString,
-                    RenderExpression(assoc.AssociatedEntity as AbstractSchemaItem, null, null, null, null),
+                    RenderExpression(assoc.AssociatedEntity, null, null, null, null),
                     sqlRenderer.NameLeftBracket + dsEntity.Name + sqlRenderer.NameRightBracket
                     );
                 numberOfJoins++;
@@ -2772,7 +2773,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             relationBuilder.Append("(");
         }
 
-        foreach (AbstractSchemaItem item in assoc.ChildItems)
+        foreach (ISchemaItem item in assoc.ChildItems)
         {
             PrettyIndent(relationBuilder);
             if (i > 0)
@@ -2833,7 +2834,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         StringBuilder recursionBuilder = new StringBuilder();
         // Let's go to recursion!
-        foreach (DataStructureEntity relation in (dsEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
+        foreach (var relation in dsEntity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
         {
             RenderSelectRelation(recursionBuilder, relation, stopAtEntity, filter, replaceParameterTexts, skipStopAtEntity, includeFilter, numberOfJoins, includeAllRelations, dynamicParameters, parameterReferences);
         }
@@ -2856,9 +2857,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         Hashtable replaceParameterTexts, Hashtable dynamicParameters,
         Hashtable paremeterReferences)
     {
-        string parentField = RenderExpression(key.BaseEntityField as AbstractSchemaItem,
+        string parentField = RenderExpression(key.BaseEntityField,
                 parentEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
-        string relatedField = RenderExpression(key.RelatedEntityField as AbstractSchemaItem,
+        string relatedField = RenderExpression(key.RelatedEntityField,
                 relatedEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
         sqlExpression.Append(filterRenderer.Equal(parentField, relatedField));
     }
@@ -2920,9 +2921,9 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     }
 
 
-    internal ArrayList Filters(DataStructureFilterSet filterSet, DataStructureEntity entity, Hashtable parameters, bool ignoreImplicitFilters)
+    internal List<EntityFilter> Filters(DataStructureFilterSet filterSet, DataStructureEntity entity, Hashtable parameters, bool ignoreImplicitFilters)
     {
-        ArrayList result = new ArrayList();
+        var result = new List<EntityFilter>();
 
         if (filterSet != null)
         {
@@ -2949,7 +2950,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         if (filterPart.IgnoreFilterParameterName != null)
                         {
                             object paramValue = parameters[filterPart.IgnoreFilterParameterName];
-                            ArrayList paramArray = paramValue as ArrayList;
+                            var paramArray = paramValue as ArrayList;
 
                             if ((paramValue == null || paramValue == DBNull.Value) && constant == null)
                             {
@@ -2997,7 +2998,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         if (!(ignoreImplicitFilters || entity.IgnoreImplicitFilters))
         {
-            foreach (EntitySecurityFilterReference rowLevel in entity.EntityDefinition.ChildItemsByType(EntitySecurityFilterReference.CategoryConst))
+            foreach (var rowLevel in entity.EntityDefinition.ChildItemsByType<EntitySecurityFilterReference>(EntitySecurityFilterReference.CategoryConst))
             {
                 if (!result.Contains(rowLevel.Filter))
                 {
@@ -3024,7 +3025,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
     internal void RenderFilter(StringBuilder sqlExpression, EntityFilter filter, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
     {
         int i = 0;
-        foreach (AbstractSchemaItem filterItem in filter.ChildItems)
+        foreach (ISchemaItem filterItem in filter.ChildItems)
         {
             if (i > 0)
                 sqlExpression.Append(" AND ");
@@ -3155,7 +3156,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             return "";
         }
 
-        DataStructureEntity relation = entity.ChildItems.ToGeneric()
+        DataStructureEntity relation = entity.ChildItems
             .OfType<DataStructureEntity>()
             .FirstOrDefault(child =>
                 child.Entity.PrimaryKey.Equals(detachedField.ArrayRelation.PrimaryKey));
@@ -3230,12 +3231,12 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             aggregationVirtualEntity2.Name = "aggregation" + (level + 1);
 
             joins.AppendFormat(" INNER JOIN {0} AS {1} ON ",
-                RenderExpression(agg2.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                RenderExpression(agg2.Relation.AssociatedEntity, null, replaceParameterTexts, dynamicParameters, parameterReferences),
                 sqlRenderer.NameLeftBracket + aggregationVirtualEntity2.Name + sqlRenderer.NameRightBracket
                 );
 
             int i = 0;
-            foreach (AbstractSchemaItem relationItem in agg2.Relation.ChildItems)
+            foreach (ISchemaItem relationItem in agg2.Relation.ChildItems)
             {
                 EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
@@ -3268,18 +3269,18 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             topLevelAggregationVirtualEntity.PersistenceProvider = topLevelEntity.PersistenceProvider;
             topLevelAggregationVirtualEntity.Name = "aggregation1";
             topLevelAggregationVirtualEntity.ParentItem = topLevelEntity.RootItem;
-            string expression = RenderExpression(item.Field as ISchemaItem, aggregationVirtualEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
+            string expression = RenderExpression(item.Field, aggregationVirtualEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
             expression = FixAggregationDataType(item.DataType, expression);
             string aggregationPart = string.Format("{0}({1})", GetAggregationString(item.AggregationType), expression);
             aggregationPart = FixSumAggregation(item.AggregationType, aggregationPart);
             result.AppendFormat("(SELECT {0} FROM {1} AS " + sqlRenderer.NameLeftBracket + "aggregation1" + sqlRenderer.NameRightBracket + " {2} WHERE ",
                 aggregationPart,
-                RenderExpression(topLevelItem.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                RenderExpression(topLevelItem.Relation.AssociatedEntity, null, replaceParameterTexts, dynamicParameters, parameterReferences),
                 joins
                 );
 
             int i = 0;
-            foreach (AbstractSchemaItem relationItem in topLevelItem.Relation.ChildItems)
+            foreach (ISchemaItem relationItem in topLevelItem.Relation.ChildItems)
             {
                 EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
                 EntityRelationFilter filter = relationItem as EntityRelationFilter;
@@ -3327,7 +3328,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
         Hashtable replaceTexts = new Hashtable();
 
-        foreach (AbstractSchemaItem paramMapping in lookupReference.ChildItems)
+        foreach (ISchemaItem paramMapping in lookupReference.ChildItems)
         {
             replaceTexts.Add(paramMapping.Name,
                 RenderExpression(paramMapping, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
@@ -3370,7 +3371,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
     private string RenderExpression(EntityRelationItem item)
     {
-        return RenderExpression(item.RelatedEntity as ISchemaItem, null, null, null, null);
+        return RenderExpression(item.RelatedEntity, null, null, null, null);
     }
 
     internal string RenderExpression(
@@ -3415,9 +3416,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
         var localizationTable 
             = FieldMappingItem.GetLocalizationTable(tableMappingItem);
-        var localizationEntity = dataStructureEntity.ChildItemsByType(
+        var localizationEntity = dataStructureEntity.ChildItemsByType<DataStructureEntity>(
                 DataStructureEntity.CategoryConst)
-            .Cast<DataStructureEntity>()
             .FirstOrDefault(
                 entity => localizationTable.Id == entity.EntityDefinition.Id);
         if (localizationEntity == null)
@@ -3723,7 +3723,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             default:
                 result = sqlRenderer.FunctionPrefix() + item.Function.Name + "(";
 
-                ArrayList sortedParams = new ArrayList(item.ChildItems);
+                var sortedParams = item.ChildItems.CastToList<FunctionCallParameter>();
                 sortedParams.Sort();
 
                 int i = 0;
@@ -3780,7 +3780,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
 
             case "Concat":
                 ISchemaItem concatArg = item.GetChildByName("Strings");
-                ArrayList concatStrings = new ArrayList(concatArg.ChildItems);
+                var concatStrings = concatArg.ChildItems.ToList<ISchemaItem>();
                 if (concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, "There have to be at least 2 strings to concatenate.");
                 concatStrings.Sort();
                 result = RenderConcat(concatStrings, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
@@ -3840,7 +3840,7 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
             case "In":
                 ISchemaItem leftArg = item.GetChildByName("FilterExpression");
                 ISchemaItem listArg = item.GetChildByName("List");
-                SchemaItemCollection listExpressions = listArg.ChildItems;
+                ISchemaItemCollection listExpressions = listArg.ChildItems;
 
                 if (listExpressions.Count < 1) throw new ArgumentOutOfRangeException("List", null, ResourceUtils.GetString("ErrorNoParamIN"));
 
@@ -3855,7 +3855,6 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                     string leftOperand = RenderExpression(leftArg.ChildItems[0], entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
                     IEnumerable<string> options = listExpressions
-                        .ToGeneric()
                         .Cast<ISchemaItem>()
                         .Select(listExpression =>
                             RenderExpression(listExpression, entity, replaceParameterTexts,
@@ -3939,15 +3938,15 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
         }
         return param;
     }
-    internal string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+    internal string RenderConcat(List<ISchemaItem> concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 	{
 		List<ColumnRenderItem> concatSchemaItemList = new List<ColumnRenderItem>();
 
-		foreach (object o in concatSchemaItems)
+		foreach (var o in concatSchemaItems)
         {
             concatSchemaItemList.Add(new ColumnRenderItem
             {
-                SchemaItem = o as ISchemaItem,
+                SchemaItem = o,
                 Entity = entity
             });
         }
@@ -4072,8 +4071,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                         RenderExpression(arrayRelation as EntityRelationItem));
                     stringBuilder.Append(" WHERE");
                     DataStructureEntity arrayEntity = null;
-                    foreach (DataStructureEntity relatedEntity
-                        in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                    foreach (var relatedEntity
+                        in entity.ChildItemsByType<DataStructureEntity>(DataStructureEntity.CategoryConst))
                     {
                         if (relatedEntity.EntityDefinition.Id 
                         == arrayRelation.AssociatedEntity.Id)
@@ -4089,8 +4088,8 @@ public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisp
                             not found among child entities of {entity.Name}");
                     }
                     var andNeeded = false;
-                    foreach (EntityRelationColumnPairItem pairItem 
-                        in arrayRelation.ChildItemsByType(
+                    foreach (var pairItem 
+                        in arrayRelation.ChildItemsByType<EntityRelationColumnPairItem>(
                             EntityRelationColumnPairItem.CategoryConst))
                     {
                         stringBuilder.Append(" ");

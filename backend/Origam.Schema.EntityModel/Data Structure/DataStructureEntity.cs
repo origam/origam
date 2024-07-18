@@ -61,10 +61,10 @@ public class DataStructureEntity : AbstractSchemaItem
     [NotNullModelElementRule()]
     [RelationshipWithKeyRule()]
     [XmlReference("entity", "EntityId")]
-    public AbstractSchemaItem Entity
+    public ISchemaItem Entity
 	{
-		get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
-			typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
+		get => (ISchemaItem)PersistenceProvider.RetrieveInstance(
+			typeof(ISchemaItem), new ModelElementKey(EntityId));
 		set
 		{
 			if(value == null)
@@ -139,7 +139,7 @@ public class DataStructureEntity : AbstractSchemaItem
 			}
 			if(value)
 			{
-				ArrayList list = ChildItemsByType(
+				List<DataStructureColumn> list = ChildItemsByType<DataStructureColumn>(
 					DataStructureColumn.CategoryConst);
 				foreach(DataStructureColumn column in list)
 				{
@@ -283,24 +283,24 @@ public class DataStructureEntity : AbstractSchemaItem
 		List<DataStructureColumn> columns = GetColumnsFromEntity();
 		// add all extra columns specified
 		columns.AddRange(
-			ChildItemsByType(DataStructureColumn.CategoryConst)
-				.Cast<DataStructureColumn>());
+			ChildItemsByType<DataStructureColumn>(DataStructureColumn
+				.CategoryConst));
 		columns.Sort();
 		return columns;
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override void GetParameterReferences(
-		AbstractSchemaItem parentItem, Hashtable list)
+		ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		// relation has parameters (i.e. there are parameters in the JOIN clause
 		if(Entity is IAssociation)
 		{
-			var childList = new Hashtable();
+			var childList = new Dictionary<string, ParameterReference>();
 			Entity.GetParameterReferences(Entity, childList);
 			// If children had some parameter references, we rename them and add them to the final
 			// collection.
-			foreach(DictionaryEntry entry in childList)
+			foreach(var entry in childList)
 			{
 				// we rename it using parent data structure entity name
 				var name = ParentItem.Name + "_" + entry.Key;
@@ -312,12 +312,12 @@ public class DataStructureEntity : AbstractSchemaItem
 		}
 		foreach(DataStructureColumn dataStructureColumn in Columns)
 		{
-			var childList = new Hashtable();
+			var childList = new Dictionary<string, ParameterReference>();
 			dataStructureColumn.GetParameterReferences(
 				dataStructureColumn, childList);
 			// If children had some parameter references,
 			// we rename them and add them to the final collection.
-			foreach(DictionaryEntry entry in childList)
+			foreach(var entry in childList)
 			{
 				var name = Name + "_" + entry.Key;
 				if(!list.ContainsKey(name))
@@ -332,7 +332,7 @@ public class DataStructureEntity : AbstractSchemaItem
 	public override bool CanMove(UI.IBrowserNode2 newNode) =>
 		// can move to the root only
 		newNode.Equals(RootItem);
-	public override void GetExtraDependencies(ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(Entity);
 		dependencies.Add(ConditionEntityConstant);

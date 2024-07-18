@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Origam.Extensions;
 
@@ -30,8 +31,8 @@ namespace Origam;
 /// </summary>
 public class ResourceMonitor
 {
-	private static Hashtable _transactionStore = new Hashtable();
-	private static Hashtable _savePoints = new Hashtable();
+	private static Dictionary<string, OrderedDictionary> _transactionStore = new ();
+	private static Dictionary<string, List<string>> _savePoints = new ();
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 	private static object _obj = new object();
 	public static void RegisterTransaction(string transactionId, string resourceManagerId, OrigamTransaction transaction)
@@ -48,7 +49,7 @@ public class ResourceMonitor
 		else
 		{
 			transactions.Add(resourceManagerId, transaction);
-			ArrayList savePoints = SavePoints(transactionId);
+			List<string> savePoints = SavePoints(transactionId);
 			foreach(string savePointName in savePoints)
 			{
 				foreach(OrigamTransaction t in transactions.Values)
@@ -171,7 +172,7 @@ public class ResourceMonitor
 		}
 		finally
 		{
-			ArrayList savePoints = SavePoints(transactionId);
+			List<string> savePoints = SavePoints(transactionId);
 			int min = savePoints.IndexOf(savePointName);
 			savePoints.RemoveRange(min, savePoints.Count-min);
 			if(errorMessage != "")
@@ -186,7 +187,7 @@ public class ResourceMonitor
 		{
 			log.Debug("Saving transaction id " + transactionId + ", save point " + savePointName);
 		}
-        OrderedDictionary  transactions = Transactions(transactionId);
+        OrderedDictionary transactions = Transactions(transactionId);
 		SavePoints(transactionId).Add(savePointName);
 		foreach(OrigamTransaction transaction in transactions.Values)
 		{
@@ -203,9 +204,9 @@ public class ResourceMonitor
 	#region Private Methods
     private static OrderedDictionary Transactions(string transactionId)
 	{
-		if(_transactionStore.Contains(transactionId))
+		if(_transactionStore.TryGetValue(transactionId, out var value))
 		{
-            return _transactionStore[transactionId] as OrderedDictionary;
+            return value;
 		}
 		else
 		{
@@ -217,17 +218,17 @@ public class ResourceMonitor
 			}
 		}
 	}
-	private static ArrayList SavePoints(string transactionId)
+	private static List<string> SavePoints(string transactionId)
 	{
-		if(_savePoints.Contains(transactionId))
+		if(_savePoints.TryGetValue(transactionId, out var points))
 		{
-			return _savePoints[transactionId] as ArrayList;
+			return points;
 		}
 		else
 		{
 			lock (_obj)
 			{
-				ArrayList result = new ArrayList();
+				var result = new  List<string>();
 				_savePoints[transactionId] = result;
 				return result;
 			}

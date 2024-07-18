@@ -68,7 +68,7 @@ public class DataEntityIndex : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override bool UseFolders
 	{
 		get

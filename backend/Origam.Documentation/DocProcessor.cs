@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
@@ -85,7 +86,7 @@ public class DocProcessor
         string caption, gridCaption, bindingMember, panelTitle, section;
         caption = gridCaption = bindingMember = panelTitle = section = "";
         int tabIndex = 0;
-        foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
+        foreach (var property in control.ChildItemsByType<PropertyValueItem>(PropertyValueItem.CategoryConst))
         {
             if (property.ControlPropertyItem.Name == "TabIndex")
             {
@@ -109,7 +110,7 @@ public class DocProcessor
             }
         }
         caption = (gridCaption == "" | gridCaption == null) ? caption : gridCaption;
-        foreach (PropertyBindingInfo bindItem in control.ChildItemsByType(PropertyBindingInfo.CategoryConst))
+        foreach (var bindItem in control.ChildItemsByType<PropertyBindingInfo>(PropertyBindingInfo.CategoryConst))
         {
             bindingMember = bindItem.Value;
         }
@@ -130,7 +131,7 @@ public class DocProcessor
             WriteElement("description",
                  documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP));
         }
-        ArrayList sortedControls;
+        List<ControlSetItem> sortedControls;
         if (control.ControlItem.IsComplexType)
         {
             if (panelTitle != "")
@@ -153,11 +154,11 @@ public class DocProcessor
             WriteEndElement();
             WriteElement("description",
                 documentation.GetDocumentation(control.ControlItem.PanelControlSet.Id, DocumentationType.USER_LONG_HELP));
-            sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.CategoryConst);
+            sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
         }
         else
         {
-            sortedControls = control.ChildItemsByType(ControlSetItem.CategoryConst);
+            sortedControls = control.ChildItemsByType<ControlSetItem>(ControlSetItem.CategoryConst);
         }
         sortedControls.Sort(new ControlSetItemComparer());
         foreach (ControlSetItem subControl in sortedControls)
@@ -197,7 +198,7 @@ public class DocProcessor
             MvpXslTransform processor = new MvpXslTransform(false);
             processor.Load(XsltPath);
         }
-        List<AbstractSchemaItem> menulist = menuprovider.ChildItems.ToList();
+        List<ISchemaItem> menulist = menuprovider.ChildItems.ToList();
         menulist.Sort();
         WriteStartElement("Menu");
         CreateXml(menulist[0]);
@@ -231,9 +232,9 @@ public class DocProcessor
         XPathDocument doc = new XPathDocument(mstream);
         xslTransform.Transform(new XmlInput(doc), null, xmlOutput);
     }
-    private void CreateXml(AbstractSchemaItem menuSublist)
+    private void CreateXml(ISchemaItem menuSublist)
     {
-        foreach (AbstractSchemaItem menuitem in menuSublist.ChildItems)
+        foreach (ISchemaItem menuitem in menuSublist.ChildItems)
         {
             WriteStartElement("Menuitem", menuitem.NodeText, menuitem.Id.ToString(), menuitem.GetType().Name);
             WriteElement("documentation",

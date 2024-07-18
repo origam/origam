@@ -43,7 +43,7 @@ public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
 	{
 		this.ChildItemTypes.Add(typeof(TreeStructureNode));
 	}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get

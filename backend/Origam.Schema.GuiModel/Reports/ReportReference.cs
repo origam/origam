@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 /// <summary>
@@ -50,21 +52,21 @@ public class ReportReference : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
 		if(this.Report != null)
-			base.GetParameterReferences(this.Report as AbstractSchemaItem, list);
+			base.GetParameterReferences(Report, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Report);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -80,7 +82,7 @@ public class ReportReference : AbstractSchemaItem
 		{
 			ModelElementKey key = new ModelElementKey();
 			key.Id = this.ReportId;
-			return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as AbstractReport;
+			return (ISchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key) as AbstractReport;
 		}
 		set
 		{

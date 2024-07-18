@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Schedule;
@@ -47,7 +48,7 @@ public class TimerJob
 	{
 		if (Enabled == false)
 			return;
-		ArrayList EventList = new ArrayList();
+		var EventList = new List<DateTime>();
 //			Schedule.AddEventsInInterval(Begin, End, EventList);
 		Schedule.AddEventsInInterval(LastTime, End, EventList);
 		if (Filter != null)
@@ -98,7 +99,7 @@ public class TimerJobList
 {
 	public TimerJobList()
 	{
-		_List = new ArrayList();
+		_List = new List<TimerJob>();
 	}
 	public void Add(TimerJob Event)
 	{
@@ -166,10 +167,10 @@ public class TimerJobList
 		get 
 		{
 			lock (_List)
-				return (TimerJob[])_List.ToArray(typeof(TimerJob)); 
+				return _List.ToArray(); 
 		}
 	}
-	private ArrayList _List;
+	private List<TimerJob> _List;
 }
 /// <summary>
 /// The timer job allows delegates to be specified with unbound parameters.  This ParameterSetter assigns all unbound datetime parameters

@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -53,11 +55,11 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 			return CategoryConst;
 		}
 	}
-	public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+	public override void GetParameterReferences(ISchemaItem parentItem, Dictionary<string, ParameterReference> list)
 	{
-		if(this.Rule != null) base.GetParameterReferences(this.Rule as AbstractSchemaItem, list);
+		if(this.Rule != null) base.GetParameterReferences(Rule, list);
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Rule);
 		if(this.ForegroundColorLookup != null) dependencies.Add(this.ForegroundColorLookup);
@@ -80,11 +82,11 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -179,7 +181,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
+            return (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.RuleId));
 		}
 		set
 		{
@@ -197,7 +199,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ForeColorLookupId));
+			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.ForeColorLookupId));
 		}
 		set
 		{
@@ -213,7 +215,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.BackColorLookupId));
+			return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.BackColorLookupId));
 		}
 		set
 		{
@@ -229,7 +231,7 @@ public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
 		get
 		{
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DynamicColorLookupFieldId));
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), new ModelElementKey(this.DynamicColorLookupFieldId));
 		}
 		set
 		{

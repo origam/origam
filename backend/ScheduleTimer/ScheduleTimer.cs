@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Timers;
 
 namespace Schedule;
@@ -202,7 +203,7 @@ public delegate void ScheduledEventHandler(object sender, ScheduledEventArgs e);
 /// </summary>
 public interface IResultFilter
 {
-	void FilterResultsInInterval(DateTime Start, DateTime End, ArrayList List);
+	void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List);
 }
 /// <summary>
 /// IEventStorage is used to provide persistance of schedule during service shutdowns.

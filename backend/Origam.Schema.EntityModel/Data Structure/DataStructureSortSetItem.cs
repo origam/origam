@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.EntityModel;
 /// <summary>
@@ -116,7 +118,7 @@ public class DataStructureSortSetItem : AbstractSchemaItem
 		}
 	}
 	#endregion
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	public override string ItemType
 	{
 		get
@@ -124,13 +126,13 @@ public class DataStructureSortSetItem : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Entity);
 		/* return a column used in a sort set */
 		/* firstly look at columns defined on datastructure level */
-		foreach (DataStructureColumn dsColumn
-				in this.Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
+		foreach (var dsColumn
+				in Entity.ChildItemsByType<DataStructureColumn>(DataStructureColumn.CategoryConst))
 		{
 			if (FieldName == dsColumn.Name)
 			{
@@ -165,11 +167,11 @@ public class DataStructureSortSetItem : AbstractSchemaItem
 		}
 		base.UpdateReferences ();
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion

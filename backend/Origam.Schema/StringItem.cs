@@ -39,7 +39,7 @@ public class StringItem : AbstractSchemaItem
 	public StringItem() : base(){}
 	public StringItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StringItem(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{

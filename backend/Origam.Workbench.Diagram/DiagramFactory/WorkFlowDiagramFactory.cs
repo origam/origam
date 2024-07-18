@@ -126,7 +126,6 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 		Guid screenId)
 	{
 		var actions = entity.Entity.ChildItems
-			.ToGeneric()
 			.OfType<EntityUIAction>()
 			.Where(action => ShouldBeShownOnScreen(action, screenId))
 			.ToArray();
@@ -136,7 +135,7 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 		if (entityDropdownActions.Length > 0)
 		{
 			var actionsFromDropDowns = entityDropdownActions
-				.SelectMany(dropDown => dropDown.ChildItems.ToGeneric())
+				.SelectMany(dropDown => dropDown.ChildItems)
 				.Cast<EntityUIAction>();
 			actions = actions
 				.Except(entityDropdownActions)
@@ -152,12 +151,12 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 	}
 	private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
 	{
-		step.ChildItems.ToGeneric()
+		step.ChildItems
 			.Where(x => !(x is WorkflowTaskDependency))
 			.OrderByDescending(x => x.Name)
 			.ForEach(stepChild =>
 			{
-				stepChild.ChildItems.ToGeneric()
+				stepChild.ChildItems
 					.OrderByDescending(x => x.Name)
 					.ForEach(innerChild =>
 					{
@@ -187,7 +186,7 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 	private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
 	{
 		IDictionary<Key, Node> nodes = new Dictionary<Key, Node>();
-		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst))
 		{
 			Node shape = step is IWorkflowBlock subBlock
@@ -196,14 +195,14 @@ public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGr
 			nodes.Add(step.PrimaryKey, shape);
 		}
 		// add connections
-		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+		foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType<AbstractWorkflowStep>(
 			AbstractWorkflowStep.CategoryConst))
 		{
 			Node destinationShape = nodes[step.PrimaryKey];
 			if (destinationShape == null)
 				throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
 			int i = 0;
-			foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
+			foreach (WorkflowTaskDependency dependency in step.ChildItemsByType<WorkflowTaskDependency>(
 				WorkflowTaskDependency.CategoryConst))
 			{
 				Node sourceShape = nodes[dependency.Task.PrimaryKey];

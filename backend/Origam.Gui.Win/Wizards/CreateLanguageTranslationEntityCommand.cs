@@ -49,7 +49,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	}
 	public override void Run()
 	{
-        ArrayList list = new ArrayList();
+        var list = new List<ListViewItem>();
         TableMappingItem mappingItem = new TableMappingItem();
         list.Add(new ListViewItem(mappingItem.GetType().SchemaItemDescription().Name, mappingItem.Icon));
         Stack stackPage = new Stack();
@@ -78,7 +78,7 @@ class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
     }
     public override void Execute()
     {
-        List<AbstractSchemaItem> generatedElements = new List<AbstractSchemaItem>();
+        List<ISchemaItem> generatedElements = new List<ISchemaItem>();
         var table = EntityHelper.CreateLanguageTranslationChildEntity(
             wizardForm.Entity as TableMappingItem, wizardForm.SelectedFields, generatedElements);
         foreach (var item in generatedElements)

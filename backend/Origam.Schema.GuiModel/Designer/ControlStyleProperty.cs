@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.GuiModel;
 [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
@@ -34,7 +35,7 @@ public class ControlStyleProperty : AbstractSchemaItem
     public ControlStyleProperty() : base() { }
     public ControlStyleProperty(Guid schemaExtensionId) : base(schemaExtensionId) { }
     public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
-    #region Overriden AbstractSchemaItem Members
+    #region Overriden ISchemaItem Members
     public override string ItemType
     {
         get
@@ -42,11 +43,11 @@ public class ControlStyleProperty : AbstractSchemaItem
             return ControlStyleProperty.CategoryConst;
         }
     }
-    public override SchemaItemCollection ChildItems
+    public override ISchemaItemCollection ChildItems
     {
         get
         {
-            return new SchemaItemCollection();
+            return SchemaItemCollection.Create();
         }
     }
     #endregion

@@ -27,9 +27,9 @@ using Origam.Schema;
 namespace Origam.DA.Service_net2Tests;
 internal class SchemaItemsToCompare
 {
-    public AbstractSchemaItem FromDb { get;} 
-    public AbstractSchemaItem FromXml { get;}
-    public SchemaItemsToCompare(AbstractSchemaItem fromDb, AbstractSchemaItem fromXml)
+    public ISchemaItem FromDb { get;} 
+    public ISchemaItem FromXml { get;}
+    public SchemaItemsToCompare(ISchemaItem fromDb, ISchemaItem fromXml)
     {
         FromDb = fromDb;
         FromXml = fromXml;

@@ -35,7 +35,7 @@ public class SchemaItemAncestorCollectionEditor : System.ComponentModel.Design.C
 	{	
 		if(itemType != typeof(SchemaItemAncestor))
 			throw new ArgumentOutOfRangeException("itemType", itemType, ResourceUtils.GetString("ErrorSchemaItemAncestorOnly"));
-		AbstractSchemaItem parentItem = (this.Context.Instance as AbstractSchemaItem);
+		ISchemaItem parentItem = (this.Context.Instance as ISchemaItem);
 		
 		SchemaItemAncestor ancestor = new SchemaItemAncestor();
 		ancestor.PersistenceProvider = parentItem.PersistenceProvider;

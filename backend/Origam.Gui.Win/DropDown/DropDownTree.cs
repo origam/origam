@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Origam.Gui.Win;
@@ -308,7 +309,7 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 	{
 		tree.Nodes.Clear();
 		tree.BeginUpdate();
-		ArrayList unsortedNodes = new ArrayList();			
+		var unsortedNodes = new List<DataTreeViewNode>();			
 		for (int i = 0; i < this.DataSource.Count; i++)
 		{
 			unsortedNodes.Add(new DataTreeViewNode(
@@ -324,7 +325,7 @@ public class DropDownTree : System.Windows.Forms.Form, ILookupDropDownPart
 			startCount = unsortedNodes.Count;
 			for (int i = unsortedNodes.Count-1; i >= 0 ; i--)
 			{					
-				if (this.TryAddNode((DataTreeViewNode)unsortedNodes[i]))
+				if (TryAddNode(unsortedNodes[i]))
 				{
 					unsortedNodes.RemoveAt(i);
 				}

@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -17,17 +18,33 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-namespace Origam.Server;
-public enum Operation
+using Origam.DA.ObjectPersistence;
+
+namespace Origam.Schema.ItemCollection;
+
+public static class SchemaItemCollection
 {
-   DeleteAllData =-2, 
-   Delete = -1, 
-   Update = 0, 
-   Create =1,
-   FormSaved = 2,
-   FormNeedsRefresh = 3,
-   CurrentRecordNeedsUpdate = 4,
-   RefreshPortal = 5
+    public static ISchemaItemCollection Create()
+    {
+#if ORIGAM_CLIENT
+        return new ServerSchemaItemCollection();
+#else
+        return new ArchitectISchemaItemCollection();
+#endif 
+    }
+    
+    public static ISchemaItemCollection Create(IPersistenceProvider persistence,
+        ISchemaItemProvider provider, ISchemaItem parentItem)
+    {
+#if ORIGAM_CLIENT
+        return new ServerSchemaItemCollection(parentItem);
+#else
+        return
+            new ArchitectISchemaItemCollection(persistence, provider,
+                parentItem);
+#endif
+    }
 }

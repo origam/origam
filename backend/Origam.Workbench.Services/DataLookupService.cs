@@ -43,7 +43,7 @@ public class ParameterizedEventArgs : EventArgs
 	{
 	}
 	public IOrigamForm SourceForm;
-	public readonly Hashtable Parameters = new Hashtable();
+	public readonly Dictionary<string, object> Parameters = new ();
 }
 /// <summary>
 /// Summary description for LookupManager.
@@ -80,77 +80,16 @@ public class DataLookupService : IDataLookupService
 	
 	public DataView GetList(Guid lookupId, string transactionId)
 	{
-		return GetList(lookupId, new Hashtable(), transactionId);
+		return GetList(lookupId, new Dictionary<string, object>(), transactionId);
 	}
-	public Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys)
-	{
-		Hashtable result = new Hashtable();
-		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-		IServiceAgent dataServiceAgent = GetAgent();
-		DataStructureQuery cacheQuery = GetQuery(lookup, QueryType.ValueCacheList);
-		dataServiceAgent.MethodName = "LoadDataByQuery";
-		dataServiceAgent.Parameters.Clear();
-		dataServiceAgent.Parameters.Add("Query", cacheQuery);
-		dataServiceAgent.Run();
-		DataSet data = dataServiceAgent.Result as DataSet;
-		string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-		foreach(DataRow row in data.Tables[0].Rows)
-		{
-			object id = row[lookup.ValueValueMember];
-			if(keys.ContainsKey(id))
-			{
-				object lookupText = ValueFromRow(row, columns);
-				ArrayList list;
-				if(result.Contains(lookupText))
-				{
-					list = result[lookupText] as ArrayList;
-				}
-				else
-				{
-					list = new ArrayList();
-					result.Add(lookupText, list);
-				}
-				list.Add(id);
-			}
-		}
-		return result;
-	}
-	public DataTable GetAllValues(Guid lookupId, Hashtable keys)
-	{
-		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
-		DataTable result = new OrigamDataTable("LookupValues");
-		result.Columns.Add(lookup.ListValueMember, typeof(object));
-		result.Constraints.Add("PK", result.Columns[0], true);
-		result.Columns.Add(lookup.ListDisplayMember, typeof(object));
-		IServiceAgent dataServiceAgent = GetAgent();
-		DataStructureQuery cacheQuery = GetQuery(lookup, QueryType.ValueCacheList);
-		dataServiceAgent.MethodName = "LoadDataByQuery";
-		dataServiceAgent.Parameters.Clear();
-		dataServiceAgent.Parameters.Add("Query", cacheQuery);
-		dataServiceAgent.Run();
-		DataSet data = dataServiceAgent.Result as DataSet;
-		string[] columns = lookup.ValueDisplayMember.Split(";".ToCharArray());
-		result.BeginLoadData();
-		foreach(DataRow row in data.Tables[0].Rows)
-		{
-			object id = row[lookup.ValueValueMember];
-			if(keys.ContainsKey(id))
-			{
-				object lookupText = ValueFromRow(row, columns);
-				result.LoadDataRow(new object[] { id, lookupText }, true);
-			}
-		}
-		result.EndLoadData();
-		return result;
-	}
-	public DataView GetList(Guid lookupId, Hashtable parameters, string transactionId)
+	public DataView GetList(Guid lookupId, Dictionary<string, object> parameters, string transactionId)
 	{
 		IServiceAgent dataServiceAgent = GetAgent();
 		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 		DataStructureQuery query = GetQuery(lookup, QueryType.List);
-		foreach(DictionaryEntry entry in parameters)
+		foreach(var entry in parameters)
 		{
-			query.Parameters.Add(new QueryParameter((string)entry.Key, entry.Value));
+			query.Parameters.Add(new QueryParameter(entry.Key, entry.Value));
 		}
 		dataServiceAgent.TransactionId = transactionId;
 		dataServiceAgent.MethodName = "LoadDataByQuery";
@@ -175,11 +114,11 @@ public class DataLookupService : IDataLookupService
 		}
 		else
 		{
-			Hashtable parameters = new Hashtable(1);
+			var parameters = new Dictionary<string, object>();
 			DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 			if(lookup.ValueMethod != null)
 			{
-				ICollection keys = lookup.ValueMethod.ParameterReferences.Keys;
+				var keys = lookup.ValueMethod.ParameterReferences.Keys;
 				foreach(string parameterName in keys)
 				{
 					parameters.Add(parameterName, lookupValue);
@@ -188,7 +127,7 @@ public class DataLookupService : IDataLookupService
 			return GetDisplayText(lookupId, parameters, useCache, returnMessageIfNull, transactionId);
 		}
 	}
-	public object GetDisplayText(Guid lookupId, Hashtable parameters, bool useCache, bool returnMessageIfNull, string transactionId)
+	public object GetDisplayText(Guid lookupId, Dictionary<string, object> parameters, bool useCache, bool returnMessageIfNull, string transactionId)
 	{
 		string internalTransactionId = transactionId;
 		if(parameters == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorParametersNull"));
@@ -198,7 +137,7 @@ public class DataLookupService : IDataLookupService
 		DataServiceDataLookup lookup = GetLookup(lookupId) as DataServiceDataLookup;
 		if(canUseCache)
 		{
-			foreach(DictionaryEntry entry in parameters)
+			foreach(var entry in parameters)
 			{
 				cachableValue = entry.Value;
 			}
@@ -247,9 +186,9 @@ public class DataLookupService : IDataLookupService
 		if(lookup.ValueDisplayMember.IndexOf(".") > -1) return "wrong display member";
 		DataStructureQuery query = GetQuery(lookup, QueryType.Value);
 		//if(lookup.ValueFilterSet == null) throw new NullReferenceException("ValueFilterSet cannot be null. Cannot get display text for lookup '" + lookup.Name + "'");
-		foreach(DictionaryEntry parameter in parameters)
+		foreach(var parameter in parameters)
 		{
-			query.Parameters.Add(new QueryParameter((string)parameter.Key, parameter.Value));
+			query.Parameters.Add(new QueryParameter(parameter.Key, parameter.Value));
 		}
 		bool error = false;
 		try
@@ -311,10 +250,10 @@ public class DataLookupService : IDataLookupService
 		if(val == null & returnMessageIfNull) 
 		{
 			string parameterString = "";
-			foreach(DictionaryEntry parameter in parameters)
+			foreach(var parameter in parameters)
 			{
 				if(parameterString != "") parameterString += ", ";
-				parameterString += parameter.Key.ToString() + ": " + parameter.Value.ToString();
+				parameterString += parameter.Key + ": " + parameter.Value;
 			}
 			val = "Záznam nedostupný (" + parameterString + ")";
 		}
@@ -378,9 +317,9 @@ public class DataLookupService : IDataLookupService
 		}
 	}
 	
-	public Hashtable LinkParameters(object linkTarget, object value)
+	public Dictionary<string, object> LinkParameters(object linkTarget, object value)
 	{
-		Hashtable result = new Hashtable();
+		var result = new Dictionary<string, object>();
 		AbstractMenuItem menu = linkTarget as AbstractMenuItem;
 		if(menu != null)
 		{
@@ -393,7 +332,7 @@ public class DataLookupService : IDataLookupService
 				}
 				else
 				{
-					foreach(DictionaryEntry entry in (menu as FormReferenceMenuItem).RecordEditMethod.ParameterReferences)
+					foreach(var entry in (menu as FormReferenceMenuItem).RecordEditMethod.ParameterReferences)
 					{
 						result.Add(entry.Key, value);
 					}
@@ -509,7 +448,6 @@ public class DataLookupService : IDataLookupService
 	public NewRecordScreenBinding GetNewRecordScreenBinding(AbstractDataLookup lookup)
 	{
 		return lookup.ChildItems
-			.ToGeneric()
 			.OfType<NewRecordScreenBinding>()
 			.FirstOrDefault(x => x.IsAvailable);
 	}
@@ -518,7 +456,7 @@ public class DataLookupService : IDataLookupService
 		IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 		IPrincipal principal = SecurityManager.CurrentPrincipal;
 		Hashtable selectionCache = new Hashtable();
-        ArrayList menuBindings = lookup.MenuBindings;
+        List<DataLookupMenuBinding> menuBindings = lookup.MenuBindings;
         menuBindings.Sort();
 		
 		foreach(DataLookupMenuBinding binding in menuBindings)
@@ -593,7 +531,7 @@ public class DataLookupService : IDataLookupService
 		if(request.CurrentRow != null)
 		{
 			// set parameters
-            foreach (DictionaryEntry entry in DatasetTools.RetrieveParemeters(
+            foreach (DictionaryEntry entry in DatasetTools.RetrieveParameters(
                 request.ParameterMappings,
                 new List<DataRow>{ request.CurrentRow })) 
 			{
@@ -765,7 +703,7 @@ public class DataLookupService : IDataLookupService
 	{
 		// TODO:  Add LookupManager.InitializeService implementation
 	}
-    public object CreateRecord(Guid lookupId, Hashtable values, string transactionId)
+    public object CreateRecord(Guid lookupId, Dictionary<string, object> values, string transactionId)
     {
         Guid newId = Guid.NewGuid();
         var lookup = GetLookup(lookupId);
@@ -781,7 +719,7 @@ public class DataLookupService : IDataLookupService
         var row = table.NewRow();
         row[lookup.ListValueMember] = newId;
         DatasetTools.UpdateOrigamSystemColumns(row, true, SecurityManager.CurrentUserProfile().Id);
-        foreach (DictionaryEntry item in values)
+        foreach (var item in values)
         {
             string columnName = (string)item.Key;
             if (!table.Columns.Contains(columnName))
@@ -801,7 +739,7 @@ public class DataLookupService : IDataLookupService
                     value = Convert.ChangeType(item.Value, type);
                 }
             }
-            row[(string)item.Key] = value;
+            row[item.Key] = value;
         }
         table.Rows.Add(row);
         DataService.Instance.StoreData(lookup.ListDataStructureId, data, false, transactionId);

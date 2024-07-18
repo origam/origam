@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Schedule;
 /// <summary>
@@ -24,7 +25,7 @@ public class Filter : IResultFilter
 {
 	public static IResultFilter Empty = new Filter();
 	private Filter() {}
-	public void FilterResultsInInterval(DateTime Start, DateTime End, ArrayList List)
+	public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
 	{
 		if (List == null)
 			return;
@@ -38,7 +39,7 @@ public class FirstEventFilter : IResultFilter
 {
 	public static IResultFilter Filter = new FirstEventFilter();
 	private FirstEventFilter() {}
-	public void FilterResultsInInterval(DateTime Start, DateTime End, ArrayList List)
+	public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
 	{
 		if (List == null)
 			return;
@@ -55,7 +56,7 @@ public class LastEventFilter : IResultFilter
 {
 	public static IResultFilter Filter = new LastEventFilter();
 	private LastEventFilter() {}
-	public void FilterResultsInInterval(DateTime Start, DateTime End, ArrayList List)
+	public void FilterResultsInInterval(DateTime Start, DateTime End, List<DateTime> List)
 	{
 		if (List == null)
 			return;

@@ -21,10 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.ItemCollection;
 
 namespace Origam.Schema.WorkflowModel;
 /// <summary>
@@ -41,7 +43,7 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 	public StateMachineEventFieldDependency() : base() {}
 	public StateMachineEventFieldDependency(Guid schemaExtensionId) : base(schemaExtensionId) {}
 	public StateMachineEventFieldDependency(Key primaryKey) : base(primaryKey)	{}
-	#region Overriden AbstractSchemaItem Members
+	#region Overriden ISchemaItem Members
 	
 	public override string ItemType
 	{
@@ -50,16 +52,16 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 			return CategoryConst;
 		}
 	}
-	public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+	public override void GetExtraDependencies(List<ISchemaItem> dependencies)
 	{
 		dependencies.Add(this.Field);
 		base.GetExtraDependencies (dependencies);
 	}
-	public override SchemaItemCollection ChildItems
+	public override ISchemaItemCollection ChildItems
 	{
 		get
 		{
-			return new SchemaItemCollection();
+			return SchemaItemCollection.Create();
 		}
 	}
 	#endregion
@@ -74,7 +76,7 @@ public class StateMachineEventFieldDependency : AbstractSchemaItem
 		get
 		{
 			ModelElementKey key = new ModelElementKey(this.FieldId);
-			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+			return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(ISchemaItem), key);
 		}
 		set
 		{

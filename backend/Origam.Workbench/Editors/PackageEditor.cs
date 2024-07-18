@@ -571,13 +571,13 @@ public class PackageEditor : AbstractViewContent
 		Package referencedPackage = this.SelectedReferencedPackage;
 		if(referencedPackage != null)
 		{
-			if(e.QueriedObject is AbstractSchemaItem)
+			if(e.QueriedObject is ISchemaItem)
 			{
 				if(! e.Filter)
 				{
-					if((e.QueriedObject as AbstractSchemaItem).ParentItem == null)
+					if((e.QueriedObject as ISchemaItem).ParentItem == null)
 					{
-						e.Filter = ! (e.QueriedObject as AbstractSchemaItem).Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey);
+						e.Filter = ! (e.QueriedObject as ISchemaItem).Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey);
 					}
 					else
 					{
@@ -602,7 +602,7 @@ public class PackageEditor : AbstractViewContent
 	private bool ShouldFilterGroup(SchemaItemGroup group)
 	{
 		if(group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey)) return false;
-		foreach(AbstractSchemaItem child in group.ChildItems)
+		foreach(ISchemaItem child in group.ChildItems)
 		{
 			if(child.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
 			{
@@ -673,17 +673,17 @@ public class PackageEditor : AbstractViewContent
 	private bool IsPackageReferenced(Package package)
 	{
 		if(package == null) return false;
-		List<AbstractSchemaItem> allCurrent = 
+		List<ISchemaItem> allCurrent = 
 			_package.PersistenceProvider
-				.RetrieveListByPackage<AbstractSchemaItem>(_schema.ActiveExtension.Id);
-		List<AbstractSchemaItem> allReferenced = 
+				.RetrieveListByPackage<ISchemaItem>(_schema.ActiveExtension.Id);
+		List<ISchemaItem> allReferenced = 
 			_package.PersistenceProvider
-				.RetrieveListByPackage<AbstractSchemaItem>(package.Id);
-		foreach(AbstractSchemaItem item in allCurrent)
+				.RetrieveListByPackage<ISchemaItem>(package.Id);
+		foreach(ISchemaItem item in allCurrent)
 		{
-			ArrayList dep = item.GetDependencies(false);
+			List<ISchemaItem> dep = item.GetDependencies(false);
 			
-			foreach(AbstractSchemaItem refItem in allReferenced)
+			foreach(ISchemaItem refItem in allReferenced)
 			{
 				// check if parent item is not from the referenced package
 				if(item.ParentItem != null && item.ParentItem.PrimaryKey.Equals(refItem.PrimaryKey))
@@ -691,7 +691,7 @@ public class PackageEditor : AbstractViewContent
 					return true;
 				}
 				// check if there is no reference to the referenced package
-				foreach(AbstractSchemaItem depItem in dep)
+				foreach(ISchemaItem depItem in dep)
 				{
 					if(depItem != null && depItem.PrimaryKey.Equals(refItem.PrimaryKey))
 					{
