@@ -2,12 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
   </ItemGroup>
 
 </Project>
