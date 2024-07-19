@@ -8,6 +8,23 @@
   xmlns:s2="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0"
   xmlns:sdpm="http://schemas.origam.com/Origam.Schema.MenuModel.SelectionDialogParameterMapping/6.0.0"
   xmlns:wrmi="http://schemas.origam.com/Origam.Schema.MenuModel.WorkflowReferenceMenuItem/6.0.0">
+  <frmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    frmi:autoSaveOnListRecordChange="false"
+    ami:displayName="Primary key is Integer"
+    x:id="8b0a6458-099a-4997-96fc-c21ed6af5cfb"
+    asi:name="PrimaryKeyIsInt"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    frmi:readOnlyAccess="false"
+    frmi:refreshAfterSaveType="RefreshChangedRecords"
+    frmi:refreshOnFocus="false"
+    frmi:refreshPortalAfterSave="false"
+    frmi:requestSaveAfterUpdate="false"
+    ami:roles="PrimaryKeyIsInt"
+    frmi:screen="Widgets/FormControlSet/Widgets/PrimaryKeyIsInt.origam#PrimaryKeyIsInt/7535785b-089e-4387-bf7e-1ddca2866ed2" />
   <rrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
