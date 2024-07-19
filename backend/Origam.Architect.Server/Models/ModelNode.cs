@@ -1,30 +1,25 @@
 ﻿using Origam.Schema;
+using Origam.UI;
 
 namespace Origam.Architect.Server.Controllers;
 
 public class ModelNode
 {
     public string Id { get; set; }
-    public string Title { get; set; }
-    public bool IsLeaf { get; set; }
+    public string NodeText { get; set; }
+    public bool HasChildNodes { get; set; }
+    public bool IsNonPersistentItem { get; set; }
+    public string IconUrl { get; set; }
     public List<ModelNode> Children { get; set; }
 
-    public static ModelNode Create(ISchemaItemProvider provider)
+    public static ModelNode Create(IBrowserNode2 node)
     {
         return new ModelNode
         {
-            Id = provider.NodeId,
-            Title = provider.NodeText,
-            IsLeaf = provider.HasChildItems
-        };
-    }
-    public static ModelNode Create(ISchemaItem schemaItem)
-    {
-        return new ModelNode
-        {
-            Id = schemaItem.Id.ToString(),
-            Title = schemaItem.NodeText,
-            IsLeaf = schemaItem.HasChildItems
+            Id = node.NodeId,
+            NodeText = node.NodeText,
+            IsNonPersistentItem = node is NonpersistentSchemaItemNode,
+            HasChildNodes = node.HasChildNodes
         };
     }
 }

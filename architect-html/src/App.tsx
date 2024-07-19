@@ -7,7 +7,13 @@ const App: React.FC = () => {
   const [topNodes, setTopNodes] = useState<TreeNode[]>([])
 
   const loadChildren = async (node: TreeNode): Promise<TreeNode[]> => {
-    return (await axios.get(`/Model/GetChildren?id=${node.id}`)).data;
+    return (await axios.get(
+      `/Model/GetChildren`,
+      { params: {
+        id: node.id,
+        nodeText: node.nodeText,
+        isNonPersistentItem: node.isNonPersistentItem
+      } })).data;
   };
 
   async function loadTopNodes() {

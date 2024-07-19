@@ -12,6 +12,9 @@ namespace Origam.Architect.Server
             workbench.InitializeDefaultServices();
             workbench.Connect("Demo");
             
+            IPersistenceService persistence = ServiceManager.Services
+                .GetService<IPersistenceService>();
+            
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +22,7 @@ namespace Origam.Architect.Server
             builder.Services.AddSingleton<ConfigManager>();
             builder.Services.AddSingleton(schema);
             builder.Services.AddSingleton(workbench);
+            builder.Services.AddSingleton(persistence);
             var app = builder.Build();
             
             if (app.Environment.IsDevelopment())
