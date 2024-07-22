@@ -8,6 +8,7 @@ export interface EditorProperty {
   value: any;
   category: string;
   description: string;
+  readOnly: boolean;
 }
 
 export function GridEditor(props: {
@@ -57,6 +58,7 @@ export function GridEditor(props: {
               <div key={property.name}>
                 <div>{property.name}</div>
                 <input
+                  disabled={property.readOnly}
                   value={property.value}
                   onChange={(e) => handleInputChange(property.name, e.target.value)}
                 />

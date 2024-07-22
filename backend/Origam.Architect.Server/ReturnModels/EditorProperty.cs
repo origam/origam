@@ -12,13 +12,15 @@ public class EditorProperty(
     string Type,
     object Value,
     string Category,
-    string Description)
+    string Description,
+    bool ReadOnly)
 {
     public string Name { get; } = Name;
     public string Type { get; } = Type;
     public object Value { get; } = Value;
     public string Category { get; } = Category;
     public string Description { get; } = Description;
+    public bool ReadOnly { get; } = ReadOnly;
 }
 
 public class EditorPropertyFactory
@@ -32,13 +34,14 @@ public class EditorPropertyFactory
         }
 
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
-
+        
         return new EditorProperty(
             Name: property.Name, 
             Type: property.PropertyType.Name,
             Value: property.GetValue(node),
             Category: category,
-            Description: description);
+            Description: description,
+            ReadOnly: property.GetSetMethod() == null);
     }
     
     private bool CanBeEdited(PropertyInfo property)
