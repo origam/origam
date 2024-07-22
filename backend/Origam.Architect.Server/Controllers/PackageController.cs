@@ -27,6 +27,10 @@ public class PackageController : ControllerBase
     [HttpPost("SetActive")]
     public ActionResult SetActive([FromBody]PackageIdentifier package)
     {
+        if (schemaService.ActiveSchemaExtensionId == package.Id)
+        {
+            return Ok();
+        }
         SecurityManager.SetServerIdentity();
         schemaService.LoadSchema(package.Id);
         return Ok();

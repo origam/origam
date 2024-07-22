@@ -16,6 +16,9 @@ export default defineConfig({
 			},'/Package':{
 				target: "https://localhost:7099",
 				secure: false
+			},'/Editor':{
+				target: "https://localhost:7099",
+				secure: false
 			},
 		}
 	},

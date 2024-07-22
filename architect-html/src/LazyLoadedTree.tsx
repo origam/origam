@@ -1,50 +1,53 @@
 import React, { useState } from 'react';
+import "./LazyLoadedTree.css"
 
 export interface TreeNode {
   id: string;
   nodeText: string;
   hasChildNodes: boolean;
   isNonPersistentItem: boolean;
+  editorType: null | "GridEditor";
   children?: TreeNode[];
   isLoading?: boolean;
 }
 
-export interface TreeProps {
-  data: TreeNode[];
-  onLoadChildren: (node: TreeNode) => Promise<TreeNode[]>;
-}
-
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
+  openEditor: (node: TreeNode) => void;
   onLoadChildren: (node: TreeNode) => Promise<TreeNode[]>;
-}> = ({ node, onLoadChildren }) => {
+}> = ({node, onLoadChildren, openEditor}) => {
 
   const [isExpanded, setIsExpanded] = useState(false)
-  function onToggle(){
-    setIsExpanded(!isExpanded);
+
+  const onNodeDoubleClick = async (node: TreeNode) => {
+    if (!node.editorType) {
+      await onToggle();
+    } else {
+      openEditor(node);
+    }
   }
 
-  const handleToggle = async () => {
+  const onToggle = async () => {
     if (!node.children && node.hasChildNodes && !node.isLoading) {
       node.children = await onLoadChildren(node);
-      onToggle();
-    } else {
-      onToggle();
     }
+    setIsExpanded(!isExpanded);
   };
 
   return (
-    <div style={{ marginLeft: '20px' }}>
-      <div onClick={handleToggle} style={{ cursor: 'pointer' }}>
-        {node.children ? (isExpanded ? '▼' : '▶') : '•'} {node.nodeText}
+    <div className={"treeNode"}>
+      <div className={"treeNodeTitle"}>
+        <div onClick={onToggle}>{node.hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}</div>
+        <div onDoubleClick={() => onNodeDoubleClick(node)}>{node.nodeText}</div>
         {node.isLoading && ' Loading...'}
       </div>
       {isExpanded && node.children && (
         <div>
           {node.children.map((childNode) => (
             <TreeNodeComponent
-              key={childNode.id}
+              key={childNode.id + childNode.nodeText}
               node={childNode}
+              openEditor={openEditor}
               onLoadChildren={onLoadChildren}
             />
           ))}
@@ -56,14 +59,16 @@ const TreeNodeComponent: React.FC<{
 
 const LazyLoadedTree: React.FC<{
   topNodes: TreeNode[];
+  openEditor: (node: TreeNode) => void;
   onLoadChildren: (node: TreeNode) => Promise<TreeNode[]>;
-}> = ({ topNodes, onLoadChildren }) => {
+}> = ({topNodes, onLoadChildren, openEditor}) => {
   return (
     <div>
       {topNodes.map((node) => (
         <TreeNodeComponent
           key={node.id}
           node={node}
+          openEditor={openEditor}
           onLoadChildren={onLoadChildren}
         />
       ))}

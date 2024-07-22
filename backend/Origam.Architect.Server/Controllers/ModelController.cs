@@ -13,38 +13,40 @@ public class ModelController : ControllerBase
 {
     private readonly SchemaService schemaService;
     private readonly IPersistenceService persistenceService;
+    private readonly TreeNodeFactory treeNodeFactory;
 
     public ModelController(SchemaService schemaService,
-        IPersistenceService persistenceService)
+        IPersistenceService persistenceService, TreeNodeFactory treeNodeFactory)
     {
         this.schemaService = schemaService;
         this.persistenceService = persistenceService;
+        this.treeNodeFactory = treeNodeFactory;
     }
 
     [HttpGet("GetTopNodes")]
-    public ActionResult<List<ModelNode>> GetTopNodes()
+    public ActionResult<List<TreeNode>> GetTopNodes()
     {
         if (schemaService.ActiveExtension == null)
         {
-            return new List<ModelNode>();
+            return new List<TreeNode>();
         }
 
         return schemaService.ActiveExtension
             .ChildNodes()
             .Cast<SchemaItemProviderGroup>()
-            .Select(x => new ModelNode
+            .Select(x => new TreeNode
             {
                 Id = x.NodeId,
                 NodeText = x.NodeText,
                 HasChildNodes = x.HasChildNodes,
                 Children = x.ChildNodes()
                     .Cast<ISchemaItemProvider>()
-                    .Select(ModelNode.Create).ToList()
+                    .Select(treeNodeFactory.Create).ToList()
             }).ToList();
     }
 
     [HttpGet("GetChildren")]
-    public async Task<ActionResult<List<ModelNode>>> GetChildren(
+    public async Task<ActionResult<List<TreeNode>>> GetChildren(
         [FromQuery] string id, [FromQuery] bool isNonPersistentItem, 
         [FromQuery] string nodeText)
     {
@@ -66,11 +68,11 @@ public class ModelController : ControllerBase
             return NotFound();
         }
 
-        List<ModelNode> nodes = GetProviderTopChildren(provider);
+        List<TreeNode> nodes = GetProviderTopChildren(provider);
         return Ok(nodes);
     }
 
-    private List<ModelNode> GetChildren(Guid id, bool isNonPersistentItem,
+    private List<TreeNode> GetChildren(Guid id, bool isNonPersistentItem,
         string nodeText)
     {
         IBrowserNode2 provider = persistenceService.SchemaProvider
@@ -87,21 +89,21 @@ public class ModelController : ControllerBase
         return provider
             .ChildNodes().Cast<IBrowserNode2>()
             .OrderBy(x => x.NodeText)
-            .Select(ModelNode.Create)
+            .Select(treeNodeFactory.Create)
             .ToList();
     }
 
-    private static List<ModelNode> GetProviderTopChildren(
+    private List<TreeNode> GetProviderTopChildren(
         ISchemaItemProvider provider)
     {
-        List<ModelNode> nodes = provider.ChildGroups
+        List<TreeNode> nodes = provider.ChildGroups
             .Where(x => x.ParentGroup == null)
             .OrderBy(x => x.NodeText)
-            .Select(ModelNode.Create)
+            .Select(treeNodeFactory.Create)
             .Concat(provider.ChildItems
                 .Where(x => x.Group == null)
                 .OrderBy(x => x.NodeText)
-                .Select(ModelNode.Create))
+                .Select(treeNodeFactory.Create))
             .ToList();
         return nodes;
     }

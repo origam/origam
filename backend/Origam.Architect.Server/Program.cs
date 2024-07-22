@@ -1,3 +1,4 @@
+using Origam.Architect.Server.Controllers;
 using Origam.Architect.Server.Wrappers;
 using Origam.Workbench.Services;
 
@@ -20,6 +21,8 @@ namespace Origam.Architect.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<ConfigManager>();
+            builder.Services.AddSingleton<TreeNodeFactory>();
+            builder.Services.AddSingleton<EditorPropertyFactory>();
             builder.Services.AddSingleton(schema);
             builder.Services.AddSingleton(workbench);
             builder.Services.AddSingleton(persistence);
