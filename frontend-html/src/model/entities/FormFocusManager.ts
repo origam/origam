@@ -124,9 +124,7 @@ export class FormFocusManager {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
-    const nextIndex =
-      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    const focusable = this.focusableContainers[nextIndex].focusable;
+    const focusable = this.findNextVisibleElement(currentContainerIndex);
     if (focusable !== activeElement && focusable.disabled) {
       this.focusNextInternal(focusable, callNumber + 1);
     } else {
@@ -136,13 +134,21 @@ export class FormFocusManager {
     }
   }
 
+  findNextVisibleElement(currentContainerIndex: number): IFocusable{
+    const nextIndex =
+      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
+    const focusable = this.focusableContainers[nextIndex].focusable;
+    if (!focusable.checkVisibility()) {
+      return this.findNextVisibleElement(nextIndex);
+    }
+    return focusable;
+  }
+
   focusPrevious(activeElement: any) {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
-    const previousIndex =
-      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
-    const focusable = this.focusableContainers[previousIndex].focusable;
+    const focusable = this.findPreviousVisibleElement(currentContainerIndex);
     if (focusable.disabled) {
       this.focusPrevious(focusable);
     } else {
@@ -150,6 +156,16 @@ export class FormFocusManager {
         this.focusAndRemember(focusable);
       });
     }
+  }
+
+  findPreviousVisibleElement(currentContainerIndex: number): IFocusable{
+     const previousIndex =
+      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
+    const focusable = this.focusableContainers[previousIndex].focusable;
+    if (!focusable.checkVisibility()) {
+      return this.findPreviousVisibleElement(previousIndex);
+    }
+    return focusable;
   }
 
   async activeEditorCloses(){
@@ -180,6 +196,6 @@ class EditorContainer {
 
 export interface IFocusable {
   focus(): void;
-
+  checkVisibility: ()=> boolean,
   disabled: boolean;
 }
