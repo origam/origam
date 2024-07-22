@@ -1,24 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { add, selectEditorById } from "src/components/gridEditor/GridEditorSlice.ts";
 
 
 export function GridEditor(props: {
   node: TreeNode
   onBackClick: () => void
 }) {
-  const [properties, setProperties] = useState<EditorProperty[]>([])
+  const editorId = props.node.nodeText + props.node.id;
+  const editorState = useSelector((state: any) => selectEditorById(state, editorId))
+    || {id:"", properties:[]};
+  const dispatch = useDispatch();
   useEffect(() => {
     async function getData (){
       const newProperties = (await axios.get("/Editor/EditableProperties", {
         params: {schemaItemId: props.node.id}
       })).data;
-      setProperties(newProperties);
+      dispatch(add({id: editorId, properties: newProperties}));
     }
     getData();
   }, []);
 
-   const groupedProperties = properties.reduce((groups: {[key: string]: any}, property) => {
+   const groupedProperties = editorState.properties.reduce((groups: {[key: string]: any}, property) => {
     (groups[property.category] = groups[property.category] || []).push(property);
     return groups;
   }, {});
@@ -45,10 +50,15 @@ export function GridEditor(props: {
   );
 }
 
-interface EditorProperty {
+export interface EditorProperty {
   name: string;
   type: string;
   value: any;
   category: string;
   description: string;
+}
+
+export interface EditorState {
+  id: string;
+  properties: EditorProperty[];
 }
