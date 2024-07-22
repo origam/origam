@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import LazyLoadedTree, { TreeNode } from './LazyLoadedTree';
+import LazyLoadedTree, { TreeNode } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import axios from "axios";
-import { Packages } from "./Packages.tsx";
-import { GridEditor } from "./GridEditor.tsx";
+import { Packages } from "src/components/packages/Packages.tsx";
+import { GridEditor } from "src/components/gridEditor/GridEditor.tsx";
 import "./App.css"
 
 const App: React.FC = () => {
@@ -49,7 +49,7 @@ const App: React.FC = () => {
           onLoadChildren={loadChildren}/>}
       {page === CurrentPage.Editor &&
         <GridEditor
-          node={editorNode}
+          node={editorNode!}
           onBackClick={() => setPage(CurrentPage.Model)}
         />}
     </div>

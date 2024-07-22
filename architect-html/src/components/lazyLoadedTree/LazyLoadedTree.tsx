@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./LazyLoadedTree.css"
+import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 
 export interface TreeNode {
   id: string;

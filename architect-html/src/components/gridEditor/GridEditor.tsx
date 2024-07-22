@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { TreeNode } from "./LazyLoadedTree.tsx";
+import { useEffect, useState } from "react";
+import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import axios from "axios";
 
 
