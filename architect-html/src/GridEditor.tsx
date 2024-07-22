@@ -18,16 +18,29 @@ export function GridEditor(props: {
     getData();
   }, []);
 
+   const groupedProperties = properties.reduce((groups: {[key: string]: any}, property) => {
+    (groups[property.category] = groups[property.category] || []).push(property);
+    return groups;
+  }, {});
+
+  const sortedCategories = Object.keys(groupedProperties).sort();
+
   return (
     <div>
       <h3>{`Editing: ${props.node.nodeText}`}</h3>
       <button onClick={props.onBackClick}>Back</button>
-      <div>{properties.map(x=>
+      <div>{sortedCategories.map(category =>
         <div>
-          <div>{x.name}</div>
-          <input value={x.value}></input>
+          <h4>{category}</h4>
+          {groupedProperties[category].map((x: EditorProperty) => (
+            <div>
+              <div>{x.name}</div>
+              <input value={x.value}></input>
+            </div>
+          ))}
         </div>
-      )}</div>
+      )}
+      </div>
     </div>
   );
 }
