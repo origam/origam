@@ -1,33 +1,44 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { add, selectEditorById, updatePropertyValue } from "src/components/gridEditor/GridEditorSlice.ts";
+
+export interface EditorProperty {
+  name: string;
+  type: string;
+  value: any;
+  category: string;
+  description: string;
+}
 
 export function GridEditor(props: {
   node: TreeNode
   onBackClick: () => void
 }) {
-  const editorId = props.node.nodeText + props.node.id;
-  const editorState = useSelector((state: any) => selectEditorById(state, editorId))
-    || {id:"", properties:[]};
-  const dispatch = useDispatch();
+  const [properties, setProperties] = useState<EditorProperty[]>([]);
 
   useEffect(() => {
-    async function getData (){
-      const newProperties = (await axios.get("/Editor/EditableProperties", {
-        params: {schemaItemId: props.node.id}
-      })).data;
-      dispatch(add({id: editorId, properties: newProperties}));
+    async function getData() {
+      try {
+        const response = await axios.get("/Editor/EditableProperties", {
+          params: { schemaItemId: props.node.id }
+        });
+        setProperties(response.data);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      }
     }
     getData();
-  }, []);
+  }, [props.node.id]);
 
   const handleInputChange = (propertyName: string, value: any) => {
-    dispatch(updatePropertyValue({ id: editorId, propertyName, value }));
+    setProperties(prevProperties =>
+      prevProperties.map(prop =>
+        prop.name === propertyName ? { ...prop, value } : prop
+      )
+    );
   };
 
-  const groupedProperties = editorState.properties.reduce((groups: {[key: string]: any}, property) => {
+  const groupedProperties = properties.reduce((groups: {[key: string]: EditorProperty[]}, property) => {
     (groups[property.category] = groups[property.category] || []).push(property);
     return groups;
   }, {});
@@ -38,34 +49,22 @@ export function GridEditor(props: {
     <div>
       <h3>{`Editing: ${props.node.nodeText}`}</h3>
       <button onClick={props.onBackClick}>Back</button>
-      <div>{sortedCategories.map(category =>
-        <div key={category}>
-          <h4>{category}</h4>
-          {groupedProperties[category].map((x: EditorProperty) => (
-            <div key={x.name}>
-              <div>{x.name}</div>
-              <input
-                value={x.value}
-                onChange={(e) => handleInputChange(x.name, e.target.value)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <div>
+        {sortedCategories.map(category => (
+          <div key={category}>
+            <h4>{category}</h4>
+            {groupedProperties[category].map((property: EditorProperty) => (
+              <div key={property.name}>
+                <div>{property.name}</div>
+                <input
+                  value={property.value}
+                  onChange={(e) => handleInputChange(property.name, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
-}
-
-export interface EditorProperty {
-  name: string;
-  type: string;
-  value: any;
-  category: string;
-  description: string;
-}
-
-export interface EditorState {
-  id: string;
-  properties: EditorProperty[];
 }
