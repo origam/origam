@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { add, selectEditorById } from "src/components/gridEditor/GridEditorSlice.ts";
-
+import { add, selectEditorById, updatePropertyValue } from "src/components/gridEditor/GridEditorSlice.ts";
 
 export function GridEditor(props: {
   node: TreeNode
@@ -13,6 +12,7 @@ export function GridEditor(props: {
   const editorState = useSelector((state: any) => selectEditorById(state, editorId))
     || {id:"", properties:[]};
   const dispatch = useDispatch();
+
   useEffect(() => {
     async function getData (){
       const newProperties = (await axios.get("/Editor/EditableProperties", {
@@ -23,7 +23,11 @@ export function GridEditor(props: {
     getData();
   }, []);
 
-   const groupedProperties = editorState.properties.reduce((groups: {[key: string]: any}, property) => {
+  const handleInputChange = (propertyName: string, value: any) => {
+    dispatch(updatePropertyValue({ id: editorId, propertyName, value }));
+  };
+
+  const groupedProperties = editorState.properties.reduce((groups: {[key: string]: any}, property) => {
     (groups[property.category] = groups[property.category] || []).push(property);
     return groups;
   }, {});
@@ -35,12 +39,15 @@ export function GridEditor(props: {
       <h3>{`Editing: ${props.node.nodeText}`}</h3>
       <button onClick={props.onBackClick}>Back</button>
       <div>{sortedCategories.map(category =>
-        <div>
+        <div key={category}>
           <h4>{category}</h4>
           {groupedProperties[category].map((x: EditorProperty) => (
-            <div>
+            <div key={x.name}>
               <div>{x.name}</div>
-              <input value={x.value}></input>
+              <input
+                value={x.value}
+                onChange={(e) => handleInputChange(x.name, e.target.value)}
+              />
             </div>
           ))}
         </div>
