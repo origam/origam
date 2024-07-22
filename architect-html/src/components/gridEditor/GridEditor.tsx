@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import axios from "axios";
+import S from './GridEditor.module.scss';
 
 export interface EditorProperty {
   name: string;
@@ -55,7 +56,7 @@ export function GridEditor(props: {
           <div key={category}>
             <h4>{category}</h4>
             {groupedProperties[category].map((property: EditorProperty) => (
-              <div key={property.name}>
+              <div className={S.property} key={property.name}>
                 <div>{property.name}</div>
                 <input
                   disabled={property.readOnly}
