@@ -159,7 +159,7 @@ export class FormFocusManager {
   }
 
   findPreviousVisibleElement(currentContainerIndex: number): IFocusable{
-     const previousIndex =
+    const previousIndex =
       currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
     const focusable = this.focusableContainers[previousIndex].focusable;
     if (!focusable.checkVisibility()) {
