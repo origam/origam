@@ -4,6 +4,7 @@ import axios from "axios";
 import { Packages } from "src/components/packages/Packages.tsx";
 import { GridEditor } from "src/components/gridEditor/GridEditor.tsx";
 import "./App.css"
+import "src/colors.scss"
 
 const App: React.FC = () => {
   const [page, setPage] = useState<CurrentPage>(CurrentPage.Packages)

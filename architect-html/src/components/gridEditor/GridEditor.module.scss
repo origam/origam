@@ -1,30 +1,72 @@
-/*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+.gridEditor {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--background2);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-This file is part of ORIGAM (http://www.origam.org).
+.title {
+  color: var(--background8);
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
 
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+.backButton {
+  background-color: var(--foreground1);
+  color: var(--background1);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-bottom: 20px;
 
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+  &:hover {
+    background-color: var(--foreground1);
+  }
+}
 
-You should have received a copy of the GNU General Public License
-along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
+.category {
+  margin-bottom: 20px;
+
+  h4 {
+    color:  var(--background8);
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--foreground1);
+    padding-bottom: 5px;
+  }
+}
 
 .property {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0.5em;
-    border-bottom: 1px solid #e0e0e0;
-    font-size: 1.2em;
-    font-weight: 500;
-    color: #213547;
-    background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5em;
+  border-bottom: 1px solid var(--background4);
+  font-size: 1.2em;
+  font-weight: 500;
+  color: var(--background8);
+  background-color: var(--background1);
+
+  .propertyName {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  input {
+    flex: 2;
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid var(--background4);
+    border-radius: 4px;
+
+    &:disabled {
+      background-color: var(--background3);
+      cursor: not-allowed;
+    }
+  }
 }

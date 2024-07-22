@@ -48,16 +48,16 @@ export function GridEditor(props: {
   const sortedCategories = Object.keys(groupedProperties).sort();
 
   return (
-    <div>
-      <h3>{`Editing: ${props.node.nodeText}`}</h3>
-      <button onClick={props.onBackClick}>Back</button>
+    <div className={S.gridEditor}>
+      <h3 className={S.title}>{`Editing: ${props.node.nodeText}`}</h3>
+      <button className={S.backButton} onClick={props.onBackClick}>Back</button>
       <div>
         {sortedCategories.map(category => (
-          <div key={category}>
+          <div className={S.category} key={category}>
             <h4>{category}</h4>
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
-                <div>{property.name}</div>
+                <div className={S.propertyName}>{property.name}</div>
                 <input
                   disabled={property.readOnly}
                   value={property.value}
