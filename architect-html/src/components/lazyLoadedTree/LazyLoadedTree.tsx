@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
+import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 
 export interface TreeNode {
   id: string;
@@ -14,9 +15,8 @@ export interface TreeNode {
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
   openEditor: (node: TreeNode) => void;
-  onLoadChildren: (node: TreeNode) => Promise<TreeNode[]>;
-}> = ({node, onLoadChildren, openEditor}) => {
-
+}> = ({node, openEditor}) => {
+  const architectApi = useContext(ArchitectApiContext)!;
   const [isExpanded, setIsExpanded] = useState(false)
 
   const onNodeDoubleClick = async (node: TreeNode) => {
@@ -29,7 +29,7 @@ const TreeNodeComponent: React.FC<{
 
   const onToggle = async () => {
     if (!node.children && node.hasChildNodes && !node.isLoading) {
-      node.children = await onLoadChildren(node);
+      node.children = await architectApi.getNodeChildren(node);
     }
     setIsExpanded(!isExpanded);
   };
@@ -48,7 +48,6 @@ const TreeNodeComponent: React.FC<{
               key={childNode.id + childNode.nodeText}
               node={childNode}
               openEditor={openEditor}
-              onLoadChildren={onLoadChildren}
             />
           ))}
         </div>
@@ -60,8 +59,7 @@ const TreeNodeComponent: React.FC<{
 const LazyLoadedTree: React.FC<{
   topNodes: TreeNode[];
   openEditor: (node: TreeNode) => void;
-  onLoadChildren: (node: TreeNode) => Promise<TreeNode[]>;
-}> = ({topNodes, onLoadChildren, openEditor}) => {
+}> = ({topNodes, openEditor}) => {
   return (
     <div>
       {topNodes.map((node) => (
@@ -69,7 +67,6 @@ const LazyLoadedTree: React.FC<{
           key={node.id}
           node={node}
           openEditor={openEditor}
-          onLoadChildren={onLoadChildren}
         />
       ))}
     </div>

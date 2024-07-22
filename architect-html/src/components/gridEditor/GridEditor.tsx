@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
-import axios from "axios";
-import S from './GridEditor.module.scss';
+import S from 'src/components/gridEditor/GridEditor.module.scss';
+import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 
 export interface EditorProperty {
   name: string;
@@ -17,14 +17,12 @@ export function GridEditor(props: {
   onBackClick: () => void
 }) {
   const [properties, setProperties] = useState<EditorProperty[]>([]);
-
+  const architectApi = useContext(ArchitectApiContext)!;
   useEffect(() => {
     async function getData() {
       try {
-        const response = await axios.get("/Editor/EditableProperties", {
-          params: { schemaItemId: props.node.id }
-        });
-        setProperties(response.data);
+        const newProperties = await architectApi.getProperties(props.node.id);
+        setProperties(newProperties);
       } catch (error) {
         console.error("Error fetching properties:", error);
       }
