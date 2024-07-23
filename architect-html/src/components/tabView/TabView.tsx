@@ -23,20 +23,22 @@ import S from "./TabView.module.scss";
 export const TabView: React.FC<{
   items: TabViewItem[];
 }> = (props) => {
-  const [activeTab, setActiveTab] = useState<ReactNode | undefined>()
+  const [activeTab, setActiveTab] = useState<TabViewId | undefined>()
 
   useEffect(() => {
-    setActiveTab(props.items[0].node)
+    setActiveTab(props.items[0].id)
   }, [])
 
   return (
     <div className={S.root}>
       <div className={S.content}>
-        {activeTab}
+        {props.items.map(x =>
+          <div key={x.id} className={activeTab !== x.id ? S.hidden : S.visible}>{x.node}</div>
+        )}
       </div>
       <div className={S.labels}>
         {props.items.map(x =>
-          <div onClick={() => setActiveTab(x.node)}>
+          <div onClick={() => setActiveTab(x.id)}>
             {x.label}
           </div>
         )}
