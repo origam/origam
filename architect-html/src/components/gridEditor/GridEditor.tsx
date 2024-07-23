@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import S from 'src/components/gridEditor/GridEditor.module.scss';
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
-import { initializeEditor, updateProperty } from './GrirEditorSlice.ts';
+import {
+  EditorState,
+  initializeEditor,
+  updateProperty
+} from './GrirEditorSlice.ts';
 import { RootState } from 'src/stores/store.ts';
 
 export interface EditorProperty {
@@ -51,16 +55,11 @@ export function GridEditor(props: {
     dispatch(updateProperty({editorId, propertyName, value}));
   };
 
-  if (!editorState) return null;
+  if (!editorState) {
+    return null;
+  }
 
-  const groupedProperties = editorState.properties.reduce((groups: {
-    [key: string]: EditorProperty[]
-  }, property) => {
-    (groups[property.category] = groups[property.category] || []).push(property);
-    return groups;
-  }, {});
-
-  const sortedCategories = Object.keys(groupedProperties).sort();
+  const {groupedProperties, sortedCategories} = getSortedProperties(editorState);
 
   return (
     <div className={S.gridEditor}>
@@ -84,4 +83,20 @@ export function GridEditor(props: {
       </div>
     </div>
   );
+}
+
+
+function getSortedProperties(editorState: EditorState) {
+  const groupedProperties = editorState.properties.reduce((groups: {
+    [key: string]: EditorProperty[]
+  }, property) => {
+    (groups[property.category] = groups[property.category] || []).push(property);
+    return groups;
+  }, {});
+
+  const sortedCategories = Object.keys(groupedProperties).sort();
+  for (const category of sortedCategories) {
+    groupedProperties[category].sort((a, b) => a.name.localeCompare(b.name));
+  }
+  return {groupedProperties, sortedCategories};
 }
