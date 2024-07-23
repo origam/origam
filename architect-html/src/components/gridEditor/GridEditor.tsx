@@ -51,7 +51,10 @@ export function GridEditor(props: {
     return null;
   }
 
-  const {groupedProperties, sortedCategories} = getSortedProperties(editorState);
+  const {
+    groupedProperties,
+    sortedCategories
+  } = getSortedProperties(editorState);
 
   function renderPropertyEditor(property: EditorProperty)
   {
@@ -64,8 +67,22 @@ export function GridEditor(props: {
         </select>
       )
     }
+    if (property.type === "boolean") {
+      return (
+        <div className={S.checkboxContainer}>
+          <input
+            type="checkbox"
+            checked={property.value}
+            onChange={(e) => handleInputChange(property.name, e.target.checked)}
+            disabled={property.readOnly}
+            className={S.checkbox}
+          />
+        </div>
+      )
+    }
     return (
       <input
+        type="text"
         disabled={property.readOnly}
         value={property.value != null ? property.value : undefined}
         onChange={(e) => handleInputChange(property.name, e.target.value)}
@@ -92,7 +109,6 @@ export function GridEditor(props: {
     </div>
   );
 }
-
 
 function getSortedProperties(editorState: EditorState) {
   const groupedProperties = editorState.properties.reduce((groups: {
