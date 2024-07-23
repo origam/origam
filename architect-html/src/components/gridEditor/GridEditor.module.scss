@@ -1,11 +1,5 @@
 .gridEditor {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: var(--background2);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1;
 }
 
 .title {
@@ -33,7 +27,7 @@
   margin-bottom: 20px;
 
   h4 {
-    color:  var(--background8);
+    color: var(--background8);
     font-size: 1.4em;
     margin-bottom: 10px;
     border-bottom: 2px solid var(--foreground1);
