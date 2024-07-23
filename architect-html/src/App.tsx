@@ -8,6 +8,7 @@ import { ArchitectApiProvider } from "src/API/ArchitectApiContext.tsx";
 import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
+import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
@@ -30,7 +31,7 @@ const App: React.FC = () => {
   return (
     <ArchitectApiProvider api={architectApi}>
       <TopLayout
-        topToolBar={<div/>}
+        topToolBar={<SaveButton/>}
         editorArea={editor}
         sideBar={
           <TabView items={[

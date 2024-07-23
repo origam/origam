@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using Microsoft.OpenApi.Extensions;
+using Origam.Architect.Server.Utils;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.UI;
@@ -25,33 +26,29 @@ public class EditorProperty(
 
 public class EditorPropertyFactory
 {
-    public EditorProperty Create(PropertyInfo property, ISchemaItem node)
+    public EditorProperty Create(PropertyInfo property, ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
-        if (category == null || !CanBeEdited(property))
+        if (category == null || !PropertyUtils.CanBeEdited(property))
         {
             return null;
         }
 
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
-        
+
+        object value = property.GetValue(item);
+        object editorValue = value;
+        if (value is ISchemaItem schemaItem)
+        {
+            editorValue = schemaItem.Id;
+        }
+
         return new EditorProperty(
             Name: property.Name, 
             Type: property.PropertyType.Name,
-            Value: property.GetValue(node),
+            Value: editorValue,
             Category: category,
             Description: description,
             ReadOnly: property.GetSetMethod() == null);
-    }
-    
-    private bool CanBeEdited(PropertyInfo property)
-    {        
-        var browsableAttribute = property.GetAttribute<BrowsableAttribute>();
-        if (browsableAttribute == null)
-        {
-            return true;
-        }
-
-        return browsableAttribute.Browsable;
     }
 }

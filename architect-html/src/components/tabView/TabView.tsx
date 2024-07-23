@@ -38,7 +38,7 @@ export const TabView: React.FC<{
       </div>
       <div className={S.labels}>
         {props.items.map(x =>
-          <div onClick={() => setActiveTab(x.id)}>
+          <div key={x.id} onClick={() => setActiveTab(x.id)}>
             {x.label}
           </div>
         )}

@@ -2,6 +2,8 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
+using Org.BouncyCastle.Asn1.X509.Qualified;
+using Origam.Architect.Server.Utils;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -38,5 +40,43 @@ public class EditorController : ControllerBase
             .Select(prop => editorPropertyFactory.Create(prop, item))
             .Where(x => x != null);
         return Ok(properties);
+    }
+
+    [HttpPost("PersistChanges")]
+    public ActionResult PersistChanges([FromBody] ChangesModel input)
+    {
+        ISchemaItem item = persistenceService.SchemaProvider
+            .RetrieveInstance<ISchemaItem>(input.SchemaItemId);
+        if (item == null)
+        {
+            return NotFound(
+                $"SchemaItem with id \"{input.SchemaItemId}\" not found");
+        }
+
+        PropertyInfo[] properties = item.GetType().GetProperties();
+        foreach (var change in input.Changes)
+        {
+            PropertyInfo propertyToChange = properties
+                .FirstOrDefault(prop => prop.Name == change.Name);
+            if (!PropertyUtils.CanBeEdited(propertyToChange))
+            {
+                throw new Exception(
+                    $"Property {change.Name} on type {item.GetType().Name} cannot be changed");
+            }
+
+            if (propertyToChange == null)
+            {
+                throw new Exception(
+                    $"Property {change.Name} not found on type {item.GetType().Name}");
+            }
+
+            object value =
+                InstanceTools.ParseValue(propertyToChange, change.Value);
+            propertyToChange.SetValue(item, value);
+        }
+
+        persistenceService.SchemaProvider.Persist(item);
+
+        return Ok();
     }
 }

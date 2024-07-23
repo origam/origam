@@ -23,8 +23,8 @@ using System;
 using System.Reflection;
 using System.Xml;
 
-namespace Origam.DA.Service;
-static class InstanceTools
+namespace Origam;
+public static class InstanceTools
 {
     public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
     {
@@ -68,5 +68,69 @@ static class InstanceTools
             correctlyTypedValue = value;
         }
         return correctlyTypedValue;
-    }       
+    }  
+    
+    public static object ParseValue(PropertyInfo property, string value)
+    {
+        var exception = new Exception($"Could not parse value of property {property.Name} to {property.PropertyType.Name}");
+
+        if (property.PropertyType == typeof(string))
+        {
+            return value;
+        }
+        if (property.PropertyType == typeof(bool))
+        {
+            if (bool.TryParse(value, out var boolValue))
+            {
+                return boolValue;
+            }
+            throw exception;
+        }
+
+        if (property.PropertyType == typeof(int))
+        {
+            if (int.TryParse(value, out var intValue))
+            {
+                return intValue;
+            }
+            throw exception;
+        }
+        if (property.PropertyType == typeof(long))
+        {
+            if (long.TryParse(value, out var intValue))
+            {
+                return intValue;
+            }
+            throw exception;
+        }
+
+        if (property.PropertyType == typeof(double))
+        {
+            if (double.TryParse(value, out var doubleValue))
+            {
+                return doubleValue;
+            }
+            throw exception;
+        }
+        
+        if (property.PropertyType == typeof(decimal))
+        {
+            if (decimal.TryParse(value, out var decimalValue))
+            {
+                return decimalValue;
+            }
+            throw exception;
+        }
+
+        if (property.PropertyType == typeof(Guid))
+        {
+            if (Guid.TryParse(value, out var guidValue))
+            {
+                return guidValue;
+            }
+            throw exception;
+        }
+        
+        throw new Exception($"Type {property.PropertyType.Name} of property {property.Name} cannot be parsed.");
+    }
 }

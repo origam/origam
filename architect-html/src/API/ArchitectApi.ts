@@ -1,6 +1,9 @@
 import axios from "axios";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
-import { EditorProperty } from "src/components/gridEditor/GridEditor.tsx";
+import {
+  EditorProperty,
+  PropertyChange
+} from "src/components/gridEditor/GridEditor.tsx";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
 
 export class ArchitectApi implements IArchitectApi {
@@ -20,10 +23,22 @@ export class ArchitectApi implements IArchitectApi {
       })).data;
   }
 
-  async getProperties(nodeId: string): Promise<EditorProperty[]> {
+  async getProperties(schemaItemId: string): Promise<EditorProperty[]> {
     return (await (axios.get("/Editor/EditableProperties", {
-      params: {schemaItemId: nodeId}
+      params: {schemaItemId: schemaItemId}
     }))).data;
+  }
+
+  async persistChanges(schemaItemId: string, changedProperties: EditorProperty[]): Promise<void> {
+    const changes = changedProperties
+      .filter(x => !x.readOnly)
+      .map(x => {
+        return {
+          name: x.name,
+          value: x.value === undefined || x.value === null ? null : x.value.toString(),
+        }
+      });
+    await axios.post(`/Editor/PersistChanges`, {schemaItemId, changes});
   }
 }
 
