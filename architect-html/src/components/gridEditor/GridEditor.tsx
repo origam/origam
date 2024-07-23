@@ -27,7 +27,7 @@ export function GridEditor(props: {
       }
     }
     getData();
-  }, [props.node.id]);
+  }, [props.node.id, architectApi]);
 
   const handleInputChange = (propertyName: string, value: any) => {
     setProperties(prevProperties =>
