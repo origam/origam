@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.topToolbar {
+  display: flex;
+  min-height: 100px;
+}
+
+.mainArea {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+}
+
+.editorArea {
+  display: flex;
+  padding: 10px;
+  flex: 1;
+}
+
+.sideBar {
+  display: flex;
+  min-width: 300px;
+  padding: 10px;
+}

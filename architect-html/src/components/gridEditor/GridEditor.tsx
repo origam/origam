@@ -14,7 +14,6 @@ export interface EditorProperty {
 
 export function GridEditor(props: {
   node: TreeNode
-  onBackClick: () => void
 }) {
   const [properties, setProperties] = useState<EditorProperty[]>([]);
   const architectApi = useContext(ArchitectApiContext)!;
@@ -48,7 +47,6 @@ export function GridEditor(props: {
   return (
     <div className={S.gridEditor}>
       <h3 className={S.title}>{`Editing: ${props.node.nodeText}`}</h3>
-      <button className={S.backButton} onClick={props.onBackClick}>Back</button>
       <div>
         {sortedCategories.map(category => (
           <div className={S.category} key={category}>

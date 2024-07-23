@@ -3,5 +3,7 @@ body {
 }
 
 #root {
-  padding: 2rem;
+  padding: 1rem;
+  display: flex;
+  flex: 1;
 }
