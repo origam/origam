@@ -1,13 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from 'src/stores/store.ts';
 
-interface EditorProperty {
+export interface EditorProperty {
   name: string;
-  type: string;
+  type: "boolean" | "enum" | "string" | "looukup";
   value: any;
+  dropDownValues: DropDownValue[];
   category: string;
   description: string;
   readOnly: boolean;
+}
+
+export interface DropDownValue {
+    name: string;
+    value: any;
 }
 
 export interface EditorStates {

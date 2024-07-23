@@ -1,5 +1,5 @@
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
-import { EditorProperty, PropertyChange } from "src/components/gridEditor/GridEditor.tsx";
+import { EditorProperty } from "src/components/gridEditor/GrirEditorSlice.ts";
 
 export interface IArchitectApi {
   getTopModelNodes(): Promise<TreeNode[]>;

@@ -1,10 +1,7 @@
 import axios from "axios";
 import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
-import {
-  EditorProperty,
-  PropertyChange
-} from "src/components/gridEditor/GridEditor.tsx";
 import { IArchitectApi } from "src/API/IArchitectApi.ts";
+import { EditorProperty } from "src/components/gridEditor/GrirEditorSlice.ts";
 
 export class ArchitectApi implements IArchitectApi {
   async getTopModelNodes(): Promise<TreeNode[]> {

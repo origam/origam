@@ -4,20 +4,12 @@ import { TreeNode } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import S from 'src/components/gridEditor/GridEditor.module.scss';
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 import {
+  EditorProperty,
   EditorState,
   initializeEditor,
   updateProperty
 } from './GrirEditorSlice.ts';
 import { RootState } from 'src/stores/store.ts';
-
-export interface EditorProperty {
-  name: string;
-  type: string;
-  value: any;
-  category: string;
-  description: string;
-  readOnly: boolean;
-}
 
 export interface PropertyChange {
   name: string;
@@ -61,6 +53,26 @@ export function GridEditor(props: {
 
   const {groupedProperties, sortedCategories} = getSortedProperties(editorState);
 
+  function renderPropertyEditor(property: EditorProperty)
+  {
+    if(property.type === "enum"){
+      return (
+        <select onChange={(e) => handleInputChange(property.name, e.target.value)}>
+          {property.dropDownValues.map(x =>
+            <option selected={x.value === property.value} value={x.value} >{x.name}</option>)
+          }
+        </select>
+      )
+    }
+    return (
+      <input
+        disabled={property.readOnly}
+        value={property.value != null ? property.value : undefined}
+        onChange={(e) => handleInputChange(property.name, e.target.value)}
+      />
+    );
+  }
+
   return (
     <div className={S.gridEditor}>
       <h3 className={S.title}>{`Editing: ${props.node.nodeText}`}</h3>
@@ -71,11 +83,7 @@ export function GridEditor(props: {
             {groupedProperties[category].map((property: EditorProperty) => (
               <div className={S.property} key={property.name}>
                 <div className={S.propertyName}>{property.name}</div>
-                <input
-                  disabled={property.readOnly}
-                  value={property.value ? property.value : undefined}
-                  onChange={(e) => handleInputChange(property.name, e.target.value)}
-                />
+                {renderPropertyEditor(property)}
               </div>
             ))}
           </div>

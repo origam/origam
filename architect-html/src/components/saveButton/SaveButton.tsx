@@ -10,7 +10,7 @@ export const SaveButton = () => {
   const { isDirty, isSaving } = activeEditor;
 
   const handleSave = () => {
-    dispatch(saveEditorContent(activeEditor.id));
+    dispatch(saveEditorContent(activeEditor.id) as any);
   };
 
   return (
