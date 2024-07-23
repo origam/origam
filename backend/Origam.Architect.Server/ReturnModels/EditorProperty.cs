@@ -119,7 +119,7 @@ public class EditorPropertyFactory
         {
             return "boolean";
         }
-        if (type.IsAssignableFrom(typeof(ISchemaItem)))
+        if (type.IsAssignableTo(typeof(ISchemaItem)))
         {
             return "looukup";
         }

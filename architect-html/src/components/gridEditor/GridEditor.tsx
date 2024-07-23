@@ -55,7 +55,7 @@ export function GridEditor(props: {
 
   function renderPropertyEditor(property: EditorProperty)
   {
-    if(property.type === "enum"){
+    if(property.type === "enum" || property.type === "looukup"){
       return (
         <select onChange={(e) => handleInputChange(property.name, e.target.value)}>
           {property.dropDownValues.map(x =>
