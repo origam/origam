@@ -73,4 +73,14 @@ const LazyLoadedTree: React.FC<{
   );
 };
 
+export interface TreeNode {
+  id: string;
+  nodeText: string;
+  hasChildNodes: boolean;
+  isNonPersistentItem: boolean;
+  editorType: null | "GridEditor";
+  children?: TreeNode[];
+  isLoading?: boolean;
+}
+
 export default LazyLoadedTree;
