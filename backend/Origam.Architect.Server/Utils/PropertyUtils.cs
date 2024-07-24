@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 using Origam.Extensions;
+using Origam.Schema;
 
 namespace Origam.Architect.Server.Utils;
 

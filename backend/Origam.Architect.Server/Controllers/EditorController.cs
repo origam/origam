@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Origam.Architect.Server.ArchitectLogic;
 using Origam.Architect.Server.Utils;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -16,12 +17,14 @@ public class EditorController : ControllerBase
 {
     private readonly IPersistenceService persistenceService;
     private readonly EditorPropertyFactory editorPropertyFactory;
+    private readonly PropertyParser propertyParser;
 
     public EditorController(IPersistenceService persistenceService,
-        EditorPropertyFactory editorPropertyFactory)
+        EditorPropertyFactory editorPropertyFactory, PropertyParser propertyParser)
     {
         this.persistenceService = persistenceService;
         this.editorPropertyFactory = editorPropertyFactory;
+        this.propertyParser = propertyParser;
     }
 
     [HttpGet("EditableProperties")]
@@ -70,8 +73,7 @@ public class EditorController : ControllerBase
                     $"Property {change.Name} not found on type {item.GetType().Name}");
             }
 
-            object value =
-                InstanceTools.ParseValue(propertyToChange, change.Value);
+            object value = propertyParser.Parse(propertyToChange, change.Value);
             propertyToChange.SetValue(item, value);
         }
 
