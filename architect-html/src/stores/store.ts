@@ -1,22 +1,35 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import editorsReducer from 'src/components/gridEditor/GrirEditorSlice.ts';
+import { configureStore, ThunkAction, Action, ConfigureStoreOptions } from '@reduxjs/toolkit';
+import editorsReducer from 'src/components/gridEditor/GrirEditorSlice';
 import { IArchitectApi } from 'src/API/IArchitectApi';
-import { ArchitectApi } from "src/API/ArchitectApi.ts";
+import { ArchitectApi } from "src/API/ArchitectApi";
+import treeReducer from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice';
+import {
+  loadStateFromLocalStorage, localStorageMiddleware
+} from "src/stores/localStorageMiddleware";
 
 const architectApi = new ArchitectApi();
 
-export const store = configureStore({
+const preloadedState = {
+  tree: {
+    expandedNodes: loadStateFromLocalStorage(),
+  },
+};
+
+const storeOptions: ConfigureStoreOptions = {
   reducer: {
     editorStates: editorsReducer,
+    tree: treeReducer,
   },
-  middleware: getDefaultMiddleware =>
+  preloadedState,
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {
         extraArgument: { architectApi }
       }
-    })
-})
+    }).concat(localStorageMiddleware)
+};
 
+export const store = configureStore(storeOptions);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

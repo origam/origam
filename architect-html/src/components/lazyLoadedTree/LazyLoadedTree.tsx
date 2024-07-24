@@ -1,6 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import "src/components/lazyLoadedTree/LazyLoadedTree.css"
 import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
+import {
+  toggleNode,
+  selectExpandedNodes
+} from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice.ts';
 
 export interface TreeNode {
   id: string;
@@ -9,15 +14,37 @@ export interface TreeNode {
   isNonPersistentItem: boolean;
   editorType: null | "GridEditor";
   children?: TreeNode[];
-  isLoading?: boolean;
 }
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
   openEditor: (node: TreeNode) => void;
-}> = ({node, openEditor}) => {
+  children?: TreeNode[];
+}> = ({node, openEditor, children}) => {
   const architectApi = useContext(ArchitectApiContext)!;
-  const [isExpanded, setIsExpanded] = useState(false)
+  const dispatch = useDispatch();
+  const expandedNodes = useSelector(selectExpandedNodes);
+  const isExpanded = expandedNodes.includes(node.id);
+  const[childNodes, setChildNodes] = useState(children)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (isExpanded && node.hasChildNodes) {
+      loadChildren();
+    }
+  }, [isExpanded, node.hasChildNodes]);
+
+  async function loadChildren() {
+    if (!childNodes && !isLoading) {
+      setIsLoading(true);
+      try {
+        const nodes = await architectApi.getNodeChildren(node);
+        setChildNodes(nodes);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }
 
   const onNodeDoubleClick = async (node: TreeNode) => {
     if (!node.editorType) {
@@ -28,22 +55,24 @@ const TreeNodeComponent: React.FC<{
   }
 
   const onToggle = async () => {
-    if (!node.children && node.hasChildNodes && !node.isLoading) {
-      node.children = await architectApi.getNodeChildren(node);
+    if (node.hasChildNodes && !isLoading) {
+      await loadChildren();
     }
-    setIsExpanded(!isExpanded);
+    dispatch(toggleNode(node.id));
   };
 
   return (
     <div className={"treeNode"}>
       <div className={"treeNodeTitle"}>
-        <div onClick={onToggle}>{node.hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}</div>
+        <div onClick={onToggle}>
+          {node.hasChildNodes ? (isExpanded ? '▼' : '▶') : '•'}
+        </div>
         <div onDoubleClick={() => onNodeDoubleClick(node)}>{node.nodeText}</div>
-        {node.isLoading && ' Loading...'}
+        {isLoading && ' Loading...'}
       </div>
-      {isExpanded && node.children && (
+      {isExpanded && childNodes && (
         <div>
-          {node.children.map((childNode) => (
+          {childNodes.map((childNode) => (
             <TreeNodeComponent
               key={childNode.id + childNode.nodeText}
               node={childNode}
@@ -67,20 +96,11 @@ const LazyLoadedTree: React.FC<{
           key={node.id}
           node={node}
           openEditor={openEditor}
+          children={node.children} // The top nodes come with preloaded children
         />
       ))}
     </div>
   );
 };
-
-export interface TreeNode {
-  id: string;
-  nodeText: string;
-  hasChildNodes: boolean;
-  isNonPersistentItem: boolean;
-  editorType: null | "GridEditor";
-  children?: TreeNode[];
-  isLoading?: boolean;
-}
 
 export default LazyLoadedTree;
