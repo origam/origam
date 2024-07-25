@@ -23,11 +23,10 @@ import {
 } from "src/components/lazyLoadedTree/LazyLoadedTree.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/stores/store.ts";
-import { useContext, useEffect, useRef } from "react";
-import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
+import { useEffect, useRef } from "react";
 import {
   EditorState,
-  initializeEditor, updateProperty
+  updateProperty
 } from "src/components/editors/gridEditor/GrirEditorSlice.ts";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
 import {
@@ -36,32 +35,16 @@ import {
 import React from 'react';
 import Editor, { EditorProps } from '@monaco-editor/react';
 import * as monacoVim from 'monaco-vim';
-
+import {
+  getEditorId,
+  useEditorInitialization
+} from "src/components/editors/gridEditor/GridEditor.tsx";
 
 export const XsltEditor = (props: { node: TreeNode }) => {
+  const editorId = getEditorId(props.node);
   const dispatch = useDispatch();
-  const editorId = props.node.nodeText + "_" + props.node.id;
   const editorState = useSelector<RootState, EditorState>(state => state.editorStates.editors[editorId]);
-  const architectApi = useContext(ArchitectApiContext)!;
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        const newProperties = await architectApi.getProperties(props.node.id);
-        dispatch(initializeEditor({
-          editorId,
-          schemaItemId: props.node.id,
-          properties: newProperties
-        }));
-      } catch (error) {
-        console.error("Error fetching properties:", error);
-      }
-    }
-
-    if (!editorState) {
-      getData();
-    }
-  }, [editorId, architectApi, dispatch, editorState]);
+  useEditorInitialization(editorState, props.node);
 
   if (!editorState) {
     return null;
