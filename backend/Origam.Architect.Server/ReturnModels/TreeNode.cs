@@ -49,7 +49,7 @@ public class TreeNodeFactory
            || itemType == "Origam.Schema.RuleModel.EndRule"
            || itemType == "Origam.Schema.RuleModel.ComplexDataRule")
         {
-            return null;
+            return "XslTEditor";
         }
         if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
         {
@@ -69,7 +69,7 @@ public class TreeNodeFactory
         }
         if (node is TableMappingItem or FieldMappingItem)
         {
-            return "PropertyEditor";
+            return "GridEditor";
         }
         return null;
     }

@@ -5,6 +5,7 @@
   flex: 1;
 }
 .content {
+  display: flex;
   overflow: auto;
   flex: 1;
 }
@@ -19,4 +20,5 @@
 }
 .visible {
   display: flex;
+  flex: 1;
 }

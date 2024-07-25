@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import LazyLoadedTree, { TreeNode } from 'src/components/lazyLoadedTree/LazyLoadedTree.tsx';
 import { Packages } from "src/components/packages/Packages.tsx";
-import { GridEditor } from "src/components/gridEditor/GridEditor.tsx";
+import { GridEditor } from "src/components/editors/gridEditor/GridEditor.tsx";
 import "./App.css"
 import "src/colors.scss"
 import { ArchitectApiProvider } from "src/API/ArchitectApiContext.tsx";
@@ -9,6 +9,7 @@ import { ArchitectApi } from "src/API/ArchitectApi.ts";
 import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
+import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
@@ -58,9 +59,12 @@ const App: React.FC = () => {
 };
 
 function getEditor(node: TreeNode){
-  return(
-      <GridEditor node={node}/>
-  );
+  if(node.editorType === "GridEditor") {
+    return <GridEditor node={node}/>
+  }
+  if(node.editorType === "XslTEditor") {
+    return <XsltEditor node={node}/>
+  }
 }
 
 export default App;

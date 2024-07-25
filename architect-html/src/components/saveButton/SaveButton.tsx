@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { saveEditorContent, selectActiveEditorState } from 'src/components/gridEditor/GrirEditorSlice.ts';
+import { saveEditorContent, selectActiveEditorState } from 'src/components/editors/gridEditor/GrirEditorSlice.ts';
 
 export const SaveButton = () => {
   const dispatch = useDispatch();

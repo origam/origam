@@ -6,7 +6,7 @@ export interface EditorProperty {
   type: "boolean" | "enum" | "string" | "looukup";
   value: any;
   dropDownValues: DropDownValue[];
-  category: string;
+  category: string | null;
   description: string;
   readOnly: boolean;
 }
@@ -90,7 +90,7 @@ const editorSlice = createSlice({
 
 export const selectActiveEditorState = (state: RootState) => {
   for (const editorState of Object.values(state.editorStates.editors)) {
-    if (editorState.isActive) {
+    if ((editorState as any).isActive) {
       return editorState;
     }
   }

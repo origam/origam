@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
@@ -90,11 +91,11 @@ public class PropertyParser
             return ParseGuid(value, property);
         }
 
-        if (property.PropertyType.IsAssignableTo(typeof(ISchemaItem)))
+        if (property.PropertyType.IsAssignableTo(typeof(IPersistent)))
         {
             Guid id = ParseGuid(value, property);
             return persistenceService.SchemaProvider
-                .RetrieveInstance<ISchemaItem>(id);
+                .RetrieveInstance<IPersistent>(id);
         }
 
         throw new Exception(

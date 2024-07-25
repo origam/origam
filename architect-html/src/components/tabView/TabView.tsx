@@ -33,7 +33,9 @@ export const TabView: React.FC<{
     <div className={S.root}>
       <div className={S.content}>
         {props.items.map(x =>
-          <div key={x.id} className={activeTab !== x.id ? S.hidden : S.visible}>{x.node}</div>
+          <div key={x.id} className={activeTab !== x.id ? S.hidden : S.visible}>
+            {x.node}
+          </div>
         )}
       </div>
       <div className={S.labels}>

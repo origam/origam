@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Extensions;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using Origam.Architect.Server.ArchitectLogic;
+using Origam.Architect.Server.ReturnModels;
 using Origam.Architect.Server.Utils;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 
 namespace Origam.Architect.Server.Controllers;
@@ -16,14 +19,14 @@ namespace Origam.Architect.Server.Controllers;
 public class EditorController : ControllerBase
 {
     private readonly IPersistenceService persistenceService;
-    private readonly EditorPropertyFactory editorPropertyFactory;
+    private readonly EditorPropertyFactory propertyFactory;
     private readonly PropertyParser propertyParser;
 
     public EditorController(IPersistenceService persistenceService,
-        EditorPropertyFactory editorPropertyFactory, PropertyParser propertyParser)
+        EditorPropertyFactory propertyFactory, PropertyParser propertyParser)
     {
         this.persistenceService = persistenceService;
-        this.editorPropertyFactory = editorPropertyFactory;
+        this.propertyFactory = propertyFactory;
         this.propertyParser = propertyParser;
     }
 
@@ -37,10 +40,25 @@ public class EditorController : ControllerBase
         {
             return NotFound($"SchemaItem with id \"{schemaItemId}\" not found");
         }
+        if (item is XslTransformation xsltTransformation)
+        {
+            var xsltProperties =
+                GetEditorPropertiesByName(
+                    xsltTransformation, 
+                    new []{"Id", "Package","TextStore", "XsltEngineType"}
+                    );
+            return Ok(xsltProperties);
+        }
+        if (item is XslRule xslRule)
+        {
+            var xsltProperties =
+                GetEditorPropertiesByName(xslRule, new []{"Xsl"});
+            return Ok(xsltProperties);
+        }
 
         var properties = item.GetType()
             .GetProperties()
-            .Select(prop => editorPropertyFactory.Create(prop, item))
+            .Select(prop => propertyFactory.CreateIfMarkedAsEditable(prop, item))
             .Where(x => x != null);
         return Ok(properties);
     }
@@ -61,11 +79,6 @@ public class EditorController : ControllerBase
         {
             PropertyInfo propertyToChange = properties
                 .FirstOrDefault(prop => prop.Name == change.Name);
-            if (!PropertyUtils.CanBeEdited(propertyToChange))
-            {
-                throw new Exception(
-                    $"Property {change.Name} on type {item.GetType().Name} cannot be changed");
-            }
 
             if (propertyToChange == null)
             {
@@ -78,7 +91,16 @@ public class EditorController : ControllerBase
         }
 
         persistenceService.SchemaProvider.Persist(item);
-
         return Ok();
+    }
+
+    private IEnumerable<EditorProperty> GetEditorPropertiesByName(
+        ISchemaItem item, string[] names)
+    {
+        var properties = item.GetType()
+            .GetProperties()
+            .Where(prop => names.Contains(prop.Name))
+            .Select(prop=> propertyFactory.Create(prop, item));
+        return properties;
     }
 }

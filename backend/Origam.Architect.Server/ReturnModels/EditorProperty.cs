@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Microsoft.OpenApi.Extensions;
 using Origam.Architect.Server.Utils;
+using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.UI;
@@ -35,21 +36,26 @@ public class DropDownValue(string Name, object Value)
 
 public class EditorPropertyFactory
 {
-    public EditorProperty Create(PropertyInfo property, ISchemaItem item)
+    public EditorProperty CreateIfMarkedAsEditable(PropertyInfo property, ISchemaItem item)
     {
         string category = property.GetAttribute<CategoryAttribute>()?.Category;
         if (category == null || !PropertyUtils.CanBeEdited(property))
         {
             return null;
         }
-
+        return Create(property, item);
+    }
+    
+    public EditorProperty Create(PropertyInfo property, ISchemaItem item)
+    {
+        string category = property.GetAttribute<CategoryAttribute>()?.Category;
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
         object value = property.GetValue(item);
         object editorValue = value;
-        if (value is ISchemaItem schemaItem)
+        if (value is IPersistent persistentObject)
         {
-            editorValue = schemaItem.Id;
+            editorValue = persistentObject.Id;
         }
 
         return new EditorProperty(
@@ -82,7 +88,7 @@ public class EditorPropertyFactory
             return Enum
                 .GetValues(property.PropertyType)
                 .Cast<object>()
-                .Select(x => new DropDownValue(x.ToString(), x))
+                .Select(x => new DropDownValue(x.ToString(), (int)x))
                 .ToArray();
         }
 
