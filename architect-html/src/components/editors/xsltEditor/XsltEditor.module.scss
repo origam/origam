@@ -5,12 +5,12 @@
 
 .codeEditor {
   display: flex;
-  flexDirection: column;
+  flex-direction: column;
   height: 100%;
   flex: 1;
 }
 
 .vimStatus {
   padding: 5px;
-  backgroundColor: #f0f0f0;
+  background: var(--background3);
 }

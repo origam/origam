@@ -114,7 +114,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ value, onChange }) => {
   return (
     <div className={S.codeEditor}>
       <Editor
-        height="90%"
+        height="100%"
         defaultLanguage="xml"
         value={value}
         onChange={handleEditorChange}
