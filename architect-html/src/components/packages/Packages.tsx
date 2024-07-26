@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { ArchitectApiContext } from "src/API/ArchitectApiContext.tsx";
 
 export function Packages(props: {
   onPackageLoaded: ()=>void
 }) {
+  const architectApi = useContext(ArchitectApiContext)!;
   const [packages, setPackages] = useState<Package[]>([]);
 
   useEffect(() => {
     (async () => {
-      setPackages((await axios.get("/Package/GetAll")).data);
+      setPackages(await architectApi.getPackages());
     })();
   }, []);
 
@@ -23,9 +24,10 @@ function PackageItem(props: {
   package: Package,
   onPackageLoaded: ()=>void
 }) {
+  const architectApi = useContext(ArchitectApiContext)!;
 
   async function onPackageClick(){
-    await axios.post("/Package/SetActive", {id: props.package.id});
+    await architectApi.setActivePackage(props.package.id);
     props.onPackageLoaded();
   }
 
