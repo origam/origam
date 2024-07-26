@@ -339,13 +339,13 @@ public class WorkflowEngine : IDisposable
 				RuntimeDescription = "";
 				Notification = "";
 				ResultMessage = "";
-				if (IsTrace(WorkflowBlock))
-				{
-					tracingService.TraceWorkflow(
-						workflowInstanceId: WorkflowInstanceId,
-						workflowId:(Guid) WorkflowBlock.PrimaryKey["Id"],
-						WorkflowBlock.Name);
-				}
+			}
+			if (IsTrace(WorkflowBlock))
+			{
+				tracingService.TraceWorkflow(
+					workflowInstanceId: WorkflowInstanceId,
+					workflowId:(Guid) WorkflowBlock.PrimaryKey["Id"],
+					WorkflowBlock.Name);
 			}
 			// Initialize all context stores (resume paused ones?)
 			var contextStores = new Hashtable();

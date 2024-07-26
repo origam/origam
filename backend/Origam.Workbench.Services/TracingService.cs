@@ -48,11 +48,20 @@ public class TracingService : ITracingService
 		{
 			if (log.IsDebugEnabled)
 			{
-				log.Info("Trace is disabled, workflow is not traced.");
+				log.Debug("Trace is disabled, workflow is not traced.");
 			}
 			return;
 		}
-        UserProfile profile = SecurityManager.CurrentUserProfile();
+
+		DataSet loadWorkflowData = LoadWorkflowInstanceData(workflowInstanceId);
+		bool alreadyInitialized = loadWorkflowData.Tables.Count > 0 &&
+		                          loadWorkflowData.Tables[0].Rows.Count > 0;
+		if (alreadyInitialized)
+		{
+			return;
+		}
+
+		UserProfile profile = SecurityManager.CurrentUserProfile();
 		// create the record
 		OrigamTraceWorkflowData data = new OrigamTraceWorkflowData();
 		OrigamTraceWorkflowData.OrigamTraceWorkflowRow row = data.OrigamTraceWorkflow.NewOrigamTraceWorkflowRow();
@@ -165,6 +174,19 @@ public class TracingService : ITracingService
 		_dataServiceAgent.Parameters.Add("Query", query);
 		_dataServiceAgent.Parameters.Add("Data", dataSet);
 		_dataServiceAgent.Run();
+	}	
+	
+	private DataSet LoadWorkflowInstanceData(Guid workflowInstanceId)
+	{
+		DataStructureQuery query = new DataStructureQuery(
+			new Guid("309843cc-39ec-4eca-8848-8c69c885790c"), 
+			new Guid("4e6594b7-0462-4c1f-bc36-8fa37016995a"));
+		query.Parameters.Add(new QueryParameter("OrigamTraceWorkflow_parId", workflowInstanceId));
+		_dataServiceAgent.MethodName = "LoadDataByQuery";
+		_dataServiceAgent.Parameters.Clear();
+		_dataServiceAgent.Parameters.Add("Query", query);
+		_dataServiceAgent.Run();
+		return _dataServiceAgent.Result as DataSet;
 	}
 	
 	#endregion
