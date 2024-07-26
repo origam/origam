@@ -6,6 +6,7 @@ import treeReducer from 'src/components/lazyLoadedTree/LazyLoadedTreeSlice';
 import {
   loadStateFromLocalStorage, localStorageMiddleware
 } from "src/stores/localStorageMiddleware";
+import { tabReducer } from "src/components/tabView/TabViewSlice.ts";
 
 const architectApi = new ArchitectApi();
 
@@ -19,6 +20,7 @@ const storeOptions: ConfigureStoreOptions = {
   reducer: {
     editorStates: editorsReducer,
     tree: treeReducer,
+    tab: tabReducer,
   },
   preloadedState,
   middleware: (getDefaultMiddleware) =>

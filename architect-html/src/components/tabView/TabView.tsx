@@ -16,18 +16,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'src/stores/store.ts';
+import { setActiveTab } from 'src/components/tabView/TabViewSlice.ts';
 import S from "./TabView.module.scss";
 
 export const TabView: React.FC<{
   items: TabViewItem[];
 }> = (props) => {
-  const [activeTab, setActiveTab] = useState<TabViewId | undefined>()
+  const dispatch = useDispatch();
+  const activeTab = useSelector((state: RootState) => state.tab.activeTab);
 
   useEffect(() => {
-    setActiveTab(props.items[0].id)
-  }, [])
+    if (props.items.length > 0 && activeTab === undefined) {
+      dispatch(setActiveTab(props.items[0].id));
+    }
+  }, [dispatch, props.items, activeTab]);
 
   return (
     <div className={S.root}>
@@ -40,7 +45,7 @@ export const TabView: React.FC<{
       </div>
       <div className={S.labels}>
         {props.items.map(x =>
-          <div key={x.id} onClick={() => setActiveTab(x.id)}>
+          <div key={x.id} onClick={() => dispatch(setActiveTab(x.id))}>
             {x.label}
           </div>
         )}
@@ -55,4 +60,4 @@ export interface TabViewItem {
   node: ReactNode
 }
 
-export enum TabViewId { Packages, Model}
+export enum TabViewId { Packages, Model }
