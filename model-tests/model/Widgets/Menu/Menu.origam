@@ -628,6 +628,17 @@
   <wrmi:MenuItem
     asi:abstract="false"
     ami:alwaysOpenNew="false"
+    ami:displayName="Workflow Trace Test"
+    x:id="9e820d35-0fe0-4684-9a7a-3afd303c139f"
+    asi:name="WorkflowTraceTest"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    ami:roles="*"
+    wrmi:workflow="Widgets/Workflow/Widgets/WorkflowTraceTest.origam#WorkflowTraceTest/884f0254-139c-4f66-8693-3b73c56d5990" />
+  <wrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
     ami:displayName="New TestQueue1_Row"
     x:id="d84de70e-ab86-468a-96e2-a619a6f37600"
     asi:name="CreateWQRow_TestQueue1"
