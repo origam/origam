@@ -4,3 +4,5 @@
 /plugins/__pycache__
 /plugins/pluginmanager_config.json
 /test/HTML5_TESTS/
+/model-tests/NewProject/mydemo.cmd
+/model-tests/NewProject/mydemo.env

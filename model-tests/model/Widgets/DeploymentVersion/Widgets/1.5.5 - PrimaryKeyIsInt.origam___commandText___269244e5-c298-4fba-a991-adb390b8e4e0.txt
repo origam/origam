@@ -1,0 +1,3 @@
+﻿CREATE TABLE [PrimaryKeyIsInt] (
+	[Id] Int NOT NULL PRIMARY KEY NONCLUSTERED,
+	[Name] NVarChar(100) NULL);
