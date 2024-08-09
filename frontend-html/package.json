@@ -73,7 +73,7 @@
     "string-strip-html": "^13.4.8",
     "typescript": "^5.5.4",
     "uuid": "^10.0.0",
-    "vite-tsconfig-paths": "^4.3.2",
+    "vite-tsconfig-paths": "^5.0.1",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
     "xstate": "^4.38.3"
