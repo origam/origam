@@ -320,7 +320,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Delete":
-        await this.clearSelection();
+        if (!this.isReadOnly) {
+          await this.clearSelection();
+        }
         break;
       case "ArrowUp":
         if (this.isDropped) {
@@ -356,6 +358,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         }
         break;
       case "Backspace":
+        if (this.isReadOnly) {
+          return;
+        }
         if (document.getSelection()?.toString() === event.target.value ||
           this.userEnteredValue?.length === 1)
         {
