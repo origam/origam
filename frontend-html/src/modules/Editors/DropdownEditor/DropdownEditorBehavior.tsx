@@ -425,7 +425,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   @action.bound
   async handleTableCellClicked(event: any, visibleRowIndex: any) {
     this.handlingNewValue = true;
-    try{
+    try {
       const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
       await this.data.chooseNewValue(id);
       this.userEnteredValue = undefined;
