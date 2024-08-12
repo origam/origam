@@ -125,6 +125,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
+  handlingNewValue = false;
 
   @observable cursorRowId = "";
 
@@ -251,10 +252,12 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   async handleInputBlur(event: any) {
-    if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
-      await this.data.chooseNewValue(this.cursorRowId);
-    } else if (this.userEnteredValue === "") {
-      await this.data.chooseNewValue(null);
+    if (!this.handlingNewValue) {
+      if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
+        await this.data.chooseNewValue(this.cursorRowId);
+      } else if (this.userEnteredValue === "") {
+        await this.data.chooseNewValue(null);
+      }
     }
     this.dropUp();
   }
@@ -298,6 +301,9 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
         break;
       case "Tab":
         if (this.isDropped) {
+          if (this.handlingNewValue) {
+            return;
+          }
           if (this.cursorRowId) {
             // chooseNewValue is not awaited here because we need the dropdown to close immediately and not wait for it.
             // Focus may end up in an unexpected place if Tab is pressed again while the dropdown is still open!
@@ -418,11 +424,17 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
 
   @action.bound
   async handleTableCellClicked(event: any, visibleRowIndex: any) {
-    const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
-    await this.data.chooseNewValue(id);
-    this.userEnteredValue = "";
-    this.dataTable.setFilterPhrase("");
-    this.dropUp();
+    this.handlingNewValue = true;
+    try {
+      const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
+      await this.data.chooseNewValue(id);
+      this.userEnteredValue = undefined;
+      this.dataTable.setFilterPhrase("");
+      this.dropUp();
+    }
+    finally {
+       this.handlingNewValue = false;
+    }
   }
 
   @action.bound
