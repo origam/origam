@@ -34,17 +34,22 @@ export class ConfigurationManager implements IConfigurationManager {
   @observable.shallow
   defaultTableConfiguration: TableConfiguration;
 
+  @observable
+  alwaysShowFilters;
+
   customConfigurationsMap: Map<string, string>;
 
   constructor(
     customTableConfigurations: TableConfiguration[],
     defaultTableConfiguration: TableConfiguration,
     customConfigurations: ICustomConfiguration[],
+    alwaysShowFilters: boolean,
     private layout: Layout // for debugging
   ) {
     this.defaultTableConfiguration = defaultTableConfiguration;
     this.customTableConfigurations = customTableConfigurations;
     this.customConfigurationsMap = new Map(customConfigurations.map(i => [i.name, i.value]));
+    this.alwaysShowFilters = alwaysShowFilters;
   }
 
   get allTableConfigurations() {

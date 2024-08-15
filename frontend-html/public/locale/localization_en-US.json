@@ -65,6 +65,7 @@
   "filter_menu_delete": "Delete",
   "filter_menu_cancel": "Cancel Filter",
   "filter_menu_filter_off": "Cancel and Hide Filter",
+  "filter_always_menu": "Always Show Filter",
   "filter_operator_begins_with": "begins with",
   "filter_operator_contains": "contains",
   "filter_operator_ends_with": "ends with",

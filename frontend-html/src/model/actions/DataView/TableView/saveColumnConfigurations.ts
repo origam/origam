@@ -46,6 +46,7 @@ export function saveColumnConfigurations(ctx: any) {
       sessionFormIdentifier: getSessionId(ctx),
       instanceId: dataView.modelInstanceId,
       tableConfigurations: configurationManager.allTableConfigurations,
+      alwaysShowFilters: configurationManager.alwaysShowFilters,
       defaultView: getActivePanelView(ctx),
     });
   };

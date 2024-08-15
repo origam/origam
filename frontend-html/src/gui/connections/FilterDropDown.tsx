@@ -31,14 +31,23 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getFilterGroupManager } from "model/selectors/DataView/getFilterGroupManager";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { FilterSwitch } from "gui/connections/FilterSwitch";
+import {
+  IConfigurationManager
+} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {
+  getConfigurationManager
+} from "model/selectors/TablePanelView/getConfigurationManager";
 
 @observer
 export class FilterDropDown extends React.Component<{ ctx: any }> {
   filterManager: FilterGroupManager;
+  configurationManager: IConfigurationManager;
 
   constructor(props: any) {
     super(props);
     this.filterManager = getFilterGroupManager(props.ctx)
+    this.configurationManager = getConfigurationManager(props.ctx);
   }
 
   onDropItemClick(filterGroup: IFilterGroup) {
@@ -80,6 +89,9 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
         )}
         content={({setDropped}) => (
           <Dropdown>
+            <DropdownItem>
+              <FilterSwitch configurationManager={this.configurationManager}/>
+            </DropdownItem>
             <DropdownItem
               isDisabled={this.filterManager.filtersHidden}
               onClick={(event: any) => {
@@ -119,7 +131,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
                 });
               }}
             >
-              {T("Remember The Current Filter", "filter_menu_set_default_filter")}
+              {T("Set the Current Filter as Default", "filter_menu_set_default_filter")}
             </DropdownItem>
             <DropdownItem
               isDisabled={!this.filterManager.defaultFilter || this.filterManager.filtersHidden}

@@ -165,6 +165,7 @@ class PluginDataView implements IPluginDataView {
       instanceId: this.dataView.modelInstanceId,
       tableConfigurations: configurationManager.allTableConfigurations,
       customConfigurations: customConfigurations,
+      alwaysShowFilters: configurationManager.alwaysShowFilters,
       defaultView: getActivePanelView(this.dataView),
     });
   }

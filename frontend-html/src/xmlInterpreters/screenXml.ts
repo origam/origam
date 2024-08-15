@@ -536,6 +536,7 @@ export function*interpretScreenXml(
         dataViewInstance.tablePanelView.tableProperties,
         isLazyLoading
       );
+      filterConfiguration.isFilterControlsDisplayed = configurationManager.alwaysShowFilters;
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties

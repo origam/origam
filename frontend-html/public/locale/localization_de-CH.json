@@ -65,6 +65,7 @@
   "filter_menu_delete": "Filtervorlage löschen",
   "filter_menu_cancel": "Filter ausschalten",
   "filter_menu_filter_off": "Filter löschen und ausblenden",
+  "filter_always_menu": "Filter immer anzeigen",
   "filter_operator_begins_with": "beginnt mit",
   "filter_operator_contains": "beinhaltet",
   "filter_operator_ends_with": "endet mit",

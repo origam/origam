@@ -591,6 +591,7 @@ export class OrigamAPI implements IApi {
     instanceId: string;
     tableConfigurations: ITableConfiguration[];
     customConfigurations?: {[nodeName: string] : string};
+    alwaysShowFilters: boolean;
     defaultView: string;
   }): Promise<any> {
     let customConfigurationXml = "";
@@ -631,6 +632,7 @@ export class OrigamAPI implements IApi {
       SessionFormIdentifier: data.sessionFormIdentifier,
       ObjectInstanceId: data.instanceId,
       SectionNameAndData: {
+        alwaysShowFilters: data.alwaysShowFilters,
         tableConfigurations: tableConfigurationsXml.join("\n"),
         customConfigurations: customConfigurationXml,
         defaultView: `<view id="${data.defaultView}" />`,
