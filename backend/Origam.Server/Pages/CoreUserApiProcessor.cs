@@ -21,13 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Microsoft.AspNetCore.Hosting;
 using Origam.Server;
 using Origam.Server.Pages;
 
 namespace Origam.Server.Pages;
 public class CoreUserApiProcessor: UserApiProcessor
 {
-    public CoreUserApiProcessor(IHttpTools httpTools) : base(httpTools)
+    public CoreUserApiProcessor(IHttpTools httpTools, IHostingEnvironment environment) 
+        : base(httpTools, environment)
     {
     }
     protected override void Handle404(IHttpContextWrapper context)

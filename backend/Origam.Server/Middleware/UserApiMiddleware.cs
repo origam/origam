@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Origam.Server.Pages;
@@ -37,10 +38,10 @@ public class UserApiMiddleware
     {
         this.requestLocalizationOptions = requestLocalizationOptions.Value;
     }
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, IHostingEnvironment environment)
     {
         await SetThreadCultureFromCookie(context);
-        var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
+        var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools(), environment);
         var contextWrapper = new StandardHttpContextWrapper(context);
         userApiProcessor.Process(contextWrapper);
         await Task.CompletedTask;
