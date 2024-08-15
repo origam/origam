@@ -33,6 +33,7 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 export class FilterGroupManager {
   ctx: any;
   filterGroups: IFilterGroup[] = [];
+  @observable
   private _defaultFilter: IFilterGroup | undefined;
   @observable
   selectedFilterGroup: IFilterGroup | undefined;
@@ -197,6 +198,7 @@ export class FilterGroupManager {
       Filter: this.getFilterGroupServerVersion("DEFAULT", false),
       IsDefault: true
     });
+    this._defaultFilter = this.selectedFilterGroup;
   }
 
   parent?: any;
