@@ -25,11 +25,15 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import {
+  getFilterGroupManager
+} from "model/selectors/DataView/getFilterGroupManager";
 
 export function saveColumnConfigurations(ctx: any) {
   return function*saveColumnConfigurations() {
     const dataView = getDataView(ctx);
     const configurationManager = getConfigurationManager(ctx);
+    const filterGroupManager = getFilterGroupManager(ctx);
     const tablePanelView = getTablePanelView(ctx);
 
     if (configurationManager.allTableConfigurations.length === 0) {
@@ -46,7 +50,7 @@ export function saveColumnConfigurations(ctx: any) {
       sessionFormIdentifier: getSessionId(ctx),
       instanceId: dataView.modelInstanceId,
       tableConfigurations: configurationManager.allTableConfigurations,
-      alwaysShowFilters: configurationManager.alwaysShowFilters,
+      alwaysShowFilters: filterGroupManager.alwaysShowFilters,
       defaultView: getActivePanelView(ctx),
     });
   };

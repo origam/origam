@@ -423,8 +423,9 @@ export function*interpretScreenXml(
       const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
 
-      const filterConfiguration = new FilterConfiguration(implicitFilters);
-      const filterGroupManager = new FilterGroupManager(filterConfiguration);
+      const alwaysShowFilters = getAlwaysShowFilters(configuration);
+      const filterConfiguration = new FilterConfiguration(implicitFilters, alwaysShowFilters);
+      const filterGroupManager = new FilterGroupManager(filterConfiguration, alwaysShowFilters);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
         .forEach((conf: any) => addFilterGroups(
@@ -531,12 +532,13 @@ export function*interpretScreenXml(
           }
         });
       }
+      filterConfiguration.isFilterControlsDisplayed = alwaysShowFilters;
+      filterGroupManager.alwaysShowFilters = alwaysShowFilters;
       const configurationManager = createConfigurationManager(
         gridConfigurationNodes,
         dataViewInstance.tablePanelView.tableProperties,
         isLazyLoading
       );
-      filterConfiguration.isFilterControlsDisplayed = configurationManager.alwaysShowFilters;
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties
@@ -701,6 +703,14 @@ export function*interpretScreenXml(
   $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
 
   return {formScreen: scr, foundLookupIds};
+}
+
+function getAlwaysShowFilters(configuration: any){
+  const gridConfigurationNodes = configuration.filter(
+  (node: any) => node?.parent?.attributes?.Type === "Grid");
+  return findStopping(
+    gridConfigurationNodes[0], (n) => n.name === "alwaysShowFilters")
+    ?.[0]?.elements[0]?.text === 'true';
 }
 
 function getImplicitFilters(dataViewXml: any) {

@@ -39,7 +39,6 @@ export interface IConfigurationManager {
   customTableConfigurations: ITableConfiguration[];
   defaultTableConfiguration: ITableConfiguration;
   allTableConfigurations: ITableConfiguration[];
-  alwaysShowFilters: boolean;
   parent: any;
 }
 

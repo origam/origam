@@ -36,17 +36,21 @@ import {
 } from "model/selectors/DataView/getFilterConfiguration";
 
 
+export interface IFilterSwitchContainer {
+  alwaysShowFilters: boolean;
+}
+
 export const FilterSwitch = observer((props: {
-  configurationManager: IConfigurationManager
+  container: IFilterSwitchContainer
 }) => {
   function onClick() {
     runGeneratorInFlowWithHandler({
-      ctx: props.configurationManager,
+      ctx: props.container,
       generator: function* () {
-        const ctx = props.configurationManager;
+        const ctx = props.container;
         const filterConfiguration = getFilterConfiguration(ctx);
-        props.configurationManager.alwaysShowFilters = !props.configurationManager.alwaysShowFilters ;
-        filterConfiguration.isFilterControlsDisplayed = props.configurationManager.alwaysShowFilters ;
+        props.container.alwaysShowFilters = !props.container.alwaysShowFilters ;
+        filterConfiguration.isFilterControlsDisplayed = props.container.alwaysShowFilters ;
         yield*saveColumnConfigurations(ctx)();
       }()
     });
@@ -56,7 +60,7 @@ export const FilterSwitch = observer((props: {
     <div className={S.root} onClick={onClick}>
       {T("Always Show Filter", "filter_always_menu")}
       <Checkbox
-        checked={props.configurationManager.alwaysShowFilters}
+        checked={props.container.alwaysShowFilters}
         id={"filter_always_menu"}/>
     </div>
   );

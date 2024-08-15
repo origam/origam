@@ -29,14 +29,17 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSessionId } from "model/selectors/getSessionId";
 import { cloneFilterGroup } from "xmlInterpreters/filterXml";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { IFilterSwitchContainer } from "gui/connections/FilterSwitch";
 
-export class FilterGroupManager {
+export class FilterGroupManager implements IFilterSwitchContainer{
   ctx: any;
   filterGroups: IFilterGroup[] = [];
   @observable
   private _defaultFilter: IFilterGroup | undefined;
   @observable
   selectedFilterGroup: IFilterGroup | undefined;
+  @observable
+  alwaysShowFilters;
 
   get isSelectedFilterGroupDefault() {
     if (!this.selectedFilterGroup) {
@@ -45,13 +48,14 @@ export class FilterGroupManager {
     return this.defaultFilter?.id === this.selectedFilterGroup?.id;
   }
 
-  constructor(private filterConfiguration: IFilterConfiguration) {
+  constructor(private filterConfiguration: IFilterConfiguration, alwaysShowFilters: boolean) {
     this.ctx = filterConfiguration;
     filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
       if (!filteringOn) {
         this.selectedFilterGroup = undefined;
       }
     });
+    this.alwaysShowFilters = alwaysShowFilters;
   }
 
   get filtersHidden() {

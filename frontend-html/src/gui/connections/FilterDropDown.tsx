@@ -90,7 +90,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
         content={({setDropped}) => (
           <Dropdown>
             <DropdownItem>
-              <FilterSwitch configurationManager={this.configurationManager}/>
+              <FilterSwitch container={this.filterManager}/>
             </DropdownItem>
             <DropdownItem
               isDisabled={this.filterManager.filtersHidden}

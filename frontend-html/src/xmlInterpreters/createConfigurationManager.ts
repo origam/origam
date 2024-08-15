@@ -67,7 +67,7 @@ export function createConfigurationManagerForLayout(configurationNodes: any, pro
   const defaultConfiguration = TableConfiguration.createDefault(properties, layout);
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
-      [], defaultConfiguration, [],false,  layout);
+      [], defaultConfiguration, [],  layout);
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
@@ -76,10 +76,9 @@ export function createConfigurationManagerForLayout(configurationNodes: any, pro
   const customConfigurations = layout === Layout.Desktop
     ? parseCustomConfigurations(configurationNodes[0])
     : [];
-  const alwaysShowFilters = findStopping(configurationNodes[0], (n) => n.name === "alwaysShowFilters")?.[0]?.elements[0]?.text === 'true';
   if (!tableConfigurationNodes) {
     return new ConfigurationManager(
-      [], defaultConfiguration, customConfigurations, alwaysShowFilters, layout);
+      [], defaultConfiguration, customConfigurations, layout);
   }
   const tableConfigurations: TableConfiguration[] = tableConfigurationNodes
     .map((tableConfigNode: any) => {
@@ -110,7 +109,6 @@ export function createConfigurationManagerForLayout(configurationNodes: any, pro
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
     defaultTableConfiguration,
     customConfigurations,
-    alwaysShowFilters,
     layout
   );
 }

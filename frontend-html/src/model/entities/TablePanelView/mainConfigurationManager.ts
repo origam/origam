@@ -51,14 +51,6 @@ export class MainConfigurationManager implements IConfigurationManager {
     mobileConfigurationManager.parent = this;
   }
 
-  get alwaysShowFilters() {
-    return this.activeManager.alwaysShowFilters;
-  }
-
-  set alwaysShowFilters(value: boolean) {
-    this.activeManager.alwaysShowFilters = value;
-  }
-
   get activeManager() {
     return isMobileLayoutActive(this)
       ? this.mobileConfigurationManager
