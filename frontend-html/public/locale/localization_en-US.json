@@ -59,7 +59,7 @@
   "type_search_here": "Search for anything here",
   "infopanel_title": "Info",
   "error_window_title": "Error",
-  "filter_menu_set_default_filter": "Remember The Current Filter",
+  "filter_menu_set_default_filter": "Set the Current Filter as Default",
   "filter_menu_cancel_default_filter": "Cancel Default Filter",
   "filter_menu_save_filter": "Save Current Filter",
   "filter_menu_delete": "Delete",
