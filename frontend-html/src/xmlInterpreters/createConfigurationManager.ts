@@ -67,7 +67,7 @@ export function createConfigurationManagerForLayout(configurationNodes: any, pro
   const defaultConfiguration = TableConfiguration.createDefault(properties, layout);
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
-      [], defaultConfiguration, [],  layout);
+      [], defaultConfiguration, [], layout);
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
