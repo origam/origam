@@ -37,6 +37,9 @@ import { IPluginProperty } from "plugins/interfaces/IPluginProperty";
 import { IPluginTableRow } from "plugins/interfaces/IPluginTableRow";
 import { IPluginDataView } from "plugins/interfaces/IPluginDataView";
 import { IGuiHelper } from "plugins/interfaces/IGuiHelper";
+import {
+  getFilterGroupManager
+} from "model/selectors/DataView/getFilterGroupManager";
 
 
 export function createSectionPluginData(dataView: IDataView): ISectionPluginData | undefined {
@@ -156,6 +159,7 @@ class PluginDataView implements IPluginDataView {
 
   async saveConfiguration(pluginName: string, configuration: string): Promise<void> {
     const configurationManager = getConfigurationManager(this.dataView);
+    const filterGroupManager = getFilterGroupManager(this.dataView);
     configurationManager.setCustomConfiguration(pluginName, configuration);
     const customConfigurations: {[key:string]: string} = {};
     customConfigurations[pluginName] = configuration;
@@ -165,6 +169,7 @@ class PluginDataView implements IPluginDataView {
       instanceId: this.dataView.modelInstanceId,
       tableConfigurations: configurationManager.allTableConfigurations,
       customConfigurations: customConfigurations,
+      alwaysShowFilters: filterGroupManager.alwaysShowFilters,
       defaultView: getActivePanelView(this.dataView),
     });
   }

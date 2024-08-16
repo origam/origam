@@ -344,6 +344,7 @@ export interface IApi {
     instanceId: string;
     tableConfigurations: ITableConfiguration[];
     customConfigurations?: {[nodeName: string] : string};
+    alwaysShowFilters: boolean
     defaultView: string;
   }): Promise<any>;
 

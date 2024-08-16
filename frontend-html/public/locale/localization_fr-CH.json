@@ -64,6 +64,7 @@
   "filter_operator_not_between": "ne pas entre",
   "filter_operator_is_null": "est vide",
   "filter_operator_not_is_null": "n'est pas vide",
+  "filter_always_menu": "Afficher toujours le filtre",
   "column_config_title": "colonne",
   "column_config_visible": "visible",
   "column_config_name": "nom",

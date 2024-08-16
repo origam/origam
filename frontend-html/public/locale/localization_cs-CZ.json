@@ -65,6 +65,7 @@
   "filter_menu_delete": "Smazat uložený filtr",
   "filter_menu_cancel": "Zrušit filtr",
   "filter_menu_filter_off": "Zrušit a schovat filtr",
+  "filter_always_menu": "Vždy zobrazit filtr",
   "filter_operator_begins_with": "začíná na",
   "filter_operator_contains": "obsahuje",
   "filter_operator_ends_with": "končí na",
