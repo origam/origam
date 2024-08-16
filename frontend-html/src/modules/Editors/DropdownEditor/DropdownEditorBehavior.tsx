@@ -302,7 +302,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
       case "Tab":
         if (this.isDropped) {
           if (this.handlingNewValue) {
-            return;
+            break;
           }
           if (this.cursorRowId) {
             // chooseNewValue is not awaited here because we need the dropdown to close immediately and not wait for it.
