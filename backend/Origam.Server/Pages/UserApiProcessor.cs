@@ -206,7 +206,7 @@ public class UserApiProcessor
                 return dataList[0].HttpStatusCode;
             }
         }
-        return 400;
+        return 500;
     }
     protected virtual void Handle404(IHttpContextWrapper context)
     { 
