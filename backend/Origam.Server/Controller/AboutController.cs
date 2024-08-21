@@ -24,6 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Server.Model.About;
@@ -35,7 +36,8 @@ namespace Origam.Server.Controller;
 public class AboutController : AbstractController
 {
     public AboutController(ILogger<AbstractController> log,
-        SessionObjects sessionObjects) : base(log, sessionObjects)
+        SessionObjects sessionObjects, IHostingEnvironment environment)
+        : base(log, sessionObjects, environment)
     {
     }
     [HttpGet]

@@ -26,6 +26,7 @@ using System.Data;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
@@ -52,6 +53,7 @@ namespace Origam.Server.Controller;
 public abstract class AbstractController: ControllerBase
 {
     protected readonly SessionObjects sessionObjects;
+    private readonly IHostingEnvironment environment;
     protected readonly IDataService dataService;
     protected readonly string workQueueEntity = "WorkQueueEntry";
     protected class EntityData
@@ -61,10 +63,12 @@ public abstract class AbstractController: ControllerBase
     }
     // ReSharper disable once InconsistentNaming
     protected readonly ILogger<AbstractController> log;
-    protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects)
+    protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects,
+        IHostingEnvironment environment)
     {
         this.log = log;
         this.sessionObjects = sessionObjects;
+        this.environment = environment;
         dataService = DataServiceFactory.GetDataService();
     }
     protected static MenuLookupIndex MenuLookupIndex {
@@ -83,39 +87,54 @@ public abstract class AbstractController: ControllerBase
     }
     protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
     {
+        object GetReturnObject(Exception ex, string defaultMessage=null)
+        {
+            return environment.IsDevelopment() 
+                ? ex 
+                : new
+                {
+                    message = defaultMessage ?? "An error has occured. There may be some details in the log file."
+                };
+        }
+
         try
         {
             return func();
         }
         catch (SessionExpiredException ex)
         {
-            return NotFound(ex);
+            return NotFound(GetReturnObject(ex, ex.Message));
         }
         catch (RowNotFoundException ex)
         {
-            return NotFound(ex);
+            object returnObject = new
+            {
+                message = "row not found",
+                exception = environment.IsDevelopment() ? ex : null
+            };
+            return  NotFound(returnObject);
         }
         catch (DBConcurrencyException ex)
         {
             log.LogError(ex, ex.Message);
-            return StatusCode(409, ex);
+            return StatusCode(409, GetReturnObject(ex));
         }
         catch (ServerObjectDisposedException ex)
         {
-            return StatusCode(474, ex); // Suggests to the client that this error could be ignored
+            return StatusCode(474, GetReturnObject(ex)); // Suggests to the client that this error could be ignored
         }
         catch (UIException ex)
         {
-            return StatusCode(422, ex);
+            return StatusCode(422, GetReturnObject(ex));
         }
         catch (Exception ex)
         {
             if (ex is IUserException)
             {
-                return StatusCode(420, ex);
+                return StatusCode(420, GetReturnObject(ex));
             }
             log.LogOrigamError(ex, ex.Message);
-            return StatusCode(500, ex);
+            return StatusCode(500, GetReturnObject(ex));
         }
     }
     protected Result<AbstractMenuItem, IActionResult> Authorize(

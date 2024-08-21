@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml;
+using Microsoft.AspNetCore.Hosting;
 using Origam.Server.Model.DeepLink;
 
 namespace Origam.Server.Controller;
@@ -43,7 +44,8 @@ public class DeepLinkController : AbstractController
     public DeepLinkController(
         SessionObjects sessionObjects,
         IStringLocalizer<SharedResources> localizer,
-        ILogger<AbstractController> log) : base(log, sessionObjects)
+        ILogger<AbstractController> log, IHostingEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
         this.logger = log;
     }

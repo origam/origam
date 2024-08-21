@@ -42,6 +42,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Origam.Extensions;
@@ -74,8 +75,9 @@ public class UIServiceController : AbstractController
         IOptions<CustomAssetsConfig> customAssetsOptions,
         IOptions<ClientFilteringConfig> filteringConfig,
         IOptions<HtmlClientConfig> htmlClientConfigOptions,
-        IOptions<ChatConfig> chatConfigOptions)
-        : base(log, sessionObjects)
+        IOptions<ChatConfig> chatConfigOptions,
+        IHostingEnvironment environment)
+        : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
         this.clientFilteringConfig = filteringConfig.Value;

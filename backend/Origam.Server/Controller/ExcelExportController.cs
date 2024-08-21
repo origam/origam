@@ -25,6 +25,7 @@ using System.Linq;
 using CSharpFunctionalExtensions;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -46,8 +47,9 @@ public class ExcelExportController: AbstractController
     public ExcelExportController(
         ILogger<ExcelExportController> log,
         SessionObjects sessionObjects,
-        IStringLocalizer<SharedResources> localizer
-        ) : base(log, sessionObjects)
+        IStringLocalizer<SharedResources> localizer,
+        IHostingEnvironment environment
+        ) : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
     }
