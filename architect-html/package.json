@@ -17,6 +17,8 @@
     "monaco-editor": "^0.50.0",
     "monaco-vim": "^0.4.1",
     "react": "^18.3.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",

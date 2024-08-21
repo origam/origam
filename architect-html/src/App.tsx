@@ -10,6 +10,9 @@ import { TopLayout } from "src/components/topLayout/TopLayout.tsx";
 import { TabView, TabViewId } from "src/components/tabView/TabView.tsx";
 import { SaveButton } from "src/components/saveButton/SaveButton.tsx";
 import { XsltEditor } from "src/components/editors/xsltEditor/XsltEditor.tsx";
+import {
+  ScreenSectionEditor
+} from "src/components/screenSectionEditor2/ScreenSectionEditor.tsx";
 
 const App: React.FC = () => {
   const [editor, setEditor] = useState<ReactNode | undefined>()
@@ -31,29 +34,30 @@ const App: React.FC = () => {
 
   return (
     <ArchitectApiProvider api={architectApi}>
-      <TopLayout
-        topToolBar={<SaveButton/>}
-        editorArea={editor}
-        sideBar={
-          <TabView items={[
-            {
-              id: TabViewId.Packages,
-              label: "Packages",
-              node: <Packages onPackageLoaded={onPackageLoaded}/>
-            },
-            {
-              id: TabViewId.Model,
-              label: "Model",
-              node: <LazyLoadedTree
-                topNodes={topNodes}
-                openEditor={(node) => {
-                  setEditor(getEditor(node));
-                }}
-              />
-            }
-          ]}/>
-        }
-      />
+      <ScreenSectionEditor/>
+      {/*<TopLayout*/}
+      {/*  topToolBar={<SaveButton/>}*/}
+      {/*  editorArea={editor}*/}
+      {/*  sideBar={*/}
+      {/*    <TabView items={[*/}
+      {/*      {*/}
+      {/*        id: TabViewId.Packages,*/}
+      {/*        label: "Packages",*/}
+      {/*        node: <Packages onPackageLoaded={onPackageLoaded}/>*/}
+      {/*      },*/}
+      {/*      {*/}
+      {/*        id: TabViewId.Model,*/}
+      {/*        label: "Model",*/}
+      {/*        node: <LazyLoadedTree*/}
+      {/*          topNodes={topNodes}*/}
+      {/*          openEditor={(node) => {*/}
+      {/*            setEditor(getEditor(node));*/}
+      {/*          }}*/}
+      {/*        />*/}
+      {/*      }*/}
+      {/*    ]}/>*/}
+      {/*  }*/}
+      {/*/>*/}
     </ArchitectApiProvider>
   );
 };
