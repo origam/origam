@@ -275,7 +275,7 @@ namespace Origam.Workflow.WorkQueue
 
         public IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
         {
-            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueMessageId);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClassByMessageId(workQueueMessageId);
             DataSet ds = FetchSingleQueueEntry(wqc, workQueueMessageId, transactionId);
             return DataDocumentFactory.New(ds);
         }
