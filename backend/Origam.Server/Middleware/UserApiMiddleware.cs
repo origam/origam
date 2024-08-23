@@ -38,7 +38,7 @@ public class UserApiMiddleware
     {
         this.requestLocalizationOptions = requestLocalizationOptions.Value;
     }
-    public async Task Invoke(HttpContext context, IHostingEnvironment environment)
+    public async Task Invoke(HttpContext context, IWebHostEnvironment environment)
     {
         await SetThreadCultureFromCookie(context);
         var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools(), environment);

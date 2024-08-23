@@ -28,6 +28,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
@@ -53,7 +54,7 @@ namespace Origam.Server.Controller;
 public abstract class AbstractController: ControllerBase
 {
     protected readonly SessionObjects sessionObjects;
-    private readonly IHostingEnvironment environment;
+    private readonly IWebHostEnvironment environment;
     protected readonly IDataService dataService;
     protected readonly string workQueueEntity = "WorkQueueEntry";
     protected class EntityData
@@ -64,7 +65,7 @@ public abstract class AbstractController: ControllerBase
     // ReSharper disable once InconsistentNaming
     protected readonly ILogger<AbstractController> log;
     protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects,
-        IHostingEnvironment environment)
+        IWebHostEnvironment environment)
     {
         this.log = log;
         this.sessionObjects = sessionObjects;

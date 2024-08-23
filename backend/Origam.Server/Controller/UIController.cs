@@ -37,7 +37,7 @@ public class UIController: AbstractController
 {
     private readonly IPersistenceService persistenceService;
     public UIController(ILogger<UIController> log, SessionObjects sessionObjects,
-        IHostingEnvironment environment) 
+        IWebHostEnvironment environment) 
         : base(log, sessionObjects, environment)
     {
         persistenceService = ServiceManager.Services.GetService<IPersistenceService>();

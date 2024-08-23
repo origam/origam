@@ -50,7 +50,7 @@ public class BlobController : AbstractController
     public BlobController(
         SessionObjects sessionObjects, 
         IStringLocalizer<SharedResources> localizer,
-        ILogger<BlobController> log, IHostingEnvironment environment) 
+        ILogger<BlobController> log, IWebHostEnvironment environment) 
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;

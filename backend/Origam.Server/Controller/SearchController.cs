@@ -33,7 +33,7 @@ public class SearchController: AbstractController
 {
     private readonly SearchHandler searchHandler;
     public SearchController(ILogger<AbstractController> log, SessionObjects sessionObjects,
-        SearchHandler searchHandler, IHostingEnvironment environment)
+        SearchHandler searchHandler, IWebHostEnvironment environment)
         : base(log, sessionObjects, environment)
     {
         this.searchHandler = searchHandler;

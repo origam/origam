@@ -76,7 +76,7 @@ public class UIServiceController : AbstractController
         IOptions<ClientFilteringConfig> filteringConfig,
         IOptions<HtmlClientConfig> htmlClientConfigOptions,
         IOptions<ChatConfig> chatConfigOptions,
-        IHostingEnvironment environment)
+        IWebHostEnvironment environment)
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;

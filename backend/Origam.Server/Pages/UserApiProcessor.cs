@@ -44,12 +44,13 @@ using Origam.Service.Core;
 using ImageMagick;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Origam.Server.Pages;
 public class UserApiProcessor
 {
     private readonly IHttpTools httpTools;
-    private readonly IHostingEnvironment environment;
+    private readonly IWebHostEnvironment environment;
 
     private static readonly log4net.ILog log 
         = log4net.LogManager.GetLogger(
@@ -59,7 +60,7 @@ public class UserApiProcessor
              (ServiceManager.Services.GetService<SchemaService>())
                 .GetProvider<PagesSchemaItemProvider>()
             ));
-    public UserApiProcessor(IHttpTools httpTools, IHostingEnvironment environment)
+    public UserApiProcessor(IHttpTools httpTools, IWebHostEnvironment environment)
     {
         this.httpTools = httpTools;
         this.environment = environment;

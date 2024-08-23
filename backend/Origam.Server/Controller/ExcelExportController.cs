@@ -48,7 +48,7 @@ public class ExcelExportController: AbstractController
         ILogger<ExcelExportController> log,
         SessionObjects sessionObjects,
         IStringLocalizer<SharedResources> localizer,
-        IHostingEnvironment environment
+        IWebHostEnvironment environment
         ) : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;

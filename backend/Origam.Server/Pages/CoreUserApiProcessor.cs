@@ -28,7 +28,7 @@ using Origam.Server.Pages;
 namespace Origam.Server.Pages;
 public class CoreUserApiProcessor: UserApiProcessor
 {
-    public CoreUserApiProcessor(IHttpTools httpTools, IHostingEnvironment environment) 
+    public CoreUserApiProcessor(IHttpTools httpTools, IWebHostEnvironment environment) 
         : base(httpTools, environment)
     {
     }

@@ -50,7 +50,7 @@ public class ReportController : AbstractController
     public ReportController(
         SessionObjects sessionObjects, 
         IStringLocalizer<SharedResources> localizer,
-        ILogger<AbstractController> log, IHostingEnvironment environment) 
+        ILogger<AbstractController> log, IWebHostEnvironment environment) 
         : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;

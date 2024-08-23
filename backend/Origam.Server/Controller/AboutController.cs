@@ -36,7 +36,7 @@ namespace Origam.Server.Controller;
 public class AboutController : AbstractController
 {
     public AboutController(ILogger<AbstractController> log,
-        SessionObjects sessionObjects, IHostingEnvironment environment)
+        SessionObjects sessionObjects, IWebHostEnvironment environment)
         : base(log, sessionObjects, environment)
     {
     }
