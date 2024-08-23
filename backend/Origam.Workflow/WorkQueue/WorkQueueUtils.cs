@@ -83,12 +83,23 @@ public class WorkQueueUtils
         return (string)lookupService.GetDisplayText(
             new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
     }
+
+    public string WorkQueueClassNameByMessageId(Guid queueMessageId)
+    {
+        return (string)lookupService.GetDisplayText(
+            new Guid("0ec49729-0981-49d7-a8e6-2160d949234e"), queueMessageId, false, false, null);
+    }
     
     public WorkQueueClass WorkQueueClass(Guid queueId)
     {
         return WorkQueueClass(WorkQueueClassName(queueId));
     }
-    
+
+    public WorkQueueClass WorkQueueClassByMessageId(Guid queueMessageId)
+    {
+        return WorkQueueClass(WorkQueueClassNameByMessageId(queueMessageId));
+    }
+
     public DataSet LoadWorkQueueData(string workQueueClass, object queueId,
         int pageSize, int pageNumber, string transactionId)
     {
