@@ -577,7 +577,16 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
         {
             DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
             queueEntryDS.Tables[0].Rows[0].Delete();
-            dataService.StoreData(wqc.WorkQueueStructure.Id, queueEntryDS, false, transactionId);
+            try
+            {
+                dataService.StoreData(wqc.WorkQueueStructure.Id, queueEntryDS, false, transactionId);
+            }
+            catch (DBConcurrencyException)
+            {
+                dataService.StoreData(
+                    new Guid("7ca0c208-9ac8-4c55-bd0e-32575b613654"),
+                    queueEntryDS, false, transactionId);
+            }
             if (log.IsDebugEnabled)
             {
                 log.Debug(string.Format("Removed Work Queue Entry `{0}'  from Queue: {1}",
