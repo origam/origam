@@ -259,9 +259,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {
-    if (this.props.isVisible !== prevProps.isVisible) {
-      this.remeasureCellArea();
-    }
+    this.remeasureCellArea();
   }
 
   componentWillUnmount() {
