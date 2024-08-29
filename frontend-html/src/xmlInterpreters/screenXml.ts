@@ -708,6 +708,9 @@ export function*interpretScreenXml(
 function getAlwaysShowFilters(configuration: any){
   const gridConfigurationNodes = configuration.filter(
   (node: any) => node?.parent?.attributes?.Type === "Grid");
+  if (gridConfigurationNodes.length === 0) {
+    return false;
+  }
   return findStopping(
     gridConfigurationNodes[0], (n) => n.name === "alwaysShowFilters")
     ?.[0]?.elements[0]?.text === 'true';
