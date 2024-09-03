@@ -67,7 +67,7 @@ jobs:
         global-json-file: global.json
         
     - name: Download testing artefact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4.1.7
       with:
         name: test-dlls
         path: backend
