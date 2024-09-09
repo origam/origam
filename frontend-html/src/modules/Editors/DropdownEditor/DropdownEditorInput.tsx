@@ -64,15 +64,24 @@ export function DropdownEditorInput(props: {
     }
   }
 
-  document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey || event.metaKey)
-      setCtrlOrCmdKeyPressed(true);
-  });
-  
-  document.addEventListener('keyup', function(event) {
-    if (!event.ctrlKey && !event.metaKey)
-      setCtrlOrCmdKeyPressed(false);
-  });
+  useEffect(() => {
+    const keyDownListener = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey)
+        setCtrlOrCmdKeyPressed(true);
+    }
+    const keyUpListener = (event: KeyboardEvent) => {
+      if (!event.ctrlKey && !event.metaKey)
+        setCtrlOrCmdKeyPressed(false);
+    }
+
+    document.addEventListener('keydown', keyDownListener);
+    document.addEventListener('keyup', keyUpListener);
+    return () => {
+      document.removeEventListener('keydown', keyDownListener);
+      document.removeEventListener('keyup', keyUpListener);
+    }
+  }, [])
+
 
   const getTitle = () => {
     if (!setup.isLink || data.value == null)
