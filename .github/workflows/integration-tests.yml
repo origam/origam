@@ -46,7 +46,7 @@ jobs:
         yarn build
 
     - name: Upload frontend artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: htmlfrontendbuild
         path: "frontend-html/dist"   
@@ -80,13 +80,13 @@ jobs:
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
     - name: Upload server artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net8.0/publish"
 
     - name: Upload workflow integration tests artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: workflowbuild
         path: "backend/Origam.WorkflowTests/bin/Release Server/net8.0/publish"
