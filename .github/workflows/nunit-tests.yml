@@ -36,10 +36,13 @@ jobs:
     - name: List test files before copy
       shell: pwsh
       run: |
-        Write-Host "Listing contents of test directories before copy:"
+        Write-Host "Listing contents of TestFiles directories before copy:"
         Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
-          Write-Host "Contents of $($_.FullName):"
-          Get-ChildItem -Path $_.FullName -Recurse | Select-Object FullName
+          Write-Host $_.FullName
+          Get-ChildItem -Path $_.FullName -Recurse | ForEach-Object {
+            $indent = "  " * ($_.FullName.Split("\").Count - $_.FullName.Split("\").Count)
+            Write-Host ("{0}{1}" -f $indent, $_.Name)
+          }
         }
 
     - name: Copy test files
@@ -62,10 +65,13 @@ jobs:
     - name: List test files after copy
       shell: pwsh
       run: |
-        Write-Host "Listing contents of test directories after copy:"
+        Write-Host "Listing contents of TestFiles directories after copy:"
         Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
-          Write-Host "Contents of $($_.FullName):"
-          Get-ChildItem -Path $_.FullName -Recurse | Select-Object FullName
+          Write-Host $_.FullName
+          Get-ChildItem -Path $_.FullName -Recurse | ForEach-Object {
+            $indent = "  " * ($_.FullName.Split("\").Count - $_.FullName.Split("\").Count)
+            Write-Host ("{0}{1}" -f $indent, $_.Name)
+          }
         }
 
     - name: Upload testing artifact
@@ -112,10 +118,13 @@ jobs:
 
     - name: Check directory structure
       run: |
-        echo "Directory structure:"
-        find backend -type d
-        echo "All files:"
-        find backend -type f
+        echo "Directory structure of Release folders:"
+        find backend -type d -name Release | while read dir; do
+          echo "$dir"
+          find "$dir" -maxdepth 1 -type d | sed 's/[^/]*\//  /'
+          echo "  Files:"
+          find "$dir" -maxdepth 1 -type f | sed 's/[^/]*\//    /'
+        done
 
     - name: Run NUnit tests
       run:  |
