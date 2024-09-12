@@ -34,7 +34,7 @@ jobs:
        msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: Upload testing artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: test-dlls
         path: "backend/**Tests/bin/Release" 
