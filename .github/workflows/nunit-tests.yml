@@ -41,12 +41,12 @@ jobs:
         if (Test-Path -Path $directory) {
             # List subdirectories
             Get-ChildItem -Path $directory -Directory | ForEach-Object {
-                Write-Host "  $_.Name"
+                Write-Host "  $_"
             }
             # List files
             Write-Host "  Files:"
             Get-ChildItem -Path $directory -File | ForEach-Object {
-                Write-Host "    $_.Name"
+                Write-Host "    $_"
             }
         } else {
             Write-Host "Directory does not exist."
@@ -77,12 +77,12 @@ jobs:
         if (Test-Path -Path $directory) {
             # List subdirectories
             Get-ChildItem -Path $directory -Directory | ForEach-Object {
-                Write-Host "  $_.Name"
+                Write-Host "  $_"
             }
             # List files
             Write-Host "  Files:"
             Get-ChildItem -Path $directory -File | ForEach-Object {
-                Write-Host "    $_.Name"
+                Write-Host "    $_"
             }
         } else {
             Write-Host "Directory does not exist."
