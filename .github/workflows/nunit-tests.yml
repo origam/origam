@@ -34,9 +34,13 @@ jobs:
        msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: List test files before copy
+      shell: pwsh
       run: |
-        echo "Listing contents of test directories before copy:"
-        find backend -name TestFiles -type d | xargs -I {} sh -c 'echo "Contents of {}:"; ls -R {}'
+        Write-Host "Listing contents of test directories before copy:"
+        Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
+          Write-Host "Contents of $($_.FullName):"
+          Get-ChildItem -Path $_.FullName -Recurse | Select-Object FullName
+        }
 
     - name: Copy test files
       run: |
@@ -56,9 +60,13 @@ jobs:
       shell: pwsh
 
     - name: List test files after copy
+      shell: pwsh
       run: |
-        echo "Listing contents of test directories after copy:"
-        find backend -name TestFiles -type d | xargs -I {} sh -c 'echo "Contents of {}:"; ls -R {}'
+        Write-Host "Listing contents of test directories after copy:"
+        Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
+          Write-Host "Contents of $($_.FullName):"
+          Get-ChildItem -Path $_.FullName -Recurse | Select-Object FullName
+        }
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
