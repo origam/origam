@@ -266,7 +266,7 @@ jobs:
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net6.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net8.0\publish\'
          Contents: |
            **\*.*
            !*.config

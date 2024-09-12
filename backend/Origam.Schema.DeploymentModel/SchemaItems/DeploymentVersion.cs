@@ -127,7 +127,7 @@ public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 				((AbstractUpdateScriptActivity)activity).ActivityOrder)
 			.Cast<AbstractUpdateScriptActivity>();
     [Browsable(false)]
-    public PackageVersion Version { get; private set; }
+    public PackageVersion Version { get; private set; } = new ("0.0");
     
 	[XmlAttribute("deploymentDependenciesCsv")]
 	public string DeploymentDependenciesCsv;

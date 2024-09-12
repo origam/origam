@@ -6,7 +6,7 @@
 # in FastReports. i.e. in czech language it doesn't display è located in the end
 # of string. Instead of Kè it printed just K.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
 #INSTALL YARN & NODEJS 18
 RUN apt-get update \

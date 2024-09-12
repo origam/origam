@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
 RUN apt-get -qq update > /dev/null 2>&1 \
 && apt-get -y -qq install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget > /dev/null 2>&1
@@ -10,7 +10,7 @@ RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
 && apt-get -qq update > /dev/null 2>&1 \
-&& apt-get -qq -y install yarn dotnet-sdk-7.0 > /dev/null 2>&1 \
+&& apt-get -qq -y install yarn dotnet-sdk-8.0 > /dev/null 2>&1 \
 && useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers

@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>10</LangVersion>
-	<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
+    <GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
   </PropertyGroup>
-
   <PropertyGroup>
     <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
     <Version>0.0.0.0</Version>
@@ -51,7 +49,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
     <Folder Include="IdentityServerGui\Browser" />
@@ -59,28 +56,25 @@
     <Folder Include="Model\Data\" />
     <Folder Include="Views\Browser" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.6.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.9" />
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
     <PackageReference Include="Origam.Service.Core" Version="2.3.1" />
     <PackageReference Include="SoapCore" Version="1.1.0.44" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\origam-utils\origam-utils.csproj" />
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj" />
@@ -103,7 +97,6 @@
     <ProjectReference Include="..\Origam.workflow.mail\Origam.workflow.mail.csproj" />
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Remove="wwwroot\css\site.less" />
     <Content Remove="wwwroot\css\site.css" />
@@ -142,7 +135,6 @@
     </Content>
     <Content Remove="appsettings.json" />
   </ItemGroup>
-  
   <ItemGroup>
     <None Update="assets\identity\css\login.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -217,7 +209,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="Authorization\RoleStore.cs" />
     <None Remove="assets\identity\js\signout-redirect.js" />
@@ -237,7 +228,6 @@
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Resources\Resources.resx">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -252,7 +242,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
-
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
