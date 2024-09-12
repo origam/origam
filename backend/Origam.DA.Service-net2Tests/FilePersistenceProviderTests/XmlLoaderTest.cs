@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -89,19 +88,6 @@ public class XmlLoaderTest: AbstractFileTestClass
     public void ReadGroupFile()
     {
         string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.GroupFileName);
-        
-        Console.WriteLine($"Current directory: {Environment.CurrentDirectory}");
-        for (int i = 0; i < 10; i++)
-        {
-            if (File.Exists(fileName))
-            {
-                break;
-            }
-            Console.WriteLine($"File {fileName} does not exist yet, waiting...");
-            Thread.Sleep(1000);
-        }
-        Console.WriteLine($"File {fileName} exists, continuing");
-        
         var objectFileDataFactory = MakeObjectFileDataFactory(TestFilesDir);
         var packageFileData = objectFileDataFactory.NewGroupFileData(
             XmlFileDataFactory.Create(new FileInfo(fileName)).Value);
