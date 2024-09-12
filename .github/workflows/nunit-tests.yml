@@ -36,16 +36,20 @@ jobs:
     - name: List test files before copy
       shell: pwsh
       run: |
-        Write-Host "Listing contents of TestFiles directories before copy:"
-        Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
-          # Check if the file 'FilePersistenceServiceTests' exists in the directory
-          if (Test-Path "$($_.FullName)\FilePersistenceServiceTests") {
-            Write-Host $_.FullName
-            Get-ChildItem -Path $_.FullName -Recurse | ForEach-Object {
-              $indent = "  " * ($_.FullName.Split("\").Count - $_.FullName.Split("\").Count)
-              Write-Host ("{0}{1}" -f $indent, $_.Name)
+        Write-Host "Listing files in backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles:"
+        $directory = "backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles"
+        if (Test-Path -Path $directory) {
+            # List subdirectories
+            Get-ChildItem -Path $directory -Directory | ForEach-Object {
+                Write-Host "  $_.Name"
             }
-          }
+            # List files
+            Write-Host "  Files:"
+            Get-ChildItem -Path $directory -File | ForEach-Object {
+                Write-Host "    $_.Name"
+            }
+        } else {
+            Write-Host "Directory does not exist."
         }
 
     - name: Copy test files
@@ -68,17 +72,22 @@ jobs:
     - name: List test files after copy
       shell: pwsh
       run: |
-        Write-Host "Listing contents of TestFiles directories after copy:"
-        Get-ChildItem -Path backend -Recurse -Directory | Where-Object { $_.Name -eq 'TestFiles' } | ForEach-Object {
-          # Check if the file 'FilePersistenceServiceTests' exists in the directory
-          if (Test-Path "$($_.FullName)\FilePersistenceServiceTests") {
-            Write-Host $_.FullName
-            Get-ChildItem -Path $_.FullName -Recurse | ForEach-Object {
-              $indent = "  " * ($_.FullName.Split("\").Count - $_.FullName.Split("\").Count)
-              Write-Host ("{0}{1}" -f $indent, $_.Name)
+        Write-Host "Listing files in backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles:"
+        $directory = "backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles"
+        if (Test-Path -Path $directory) {
+            # List subdirectories
+            Get-ChildItem -Path $directory -Directory | ForEach-Object {
+                Write-Host "  $_.Name"
             }
-          }
+            # List files
+            Write-Host "  Files:"
+            Get-ChildItem -Path $directory -File | ForEach-Object {
+                Write-Host "    $_.Name"
+            }
+        } else {
+            Write-Host "Directory does not exist."
         }
+
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
@@ -124,15 +133,14 @@ jobs:
 
     - name: Check directory structure
       run: |
-        echo "Directory structure of Release folders containing FilePersistenceServiceTests:"
-        find backend -type d -name Release | while read dir; do
-          if find "$dir" -maxdepth 1 -type f -name "FilePersistenceServiceTests" >/dev/null 2>&1; then
-            echo "$dir"
-            find "$dir" -maxdepth 1 -type d | sed 's/[^/]*\//  /'
-            echo "  Files:"
-            find "$dir" -maxdepth 1 -type f | sed 's/[^/]*\//    /'
-          fi
-        done
+        echo "Listing files in backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles:"
+        if [ -d "backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles" ]; then
+          find backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles -maxdepth 1 -type d | sed 's/[^/]*\//  /'
+          echo "  Files:"
+          find backend/Origam.DA.Service-net2Tests/bin/Release/FilePersistenceProviderTests/TestFiles -maxdepth 1 -type f | sed 's/[^/]*\//    /'
+        else
+          echo "Directory does not exist."
+        fi
     
 
     - name: Run NUnit tests
