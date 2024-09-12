@@ -33,6 +33,11 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
+    - name: List test files before copy
+      run: |
+        echo "Listing contents of test directories before copy:"
+        find backend -name TestFiles -type d | xargs -I {} sh -c 'echo "Contents of {}:"; ls -R {}'
+
     - name: Copy test files
       run: |
         $testFiles = @(
@@ -49,6 +54,11 @@ jobs:
           Copy-Item -Path $source -Destination $destination -Force
         }
       shell: pwsh
+
+    - name: List test files after copy
+      run: |
+        echo "Listing contents of test directories after copy:"
+        find backend -name TestFiles -type d | xargs -I {} sh -c 'echo "Contents of {}:"; ls -R {}'
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
