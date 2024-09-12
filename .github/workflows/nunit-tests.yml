@@ -72,7 +72,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-dlls
-        path: "backend/**Tests/bin/Release"
+        path: |
+          backend/**Tests/bin/Release
+          backend/**Tests/bin/Release/**
+        if-no-files-found: error
 
   tests:
     needs: buildArchitect
@@ -106,6 +109,13 @@ jobs:
       with:
         name: test-dlls
         path: backend
+
+    - name: Check directory structure
+      run: |
+        echo "Directory structure:"
+        find backend -type d
+        echo "All files:"
+        find backend -type f
 
     - name: Run NUnit tests
       run:  |
