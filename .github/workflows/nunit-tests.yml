@@ -33,12 +33,29 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
+    - name: Copy test files
+      run: |
+        $testFiles = @(
+          "FilePersistenceProviderTests\TestFiles\.origamPackage",
+          "FilePersistenceProviderTests\TestFiles\.origamGroupReference",
+          "FilePersistenceProviderTests\TestFiles\.origamGroup",
+          "FlatFileSearchTests\TestFiles\FaultyFile.origam",
+          "FlatFileSearchTests\TestFiles\Language.origam"
+        )
+        foreach ($file in $testFiles) {
+          $source = "backend\Origam.DA.Service-net2Tests\$file"
+          $destination = "backend\Origam.DA.Service-net2Tests\bin\Release\$file"
+          New-Item -Path (Split-Path $destination) -ItemType Directory -Force
+          Copy-Item -Path $source -Destination $destination -Force
+        }
+      shell: pwsh
+
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
       with:
         name: test-dlls
-        path: "backend/**Tests/bin/Release" 
-     
+        path: "backend/**Tests/bin/Release"
+
   tests:
     needs: buildArchitect
     name: Tests
