@@ -97,6 +97,7 @@ jobs:
           backend/**Tests/bin/Release
           backend/**Tests/bin/Release/**
         if-no-files-found: error
+        include-hidden-files: true
 
   tests:
     needs: buildArchitect
