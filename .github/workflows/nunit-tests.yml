@@ -60,7 +60,7 @@ jobs:
       # We really want to specify the version the tests run on.
       # The latest dotnet version is already installed that is why we can run "dotnet" now.
       run: |
-        dotnet new globaljson --sdk-version 6.0.413
+        dotnet new globaljson --sdk-version 8.0.401
         
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
