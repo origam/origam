@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.OrigamEngine.ModelXmlBuilders;
@@ -35,8 +36,9 @@ namespace Origam.Server.Controller;
 public class UIController: AbstractController
 {
     private readonly IPersistenceService persistenceService;
-    public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
-        : base(log, sessionObjects)
+    public UIController(ILogger<UIController> log, SessionObjects sessionObjects,
+        IWebHostEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
         persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
     }

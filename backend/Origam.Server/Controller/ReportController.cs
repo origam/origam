@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -49,7 +50,8 @@ public class ReportController : AbstractController
     public ReportController(
         SessionObjects sessionObjects, 
         IStringLocalizer<SharedResources> localizer,
-        ILogger<AbstractController> log) : base(log, sessionObjects)
+        ILogger<AbstractController> log, IWebHostEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
         this.localizer = localizer;
     }
