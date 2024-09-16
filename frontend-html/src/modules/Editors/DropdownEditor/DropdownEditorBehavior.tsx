@@ -173,7 +173,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior {
   @action.bound
   private async clear() {
     try {
-      if(this.handlingNewValue) {
+      if (this.handlingNewValue) {
         await this.runningPromise;
       }
     } finally {
