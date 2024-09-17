@@ -131,6 +131,52 @@ jobs:
          PathtoPublish: '$(build.artifactstagingdirectory)\origam-architect'
          ArtifactName: origam-architect
        condition: succeededOrFailed()
+     - task: VSBuild@1
+       displayName: 'Build Client'
+       inputs:
+         solution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
+         platform: 'Any CPU'
+         configuration: 'Release Client'
+         msbuildArchitecture: 'x64'
+     - task: CopyFiles@2
+       displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-client'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamScheduler\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+           **\*.exe.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
+       condition: succeededOrFailed()
+     - task: CopyFiles@2
+       displayName: 'Copy client to: $(build.artifactstagingdirectory)\origam-client'
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\OrigamArchitect\bin\Release\'
+         Contents: |
+           **\*.dll
+           **\*.exe
+           **\*.pdb
+           **\*.exe.config
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
+       condition: succeededOrFailed()
+     - powershell: |
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
+       displayName: 'Rename Config files'
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish artifact: origam-client'
+       inputs:
+         PathtoPublish: '$(build.artifactstagingdirectory)\origam-client'
+         ArtifactName: origam-client
+       condition: succeededOrFailed()
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(build.artifactstagingdirectory)\origam-client'
+         Contents: |
+           **\*.*
+         RemoveSourceFolder: true
+       displayName: 'origam-client clean up'
      - powershell: |
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@product_version@", "$(PRODUCT_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
         (Get-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\backend\OrigamSetup\ArchitectSetup.wxs
@@ -479,6 +525,7 @@ jobs:
            $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
            $(Build.ArtifactStagingDirectory)/origam-server.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-desktop-client.zip
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
