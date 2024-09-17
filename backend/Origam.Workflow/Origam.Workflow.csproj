@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <LangVersion>10</LangVersion>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
   <PropertyGroup>
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -68,7 +69,10 @@
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
     <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
-	<Reference Include="System.IO.Compression" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <Reference Include="System.IO.Compression"  />
   </ItemGroup>
 
  
