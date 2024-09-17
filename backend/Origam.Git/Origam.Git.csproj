@@ -81,6 +81,7 @@
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp">
       <Version>0.30.0</Version>
+      <NoWarn>NU1701</NoWarn>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
