@@ -38,7 +38,7 @@ resources:
      ref: $(BRANCH)
 
 jobs:
-  - job: build_architect
+  - job: build_desktop_applications
     displayName: Build Desktop Applications
     pool:
       vmImage: windows-2022
