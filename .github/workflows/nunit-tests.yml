@@ -27,10 +27,14 @@ jobs:
     - name: Setup msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Build
+    - name: Restore Packages
       run: |
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
+    - name: Build Architect
+      run: |
        msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect"
+    - name: Build Origam.CommonTests
+      run: |
        msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: Upload testing artifact
