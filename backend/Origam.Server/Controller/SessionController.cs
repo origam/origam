@@ -196,7 +196,7 @@ public class SessionController : ControllerBase
         {
             return func();
         }
-        catch (UIException ex)
+        catch (OrigamDataException ex)
         {
             return BadRequest(ex.Message);
         }
@@ -207,7 +207,7 @@ public class SessionController : ControllerBase
         {
             return await func();
         }
-        catch (UIException ex)
+        catch (OrigamDataException ex)
         {
             return BadRequest(ex.Message);
         }

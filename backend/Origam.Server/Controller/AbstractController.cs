@@ -124,15 +124,21 @@ public abstract class AbstractController: ControllerBase
         {
             return StatusCode(474, GetReturnObject(ex)); // Suggests to the client that this error could be ignored
         }
-        catch (UIException ex)
-        {
-            return StatusCode(422, GetReturnObject(ex));
-        }
         catch (Exception ex)
         {
+            if (ex is OrigamDataException or OrigamSecurityException)
+            {
+                return StatusCode(400, GetReturnObject(ex));
+            }
+
+            if (ex is OrigamValidationException)
+            {
+                return StatusCode(400, ex);
+            }
+
             if (ex is IUserException)
             {
-                return StatusCode(420, GetReturnObject(ex));
+                return StatusCode(420, ex);
             }
             log.LogOrigamError(ex, ex.Message);
             return StatusCode(500, GetReturnObject(ex));
