@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using System.Collections;
 using System.Xml;
 
 using Origam.Schema.EntityModel;
@@ -29,12 +28,10 @@ using Origam.Workbench.Services;
 using Origam.Schema.MenuModel;
 using Origam.DA;
 using Origam.DA.Service;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Schema;
 using System.Collections.Generic;
 using Origam.Gui;
-using Origam.Server;
-using Origam.Server.Session_Stores;
 
 namespace Origam.Server;
 public class FormSessionStore : SaveableSessionStore
@@ -143,7 +140,7 @@ public class FormSessionStore : SaveableSessionStore
         }
         DataSet data;
         QueryParameterCollection qparams = Request.QueryParameters;
-        data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
+        data = CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
             _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
         return data;
     }
@@ -180,7 +177,7 @@ public class FormSessionStore : SaveableSessionStore
                 {
                     DataColumn col = dataset.Tables[entity].Columns[column];
                     string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                    core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                    CoreServices.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                         Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
                         null);
                     DataListLoadedColumns.Add(column);
@@ -199,7 +196,7 @@ public class FormSessionStore : SaveableSessionStore
             finalColumns.Add(ListPrimaryKeyColumns(this.DataList, this.DataListEntity));
             DataSet columnData = DatasetTools.CloneDataSet(DataList);
             DataTable listTable = DataList.Tables[DataListEntity];
-            core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+            CoreServices.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                 Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
                 this.DataListEntity,
                 string.Join(";", finalColumns));
@@ -235,7 +232,7 @@ public class FormSessionStore : SaveableSessionStore
         // We use the RecordEdit filter set for single record editing.
         ResolveFormMethodParameters(_menuItem.RecordEditMethod);
         QueryParameterCollection qparams = Request.QueryParameters;
-        data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
+        data = CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
             _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
         return data;
     }
@@ -429,7 +426,7 @@ public class FormSessionStore : SaveableSessionStore
     }
     private DataSet LoadDataPiece(object parentId)
     {
-        return core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
+        return CoreServices.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
             _menuItem.DefaultSetId, Guid.Empty, null, 
             DelayedLoadingParameterName, parentId);
     }

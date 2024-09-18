@@ -50,7 +50,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Server.Controller;
 using Origam.Server.Model.UIService;
 using Origam.Service.Core;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 // ReSharper disable once InconsistentNaming
@@ -109,7 +109,7 @@ public class ServerCoreUIService : IBasicUIService
                 = logoNotificationBox.RefreshInterval * 1000;
         }
         // load favorites
-        var favorites = core.DataService.Instance.LoadData(
+        var favorites = CoreServices.DataService.Instance.LoadData(
             dataStructureId: new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             methodId: new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
             defaultSetId: Guid.Empty, 
@@ -658,7 +658,7 @@ public class ServerCoreUIService : IBasicUIService
             input.Entity, input.Id));
         foreach(var recordId in idList)
         {
-            var oneRecordList = core.DataService.Instance.LoadData(
+            var oneRecordList = CoreServices.DataService.Instance.LoadData(
                 dataStructureId: new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), 
                 methodId: new Guid("0fda540f-e5de-4ab6-93d2-76b0abe6fd77"), 
                 defaultSetId: Guid.Empty, 
@@ -864,7 +864,7 @@ public class ServerCoreUIService : IBasicUIService
     {
         var profile = SecurityTools.CurrentUserProfile();
         // save favorites
-        var favorites = core.DataService.Instance.LoadData(
+        var favorites = CoreServices.DataService.Instance.LoadData(
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
             Guid.Empty, 
@@ -891,7 +891,7 @@ public class ServerCoreUIService : IBasicUIService
             row["refBusinessPartnerId"] = profile.Id;
             favorites.Tables["OrigamFavoritesUserConfig"].Rows.Add(row);
         }
-        core.DataService.Instance.StoreData(
+        CoreServices.DataService.Instance.StoreData(
             new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
             favorites, false, null);
     }
@@ -1316,7 +1316,7 @@ public class ServerCoreUIService : IBasicUIService
                 qparams.Add(new QueryParameter(paramName, id));
             }
         }
-        DataSet data = core.DataService.Instance.LoadData(
+        DataSet data = CoreServices.DataService.Instance.LoadData(
             tooltip.TooltipDataStructureId, 
             tooltip.TooltipDataStructureMethodId, 
             Guid.Empty, Guid.Empty, null, qparams);

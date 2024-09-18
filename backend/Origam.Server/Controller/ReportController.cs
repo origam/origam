@@ -24,13 +24,12 @@ using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.BI;
-using Origam.BI.CrystalReports;
-using Origam.CrystalReportsService.Models;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server.Extensions;
@@ -156,7 +155,7 @@ public class ReportController : AbstractController
             reportRequest.DataReportExportFormatType.GetString(),
             reportRequest.Parameters,
             null);
-        Response.Headers.Add(
+        Response.Headers.Append(
             HeaderNames.ContentDisposition,
             "filename=\"" + reportName + "."
             + reportRequest.DataReportExportFormatType.GetExtension() 
@@ -190,7 +189,7 @@ public class ReportController : AbstractController
         }
         var mimeType = HttpTools.Instance.GetMimeType(filePath);
         var fileName = Path.GetFileName(filePath);
-        Response.Headers.Add(
+        Response.Headers.Append(
             HeaderNames.ContentDisposition,
             httpTools.GetFileDisposition(
                 Request.GetUserAgent(), 

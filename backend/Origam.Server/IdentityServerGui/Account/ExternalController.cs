@@ -80,6 +80,7 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
     }
     private async Task<IActionResult> ProcessWindowsLoginAsync(string returnUrl)
     {
+#pragma warning disable CA1416
         // see if windows auth has already been requested and succeeded
         var result = await HttpContext.AuthenticateAsync(AccountOptions.WindowsAuthenticationSchemeName);
         if (result?.Principal is WindowsPrincipal wp)
@@ -113,13 +114,11 @@ public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
                 props);
             return Redirect(props.RedirectUri);
         }
-        else
-        {
-            // trigger windows auth
-            // since windows auth don't support the redirect uri,
-            // this URL is re-triggered when we call challenge
-            return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
-        }
+        // trigger windows auth
+        // since windows auth don't support the redirect uri,
+        // this URL is re-triggered when we call challenge
+        return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
+#pragma warning restore CA1416
     }
     
     /// <summary>

@@ -2,27 +2,6 @@
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
-This file is part of ORIGAM (http://www.origam.org).
-
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
-#endregion
-
-#region license
-/*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
-
 This file is part of ORIGAM.
 
 ORIGAM is free software: you can redistribute it and/or modify
@@ -41,7 +20,6 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Xml;
@@ -52,16 +30,12 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Schema;
 using System.Collections;
-using Origam;
-using Origam.Rule;
 using Origam.Schema.MenuModel;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Gui;
 using Origam.Schema.EntityModel.Interfaces;
-using core = Origam.Workbench.Services.CoreServices;
-using Origam.Schema.RuleModel;
-using Origam.Server;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Service.Core;
 
 namespace Origam.Server;
@@ -188,7 +162,7 @@ public class WorkflowSessionStore : SaveableSessionStore
         if(_refreshMethod != null) methodId = _refreshMethod.Id;
         Guid sortSetId = Guid.Empty;
         if (this.SortSet != null) sortSetId = this.SortSet.Id;
-        data = core.DataService.Instance.LoadData(_dataStructure.Id, methodId, Guid.Empty, sortSetId, null, qparams);
+        data = CoreServices.DataService.Instance.LoadData(_dataStructure.Id, methodId, Guid.Empty, sortSetId, null, qparams);
         return data;
     }
     public override void OnDispose()
