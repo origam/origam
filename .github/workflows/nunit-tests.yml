@@ -31,7 +31,7 @@ jobs:
       run: |
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
        msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect"
-       msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
+       msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: Upload testing artifact
       uses: actions/upload-artifact@v4
