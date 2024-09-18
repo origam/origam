@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2024 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
