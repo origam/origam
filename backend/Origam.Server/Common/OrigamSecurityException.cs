@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -20,13 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origam.Server;
-public class UIException: Exception
+
+public class OrigamSecurityException: Exception
 {
-    public UIException(string message) : base(message)
+    public OrigamSecurityException(string message) : base(message)
     {
     }
 }

@@ -116,7 +116,7 @@ public abstract class SaveableSessionStore : SessionStore
     {
         if (Data.HasErrors)
         {
-            throw new UIException(Resources.ErrorInForm);
+            throw new OrigamValidationException(Resources.ErrorInForm);
         }
         var listOfChanges = new List<ChangeInfo>();
         IList<DataRow> changedRows = new List<DataRow>();

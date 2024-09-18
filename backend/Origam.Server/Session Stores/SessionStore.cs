@@ -1049,7 +1049,7 @@ public abstract class SessionStore : IDisposable
     {
         if (!data.Tables.Contains(entity))
         {
-            throw new UIException("Entity not found: " + entity);
+            throw new OrigamDataException("Entity not found: " + entity);
         }
         return data.Tables[entity];
     }
