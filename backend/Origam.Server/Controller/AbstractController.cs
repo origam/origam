@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -86,7 +87,14 @@ public abstract class AbstractController: ControllerBase
             return lookupIndex;
         }
     }
+
     protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
+    {
+        Task<IActionResult> AsynFunc() => Task.FromResult(func());
+        return RunWithErrorHandlerAsync(AsynFunc).Result;
+    }
+
+    protected async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
     {
         object GetReturnObject(Exception ex, string defaultMessage=null)
         {
@@ -100,7 +108,7 @@ public abstract class AbstractController: ControllerBase
 
         try
         {
-            return func();
+            return await func();
         }
         catch (SessionExpiredException ex)
         {
