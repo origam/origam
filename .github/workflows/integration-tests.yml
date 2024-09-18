@@ -75,7 +75,7 @@ jobs:
     - name: Restore Packages
       run: |
        cd backend
-       msbuild Origam.sln -t:restore /p:Configuration="Release Server"
+       msbuild Origam.sln -t:restore /p:Configuration="Release Server" -v:m
     - name: Build Server
       run: |
        cd backend

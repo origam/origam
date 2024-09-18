@@ -29,10 +29,10 @@ jobs:
 
     - name: Restore Packages
       run: |
-       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect" -v:m
     - name: Build Architect
       run: |
-       msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln -warnaserror /p:Configuration="Release Architect" -v:m
     - name: Build Origam.CommonTests
       run: |
        msbuild backend/Origam.sln -warnaserror -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
