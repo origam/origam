@@ -69,7 +69,8 @@ public class WorkQueueIntegrationTests
         
         // MonitoredMsSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
-        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+        var dataService 
+            = (MonitoredMsSqlDataService)DataServiceFactory.GetDataService();
         var deletedWorkQueueEntryIds = dataService.Operations.OfType<DeleteWorkQueueEntryOperation>()
             .Select(x => x.RowId)
             .Reverse()
@@ -97,9 +98,8 @@ public class WorkQueueIntegrationTests
 
         // MonitoredMsSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
-        var dataService =
-            DataServiceFactory
-                .GetDataService() as MonitoredMsSqlDataService;
+        var dataService 
+            = (MonitoredMsSqlDataService)DataServiceFactory.GetDataService();
         var deleteOperations = dataService.Operations
             .OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
@@ -156,7 +156,8 @@ public class WorkQueueIntegrationTests
             
             // MonitoredMsSqlDataService must be set in "DataDataService" element
             // in OrigamSettings.config
-            var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+            var dataService 
+                = (MonitoredMsSqlDataService)DataServiceFactory.GetDataService();
             var deleteOperations = dataService.Operations
                 .OfType<DeleteWorkQueueEntryOperation>()
                 .OrderBy(operation => operation.ExecutedAt)
