@@ -129,6 +129,6 @@
         private System.Windows.Forms.Label groupLabel;
         private System.Windows.Forms.ComboBox groupComboBox;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
     }
 }

@@ -204,7 +204,6 @@ public class DeployVersion : AbstractMenuCommand
 				{
 					return false;
 				}
-				return false;
 			}
 			else
 			{
