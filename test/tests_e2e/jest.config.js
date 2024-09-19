@@ -1,6 +1,6 @@
 module.exports = {
-  //preset: "jest-puppeteer",
   testMatch: ["./**/*.test.js"],
+  testSequencer: './path-sequencer.js',
   verbose: true,
   setupFilesAfterEnv: ["./jest.setup.js"],
   reporters: [
