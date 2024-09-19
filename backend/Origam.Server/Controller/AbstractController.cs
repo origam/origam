@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -86,7 +87,14 @@ public abstract class AbstractController: ControllerBase
             return lookupIndex;
         }
     }
+
     protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
+    {
+        Task<IActionResult> AsynFunc() => Task.FromResult(func());
+        return RunWithErrorHandlerAsync(AsynFunc).Result;
+    }
+
+    protected async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
     {
         object GetReturnObject(Exception ex, string defaultMessage=null)
         {
@@ -100,7 +108,7 @@ public abstract class AbstractController: ControllerBase
 
         try
         {
-            return func();
+            return await func();
         }
         catch (SessionExpiredException ex)
         {
@@ -124,15 +132,21 @@ public abstract class AbstractController: ControllerBase
         {
             return StatusCode(474, GetReturnObject(ex)); // Suggests to the client that this error could be ignored
         }
-        catch (UIException ex)
-        {
-            return StatusCode(422, GetReturnObject(ex));
-        }
         catch (Exception ex)
         {
+            if (ex is OrigamDataException or OrigamSecurityException)
+            {
+                return StatusCode(400, GetReturnObject(ex));
+            }
+
+            if (ex is OrigamValidationException)
+            {
+                return StatusCode(400, ex);
+            }
+
             if (ex is IUserException)
             {
-                return StatusCode(420, GetReturnObject(ex));
+                return StatusCode(420, ex);
             }
             log.LogOrigamError(ex, ex.Message);
             return StatusCode(500, GetReturnObject(ex));

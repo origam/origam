@@ -482,8 +482,8 @@ public class ServerCoreUIService : IBasicUIService
                 SecurityManager.CurrentPrincipal, menuAction.Menu.Roles);
             if (!isAuthorized)
             {
-                throw new UIException(string.Format(
-                    Origam.Server.Resources.MenuNotAuthorized,
+                throw new OrigamSecurityException(string.Format(
+                    Resources.MenuNotAuthorized,
                     menuAction.Menu.NodeText)
                 );
             }
