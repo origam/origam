@@ -199,8 +199,14 @@ public class WorkQueueIncrementalFileLoader : WorkQueueLoaderAdapter
                 filename, FileMode.Open))
             using(ZipArchive archive = new ZipArchive(fileStream))
             {
+                string fullDestinationDirPath = Path.GetFullPath(path + Path.DirectorySeparatorChar);
                 foreach(ZipArchiveEntry archiveEntry in archive.Entries)
                 {
+                    string destinationFileName = Path.GetFullPath(Path.Combine(path, archiveEntry.FullName));
+                    if (!destinationFileName.StartsWith(fullDestinationDirPath))
+                    {
+                        throw new InvalidOperationException("Entry is outside the target dir: " + destinationFileName);
+                    }
                     if(FitsMask(archiveEntry.Name) 
                     && !hashIndexFile.IsZipArchiveEntryProcessed(
                         archiveEntry))
