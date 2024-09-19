@@ -24,12 +24,11 @@ using Origam.Schema.MenuModel;
 using System;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Workflow;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.DA.Service;
 using System.Data;
 using Origam.Schema.EntityModel;
 using System.Collections.Generic;
-using Origam.Server;
 
 namespace Origam.Server;
 public class OrigamDesignerSessionStore : FormSessionStore
@@ -62,7 +61,7 @@ public class OrigamDesignerSessionStore : FormSessionStore
     }
     private void GetModelData()
     {
-        _modelData = core.DataService.Instance.LoadData(
+        _modelData = CoreServices.DataService.Instance.LoadData(
             new Guid("3aaec7cd-5e40-40af-b4ad-1edd0e0fdade"),
             new Guid("b3cc44d5-aa9f-4ff5-b078-15dd2f7af46f"),
             Guid.Empty, new Guid("d217d65d-c1f4-4b53-b449-a971277cacb8"),

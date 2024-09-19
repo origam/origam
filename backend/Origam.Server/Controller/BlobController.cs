@@ -36,6 +36,7 @@ using Origam.Schema;
 using Origam.Workbench.Services;
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Origam.Server.Extensions;
 using Origam.Server.Model.Blob;
 using Origam.Server.Model.UIService;
@@ -158,7 +159,7 @@ public class BlobController : AbstractController
             {
                 disposition = "attachment; " + disposition;
             }
-            Response.Headers.Add(
+            Response.Headers.Append(
                 HeaderNames.ContentDisposition, disposition);
             return File(resultStream, HttpTools.Instance.GetMimeType(filename));
         }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Data;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
@@ -11,7 +10,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Server.Controller;
 using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server;
 public class DataServiceSoap: IDataServiceSoap
@@ -40,7 +39,7 @@ public class DataServiceSoap: IDataServiceSoap
             ? Guid.Empty 
             : new Guid(sortSetId);
         var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-        var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId, sId, null,
+        var dataSet = CoreServices.DataService.Instance.LoadData(dsId, fId, dId, sId, null,
             parameterCollection);
         return Task.FromResult(dataSet);
     }
@@ -60,7 +59,7 @@ public class DataServiceSoap: IDataServiceSoap
         Guid sId = string.IsNullOrWhiteSpace(sortSetId) 
             ? Guid.Empty 
             : new Guid(sortSetId);
-        var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId, sId, null);
+        var dataSet = CoreServices.DataService.Instance.LoadData(dsId, fId, dId, sId, null);
         return Task.FromResult(dataSet);
     }
     public Task<DataSet> LoadData1Async(string dataStructureId, string filterId, string defaultSetId, string sortSetId, string paramName1, string paramValue1)
@@ -79,7 +78,7 @@ public class DataServiceSoap: IDataServiceSoap
         Guid sId = string.IsNullOrWhiteSpace(sortSetId) 
             ? Guid.Empty 
             : new Guid(sortSetId);
-        var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId,
+        var dataSet = CoreServices.DataService.Instance.LoadData(dsId, fId, dId,
             sId, null, paramName1, paramValue1);
         return Task.FromResult(dataSet);
     }
@@ -101,7 +100,7 @@ public class DataServiceSoap: IDataServiceSoap
         Guid sId = string.IsNullOrWhiteSpace(sortSetId) 
             ? Guid.Empty 
             : new Guid(sortSetId);
-        var dataSet = core.DataService.Instance.LoadData(
+        var dataSet = CoreServices.DataService.Instance.LoadData(
             dsId, fId, dId, sId, null,
             paramName1, paramValue1, paramName2, paramValue2);
         return Task.FromResult(dataSet);
@@ -111,7 +110,7 @@ public class DataServiceSoap: IDataServiceSoap
         log.Log(LogLevel.Information,"ExecuteProcedure");
         
         var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-        var dataSet = core.DataService.Instance.ExecuteProcedure(procedureName,
+        var dataSet = CoreServices.DataService.Instance.ExecuteProcedure(procedureName,
             parameterCollection, null);
         return Task.FromResult(dataSet);
     }
@@ -151,7 +150,7 @@ public class DataServiceSoap: IDataServiceSoap
                 }
             }
         }
-        DataSet returnDataSet = core.DataService.Instance.StoreData(guid, data, loadActualValuesAfterUpdate, null);
+        DataSet returnDataSet = CoreServices.DataService.Instance.StoreData(guid, data, loadActualValuesAfterUpdate, null);
         return Task.FromResult(returnDataSet);
     }
     public Task<DataSet> StoreXmlAsync(string dataStructureId, XmlNode xml,
@@ -184,7 +183,7 @@ public class DataServiceSoap: IDataServiceSoap
             log.Log(LogLevel.Debug, "StoreXml - merged xml below");
             log.Log(LogLevel.Debug, set2.GetXml());
         }
-        DataSet dataSet = core.DataService.Instance.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
+        DataSet dataSet = CoreServices.DataService.Instance.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
         return Task.FromResult(dataSet);
     }
 }

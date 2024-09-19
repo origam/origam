@@ -32,8 +32,7 @@ using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema.GuiModel;
 using Origam.Schema;
-using Origam.Schema.RuleModel;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
 using System.Linq;
 using MoreLinq;
@@ -1110,7 +1109,7 @@ public abstract class SessionStore : IDisposable
                         pms.Add(new QueryParameter(col.ColumnName, rowId));
                     }
                     DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                    core.DataService.Instance.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                    CoreServices.DataService.Instance.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
                     if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
                     {
                         throw new ArgumentOutOfRangeException(string.Format(
@@ -1268,7 +1267,7 @@ public abstract class SessionStore : IDisposable
     }
     private DataRowCollection LoadMissingRows(string entity, Dictionary<string, object> idsNotFoundInStore)
     {
-        var dataService = core.DataServiceFactory.GetDataService();
+        var dataService = CoreServices.DataServiceFactory.GetDataService();
         var dataStructureEntityId =
             (Guid) Data.Tables[entity].ExtendedProperties["Id"];
         var dataStructureEntity = Workbench.Services.ServiceManager.Services

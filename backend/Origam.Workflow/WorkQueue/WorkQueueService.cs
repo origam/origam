@@ -1303,7 +1303,7 @@ public class WorkQueueService : IWorkQueueService, IBackgroundService
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // rollback the transaction
                     if (transactionId != null)

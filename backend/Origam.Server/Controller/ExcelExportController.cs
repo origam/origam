@@ -26,6 +26,7 @@ using CSharpFunctionalExtensions;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -115,14 +116,14 @@ public class ExcelExportController: AbstractController
             if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
             {
                 Response.ContentType = "application/vnd.ms-excel";
-                Response.Headers.Add(
+                Response.Headers.Append(
                     "content-disposition", "attachment; filename=export.xls");
             }
             else
             {
                 Response.ContentType
                     = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.Headers.Add(
+                Response.Headers.Append(
                     "content-disposition", "attachment; filename=export.xlsx");
             }
 #pragma warning disable 1998 

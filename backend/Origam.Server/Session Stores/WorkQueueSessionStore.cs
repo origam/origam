@@ -50,7 +50,7 @@ using Origam.Gui;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server.Session_Stores;
-using core = Origam.Workbench.Services.CoreServices;
+using CoreServices = Origam.Workbench.Services.CoreServices;
 using Origam.Workbench.Services;
 
 namespace Origam.Server;
@@ -138,7 +138,7 @@ public class WorkQueueSessionStore : SessionStore
         {
             throw new Exception($"Data structure filter set with name GetById was not found under WorkQueueStructure {WQClass.WorkQueueStructure.Id}");
         }
-        return core.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId.Value, 
+        return CoreServices.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId.Value, 
             Guid.Empty, WQClass.WorkQueueStructureSortSetId, null, 
             "WorkQueueEntry_parId", parentId);
     }

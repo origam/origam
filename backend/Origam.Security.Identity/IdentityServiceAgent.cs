@@ -33,7 +33,7 @@ namespace Origam.Security.Identity;
 // class is sealed because of a simplified IDisposable pattern implementation
 public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
 {
-	protected static readonly ILog log
+    private static readonly ILog log
 		= LogManager.GetLogger(typeof(IdentityServiceAgent));
     private IManager userManager;
     private IServiceScope serviceScope;

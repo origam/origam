@@ -35,7 +35,6 @@ using System.Xml;
 using System.Xml.XPath;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Origam.DA;
 using Origam.Rule;
 using Origam.Rule.Xslt;
@@ -1420,7 +1419,6 @@ public class XsltTests
     [Test]
     public void ShouldTestNodeSet()
     {
-        string xsltCall = "AS:NodeSet(<TestNode>test</TestNode>)/TestNode";
         string expectedResult = "test";
 
         string xsltScript =

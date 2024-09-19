@@ -10,7 +10,7 @@ const { clearScreenConfiguration, restoreWidgetSectionTestMasterForRefreshTest,
   restoreAllDataTypesTable} = require("./dbTools");
 const expect = require("expect");
 const {openFilters, setFilter} = require("./filterTestTools");
-const {installMouseHelper} = require("./instalMouseHelper_");
+const {installMouseHelper} = require("./installMouseHelper_");
 
 let browser;
 let page;

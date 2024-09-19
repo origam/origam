@@ -517,7 +517,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return result;
     }
 
-    private static new Dictionary<string, object> RetrieveParameters(XPathNavigator parameters)
+    private static Dictionary<string, object> RetrieveParameters(XPathNavigator parameters)
     {
         XPathNodeIterator iter =
             ((XPathNodeIterator)parameters.Evaluate("parameter"));
