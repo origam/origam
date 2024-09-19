@@ -29,7 +29,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.Gui;
 using Origam.Rule;
@@ -37,6 +39,7 @@ using Origam.Schema.GuiModel;
 using Origam.Security.Identity;
 using Origam.Server;
 using Origam.Server.Attributes;
+using Origam.Server.Controller;
 using Origam.Server.Model.Session;
 using Origam.Server.Model;
 
@@ -44,10 +47,13 @@ namespace Origam.Server.Controllers;
 [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
 [ApiController]
 [Route("internalApi/[controller]")]
-public class SessionController : ControllerBase
+public class SessionController : AbstractController
 {
     private readonly SessionObjects sessionObjects;
-    public SessionController(SessionObjects sessionObjects)
+    
+    public SessionController(SessionObjects sessionObjects, 
+        ILogger<AbstractController> log, IWebHostEnvironment environment) 
+        : base(log, sessionObjects, environment)
     {
         this.sessionObjects = sessionObjects;            
     }
@@ -189,28 +195,6 @@ public class SessionController : ControllerBase
             sessionHelper.DeleteSession(pss.FormSessions[0].Id);
         }
         return Ok();
-    }
-    private IActionResult RunWithErrorHandler(Func<IActionResult> func)
-    {
-        try
-        {
-            return func();
-        }
-        catch (UIException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    private async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
-    {
-        try
-        {
-            return await func();
-        }
-        catch (UIException ex)
-        {
-            return BadRequest(ex.Message);
-        }
     }
     private void CallOrigamUserUpdate()
     {

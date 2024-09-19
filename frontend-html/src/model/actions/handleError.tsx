@@ -38,7 +38,7 @@ export function handleError(ctx: any) {
       }
     }
     if (error.response && error.response.status === 474) {
-      // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
+      // 474 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
       // finished (RowStates for example)
       return;
     }
