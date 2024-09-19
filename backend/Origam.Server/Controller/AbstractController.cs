@@ -134,22 +134,18 @@ public abstract class AbstractController: ControllerBase
         }
         catch (Exception ex)
         {
-            if (ex is OrigamDataException or OrigamSecurityException)
+            switch (ex)
             {
-                return StatusCode(400, GetReturnObject(ex));
+                case OrigamDataException or OrigamSecurityException:
+                    return StatusCode(400, GetReturnObject(ex));
+                case OrigamValidationException:
+                    return StatusCode(400, ex);
+                case IUserException:
+                    return StatusCode(420, ex);
+                default:
+                    log.LogOrigamError(ex, ex.Message);
+                    return StatusCode(500, GetReturnObject(ex));
             }
-
-            if (ex is OrigamValidationException)
-            {
-                return StatusCode(400, ex);
-            }
-
-            if (ex is IUserException)
-            {
-                return StatusCode(420, ex);
-            }
-            log.LogOrigamError(ex, ex.Message);
-            return StatusCode(500, GetReturnObject(ex));
         }
     }
     protected Result<AbstractMenuItem, IActionResult> Authorize(
