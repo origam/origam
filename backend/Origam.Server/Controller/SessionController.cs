@@ -23,39 +23,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Origam.DA;
 using Origam.Gui;
-using Origam.Rule;
-using Origam.Schema.GuiModel;
-using Origam.Security.Identity;
-using Origam.Server;
 using Origam.Server.Attributes;
-using Origam.Server.Controller;
 using Origam.Server.Model.Session;
-using Origam.Server.Model;
 
-namespace Origam.Server.Controllers;
+namespace Origam.Server.Controller;
 [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
 [ApiController]
 [Route("internalApi/[controller]")]
 public class SessionController : AbstractController
 {
-    private readonly SessionObjects sessionObjects;
     
     public SessionController(SessionObjects sessionObjects, 
         ILogger<AbstractController> log, IWebHostEnvironment environment) 
         : base(log, sessionObjects, environment)
     {
-        this.sessionObjects = sessionObjects;            
     }
     [HttpPost("[action]")]
     public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
