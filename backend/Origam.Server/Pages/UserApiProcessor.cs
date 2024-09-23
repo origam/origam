@@ -168,31 +168,27 @@ public class UserApiProcessor
             context.Response.StatusCode = GetStatusCode(ex);
             context.Response.ContentType = "application/json";   
             context.Response.TrySkipIisCustomErrors = true;
-            string message = environment.IsDevelopment()
-                ? GetDetailErrorMessage(ex)
-                : "There was en error, check log for details";
+            string message = GetErrorObject(ex);
             context.Response.Write(message);
             context.Response.End();
         }
     }
 
-    private static string GetDetailErrorMessage(Exception ex)
+    private string GetErrorObject(Exception ex)
     {
-        string message;
         if (ex is RuleException ruleEx)
         {
-            message =
+            return
                 $@"{{""Message"" : 
                     {JsonConvert.SerializeObject(ruleEx.Message)}, 
                     ""RuleResult"" : 
                     {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
         }
-        else
+        if (environment.IsProduction())
         {
-            message = JsonConvert.SerializeObject(ex);
+            return "There was en error, check log for details";
         }
-
-        return message;
+        return JsonConvert.SerializeObject(ex);
     }
 
     private int GetStatusCode(Exception ex)
