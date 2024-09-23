@@ -184,7 +184,7 @@ public class UserApiProcessor
                     ""RuleResult"" : 
                     {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
         }
-        if (environment.IsDevelopment())
+        if (environment.IsProduction())
         {
             return "There was en error, check log for details";
         }
