@@ -139,9 +139,9 @@ public abstract class AbstractController: ControllerBase
                 case OrigamDataException or OrigamSecurityException:
                     return StatusCode(400, GetReturnObject(ex));
                 case OrigamValidationException:
-                    return StatusCode(400, ex);
+                    return StatusCode(400, GetReturnObject(ex, ex.Message));
                 case IUserException:
-                    return StatusCode(420, ex);
+                    return StatusCode(420, GetReturnObject(ex, ex.Message));
                 default:
                     log.LogOrigamError(ex, ex.Message);
                     return StatusCode(500, GetReturnObject(ex));
