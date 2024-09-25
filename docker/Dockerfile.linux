@@ -2,9 +2,9 @@
 #For more information, please see https://aka.ms/containercompat
 
 # Fix of https://community.origam.com/t/not-displaying-c-at-the-end-of-words-in-pdf-generated-from-fastreport/755/19
-# Rebuilding libgdiplus library to correctly display international characters 
-# in FastReports. i.e. in czech language it doesn't display � located in the end
-# of string. Instead of K� it printed just K.
+# Rebuilding libgdiplus library to correctly display international characters
+# in FastReports. i.e. in czech language it doesn't display è located in the end
+# of string. Instead of Kè it printed just K.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /tmp
