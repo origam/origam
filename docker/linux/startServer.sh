@@ -1,4 +1,16 @@
 #!/bin/bash
+
+run_silently() {
+    local output
+    output=$("$@" 2>&1)
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo "Error in command: $1"
+        echo "$output"
+        return $exit_code
+    fi
+}
+
 cd /home/origam/HTML5
 DIR="data"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
@@ -130,7 +142,7 @@ if [ ! -d "$DIR/origam" ]; then
 fi
 # generate certificate every start.
 	openssl rand -base64 10 >certpass
-	openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
+	run_silently openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
 	openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx
 	cp _appsettings.template appsettings.prepare
     sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
