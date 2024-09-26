@@ -5,6 +5,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -50,7 +51,13 @@ export default defineConfig({
 	css:{
 		modules: {
 			generateScopedName: "[name]__[local]__[hash:base64:2]"
-		}
+		},
+		preprocessorOptions: {
+      scss: {
+        api: 'modern',
+				loadPaths: ['./'],
+      }
+    }
 	},
 	optimizeDeps: {
 		esbuildOptions: {
