@@ -5,7 +5,6 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 import rollupNodePolyFill from 'rollup-plugin-node-polyfills'
-import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -76,6 +75,7 @@ export default defineConfig({
 		}
 	},
 	build: {
+		chunkSizeWarningLimit: 4000, // size in kB
 		commonjsOptions: {
 			transformMixedEsModules: true
 		},
