@@ -17,10 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@function hexToRGB($hex) {
-    @return red($hex), green($hex), blue($hex);
-}
+@use "sass:color";
 
+@function hexToRGB($hex) {
+  @return (
+    color.channel($hex, "red", $space: rgb),
+    color.channel($hex, "green", $space: rgb),
+    color.channel($hex, "blue", $space: rgb)
+  );
+}
 $background1: #FFFFFF;
 $background2: #F7F6FA;
 $background3: #E9E8F0;

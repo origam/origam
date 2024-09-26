@@ -54,8 +54,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .progressIndicator {
   @include progressIndicator;
-  background-color:var(--background1);
-  width: 100%;
+  & {
+    background-color:var(--background1);
+    width: 100%;
+  }
 }
 
 .label {
