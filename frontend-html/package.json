@@ -122,5 +122,6 @@
     "Safari >=14",
     "Edge >=88",
     "iOS >= 14"
-  ]
+  ],
+  "packageManager": "yarn@4.5.0"
 }
