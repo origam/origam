@@ -60,7 +60,6 @@ jobs:
         name: htmlfrontendbuild
         path: "frontend-html/dist"   
 
-    
   build-server:
     name: build-server
     runs-on: windows-2022
