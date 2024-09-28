@@ -10,7 +10,6 @@ on:
     branches: [ master, 20* ]
 
 jobs:
-
   build-frontend:
     name: build-frontend
     runs-on: windows-2019
@@ -27,22 +26,25 @@ jobs:
         
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-       node-version: '18'
-     
+        node-version: '18'
+
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Install Yarn
-      run: npm install -g yarn
-      
+      run: corepack prepare yarn@4.5.0 --activate
+
     - name: Build Frontend
       run: |
         cd frontend-html
         yarn -version
         node --version
-        yarn --frozen-lockfile
+        yarn install
         yarn build
 
     - name: Upload frontend artifact
