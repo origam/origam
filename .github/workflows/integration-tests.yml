@@ -52,7 +52,7 @@ jobs:
 
     - name: Log versions
       run: |
-        yarn -version
+        yarn --version
         node --version
       shell: bash
 
