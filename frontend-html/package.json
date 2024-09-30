@@ -91,6 +91,7 @@
     "browserslist-useragent-regexp": "^4.1.3",
     "esbuild": "^0.24.0",
     "identity-obj-proxy": "^3.0.0",
+    "ts-jest": "^29.2.5",
     "vite": "^5.4.8",
     "ws": "^8.18.0"
   },
@@ -114,6 +115,13 @@
     "moduleDirectories": [
       "node_modules",
       "src"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
     ]
   },
   "browserslist": [
