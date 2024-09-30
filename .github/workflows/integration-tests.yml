@@ -36,8 +36,19 @@ jobs:
     - name: Enable Corepack
       run: corepack enable
 
+    - name: Verify Corepack
+      run: corepack --version
+      shell: bash
+
     - name: Prepare Yarn
-      run: corepack prepare
+      run: corepack prepare yarn@stable --activate
+      shell: bash
+
+    - name: Verify directory contents
+      run: |
+        pwd
+        ls -la
+      shell: bash
 
     - name: Log versions
       run: |
