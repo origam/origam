@@ -25,6 +25,7 @@ using Origam.Rule;
 
 using Origam.Schema;
 using Origam.DA;
+using Origam.Rule.Xslt;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
@@ -37,7 +38,7 @@ public static class ReportHelper
 	public static void LogInfo(Type type, string message)
 	{
 		var log = log4net.LogManager.GetLogger(type);
-		if(log.IsInfoEnabled)
+		if (log.IsInfoEnabled)
 		{
 			log.Info(message);
 		}
@@ -47,63 +48,61 @@ public static class ReportHelper
         Hashtable parameters, 
         TraceTaskInfo traceTaskInfo = null)
     {
-        if(parameters == null)
+        if (parameters == null)
         {
             return;
         }
         var persistence = ServiceManager.Services
             .GetService<IPersistenceService>();
         var transformParams = new Hashtable();
-        foreach(SchemaItemParameter parameter in report.Parameters)
+        foreach (SchemaItemParameter parameter in report.Parameters)
         {
             // send all ordinary parameters as an input to the Xslt
-            if((parameter != null) 
-            && !(parameter is XsltInitialValueParameter))
+            if (parameter is not null and not XsltInitialValueParameter)
             {
                 transformParams.Add(
                     parameter.Name, parameters[parameter.Name]);
             }
         }
         string oldStepName = null;
-        if(traceTaskInfo != null)
+        if (traceTaskInfo != null)
         {
             oldStepName = traceTaskInfo.TraceStepName;
         }
-        foreach(SchemaItemParameter parameter in report.Parameters)
+        foreach (SchemaItemParameter parameter in report.Parameters)
         {
-            var xsltParameter = parameter as XsltInitialValueParameter;
-            if(xsltParameter == null)
+            if (parameter is not XsltInitialValueParameter xsltParameter)
             {
                 continue;
             }
             // do not recompute parameters if they were sent and they have some value
-            if(parameters.ContainsKey(xsltParameter.Name) 
+            if (parameters.ContainsKey(xsltParameter.Name) 
             && (parameters[xsltParameter.Name] != null))
             {
                 continue;
             }
-            var transformer = AsTransform.GetXsltEngine(
+            IXsltEngine transformer = AsTransform.GetXsltEngine(
                 persistence.SchemaProvider,
                 xsltParameter.transformationId);
             IXmlContainer xmlData = new XmlContainer("<ROOT/>");
-            if(traceTaskInfo != null)
+            if (traceTaskInfo != null)
             {
                 traceTaskInfo.TraceStepName =
                     $"{oldStepName}/ComputeParam_{xsltParameter.Name}";
                 transformer.SetTraceTaskInfo(traceTaskInfo);
             }
-            var result = transformer.Transform(
+            IXmlContainer result = transformer.Transform(
                 xmlData,
                 xsltParameter.transformationId,
-                Guid.Empty, 
+                retransformationId: Guid.Empty, 
                 transformParams, 
-                null,
-                null,
-                null, 
-                false);
+                transactionId: null,
+                retransformationParameters: null,
+                outputStructure: null, 
+                validateOnly: false);
             var resultNode = result.Xml.SelectSingleNode("/ROOT/value");
             // add a newly created computed parameter
-            if(resultNode == null)
+            if (resultNode == null)
             {
                 parameters.Add(xsltParameter.Name, null);
             }
@@ -116,7 +115,7 @@ public static class ReportHelper
                 parameters.Add(xsltParameter.Name, valueToContext);
             }
         }
-        if(traceTaskInfo != null)
+        if (traceTaskInfo != null)
         {
             traceTaskInfo.TraceStepName = oldStepName;
         }
@@ -124,41 +123,42 @@ public static class ReportHelper
     public static string BuildFileSystemReportFilePath(
         string filePath, Hashtable parameters)
     {
-        foreach(DictionaryEntry entry in parameters)
+        foreach (DictionaryEntry entry in parameters)
         {
             var key = entry.Key.ToString();
             string value = null;
-            if(entry.Value != null)
+            if (entry.Value != null)
             {
                 value = entry.Value.ToString();
             }
             var replacement = "{" + key + "}";
-            if(filePath.IndexOf(replacement, StringComparison.Ordinal) > -1)
+            if (filePath.IndexOf(replacement, StringComparison.Ordinal) <= -1)
             {
-                if(value == null)
-                {
-                    throw new Exception(ResourceUtils.GetString(
-                        "ParametersDontMatch"));
-                }
-                filePath = filePath.Replace(replacement, value);
+                continue;
             }
+            if (value == null)
+            {
+                throw new Exception(ResourceUtils.GetString(
+                    "ParametersDontMatch"));
+            }
+            filePath = filePath.Replace(replacement, value);
         }
         return filePath;
     }
     public static string ExpandCurlyBracketPlaceholdersWithParameters(
         string input, Hashtable parameters)
     {
-        var output = input;
-        foreach(DictionaryEntry entry in parameters)
+        string output = input;
+        foreach (DictionaryEntry entry in parameters)
         {
             var key = entry.Key.ToString();
             var value = "";
-            if(entry.Value != null)
+            if (entry.Value != null)
             {
                 value = entry.Value.ToString();
             }
             var replacement = "{" + key + "}";
-            if(output.IndexOf(replacement, StringComparison.Ordinal) > -1)
+            if (output.IndexOf(replacement, StringComparison.Ordinal) > -1)
             {
                 output = output.Replace(replacement, value);
             }
@@ -168,7 +168,7 @@ public static class ReportHelper
     public static void LogError(Type type, string message)
 	{
 		var log = log4net.LogManager.GetLogger(type);
-		if(log.IsErrorEnabled)
+		if (log.IsErrorEnabled)
 		{
 			log.Error(message);
 		}
@@ -178,26 +178,27 @@ public static class ReportHelper
     {
         var parameterService = ServiceManager.Services
             .GetService<IParameterService>();
-		foreach(var parameter in report.Parameters)
-		{
-            if(parameter is DefaultValueParameter defaultParam)
+		foreach (var parameter in report.Parameters)
+        {
+            if (parameter is not DefaultValueParameter defaultParam)
             {
-                if(parameters.Contains(defaultParam.Name))
+                continue;
+            }
+            if (parameters.Contains(defaultParam.Name))
+            {
+                object paramValue = parameters[defaultParam.Name];
+                if ((paramValue == null) || (paramValue == DBNull.Value))
                 {
-                    var paramValue = parameters[defaultParam.Name];
-                    if((paramValue == null) || (paramValue == DBNull.Value))
-                    {
-                        parameters[defaultParam.Name] = 
-                            parameterService.GetParameterValue(
-                                defaultParam.DefaultValue.Id);
-                    }
-                }
-                else
-                {
-                    parameters[defaultParam.Name] =
+                    parameters[defaultParam.Name] = 
                         parameterService.GetParameterValue(
                             defaultParam.DefaultValue.Id);
                 }
+            }
+            else
+            {
+                parameters[defaultParam.Name] =
+                    parameterService.GetParameterValue(
+                        defaultParam.DefaultValue.Id);
             }
         }
 	}
@@ -207,10 +208,10 @@ public static class ReportHelper
             .GetService<IPersistenceService>();
 		var report = persistence.SchemaProvider
             .RetrieveInstance<T>(reportId);
-		if(report == null)
+		if (report == null)
 		{
 			throw new ArgumentException(
-                @"reportId",
+                nameof(reportId),
                 ResourceUtils.GetString("DefinitionNotInModel"));
 		}
 		return report;
@@ -218,13 +219,15 @@ public static class ReportHelper
 	public static string ResolveLanguage(
         IXmlContainer doc, AbstractDataReport reportElement)
 	{
-        if(string.IsNullOrEmpty(reportElement.LocaleXPath))
+        if (string.IsNullOrEmpty(reportElement.LocaleXPath))
         {
             return null;
         }
-		var ruleEngine = RuleEngine.Create(null, null);
+		RuleEngine ruleEngine = RuleEngine.Create(
+            contextStores: null, transactionId: null);
 		var cultureString = (string)ruleEngine.EvaluateContext(
-            reportElement.LocaleXPath, doc, OrigamDataType.String, null);
+            reportElement.LocaleXPath, doc, OrigamDataType.String, 
+            targetStructure: null);
 		return cultureString;
 	}
 	public static IDataDocument LoadOrUseReportData(
@@ -233,13 +236,13 @@ public static class ReportHelper
         Hashtable parameters, 
         string dbTransaction)
 	{
-		switch(data)
+		switch (data)
         {
             case null when report.DataStructure != null:
             {
                 var queryParameterCollection 
                     = new QueryParameterCollection();
-                if(parameters != null)
+                if (parameters != null)
                 {
                     foreach (DictionaryEntry entry in parameters)
                     {
@@ -252,17 +255,21 @@ public static class ReportHelper
                     core.DataService.Instance.LoadData(
                         report.DataStructureId,
                         report.DataStructureMethodId, 
-                        Guid.Empty, 
+                        defaultSetId: Guid.Empty, 
                         report.DataStructureSortSetId, 
                         dbTransaction, 
                         queryParameterCollection));
             }
             case IDataDocument document:
+            {
                 return document;
+            }
             default:
+            {
                 throw new ArgumentException(
-                    @"data", 
+                    nameof(data), 
                     ResourceUtils.GetString("OnlyXmlDocSupported"));
+            }
         }
     }
 }	
