@@ -29,12 +29,18 @@ namespace Origam.Workbench.Services.CoreServices;
 /// </summary>
 public class ReportService
 {
-	public ReportService()
+	public static byte[] GetReport(
+		Guid reportId, 
+		XmlDocument data, 
+		string format, 
+		Hashtable parameters, 
+		string transactionId)
 	{
-	}
-	public static byte[] GetReport(Guid reportId, XmlDocument data, string format, Hashtable parameters, string transactionId)
-	{
-		IServiceAgent reportServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("ReportService", null, null);
+		IServiceAgent reportServiceAgent = ServiceManager.Services
+			.GetService<IBusinessServicesService>().GetAgent(
+				serviceType: "ReportService", 
+				ruleEngine: null, 
+				workflowEngine: null);
 		reportServiceAgent.MethodName = "GetReport";
 		reportServiceAgent.Parameters.Clear();
 		reportServiceAgent.Parameters.Add("Report", reportId);
