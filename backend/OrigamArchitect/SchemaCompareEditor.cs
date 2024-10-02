@@ -401,6 +401,10 @@ public class SchemaCompareEditor : AbstractViewContent
         AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
         DaPlatform.PersistenceProvider = persistence.SchemaProvider;
         _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
+        foreach (var result in _results)
+        {
+	        result.Platform = platform;
+        }
         RenderList();
 	}
 	private List<SchemaDbCompareResult> SelectedResults()
