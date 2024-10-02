@@ -44,8 +44,7 @@ public class CrystalReportService : IReportService
         int copies,
         Hashtable parameters)
     {
-        CrystalReport report = ReportHelper.GetReportElement<CrystalReport>(
-            reportId);
+        var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
         if (data is not (IDataDocument or null))
         {
             throw new ArgumentOutOfRangeException(nameof(data), data,
@@ -82,8 +81,12 @@ public class CrystalReportService : IReportService
         reportDoc.Close();
     }
 
-    public object GetReport(Guid reportId, IXmlContainer data, string format,
-        Hashtable parameters, string dbTransaction)
+    public object GetReport(
+        Guid reportId, 
+        IXmlContainer data, 
+        string format,
+        Hashtable parameters, 
+        string dbTransaction)
     {
         var report = ReportHelper.GetReportElement<AbstractDataReport>(
             reportId);
@@ -124,8 +127,11 @@ public class CrystalReportService : IReportService
         // do nothing unless we need to trace
     }
 
-    public string PrepareExternalReportViewer(Guid reportId,
-        IXmlContainer data, string format, Hashtable parameters,
+    public string PrepareExternalReportViewer(
+        Guid reportId,
+        IXmlContainer data, 
+        string format, 
+        Hashtable parameters,
         string dbTransaction)
     {
         throw new NotImplementedException();
