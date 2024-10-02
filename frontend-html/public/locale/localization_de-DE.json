@@ -147,5 +147,6 @@
   "order_columns_title": "Spalten sortieren",
   "add_new_record": "Neuer Datensatz",
   "hold_ctrl_tool_tip": "Ctrl-Taste gedrückt halten und klicken, um den Link zu öffnen",
-  "hold_cmd_tool_tip": "Cmd-Taste gedrückt halten und klicken, um den Link zu öffnen"
+  "hold_cmd_tool_tip": "Cmd-Taste gedrückt halten und klicken, um den Link zu öffnen",
+  "server_error": "Es ist ein Serverfehler aufgetreten. Weitere Einzelheiten finden Sie im Serverprotokoll."
 }

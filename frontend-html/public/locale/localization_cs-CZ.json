@@ -149,5 +149,6 @@
   "add_new_record": "Přidat nový záznam",
   "cancel_workflow_confirmation": "Opravdu chcete zrušit workflow?",
   "hold_ctrl_tool_tip": "Držte klávesu Ctrl a klikněte pro otevření odkazu",
-  "hold_cmd_tool_tip": "Držte klávesu Cmd a klikněte pro otevření odkazu"
+  "hold_cmd_tool_tip": "Držte klávesu Cmd a klikněte pro otevření odkazu",
+  "server_error": "Objevila se chyba na serveru. V log souboru serveru jsou detaily."
 }
