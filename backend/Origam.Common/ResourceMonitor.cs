@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Origam.Extensions;
@@ -31,10 +32,9 @@ namespace Origam;
 /// </summary>
 public class ResourceMonitor
 {
-	private static Dictionary<string, OrderedDictionary> _transactionStore = new ();
-	private static Dictionary<string, List<string>> _savePoints = new ();
+	private static ConcurrentDictionary<string, OrderedDictionary> _transactionStore = new ();
+	private static ConcurrentDictionary<string, List<string>> _savePoints = new ();
 	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	private static object _obj = new object();
 	public static void RegisterTransaction(string transactionId, string resourceManagerId, OrigamTransaction transaction)
 	{
 		if(log.IsDebugEnabled)
@@ -101,8 +101,8 @@ public class ResourceMonitor
 		}
 		finally
 		{
-			_transactionStore.Remove(transactionId);
-			_savePoints.Remove(transactionId);
+			_transactionStore.TryRemove(transactionId, out _);
+			_savePoints.TryRemove(transactionId, out _);
 		}
 	}
 	public static void Rollback(string transactionId)
@@ -134,8 +134,8 @@ public class ResourceMonitor
 		}
 		finally
 		{
-			_transactionStore.Remove(transactionId);
-			_savePoints.Remove(transactionId);
+			_transactionStore.TryRemove(transactionId, out _);
+			_savePoints.TryRemove(transactionId, out _);
 			if(errorMessage != "")
 			{
 				throw new Exception(ResourceUtils.GetString("ErrorsDuringRollback",  Environment.NewLine + Environment.NewLine + errorMessage));
@@ -204,35 +204,13 @@ public class ResourceMonitor
 	#region Private Methods
     private static OrderedDictionary Transactions(string transactionId)
 	{
-		if(_transactionStore.TryGetValue(transactionId, out var value))
-		{
-            return value;
-		}
-		else
-		{
-			lock (_obj) 
-			{
-				OrderedDictionary result = new OrderedDictionary();
-				_transactionStore[transactionId] = result;
-				return result;
-			}
-		}
+		return _transactionStore.GetOrAdd(
+			transactionId, 
+			key => new OrderedDictionary());
 	}
 	private static List<string> SavePoints(string transactionId)
 	{
-		if(_savePoints.TryGetValue(transactionId, out var points))
-		{
-			return points;
-		}
-		else
-		{
-			lock (_obj)
-			{
-				var result = new  List<string>();
-				_savePoints[transactionId] = result;
-				return result;
-			}
-		}
+		return _savePoints.GetOrAdd(transactionId, key => new List<string>());
 	}
 	#endregion
 }
