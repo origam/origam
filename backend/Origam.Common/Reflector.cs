@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -31,8 +32,8 @@ namespace Origam;
 public class Reflector
 {
 	static public readonly BindingFlags SearchCriteria = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
-	static private Dictionary<Type, Dictionary<Type, List<MemberAttributeInfo>>> memberTypeCache = new();
-	static private IReflectorCache classCache;
+	private static ConcurrentDictionary<Type, ConcurrentDictionary<Type, List<MemberAttributeInfo>>> memberTypeCache = new();
+	private static IReflectorCache classCache;
     private static readonly log4net.ILog log
         = log4net.LogManager.GetLogger(
         MethodBase.GetCurrentMethod().DeclaringType);
@@ -88,46 +89,31 @@ public class Reflector
 	}
 	// this signature causes nothing to be returned.. very strange
 	// static public MemberAttributeInfo[] FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
-	static public List<MemberAttributeInfo> FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
+	public static List<MemberAttributeInfo> FindMembers( Type type, Type primaryAttribute, params Type[] secondaryAttributes )
 	{
+		List<MemberAttributeInfo> GetAttributes(Type key)
+		{
+			var result = new List<MemberAttributeInfo>();
+			foreach (MemberInfo memberInfo in type.GetMembers(SearchCriteria))
+			{
+				object[] attrs = memberInfo.GetCustomAttributes(primaryAttribute, true);
+				foreach (object attr in attrs)
+				{
+					List<Attribute> memberAttrs = FindAttributes(memberInfo, secondaryAttributes);
+					result.Add(new MemberAttributeInfo(memberInfo, attr as Attribute, memberAttrs));
+				}
+			}
+			return result;
+		}
 		// cache only requests without secondary attributes
 		if(secondaryAttributes.Length == 0)
 		{
-			if(memberTypeCache.ContainsKey(type))
-			{
-				if(memberTypeCache[type].ContainsKey(primaryAttribute))
-				{
-					return memberTypeCache[type][primaryAttribute];
-				}
-			}
-			else
-			{
-				lock(memberTypeCache)
-				{
-					memberTypeCache.Add(type, new Dictionary<Type, List<MemberAttributeInfo>>());
-				}
-			}
+			var innerDictionary = memberTypeCache.GetOrAdd(type,
+				key => new ConcurrentDictionary<Type, List<MemberAttributeInfo>>());
+			return innerDictionary.GetOrAdd(primaryAttribute, GetAttributes);
 		}
-		var result = new List<MemberAttributeInfo>();
-		foreach( MemberInfo memberInfo in type.GetMembers( SearchCriteria ) )
-		{
-			object[] attrs = memberInfo.GetCustomAttributes( primaryAttribute, true );
-			if( attrs != null)
-			{
-                foreach (object attr in attrs)
-                {
-	                List<Attribute> memberAttrs = FindAttributes(memberInfo, secondaryAttributes);
-                    result.Add(new MemberAttributeInfo(memberInfo, attr as Attribute, memberAttrs));
-                }
-			}
-		}
-		// return result.ToArray() as MemberAttributeInfo[];
-		lock(memberTypeCache)
-		{
-			if(! memberTypeCache[type].ContainsKey(primaryAttribute))
-				memberTypeCache[type].Add(primaryAttribute, result);
-		}
-		return result;
+
+		return GetAttributes(type);
 	}
 	//static public Attribute[] FindAttributes( MemberInfo memberInfo, params Type[] attributes )
 	static public List<Attribute> FindAttributes( MemberInfo memberInfo, params Type[] attributes )
