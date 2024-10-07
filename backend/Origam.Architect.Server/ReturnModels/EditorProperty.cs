@@ -52,20 +52,37 @@ public class EditorPropertyFactory
         string description = property.GetAttribute<DescriptionAttribute>()?.Description;
 
         object value = property.GetValue(item);
-        object editorValue = value;
-        if (value is IPersistent persistentObject)
-        {
-            editorValue = persistentObject.Id;
-        }
 
         return new EditorProperty(
             Name: property.Name, 
             Type: ToPropertyTypeName(property.PropertyType),
-            Value: editorValue,
+            Value: ToSerializableValue(value),
             DropDownValues: GetAvailableValues(property, item),
             Category: category,
             Description: description,
             ReadOnly: property.GetSetMethod() == null);
+    }
+
+    private object ToSerializableValue(object value)
+    {
+        if (value is IPersistent persistentObject)
+        {
+            return persistentObject.Id;
+        }
+        if (value is ICollection collection)
+        {
+            var editorValue = new List<object>();
+            foreach (var item in collection)
+            {
+                editorValue.Add(item is IPersistent persistentValue
+                    ? persistentValue.Id
+                    : value);
+            }
+
+            return editorValue;
+        }
+
+        return value;
     }
 
     private DropDownValue[] GetAvailableValues(PropertyInfo property,
